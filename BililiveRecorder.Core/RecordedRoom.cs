@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
+using System.Net;
 using System.Text;
 using BililiveRecorder.FlvProcessor;
 
@@ -13,13 +14,29 @@ namespace BililiveRecorder.Core
     {
         public int RoomID;
 
+        public StreamMonitor streamMonitor;
         public FlvStreamProcessor Processor; // FlvProcessor
-
         public readonly ObservableCollection<FlvClipProcessor> Clips = new ObservableCollection<FlvClipProcessor>();
+        private HttpWebRequest webRequest;
 
         public RecordedRoom()
         {
             Processor.BlockProcessed += Processor_BlockProcessed;
+            streamMonitor.StreamStatusChanged += StreamMonitor_StreamStatusChanged;
+        }
+
+        private void StreamMonitor_StreamStatusChanged(object sender, StreamStatusChangedArgs e)
+        {
+            if (e.status.isStreaming)
+            {
+                // TODO: 失败重试逻辑 & 掉线重连逻辑
+                _StartRecord();
+            }
+        }
+
+        private void _StartRecord()
+        {
+            throw new NotImplementedException();
         }
 
         // Called by API or GUI

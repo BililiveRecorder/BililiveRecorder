@@ -11,8 +11,6 @@ namespace BililiveRecorder.FlvProcessor
         public readonly FlvHeader Header = new FlvHeader();
         private readonly List<FlvDataBlock> dataBlocks = new List<FlvDataBlock>();
 
-        private HttpWebRequest webRequest;
-        
 
         public event BlockProcessedEvent BlockProcessed;
 

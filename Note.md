@@ -11,6 +11,14 @@
   - 绑定 ObservableCollection
 - 命令行 + 配置文件 跨平台录制工具 | Standard
 
+- WPF界面
+  - `Recorder` 核心录制逻辑在这里
+    - `StreamMonitor`
+      - `DanmakuReceiver`
+    - `HttpWebRequest`
+    - `FlvStreamProcessor`
+    - `ObservableCollection<FlvClipProcessor>`
+
 ## flv处理模块 `FlvStreamProcessor`
 
 - 对外提供的API应该继承 IDisposable
