@@ -1,13 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Text;
 
 namespace BililiveRecorder.FlvProcessor
 {
     public class FlvStreamProcessor : IDisposable
     {
-        public RecordInfo Info;
+        public RecordInfo Info; // not used for now.
+        public readonly FlvHeader Header = new FlvHeader();
+        private readonly List<FlvDataBlock> dataBlocks = new List<FlvDataBlock>();
+
+        private HttpWebRequest webRequest;
+        
+
         public event BlockProcessedEvent BlockProcessed;
+
 
         public FlvStreamProcessor(RecordInfo info)
         {
