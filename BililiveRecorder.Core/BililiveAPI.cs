@@ -1,0 +1,42 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Net;
+using System.Text;
+
+namespace BililiveRecorder.Core
+{
+    internal static class BililiveAPI
+    {
+        public static JSONObject HttpGetJson(string url)
+        {
+            var c = new WebClient();
+            c.Headers.Add(HttpRequestHeader.UserAgent, "Mozilla/5.0 BililiveRecorder/0.0.0.0 (+https://github.com/Bililive/BililiveRecorder;bliverec@genteure.com)");
+            c.Headers.Add(HttpRequestHeader.Accept, "application/json, text/javascript, */*; q=0.01");
+            c.Headers.Add(HttpRequestHeader.Referer, "https://live.bilibili.com/");
+            var s = c.DownloadString(url);
+            var j = new JSONObject(s);
+            return j;
+        }
+
+        public static string GetPlayUrl(int roomid)
+        {
+            string url = $@"https://api.live.bilibili.com/room/v1/Room/playUrl?cid={roomid}&quality=0&platform=web";
+            var data = HttpGetJson(url);
+            return data?["data"]?["durl"]?[0]?["url"]?.str ?? throw new Exception("没有直播播放地址");
+        }
+
+        public static RoomInfo GetRoomInfo(int roomid)
+        {
+            string url = $@"http://api.live.bilibili.com/AppRoom/index?room_id={roomid}&platform=android";
+            var data = HttpGetJson(url);
+            var i = new RoomInfo()
+            {
+                DisplayRoomid = (int)(data?["data"]?["show_room_id"]?.n ?? throw new Exception("未获取到直播间信息")),
+                RealRoomid = (int)(data?["data"]?["room_id"]?.n ?? throw new Exception("未获取到直播间信息")),
+                Username = data?["data"]?["uname"]?.str ?? throw new Exception("未获取到直播间信息"),
+                isStreaming = "LIVE" == (data?["data"]?["status"]?.str ?? throw new Exception("未获取到直播间信息")),
+            };
+            return i;
+        }
+    }
+}
