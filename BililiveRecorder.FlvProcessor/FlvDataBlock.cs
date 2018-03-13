@@ -4,7 +4,7 @@ using System.Text;
 
 namespace BililiveRecorder.FlvProcessor
 {
-    class FlvDataBlock
+    public class FlvDataBlock
     {
     }
 }

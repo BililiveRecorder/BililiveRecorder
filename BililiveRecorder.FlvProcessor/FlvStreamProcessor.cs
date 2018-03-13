@@ -7,11 +7,23 @@ namespace BililiveRecorder.FlvProcessor
     public class FlvStreamProcessor : IDisposable
     {
         public RecordInfo Info;
+        public event BlockProcessedEvent BlockProcessed;
 
         public FlvStreamProcessor(RecordInfo info)
         {
             Info = info;
         }
+
+
+
+        public FlvClipProcessor Clip()
+        {
+            throw new NotImplementedException();
+        }
+
+
+
+
 
         #region IDisposable Support
         private bool disposedValue = false; // To detect redundant calls

@@ -11,10 +11,14 @@
   - 绑定 ObservableCollection
 - 命令行 + 配置文件 跨平台录制工具 | Standard
 
-## flv处理模块
+## flv处理模块 `FlvStreamProcessor`
 
 - 对外提供的API应该继承 IDisposable
 - 插入自定义FLV文件头
 - 提供一个对Stream友好的写入字节流的接口
-- 提供一个 Copy 方法（用于 Clip 功能）
+- 提供一个 Clip 方法
+  - Clip 方法应当不需要传入参数
+  - Clip 的时长应当由主 `FlvStreamProcessor` 设置
+  - 被 Clip 后的生成的 `FlvStreamProcessor` 应当拒绝再执行 Clip
+  - (?) 主 `FlvStreamProcessor` 应当自动传递处理后的数据给 Clips
 - 输出位置应当尽量由调用方决定（但不能直接接受 Stream ，因为要重写覆盖文件头）
