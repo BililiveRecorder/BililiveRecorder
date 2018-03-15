@@ -13,5 +13,10 @@ namespace BililiveRecorder.Core
         {
             throw new NotImplementedException();
         }
+
+        public void CheckAfterSeconeds(uint seconds)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

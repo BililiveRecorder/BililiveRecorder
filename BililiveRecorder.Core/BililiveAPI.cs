@@ -7,6 +7,13 @@ namespace BililiveRecorder.Core
 {
     internal static class BililiveAPI
     {
+        /// <summary>
+        /// 下载json并解析
+        /// </summary>
+        /// <param name="url">下载路径</param>
+        /// <returns>数据</returns>
+        /// <exception cref="ArgumentNullException"/>
+        /// <exception cref="WebException"/>
         public static JSONObject HttpGetJson(string url)
         {
             var c = new WebClient();
@@ -18,6 +25,13 @@ namespace BililiveRecorder.Core
             return j;
         }
 
+        /// <summary>
+        /// 获取直播间播放地址
+        /// </summary>
+        /// <param name="roomid">原房间号</param>
+        /// <returns>FLV播放地址</returns>
+        /// <exception cref="WebException"/>
+        /// <exception cref="Exception"/>
         public static string GetPlayUrl(int roomid)
         {
             string url = $@"https://api.live.bilibili.com/room/v1/Room/playUrl?cid={roomid}&quality=0&platform=web";
@@ -25,6 +39,13 @@ namespace BililiveRecorder.Core
             return data?["data"]?["durl"]?[0]?["url"]?.str ?? throw new Exception("没有直播播放地址");
         }
 
+        /// <summary>
+        /// 获取直播间信息
+        /// </summary>
+        /// <param name="roomid">房间号（允许短号）</param>
+        /// <returns>直播间信息</returns>
+        /// <exception cref="WebException"/>
+        /// <exception cref="Exception"/>
         public static RoomInfo GetRoomInfo(int roomid)
         {
             string url = $@"http://api.live.bilibili.com/AppRoom/index?room_id={roomid}&platform=android";

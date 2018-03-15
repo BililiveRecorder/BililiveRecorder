@@ -12,7 +12,10 @@ namespace BililiveRecorder.Core
 {
     public class RecordedRoom : INotifyPropertyChanged
     {
-        public int RoomID;
+        public int roomID { get; private set; }
+        public RoomInfo roomInfo { get; private set; }
+
+        public RecordStatus Status;
 
         public StreamMonitor streamMonitor;
         public FlvStreamProcessor Processor; // FlvProcessor
@@ -23,6 +26,8 @@ namespace BililiveRecorder.Core
         {
             Processor.BlockProcessed += Processor_BlockProcessed;
             streamMonitor.StreamStatusChanged += StreamMonitor_StreamStatusChanged;
+
+            UpdateRoomInfo();
         }
 
         private void StreamMonitor_StreamStatusChanged(object sender, StreamStatusChangedArgs e)
@@ -34,9 +39,74 @@ namespace BililiveRecorder.Core
             }
         }
 
-        private void _StartRecord()
+        public void StartRecord()
         {
             throw new NotImplementedException();
+        }
+
+        private void _StartRecord()
+        {
+            // throw new NotImplementedException();
+            if (webRequest != null)
+            {
+                //TODO: cleanup
+                webRequest = null;
+            }
+            if (Processor != null)
+            {
+                //TODO: cleanup
+                Processor = null;
+            }
+
+
+            string flv_path = BililiveAPI.GetPlayUrl(roomInfo.RealRoomid);
+
+            webRequest = WebRequest.CreateHttp(flv_path);
+            _SetupFlvRequest(webRequest);
+            HttpWebResponse response = webRequest.GetResponse() as HttpWebResponse;
+            if (response.StatusCode != HttpStatusCode.OK)
+            {
+                //TODO: Log
+                response.Close();
+                webRequest = null;
+                return;
+            }
+
+        }
+
+        private static void _SetupFlvRequest(HttpWebRequest r)
+        {
+            r.Accept = "*/*";
+            r.AllowAutoRedirect = true;
+            r.Connection = "keep-alive";
+            r.Referer = "https://live.bilibili.com";
+            r.Headers["Origin"] = "https://live.bilibili.com";
+            r.UserAgent = "Mozilla/5.0 BililiveRecorder/0.0.0.0 (+https://github.com/Bililive/BililiveRecorder;bliverec@genteure.com)";
+        }
+
+        void StartWebRequest()
+        {
+
+            webRequest.BeginGetResponse(new AsyncCallback(FinishWebRequest), webRequest);
+        }
+
+        void FinishWebRequest(IAsyncResult result)
+        {
+            HttpWebResponse response = (result.AsyncState as HttpWebRequest).EndGetResponse(result) as HttpWebResponse;
+        }
+
+        public bool UpdateRoomInfo()
+        {
+            try
+            {
+                roomInfo = BililiveAPI.GetRoomInfo(roomID);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.ToString());
+                return false;
+            }
         }
 
         // Called by API or GUI
