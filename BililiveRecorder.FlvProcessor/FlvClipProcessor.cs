@@ -6,16 +6,16 @@ namespace BililiveRecorder.FlvProcessor
 {
     public class FlvClipProcessor : IDisposable
     {
-        public readonly FlvHeader Header;
+        public readonly FlvMetadata Header;
 
-        public FlvClipProcessor(FlvHeader header)
+        public FlvClipProcessor(FlvMetadata header)
         {
             Header = header;
         }
 
-        public void AddBlock(FlvDataBlock block)
+        public void AddTag(FlvTag tag)
         {
-
+            throw new NotImplementedException();
         }
 
 

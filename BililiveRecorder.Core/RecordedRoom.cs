@@ -25,7 +25,7 @@ namespace BililiveRecorder.Core
 
         public RecordedRoom()
         {
-            Processor.BlockProcessed += Processor_BlockProcessed;
+            Processor.TagProcessed += Processor_TagProcessed;
             streamMonitor.StreamStatusChanged += StreamMonitor_StreamStatusChanged;
 
             UpdateRoomInfo();
@@ -171,9 +171,9 @@ namespace BililiveRecorder.Core
             }
         }
 
-        private void Processor_BlockProcessed(object sender, BlockProcessedArgs e)
+        private void Processor_TagProcessed(object sender, TagProcessedArgs e)
         {
-            Clips.ToList().ForEach((fcp) => fcp.AddBlock(e.DataBlock));
+            Clips.ToList().ForEach((fcp) => fcp.AddTag(e.Tag));
         }
 
 

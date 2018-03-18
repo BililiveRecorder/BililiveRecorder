@@ -4,10 +4,10 @@ using System.Text;
 
 namespace BililiveRecorder.FlvProcessor
 {
-    public delegate void BlockProcessedEvent(object sender, BlockProcessedArgs e);
-    public class BlockProcessedArgs
+    public delegate void TagProcessedEvent(object sender, TagProcessedArgs e);
+    public class TagProcessedArgs
     {
-        public FlvDataBlock DataBlock;
+        public FlvTag Tag;
     }
 
 

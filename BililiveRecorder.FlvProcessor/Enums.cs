@@ -1,11 +1,10 @@
 ﻿namespace BililiveRecorder.FlvProcessor
 {
-    public enum TagType
+    public enum TagType : int
     {
-        NONE = 0x0,
-        AUDIO = 0x8,
-        VIDEO = 0x9,
-        META = 0x12,
+        AUDIO = 8,
+        VIDEO = 9,
+        DATA = 18,
     }
 
     public enum AMFTypes
