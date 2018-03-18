@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
@@ -71,7 +72,46 @@ namespace BililiveRecorder.Core
                 webRequest = null;
                 return;
             }
+            Stream flvStream = response.GetResponseStream();
+            const int BUF_SIZE = 1024 * 8;// 8 KiB
+            byte[] buffer = new byte[BUF_SIZE];
 
+            AsyncCallback callback = null;
+
+            callback = ar =>
+            {
+                try
+                {
+                    int bytesRead = flvStream.EndRead(ar);
+
+                    if (bytesRead == 0)
+                    {
+                        // TODO: connection closed
+                    }
+                    else
+                    {
+                        if (bytesRead != buffer.Length)
+                        {
+                            Processor.AddBytes(buffer.Take(bytesRead).ToArray());
+                        }
+                        else
+                        {
+                            Processor.AddBytes(buffer);
+                        }
+
+
+                        Console.Write('#');
+
+                        flvStream.BeginRead(buffer, 0, BUF_SIZE, callback, null);
+                    }
+                }
+                catch (Exception e)
+                {
+                    throw; //TODO
+                }
+            };
+
+            flvStream.BeginRead(buffer, 0, BUF_SIZE, callback, null);
         }
 
         private static void _SetupFlvRequest(HttpWebRequest r)

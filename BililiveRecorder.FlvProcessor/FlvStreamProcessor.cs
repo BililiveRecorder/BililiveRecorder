@@ -20,7 +20,10 @@ namespace BililiveRecorder.FlvProcessor
             Info = info;
         }
 
-
+        public void AddBytes(byte[] data)
+        {
+            throw new NotImplementedException();
+        }
 
         public FlvClipProcessor Clip()
         {
