@@ -29,10 +29,10 @@ namespace BililiveRecorder.FlvProcessor
             // 0x00, // the "0th" tag has a length of 0
         };
 
-        public RecordInfo Info; // not used for now.
         public FlvMetadata Metadata = null;
         public event TagProcessedEvent TagProcessed;
         public event StreamFinalizedEvent StreamFinalized;
+        public Func<string> GetFileName;
 
         public int Clip_Past = 90;
         public int Clip_Future = 30;
@@ -53,9 +53,8 @@ namespace BililiveRecorder.FlvProcessor
         public int TagAudioCount { get; private set; } = 0;
         private bool hasOffset = false;
 
-        public FlvStreamProcessor(RecordInfo info, string path)
+        public FlvStreamProcessor(string path)
         {
-            Info = info;
             _fs = new FileStream(path, FileMode.CreateNew, FileAccess.ReadWrite);
             if (!_fs.CanSeek)
             {
@@ -224,12 +223,13 @@ namespace BililiveRecorder.FlvProcessor
         {
             lock (_writelock)
             {
-                return new FlvClipProcessor(Metadata, Tags, 30);
+                return new FlvClipProcessor(Metadata, new List<FlvTag>(Tags), 30);
             }
         }
 
         public void FinallizeFile()
         {
+
             lock (_writelock)
             {
                 Metadata.Meta["duration"] = MaxTimeStamp / 1000.0;
@@ -256,9 +256,9 @@ namespace BililiveRecorder.FlvProcessor
 
                 StreamFinalized?.Invoke(this, new StreamFinalizedArgs() { StreamProcessor = this });
 
-                // TODO: 通知 Clip 也进行保存
-                // TODO: 阻止再尝试写入任何数据
-                // TODO: 清空 Tags List
+                // 通知 Clip 也进行保存
+                // 阻止再尝试写入任何数据
+                // 清空 Tags List
             }
         }
 

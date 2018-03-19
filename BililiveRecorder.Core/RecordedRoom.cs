@@ -15,6 +15,7 @@ namespace BililiveRecorder.Core
     {
         public int roomID { get; private set; }
         public RoomInfo roomInfo { get; private set; }
+        public RecordInfo recordInfo { get; private set; }
 
         public RecordStatus Status;
 
@@ -22,14 +23,34 @@ namespace BililiveRecorder.Core
         public FlvStreamProcessor Processor; // FlvProcessor
         public readonly ObservableCollection<FlvClipProcessor> Clips = new ObservableCollection<FlvClipProcessor>();
         private HttpWebRequest webRequest;
+        private readonly Settings _settings;
 
-        public RecordedRoom()
+        public RecordedRoom(Settings settings)
         {
+            _settings = settings;
+
+            _settings.PropertyChanged += _settings_PropertyChanged;
+
             Processor.TagProcessed += Processor_TagProcessed;
             Processor.StreamFinalized += Processor_StreamFinalized;
+            Processor.GetFileName = recordInfo.GetStreamFilePath;
             streamMonitor.StreamStatusChanged += StreamMonitor_StreamStatusChanged;
 
             UpdateRoomInfo();
+        }
+
+        private void _settings_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(_settings.Clip_Past))
+            {
+                if (Processor != null)
+                    Processor.Clip_Past = _settings.Clip_Past;
+            }
+            else if (e.PropertyName == nameof(_settings.Clip_Future))
+            {
+                if (Processor != null)
+                    Processor.Clip_Future = _settings.Clip_Future;
+            }
         }
 
         private void StreamMonitor_StreamStatusChanged(object sender, StreamStatusChangedArgs e)
@@ -155,6 +176,7 @@ namespace BililiveRecorder.Core
         {
             var clip = Processor.Clip();
             clip.ClipFinalized += CallBack_ClipFinalized;
+            clip.GetFileName = recordInfo.GetClipFilePath;
             Clips.Add(clip);
         }
 

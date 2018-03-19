@@ -11,6 +11,8 @@ namespace BililiveRecorder.FlvProcessor
         public List<FlvTag> Tags;
         private int target = -1;
 
+        public Func<string> GetFileName;
+
         public FlvClipProcessor(FlvMetadata header, List<FlvTag> past, int future)
         {
             Header = header;
@@ -29,7 +31,7 @@ namespace BililiveRecorder.FlvProcessor
 
         public void FinallizeFile()
         {
-            using (var fs = new FileStream("", FileMode.CreateNew, FileAccess.ReadWrite))
+            using (var fs = new FileStream(GetFileName(), FileMode.CreateNew, FileAccess.ReadWrite))
             {
                 fs.Write(FlvStreamProcessor.FLV_HEADER_BYTES, 0, FlvStreamProcessor.FLV_HEADER_BYTES.Length);
 
