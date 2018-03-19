@@ -17,4 +17,10 @@ namespace BililiveRecorder.FlvProcessor
         public FlvClipProcessor ClipProcessor;
     }
 
+    public delegate void StreamFinalizedEvent(object sender, StreamFinalizedArgs e);
+    public class StreamFinalizedArgs
+    {
+        public FlvStreamProcessor StreamProcessor;
+    }
+
 }

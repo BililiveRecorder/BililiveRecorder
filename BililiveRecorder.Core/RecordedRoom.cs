@@ -26,6 +26,7 @@ namespace BililiveRecorder.Core
         public RecordedRoom()
         {
             Processor.TagProcessed += Processor_TagProcessed;
+            Processor.StreamFinalized += Processor_StreamFinalized;
             streamMonitor.StreamStatusChanged += StreamMonitor_StreamStatusChanged;
 
             UpdateRoomInfo();
@@ -153,8 +154,6 @@ namespace BililiveRecorder.Core
         public void Clip()
         {
             var clip = Processor.Clip();
-            // TODO: 多个线程同时运行，这个位置有可能会导致 Clip 丢数据
-            // 考虑在此处加锁， Clip 操作时停止向主 Processor 添加数据
             clip.ClipFinalized += CallBack_ClipFinalized;
             Clips.Add(clip);
         }
@@ -173,7 +172,12 @@ namespace BililiveRecorder.Core
 
         private void Processor_TagProcessed(object sender, TagProcessedArgs e)
         {
-            Clips.ToList().ForEach((fcp) => fcp.AddTag(e.Tag));
+            Clips.ToList().ForEach(fcp => fcp.AddTag(e.Tag));
+        }
+
+        private void Processor_StreamFinalized(object sender, StreamFinalizedArgs e)
+        {
+            Clips.ToList().ForEach(fcp => fcp.FinallizeFile());
         }
 
 
