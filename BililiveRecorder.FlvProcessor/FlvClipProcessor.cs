@@ -15,7 +15,7 @@ namespace BililiveRecorder.FlvProcessor
         {
             Header = header;
             Tags = past;
-            target = Tags[Tags.Count - 1].TimeStamp + future;
+            target = Tags[Tags.Count - 1].TimeStamp + (future * FlvStreamProcessor.SEC_TO_MS);
         }
 
         public void AddTag(FlvTag tag)

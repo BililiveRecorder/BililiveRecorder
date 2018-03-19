@@ -10,7 +10,8 @@ namespace BililiveRecorder.FlvProcessor
 {
     public class FlvStreamProcessor : IDisposable
     {
-        private const int MIN_BUFFER_SIZE = 1024 * 2;
+        internal const int SEC_TO_MS = 1000; // 1 second = 1000 ms
+        internal const int MIN_BUFFER_SIZE = 1024 * 2;
         internal static readonly byte[] FLV_HEADER_BYTES = new byte[]
         {
             0x46, // F
@@ -22,16 +23,19 @@ namespace BililiveRecorder.FlvProcessor
             0x00, //  |
             0x00, //  |
             0x09, // total of 9 bytes
-            0x00, // ---
-            0x00, //  |
-            0x00, //  |
-            0x00, // the "0th" tag has a length of 0
+            // 0x00, // ---
+            // 0x00, //  |
+            // 0x00, //  |
+            // 0x00, // the "0th" tag has a length of 0
         };
 
         public RecordInfo Info; // not used for now.
         public FlvMetadata Metadata = null;
         public event TagProcessedEvent TagProcessed;
         public event StreamFinalizedEvent StreamFinalized;
+
+        public int Clip_Past = 90;
+        public int Clip_Future = 30;
 
         private bool _headerParsed = false;
         private readonly List<FlvTag> Tags = new List<FlvTag>();
@@ -43,7 +47,11 @@ namespace BililiveRecorder.FlvProcessor
 
         private readonly FileStream _fs;
 
-        public int MaxTimeStamp { get; private set; }
+        public int MaxTimeStamp { get; private set; } = -1;
+        public int BaseTimeStamp { get; private set; } = 0;
+        public int TagVideoCount { get; private set; } = 0;
+        public int TagAudioCount { get; private set; } = 0;
+        private bool hasOffset = false;
 
         public FlvStreamProcessor(RecordInfo info, string path)
         {
@@ -132,14 +140,45 @@ namespace BililiveRecorder.FlvProcessor
             }
             else
             {
-                tag.TimeStamp -= 0; // TODO: 修复时间戳
-                Tags.Add(tag);
-                // TODO: remove old tag
+                switch (tag.TagType)
+                {
+                    case TagType.AUDIO:
+                        TagAudioCount++;
+                        if (!hasOffset && TagAudioCount == 2)
+                        {
+                            hasOffset = true;
+                            BaseTimeStamp = tag.TimeStamp;
+                            Debug.Write(string.Format("Reseting to this base timestamp {0} ms\n", BaseTimeStamp));
+                            tag.TimeStamp = 0;
+                            MaxTimeStamp = 0;
+                        }
+                        break;
+                    case TagType.VIDEO:
+                        TagVideoCount++;
+                        if (!hasOffset && TagVideoCount == 2)
+                        {
+                            hasOffset = true;
+                            BaseTimeStamp = tag.TimeStamp;
+                            Debug.Write(string.Format("Reseting to this base timestamp {0} ms\n", BaseTimeStamp));
+                            tag.TimeStamp = 0;
+                            MaxTimeStamp = 0;
+                        }
+                        break;
+                    case TagType.DATA:
+                    default:
+                        break;
+                }
 
+                tag.TimeStamp -= BaseTimeStamp; // 修复时间戳
+                MaxTimeStamp = Math.Max(MaxTimeStamp, tag.TimeStamp);
+                Tags.Add(tag); // Clip 缓存
+                Tags.Where(x => (MaxTimeStamp - x.TimeStamp) > (Clip_Past * SEC_TO_MS)).Any(x => Tags.Remove(x)); // 移除过旧的数据
+
+                // 写入硬盘
                 var b = tag.ToBytes();
                 _fs.Write(b, 0, b.Length);
                 _fs.Write(tag.Data, 0, tag.Data.Length);
-                _fs.Write(BitConverter.GetBytes(tag.Data.Length + b.Length).ToBE(), 0, 4);
+                _fs.Write(BitConverter.GetBytes(tag.Data.Length + b.Length).ToBE(), 0, 4); // Last Tag Size
 
                 TagProcessed?.Invoke(this, new TagProcessedArgs() { Tag = tag });
             }
@@ -147,11 +186,15 @@ namespace BililiveRecorder.FlvProcessor
 
         private void _ParseTag(byte[] data)
         {
-            byte[] b = { 0, 0, 0, 0, };
+            byte[] b = new byte[4];
             _buffer.Write(data, 0, data.Length);
             long dataLen = _buffer.Position;
             _buffer.Position = 0;
             FlvTag tag = new FlvTag();
+
+            // Previous Tag Size
+            _buffer.Read(b, 0, 4);
+            b = new byte[4];
 
             // TagType UI8
             tag.TagType = (TagType)_buffer.ReadByte();
