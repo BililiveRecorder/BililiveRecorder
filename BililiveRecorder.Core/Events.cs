@@ -7,6 +7,6 @@ namespace BililiveRecorder.Core
     public delegate void StreamStatusChangedEvent(object sender, StreamStatusChangedArgs e);
     public class StreamStatusChangedArgs
     {
-        public StreamStatus status;
+        public TriggerType status;
     }
 }

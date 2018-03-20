@@ -8,7 +8,7 @@ namespace BililiveRecorder.FlvProcessor
     public class FlvClipProcessor : IDisposable
     {
         public readonly FlvMetadata Header;
-        public List<FlvTag> Tags;
+        public readonly List<FlvTag> Tags;
         private int target = -1;
 
         public Func<string> GetFileName;
@@ -59,6 +59,7 @@ namespace BililiveRecorder.FlvProcessor
 
                 fs.Close();
             }
+            Tags.Clear();
 
             ClipFinalized?.Invoke(this, new ClipFinalizedArgs() { ClipProcessor = this });
         }

@@ -4,40 +4,11 @@ using System.Text;
 
 namespace BililiveRecorder.Core
 {
-    public class StreamStatus
+    public enum TriggerType
     {
-        // TODO:
-        public bool isStreaming
-        {
-            get
-            {
-                return false;
-            }
-        }
-
-        public bool HttpAPIStreaming
-        {
-            get
-            {
-                return false;
-            }
-            set
-            {
-
-            }
-        }
-
-        public bool DanmakuStreaming
-        {
-            get
-            {
-                return false;
-            }
-            set
-            {
-
-            }
-        }
-
+        Danmaku,
+        HttpApi,
+        HttpApiRecheck,
+        Manual,
     }
 }
