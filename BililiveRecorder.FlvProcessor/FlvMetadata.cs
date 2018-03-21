@@ -112,7 +112,7 @@ namespace BililiveRecorder.FlvProcessor
             }
             else
             {
-                Debug.Write(string.Format("Unknown Value type: {0}\n", val.GetType().Name));
+                Debug.Write(string.Format("Unknown Value type: {0}\n", val?.GetType()?.Name));
                 return null;
             }
         }

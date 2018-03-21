@@ -218,7 +218,7 @@ namespace BililiveRecorder.Core
                         UserName = obj["data"]["uname"].str?.Decode();
                         UserID = (int)obj["data"]["uid"].i;
                         isVIP = true;
-                        isAdmin = obj["data"]["is_admin"].b;
+                        isAdmin = obj["data"]?["is_admin"]?.b ?? obj["data"]?["isadmin"]?.str == "1";
                         break;
 
                     }

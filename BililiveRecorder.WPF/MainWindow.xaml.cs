@@ -153,7 +153,7 @@ namespace BililiveRecorder.WPF
 
         private void LoadRooms()
         {
-            Recorder.AddRoom(647);
+            Recorder.AddRoom(528);
             Recorder.Rooms[0].streamMonitor.Start();
         }
 

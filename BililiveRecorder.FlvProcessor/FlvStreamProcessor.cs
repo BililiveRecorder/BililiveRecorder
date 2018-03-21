@@ -90,9 +90,10 @@ namespace BililiveRecorder.FlvProcessor
             }
             else if (currentTag == null)
             {
+                _buffer.Write(data, 0, data.Length);
                 if (_buffer.Position >= MIN_BUFFER_SIZE)
                 {
-                    _ParseTag(data);
+                    _ParseTag(_buffer.GetBuffer().Take((int)_buffer.Position).ToArray());
                 }
             }
             else
@@ -185,6 +186,8 @@ namespace BililiveRecorder.FlvProcessor
 
         private void _ParseTag(byte[] data)
         {
+            _buffer.Position = 0;
+            _buffer.SetLength(0);
             byte[] b = new byte[4];
             _buffer.Write(data, 0, data.Length);
             long dataLen = _buffer.Position;
