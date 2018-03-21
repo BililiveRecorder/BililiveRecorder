@@ -30,7 +30,7 @@ namespace BililiveRecorder.Core
 
         public StreamMonitor streamMonitor;
         public FlvStreamProcessor Processor; // FlvProcessor
-        public readonly ObservableCollection<FlvClipProcessor> Clips = new ObservableCollection<FlvClipProcessor>();
+        public ObservableCollection<FlvClipProcessor> Clips { get; private set; } = new ObservableCollection<FlvClipProcessor>();
         private HttpWebRequest webRequest;
         private Stream flvStream;
         private readonly Settings _settings;
@@ -43,6 +43,8 @@ namespace BililiveRecorder.Core
             Roomid = roomid;
 
             UpdateRoomInfo();
+
+            RecordInfo = new RecordInfo(StreamerName);
 
             streamMonitor = new StreamMonitor(RealRoomid);
             streamMonitor.StreamStatusChanged += StreamMonitor_StreamStatusChanged;
@@ -201,7 +203,7 @@ namespace BililiveRecorder.Core
         {
             r.Accept = "*/*";
             r.AllowAutoRedirect = true;
-            r.Connection = "keep-alive";
+            // r.Connection = "keep-alive";
             r.Referer = "https://live.bilibili.com";
             r.Headers["Origin"] = "https://live.bilibili.com";
             r.UserAgent = "Mozilla/5.0 BililiveRecorder/0.0.0.0 (+https://github.com/Bililive/BililiveRecorder;bliverec@genteure.com)";
@@ -226,6 +228,7 @@ namespace BililiveRecorder.Core
         // Called by API or GUI
         public void Clip()
         {
+            if (Processor == null) return;
             var clip = Processor.Clip();
             clip.ClipFinalized += CallBack_ClipFinalized;
             clip.GetFileName = RecordInfo.GetClipFilePath;

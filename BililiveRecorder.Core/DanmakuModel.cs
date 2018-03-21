@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Globalization;
+using System.Text.RegularExpressions;
 
 namespace BililiveRecorder.Core
 {
@@ -182,30 +184,30 @@ namespace BililiveRecorder.Core
             RawData = JSON;
             JSON_Version = 2;
             var obj = new JSONObject(JSON);
-            string cmd = obj["cmd"].str;
+            string cmd = obj["cmd"].str?.Decode();
             switch (cmd)
             {
                 case "LIVE":
                     MsgType = MsgTypeEnum.LiveStart;
-                    roomID = obj["roomid"].str;
+                    roomID = obj["roomid"].str?.Decode();
                     break;
                 case "PREPARING":
                     MsgType = MsgTypeEnum.LiveEnd;
-                    roomID = obj["roomid"].str;
+                    roomID = obj["roomid"].str?.Decode();
                     break;
                 case "DANMU_MSG":
                     MsgType = MsgTypeEnum.Comment;
-                    CommentText = obj["info"][1].str;
+                    CommentText = obj["info"][1].str?.Decode();
                     UserID = (int)obj["info"][2][0].i;
-                    UserName = obj["info"][2][1].str;
-                    isAdmin = obj["info"][2][2].str == "1";
-                    isVIP = obj["info"][2][3].str == "1";
+                    UserName = obj["info"][2][1].str?.Decode();
+                    isAdmin = obj["info"][2][2].str?.Decode() == "1";
+                    isVIP = obj["info"][2][3].str?.Decode() == "1";
                     UserGuardLevel = (int)obj["info"][7].i;
                     break;
                 case "SEND_GIFT":
                     MsgType = MsgTypeEnum.GiftSend;
-                    GiftName = obj["data"]["giftName"].str;
-                    UserName = obj["data"]["uname"].str;
+                    GiftName = obj["data"]["giftName"].str?.Decode();
+                    UserName = obj["data"]["uname"].str?.Decode();
                     UserID = (int)obj["data"]["uid"].i;
                     // Giftrcost = obj["data"]["rcost"].ToString();
                     GiftCount = (int)obj["data"]["num"].i;
@@ -213,17 +215,17 @@ namespace BililiveRecorder.Core
                 case "WELCOME":
                     {
                         MsgType = MsgTypeEnum.Welcome;
-                        UserName = obj["data"]["uname"].str;
+                        UserName = obj["data"]["uname"].str?.Decode();
                         UserID = (int)obj["data"]["uid"].i;
                         isVIP = true;
-                        isAdmin = obj["data"]["isadmin"].str == "1";
+                        isAdmin = obj["data"]["is_admin"].b;
                         break;
 
                     }
                 case "WELCOME_GUARD":
                     {
                         MsgType = MsgTypeEnum.WelcomeGuard;
-                        UserName = obj["data"]["username"].str;
+                        UserName = obj["data"]["username"].str?.Decode();
                         UserID = (int)obj["data"]["uid"].i;
                         UserGuardLevel = (int)obj["data"]["guard_level"].i;
                         break;
@@ -232,7 +234,7 @@ namespace BililiveRecorder.Core
                     {
                         MsgType = MsgTypeEnum.GuardBuy;
                         UserID = (int)obj["data"]["uid"].i;
-                        UserName = obj["data"]["username"].str;
+                        UserName = obj["data"]["username"].str?.Decode();
                         UserGuardLevel = (int)obj["data"]["guard_level"].i;
                         GiftName = UserGuardLevel == 3 ? "舰长" : UserGuardLevel == 2 ? "提督" : UserGuardLevel == 1 ? "总督" : "";
                         GiftCount = (int)obj["data"]["num"].i;
@@ -245,6 +247,6 @@ namespace BililiveRecorder.Core
                     }
             }
         }
-    }
 
+    }
 }

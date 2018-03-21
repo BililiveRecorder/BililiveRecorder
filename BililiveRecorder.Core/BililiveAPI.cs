@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Net;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace BililiveRecorder.Core
 {
@@ -36,7 +38,7 @@ namespace BililiveRecorder.Core
         {
             string url = $@"https://api.live.bilibili.com/room/v1/Room/playUrl?cid={roomid}&quality=0&platform=web";
             var data = HttpGetJson(url);
-            return data?["data"]?["durl"]?[0]?["url"]?.str ?? throw new Exception("没有直播播放地址");
+            return data?["data"]?["durl"]?[0]?["url"]?.str?.Decode() ?? throw new Exception("没有直播播放地址");
         }
 
         /// <summary>
@@ -54,10 +56,13 @@ namespace BililiveRecorder.Core
             {
                 DisplayRoomid = (int)(data?["data"]?["show_room_id"]?.n ?? throw new Exception("未获取到直播间信息")),
                 RealRoomid = (int)(data?["data"]?["room_id"]?.n ?? throw new Exception("未获取到直播间信息")),
-                Username = data?["data"]?["uname"]?.str ?? throw new Exception("未获取到直播间信息"),
-                isStreaming = "LIVE" == (data?["data"]?["status"]?.str ?? throw new Exception("未获取到直播间信息")),
+                Username = data?["data"]?["uname"]?.str?.Decode() ?? throw new Exception("未获取到直播间信息"),
+                isStreaming = "LIVE" == (data?["data"]?["status"]?.str?.Decode() ?? throw new Exception("未获取到直播间信息")),
             };
             return i;
         }
+
+        private static readonly Regex rx = new Regex(@"\\[uU]([0-9A-Fa-f]{4})", RegexOptions.Compiled);
+        internal static string Decode(this string str) => rx.Replace(str, match => ((char)Int32.Parse(match.Value.Substring(2), NumberStyles.HexNumber)).ToString());
     }
 }

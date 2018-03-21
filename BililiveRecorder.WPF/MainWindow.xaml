@@ -20,7 +20,7 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <local:UpdateBarUserControl Grid.Row="0" x:Name="UpdateBar"></local:UpdateBarUserControl>
+        <local:UpdateBarUserControl Grid.Row="0" x:Name="UpdateBar"/>
         <Grid Grid.Row="1">
             <Grid.RowDefinitions>
                 <RowDefinition Height="298*"/>
@@ -36,10 +36,18 @@
                       AutoGenerateColumns="False" IsReadOnly="True"
                       SelectionChanged="RoomList_SelectionChanged">
                 <DataGrid.Columns>
+                    <DataGridTemplateColumn Header="回放剪辑按钮">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Button Click="Clip_Click">剪辑</Button>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
                     <DataGridTextColumn Binding="{Binding Roomid}" Header="房间号"/>
                     <DataGridTextColumn Binding="{Binding RealRoomid}" Header="原房间号"/>
                     <DataGridTextColumn Binding="{Binding StreamerName}" Header="主播名字"/>
                     <DataGridTextColumn Binding="{Binding Status}" Header="录制状态"/>
+                    <DataGridTextColumn Binding="{Binding Clips.Count}" Header="在处理的剪辑数量"/>
                 </DataGrid.Columns>
             </DataGrid>
             <ItemsControl Grid.Row="1" x:Name="Log" ItemsSource="{Binding Logs}" ItemTemplate="{StaticResource LogTemplate}" >
@@ -59,6 +67,7 @@
             <Grid Grid.Column="1" DataContext="{Binding ElementName=RoomList,Path=SelectedItem}">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="10"/>
+                    <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
@@ -85,7 +94,10 @@
                 <TextBlock Grid.Row="4" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right">录制状态：</TextBlock>
                 <TextBlock Grid.Row="4" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left" Text="{Binding Status}"/>
 
-                <Grid Grid.Row="6" Grid.ColumnSpan="2">
+                <TextBlock Grid.Row="5" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right">剪辑数量：</TextBlock>
+                <TextBlock Grid.Row="5" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left" Text="{Binding Clips.Count}"/>
+
+                <Grid Grid.Row="7" Grid.ColumnSpan="2">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="*"/>
                         <RowDefinition Height="*"/>

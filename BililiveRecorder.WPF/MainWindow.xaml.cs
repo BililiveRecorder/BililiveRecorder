@@ -13,7 +13,6 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Documents;
-using System.Windows.Forms;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
@@ -44,7 +43,7 @@ namespace BililiveRecorder.WPF
 
         public MainWindow()
         {
-            _AddLog = (message) => { Logs.Add(message); while (Logs.Count > MAX_LOG_ROW) Logs.RemoveAt(0); };
+            _AddLog = (message) => Log.Dispatcher.Invoke(() => { Logs.Add(message); while (Logs.Count > MAX_LOG_ROW) Logs.RemoveAt(0); });
 
             InitializeComponent();
 
@@ -147,11 +146,15 @@ namespace BililiveRecorder.WPF
         private void LoadSettings()
         {
             // TODO: Load Settings
+            Recorder.Settings.Clip_Future = 10;
+            Recorder.Settings.Clip_Past = 20;
+            Recorder.Settings.SavePath = @"D:\录播姬测试保存";
         }
 
         private void LoadRooms()
         {
-            Recorder.AddRoom(12345);
+            Recorder.AddRoom(647);
+            Recorder.Rooms[0].streamMonitor.Start();
         }
 
         private void TextBlock_MouseRightButtonUp(object sender, MouseButtonEventArgs e)
@@ -163,5 +166,12 @@ namespace BililiveRecorder.WPF
         {
 
         }
+
+        private void Clip_Click(object sender, RoutedEventArgs e)
+        {
+            var rr = (sender as Button).DataContext as RecordedRoom;
+            Task.Run(() => rr.Clip());
+        }
+
     }
 }

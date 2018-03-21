@@ -22,8 +22,9 @@ namespace BililiveRecorder.Core
         {
             if (roomid <= 0)
                 throw new ArgumentOutOfRangeException(nameof(roomid), "房间号需要大于0");
-
-            Rooms.Add(new RecordedRoom(Settings, roomid));
+            var rr = new RecordedRoom(Settings, roomid);
+            rr.RecordInfo.SavePath = Settings.SavePath;
+            Rooms.Add(rr);
         }
 
     }

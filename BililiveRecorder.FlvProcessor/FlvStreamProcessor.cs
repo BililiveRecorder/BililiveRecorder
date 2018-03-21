@@ -224,7 +224,7 @@ namespace BililiveRecorder.FlvProcessor
             if (!Finallized)
                 lock (_writelock)
                 {
-                    return new FlvClipProcessor(Metadata, new List<FlvTag>(Tags), 30);
+                    return new FlvClipProcessor(Metadata, new List<FlvTag>(Tags), Clip_Future);
                 }
             return null;
         }
