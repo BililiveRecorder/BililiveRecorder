@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NLog;
+using System;
 using System.Linq;
 using System.Net.Sockets;
 
@@ -36,6 +37,18 @@ namespace BililiveRecorder.Core
                 if (!val.Equals(p.GetValue(val2)))
                     p.SetValue(val2, val);
             }
+        }
+
+        public static void Log(this Logger logger, int id, LogLevel level, string message, Exception exception = null)
+        {
+            var log = new LogEventInfo()
+            {
+                Level = level,
+                Message = message,
+                Exception = exception,
+            };
+            log.Properties["roomid"] = id;
+            logger.Log(log);
         }
     }
 }

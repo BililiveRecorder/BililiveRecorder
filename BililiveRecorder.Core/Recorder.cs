@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NLog;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Text;
@@ -7,12 +8,22 @@ namespace BililiveRecorder.Core
 {
     public class Recorder
     {
-        public readonly ObservableCollection<RecordedRoom> Rooms = new ObservableCollection<RecordedRoom>();
-        public readonly Settings settings = new Settings();
+        private static readonly Logger logger = LogManager.GetCurrentClassLogger();
+
+        public ObservableCollection<RecordedRoom> Rooms { get; } = new ObservableCollection<RecordedRoom>();
+        public Settings Settings { get; } = new Settings();
 
         public Recorder()
         {
 
+        }
+
+        public void AddRoom(int roomid)
+        {
+            if (roomid <= 0)
+                throw new ArgumentOutOfRangeException(nameof(roomid), "房间号需要大于0");
+
+            Rooms.Add(new RecordedRoom(Settings, roomid));
         }
 
     }

@@ -221,49 +221,38 @@ namespace BililiveRecorder.FlvProcessor
 
         public FlvClipProcessor Clip()
         {
-            lock (_writelock)
-            {
-                return new FlvClipProcessor(Metadata, new List<FlvTag>(Tags), 30);
-            }
+            if (!Finallized)
+                lock (_writelock)
+                {
+                    return new FlvClipProcessor(Metadata, new List<FlvTag>(Tags), 30);
+                }
+            return null;
         }
 
         public void FinallizeFile()
         {
+            if (!Finallized)
+                lock (_writelock)
+                {
+                    Metadata.Meta["duration"] = MaxTimeStamp / 1000.0;
+                    Metadata.Meta["lasttimestamp"] = (double)MaxTimeStamp;
+                    byte[] metadata = Metadata.ToBytes();
 
-            lock (_writelock)
-            {
-                Metadata.Meta["duration"] = MaxTimeStamp / 1000.0;
-                Metadata.Meta["lasttimestamp"] = (double)MaxTimeStamp;
-                byte[] metadata = Metadata.ToBytes();
+                    // 13 for FLV header & "0th" tag size
+                    // 11 for 1st tag header
+                    _fs.Seek(13 + 11, SeekOrigin.Begin);
+                    _fs.Write(metadata, 0, metadata.Length);
 
-                // 13 for FLV header & "0th" tag size
-                // 11 for 1st tag header
-                _fs.Seek(13 + 11, SeekOrigin.Begin);
-                _fs.Write(metadata, 0, metadata.Length);
+                    _fs.Close();
+                    _buffer.Close();
+                    _data.Close();
+                    Tags.Clear();
 
-                _fs.Close();
-                _fs.Dispose();
+                    Finallized = true;
 
-                _buffer.Close();
-                _buffer.Dispose();
-
-                _data.Close();
-                _data.Dispose();
-
-                Tags.Clear();
-
-                Finallized = true;
-
-                StreamFinalized?.Invoke(this, new StreamFinalizedArgs() { StreamProcessor = this });
-
-                // 通知 Clip 也进行保存
-                // 阻止再尝试写入任何数据
-                // 清空 Tags List
-            }
+                    StreamFinalized?.Invoke(this, new StreamFinalizedArgs() { StreamProcessor = this });
+                }
         }
-
-
-
 
         #region IDisposable Support
         private bool disposedValue = false; // To detect redundant calls
@@ -274,29 +263,18 @@ namespace BililiveRecorder.FlvProcessor
             {
                 if (disposing)
                 {
-                    // TODO: dispose managed state (managed objects).
+                    _buffer.Dispose();
+                    _data.Dispose();
+                    _fs.Dispose();
                 }
-
-                // TODO: free unmanaged resources (unmanaged objects) and override a finalizer below.
-                // TODO: set large fields to null.
-
+                Tags.Clear();
                 disposedValue = true;
             }
         }
 
-        // TODO: override a finalizer only if Dispose(bool disposing) above has code to free unmanaged resources.
-        // ~FlvProcessor() {
-        //   // Do not change this code. Put cleanup code in Dispose(bool disposing) above.
-        //   Dispose(false);
-        // }
-
-        // This code added to correctly implement the disposable pattern.
-        void IDisposable.Dispose()
+        public void Dispose()
         {
-            // Do not change this code. Put cleanup code in Dispose(bool disposing) above.
             Dispose(true);
-            // TODO: uncomment the following line if the finalizer is overridden above.
-            // GC.SuppressFinalize(this);
         }
         #endregion
     }

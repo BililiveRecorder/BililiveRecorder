@@ -5,7 +5,7 @@ using System.Text;
 
 namespace BililiveRecorder.FlvProcessor
 {
-    public class FlvClipProcessor : IDisposable
+    public class FlvClipProcessor
     {
         public readonly FlvMetadata Header;
         public readonly List<FlvTag> Tags;
@@ -38,9 +38,11 @@ namespace BililiveRecorder.FlvProcessor
                 Header.Meta["duration"] = Tags[Tags.Count - 1].TimeStamp / 1000.0;
                 Header.Meta["lasttimestamp"] = (double)Tags[Tags.Count - 1].TimeStamp;
 
-                var t = new FlvTag();
-                t.TagType = TagType.DATA;
-                t.Data = Header.ToBytes();
+                var t = new FlvTag
+                {
+                    TagType = TagType.DATA,
+                    Data = Header.ToBytes()
+                };
                 var b = t.ToBytes();
                 fs.Write(b, 0, b.Length);
                 fs.Write(t.Data, 0, t.Data.Length);
@@ -65,41 +67,5 @@ namespace BililiveRecorder.FlvProcessor
         }
 
         public event ClipFinalizedEvent ClipFinalized;
-
-        #region IDisposable Support
-        private bool disposedValue = false; // To detect redundant calls
-
-        protected virtual void Dispose(bool disposing)
-        {
-            if (!disposedValue)
-            {
-                if (disposing)
-                {
-                    // TODO: dispose managed state (managed objects).
-                }
-
-                // TODO: free unmanaged resources (unmanaged objects) and override a finalizer below.
-                // TODO: set large fields to null.
-
-                disposedValue = true;
-            }
-        }
-
-        // TODO: override a finalizer only if Dispose(bool disposing) above has code to free unmanaged resources.
-        // ~FlvClipProcessor() {
-        //   // Do not change this code. Put cleanup code in Dispose(bool disposing) above.
-        //   Dispose(false);
-        // }
-
-        // This code added to correctly implement the disposable pattern.
-        void IDisposable.Dispose()
-        {
-            // Do not change this code. Put cleanup code in Dispose(bool disposing) above.
-            Dispose(true);
-            // TODO: uncomment the following line if the finalizer is overridden above.
-            // GC.SuppressFinalize(this);
-        }
-        #endregion
-
     }
 }

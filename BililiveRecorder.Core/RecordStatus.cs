@@ -6,7 +6,8 @@ namespace BililiveRecorder.Core
 {
     public enum RecordStatus
     {
+        Waiting,
         Recording,
-        NotStreaming,
+        Idle,
     }
 }

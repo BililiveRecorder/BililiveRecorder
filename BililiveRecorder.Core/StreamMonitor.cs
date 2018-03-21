@@ -1,31 +1,31 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using NLog;
+using System;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace BililiveRecorder.Core
 {
     public class StreamMonitor
     {
+        private static readonly Logger logger = LogManager.GetCurrentClassLogger();
+
         public int Roomid { get; private set; } = 0;
         public event StreamStatusChangedEvent StreamStatusChanged;
         public readonly DanmakuReceiver receiver = new DanmakuReceiver();
+        private CancellationTokenSource TokenSource;
 
         public StreamMonitor(int roomid)
         {
             Roomid = roomid;
 
-            receiver.Connected += Receiver_Connected;
             receiver.Disconnected += Receiver_Disconnected;
-            receiver.LogMessage += Receiver_LogMessage;
             receiver.ReceivedDanmaku += Receiver_ReceivedDanmaku;
             receiver.ReceivedRoomCount += Receiver_ReceivedRoomCount;
-
         }
 
         private void Receiver_ReceivedRoomCount(object sender, ReceivedRoomCountArgs e)
         {
-            throw new NotImplementedException();
+            logger.Log(Roomid, LogLevel.Trace, "直播间人气: " + e.UserCount.ToString());
         }
 
         private void Receiver_ReceivedDanmaku(object sender, ReceivedDanmakuArgs e)
@@ -42,50 +42,57 @@ namespace BililiveRecorder.Core
             }
         }
 
-        private void Receiver_LogMessage(object sender, LogMessageArgs e)
-        {
-            // TODO: Log
-        }
-
         private void Receiver_Disconnected(object sender, DisconnectEvtArgs e)
         {
-            if (e.Error != null)
+            bool connect_result = false;
+            while (!connect_result && !TokenSource.Token.IsCancellationRequested)
             {
+                Thread.Sleep(1000 * 30); // 备注：这是运行在 ReceiveMessageLoop 线程上的
+                logger.Log(Roomid, LogLevel.Info, "重连弹幕服务器...");
+                connect_result = receiver.Connect(Roomid);
+            }
 
+            if (connect_result)
+            {
+                logger.Log(Roomid, LogLevel.Info, "弹幕服务器重连成功");
             }
         }
-
-        private void Receiver_Connected(object sender, ConnectedEvtArgs e)
-        { }
 
         private void _StartRecord(TriggerType status)
         {
-            Task.Run(() => StreamStatusChanged?.Invoke(this, new StreamStatusChangedArgs() { status = status }));
+            Task.Run(() => StreamStatusChanged?.Invoke(this, new StreamStatusChangedArgs() { type = status }));
         }
 
-        public void Start()
+        private void HttpCheck()
         {
-            if (receiver.Connect(Roomid))
+            try
             {
-                var info = BililiveAPI.GetRoomInfo(Roomid);
-                if (info.isStreaming)
-                {
+                if (BililiveAPI.GetRoomInfo(Roomid).isStreaming)
                     _StartRecord(TriggerType.HttpApi);
-                }
             }
-            else
+            catch (Exception ex)
             {
-                throw receiver.Error;
+                logger.Log(Roomid, LogLevel.Warn, "获取直播间开播状态出错", ex);
             }
+        }
 
+        public bool Start()
+        {
+            if (!receiver.Connect(Roomid))
+                return false;
+            logger.Log(Roomid, LogLevel.Info, "弹幕服务器连接成功");
+
+            // Run 96 times a day.
+            TokenSource = new CancellationTokenSource();
+            Repeat.Interval(TimeSpan.FromMinutes(15), HttpCheck, TokenSource.Token);
+            return true;
         }
 
         public void Stop()
         {
-            if (receiver.isConnected)
-            {
+            if (receiver.IsConnected)
                 receiver.Disconnect();
-            }
+            TokenSource?.Cancel();
         }
 
         public void Check()

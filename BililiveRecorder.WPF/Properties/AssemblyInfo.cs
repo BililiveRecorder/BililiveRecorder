@@ -7,12 +7,12 @@ using System.Windows;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("BililiveRecorder.WPF")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyTitle("B站录播姬")]
+[assembly: AssemblyDescription("录制 BiliBili 直播")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("BililiveRecorder.WPF")]
-[assembly: AssemblyCopyright("Copyright ©  2018")]
+[assembly: AssemblyCompany("Genteure")]
+[assembly: AssemblyProduct("B站录播姬")]
+[assembly: AssemblyCopyright("Copyright Genteure ©  2018")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

@@ -5,8 +5,135 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:BililiveRecorder.WPF"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        MinHeight="400" MinWidth="650"
+        Title="录播姬" Height="450" Width="800"
+        Loaded="Window_Loaded">
     <Grid>
-        
+        <Grid.Resources>
+            <ResourceDictionary>
+                <DataTemplate x:Key="LogTemplate" >
+                    <TextBlock Text="{Binding}" TextWrapping="Wrap" Cursor="Hand" MouseRightButtonUp="TextBlock_MouseRightButtonUp"/>
+                </DataTemplate>
+            </ResourceDictionary>
+        </Grid.Resources>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <local:UpdateBarUserControl Grid.Row="0" x:Name="UpdateBar"></local:UpdateBarUserControl>
+        <Grid Grid.Row="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="298*"/>
+                <RowDefinition Height="121*"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="2*"/>
+                <ColumnDefinition Width="1*"/>
+            </Grid.ColumnDefinitions>
+            <DataGrid x:Name="RoomList" ItemsSource="{Binding Recorder.Rooms}"
+                      SelectionMode="Extended" SelectionUnit="FullRow"
+                      CanUserAddRows="False" CanUserDeleteRows="False"
+                      AutoGenerateColumns="False" IsReadOnly="True"
+                      SelectionChanged="RoomList_SelectionChanged">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Binding="{Binding Roomid}" Header="房间号"/>
+                    <DataGridTextColumn Binding="{Binding RealRoomid}" Header="原房间号"/>
+                    <DataGridTextColumn Binding="{Binding StreamerName}" Header="主播名字"/>
+                    <DataGridTextColumn Binding="{Binding Status}" Header="录制状态"/>
+                </DataGrid.Columns>
+            </DataGrid>
+            <ItemsControl Grid.Row="1" x:Name="Log" ItemsSource="{Binding Logs}" ItemTemplate="{StaticResource LogTemplate}" >
+                <ItemsControl.Template>
+                    <ControlTemplate>
+                        <ScrollViewer x:Name="LogScroll" CanContentScroll="True">
+                            <ItemsPresenter/>
+                        </ScrollViewer>
+                    </ControlTemplate>
+                </ItemsControl.Template>
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <VirtualizingStackPanel IsItemsHost="True"/>
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+            </ItemsControl>
+            <Grid Grid.Column="1" DataContext="{Binding ElementName=RoomList,Path=SelectedItem}">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="10"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="25"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="2*"/>
+                </Grid.ColumnDefinitions>
+
+
+                <TextBlock Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right">房间号：</TextBlock>
+                <TextBlock Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left" Text="{Binding Roomid}"/>
+
+                <TextBlock Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right">原房间号：</TextBlock>
+                <TextBlock Grid.Row="2" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left" Text="{Binding RealRoomid}"/>
+
+                <TextBlock Grid.Row="3" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right">主播名字：</TextBlock>
+                <TextBlock Grid.Row="3" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left" Text="{Binding StreamerName}"/>
+
+                <TextBlock Grid.Row="4" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right">录制状态：</TextBlock>
+                <TextBlock Grid.Row="4" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left" Text="{Binding Status}"/>
+
+                <Grid Grid.Row="6" Grid.ColumnSpan="2">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Button Grid.Column="0" Margin="5,0">启用自动录制</Button>
+                    <Button Grid.Column="1" Margin="5,0">禁用自动录制</Button>
+                    <Button Grid.Row="1" Grid.ColumnSpan="2" Margin="5">手动触发开始录制</Button>
+                    <Button Grid.Row="2" Grid.ColumnSpan="2" Margin="5,0">删除这个直播间</Button>
+                </Grid>
+            </Grid>
+            <Grid Grid.Column="1" Grid.Row="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <Grid Grid.Row="0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock VerticalAlignment="Center" Margin="5,2" Grid.Column="0">添加直播间：</TextBlock>
+                    <TextBox VerticalAlignment="Center" Margin="0,2" Grid.Column="1"></TextBox>
+                    <Button VerticalAlignment="Center" Margin="5,2" Padding="10,0" Grid.Column="2">添加</Button>
+                </Grid>
+                <Grid Grid.Row="1">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Button Grid.Column="0" Margin="5,2">启用所有直播间</Button>
+                    <Button Grid.Column="1" Margin="5,2">禁用所有直播间</Button>
+                </Grid>
+                <Grid Grid.Row="3">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <Button Width="50" Margin="5" Content="设置" Grid.Column="1"/>
+                </Grid>
+            </Grid>
+        </Grid>
     </Grid>
 </Window>

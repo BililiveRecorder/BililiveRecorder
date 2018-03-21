@@ -22,10 +22,9 @@ namespace BililiveRecorder.Core
                 {
                     for (; ; )
                     {
+                        action();
                         if (token.WaitCancellationRequested(pollInterval))
                             break;
-
-                        action();
                     }
                 }, token, TaskCreationOptions.LongRunning, TaskScheduler.Default);
         }
