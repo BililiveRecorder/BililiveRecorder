@@ -14,11 +14,12 @@ namespace BililiveRecorder.FlvProcessor
 
         public byte[] Data = null;
 
-        public byte[] ToBytes()
+        public byte[] ToBytes(bool useDataSize)
         {
             var tag = new byte[11];
             tag[0] = (byte)TagType;
-            Buffer.BlockCopy(BitConverter.GetBytes(Data.Length).ToBE(), 0, tag, 1, 3);
+            var size = BitConverter.GetBytes(useDataSize ? Data.Length : TagSize).ToBE();
+            Buffer.BlockCopy(size, 1, tag, 1, 3);
 
             byte[] timing = new byte[4];
             Buffer.BlockCopy(BitConverter.GetBytes(this.TimeStamp).ToBE(), 0, timing, 0, timing.Length);

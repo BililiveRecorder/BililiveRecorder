@@ -34,6 +34,7 @@ namespace BililiveRecorder.FlvProcessor
             using (var fs = new FileStream(GetFileName(), FileMode.CreateNew, FileAccess.ReadWrite))
             {
                 fs.Write(FlvStreamProcessor.FLV_HEADER_BYTES, 0, FlvStreamProcessor.FLV_HEADER_BYTES.Length);
+                fs.Write(new byte[] { 0, 0, 0, 0, }, 0, 4);
 
                 Header.Meta["duration"] = Tags[Tags.Count - 1].TimeStamp / 1000.0;
                 Header.Meta["lasttimestamp"] = (double)Tags[Tags.Count - 1].TimeStamp;
@@ -43,7 +44,7 @@ namespace BililiveRecorder.FlvProcessor
                     TagType = TagType.DATA,
                     Data = Header.ToBytes()
                 };
-                var b = t.ToBytes();
+                var b = t.ToBytes(true);
                 fs.Write(b, 0, b.Length);
                 fs.Write(t.Data, 0, t.Data.Length);
                 fs.Write(BitConverter.GetBytes(t.Data.Length + b.Length).ToBE(), 0, 4);
@@ -53,7 +54,7 @@ namespace BililiveRecorder.FlvProcessor
                 Tags.ForEach(tag =>
                 {
                     tag.TimeStamp -= timestamp;
-                    var vs = tag.ToBytes();
+                    var vs = tag.ToBytes(true);
                     fs.Write(vs, 0, vs.Length);
                     fs.Write(tag.Data, 0, tag.Data.Length);
                     fs.Write(BitConverter.GetBytes(tag.Data.Length + vs.Length).ToBE(), 0, 4);

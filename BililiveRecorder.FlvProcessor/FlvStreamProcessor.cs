@@ -123,12 +123,13 @@ namespace BililiveRecorder.FlvProcessor
                 if (tag.TagType == TagType.DATA)
                 {
                     _fs.Write(FLV_HEADER_BYTES, 0, FLV_HEADER_BYTES.Length);
+                    _fs.Write(new byte[] { 0, 0, 0, 0, }, 0, 4);
                     Metadata = FlvMetadata.Parse(tag.Data);
 
                     // TODO: 添加录播姬标记、录制信息
 
                     tag.Data = Metadata.ToBytes();
-                    var b = tag.ToBytes();
+                    var b = tag.ToBytes(true);
                     _fs.Write(b, 0, b.Length);
                     _fs.Write(tag.Data, 0, tag.Data.Length);
                     _fs.Write(BitConverter.GetBytes(tag.Data.Length + b.Length).ToBE(), 0, 4);
@@ -175,7 +176,7 @@ namespace BililiveRecorder.FlvProcessor
                 Tags.Where(x => (MaxTimeStamp - x.TimeStamp) > (Clip_Past * SEC_TO_MS)).Any(x => Tags.Remove(x)); // 移除过旧的数据
 
                 // 写入硬盘
-                var b = tag.ToBytes();
+                var b = tag.ToBytes(true);
                 _fs.Write(b, 0, b.Length);
                 _fs.Write(tag.Data, 0, tag.Data.Length);
                 _fs.Write(BitConverter.GetBytes(tag.Data.Length + b.Length).ToBE(), 0, 4); // Last Tag Size
