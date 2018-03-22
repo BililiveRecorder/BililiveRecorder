@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Deployment.Application;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -50,7 +51,8 @@ namespace BililiveRecorder.WPF
             Recorder = new Recorder();
             DataContext = this;
 
-
+            if (Debugger.IsAttached)
+                new DebugConsole(this).Show();
         }
 
 
@@ -153,7 +155,7 @@ namespace BililiveRecorder.WPF
 
         private void LoadRooms()
         {
-            Recorder.AddRoom(528);
+            Recorder.AddRoom(7275510);
             Recorder.Rooms[0].streamMonitor.Start();
         }
 

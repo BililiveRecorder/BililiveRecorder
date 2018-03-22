@@ -88,6 +88,14 @@ namespace BililiveRecorder.Core
             _StartRecord(TriggerType.Manual);
         }
 
+        public void StopRecord()
+        {
+            if (flvStream != null)
+            {
+                flvStream.Close();
+            }
+        }
+
         private void _StartRecord(TriggerType triggerType)
         {
             /* *

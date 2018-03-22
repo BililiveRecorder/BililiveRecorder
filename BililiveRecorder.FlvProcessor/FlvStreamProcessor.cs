@@ -150,8 +150,6 @@ namespace BililiveRecorder.FlvProcessor
                             hasOffset = true;
                             BaseTimeStamp = tag.TimeStamp;
                             Debug.Write(string.Format("Reseting to this base timestamp {0} ms\n", BaseTimeStamp));
-                            tag.TimeStamp = 0;
-                            MaxTimeStamp = 0;
                         }
                         break;
                     case TagType.VIDEO:
@@ -161,8 +159,6 @@ namespace BililiveRecorder.FlvProcessor
                             hasOffset = true;
                             BaseTimeStamp = tag.TimeStamp;
                             Debug.Write(string.Format("Reseting to this base timestamp {0} ms\n", BaseTimeStamp));
-                            tag.TimeStamp = 0;
-                            MaxTimeStamp = 0;
                         }
                         break;
                     case TagType.DATA:
@@ -170,8 +166,17 @@ namespace BililiveRecorder.FlvProcessor
                         break;
                 }
 
-                tag.TimeStamp -= BaseTimeStamp; // 修复时间戳
-                MaxTimeStamp = Math.Max(MaxTimeStamp, tag.TimeStamp);
+                if (hasOffset)
+                {
+                    tag.TimeStamp -= BaseTimeStamp; // 修复时间戳
+                    MaxTimeStamp = Math.Max(MaxTimeStamp, tag.TimeStamp);
+                }
+                else
+                {
+                    tag.TimeStamp = 0;
+                    MaxTimeStamp = 0;
+                }
+
                 Tags.Add(tag); // Clip 缓存
                 Tags.Where(x => (MaxTimeStamp - x.TimeStamp) > (Clip_Past * SEC_TO_MS)).Any(x => Tags.Remove(x)); // 移除过旧的数据
 
@@ -228,7 +233,7 @@ namespace BililiveRecorder.FlvProcessor
             if (!Finallized)
                 lock (_writelock)
                 {
-                    return new FlvClipProcessor(Metadata, new List<FlvTag>(Tags), Clip_Future);
+                    return new FlvClipProcessor(Metadata, new List<FlvTag>(Tags.ToArray()), Clip_Future);
                 }
             return null;
         }

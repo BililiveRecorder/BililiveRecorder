@@ -91,10 +91,17 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="DebugConsole.xaml.cs">
+      <DependentUpon>DebugConsole.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Settings.cs" />
     <Compile Include="UpdateBarUserControl.xaml.cs">
       <DependentUpon>UpdateBarUserControl.xaml</DependentUpon>
     </Compile>
+    <Page Include="DebugConsole.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
