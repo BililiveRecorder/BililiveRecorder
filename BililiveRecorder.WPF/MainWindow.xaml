@@ -107,10 +107,11 @@
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
-                    <Button Grid.Column="0" Margin="5,0">启用自动录制</Button>
-                    <Button Grid.Column="1" Margin="5,0">禁用自动录制</Button>
-                    <Button Grid.Row="1" Grid.ColumnSpan="2" Margin="5">手动触发开始录制</Button>
-                    <Button Grid.Row="2" Grid.ColumnSpan="2" Margin="5,0">删除这个直播间</Button>
+                    <Button Grid.Column="0" Margin="5,0" Click="EnableAutoRec">启用自动录制</Button>
+                    <Button Grid.Column="1" Margin="5,0" Click="DisableAutoRec">禁用自动录制</Button>
+                    <Button Grid.Row="1" Grid.Column="0" Margin="5" Click="TriggerRec">手动触发开始录制</Button>
+                    <Button Grid.Row="1" Grid.Column="1" Margin="5" Click="CutRec">切断当前录制</Button>
+                    <Button Grid.Row="2" Grid.ColumnSpan="2" Margin="5,0" Click="RemoveRecRoom">删除这个直播间</Button>
                 </Grid>
             </Grid>
             <Grid Grid.Column="1" Grid.Row="1">
@@ -127,23 +128,23 @@
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
                     <TextBlock VerticalAlignment="Center" Margin="5,2" Grid.Column="0">添加直播间：</TextBlock>
-                    <TextBox VerticalAlignment="Center" Margin="0,2" Grid.Column="1"></TextBox>
-                    <Button VerticalAlignment="Center" Margin="5,2" Padding="10,0" Grid.Column="2">添加</Button>
+                    <TextBox VerticalAlignment="Center" Margin="0,2" Grid.Column="1" x:Name="AddRoomidTextBox"/>
+                    <Button VerticalAlignment="Center" Margin="5,2" Padding="10,0" Grid.Column="2" x:Name="AddRoomidButton" Click="AddRoomidButton_Click">添加</Button>
                 </Grid>
                 <Grid Grid.Row="1">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
-                    <Button Grid.Column="0" Margin="5,2">启用所有直播间</Button>
-                    <Button Grid.Column="1" Margin="5,2">禁用所有直播间</Button>
+                    <Button Grid.Column="0" Margin="5,2" Click="EnableAllAutoRec">启用所有直播间</Button>
+                    <Button Grid.Column="1" Margin="5,2" Click="DisableAllAutoRec">禁用所有直播间</Button>
                 </Grid>
                 <Grid Grid.Row="3">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
-                    <Button Width="50" Margin="5" Content="设置" Grid.Column="1"/>
+                    <Button x:Name="SettingsButton" Click="SettingsButton_Click" Width="50" Margin="5" Content="设置" Grid.Column="1"/>
                 </Grid>
             </Grid>
         </Grid>

@@ -8,6 +8,9 @@ using System.Text;
 
 namespace BililiveRecorder.FlvProcessor
 {
+    // TODO: 重构 Tag 解析流程
+    // TODO: 添加测试
+    // 注：下载时会按照 4 11 N bytes 下载
     public class FlvStreamProcessor : IDisposable
     {
         internal const int SEC_TO_MS = 1000; // 1 second = 1000 ms

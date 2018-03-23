@@ -30,3 +30,8 @@
   - 被 Clip 后的生成的 `FlvStreamProcessor` 应当拒绝再执行 Clip
   - (?) 主 `FlvStreamProcessor` 应当自动传递处理后的数据给 Clips
 - 输出位置应当尽量由调用方决定（但不能直接接受 Stream ，因为要重写覆盖文件头）
+
+## 各种东西的叫法
+
+- 录播姬
+- 回放剪辑

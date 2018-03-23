@@ -12,7 +12,7 @@ namespace BililiveRecorder.Core
         public int Roomid { get; private set; } = 0;
         public event StreamStatusChangedEvent StreamStatusChanged;
         public readonly DanmakuReceiver receiver = new DanmakuReceiver();
-        private CancellationTokenSource TokenSource;
+        private CancellationTokenSource TokenSource = null;
 
         public StreamMonitor(int roomid)
         {
@@ -78,13 +78,17 @@ namespace BililiveRecorder.Core
 
         public bool Start()
         {
-            if (!receiver.Connect(Roomid))
-                return false;
+            if (!receiver.IsConnected)
+                if (!receiver.Connect(Roomid))
+                    return false;
             logger.Log(Roomid, LogLevel.Info, "弹幕服务器连接成功");
 
             // Run 96 times a day.
-            TokenSource = new CancellationTokenSource();
-            Repeat.Interval(TimeSpan.FromMinutes(15), HttpCheck, TokenSource.Token);
+            if (TokenSource == null)
+            {
+                TokenSource = new CancellationTokenSource();
+                Repeat.Interval(TimeSpan.FromMinutes(15), HttpCheck, TokenSource.Token);
+            }
             return true;
         }
 
@@ -93,6 +97,7 @@ namespace BililiveRecorder.Core
             if (receiver.IsConnected)
                 receiver.Disconnect();
             TokenSource?.Cancel();
+            TokenSource = null;
         }
 
         public void Check()

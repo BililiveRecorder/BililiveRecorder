@@ -18,14 +18,29 @@ namespace BililiveRecorder.Core
 
         }
 
+        /// <summary>
+        /// 添加直播间到录播姬
+        /// </summary>
+        /// <param name="roomid">房间号（支持短号）</param>
+        /// <exception cref="ArgumentOutOfRangeException"/>
         public void AddRoom(int roomid)
         {
             if (roomid <= 0)
                 throw new ArgumentOutOfRangeException(nameof(roomid), "房间号需要大于0");
             var rr = new RecordedRoom(Settings, roomid);
-            rr.RecordInfo.SavePath = Settings.SavePath;
+            rr.RecordInfo.SavePath = Settings.SavePath;//TODO: 录制文件保存位置
             Rooms.Add(rr);
         }
 
+        /// <summary>
+        /// 从录播姬移除直播间
+        /// </summary>
+        /// <param name="rr">直播间</param>
+        public void RemoveRoom(RecordedRoom rr)
+        {
+            rr.Stop();
+            rr.StopRecord();
+            Rooms.Remove(rr);
+        }
     }
 }

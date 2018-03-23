@@ -172,6 +172,8 @@ namespace BililiveRecorder.Core
                         {
                             _CleanupFlvRequest();
                             logger.Log(RealRoomid, LogLevel.Info, "直播流下载连接出错。" + (triggerType != TriggerType.HttpApiRecheck ? "将在30秒后重试启动。" : ""), ex);
+                            // 有时这里不算是“出错”，比如手动切断下载的情况。
+                            // TODO: 优化此处提示 & 处理逻辑
                             if (triggerType != TriggerType.HttpApiRecheck)
                                 streamMonitor.CheckAfterSeconeds(30);
                         }
