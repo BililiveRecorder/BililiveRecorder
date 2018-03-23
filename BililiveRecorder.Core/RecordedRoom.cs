@@ -38,7 +38,7 @@ namespace BililiveRecorder.Core
         public RecordedRoom(Settings settings, int roomid)
         {
             _settings = settings;
-            _settings.PropertyChanged += _settings_PropertyChanged;
+            _settings_Setup();
 
             Roomid = roomid;
 
@@ -62,6 +62,13 @@ namespace BililiveRecorder.Core
         {
             streamMonitor.Stop();
             Status = RecordStatus.Idle;
+        }
+
+        private void _settings_Setup()
+        {
+            _settings.PropertyChanged += _settings_PropertyChanged;
+            Processor.Clip_Future = _settings.Clip_Future;
+            Processor.Clip_Past = _settings.Clip_Past;
         }
 
         private void _settings_PropertyChanged(object sender, PropertyChangedEventArgs e)
