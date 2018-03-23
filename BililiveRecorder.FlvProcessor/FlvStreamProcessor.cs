@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NLog;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -13,6 +14,8 @@ namespace BililiveRecorder.FlvProcessor
     // 注：下载时会按照 4 11 N bytes 下载
     public class FlvStreamProcessor : IDisposable
     {
+        private static readonly Logger logger = LogManager.GetCurrentClassLogger();
+
         internal const int SEC_TO_MS = 1000; // 1 second = 1000 ms
         internal const int MIN_BUFFER_SIZE = 1024 * 2;
         internal static readonly byte[] FLV_HEADER_BYTES = new byte[]
@@ -50,7 +53,7 @@ namespace BililiveRecorder.FlvProcessor
 
         private readonly FileStream _fs;
 
-        public int MaxTimeStamp { get; private set; } = -1;
+        public int MaxTimeStamp { get; private set; } = 0;
         public int BaseTimeStamp { get; private set; } = 0;
         public int TagVideoCount { get; private set; } = 0;
         public int TagAudioCount { get; private set; } = 0;
@@ -81,6 +84,12 @@ namespace BililiveRecorder.FlvProcessor
             }
             else if (!_headerParsed)
             {
+                if (data[4] != FLV_HEADER_BYTES[4])
+                {
+                    // 七牛 直播云 的高端 FLV 头
+                    logger.Debug("FLV头[4]的值是 {0}", data[4]);
+                    data[4] = FLV_HEADER_BYTES[4];
+                }
                 var r = new bool[FLV_HEADER_BYTES.Length];
                 for (int i = 0; i < FLV_HEADER_BYTES.Length; i++)
                     r[i] = data[i] == FLV_HEADER_BYTES[i];
@@ -144,44 +153,53 @@ namespace BililiveRecorder.FlvProcessor
             }
             else
             {
-                switch (tag.TagType)
+                if (!hasOffset)
                 {
-                    case TagType.AUDIO:
-                        TagAudioCount++;
-                        if (!hasOffset && TagAudioCount == 2)
-                        {
-                            hasOffset = true;
-                            BaseTimeStamp = tag.TimeStamp;
-                            Debug.Write(string.Format("Reseting to this base timestamp {0} ms\n", BaseTimeStamp));
-                        }
-                        break;
-                    case TagType.VIDEO:
+                    if (tag.TagType == TagType.VIDEO)
+                    {
                         TagVideoCount++;
-                        if (!hasOffset && TagVideoCount == 2)
+                        if (TagVideoCount < 2)
                         {
-                            hasOffset = true;
-                            BaseTimeStamp = tag.TimeStamp;
-                            Debug.Write(string.Format("Reseting to this base timestamp {0} ms\n", BaseTimeStamp));
+                            logger.Trace("第一个 Video Tag 时间戳 {0} ms", tag.TimeStamp);
                         }
-                        break;
-                    case TagType.DATA:
-                    default:
-                        break;
+                        else
+                        {
+                            BaseTimeStamp = tag.TimeStamp;
+                            hasOffset = true;
+                            logger.Trace("重设时间戳 {0} 毫秒", BaseTimeStamp);
+                        }
+                    }
+                    else if (tag.TagType == TagType.AUDIO)
+                    {
+                        TagAudioCount++;
+                        if (TagAudioCount < 2)
+                        {
+                            logger.Trace("第一个 Audio Tag 时间戳 {0} ms", tag.TimeStamp);
+                        }
+                        else
+                        {
+                            BaseTimeStamp = tag.TimeStamp;
+                            hasOffset = true;
+                            logger.Trace("重设时间戳 {0} 毫秒", BaseTimeStamp);
+                        }
+                    }
                 }
+
 
                 if (hasOffset)
                 {
                     tag.TimeStamp -= BaseTimeStamp; // 修复时间戳
+                    if (tag.TimeStamp < 0)
+                        tag.TimeStamp = 0;
                     MaxTimeStamp = Math.Max(MaxTimeStamp, tag.TimeStamp);
                 }
                 else
                 {
                     tag.TimeStamp = 0;
-                    MaxTimeStamp = 0;
                 }
 
                 Tags.Add(tag); // Clip 缓存
-                Tags.Where(x => (MaxTimeStamp - x.TimeStamp) > (Clip_Past * SEC_TO_MS)).Any(x => Tags.Remove(x)); // 移除过旧的数据
+                Tags.RemoveAll(x => (MaxTimeStamp - x.TimeStamp) > (Clip_Past * SEC_TO_MS)); // 移除过旧的数据
 
                 // 写入硬盘
                 var b = tag.ToBytes(true);
@@ -190,7 +208,7 @@ namespace BililiveRecorder.FlvProcessor
                 _fs.Write(BitConverter.GetBytes(tag.Data.Length + b.Length).ToBE(), 0, 4); // Last Tag Size
 
                 TagProcessed?.Invoke(this, new TagProcessedArgs() { Tag = tag });
-            }
+            } // if (Metadata == null) else
         }
 
         private void _ParseTag(byte[] data)

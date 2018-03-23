@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NLog;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
@@ -7,6 +8,8 @@ namespace BililiveRecorder.FlvProcessor
 {
     public class FlvClipProcessor
     {
+        private static readonly Logger logger = LogManager.GetCurrentClassLogger();
+
         public readonly FlvMetadata Header;
         public readonly List<FlvTag> Tags;
         private int target = -1;
@@ -18,6 +21,8 @@ namespace BililiveRecorder.FlvProcessor
             Header = header;
             Tags = past;
             target = Tags[Tags.Count - 1].TimeStamp + (future * FlvStreamProcessor.SEC_TO_MS);
+            logger.Trace("Clip 创建 Tags.Count={0} Tags[0].TimeStamp={1} Tags[Tags.Count-1].TimeStamp={2} Tags里秒数={3}",
+                Tags.Count, Tags[0].TimeStamp, Tags[Tags.Count - 1].TimeStamp, (Tags[Tags.Count - 1].TimeStamp - Tags[0].TimeStamp) / 1000d);
         }
 
         public void AddTag(FlvTag tag)

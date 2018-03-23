@@ -155,8 +155,8 @@ namespace BililiveRecorder.WPF
 
         private void LoadRooms()
         {
-            Recorder.AddRoom(7275510);
-            Recorder.Rooms[0].Start();
+            // Recorder.AddRoom(7275510);
+            // Recorder.Rooms[0].Start();
         }
 
         private void TextBlock_MouseRightButtonUp(object sender, MouseButtonEventArgs e)
