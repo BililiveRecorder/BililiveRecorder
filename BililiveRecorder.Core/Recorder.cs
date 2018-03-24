@@ -40,7 +40,7 @@ namespace BililiveRecorder.Core
         {
             rr.Stop();
             rr.StopRecord();
-            Rooms.Remove(rr);
+            Rooms.Remove(rr); // TODO: fix
         }
     }
 }

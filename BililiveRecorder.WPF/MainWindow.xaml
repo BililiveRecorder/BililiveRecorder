@@ -23,8 +23,9 @@
         <local:UpdateBarUserControl Grid.Row="0" x:Name="UpdateBar"/>
         <Grid Grid.Row="1">
             <Grid.RowDefinitions>
-                <RowDefinition Height="298*"/>
-                <RowDefinition Height="121*"/>
+                <RowDefinition Height="7*"/>
+                <RowDefinition Height="4*"/>
+                <RowDefinition Height="4*"/>
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="2*"/>
@@ -33,8 +34,7 @@
             <DataGrid x:Name="RoomList" ItemsSource="{Binding Recorder.Rooms}"
                       SelectionMode="Extended" SelectionUnit="FullRow"
                       CanUserAddRows="False" CanUserDeleteRows="False"
-                      AutoGenerateColumns="False" IsReadOnly="True"
-                      SelectionChanged="RoomList_SelectionChanged">
+                      AutoGenerateColumns="False" IsReadOnly="True">
                 <DataGrid.Columns>
                     <DataGridTemplateColumn Header="回放剪辑按钮">
                         <DataGridTemplateColumn.CellTemplate>
@@ -50,7 +50,7 @@
                     <DataGridTextColumn Binding="{Binding Clips.Count}" Header="在处理的剪辑数量"/>
                 </DataGrid.Columns>
             </DataGrid>
-            <ItemsControl Grid.Row="1" x:Name="Log" ItemsSource="{Binding Logs}" ItemTemplate="{StaticResource LogTemplate}" >
+            <ItemsControl Grid.Row="1" Grid.RowSpan="2" x:Name="Log" ItemsSource="{Binding Logs}" ItemTemplate="{StaticResource LogTemplate}" >
                 <ItemsControl.Template>
                     <ControlTemplate>
                         <ScrollViewer x:Name="LogScroll" CanContentScroll="True">
@@ -64,7 +64,7 @@
                     </ItemsPanelTemplate>
                 </ItemsControl.ItemsPanel>
             </ItemsControl>
-            <Grid Grid.Column="1" DataContext="{Binding ElementName=RoomList,Path=SelectedItem}">
+            <Grid Grid.Column="1" DataContext="{Binding ElementName=RoomList,Path=SelectedItem}" Grid.RowSpan="2">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="10"/>
                     <RowDefinition Height="Auto"/>
@@ -114,7 +114,7 @@
                     <Button Grid.Row="2" Grid.ColumnSpan="2" Margin="5,0" Click="RemoveRecRoom">删除这个直播间</Button>
                 </Grid>
             </Grid>
-            <Grid Grid.Column="1" Grid.Row="1">
+            <Grid Grid.Column="1" Grid.Row="2">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>

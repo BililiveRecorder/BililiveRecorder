@@ -51,8 +51,6 @@ namespace BililiveRecorder.WPF
             Recorder = new Recorder();
             DataContext = this;
 
-            if (Debugger.IsAttached)
-                new DebugConsole(this).Show();
         }
 
 
@@ -165,11 +163,6 @@ namespace BililiveRecorder.WPF
             {
                 Clipboard.SetText(textBlock.Text);
             }
-        }
-
-        private void RoomList_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            // 不再需要了（？）
         }
 
         /// <summary>

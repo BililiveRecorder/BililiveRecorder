@@ -38,7 +38,7 @@ namespace BililiveRecorder.Core
         public RecordedRoom(Settings settings, int roomid)
         {
             _settings = settings;
-            _settings_Setup();
+            _settings.PropertyChanged += _settings_PropertyChanged;
 
             Roomid = roomid;
 
@@ -62,13 +62,6 @@ namespace BililiveRecorder.Core
         {
             streamMonitor.Stop();
             Status = RecordStatus.Idle;
-        }
-
-        private void _settings_Setup()
-        {
-            _settings.PropertyChanged += _settings_PropertyChanged;
-            Processor.Clip_Future = _settings.Clip_Future;
-            Processor.Clip_Past = _settings.Clip_Past;
         }
 
         private void _settings_PropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -147,6 +140,8 @@ namespace BililiveRecorder.Core
                     Processor.TagProcessed += Processor_TagProcessed;
                     Processor.StreamFinalized += Processor_StreamFinalized;
                     Processor.GetFileName = RecordInfo.GetStreamFilePath;
+                    Processor.Clip_Future = _settings.Clip_Future;
+                    Processor.Clip_Past = _settings.Clip_Past;
 
                     flvStream = response.GetResponseStream();
                     const int BUF_SIZE = 1024 * 8;// 8 KiB

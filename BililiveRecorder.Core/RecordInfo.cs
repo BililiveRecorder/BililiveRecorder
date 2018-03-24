@@ -10,7 +10,7 @@ namespace BililiveRecorder.Core
         public string SavePath;
 
         public string StreamFilePrefix = "录制";
-        public string ClipFilePrefix = "片段";
+        public string ClipFilePrefix = "剪辑";
 
         public string StreamName = "某直播间";
 
