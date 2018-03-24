@@ -12,30 +12,34 @@ init:
   - ps: >-
       if ($env:APPVEYOR_REPO_TAG -eq "true")
       {
-          Update-AppveyorBuild -Version "$($env:APPVEYOR_REPO_TAG_NAME.TrimStart("v"))"
+        $env:p_version="$($env:APPVEYOR_REPO_TAG_NAME.TrimStart("v"))"
+        Update-AppveyorBuild -Version "$env:p_version"
       }
       else
       {
-          Update-AppveyorBuild -Version "dev-$($env:APPVEYOR_REPO_COMMIT.Substring(0, 7))"
+        $env:p_version="0.0.0.$env:APPVEYOR_BUILD_NUMBER"
+        Update-AppveyorBuild -Version "dev-$($env:APPVEYOR_REPO_COMMIT.Substring(0, 7))"
       }
+
+for:
 
 assembly_info:
   patch: true
   file: '**\AssemblyInfo.*'
-  assembly_version: '{version}'
-  assembly_file_version: '{version}'
-  assembly_informational_version: '{version}'
+  assembly_version: '${p_version}'
+  assembly_file_version: '${p_version}'
+  assembly_informational_version: '${p_version}'
 dotnet_csproj:
   patch: true
   file: '**\*.csproj'
-  version: '{version}'
-  package_version: '{version}'
-  assembly_version: '{version}'
-  file_version: '{version}'
-  informational_version: '{version}'
+  version: '${p_version}'
+  package_version: '${p_version}'
+  assembly_version: '${p_version}'
+  file_version: '${p_version}'
+  informational_version: '${p_version}'
 
 before_build:
-  - nuget restore BililiveRecorder.sln
+  - nuget restore
 
 artifacts:
   - path: BililiveRecorder.WPF\bin\Debug

@@ -35,3 +35,19 @@
 
 - 录播姬
 - 回放剪辑
+- 录制出来的文件类型
+  - 录制
+  - 剪辑
+
+## Appveyor
+
+- 每次 push dev 分支的时候
+  - 编译 Debug 版本
+  - 版本号： 0.0.0.{build}
+  - 打包上传到 Appveyor 的 artifacts 列表
+- 每次 push tag 的时候
+  - 编译 Release 版本
+  - 版本号： {tag去掉v}.0
+  - 执行 publish
+  - 复制生成结果 git push 到 soft.danmuji.org
+- master 分支手动维护，保持在最后一个 tag 上
