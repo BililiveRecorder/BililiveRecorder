@@ -16,7 +16,7 @@ namespace BililiveRecorder.FlvProcessor
     {
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
 
-        internal const int SEC_TO_MS = 1000; // 1 second = 1000 ms
+        internal const uint SEC_TO_MS = 1000; // 1 second = 1000 ms
         internal const int MIN_BUFFER_SIZE = 1024 * 2;
         internal static readonly byte[] FLV_HEADER_BYTES = new byte[]
         {
@@ -40,8 +40,8 @@ namespace BililiveRecorder.FlvProcessor
         public event StreamFinalizedEvent StreamFinalized;
         public Func<string> GetFileName;
 
-        public int Clip_Past = 90;
-        public int Clip_Future = 30;
+        public uint Clip_Past = 90;
+        public uint Clip_Future = 30;
 
         private bool _headerParsed = false;
         private readonly List<FlvTag> HTags = new List<FlvTag>();

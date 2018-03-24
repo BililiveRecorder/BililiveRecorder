@@ -8,15 +8,15 @@ namespace BililiveRecorder.Core
     {
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
 
-        private int _clip_past = 90;
-        public int Clip_Past
+        private uint _clip_past = 90;
+        public uint Clip_Past
         {
             get => _clip_past;
             set => SetField(ref _clip_past, value, nameof(Clip_Past));
         }
 
-        private int _clip_future = 30;
-        public int Clip_Future
+        private uint _clip_future = 30;
+        public uint Clip_Future
         {
             get => _clip_future;
             set => SetField(ref _clip_future, value, nameof(Clip_Future));

@@ -5,14 +5,14 @@ using System.Net.Sockets;
 
 namespace BililiveRecorder.Core
 {
-    internal static class Utils
+    public static class Utils
     {
-        public static byte[] ToBE(this byte[] b)
+        internal static byte[] ToBE(this byte[] b)
         {
             if (BitConverter.IsLittleEndian) return b.Reverse().ToArray(); else return b;
         }
 
-        public static void ReadB(this NetworkStream stream, byte[] buffer, int offset, int count)
+        internal static void ReadB(this NetworkStream stream, byte[] buffer, int offset, int count)
         {
             if (offset + count > buffer.Length)
                 throw new ArgumentException();
@@ -29,7 +29,7 @@ namespace BililiveRecorder.Core
             }
         }
 
-        public static void ApplyTo<T>(this T val1, T val2)
+        public static void ApplyTo(this Settings val1, Settings val2)
         {
             foreach (var p in val1.GetType().GetProperties())
             {
@@ -39,7 +39,7 @@ namespace BililiveRecorder.Core
             }
         }
 
-        public static void Log(this Logger logger, int id, LogLevel level, string message, Exception exception = null)
+        internal static void Log(this Logger logger, int id, LogLevel level, string message, Exception exception = null)
         {
             var log = new LogEventInfo()
             {

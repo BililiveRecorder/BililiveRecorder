@@ -322,7 +322,11 @@ namespace BililiveRecorder.WPF
 
         private void SettingsButton_Click(object sender, RoutedEventArgs e)
         {
-
+            var sw = new SettingsWindow(this, Recorder.Settings);
+            if (sw.ShowDialog() == true)
+            {
+                sw.Settings.ApplyTo(Recorder.Settings);
+            }
         }
 
         private RecordedRoom _GetSenderAsRecordedRoom(object sender) => (sender as Button).DataContext as RecordedRoom;

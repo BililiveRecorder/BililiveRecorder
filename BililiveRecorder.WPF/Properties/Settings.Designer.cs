@@ -50,9 +50,9 @@ namespace BililiveRecorder.WPF.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("10")]
-        public int Clip_Future {
+        public uint Clip_Future {
             get {
-                return ((int)(this["Clip_Future"]));
+                return ((uint)(this["Clip_Future"]));
             }
             set {
                 this["Clip_Future"] = value;
@@ -62,9 +62,9 @@ namespace BililiveRecorder.WPF.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("20")]
-        public int Clip_Past {
+        public uint Clip_Past {
             get {
-                return ((int)(this["Clip_Past"]));
+                return ((uint)(this["Clip_Past"]));
             }
             set {
                 this["Clip_Past"] = value;

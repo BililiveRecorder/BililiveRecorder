@@ -8,10 +8,10 @@
     <Setting Name="RoomIDs" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
-    <Setting Name="Clip_Future" Type="System.Int32" Scope="User">
+    <Setting Name="Clip_Future" Type="System.UInt32" Scope="User">
       <Value Profile="(Default)">10</Value>
     </Setting>
-    <Setting Name="Clip_Past" Type="System.Int32" Scope="User">
+    <Setting Name="Clip_Past" Type="System.UInt32" Scope="User">
       <Value Profile="(Default)">20</Value>
     </Setting>
     <Setting Name="SavePath" Type="System.String" Scope="User">

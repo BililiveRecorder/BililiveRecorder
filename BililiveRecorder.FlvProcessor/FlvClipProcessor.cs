@@ -17,12 +17,12 @@ namespace BililiveRecorder.FlvProcessor
 
         public Func<string> GetFileName;
 
-        public FlvClipProcessor(FlvMetadata header, List<FlvTag> head, List<FlvTag> past, int future)
+        public FlvClipProcessor(FlvMetadata header, List<FlvTag> head, List<FlvTag> past, uint future)
         {
             Header = header;
             HTags = head;
             Tags = past;
-            target = Tags[Tags.Count - 1].TimeStamp + (future * FlvStreamProcessor.SEC_TO_MS);
+            target = Tags[Tags.Count - 1].TimeStamp + (int)(future * FlvStreamProcessor.SEC_TO_MS);
             logger.Trace("Clip 创建 Tags.Count={0} Tags[0].TimeStamp={1} Tags[Tags.Count-1].TimeStamp={2} Tags里秒数={3}",
                 Tags.Count, Tags[0].TimeStamp, Tags[Tags.Count - 1].TimeStamp, (Tags[Tags.Count - 1].TimeStamp - Tags[0].TimeStamp) / 1000d);
         }

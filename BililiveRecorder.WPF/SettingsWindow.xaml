@@ -1,0 +1,85 @@
+﻿<Window x:Class="BililiveRecorder.WPF.SettingsWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:BililiveRecorder.WPF"
+        mc:Ignorable="d"
+        ShowInTaskbar="False" ResizeMode="NoResize"
+        Title="设置 - 录播姬" Height="260" Width="230">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <Grid Margin="5">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="1*"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="2*"/>
+                <ColumnDefinition Width="3*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.Resources>
+                <ResourceDictionary>
+                    <Style TargetType="TextBlock">
+                        <Style.Setters>
+                            <Setter Property="HorizontalAlignment" Value="Right"></Setter>
+                            <Setter Property="VerticalAlignment" Value="Center"></Setter>
+                        </Style.Setters>
+                    </Style>
+                </ResourceDictionary>
+            </Grid.Resources>
+            <TextBlock Grid.Row="0" Grid.Column="0">保存位置：</TextBlock>
+            <Grid Grid.Row="0" Grid.Column="1" VerticalAlignment="Center">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <local:ClickSelectTextBox Grid.Column="0" Text="{Binding SavePath}"/>
+                <Button Grid.Column="1" Click="Button_Click">浏览...</Button>
+            </Grid>
+            <TextBlock Grid.Row="1" Grid.Column="0">剪辑回放时长：</TextBlock>
+            <Grid Grid.Row="1" Grid.Column="1" VerticalAlignment="Center">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <local:ClickSelectTextBox Grid.Column="0" Text="{Binding Clip_Past}"/>
+                <TextBlock Grid.Column="1" Margin="5,0,10,0">秒</TextBlock>
+            </Grid>
+            <TextBlock Grid.Row="2" Grid.Column="0">剪辑录制时长：</TextBlock>
+            <Grid Grid.Row="2" Grid.Column="1" VerticalAlignment="Center">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <local:ClickSelectTextBox Grid.Column="0" Text="{Binding Clip_Future}"/>
+                <TextBlock Grid.Column="1" Margin="5,0,10,0">秒</TextBlock>
+            </Grid>
+            <TextBlock Grid.Row="3" Grid.Column="0"></TextBlock>
+            <StackPanel Grid.Row="3" Grid.Column="1">
+
+            </StackPanel>
+            <TextBlock Grid.Row="4" Grid.Column="0"></TextBlock>
+            <StackPanel Grid.Row="4" Grid.Column="1">
+
+            </StackPanel>
+
+        </Grid>
+
+        <StackPanel Orientation="Horizontal" Grid.Row="1"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center">
+            <Button Click="Save" Padding="20,5" Margin="5">保存</Button>
+            <Button Click="Cancel" Padding="20,5" Margin="5">取消</Button>
+        </StackPanel>
+    </Grid>
+</Window>
