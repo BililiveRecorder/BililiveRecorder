@@ -20,6 +20,7 @@ init:
         $env:p_version="0.0.0.$env:APPVEYOR_BUILD_NUMBER"
         Update-AppveyorBuild -Version "dev-$($env:APPVEYOR_REPO_COMMIT.Substring(0, 7))"
       }
+  - ps: Write-Host $env:p_version
 
 for:
 
@@ -31,7 +32,9 @@ assembly_info:
   assembly_informational_version: '${p_version}'
 dotnet_csproj:
   patch: true
-  file: '**\*.csproj'
+  file:
+    - 'BililiveRecorder.Core\BililiveRecorder.Core.csproj'
+    - 'BililiveRecorder.FlvProcessor\BililiveRecorder.FlvProcessor.csproj'
   version: '${p_version}'
   package_version: '${p_version}'
   assembly_version: '${p_version}'
@@ -40,6 +43,7 @@ dotnet_csproj:
 
 before_build:
   - nuget restore
+  - dotnet restore
 
 artifacts:
   - path: BililiveRecorder.WPF\bin\Debug
@@ -57,3 +61,6 @@ on_success:
 #  - git push ...
 
 # TODO: Github Release
+
+on_finish:
+  - ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
