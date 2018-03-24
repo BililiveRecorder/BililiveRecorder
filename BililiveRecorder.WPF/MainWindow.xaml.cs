@@ -228,7 +228,7 @@ namespace BililiveRecorder.WPF
         private void RemoveRecRoom(object sender, RoutedEventArgs e)
         {
             var rr = _GetSenderAsRecordedRoom(sender);
-            Task.Run(() => Recorder.RemoveRoom(rr));
+            Recorder.RemoveRoom(rr);
         }
 
         /// <summary>

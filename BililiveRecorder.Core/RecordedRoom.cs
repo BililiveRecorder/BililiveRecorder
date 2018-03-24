@@ -33,6 +33,7 @@ namespace BililiveRecorder.Core
         public ObservableCollection<FlvClipProcessor> Clips { get; private set; } = new ObservableCollection<FlvClipProcessor>();
         private HttpWebRequest webRequest;
         private Stream flvStream;
+        private bool flv_shutdown = false;
         private readonly Settings _settings;
 
         public RecordedRoom(Settings settings, int roomid)
@@ -44,7 +45,10 @@ namespace BililiveRecorder.Core
 
             UpdateRoomInfo();
 
-            RecordInfo = new RecordInfo(StreamerName);
+            RecordInfo = new RecordInfo(StreamerName)
+            {
+                SavePath = _settings.SavePath
+            };
 
             streamMonitor = new StreamMonitor(RealRoomid);
             streamMonitor.StreamStatusChanged += StreamMonitor_StreamStatusChanged;
@@ -76,6 +80,11 @@ namespace BililiveRecorder.Core
                 if (Processor != null)
                     Processor.Clip_Future = _settings.Clip_Future;
             }
+            else if (e.PropertyName == nameof(_settings.SavePath))
+            {
+                if (RecordInfo != null)
+                    RecordInfo.SavePath = _settings.SavePath;
+            }
         }
 
         private void StreamMonitor_StreamStatusChanged(object sender, StreamStatusChangedArgs e)
@@ -92,6 +101,7 @@ namespace BililiveRecorder.Core
         {
             if (flvStream != null)
             {
+                flv_shutdown = true;
                 flvStream.Close();
             }
         }
@@ -114,6 +124,7 @@ namespace BililiveRecorder.Core
 
             try
             {
+                flv_shutdown = false;
                 Status = RecordStatus.Recording;
 
                 string flv_path = BililiveAPI.GetPlayUrl(RoomInfo.RealRoomid);
@@ -156,7 +167,7 @@ namespace BililiveRecorder.Core
                             if (bytesRead == 0)
                             {
                                 _CleanupFlvRequest();
-                                logger.Log(RealRoomid, LogLevel.Info, "直播流下载连接已关闭。" + (triggerType != TriggerType.HttpApiRecheck ? "将在30秒后重试启动。" : ""));
+                                logger.Log(RealRoomid, LogLevel.Info, "直播已结束，停止录制。" + (triggerType != TriggerType.HttpApiRecheck ? "将在30秒后重试启动。" : ""));
                                 if (triggerType != TriggerType.HttpApiRecheck)
                                     streamMonitor.CheckAfterSeconeds(30);
                             }
@@ -173,11 +184,16 @@ namespace BililiveRecorder.Core
                         catch (Exception ex)
                         {
                             _CleanupFlvRequest();
-                            logger.Log(RealRoomid, LogLevel.Info, "直播流下载连接出错。" + (triggerType != TriggerType.HttpApiRecheck ? "将在30秒后重试启动。" : ""), ex);
-                            // 有时这里不算是“出错”，比如手动切断下载的情况。
-                            // TODO: 优化此处提示 & 处理逻辑
-                            if (triggerType != TriggerType.HttpApiRecheck)
-                                streamMonitor.CheckAfterSeconeds(30);
+                            if (!flv_shutdown)
+                            {
+                                logger.Log(RealRoomid, LogLevel.Info, "直播流下载连接出错。" + (triggerType != TriggerType.HttpApiRecheck ? "将在30秒后重试启动。" : ""), ex);
+                                if (triggerType != TriggerType.HttpApiRecheck)
+                                    streamMonitor.CheckAfterSeconeds(30);
+                            }
+                            else
+                            {
+                                logger.Log(RealRoomid, LogLevel.Info, "直播流下载已结束。");
+                            }
                         }
                     }
 

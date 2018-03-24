@@ -241,7 +241,7 @@ namespace BililiveRecorder.FlvProcessor
 
             // DataSize UI24
             _buffer.Read(b, 1, 3);
-            tag.TagSize = BitConverter.ToInt32(b.ToBE(), 0); // TODO: test this
+            tag.TagSize = BitConverter.ToInt32(b.ToBE(), 0);
 
             // Timestamp UI24
             _buffer.Read(b, 1, 3);
