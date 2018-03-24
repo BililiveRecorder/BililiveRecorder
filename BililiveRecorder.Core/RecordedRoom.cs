@@ -21,6 +21,7 @@ namespace BililiveRecorder.Core
         public RoomInfo RoomInfo { get; private set; }
         public RecordInfo RecordInfo { get; private set; }
 
+        public bool Monitoring { get => streamMonitor.receiver.IsConnected; }
         public RecordStatus Status
         {
             get => _status;
@@ -28,9 +29,10 @@ namespace BililiveRecorder.Core
         }
         private RecordStatus _status;
 
-        public StreamMonitor streamMonitor;
         public FlvStreamProcessor Processor; // FlvProcessor
         public ObservableCollection<FlvClipProcessor> Clips { get; private set; } = new ObservableCollection<FlvClipProcessor>();
+
+        private StreamMonitor streamMonitor;
         private HttpWebRequest webRequest;
         private Stream flvStream;
         private bool flv_shutdown = false;
@@ -59,12 +61,14 @@ namespace BililiveRecorder.Core
             var r = streamMonitor.Start();
             if (r)
                 Status = RecordStatus.Waiting;
+            TriggerPropertyChanged(nameof(Monitoring));
             return r;
         }
 
         public void Stop()
         {
             streamMonitor.Stop();
+            TriggerPropertyChanged(nameof(Monitoring));
             Status = RecordStatus.Idle;
         }
 
@@ -287,6 +291,8 @@ namespace BililiveRecorder.Core
 
 
         public event PropertyChangedEventHandler PropertyChanged;
+        protected void TriggerPropertyChanged(string propertyName)
+            => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         protected bool SetField<T>(ref T field, T value, string propertyName)
         {
             if (EqualityComparer<T>.Default.Equals(field, value)) return false;

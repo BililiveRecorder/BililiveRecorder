@@ -20,6 +20,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
+
 namespace BililiveRecorder.WPF
 {
     /// <summary>
@@ -28,6 +29,7 @@ namespace BililiveRecorder.WPF
     public partial class MainWindow : Window
     {
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
+        private static readonly Properties.Settings ps = Properties.Settings.Default;
 
         private const int MAX_LOG_ROW = 25;
 
@@ -56,10 +58,19 @@ namespace BililiveRecorder.WPF
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            LoadSettings();
-            LoadRooms();
+            InitSettings();
             Task.Run(() => CheckVersion());
         }
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            _AddLog = null;
+            ps.RoomIDs = string.Join(";", Recorder.Rooms.Select(x => x.Roomid + "," + x.Monitoring));
+            ps.Save();
+            Recorder.Shutdown();
+        }
+
+        #region - 更新检查 -
 
         private void CheckVersion()
         {
@@ -143,18 +154,51 @@ namespace BililiveRecorder.WPF
             UpdateBar.ShowProgressBar = false;
         }
 
-        private void LoadSettings()
-        {
-            // TODO: Load Settings
-            Recorder.Settings.Clip_Future = 10;
-            Recorder.Settings.Clip_Past = 20;
-            Recorder.Settings.SavePath = @"D:\录播姬测试保存";
-        }
+        #endregion
 
-        private void LoadRooms()
+
+        private void InitSettings()
         {
-            // Recorder.AddRoom(7275510);
-            // Recorder.Rooms[0].Start();
+            var s = Recorder.Settings;
+
+            if (ps.UpgradeRequired)
+            {
+                ps.Upgrade();
+                ps.UpgradeRequired = false;
+                ps.Save();
+            }
+
+            s.Clip_Future = ps.Clip_Future;
+            s.Clip_Past = ps.Clip_Past;
+            s.SavePath = ps.SavePath;
+            s.PropertyChanged += (sender, e) =>
+            {
+                switch (e.PropertyName)
+                {
+                    case nameof(s.Clip_Future):
+                        ps.Clip_Future = s.Clip_Future;
+                        break;
+                    case nameof(s.Clip_Past):
+                        ps.Clip_Past = s.Clip_Past;
+                        break;
+                    case nameof(s.SavePath):
+                        ps.SavePath = s.SavePath;
+                        break;
+                    default:
+                        break;
+                }
+            };
+
+            ps.RoomIDs.Split(';').ToList().ForEach(rs =>
+            {
+                var r = rs.Split(',');
+                if (int.TryParse(r[0], out int roomid) && bool.TryParse(r[1], out bool enabled))
+                {
+                    if (roomid > 0)
+                        Recorder.AddRoom(roomid, enabled);
+                }
+            });
+
         }
 
         private void TextBlock_MouseRightButtonUp(object sender, MouseButtonEventArgs e)
@@ -282,5 +326,7 @@ namespace BililiveRecorder.WPF
         }
 
         private RecordedRoom _GetSenderAsRecordedRoom(object sender) => (sender as Button).DataContext as RecordedRoom;
+
+
     }
 }

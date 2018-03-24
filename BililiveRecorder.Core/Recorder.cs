@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Text;
 
 namespace BililiveRecorder.Core
@@ -23,11 +24,14 @@ namespace BililiveRecorder.Core
         /// </summary>
         /// <param name="roomid">房间号（支持短号）</param>
         /// <exception cref="ArgumentOutOfRangeException"/>
-        public void AddRoom(int roomid)
+        public void AddRoom(int roomid, bool enabled = false)
         {
             if (roomid <= 0)
                 throw new ArgumentOutOfRangeException(nameof(roomid), "房间号需要大于0");
-            Rooms.Add(new RecordedRoom(Settings, roomid));
+            var rr = new RecordedRoom(Settings, roomid);
+            if (enabled)
+                rr.Start();
+            Rooms.Add(rr);
         }
 
         /// <summary>
@@ -39,6 +43,15 @@ namespace BililiveRecorder.Core
             rr.Stop();
             rr.StopRecord();
             Rooms.Remove(rr);
+        }
+
+        public void Shutdown()
+        {
+            Rooms.ToList().ForEach(rr =>
+            {
+                rr.Stop();
+                rr.StopRecord();
+            });
         }
     }
 }
