@@ -106,9 +106,12 @@ namespace BililiveRecorder.WPF
                 else
                 {
                     UpdateAction = () => BeginUpdate();
-                    UpdateBar.MainText = string.Format("发现新版本: {0} 大小: {1}KiB", e.AvailableVersion, e.UpdateSizeBytes / 1024);
-                    UpdateBar.ButtonText = "下载更新";
-                    UpdateBar.Display = true;
+                    UpdateBar.Dispatcher.Invoke(() =>
+                    {
+                        UpdateBar.MainText = string.Format("发现新版本: {0} 大小: {1}KiB", e.AvailableVersion, e.UpdateSizeBytes / 1024);
+                        UpdateBar.ButtonText = "下载更新";
+                        UpdateBar.Display = true;
+                    });
                 }
             }
         }
@@ -119,39 +122,51 @@ namespace BililiveRecorder.WPF
             ad.UpdateCompleted += Ad_UpdateCompleted;
             ad.UpdateProgressChanged += Ad_UpdateProgressChanged;
             ad.UpdateAsync();
-            UpdateBar.ProgressText = "0KiB / 0KiB - 0%";
-            UpdateBar.Progress = 0;
-            UpdateBar.Display = true;
-            UpdateBar.ShowProgressBar = true;
+            UpdateBar.Dispatcher.Invoke(() =>
+            {
+                UpdateBar.ProgressText = "0KiB / 0KiB - 0%";
+                UpdateBar.Progress = 0;
+                UpdateBar.Display = true;
+                UpdateBar.ShowProgressBar = true;
+            });
         }
 
         private void Ad_UpdateProgressChanged(object sender, DeploymentProgressChangedEventArgs e)
         {
-            UpdateBar.Progress = e.BytesCompleted / e.BytesTotal;
-            UpdateBar.ProgressText = string.Format("{0}KiB / {1}KiB - {2}%", e.BytesCompleted / 1024, e.BytesTotal / 1024, e.BytesCompleted / e.BytesTotal);
+            UpdateBar.Dispatcher.Invoke(() =>
+            {
+                var p = (e.BytesTotal == 0) ? 100d : ((double)e.BytesCompleted / (double)e.BytesTotal) * 100d;
+                UpdateBar.Progress = p;
+                UpdateBar.ProgressText = string.Format("{0}KiB / {1}KiB - {2}%", e.BytesCompleted / 1024, e.BytesTotal / 1024, p.ToString("0.##"));
+            });
         }
 
         private void Ad_UpdateCompleted(object sender, System.ComponentModel.AsyncCompletedEventArgs e)
         {
-            if (e.Cancelled)
+            UpdateBar.Dispatcher.Invoke(() =>
             {
-                UpdateBar.Display = false;
-                return;
-            }
-            if (e.Error != null)
-            {
-                UpdateBar.Display = false;
-                logger.Error(e.Error, "下载更新时出现错误");
-                return;
-            }
+                if (e.Cancelled)
+                {
+                    UpdateBar.Display = false;
+                    return;
+                }
+                if (e.Error != null)
+                {
+                    UpdateBar.Display = false;
+                    logger.Error(e.Error, "下载更新时出现错误");
+                    return;
+                }
 
-            UpdateAction = () =>
-            {
-                System.Windows.Forms.Application.Restart();
-            };
-            UpdateBar.MainText = "更新已下载好，要现在重启软件吗？";
-            UpdateBar.ButtonText = "重启软件";
-            UpdateBar.ShowProgressBar = false;
+                UpdateAction = () =>
+                    {
+                        Recorder.Shutdown();
+                        System.Windows.Forms.Application.Restart();
+                        Application.Current.Shutdown();
+                    };
+                UpdateBar.MainText = "更新已下载好，要现在重启软件吗？";
+                UpdateBar.ButtonText = "重启软件";
+                UpdateBar.ShowProgressBar = false;
+            });
         }
 
         #endregion
