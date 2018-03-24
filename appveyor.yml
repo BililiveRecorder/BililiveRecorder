@@ -25,17 +25,17 @@ init:
 assembly_info:
   patch: true
   file: '**\AssemblyInfo.*'
-  assembly_version: '${p_version}'
-  assembly_file_version: '${p_version}'
-  assembly_informational_version: '${p_version}'
+  assembly_version: $(p_version)
+  assembly_file_version: $(p_version)
+  assembly_informational_version: $(p_version)
 dotnet_csproj:
   patch: true
   file: '**\*.csproj'
-  version: '${p_version}'
-  package_version: '${p_version}'
-  assembly_version: '${p_version}'
-  file_version: '${p_version}'
-  informational_version: '${p_version}'
+  version: $(p_version)
+  package_version: $(p_version)
+  assembly_version: $(p_version)
+  file_version: $(p_version)
+  informational_version: $(p_version)
 
 before_build:
   - nuget restore
@@ -58,5 +58,5 @@ on_success:
 
 # TODO: Github Release
 
-on_finish:
-  - ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
+#on_finish:
+#  - ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
