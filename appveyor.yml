@@ -30,7 +30,7 @@ assembly_info:
   assembly_informational_version: $(p_version)
 dotnet_csproj:
   patch: true
-  file: '**\*.FlvProcessor.csproj;**\*.Core.csproj'
+  file: '**\*.csproj'
   version: $(p_version)
   package_version: $(p_version)
   assembly_version: $(p_version)
