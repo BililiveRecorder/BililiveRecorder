@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 
@@ -30,5 +31,14 @@ namespace BililiveRecorder.FlvProcessor
 
             return tag;
         }
+
+        public void WriteTo(Stream stream)
+        {
+            var vs = ToBytes(true);
+            stream.Write(vs, 0, vs.Length);
+            stream.Write(Data, 0, Data.Length);
+            stream.Write(BitConverter.GetBytes(Data.Length + vs.Length).ToBE(), 0, 4);
+        }
+
     }
 }

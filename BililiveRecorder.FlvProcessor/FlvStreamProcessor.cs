@@ -143,10 +143,7 @@ namespace BililiveRecorder.FlvProcessor
                     // TODO: 添加录播姬标记、录制信息
 
                     tag.Data = Metadata.ToBytes();
-                    var b = tag.ToBytes(true);
-                    _fs.Write(b, 0, b.Length);
-                    _fs.Write(tag.Data, 0, tag.Data.Length);
-                    _fs.Write(BitConverter.GetBytes(tag.Data.Length + b.Length).ToBE(), 0, 4);
+                    tag.WriteTo(_fs);
                 }
                 else
                 {
@@ -218,10 +215,7 @@ namespace BililiveRecorder.FlvProcessor
                 // Tags.RemoveAll(x => (MaxTimeStamp - x.TimeStamp) > (Clip_Past * SEC_TO_MS));
 
                 // 写入硬盘
-                var b = tag.ToBytes(true);
-                _fs.Write(b, 0, b.Length);
-                _fs.Write(tag.Data, 0, tag.Data.Length);
-                _fs.Write(BitConverter.GetBytes(tag.Data.Length + b.Length).ToBE(), 0, 4); // Last Tag Size
+                tag.WriteTo(_fs);
 
                 TagProcessed?.Invoke(this, new TagProcessedArgs() { Tag = tag });
             } // if (Metadata == null) else

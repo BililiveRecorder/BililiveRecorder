@@ -52,29 +52,10 @@ namespace BililiveRecorder.FlvProcessor
                     TagType = TagType.DATA,
                     Data = Header.ToBytes()
                 };
-                var b = t.ToBytes(true);
-                fs.Write(b, 0, b.Length);
-                fs.Write(t.Data, 0, t.Data.Length);
-                fs.Write(BitConverter.GetBytes(t.Data.Length + b.Length).ToBE(), 0, 4);
+                t.WriteTo(fs);
 
-                int timestamp = Tags[0].TimeStamp;
-
-                HTags.ForEach(tag =>
-                {
-                    var vs = tag.ToBytes(true);
-                    fs.Write(vs, 0, vs.Length);
-                    fs.Write(tag.Data, 0, tag.Data.Length);
-                    fs.Write(BitConverter.GetBytes(tag.Data.Length + vs.Length).ToBE(), 0, 4);
-                });
-
-                Tags.ForEach(tag =>
-                {
-                    tag.TimeStamp -= timestamp;
-                    var vs = tag.ToBytes(true);
-                    fs.Write(vs, 0, vs.Length);
-                    fs.Write(tag.Data, 0, tag.Data.Length);
-                    fs.Write(BitConverter.GetBytes(tag.Data.Length + vs.Length).ToBE(), 0, 4);
-                });
+                HTags.ForEach(tag => tag.WriteTo(fs));
+                Tags.ForEach(tag => tag.WriteTo(fs));
 
                 fs.Close();
             }
