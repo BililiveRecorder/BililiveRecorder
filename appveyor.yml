@@ -22,8 +22,6 @@ init:
       }
   - ps: Write-Host $env:p_version
 
-for:
-
 assembly_info:
   patch: true
   file: '**\AssemblyInfo.*'
