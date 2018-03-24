@@ -1,15 +1,24 @@
-version: 1.0.{build}
-skip_non_tags: true
 image: Visual Studio 2017
-configuration:
-- Debug
-- Release
 platform: Any CPU
+# skip_non_tags: true
+
+version: 0.0.0.{build}
+
 init:
   - git config --global credential.helper store
   - ps: Add-Content "$env:USERPROFILE\.git-credentials" "https://$($env:github_access_token):x-oauth-basic@github.com`n"
   - git config --global user.email "appveyor@genteure.com"
   - git config --global user.name "Appveyor(Genteure)"
+  - ps: >-
+      if ($env:APPVEYOR_REPO_TAG -eq "true")
+      {
+          Update-AppveyorBuild -Version "$($env:APPVEYOR_REPO_TAG_NAME.TrimStart("v"))"
+      }
+      else
+      {
+          Update-AppveyorBuild -Version "dev-$($env:APPVEYOR_REPO_COMMIT.Substring(0, 7))"
+      }
+
 assembly_info:
   patch: true
   file: '**\AssemblyInfo.*'
@@ -24,6 +33,11 @@ dotnet_csproj:
   assembly_version: '{version}'
   file_version: '{version}'
   informational_version: '{version}'
+
+artifacts:
+  - path: BililiveRecorder.WPF\bin\Debug
+    name: WPFDebug
+
 environment:
   github_access_token:
     secure: 3n2WMbrqWb0nmy2LBmu7w6dJltiHHC4LCoNuIKBh7fKV0xfxCwVGOxbTpunLI2pe
