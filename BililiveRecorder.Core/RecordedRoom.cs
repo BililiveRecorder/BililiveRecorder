@@ -21,7 +21,6 @@ namespace BililiveRecorder.Core
         public RoomInfo RoomInfo { get; private set; }
         public RecordInfo RecordInfo { get; private set; }
 
-        // TODO: 这里应该再修改一下
         public bool IsMonitoring => streamMonitor.receiver.IsConnected;
         public bool IsRecording => flvStream != null;
 
