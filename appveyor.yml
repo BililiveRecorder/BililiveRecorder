@@ -17,10 +17,11 @@ init:
   - ps: Add-Content "$env:USERPROFILE\.git-credentials" "https://$($env:github_access_token):x-oauth-basic@github.com`n"
   - git config --global user.email "appveyor@genteure.com"
   - git config --global user.name "Appveyor(Genteure)"
+  - git config --global core.autocrlf false
   - ps: >-
       if ($env:APPVEYOR_REPO_TAG -eq "true")
       {
-        $env:p_version="$($env:APPVEYOR_REPO_TAG_NAME.TrimStart("v"))"
+        $env:p_version="$($env:APPVEYOR_REPO_TAG_NAME.TrimStart("v")).0"
         Update-AppveyorBuild -Version "$env:p_version"
       }
       else
