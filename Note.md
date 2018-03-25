@@ -51,3 +51,13 @@
   - 执行 publish
   - 复制生成结果 git push 到 soft.danmuji.org
 - master 分支手动维护，保持在最后一个 tag 上
+
+## 发布新版本的方法
+
+- 在 dev 分支上
+- git add ...
+- git commit -m "New Version: v1.0.0"
+- git tag v1.0.0
+- git push origin
+- git push origin v1.0.0
+- 在 Github 上开 Pull Request 合并 dev 进 master
