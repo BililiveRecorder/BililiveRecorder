@@ -33,6 +33,15 @@ namespace BililiveRecorder.Core
         private Stream flvStream;
         private bool flv_shutdown = false;
 
+        public double DownloadSpeedKiBps
+        {
+            get { return _DownloadSpeedKiBps; }
+            set { if (value != _DownloadSpeedKiBps) { _DownloadSpeedKiBps = value; TriggerPropertyChanged(nameof(DownloadSpeedKiBps)); } }
+        }
+        private double _DownloadSpeedKiBps = 0;
+        private DateTime lastUpdateDateTime;
+        private long lastUpdateSize = 0;
+
         public RecordedRoom(Settings settings, int roomid)
         {
             _settings = settings;
@@ -160,6 +169,8 @@ namespace BililiveRecorder.Core
                         {
                             int bytesRead = flvStream.EndRead(ar);
 
+                            _UpdateDownloadSpeed(bytesRead);
+
                             if (bytesRead == 0)
                             {
                                 _CleanupFlvRequest();
@@ -206,6 +217,20 @@ namespace BililiveRecorder.Core
             }
         }
 
+        private void _UpdateDownloadSpeed(int bytesRead)
+        {
+            DateTime now = DateTime.Now;
+            double sec = (now - lastUpdateDateTime).TotalSeconds;
+            lastUpdateSize += bytesRead;
+            if (sec > 1)
+            {
+                var speed = lastUpdateSize / sec;
+                lastUpdateDateTime = now;
+                lastUpdateSize = 0;
+                DownloadSpeedKiBps = speed / 1024; // KiB per sec
+            }
+        }
+
         private void _CleanupFlvRequest()
         {
             if (Processor != null)
@@ -221,6 +246,7 @@ namespace BililiveRecorder.Core
                 flvStream.Dispose();
                 flvStream = null;
             }
+            DownloadSpeedKiBps = 0d;
             TriggerPropertyChanged(nameof(IsRecording));
         }
 

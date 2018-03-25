@@ -80,6 +80,7 @@
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
                     <RowDefinition Height="25"/>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="*"/>
@@ -112,7 +113,10 @@
                 <TextBlock Grid.Row="5" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right">剪辑数量：</TextBlock>
                 <TextBlock Grid.Row="5" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left" Text="{Binding Clips.Count}"/>
 
-                <Grid Grid.Row="7" Grid.ColumnSpan="2">
+                <TextBlock Grid.Row="6" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right">下载速度：</TextBlock>
+                <TextBlock Grid.Row="6" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left" Text="{Binding DownloadSpeedKiBps,StringFormat=0.## KiB/s}"/>
+
+                <Grid Grid.Row="8" Grid.ColumnSpan="2">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="*"/>
                         <RowDefinition Height="*"/>
