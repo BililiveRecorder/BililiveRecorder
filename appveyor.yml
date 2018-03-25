@@ -64,10 +64,10 @@ build:
   verbosity: minimal
 
 after_build:
-  - ps: if ($env:APPVEYOR_REPO_TAG -eq "true") ./CI/build_clickonce.ps1
+  - ps: if ($env:APPVEYOR_REPO_TAG -eq "true") { ./CI/build_clickonce.ps1 }
 
 after_deploy:
-  - ps: if ($env:APPVEYOR_REPO_TAG -eq "true") ./CI/push_clickonce.ps1
+  - ps: if ($env:APPVEYOR_REPO_TAG -eq "true") { ./CI/push_clickonce.ps1 }
 
 # clone soft.danmuji.org
 # copy files
