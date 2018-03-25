@@ -59,6 +59,16 @@ namespace BililiveRecorder.WPF
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             InitSettings();
+
+            if (ApplicationDeployment.IsNetworkDeployed && ApplicationDeployment.CurrentDeployment.IsFirstRun)
+            {
+                var sw = new SettingsWindow(this, Recorder.Settings);
+                if (sw.ShowDialog() == true)
+                {
+                    sw.Settings.ApplyTo(Recorder.Settings);
+                }
+            }
+
             Task.Run(() => CheckVersion());
         }
 
