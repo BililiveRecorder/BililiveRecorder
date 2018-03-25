@@ -44,6 +44,7 @@ namespace BililiveRecorder.Core
 
         private void Receiver_Disconnected(object sender, DisconnectEvtArgs e)
         {
+            logger.Warn(e.Error, "弹幕连接被断开，将每30秒尝试重连一次");
             bool connect_result = false;
             while (!connect_result && !TokenSource.Token.IsCancellationRequested)
             {
