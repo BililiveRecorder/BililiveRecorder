@@ -4,6 +4,16 @@ platform: Any CPU
 
 version: 0.0.0.{build}
 
+branches:
+  only:
+    - dev
+
+platform: Any CPU
+
+configuration:
+  - Debug
+  #- Release
+
 init:
   - git config --global credential.helper store
   - ps: Add-Content "$env:USERPROFILE\.git-credentials" "https://$($env:github_access_token):x-oauth-basic@github.com`n"
@@ -18,9 +28,9 @@ init:
       else
       {
         $env:p_version="0.0.0.$env:APPVEYOR_BUILD_NUMBER"
-        Update-AppveyorBuild -Version "dev-$($env:APPVEYOR_REPO_COMMIT.Substring(0, 7))"
+        Update-AppveyorBuild -Version "dev-$($env:APPVEYOR_REPO_COMMIT.Substring(0, 7))-$env:APPVEYOR_BUILD_NUMBER"
       }
-  - ps: Write-Host $env:p_version
+  - ps: Write-Host "Current build version is $env:p_version"
 
 assembly_info:
   patch: true
@@ -43,14 +53,24 @@ before_build:
 
 artifacts:
   - path: BililiveRecorder.WPF\bin\Debug
-    name: WPFDebug
+    name: BililiveRecorderDebugBuild
 
 environment:
   github_access_token:
     secure: 3n2WMbrqWb0nmy2LBmu7w6dJltiHHC4LCoNuIKBh7fKV0xfxCwVGOxbTpunLI2pe
+
+cache:
+  - packages
+
 build:
   verbosity: minimal
-on_success:
+
+after_build:
+  - ps: if ($env:APPVEYOR_REPO_TAG -eq "true") ./CI/build_clickonce.ps1
+
+after_deploy:
+  - ps: if ($env:APPVEYOR_REPO_TAG -eq "true") ./CI/push_clickonce.ps1
+
 # clone soft.danmuji.org
 # copy files
 #  - git commit ...
