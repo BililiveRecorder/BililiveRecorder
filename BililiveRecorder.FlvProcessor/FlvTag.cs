@@ -13,6 +13,9 @@ namespace BililiveRecorder.FlvProcessor
         public int TimeStamp = 0;
         public byte[] StreamId = new byte[3];
 
+        public bool IsVideoKeyframe => _IsVideoKeyframe != -1 ? _IsVideoKeyframe == 1 : 1 == (_IsVideoKeyframe = _ParseIsVideoKeyframe());
+        private int _IsVideoKeyframe = -1;
+
         public byte[] Data = null;
 
         public byte[] ToBytes(bool useDataSize)
@@ -30,6 +33,19 @@ namespace BililiveRecorder.FlvProcessor
             Buffer.BlockCopy(StreamId, 0, tag, 8, 3);
 
             return tag;
+        }
+
+        private int _ParseIsVideoKeyframe()
+        {
+            if (TagType != TagType.VIDEO)
+                return 0;
+            if (Data.Length < 1)
+                return -1;
+
+            const byte mask = 0b00001111;
+            const byte compare = 0b00011111;
+
+            return (Data[0] | mask) == compare ? 1 : 0;
         }
 
         public void WriteTo(Stream stream)

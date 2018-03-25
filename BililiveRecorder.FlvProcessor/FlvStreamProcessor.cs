@@ -201,18 +201,16 @@ namespace BililiveRecorder.FlvProcessor
 
                 Tags.Add(tag); // Clip 缓存
 
-                // TODO: 删除时刚好删到关键帧上
-
                 // 移除过旧的数据
                 if (MaxTimeStamp - LasttimeRemovedTimestamp > 800)
                 {
                     LasttimeRemovedTimestamp = MaxTimeStamp;
-                    int max_remove_index = Tags.FindLastIndex(x => (MaxTimeStamp - x.TimeStamp) > (Clip_Past * SEC_TO_MS));
-                    if (max_remove_index != -1)
-                        Tags.RemoveRange(0, max_remove_index + 1);
+                    int max_remove_index = Tags.FindLastIndex(x => x.IsVideoKeyframe && ((MaxTimeStamp - x.TimeStamp) > (Clip_Past * SEC_TO_MS)));
+                    if (max_remove_index > 0)
+                        Tags.RemoveRange(0, max_remove_index);
+                    // Tags.RemoveRange(0, max_remove_index + 1 - 1);
+                    // 给将来的备注：这里是故意 + 1 - 1 的，因为要保留选中的那个关键帧， + 1 就把关键帧删除了
                 }
-
-                // Tags.RemoveAll(x => (MaxTimeStamp - x.TimeStamp) > (Clip_Past * SEC_TO_MS));
 
                 // 写入硬盘
                 tag.WriteTo(_fs);
