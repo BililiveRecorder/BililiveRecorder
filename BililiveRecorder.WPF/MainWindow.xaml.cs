@@ -233,6 +233,7 @@ namespace BililiveRecorder.WPF
         private void Clip_Click(object sender, RoutedEventArgs e)
         {
             var rr = _GetSenderAsRecordedRoom(sender);
+            if (rr == null) return;
             Task.Run(() => rr.Clip());
         }
 
@@ -244,6 +245,7 @@ namespace BililiveRecorder.WPF
         private void EnableAutoRec(object sender, RoutedEventArgs e)
         {
             var rr = _GetSenderAsRecordedRoom(sender);
+            if (rr == null) return;
             Task.Run(() => rr.Start());
         }
 
@@ -255,6 +257,7 @@ namespace BililiveRecorder.WPF
         private void DisableAutoRec(object sender, RoutedEventArgs e)
         {
             var rr = _GetSenderAsRecordedRoom(sender);
+            if (rr == null) return;
             Task.Run(() => rr.Stop());
         }
 
@@ -266,6 +269,7 @@ namespace BililiveRecorder.WPF
         private void TriggerRec(object sender, RoutedEventArgs e)
         {
             var rr = _GetSenderAsRecordedRoom(sender);
+            if (rr == null) return;
             Task.Run(() => rr.StartRecord());
         }
 
@@ -277,6 +281,7 @@ namespace BililiveRecorder.WPF
         private void CutRec(object sender, RoutedEventArgs e)
         {
             var rr = _GetSenderAsRecordedRoom(sender);
+            if (rr == null) return;
             Task.Run(() => rr.StopRecord());
         }
 
@@ -288,6 +293,7 @@ namespace BililiveRecorder.WPF
         private void RemoveRecRoom(object sender, RoutedEventArgs e)
         {
             var rr = _GetSenderAsRecordedRoom(sender);
+            if (rr == null) return;
             Recorder.RemoveRoom(rr);
         }
 
@@ -345,7 +351,7 @@ namespace BililiveRecorder.WPF
             }
         }
 
-        private RecordedRoom _GetSenderAsRecordedRoom(object sender) => (sender as Button).DataContext as RecordedRoom;
+        private RecordedRoom _GetSenderAsRecordedRoom(object sender) => (sender as Button)?.DataContext as RecordedRoom;
 
 
     }
