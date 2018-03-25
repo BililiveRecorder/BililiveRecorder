@@ -274,23 +274,32 @@ namespace BililiveRecorder.FlvProcessor
             if (!Finallized)
                 lock (_writelock)
                 {
-                    Metadata.Meta["duration"] = MaxTimeStamp / 1000.0;
-                    Metadata.Meta["lasttimestamp"] = (double)MaxTimeStamp;
-                    byte[] metadata = Metadata.ToBytes();
+                    try
+                    {
+                        Metadata.Meta["duration"] = MaxTimeStamp / 1000.0;
+                        Metadata.Meta["lasttimestamp"] = (double)MaxTimeStamp;
+                        byte[] metadata = Metadata.ToBytes();
 
-                    // 13 for FLV header & "0th" tag size
-                    // 11 for 1st tag header
-                    _fs.Seek(13 + 11, SeekOrigin.Begin);
-                    _fs.Write(metadata, 0, metadata.Length);
+                        // 13 for FLV header & "0th" tag size
+                        // 11 for 1st tag header
+                        _fs.Seek(13 + 11, SeekOrigin.Begin);
+                        _fs.Write(metadata, 0, metadata.Length);
+                    }
+                    catch (Exception ex)
+                    {
+                        logger.Error(ex, "保存录制文件时出错");
+                    }
+                    finally
+                    {
+                        _fs.Close();
+                        _buffer.Close();
+                        _data.Close();
+                        Tags.Clear();
 
-                    _fs.Close();
-                    _buffer.Close();
-                    _data.Close();
-                    Tags.Clear();
+                        Finallized = true;
 
-                    Finallized = true;
-
-                    StreamFinalized?.Invoke(this, new StreamFinalizedArgs() { StreamProcessor = this });
+                        StreamFinalized?.Invoke(this, new StreamFinalizedArgs() { StreamProcessor = this });
+                    }
                 }
         }
 

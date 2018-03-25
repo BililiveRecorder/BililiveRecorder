@@ -38,6 +38,8 @@ namespace BililiveRecorder.FlvProcessor
 
         public void FinallizeFile()
         {
+            try
+        {
             using (var fs = new FileStream(GetFileName(), FileMode.CreateNew, FileAccess.ReadWrite))
             {
                 fs.Write(FlvStreamProcessor.FLV_HEADER_BYTES, 0, FlvStreamProcessor.FLV_HEADER_BYTES.Length);
@@ -62,6 +64,12 @@ namespace BililiveRecorder.FlvProcessor
             Tags.Clear();
 
             ClipFinalized?.Invoke(this, new ClipFinalizedArgs() { ClipProcessor = this });
+
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex, "保存剪辑文件时出错");
+            }
         }
 
         public event ClipFinalizedEvent ClipFinalized;
