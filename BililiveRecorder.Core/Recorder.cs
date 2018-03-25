@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace BililiveRecorder.Core
 {
@@ -30,7 +31,7 @@ namespace BililiveRecorder.Core
                 throw new ArgumentOutOfRangeException(nameof(roomid), "房间号需要大于0");
             var rr = new RecordedRoom(Settings, roomid);
             if (enabled)
-                rr.Start();
+                Task.Run(() => rr.Start());
             Rooms.Add(rr);
         }
 

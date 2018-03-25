@@ -237,7 +237,7 @@ namespace BililiveRecorder.FlvProcessor
 
             // TagType UI8
             tag.TagType = (TagType)_buffer.ReadByte();
-            Debug.Write(string.Format("Tag Type: {0}\n", tag.TagType));
+            // Debug.Write(string.Format("Tag Type: {0}\n", tag.TagType));
 
             // DataSize UI24
             _buffer.Read(b, 1, 3);

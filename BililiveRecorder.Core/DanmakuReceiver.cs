@@ -69,7 +69,7 @@ namespace BililiveRecorder.Core
                 catch (WebException ex)
                 {
                     HttpWebResponse errorResponse = ex.Response as HttpWebResponse;
-                    if (errorResponse.StatusCode == HttpStatusCode.NotFound)
+                    if (errorResponse?.StatusCode == HttpStatusCode.NotFound)
                     { // 直播间不存在（HTTP 404）
                         var log = new LogEventInfo()
                         {
@@ -172,7 +172,6 @@ namespace BililiveRecorder.Core
                     var typeId = BitConverter.ToInt32(stableBuffer, 0);
                     typeId = IPAddress.NetworkToHostOrder(typeId);
 
-                    Console.WriteLine(typeId);
                     NetStream.ReadB(stableBuffer, 0, 4);//magic, params?
                     var playloadlength = packetlength - 16;
                     if (playloadlength == 0)

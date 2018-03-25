@@ -14,6 +14,7 @@
                 <DataTemplate x:Key="LogTemplate" >
                     <TextBlock Text="{Binding}" TextWrapping="Wrap" Cursor="Hand" MouseRightButtonUp="TextBlock_MouseRightButtonUp"/>
                 </DataTemplate>
+                <local:RecordStatusConverter x:Key="RSC"/>
             </ResourceDictionary>
         </Grid.Resources>
         <Grid.RowDefinitions>
@@ -46,8 +47,8 @@
                     <DataGridTextColumn Binding="{Binding Roomid}" Header="房间号"/>
                     <DataGridTextColumn Binding="{Binding RealRoomid}" Header="原房间号"/>
                     <DataGridTextColumn Binding="{Binding StreamerName}" Header="主播名字"/>
-                    <DataGridTextColumn Binding="{Binding Status}" Header="录制状态"/>
-                    <DataGridTextColumn Binding="{Binding Clips.Count}" Header="在处理的剪辑数量"/>
+                    <DataGridTextColumn Binding="{Binding Converter={StaticResource RSC}}" Header="当前状态"/>
+                                        <DataGridTextColumn Binding="{Binding Clips.Count}" Header="在处理的剪辑数量"/>
                 </DataGrid.Columns>
             </DataGrid>
             <ItemsControl Grid.Row="1" Grid.RowSpan="2" x:Name="Log" ItemsSource="{Binding Logs}" ItemTemplate="{StaticResource LogTemplate}" >
@@ -92,7 +93,7 @@
                 <TextBlock Grid.Row="3" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left" Text="{Binding StreamerName}"/>
 
                 <TextBlock Grid.Row="4" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right">录制状态：</TextBlock>
-                <TextBlock Grid.Row="4" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left" Text="{Binding Status}"/>
+                <TextBlock Grid.Row="4" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left" Text="{Binding Converter={StaticResource RSC}}"/>
 
                 <TextBlock Grid.Row="5" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right">剪辑数量：</TextBlock>
                 <TextBlock Grid.Row="5" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left" Text="{Binding Clips.Count}"/>

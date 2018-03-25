@@ -21,22 +21,17 @@ namespace BililiveRecorder.Core
         public RoomInfo RoomInfo { get; private set; }
         public RecordInfo RecordInfo { get; private set; }
 
-        public bool Monitoring { get => streamMonitor.receiver.IsConnected; }
-        public RecordStatus Status
-        {
-            get => _status;
-            set => SetField(ref _status, value, nameof(Status));
-        }
-        private RecordStatus _status;
+        public bool IsMonitoring => streamMonitor.receiver.IsConnected;
+        public bool IsRecording => flvStream != null;
 
         public FlvStreamProcessor Processor; // FlvProcessor
         public ObservableCollection<FlvClipProcessor> Clips { get; private set; } = new ObservableCollection<FlvClipProcessor>();
 
-        private StreamMonitor streamMonitor;
+        private readonly Settings _settings;
+        private readonly StreamMonitor streamMonitor;
         private HttpWebRequest webRequest;
         private Stream flvStream;
         private bool flv_shutdown = false;
-        private readonly Settings _settings;
 
         public RecordedRoom(Settings settings, int roomid)
         {
@@ -59,17 +54,14 @@ namespace BililiveRecorder.Core
         public bool Start()
         {
             var r = streamMonitor.Start();
-            if (r)
-                Status = RecordStatus.Waiting;
-            TriggerPropertyChanged(nameof(Monitoring));
+            TriggerPropertyChanged(nameof(IsMonitoring));
             return r;
         }
 
         public void Stop()
         {
             streamMonitor.Stop();
-            TriggerPropertyChanged(nameof(Monitoring));
-            Status = RecordStatus.Idle;
+            TriggerPropertyChanged(nameof(IsMonitoring));
         }
 
         private void _settings_PropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -129,7 +121,6 @@ namespace BililiveRecorder.Core
             try
             {
                 flv_shutdown = false;
-                Status = RecordStatus.Recording;
 
                 string flv_path = BililiveAPI.GetPlayUrl(RoomInfo.RealRoomid);
 
@@ -202,6 +193,7 @@ namespace BililiveRecorder.Core
                     }
 
                     flvStream.BeginRead(buffer, 0, BUF_SIZE, callback, null);
+                    TriggerPropertyChanged(nameof(IsRecording));
                 }
             }
             catch (Exception ex)
@@ -215,7 +207,6 @@ namespace BililiveRecorder.Core
 
         private void _CleanupFlvRequest()
         {
-            Status = RecordStatus.Waiting;
             if (Processor != null)
             {
                 Processor.FinallizeFile();
@@ -229,6 +220,7 @@ namespace BililiveRecorder.Core
                 flvStream.Dispose();
                 flvStream = null;
             }
+            TriggerPropertyChanged(nameof(IsRecording));
         }
 
         private static void _SetupFlvRequest(HttpWebRequest r)
@@ -293,12 +285,5 @@ namespace BililiveRecorder.Core
         public event PropertyChangedEventHandler PropertyChanged;
         protected void TriggerPropertyChanged(string propertyName)
             => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        protected bool SetField<T>(ref T field, T value, string propertyName)
-        {
-            if (EqualityComparer<T>.Default.Equals(field, value)) return false;
-            field = value;
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-            return true;
-        }
     }
 }

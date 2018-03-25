@@ -65,7 +65,7 @@ namespace BililiveRecorder.WPF
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             _AddLog = null;
-            ps.RoomIDs = string.Join(";", Recorder.Rooms.Select(x => x.Roomid + "," + x.Monitoring));
+            ps.RoomIDs = string.Join(";", Recorder.Rooms.Select(x => x.Roomid + "," + x.IsMonitoring));
             ps.Save();
             Recorder.Shutdown();
         }
@@ -203,6 +203,7 @@ namespace BililiveRecorder.WPF
                         break;
                 }
             };
+
 
             ps.RoomIDs.Split(';').ToList().ForEach(rs =>
             {

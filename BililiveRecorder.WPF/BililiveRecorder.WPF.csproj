@@ -25,7 +25,6 @@
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
     <InstallUrl>https://soft.danmuji.org/BililiveRecorder/</InstallUrl>
-    <!--<SupportUrl>https://rec.danmuji.org</SupportUrl>-->
     <ProductName>B站录播姬</ProductName>
     <PublisherName>Genteure</PublisherName>
     <MinimumRequiredVersion>1.0.0.0</MinimumRequiredVersion>
@@ -38,6 +37,7 @@
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
     <PublishWizardCompleted>true</PublishWizardCompleted>
     <BootstrapperEnabled>true</BootstrapperEnabled>
+    <!--<SupportUrl>https://rec.danmuji.org</SupportUrl>-->
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -104,6 +104,7 @@
     <Compile Include="ClickSelectTextBox.xaml.cs">
       <DependentUpon>ClickSelectTextBox.xaml</DependentUpon>
     </Compile>
+    <Compile Include="RecordStatusConverter.cs" />
     <Compile Include="Settings.cs" />
     <Compile Include="SettingsWindow.xaml.cs">
       <DependentUpon>SettingsWindow.xaml</DependentUpon>
