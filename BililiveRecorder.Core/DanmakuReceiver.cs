@@ -221,9 +221,12 @@ namespace BililiveRecorder.Core
             }
             catch (Exception ex)
             {
-                this.Error = ex;
-                logger.Error(ex);
-                _disconnect();
+                if (IsConnected)
+                {
+                    this.Error = ex;
+                    logger.Error(ex);
+                    _disconnect();
+                }
             }
         }
 
