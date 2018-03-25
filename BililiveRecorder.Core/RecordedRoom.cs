@@ -27,8 +27,8 @@ namespace BililiveRecorder.Core
         public FlvStreamProcessor Processor; // FlvProcessor
         public ObservableCollection<FlvClipProcessor> Clips { get; private set; } = new ObservableCollection<FlvClipProcessor>();
 
-        private readonly Settings _settings;
-        private readonly StreamMonitor streamMonitor;
+        private Settings _settings { get; }
+        private StreamMonitor streamMonitor { get; }
         private HttpWebRequest webRequest;
         private Stream flvStream;
         private bool flv_shutdown = false;
@@ -90,7 +90,8 @@ namespace BililiveRecorder.Core
 
         public void StartRecord()
         {
-            _StartRecord(TriggerType.Manual);
+            streamMonitor.Check(TriggerType.Manual);
+            // _StartRecord(TriggerType.Manual);
         }
 
         public void StopRecord()

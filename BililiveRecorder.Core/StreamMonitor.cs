@@ -100,16 +100,16 @@ namespace BililiveRecorder.Core
             TokenSource = null;
         }
 
-        public void Check()
+        public void Check(TriggerType type = TriggerType.HttpApiRecheck)
         {
             var info = BililiveAPI.GetRoomInfo(Roomid);
             if (info.isStreaming)
             {
-                _StartRecord(TriggerType.HttpApiRecheck);
+                _StartRecord(type);
             }
         }
 
-        public void CheckAfterSeconeds(int seconds)
+        public void CheckAfterSeconeds(int seconds, TriggerType type = TriggerType.HttpApiRecheck)
         {
             if (seconds < 0)
                 throw new ArgumentOutOfRangeException(nameof(seconds), "不能小于0");
@@ -117,7 +117,7 @@ namespace BililiveRecorder.Core
             Task.Run(() =>
             {
                 Task.Delay(seconds * 1000).Wait();
-                Check();
+                Check(type);
             });
         }
     }
