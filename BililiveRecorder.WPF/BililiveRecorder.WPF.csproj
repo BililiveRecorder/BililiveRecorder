@@ -24,8 +24,8 @@
     <UpdatePeriodically>false</UpdatePeriodically>
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
-    <InstallUrl>https://soft.danmuji.org/bililiverecorder/</InstallUrl>
-    <SupportUrl>https://rec.danmuji.org</SupportUrl>
+    <InstallUrl>https://soft.danmuji.org/BililiveRecorder/</InstallUrl>
+    <!--<SupportUrl>https://rec.danmuji.org</SupportUrl>-->
     <ProductName>B站录播姬</ProductName>
     <PublisherName>Genteure</PublisherName>
     <MinimumRequiredVersion>1.0.0.0</MinimumRequiredVersion>
