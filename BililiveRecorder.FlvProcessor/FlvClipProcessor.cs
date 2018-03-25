@@ -39,31 +39,33 @@ namespace BililiveRecorder.FlvProcessor
         public void FinallizeFile()
         {
             try
-        {
-            using (var fs = new FileStream(GetFileName(), FileMode.CreateNew, FileAccess.ReadWrite))
             {
-                fs.Write(FlvStreamProcessor.FLV_HEADER_BYTES, 0, FlvStreamProcessor.FLV_HEADER_BYTES.Length);
-                fs.Write(new byte[] { 0, 0, 0, 0, }, 0, 4);
-
-                // TODO: debug 这里好像有问题。输出的文件时长不对
-                Header.Meta["duration"] = Tags[Tags.Count - 1].TimeStamp / 1000.0;
-                Header.Meta["lasttimestamp"] = (double)Tags[Tags.Count - 1].TimeStamp;
-
-                var t = new FlvTag
+                using (var fs = new FileStream(GetFileName(), FileMode.CreateNew, FileAccess.ReadWrite))
                 {
-                    TagType = TagType.DATA,
-                    Data = Header.ToBytes()
-                };
-                t.WriteTo(fs);
+                    fs.Write(FlvStreamProcessor.FLV_HEADER_BYTES, 0, FlvStreamProcessor.FLV_HEADER_BYTES.Length);
+                    fs.Write(new byte[] { 0, 0, 0, 0, }, 0, 4);
 
-                HTags.ForEach(tag => tag.WriteTo(fs));
-                Tags.ForEach(tag => tag.WriteTo(fs));
+                    var offset = Tags[0].TimeStamp;
+                    Tags.ForEach(tag => tag.TimeStamp -= offset);
 
-                fs.Close();
-            }
-            Tags.Clear();
+                    Header.Meta["duration"] = Tags[Tags.Count - 1].TimeStamp / 1000.0;
+                    Header.Meta["lasttimestamp"] = (double)Tags[Tags.Count - 1].TimeStamp;
 
-            ClipFinalized?.Invoke(this, new ClipFinalizedArgs() { ClipProcessor = this });
+                    var t = new FlvTag
+                    {
+                        TagType = TagType.DATA,
+                        Data = Header.ToBytes()
+                    };
+                    t.WriteTo(fs);
+
+                    HTags.ForEach(tag => tag.WriteTo(fs));
+                    Tags.ForEach(tag => tag.WriteTo(fs));
+
+                    fs.Close();
+                }
+                Tags.Clear();
+
+                ClipFinalized?.Invoke(this, new ClipFinalizedArgs() { ClipProcessor = this });
 
             }
             catch (Exception ex)
