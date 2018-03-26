@@ -158,6 +158,7 @@
     <Content Include="NLog.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Nlog.Release.config" />
     <None Include="NLog.xsd">
       <SubType>Designer</SubType>
     </None>

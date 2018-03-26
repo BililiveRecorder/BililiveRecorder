@@ -23,7 +23,7 @@ namespace BililiveRecorder.FlvProcessor
             HTags = head;
             Tags = past;
             target = Tags[Tags.Count - 1].TimeStamp + (int)(future * FlvStreamProcessor.SEC_TO_MS);
-            logger.Trace("Clip 创建 Tags.Count={0} Tags[0].TimeStamp={1} Tags[Tags.Count-1].TimeStamp={2} Tags里秒数={3}",
+            logger.Debug("Clip 创建 Tags.Count={0} Tags[0].TimeStamp={1} Tags[Tags.Count-1].TimeStamp={2} Tags里秒数={3}",
                 Tags.Count, Tags[0].TimeStamp, Tags[Tags.Count - 1].TimeStamp, (Tags[Tags.Count - 1].TimeStamp - Tags[0].TimeStamp) / 1000d);
         }
 
@@ -40,7 +40,8 @@ namespace BililiveRecorder.FlvProcessor
         {
             try
             {
-                using (var fs = new FileStream(GetFileName(), FileMode.CreateNew, FileAccess.ReadWrite))
+                string filepath = GetFileName();
+                using (var fs = new FileStream(filepath, FileMode.CreateNew, FileAccess.ReadWrite))
                 {
                     fs.Write(FlvStreamProcessor.FLV_HEADER_BYTES, 0, FlvStreamProcessor.FLV_HEADER_BYTES.Length);
                     fs.Write(new byte[] { 0, 0, 0, 0, }, 0, 4);
@@ -60,6 +61,8 @@ namespace BililiveRecorder.FlvProcessor
 
                     HTags.ForEach(tag => tag.WriteTo(fs));
                     Tags.ForEach(tag => tag.WriteTo(fs));
+
+                    logger.Info("剪辑已保存：{0}", Path.GetFileName(filepath));
 
                     fs.Close();
                 }

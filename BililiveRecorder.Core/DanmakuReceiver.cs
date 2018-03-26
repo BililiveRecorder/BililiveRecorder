@@ -71,37 +71,16 @@ namespace BililiveRecorder.Core
                     HttpWebResponse errorResponse = ex.Response as HttpWebResponse;
                     if (errorResponse?.StatusCode == HttpStatusCode.NotFound)
                     { // 直播间不存在（HTTP 404）
-                        var log = new LogEventInfo()
-                        {
-                            Level = LogLevel.Warn,
-                            Message = "该直播间疑似不存在",
-                            Exception = ex,
-                        };
-                        log.Properties["roomid"] = roomId;
-                        logger.Log(log);
+                        logger.Log(roomId, LogLevel.Warn, "该直播间疑似不存在", ex);
                     }
                     else
                     { // B站服务器响应错误
-                        var log = new LogEventInfo()
-                        {
-                            Level = LogLevel.Warn,
-                            Message = "B站服务器响应弹幕服务器地址出错",
-                            Exception = ex,
-                        };
-                        log.Properties["roomid"] = roomId;
-                        logger.Log(log);
+                        logger.Log(roomId, LogLevel.Warn, "B站服务器响应弹幕服务器地址出错", ex);
                     }
                 }
                 catch (Exception ex)
                 { // 其他错误（XML解析错误？）
-                    var log = new LogEventInfo()
-                    {
-                        Level = LogLevel.Warn,
-                        Message = "获取弹幕服务器地址时出现未知错误",
-                        Exception = ex,
-                    };
-                    log.Properties["roomid"] = roomId;
-                    logger.Log(log);
+                    logger.Log(roomId, LogLevel.Warn, "获取弹幕服务器地址时出现未知错误", ex);
                 }
 
                 Client = new TcpClient();
@@ -132,7 +111,7 @@ namespace BililiveRecorder.Core
             catch (Exception ex)
             {
                 this.Error = ex;
-                logger.Error(ex);
+                logger.Log(roomId, LogLevel.Error, "连接弹幕服务器时发生了未知错误", ex);
                 return false;
             }
         }
