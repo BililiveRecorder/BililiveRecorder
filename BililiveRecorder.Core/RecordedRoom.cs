@@ -21,14 +21,14 @@ namespace BililiveRecorder.Core
         public RoomInfo RoomInfo { get; private set; }
         public RecordInfo RecordInfo { get; private set; }
 
-        public bool IsMonitoring => streamMonitor.receiver.IsConnected;
+        public bool IsMonitoring => StreamMonitor.receiver.IsConnected;
         public bool IsRecording => flvStream != null;
 
         public FlvStreamProcessor Processor; // FlvProcessor
         public ObservableCollection<FlvClipProcessor> Clips { get; private set; } = new ObservableCollection<FlvClipProcessor>();
 
         private Settings _settings { get; }
-        private StreamMonitor streamMonitor { get; }
+        private StreamMonitor StreamMonitor { get; }
         private HttpWebRequest webRequest;
         private Stream flvStream;
         private bool flv_shutdown = false;
@@ -56,20 +56,20 @@ namespace BililiveRecorder.Core
                 SavePath = _settings.SavePath
             };
 
-            streamMonitor = new StreamMonitor(RealRoomid);
-            streamMonitor.StreamStatusChanged += StreamMonitor_StreamStatusChanged;
+            StreamMonitor = new StreamMonitor(RealRoomid);
+            StreamMonitor.StreamStatusChanged += StreamMonitor_StreamStatusChanged;
         }
 
         public bool Start()
         {
-            var r = streamMonitor.Start();
+            var r = StreamMonitor.Start();
             TriggerPropertyChanged(nameof(IsMonitoring));
             return r;
         }
 
         public void Stop()
         {
-            streamMonitor.Stop();
+            StreamMonitor.Stop();
             TriggerPropertyChanged(nameof(IsMonitoring));
         }
 
@@ -99,7 +99,7 @@ namespace BililiveRecorder.Core
 
         public void StartRecord()
         {
-            streamMonitor.Check(TriggerType.Manual);
+            StreamMonitor.Check(TriggerType.Manual);
             // _StartRecord(TriggerType.Manual);
         }
 
@@ -145,7 +145,7 @@ namespace BililiveRecorder.Core
                     if (response.StatusCode == HttpStatusCode.NotFound)
                     {
                         logger.Log(RealRoomid, LogLevel.Info, "将在30秒后重试");
-                        streamMonitor.CheckAfterSeconeds(30);
+                        StreamMonitor.CheckAfterSeconeds(30);
                     }
                     return;
                 }
@@ -176,7 +176,7 @@ namespace BililiveRecorder.Core
                                 _CleanupFlvRequest();
                                 logger.Log(RealRoomid, LogLevel.Info, "直播已结束，停止录制。" + (triggerType != TriggerType.HttpApiRecheck ? "将在30秒后重试启动。" : ""));
                                 if (triggerType != TriggerType.HttpApiRecheck)
-                                    streamMonitor.CheckAfterSeconeds(30);
+                                    StreamMonitor.CheckAfterSeconeds(30);
                             }
                             else
                             {
@@ -195,7 +195,7 @@ namespace BililiveRecorder.Core
                             {
                                 logger.Log(RealRoomid, LogLevel.Info, "直播流下载连接出错。" + (triggerType != TriggerType.HttpApiRecheck ? "将在30秒后重试启动。" : ""), ex);
                                 if (triggerType != TriggerType.HttpApiRecheck)
-                                    streamMonitor.CheckAfterSeconeds(30);
+                                    StreamMonitor.CheckAfterSeconeds(30);
                             }
                             else
                             {
@@ -213,7 +213,7 @@ namespace BililiveRecorder.Core
                 _CleanupFlvRequest();
                 logger.Log(RealRoomid, LogLevel.Warn, "启动直播流下载出错。" + (triggerType != TriggerType.HttpApiRecheck ? "将在30秒后重试启动。" : ""), ex);
                 if (triggerType != TriggerType.HttpApiRecheck)
-                    streamMonitor.CheckAfterSeconeds(30);
+                    StreamMonitor.CheckAfterSeconeds(30);
             }
         }
 

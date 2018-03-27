@@ -150,7 +150,7 @@ namespace BililiveRecorder.Core
         /// <item><see cref="MsgTypeEnum.GiftSend"/></item>
         /// </list></para>
         /// </summary>
-        public bool isAdmin { get; set; }
+        public bool IsAdmin { get; set; }
 
         /// <summary>
         /// 是否VIP用戶(老爺)
@@ -159,12 +159,12 @@ namespace BililiveRecorder.Core
         /// <item><see cref="MsgTypeEnum.Welcome"/></item>
         /// </list></para>
         /// </summary>
-        public bool isVIP { get; set; }
+        public bool IsVIP { get; set; }
 
         /// <summary>
         /// <see cref="MsgTypeEnum.LiveStart"/>,<see cref="MsgTypeEnum.LiveEnd"/> 事件对应的房间号
         /// </summary>
-        public string roomID { get; set; }
+        public string RoomID { get; set; }
 
         /// <summary>
         /// 原始数据, 高级开发用
@@ -189,19 +189,19 @@ namespace BililiveRecorder.Core
             {
                 case "LIVE":
                     MsgType = MsgTypeEnum.LiveStart;
-                    roomID = obj["roomid"].str?.Decode();
+                    RoomID = obj["roomid"].str?.Decode();
                     break;
                 case "PREPARING":
                     MsgType = MsgTypeEnum.LiveEnd;
-                    roomID = obj["roomid"].str?.Decode();
+                    RoomID = obj["roomid"].str?.Decode();
                     break;
                 case "DANMU_MSG":
                     MsgType = MsgTypeEnum.Comment;
                     CommentText = obj["info"][1].str?.Decode();
                     UserID = (int)obj["info"][2][0].i;
                     UserName = obj["info"][2][1].str?.Decode();
-                    isAdmin = obj["info"][2][2].str?.Decode() == "1";
-                    isVIP = obj["info"][2][3].str?.Decode() == "1";
+                    IsAdmin = obj["info"][2][2].str?.Decode() == "1";
+                    IsVIP = obj["info"][2][3].str?.Decode() == "1";
                     UserGuardLevel = (int)obj["info"][7].i;
                     break;
                 case "SEND_GIFT":
@@ -217,8 +217,8 @@ namespace BililiveRecorder.Core
                         MsgType = MsgTypeEnum.Welcome;
                         UserName = obj["data"]["uname"].str?.Decode();
                         UserID = (int)obj["data"]["uid"].i;
-                        isVIP = true;
-                        isAdmin = obj["data"]?["is_admin"]?.b ?? obj["data"]?["isadmin"]?.str == "1";
+                        IsVIP = true;
+                        IsAdmin = obj["data"]?["is_admin"]?.b ?? obj["data"]?["isadmin"]?.str == "1";
                         break;
 
                     }

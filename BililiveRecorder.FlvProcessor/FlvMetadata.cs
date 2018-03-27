@@ -12,9 +12,10 @@ namespace BililiveRecorder.FlvProcessor
 
         public static FlvMetadata Parse(byte[] data)
         {
-            var m = new FlvMetadata();
-
-            m.Meta = _Decode(data);
+            var m = new FlvMetadata
+            {
+                Meta = _Decode(data)
+            };
 
             if (!m.Meta.ContainsKey("duration"))
                 m.Meta["duration"] = 0.0;
@@ -82,9 +83,8 @@ namespace BililiveRecorder.FlvProcessor
         }
         private byte[] _EncodeVal(object val)
         {
-            if (val is double)
+            if (val is double num)
             {
-                double num = (double)val;
                 byte[] ret = new byte[1 + sizeof(double)];
                 ret[0] = (byte)AMFTypes.Number;
                 byte[] numbits = BitConverter.GetBytes(num).ToBE();
@@ -102,9 +102,8 @@ namespace BililiveRecorder.FlvProcessor
                 Buffer.BlockCopy(Encoding.ASCII.GetBytes(str), 0, ret, 3, str.Length);
                 return ret;
             }
-            else if (val is byte)
+            else if (val is byte bit)
             {
-                byte bit = (byte)val;
                 byte[] ret = new byte[2];
                 ret[0] = (byte)AMFTypes.Boolean;
                 ret[1] = bit;
