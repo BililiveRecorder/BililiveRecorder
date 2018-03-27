@@ -47,7 +47,7 @@ namespace BililiveRecorder.FlvProcessor
                     fs.Write(new byte[] { 0, 0, 0, 0, }, 0, 4);
 
                     var offset = Tags[0].TimeStamp;
-                    Tags.ForEach(tag => tag.TimeStamp -= offset);
+                    Tags.ForEach(tag => tag.TimeStamp -= (tag.TimeStamp < offset ? tag.TimeStamp : offset));
 
                     Header.Meta["duration"] = Tags[Tags.Count - 1].TimeStamp / 1000.0;
                     Header.Meta["lasttimestamp"] = (double)Tags[Tags.Count - 1].TimeStamp;
