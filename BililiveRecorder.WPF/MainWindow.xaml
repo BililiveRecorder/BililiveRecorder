@@ -55,6 +55,7 @@
                             </MultiBinding>
                         </DataGridTextColumn.Binding>
                     </DataGridTextColumn>
+                    <DataGridTextColumn Binding="{Binding DownloadSpeedKiBps,StringFormat=0.## KiB/s}" Header="下载速度"/>
                     <DataGridTextColumn Binding="{Binding Clips.Count}" Header="在处理的剪辑数量"/>
                 </DataGrid.Columns>
             </DataGrid>
