@@ -1,0 +1,72 @@
+﻿<#@ template language="C#" hostspecific="True"#>
+<#@ assembly name="System.Core"#>
+<#@ import namespace="System.Linq"#>
+<#@ import namespace="System.Text"#>
+<#@ import namespace="System.IO"#>
+<#@ import namespace="System.Collections.Generic"#>
+<#@ assembly name="EnvDTE"#>
+<#@ output extension="tt.cs"#>
+namespace BililiveRecorder.WPF
+{
+    internal class BuildInfo
+    {
+		internal const bool Appveyor = <#= GetIsAppveyor() #>;
+		internal const string Version = @"<#= GetBuildVersion() #>";
+        internal const string HeadSha1 = @"<#= GetSha1() #>";
+        internal const string HeadShaShort = @"<#= GetSha1().Substring(0,7) #>";
+    }
+}
+<#+
+public string GetBuildVersion()
+{
+	return Environment.GetEnvironmentVariable("p_version") ?? "本地编译";
+}
+
+public string GetIsAppveyor()
+{
+	return Environment.GetEnvironmentVariable("APPVEYOR")?.ToUpper()=="TRUE" ? "true" : "false";
+}
+
+public string GetHeadSha1(DirectoryInfo gitDirectory)
+{
+    if (gitDirectory != null)
+    {
+        var head = File.ReadAllText(gitDirectory.GetFiles("HEAD").First().FullName);
+        head = head.Substring(4).Trim();
+        var headRef = System.IO.Path.Combine(gitDirectory.FullName, head);
+        return File.ReadAllText(headRef).Trim();
+    }
+    return null;
+}
+
+public DirectoryInfo SearchForGitDirectory(string path)
+{
+    DirectoryInfo di = new DirectoryInfo(path);
+    var directories = di.GetDirectories(".git");
+    var gitDirectory = directories.FirstOrDefault(x => x.Name == ".git");
+    if (gitDirectory == null)
+    {
+        if (di.Parent != null)
+        {
+            return SearchForGitDirectory(di.Parent.FullName);
+        }
+
+        return null;
+    }
+    return gitDirectory;
+}
+
+public string GetSha1()
+{
+    var gitDirectory = SearchForGitDirectory(GetSolutionDirectory());
+    var headSha1 = GetHeadSha1(gitDirectory);
+    return headSha1;
+}
+
+public string GetSolutionDirectory()
+{
+    var serviceProvider = this.Host as IServiceProvider;
+    var dte = serviceProvider.GetService(typeof(EnvDTE.DTE)) as EnvDTE.DTE;
+    return System.IO.Path.GetDirectoryName(dte.Solution.FullName);
+}
+#>

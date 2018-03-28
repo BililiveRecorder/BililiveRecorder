@@ -37,6 +37,7 @@ namespace BililiveRecorder.WPF
         public ObservableCollection<string> Logs { get; set; } =
             new ObservableCollection<string>()
             {
+                "当前版本：" + BuildInfo.Version,
                 "注：按鼠标右键复制日志",
                 "网站： https://rec.danmuji.org",
             };
@@ -53,6 +54,8 @@ namespace BililiveRecorder.WPF
             Recorder = new Recorder();
             DataContext = this;
 
+
+            Title += $@"   版本号: {BuildInfo.Version}  {BuildInfo.HeadShaShort}";
         }
 
 
