@@ -260,4 +260,4 @@ paket-files/
 __pycache__/
 *.pyc
 
-BililiveRecorder.WPF/BuildInfo.tt.cs
+BililiveRecorder.WPF/BuildInfo.cs

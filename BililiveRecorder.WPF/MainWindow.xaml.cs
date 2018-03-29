@@ -55,7 +55,7 @@ namespace BililiveRecorder.WPF
             DataContext = this;
 
 
-            Title += $@"   版本号: {BuildInfo.Version}  {BuildInfo.HeadShaShort}";
+            Title += "   版本号: " + BuildInfo.Version + "  " + BuildInfo.HeadShaShort;
         }
 
 

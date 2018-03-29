@@ -1,0 +1,10 @@
+﻿namespace BililiveRecorder.WPF
+{
+    internal class BuildInfo
+    {
+        internal const bool Appveyor = [APPVEYOR];
+        internal const string Version = @"[VERSION]";
+        internal const string HeadSha1 = @"[GIT_HASH]";
+        internal const string HeadShaShort = @"[GIT_HASH_S]";
+    }
+}
