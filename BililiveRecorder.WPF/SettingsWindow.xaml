@@ -73,21 +73,21 @@
             </Grid>
 
             <StackPanel Grid.Row="3" Grid.ColumnSpan="2" Margin="10,0">
-                <RadioButton IsChecked="{Binding Path=Feature, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter={x:Static core:UsedFeature.ClipOnly}}">
+                <RadioButton IsChecked="{Binding Path=Feature, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter={x:Static core:EnabledFeature.ClipOnly}}">
                     <TextBlock>
                         只使用即时回放剪辑功能
                         <LineBreak/>
                         （不保存所有直播数据到硬盘）
                     </TextBlock>
                 </RadioButton>
-                <RadioButton IsChecked="{Binding Path=Feature, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter={x:Static core:UsedFeature.RecordOnly}}">
+                <RadioButton IsChecked="{Binding Path=Feature, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter={x:Static core:EnabledFeature.RecordOnly}}">
                     <TextBlock>
                         只使用录制功能
                         <LineBreak/>
                         （占内存更少，但不能剪辑回放）
                     </TextBlock>
                 </RadioButton>
-                <RadioButton IsChecked="{Binding Path=Feature, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter={x:Static core:UsedFeature.Both}}">同时启用两个功能</RadioButton>
+                <RadioButton IsChecked="{Binding Path=Feature, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter={x:Static core:EnabledFeature.Both}}">同时启用两个功能</RadioButton>
             </StackPanel>
 
             <TextBlock Grid.Row="4" Grid.Column="0"></TextBlock>
