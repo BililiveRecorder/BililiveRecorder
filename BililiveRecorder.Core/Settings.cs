@@ -29,6 +29,13 @@ namespace BililiveRecorder.Core
             set => SetField(ref _savepath, value, nameof(SavePath));
         }
 
+        private EnabledFeature _feature = EnabledFeature.Both;
+        public EnabledFeature Feature
+        {
+            get => _feature;
+            set => SetField(ref _feature, value, nameof(Feature));
+        }
+
 
         public Settings()
         {

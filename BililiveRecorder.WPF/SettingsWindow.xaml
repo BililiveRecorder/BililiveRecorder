@@ -4,9 +4,13 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:BililiveRecorder.WPF"
+        xmlns:core="clr-namespace:BililiveRecorder.Core;assembly=BililiveRecorder.Core"
         mc:Ignorable="d"
         ShowInTaskbar="False" ResizeMode="NoResize"
-        Title="设置 - 录播姬" Height="260" Width="230">
+        Title="设置 - 录播姬" Height="260" Width="250">
+    <Window.Resources>
+        <local:EnumToBooleanConverter x:Key="EnumToBooleanConverter" />
+    </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition/>
@@ -18,7 +22,7 @@
                 <RowDefinition Height="1*"/>
                 <RowDefinition Height="1*"/>
                 <RowDefinition Height="1*"/>
-                <RowDefinition Height="1*"/>
+                <RowDefinition Height="Auto"/>
                 <RowDefinition Height="1*"/>
                 <RowDefinition Height="1*"/>
                 <RowDefinition Height="1*"/>
@@ -37,6 +41,7 @@
                     </Style>
                 </ResourceDictionary>
             </Grid.Resources>
+
             <TextBlock Grid.Row="0" Grid.Column="0">保存位置：</TextBlock>
             <Grid Grid.Row="0" Grid.Column="1" VerticalAlignment="Center">
                 <Grid.ColumnDefinitions>
@@ -46,6 +51,7 @@
                 <local:ClickSelectTextBox Grid.Column="0" Text="{Binding SavePath}"/>
                 <Button Grid.Column="1" Click="Button_Click">浏览...</Button>
             </Grid>
+
             <TextBlock Grid.Row="1" Grid.Column="0">剪辑回放时长：</TextBlock>
             <Grid Grid.Row="1" Grid.Column="1" VerticalAlignment="Center">
                 <Grid.ColumnDefinitions>
@@ -55,6 +61,7 @@
                 <local:ClickSelectTextBox Grid.Column="0" Text="{Binding Clip_Past}"/>
                 <TextBlock Grid.Column="1" Margin="5,0,10,0">秒</TextBlock>
             </Grid>
+
             <TextBlock Grid.Row="2" Grid.Column="0">剪辑录制时长：</TextBlock>
             <Grid Grid.Row="2" Grid.Column="1" VerticalAlignment="Center">
                 <Grid.ColumnDefinitions>
@@ -64,10 +71,25 @@
                 <local:ClickSelectTextBox Grid.Column="0" Text="{Binding Clip_Future}"/>
                 <TextBlock Grid.Column="1" Margin="5,0,10,0">秒</TextBlock>
             </Grid>
-            <TextBlock Grid.Row="3" Grid.Column="0"></TextBlock>
-            <StackPanel Grid.Row="3" Grid.Column="1">
 
+            <StackPanel Grid.Row="3" Grid.ColumnSpan="2" Margin="10,0">
+                <RadioButton IsChecked="{Binding Path=Feature, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter={x:Static core:UsedFeature.ClipOnly}}">
+                    <TextBlock>
+                        只使用即时回放剪辑功能
+                        <LineBreak/>
+                        （不保存所有直播数据到硬盘）
+                    </TextBlock>
+                </RadioButton>
+                <RadioButton IsChecked="{Binding Path=Feature, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter={x:Static core:UsedFeature.RecordOnly}}">
+                    <TextBlock>
+                        只使用录制功能
+                        <LineBreak/>
+                        （占内存更少，但不能剪辑回放）
+                    </TextBlock>
+                </RadioButton>
+                <RadioButton IsChecked="{Binding Path=Feature, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter={x:Static core:UsedFeature.Both}}">同时启用两个功能</RadioButton>
             </StackPanel>
+
             <TextBlock Grid.Row="4" Grid.Column="0"></TextBlock>
             <StackPanel Grid.Row="4" Grid.Column="1">
 

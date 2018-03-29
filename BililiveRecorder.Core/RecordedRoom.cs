@@ -152,7 +152,7 @@ namespace BililiveRecorder.Core
                 else
                 {
                     // response.StatusCode == HttpStatusCode.OK
-                    Processor = new FlvStreamProcessor(RecordInfo.GetStreamFilePath());
+                    Processor = new FlvStreamProcessor(_settings.Feature != EnabledFeature.ClipOnly ? RecordInfo.GetStreamFilePath() : null, _settings.Feature == EnabledFeature.RecordOnly);
                     Processor.TagProcessed += Processor_TagProcessed;
                     Processor.StreamFinalized += Processor_StreamFinalized;
                     Processor.GetFileName = RecordInfo.GetStreamFilePath;

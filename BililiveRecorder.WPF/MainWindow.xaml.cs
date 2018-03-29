@@ -199,6 +199,7 @@ namespace BililiveRecorder.WPF
             s.Clip_Future = ps.Clip_Future;
             s.Clip_Past = ps.Clip_Past;
             s.SavePath = ps.SavePath;
+            s.Feature = (EnabledFeature)ps.Feature;
             s.PropertyChanged += (sender, e) =>
             {
                 switch (e.PropertyName)
@@ -211,6 +212,9 @@ namespace BililiveRecorder.WPF
                         break;
                     case nameof(s.SavePath):
                         ps.SavePath = s.SavePath;
+                        break;
+                    case nameof(s.Feature):
+                        ps.Feature = (int)s.Feature;
                         break;
                     default:
                         break;

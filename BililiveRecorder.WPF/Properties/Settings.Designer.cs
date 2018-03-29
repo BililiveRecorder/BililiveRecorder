@@ -82,5 +82,17 @@ namespace BililiveRecorder.WPF.Properties {
                 this["SavePath"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int Feature {
+            get {
+                return ((int)(this["Feature"]));
+            }
+            set {
+                this["Feature"] = value;
+            }
+        }
     }
 }

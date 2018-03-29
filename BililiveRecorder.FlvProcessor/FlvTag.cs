@@ -50,10 +50,13 @@ namespace BililiveRecorder.FlvProcessor
 
         public void WriteTo(Stream stream)
         {
-            var vs = ToBytes(true);
-            stream.Write(vs, 0, vs.Length);
-            stream.Write(Data, 0, Data.Length);
-            stream.Write(BitConverter.GetBytes(Data.Length + vs.Length).ToBE(), 0, 4);
+            if (stream != null)
+            {
+                var vs = ToBytes(true);
+                stream.Write(vs, 0, vs.Length);
+                stream.Write(Data, 0, Data.Length);
+                stream.Write(BitConverter.GetBytes(Data.Length + vs.Length).ToBE(), 0, 4);
+            }
         }
 
     }
