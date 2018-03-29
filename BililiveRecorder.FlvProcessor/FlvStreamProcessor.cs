@@ -283,7 +283,7 @@ namespace BililiveRecorder.FlvProcessor
             {
                 lock (_writelock)
                 {
-                    logger.Info("剪辑处理中，将会保存过去 {0} 秒和将来 {1} 秒的直播", (Tags[Tags.Count - 1].TimeStamp - Tags[0].TimeStamp) / 1000d, Clip_Future);
+                    logger.Info("剪辑处理中，将会保存过去 {0} 秒和将来 {1} 秒的直播流", (Tags[Tags.Count - 1].TimeStamp - Tags[0].TimeStamp) / 1000d, Clip_Future);
                     return new FlvClipProcessor(Metadata, HTags, new List<FlvTag>(Tags.ToArray()), Clip_Future);
                 }
             }

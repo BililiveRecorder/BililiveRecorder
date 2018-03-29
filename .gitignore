@@ -261,3 +261,4 @@ __pycache__/
 *.pyc
 
 BililiveRecorder.WPF/BuildInfo.cs
+BililiveRecorder.WPF/Nlog.config

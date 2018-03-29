@@ -151,8 +151,15 @@ namespace BililiveRecorder.Core
                 }
                 else
                 {
-                    // response.StatusCode == HttpStatusCode.OK
-                    Processor = new FlvStreamProcessor(_settings.Feature != EnabledFeature.ClipOnly ? RecordInfo.GetStreamFilePath() : null, _settings.Feature == EnabledFeature.RecordOnly);
+                    string savepath = _settings.Feature != EnabledFeature.ClipOnly ? RecordInfo.GetStreamFilePath() : null;
+                    logger.Log(RealRoomid, LogLevel.Info, "开始下载直播流" + savepath != null ? " 并保存到 " + Path.GetFileName(savepath) : "");
+
+                    if (triggerType == TriggerType.HttpApiRecheck)
+                    {
+                        triggerType = TriggerType.HttpApi;
+                    }
+
+                    Processor = new FlvStreamProcessor(savepath, _settings.Feature == EnabledFeature.RecordOnly);
                     Processor.TagProcessed += Processor_TagProcessed;
                     Processor.StreamFinalized += Processor_StreamFinalized;
                     Processor.GetFileName = RecordInfo.GetStreamFilePath;
