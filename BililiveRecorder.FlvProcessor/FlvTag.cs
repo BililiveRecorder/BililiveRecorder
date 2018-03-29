@@ -18,7 +18,7 @@ namespace BililiveRecorder.FlvProcessor
 
         public byte[] Data = null;
 
-        public byte[] ToBytes(bool useDataSize, double offset = 0)
+        public byte[] ToBytes(bool useDataSize, int offset = 0)
         {
             var tag = new byte[11];
             tag[0] = (byte)TagType;
@@ -48,7 +48,7 @@ namespace BililiveRecorder.FlvProcessor
             return (Data[0] | mask) == compare ? 1 : 0;
         }
 
-        public void WriteTo(Stream stream, double offset = 0)
+        public void WriteTo(Stream stream, int offset = 0)
         {
             if (stream != null)
             {
