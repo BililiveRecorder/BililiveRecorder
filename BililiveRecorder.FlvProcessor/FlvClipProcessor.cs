@@ -46,11 +46,8 @@ namespace BililiveRecorder.FlvProcessor
                     fs.Write(FlvStreamProcessor.FLV_HEADER_BYTES, 0, FlvStreamProcessor.FLV_HEADER_BYTES.Length);
                     fs.Write(new byte[] { 0, 0, 0, 0, }, 0, 4);
 
-                    var offset = Tags[0].TimeStamp;
-                    Tags.ForEach(tag => tag.TimeStamp -= (tag.TimeStamp < offset ? tag.TimeStamp : offset));
-
-                    Header.Meta["duration"] = Tags[Tags.Count - 1].TimeStamp / 1000.0;
-                    Header.Meta["lasttimestamp"] = (double)Tags[Tags.Count - 1].TimeStamp;
+                    Header.Meta["duration"] = (Tags[Tags.Count - 1].TimeStamp - Tags[0].TimeStamp) / 1000d;
+                    Header.Meta["lasttimestamp"] = (Tags[Tags.Count - 1].TimeStamp - Tags[0].TimeStamp);
 
                     var t = new FlvTag
                     {
@@ -59,8 +56,10 @@ namespace BililiveRecorder.FlvProcessor
                     };
                     t.WriteTo(fs);
 
+                    var offset = Tags[0].TimeStamp;
+
                     HTags.ForEach(tag => tag.WriteTo(fs));
-                    Tags.ForEach(tag => tag.WriteTo(fs));
+                    Tags.ForEach(tag => tag.WriteTo(fs, offset));
 
                     logger.Info("剪辑已保存：{0}", Path.GetFileName(filepath));
 
