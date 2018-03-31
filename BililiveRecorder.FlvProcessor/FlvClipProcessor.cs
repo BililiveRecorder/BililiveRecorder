@@ -56,7 +56,7 @@ namespace BililiveRecorder.FlvProcessor
                     };
                     t.WriteTo(fs);
 
-                    var offset = Tags[0].TimeStamp;
+                    int offset = Tags[0].TimeStamp;
 
                     HTags.ForEach(tag => tag.WriteTo(fs));
                     Tags.ForEach(tag => tag.WriteTo(fs, offset));

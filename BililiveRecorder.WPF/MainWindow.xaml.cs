@@ -9,6 +9,7 @@ using System.Deployment.Application;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -88,16 +89,19 @@ namespace BililiveRecorder.WPF
         private void CheckVersion()
         {
             UpdateBar.MainButtonClick += UpdateBar_MainButtonClick;
-
-            if (ApplicationDeployment.IsNetworkDeployed)
+            // 定时每6小时检查一次
+            Repeat.Interval(TimeSpan.FromHours(6), () => UpdateBar.Dispatcher.Invoke(() =>
             {
-                ApplicationDeployment ad = ApplicationDeployment.CurrentDeployment;
-                ad.CheckForUpdateCompleted += Ad_CheckForUpdateCompleted;
-                ad.CheckForUpdateAsync();
-            }
+                if (ApplicationDeployment.IsNetworkDeployed && UpdateAction == null)
+                {
+                    ApplicationDeployment ad = ApplicationDeployment.CurrentDeployment;
+                    ad.CheckForUpdateCompleted += Ad_CheckForUpdateCompleted;
+                    ad.CheckForUpdateAsync();
+                }
+            }), new CancellationToken());
         }
 
-        private Action UpdateAction;
+        private Action UpdateAction = null;
         private void UpdateBar_MainButtonClick(object sender, RoutedEventArgs e) => UpdateAction?.Invoke();
 
         private void Ad_CheckForUpdateCompleted(object sender, CheckForUpdateCompletedEventArgs e)

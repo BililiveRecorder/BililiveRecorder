@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace BililiveRecorder.Core
 {
-    internal static class Repeat
+    public static class Repeat
     {
         public static Task Interval(
             TimeSpan pollInterval,
