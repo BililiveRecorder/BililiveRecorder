@@ -15,7 +15,7 @@ See [rec.danmuji.org](https://rec.danmuji.org) (in Chinese)
 
 ## Feature
 
-- Eazy to use
+- Easy to use
 - Fix timestamp automatically
 - Start recording when stream starts
 - Record multiple stream at same time
