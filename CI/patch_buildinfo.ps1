@@ -1,3 +1,5 @@
+# called by msbuild
+
 $isAppveyor = if ($env:APPVEYOR -eq $null) { "false" } else { $env:APPVEYOR }
 $buildversion = if ($env:p_version -eq $null) { "本地编译" } else { $env:p_version }
 $githash = git rev-parse --verify HEAD

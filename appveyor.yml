@@ -2,34 +2,21 @@ image: Visual Studio 2017
 
 version: Oops{build}
 
-branches:
-  only:
-    - dev
+#
+# 在 Appveyor 控制台设置的
+#
+# Branches to build
+#   All except branches specified below
+#     master
+#
+# [x] Do not build tags
+#
 
 platform: Any CPU
 
 configuration:
   - Debug
   #- Release
-
-init:
-  - git config --global credential.helper store
-  - ps: Add-Content "$env:USERPROFILE\.git-credentials" "https://$($env:github_access_token):x-oauth-basic@github.com`n"
-  - git config --global user.email "appveyor@genteure.com"
-  - git config --global user.name "Appveyor(Genteure)"
-  - git config --global core.autocrlf false
-  - ps: >-
-      if ($env:APPVEYOR_REPO_TAG -eq "true")
-      {
-        $env:p_version="$($env:APPVEYOR_REPO_TAG_NAME.TrimStart("v")).0"
-        Update-AppveyorBuild -Version "$env:p_version"
-      }
-      else
-      {
-        $env:p_version="0.0.0.$env:APPVEYOR_BUILD_NUMBER"
-        Update-AppveyorBuild -Version "dev-$($env:APPVEYOR_REPO_COMMIT.Substring(0, 7))-$env:APPVEYOR_BUILD_NUMBER"
-      }
-  - ps: Write-Host "Current build version is $env:p_version"
 
 assembly_info:
   patch: true
@@ -46,9 +33,12 @@ dotnet_csproj:
   file_version: $(p_version)
   informational_version: $(p_version)
 
+init:
+  - ps: ./CI/appveyor_init.ps1
+
 before_build:
-  - nuget restore
-  - dotnet restore
+  - nuget restore -Verbosity quiet
+  - msbuild /t:Clean /verbosity:quiet /nologo
 
 artifacts:
   - path: BililiveRecorder.WPF\bin\Debug
@@ -65,12 +55,11 @@ build:
   verbosity: minimal
 
 after_build:
-  - ps: >-
-      if ($env:APPVEYOR_REPO_TAG -eq "true")
-      {
-        ./CI/build_clickonce.ps1 
-        ./CI/push_clickonce.ps1
-      }
+  - ps: ./CI/appveyor_after_build.ps1
+
+before_deploy:
+  - ps: ./CI/appveyor_before_deploy.ps1
+
 
 # after_deploy:
 
