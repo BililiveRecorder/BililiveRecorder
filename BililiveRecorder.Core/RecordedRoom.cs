@@ -27,8 +27,8 @@ namespace BililiveRecorder.Core
         public FlvStreamProcessor Processor; // FlvProcessor
         public ObservableCollection<FlvClipProcessor> Clips { get; private set; } = new ObservableCollection<FlvClipProcessor>();
 
+        internal StreamMonitor StreamMonitor { get; }
         private Settings _settings { get; }
-        private StreamMonitor StreamMonitor { get; }
         private HttpWebRequest webRequest;
         private Stream flvStream;
         private bool flv_shutdown = false;
@@ -36,11 +36,11 @@ namespace BililiveRecorder.Core
         public double DownloadSpeedKiBps
         {
             get { return _DownloadSpeedKiBps; }
-            set { if (value != _DownloadSpeedKiBps) { _DownloadSpeedKiBps = value; TriggerPropertyChanged(nameof(DownloadSpeedKiBps)); } }
+            private set { if (value != _DownloadSpeedKiBps) { _DownloadSpeedKiBps = value; TriggerPropertyChanged(nameof(DownloadSpeedKiBps)); } }
         }
         private double _DownloadSpeedKiBps = 0;
-        private DateTime lastUpdateDateTime;
-        private long lastUpdateSize = 0;
+        public DateTime LastUpdateDateTime { get; private set; } = DateTime.Now;
+        public long LastUpdateSize { get; private set; } = 0;
 
         public RecordedRoom(Settings settings, int roomid)
         {
@@ -227,13 +227,13 @@ namespace BililiveRecorder.Core
         private void _UpdateDownloadSpeed(int bytesRead)
         {
             DateTime now = DateTime.Now;
-            double sec = (now - lastUpdateDateTime).TotalSeconds;
-            lastUpdateSize += bytesRead;
+            double sec = (now - LastUpdateDateTime).TotalSeconds;
+            LastUpdateSize += bytesRead;
             if (sec > 1)
             {
-                var speed = lastUpdateSize / sec;
-                lastUpdateDateTime = now;
-                lastUpdateSize = 0;
+                var speed = LastUpdateSize / sec;
+                LastUpdateDateTime = now;
+                LastUpdateSize = 0;
                 DownloadSpeedKiBps = speed / 1024; // KiB per sec
             }
         }

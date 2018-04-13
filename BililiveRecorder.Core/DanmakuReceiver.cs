@@ -95,6 +95,7 @@ namespace BililiveRecorder.Core
 
                 ReceiveMessageLoopThread = new Thread(this.ReceiveMessageLoop)
                 {
+                    Name = "ReceiveMessageLoop " + channelId,
                     IsBackground = true
                 };
                 ReceiveMessageLoopThread.Start();
