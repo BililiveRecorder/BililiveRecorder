@@ -64,13 +64,9 @@ namespace BililiveRecorder.WPF
         {
             InitSettings();
 
-            if (ApplicationDeployment.IsNetworkDeployed && ApplicationDeployment.CurrentDeployment.IsFirstRun)
+            if (string.IsNullOrWhiteSpace(Recorder.Settings.SavePath) || (ApplicationDeployment.IsNetworkDeployed && ApplicationDeployment.CurrentDeployment.IsFirstRun))
             {
-                var sw = new SettingsWindow(this, Recorder.Settings);
-                if (sw.ShowDialog() == true)
-                {
-                    sw.Settings.ApplyTo(Recorder.Settings);
-                }
+                ShowSettingsWindow();
             }
 
             Task.Run(() => CheckVersion());
@@ -364,6 +360,11 @@ namespace BililiveRecorder.WPF
         }
 
         private void SettingsButton_Click(object sender, RoutedEventArgs e)
+        {
+            ShowSettingsWindow();
+        }
+
+        private void ShowSettingsWindow()
         {
             var sw = new SettingsWindow(this, Recorder.Settings);
             if (sw.ShowDialog() == true)
