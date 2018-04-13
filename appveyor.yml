@@ -33,7 +33,7 @@ dotnet_csproj:
   file_version: $(p_version)
   informational_version: $(p_version)
 
-init:
+install:
   - ps: ./CI/appveyor_init.ps1
 
 before_build:
