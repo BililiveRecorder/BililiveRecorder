@@ -152,7 +152,7 @@ namespace BililiveRecorder.Core
                 else
                 {
                     string savepath = _settings.Feature != EnabledFeature.ClipOnly ? RecordInfo.GetStreamFilePath() : null;
-                    logger.Log(RealRoomid, LogLevel.Info, "开始下载直播流" + savepath != null ? " 并保存到 " + Path.GetFileName(savepath) : "");
+                    logger.Log(RealRoomid, LogLevel.Info, "开始下载直播流" + (savepath != null ? " 并保存到 " + Path.GetFileName(savepath) : ""));
 
                     if (triggerType == TriggerType.HttpApiRecheck)
                     {
