@@ -2,17 +2,12 @@ image: Visual Studio 2017
 
 version: Oops{build}
 
-#
-# 在 Appveyor 控制台设置的
-#
-# Branches to build
-#   All except branches specified below
-#     master
-#
-# [x] Do not build tags
-#
-
 platform: Any CPU
+
+branches:
+  except:
+  - master
+skip_tags: true
 
 configuration:
   - Debug
