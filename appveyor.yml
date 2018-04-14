@@ -33,13 +33,6 @@ dotnet_csproj:
   file_version: $(p_version)
   informational_version: $(p_version)
 
-install:
-  - ps: ./CI/appveyor_init.ps1
-
-before_build:
-  - nuget restore -Verbosity quiet
-  - msbuild /t:Clean /verbosity:quiet /nologo
-
 artifacts:
   - path: BililiveRecorder.WPF\bin\Debug
     name: BililiveRecorderDebugBuild
@@ -55,14 +48,21 @@ environment:
 cache:
   - packages
 
+install:
+  - ps: ./CI/appveyor_install.ps1
+
+before_build:
+  - nuget restore -Verbosity quiet
+  - msbuild /t:Clean /verbosity:quiet /nologo
+
 build:
   verbosity: minimal
 
 after_build:
   - ps: ./CI/appveyor_after_build.ps1
 
-before_deploy:
-  - ps: ./CI/appveyor_before_deploy.ps1
+on_success:
+  - ps: ./CI/appveyor_on_success.ps1
 
 
 # after_deploy:
