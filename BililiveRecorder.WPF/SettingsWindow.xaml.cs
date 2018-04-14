@@ -33,12 +33,24 @@ namespace BililiveRecorder.WPF
 
         private void Save(object sender, RoutedEventArgs e)
         {
+            if (!_CheckSavePath()) return;
             DialogResult = true;
             Close();
         }
 
+        private bool _CheckSavePath()
+        {
+            if (string.IsNullOrWhiteSpace(Settings.SavePath))
+            {
+                MessageBox.Show("请设置一个录像保存路径", "保存路径不能为空", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return false;
+            }
+            return true;
+        }
+
         private void Cancel(object sender, RoutedEventArgs e)
         {
+            if (!_CheckSavePath()) return;
             Close();
         }
 
