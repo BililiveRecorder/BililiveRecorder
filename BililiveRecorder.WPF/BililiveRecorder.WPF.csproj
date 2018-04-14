@@ -78,7 +78,8 @@
     <ManifestCertificateThumbprint>9097810D08593788E799F3C1DBFDDEF603D37940</ManifestCertificateThumbprint>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestKeyFile>rixCloud2Genteure.pfx</ManifestKeyFile>
+    <ManifestKeyFile>
+    </ManifestKeyFile>
   </PropertyGroup>
   <PropertyGroup>
     <ManifestTimestampUrl>http://timestamp.comodoca.com/?td=sha256</ManifestTimestampUrl>
@@ -176,7 +177,6 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <None Include="BuildInfo.txt" />
-    <None Include="rixCloud2Genteure.pfx" />
     <Resource Include="ico.ico" />
     <Content Include="NLog.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
