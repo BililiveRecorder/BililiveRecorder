@@ -10,6 +10,7 @@ $commit_message_version_regex="^Release: (\d+\.\d+\.\d+)$"
 
 if ($env:APPVEYOR_REPO_BRANCH -eq "dev" -and $env:APPVEYOR_REPO_COMMIT_MESSAGE -cmatch $commit_message_version_regex)
 {
+    git checkout dev
     $env:BILILIVERECORDER_RELEASE=$true
     $env:p_version="$($Matches[1]).0"
     Update-AppveyorBuild -Version "$env:p_version"
