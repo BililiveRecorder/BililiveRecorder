@@ -1,13 +1,16 @@
 # BiliBili Stream Recorder
 
 [![Build status](https://ci.appveyor.com/api/projects/status/1n4822yitgtu7ht7?svg=true)](https://ci.appveyor.com/project/Genteure/bililiverecorder)
-![Pull Request Welcome](https://img.shields.io/badge/Pull%20request-welcome-brightgreen.svg)
+[![Version](https://img.shields.io/github/tag/Bililive/BililiveRecorder.svg?label=Version)](#)
+[![Issues are "help wanted"](https://img.shields.io/github/issues/Bililive/BililiveRecorder/help%20wanted.svg)](https://github.com/Bililive/BililiveRecorder/issues?q=is%3Aissue+is%3Aopen+label%3A%22help+wanted%22)
+[![Pull Request Welcome](https://img.shields.io/badge/Pull%20request-welcome-brightgreen.svg)](#)
+[![license](https://img.shields.io/github/license/Bililive/BililiveRecorder.svg)](#)
 
 [简体中文 | Simplified Chinese](README_CN.md)
 
 ## Apology
 
-GitHub is a global platform, and theoretically, everyone should use English. But since this project is only meant for Chinese user and rely on a Chinese website [BiliBili](https://live.bilibili.com), all code comments are in Chinese. This README file will always use English so people like _you_ can understand what is this, and perhaps make some use out of it.
+GitHub is a global platform, and theoretically, everyone should use English. But since this project is only meant for Chinese user and rely on a Chinese website [BiliBili](https://live.bilibili.com) (_[wikipedia](https://en.wikipedia.org/wiki/Bilibili)_), all code comments are in Chinese. This README file will always use English so people like _you_ can understand what is this, and perhaps make some use out of it.
 
 ## Install & Use
 

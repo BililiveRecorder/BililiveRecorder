@@ -1,7 +1,10 @@
 # B站录播姬
 
 [![编译状态](https://ci.appveyor.com/api/projects/status/1n4822yitgtu7ht7?svg=true)](https://ci.appveyor.com/project/Genteure/bililiverecorder)
-![Pull Request Welcome](https://img.shields.io/badge/Pull%20request-welcome-brightgreen.svg)
+[![当前版本](https://img.shields.io/github/tag/Bililive/BililiveRecorder.svg?label=当前版本)](#)
+[![需要帮助的 issue](https://img.shields.io/github/issues/Bililive/BililiveRecorder/help%20wanted.svg?label=需要帮助的%20issue)](https://github.com/Bililive/BililiveRecorder/issues?q=is%3Aissue+is%3Aopen+label%3A%22help+wanted%22)
+[![Pull Request Welcome](https://img.shields.io/badge/Pull%20request-欢迎-brightgreen.svg)](#)
+[![开源协议](https://img.shields.io/github/license/Bililive/BililiveRecorder.svg?label=开源协议)](#)
 
 ## 安装 & 使用
 
