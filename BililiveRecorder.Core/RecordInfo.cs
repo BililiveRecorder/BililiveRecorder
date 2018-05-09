@@ -15,10 +15,10 @@ namespace BililiveRecorder.Core
         public string StreamName = "某直播间";
 
         public string GetStreamFilePath()
-            => RemoveInvalidFileName(Path.Combine(SavePath, $@"{StreamFilePrefix}-{StreamName}-{DateTime.Now.ToString("yyyyMMddHHmmss")}-{random.Next(100, 999)}.flv"));
+            => Path.Combine(SavePath, RemoveInvalidFileName($@"{StreamFilePrefix}-{StreamName}-{DateTime.Now.ToString("yyyyMMddHHmmss")}-{random.Next(100, 999)}.flv"));
 
         public string GetClipFilePath()
-            => RemoveInvalidFileName(Path.Combine(SavePath, $@"{ClipFilePrefix}-{StreamName}-{DateTime.Now.ToString("yyyyMMddHHmmss")}-{random.Next(100, 999)}.flv"));
+            => Path.Combine(SavePath, RemoveInvalidFileName($@"{ClipFilePrefix}-{StreamName}-{DateTime.Now.ToString("yyyyMMddHHmmss")}-{random.Next(100, 999)}.flv"));
 
         private static string RemoveInvalidFileName(string name)
         {
