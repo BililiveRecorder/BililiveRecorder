@@ -46,7 +46,7 @@ namespace BililiveRecorder.Core
         {
             logger.Warn(e.Error, "弹幕连接被断开，将每30秒尝试重连一次");
             bool connect_result = false;
-            while (!connect_result && !TokenSource.Token.IsCancellationRequested)
+            while (!receiver.IsConnected && !TokenSource.Token.IsCancellationRequested)
             {
                 Thread.Sleep(1000 * 30); // 备注：这是运行在 ReceiveMessageLoop 线程上的
                 logger.Log(Roomid, LogLevel.Info, "重连弹幕服务器...");
