@@ -1,18 +1,15 @@
 ﻿using NLog;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Net;
-using System.Text;
 
 namespace BililiveRecorder.FlvProcessor
 {
     // TODO: 重构 Tag 解析流程
     // TODO: 添加测试
     // 注：下载时会按照 4 11 N bytes 下载
-    public class FlvStreamProcessor : IDisposable
+    public class FlvStreamProcessor : IFlvStreamProcessor
     {
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
 
@@ -35,22 +32,22 @@ namespace BililiveRecorder.FlvProcessor
             // 0x00, // the "0th" tag has a length of 0
         };
 
-        public FlvMetadata Metadata = null;
+        public IFlvMetadata Metadata { get; set; } = null;
         public event TagProcessedEvent TagProcessed;
         public event StreamFinalizedEvent StreamFinalized;
-        public Func<string> GetFileName;
+        public Func<string> GetFileName { get; set; }
 
-        public uint Clip_Past = 90;
-        public uint Clip_Future = 30;
+        public uint Clip_Past { get; set; } = 90;
+        public uint Clip_Future { get; set; } = 30;
         private readonly bool _noClip = false;
 
         private bool _headerParsed = false;
-        private readonly List<FlvTag> HTags = new List<FlvTag>();
-        private readonly List<FlvTag> Tags = new List<FlvTag>();
+        private readonly List<IFlvTag> HTags = new List<IFlvTag>();
+        private readonly List<IFlvTag> Tags = new List<IFlvTag>();
         private readonly MemoryStream _buffer = new MemoryStream();
         private readonly MemoryStream _data = new MemoryStream();
-        private FlvTag currentTag = null;
-        private object _writelock = new object();
+        private IFlvTag currentTag = null;
+        private readonly object _writelock = new object();
         private bool Finallized = false;
 
         private readonly FileStream _fs;
@@ -85,7 +82,9 @@ namespace BililiveRecorder.FlvProcessor
         public void AddBytes(byte[] data)
         {
             lock (_writelock)
+            {
                 _AddBytes(data);
+            }
         }
 
         private void _AddBytes(byte[] data)
@@ -104,10 +103,15 @@ namespace BililiveRecorder.FlvProcessor
                 }
                 var r = new bool[FLV_HEADER_BYTES.Length];
                 for (int i = 0; i < FLV_HEADER_BYTES.Length; i++)
+                {
                     r[i] = data[i] == FLV_HEADER_BYTES[i];
+                }
+
                 bool succ = r.All(x => x);
                 if (!succ)
+                {
                     throw new NotSupportedException("Not FLV Stream or Not Supported"); // TODO: custom Exception.
+                }
 
                 _headerParsed = true;
                 _AddBytes(data.Skip(FLV_HEADER_BYTES.Length).ToArray());
@@ -140,7 +144,7 @@ namespace BililiveRecorder.FlvProcessor
             }
         }
 
-        private void _TagCreated(FlvTag tag)
+        private void _TagCreated(IFlvTag tag)
         {
             if (Metadata == null)
             {
@@ -149,7 +153,7 @@ namespace BililiveRecorder.FlvProcessor
                     _fs?.Write(FLV_HEADER_BYTES, 0, FLV_HEADER_BYTES.Length);
                     _fs?.Write(new byte[] { 0, 0, 0, 0, }, 0, 4);
 
-                    Metadata = FlvMetadata.Parse(tag.Data);
+                    Metadata = new FlvMetadata(tag.Data);
 
                     // TODO: 添加录播姬标记、录制信息
 
@@ -202,7 +206,10 @@ namespace BililiveRecorder.FlvProcessor
                 {
                     tag.TimeStamp -= BaseTimeStamp; // 修复时间戳
                     if (tag.TimeStamp < 0)
+                    {
                         tag.TimeStamp = 0;
+                    }
+
                     MaxTimeStamp = Math.Max(MaxTimeStamp, tag.TimeStamp);
                 }
                 else
@@ -221,7 +228,9 @@ namespace BililiveRecorder.FlvProcessor
                         LasttimeRemovedTimestamp = MaxTimeStamp;
                         int max_remove_index = Tags.FindLastIndex(x => x.IsVideoKeyframe && ((MaxTimeStamp - x.TimeStamp) > (Clip_Past * SEC_TO_MS)));
                         if (max_remove_index > 0)
+                        {
                             Tags.RemoveRange(0, max_remove_index);
+                        }
                         // Tags.RemoveRange(0, max_remove_index + 1 - 1);
                         // 给将来的备注：这里是故意 + 1 - 1 的，因为要保留选中的那个关键帧， + 1 就把关键帧删除了
                     }
@@ -242,7 +251,7 @@ namespace BililiveRecorder.FlvProcessor
             _buffer.Write(data, 0, data.Length);
             long dataLen = _buffer.Position;
             _buffer.Position = 0;
-            FlvTag tag = new FlvTag();
+            IFlvTag tag = new FlvTag();
 
             // Previous Tag Size
             _buffer.Read(b, 0, 4);
@@ -272,7 +281,7 @@ namespace BililiveRecorder.FlvProcessor
             _AddBytes(rest);
         }
 
-        public FlvClipProcessor Clip()
+        public IFlvClipProcessor Clip()
         {
             // 如果禁用 clip 功能 或者 已经结束处理了
             if (_noClip || Finallized)
@@ -284,7 +293,7 @@ namespace BililiveRecorder.FlvProcessor
                 lock (_writelock)
                 {
                     logger.Info("剪辑处理中，将会保存过去 {0} 秒和将来 {1} 秒的直播流", (Tags[Tags.Count - 1].TimeStamp - Tags[0].TimeStamp) / 1000d, Clip_Future);
-                    return new FlvClipProcessor(Metadata, HTags, new List<FlvTag>(Tags.ToArray()), Clip_Future);
+                    return new FlvClipProcessor(Metadata, HTags, new List<IFlvTag>(Tags.ToArray()), Clip_Future);
                 }
             }
         }
@@ -292,6 +301,7 @@ namespace BililiveRecorder.FlvProcessor
         public void FinallizeFile()
         {
             if (!Finallized)
+            {
                 lock (_writelock)
                 {
                     try
@@ -322,6 +332,7 @@ namespace BililiveRecorder.FlvProcessor
                         StreamFinalized?.Invoke(this, new StreamFinalizedArgs() { StreamProcessor = this });
                     }
                 }
+            }
         }
 
         #region IDisposable Support

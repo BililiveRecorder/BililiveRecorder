@@ -24,8 +24,8 @@ namespace BililiveRecorder.Core
         public bool IsMonitoring => StreamMonitor.receiver.IsConnected;
         public bool IsRecording => flvStream != null;
 
-        public FlvStreamProcessor Processor; // FlvProcessor
-        public ObservableCollection<FlvClipProcessor> Clips { get; private set; } = new ObservableCollection<FlvClipProcessor>();
+        public IFlvStreamProcessor Processor; // FlvProcessor
+        public ObservableCollection<IFlvClipProcessor> Clips { get; private set; } = new ObservableCollection<IFlvClipProcessor>();
 
         internal StreamMonitor StreamMonitor { get; }
         private Settings _settings { get; }

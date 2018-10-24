@@ -2,22 +2,21 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Text;
 
 namespace BililiveRecorder.FlvProcessor
 {
-    public class FlvClipProcessor
+    public class FlvClipProcessor : IFlvClipProcessor
     {
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
 
-        public readonly FlvMetadata Header;
-        public readonly List<FlvTag> HTags;
-        public readonly List<FlvTag> Tags;
-        private int target = -1;
+        public IFlvMetadata Header { get; }
+        public List<IFlvTag> HTags { get; }
+        public List<IFlvTag> Tags { get; }
+        private readonly int target = -1;
 
-        public Func<string> GetFileName;
+        public Func<string> GetFileName { get; set; }
 
-        public FlvClipProcessor(FlvMetadata header, List<FlvTag> head, List<FlvTag> past, uint future)
+        public FlvClipProcessor(IFlvMetadata header, List<IFlvTag> head, List<IFlvTag> past, uint future)
         {
             Header = header;
             HTags = head;
@@ -27,7 +26,7 @@ namespace BililiveRecorder.FlvProcessor
                 Tags.Count, Tags[0].TimeStamp, Tags[Tags.Count - 1].TimeStamp, (Tags[Tags.Count - 1].TimeStamp - Tags[0].TimeStamp) / 1000d);
         }
 
-        public void AddTag(FlvTag tag)
+        public void AddTag(IFlvTag tag)
         {
             Tags.Add(tag);
             if (tag.TimeStamp >= target)
