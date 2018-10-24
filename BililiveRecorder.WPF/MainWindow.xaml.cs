@@ -373,7 +373,7 @@ namespace BililiveRecorder.WPF
             }
         }
 
-        private RecordedRoom _GetSenderAsRecordedRoom(object sender) => (sender as Button)?.DataContext as RecordedRoom;
+        private IRecordedRoom _GetSenderAsRecordedRoom(object sender) => (sender as Button)?.DataContext as IRecordedRoom;
 
 
     }

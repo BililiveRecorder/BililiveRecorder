@@ -3,16 +3,16 @@ using System.IO;
 
 namespace BililiveRecorder.Core
 {
-    public class RecordInfo
+    public class RecordInfo : IRecordInfo
     {
         private static readonly Random random = new Random();
 
-        public string SavePath;
+        public string SavePath { get; set; }
 
-        public string StreamFilePrefix = "录制";
-        public string ClipFilePrefix = "剪辑";
+        public string StreamFilePrefix { get; set; } = "录制";
+        public string ClipFilePrefix { get; set; } = "剪辑";
 
-        public string StreamName = "某直播间";
+        public string StreamName { get; set; } = "某直播间";
 
         public string GetStreamFilePath()
             => Path.Combine(SavePath, RemoveInvalidFileName($@"{StreamFilePrefix}-{StreamName}-{DateTime.Now.ToString("yyyyMMddHHmmss")}-{random.Next(100, 999)}.flv"));
@@ -23,7 +23,10 @@ namespace BililiveRecorder.Core
         private static string RemoveInvalidFileName(string name)
         {
             foreach (char c in Path.GetInvalidFileNameChars())
+            {
                 name = name.Replace(c, '_');
+            }
+
             return name;
         }
 

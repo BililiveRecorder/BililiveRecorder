@@ -13,8 +13,8 @@ namespace BililiveRecorder.Core
     {
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
 
-        public ObservableCollection<RecordedRoom> Rooms { get; } = new ObservableCollection<RecordedRoom>();
-        public Settings Settings { get; } = new Settings();
+        public ObservableCollection<IRecordedRoom> Rooms { get; } = new ObservableCollection<IRecordedRoom>();
+        public ISettings Settings { get; } = new Settings();
 
         private CancellationTokenSource tokenSource;
 
@@ -66,7 +66,7 @@ namespace BililiveRecorder.Core
         /// 从录播姬移除直播间
         /// </summary>
         /// <param name="rr">直播间</param>
-        public void RemoveRoom(RecordedRoom rr)
+        public void RemoveRoom(IRecordedRoom rr)
         {
             rr.Stop();
             rr.StopRecord();

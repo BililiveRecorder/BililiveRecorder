@@ -5,13 +5,13 @@ using System.Threading.Tasks;
 
 namespace BililiveRecorder.Core
 {
-    public class StreamMonitor
+    public class StreamMonitor : IStreamMonitor
     {
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
 
         public int Roomid { get; private set; } = 0;
         public event StreamStatusChangedEvent StreamStatusChanged;
-        public readonly DanmakuReceiver receiver = new DanmakuReceiver();
+        public DanmakuReceiver receiver { get; } = new DanmakuReceiver();
         private CancellationTokenSource TokenSource = null;
 
         public StreamMonitor(int roomid)
@@ -69,7 +69,9 @@ namespace BililiveRecorder.Core
             try
             {
                 if (BililiveAPI.GetRoomInfo(Roomid).isStreaming)
+                {
                     _StartRecord(TriggerType.HttpApi);
+                }
             }
             catch (Exception ex)
             {
@@ -80,8 +82,13 @@ namespace BililiveRecorder.Core
         public bool Start()
         {
             if (!receiver.IsConnected)
+            {
                 if (!receiver.Connect(Roomid))
+                {
                     return false;
+                }
+            }
+
             logger.Log(Roomid, LogLevel.Info, "弹幕服务器连接成功");
 
             // Run 96 times a day.
@@ -96,7 +103,10 @@ namespace BililiveRecorder.Core
         public void Stop()
         {
             if (receiver.IsConnected)
+            {
                 receiver.Disconnect();
+            }
+
             TokenSource?.Cancel();
             TokenSource = null;
         }
@@ -113,7 +123,9 @@ namespace BililiveRecorder.Core
         public void CheckAfterSeconeds(int seconds, TriggerType type = TriggerType.HttpApiRecheck)
         {
             if (seconds < 0)
+            {
                 throw new ArgumentOutOfRangeException(nameof(seconds), "不能小于0");
+            }
 
             Task.Run(() =>
             {

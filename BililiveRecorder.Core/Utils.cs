@@ -29,7 +29,7 @@ namespace BililiveRecorder.Core
             }
         }
 
-        public static void ApplyTo(this Settings val1, Settings val2)
+        public static void ApplyTo(this ISettings val1, ISettings val2)
         {
             foreach (var p in val1.GetType().GetProperties())
             {
