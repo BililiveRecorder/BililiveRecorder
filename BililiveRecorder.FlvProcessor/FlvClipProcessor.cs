@@ -9,21 +9,27 @@ namespace BililiveRecorder.FlvProcessor
     {
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
 
-        public IFlvMetadata Header { get; }
-        public List<IFlvTag> HTags { get; }
-        public List<IFlvTag> Tags { get; }
-        private readonly int target = -1;
+        public IFlvMetadata Header { get; private set; }
+        public List<IFlvTag> HTags { get; private set; }
+        public List<IFlvTag> Tags { get; private set; }
+        private int target = -1;
 
         public Func<string> GetFileName { get; set; }
 
-        public FlvClipProcessor(IFlvMetadata header, List<IFlvTag> head, List<IFlvTag> past, uint future)
+        public FlvClipProcessor()
         {
-            Header = header;
+        }
+
+        public IFlvClipProcessor Initialize(IFlvMetadata metadata, List<IFlvTag> head, List<IFlvTag> data, uint seconds)
+        {
+            Header = metadata;
             HTags = head;
-            Tags = past;
-            target = Tags[Tags.Count - 1].TimeStamp + (int)(future * FlvStreamProcessor.SEC_TO_MS);
+            Tags = data;
+            target = Tags[Tags.Count - 1].TimeStamp + (int)(seconds * FlvStreamProcessor.SEC_TO_MS);
             logger.Debug("Clip 创建 Tags.Count={0} Tags[0].TimeStamp={1} Tags[Tags.Count-1].TimeStamp={2} Tags里秒数={3}",
                 Tags.Count, Tags[0].TimeStamp, Tags[Tags.Count - 1].TimeStamp, (Tags[Tags.Count - 1].TimeStamp - Tags[0].TimeStamp) / 1000d);
+
+            return this;
         }
 
         public void AddTag(IFlvTag tag)

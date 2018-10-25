@@ -7,7 +7,8 @@ namespace BililiveRecorder.Core
     {
         private static readonly Random random = new Random();
 
-        public string SavePath { get; set; }
+        private ISettings Settings { get; }
+        public string SavePath { get => Settings.SavePath; }
 
         public string StreamFilePrefix { get; set; } = "录制";
         public string ClipFilePrefix { get; set; } = "剪辑";
@@ -30,9 +31,10 @@ namespace BililiveRecorder.Core
             return name;
         }
 
-        public RecordInfo(string name)
+        public RecordInfo(string name, ISettings settings)
         {
             StreamName = name;
+            Settings = settings;
         }
 
     }

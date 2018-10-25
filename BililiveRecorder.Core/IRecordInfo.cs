@@ -2,7 +2,7 @@
 {
     public interface IRecordInfo
     {
-        string SavePath { get; set; }
+        string SavePath { get; }
         string StreamFilePrefix { get; set; }
         string ClipFilePrefix { get; set; }
         string StreamName { get; set; }

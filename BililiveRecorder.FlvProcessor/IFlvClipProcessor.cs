@@ -10,6 +10,7 @@ namespace BililiveRecorder.FlvProcessor
         List<IFlvTag> Tags { get; }
         Func<string> GetFileName { get; set; }
 
+        IFlvClipProcessor Initialize(IFlvMetadata metadata, List<IFlvTag> head, List<IFlvTag> data, uint seconds);
         void AddTag(IFlvTag tag);
         void FinallizeFile();
         event ClipFinalizedEvent ClipFinalized;

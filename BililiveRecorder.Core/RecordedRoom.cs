@@ -23,6 +23,7 @@ namespace BililiveRecorder.Core
         public bool IsMonitoring => StreamMonitor.receiver.IsConnected;
         public bool IsRecording => flvStream != null;
 
+        private readonly Func<string, bool, IFlvStreamProcessor> newIFlvStreamProcessor;
         public IFlvStreamProcessor Processor { get; set; } // FlvProcessor
         public ObservableCollection<IFlvClipProcessor> Clips { get; private set; } = new ObservableCollection<IFlvClipProcessor>();
 
@@ -41,8 +42,14 @@ namespace BililiveRecorder.Core
         public DateTime LastUpdateDateTime { get; private set; } = DateTime.Now;
         public long LastUpdateSize { get; private set; } = 0;
 
-        public RecordedRoom(ISettings settings, int roomid)
+        public RecordedRoom(ISettings settings,
+            Func<string, IRecordInfo> newIRecordInfo,
+            Func<int, IStreamMonitor> newIStreamMonitor,
+            Func<string, bool, IFlvStreamProcessor> newIFlvStreamProcessor,
+            int roomid)
         {
+            this.newIFlvStreamProcessor = newIFlvStreamProcessor;
+
             _settings = settings;
             _settings.PropertyChanged += _settings_PropertyChanged;
 
@@ -50,12 +57,9 @@ namespace BililiveRecorder.Core
 
             UpdateRoomInfo();
 
-            RecordInfo = new RecordInfo(StreamerName)
-            {
-                SavePath = _settings.SavePath
-            };
+            RecordInfo = newIRecordInfo(StreamerName);
 
-            StreamMonitor = new StreamMonitor(RealRoomid);
+            StreamMonitor = newIStreamMonitor(RealRoomid);
             StreamMonitor.StreamStatusChanged += StreamMonitor_StreamStatusChanged;
         }
 
@@ -88,6 +92,7 @@ namespace BililiveRecorder.Core
                     Processor.Clip_Future = _settings.Clip_Future;
                 }
             }
+            /**
             else if (e.PropertyName == nameof(_settings.SavePath))
             {
                 if (RecordInfo != null)
@@ -95,6 +100,7 @@ namespace BililiveRecorder.Core
                     RecordInfo.SavePath = _settings.SavePath;
                 }
             }
+            */
         }
 
         private void StreamMonitor_StreamStatusChanged(object sender, StreamStatusChangedArgs e)
@@ -164,7 +170,8 @@ namespace BililiveRecorder.Core
                         triggerType = TriggerType.HttpApi;
                     }
 
-                    Processor = new FlvStreamProcessor(savepath, _settings.Feature == EnabledFeature.RecordOnly);
+                    // Processor = new FlvStreamProcessor(savepath, _settings.Feature == EnabledFeature.RecordOnly);
+                    Processor = newIFlvStreamProcessor(savepath, _settings.Feature == EnabledFeature.RecordOnly);
                     Processor.TagProcessed += Processor_TagProcessed;
                     Processor.StreamFinalized += Processor_StreamFinalized;
                     Processor.GetFileName = RecordInfo.GetStreamFilePath;

@@ -59,8 +59,16 @@ namespace BililiveRecorder.FlvProcessor
         public int TagAudioCount { get; private set; } = 0;
         private bool hasOffset = false;
 
-        public FlvStreamProcessor(string path, bool noclip)
+        private readonly Func<IFlvClipProcessor> funcFlvClipProcessor;
+        private readonly Func<byte[], IFlvMetadata> funcFlvMetadata;
+        private readonly Func<IFlvTag> funcFlvTag;
+
+        public FlvStreamProcessor(Func<IFlvClipProcessor> funcFlvClipProcessor, Func<byte[], IFlvMetadata> funcFlvMetadata, Func<IFlvTag> funcFlvTag, string path, bool noclip)
         {
+            this.funcFlvClipProcessor = funcFlvClipProcessor;
+            this.funcFlvMetadata = funcFlvMetadata;
+            this.funcFlvTag = funcFlvTag;
+
             _noClip = noclip;
             if (path == null)
             {
@@ -153,7 +161,7 @@ namespace BililiveRecorder.FlvProcessor
                     _fs?.Write(FLV_HEADER_BYTES, 0, FLV_HEADER_BYTES.Length);
                     _fs?.Write(new byte[] { 0, 0, 0, 0, }, 0, 4);
 
-                    Metadata = new FlvMetadata(tag.Data);
+                    Metadata = funcFlvMetadata(tag.Data);
 
                     // TODO: 添加录播姬标记、录制信息
 
@@ -251,7 +259,7 @@ namespace BililiveRecorder.FlvProcessor
             _buffer.Write(data, 0, data.Length);
             long dataLen = _buffer.Position;
             _buffer.Position = 0;
-            IFlvTag tag = new FlvTag();
+            IFlvTag tag = funcFlvTag();
 
             // Previous Tag Size
             _buffer.Read(b, 0, 4);
@@ -293,7 +301,7 @@ namespace BililiveRecorder.FlvProcessor
                 lock (_writelock)
                 {
                     logger.Info("剪辑处理中，将会保存过去 {0} 秒和将来 {1} 秒的直播流", (Tags[Tags.Count - 1].TimeStamp - Tags[0].TimeStamp) / 1000d, Clip_Future);
-                    return new FlvClipProcessor(Metadata, HTags, new List<IFlvTag>(Tags.ToArray()), Clip_Future);
+                    return ((funcFlvClipProcessor()).Initialize(Metadata, HTags, new List<IFlvTag>(Tags.ToArray()), Clip_Future));
                 }
             }
         }
