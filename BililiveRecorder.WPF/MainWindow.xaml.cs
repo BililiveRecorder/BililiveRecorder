@@ -45,9 +45,7 @@ namespace BililiveRecorder.WPF
             var builder = new ContainerBuilder();
             builder.RegisterModule<FlvProcessorModule>();
             builder.RegisterModule<CoreModule>();
-
             Container = builder.Build();
-
             RootScope = Container.BeginLifetimeScope("recorder_root");
 
             _AddLog = (message) => Log.Dispatcher.Invoke(() => { Logs.Add(message); while (Logs.Count > MAX_LOG_ROW) { Logs.RemoveAt(0); } });

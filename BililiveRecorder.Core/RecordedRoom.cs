@@ -20,7 +20,7 @@ namespace BililiveRecorder.Core
         public RoomInfo RoomInfo { get; private set; }
         public IRecordInfo RecordInfo { get; private set; }
 
-        public bool IsMonitoring => StreamMonitor.receiver.IsConnected;
+        public bool IsMonitoring => StreamMonitor.Receiver.IsConnected;
         public bool IsRecording => flvStream != null;
 
         private readonly Func<string, bool, IFlvStreamProcessor> newIFlvStreamProcessor;
@@ -51,7 +51,8 @@ namespace BililiveRecorder.Core
             this.newIFlvStreamProcessor = newIFlvStreamProcessor;
 
             _settings = settings;
-            _settings.PropertyChanged += _settings_PropertyChanged;
+            // _settings.PropertyChanged += _settings_PropertyChanged;
+            // TODO: 事件导致的内存泄漏
 
             Roomid = roomid;
 
@@ -78,6 +79,8 @@ namespace BililiveRecorder.Core
 
         private void _settings_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
+            // TODO: 事件导致的内存泄漏
+            /**
             if (e.PropertyName == nameof(_settings.Clip_Past))
             {
                 if (Processor != null)
@@ -92,7 +95,7 @@ namespace BililiveRecorder.Core
                     Processor.Clip_Future = _settings.Clip_Future;
                 }
             }
-            /**
+            
             else if (e.PropertyName == nameof(_settings.SavePath))
             {
                 if (RecordInfo != null)
@@ -321,6 +324,7 @@ namespace BililiveRecorder.Core
 
         private void CallBack_ClipFinalized(object sender, ClipFinalizedArgs e)
         {
+            e.ClipProcessor.ClipFinalized -= CallBack_ClipFinalized; 
             if (Clips.Remove(e.ClipProcessor))
             {
                 Debug.WriteLine("Clip Finalized");

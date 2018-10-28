@@ -46,7 +46,7 @@ namespace BililiveRecorder.WPF
             else
             {
                 MessageBox.Show("请使用桌面上或开始菜单里的快捷方式打开", "你的打开方式不正确", MessageBoxButton.OK, MessageBoxImage.Warning);
-                Current.Shutdown(1);
+                // Current.Shutdown(1);
             }
         }
 

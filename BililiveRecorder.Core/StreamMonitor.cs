@@ -11,16 +11,17 @@ namespace BililiveRecorder.Core
 
         public int Roomid { get; private set; } = 0;
         public event StreamStatusChangedEvent StreamStatusChanged;
-        public DanmakuReceiver receiver { get; } = new DanmakuReceiver();
+        public IDanmakuReceiver Receiver { get; }
         private CancellationTokenSource TokenSource = null;
 
-        public StreamMonitor(int roomid)
+        public StreamMonitor(int roomid, IDanmakuReceiver danmakuReceiver)
         {
+            Receiver = danmakuReceiver;
             Roomid = roomid;
 
-            receiver.Disconnected += Receiver_Disconnected;
-            receiver.ReceivedDanmaku += Receiver_ReceivedDanmaku;
-            receiver.ReceivedRoomCount += Receiver_ReceivedRoomCount;
+            Receiver.Disconnected += Receiver_Disconnected;
+            Receiver.ReceivedDanmaku += Receiver_ReceivedDanmaku;
+            Receiver.ReceivedRoomCount += Receiver_ReceivedRoomCount;
         }
 
         private void Receiver_ReceivedRoomCount(object sender, ReceivedRoomCountArgs e)
@@ -46,11 +47,11 @@ namespace BililiveRecorder.Core
         {
             logger.Warn(e.Error, "弹幕连接被断开，将每30秒尝试重连一次");
             bool connect_result = false;
-            while (!receiver.IsConnected && !TokenSource.Token.IsCancellationRequested)
+            while (!Receiver.IsConnected && !TokenSource.Token.IsCancellationRequested)
             {
                 Thread.Sleep(1000 * 30); // 备注：这是运行在 ReceiveMessageLoop 线程上的
                 logger.Log(Roomid, LogLevel.Info, "重连弹幕服务器...");
-                connect_result = receiver.Connect(Roomid);
+                connect_result = Receiver.Connect(Roomid);
             }
 
             if (connect_result)
@@ -81,9 +82,9 @@ namespace BililiveRecorder.Core
 
         public bool Start()
         {
-            if (!receiver.IsConnected)
+            if (!Receiver.IsConnected)
             {
-                if (!receiver.Connect(Roomid))
+                if (!Receiver.Connect(Roomid))
                 {
                     return false;
                 }
@@ -102,9 +103,9 @@ namespace BililiveRecorder.Core
 
         public void Stop()
         {
-            if (receiver.IsConnected)
+            if (Receiver.IsConnected)
             {
-                receiver.Disconnect();
+                Receiver.Disconnect();
             }
 
             TokenSource?.Cancel();
