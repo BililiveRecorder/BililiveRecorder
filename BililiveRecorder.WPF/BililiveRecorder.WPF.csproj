@@ -75,6 +75,9 @@
     <SignAssembly>false</SignAssembly>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Autofac, Version=4.8.1.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
+      <HintPath>..\packages\Autofac.4.8.1\lib\net45\Autofac.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.WindowsAPICodePack, Version=1.1.2.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\WindowsAPICodePack-Core.1.1.2\lib\Microsoft.WindowsAPICodePack.dll</HintPath>
     </Reference>
@@ -191,6 +194,10 @@
     <ProjectReference Include="..\BililiveRecorder.Core\BililiveRecorder.Core.csproj">
       <Project>{cb9f2d58-181d-49f7-9560-d35a9b9c1d8c}</Project>
       <Name>BililiveRecorder.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\BililiveRecorder.FlvProcessor\BililiveRecorder.FlvProcessor.csproj">
+      <Project>{51748048-1949-4218-8ded-94014abe7633}</Project>
+      <Name>BililiveRecorder.FlvProcessor</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

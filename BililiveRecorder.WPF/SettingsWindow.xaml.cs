@@ -21,9 +21,9 @@ namespace BililiveRecorder.WPF
     /// </summary>
     public partial class SettingsWindow : Window
     {
-        public Settings Settings { get; set; } = new Settings();
+        public ISettings Settings { get; set; } = new Settings();
 
-        public SettingsWindow(MainWindow mainWindow, Settings settings)
+        public SettingsWindow(MainWindow mainWindow, ISettings settings)
         {
             Owner = mainWindow;
             settings.ApplyTo(Settings);

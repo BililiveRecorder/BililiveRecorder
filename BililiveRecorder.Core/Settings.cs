@@ -4,7 +4,7 @@ using System.ComponentModel;
 
 namespace BililiveRecorder.Core
 {
-    public class Settings : INotifyPropertyChanged
+    public class Settings : ISettings
     {
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
 
@@ -45,7 +45,11 @@ namespace BililiveRecorder.Core
         public event PropertyChangedEventHandler PropertyChanged;
         protected bool SetField<T>(ref T field, T value, string propertyName)
         {
-            if (EqualityComparer<T>.Default.Equals(field, value)) return false;
+            if (EqualityComparer<T>.Default.Equals(field, value))
+            {
+                return false;
+            }
+
             logger.Debug("设置 [{0}] 的值已从 [{1}] 修改到 [{2}]", propertyName, field, value);
             field = value;
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));

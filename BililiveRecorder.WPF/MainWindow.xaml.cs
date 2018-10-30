@@ -1,25 +1,16 @@
-﻿using BililiveRecorder.Core;
+﻿using Autofac;
+using BililiveRecorder.Core;
+using BililiveRecorder.FlvProcessor;
 using NLog;
-using NLog.Config;
-using NLog.Targets;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Deployment.Application;
-using System.Diagnostics;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 
 namespace BililiveRecorder.WPF
@@ -33,6 +24,9 @@ namespace BililiveRecorder.WPF
         private static readonly Properties.Settings ps = Properties.Settings.Default;
 
         private const int MAX_LOG_ROW = 25;
+
+        private IContainer Container { get; set; }
+        private ILifetimeScope RootScope { get; set; }
 
         public Recorder Recorder { get; set; }
         public ObservableCollection<string> Logs { get; set; } =
@@ -48,11 +42,17 @@ namespace BililiveRecorder.WPF
 
         public MainWindow()
         {
-            _AddLog = (message) => Log.Dispatcher.Invoke(() => { Logs.Add(message); while (Logs.Count > MAX_LOG_ROW) Logs.RemoveAt(0); });
+            var builder = new ContainerBuilder();
+            builder.RegisterModule<FlvProcessorModule>();
+            builder.RegisterModule<CoreModule>();
+            Container = builder.Build();
+            RootScope = Container.BeginLifetimeScope("recorder_root");
+
+            _AddLog = (message) => Log.Dispatcher.Invoke(() => { Logs.Add(message); while (Logs.Count > MAX_LOG_ROW) { Logs.RemoveAt(0); } });
 
             InitializeComponent();
 
-            Recorder = new Recorder();
+            Recorder = RootScope.Resolve<Recorder>();
             DataContext = this;
 
 
@@ -109,7 +109,10 @@ namespace BililiveRecorder.WPF
                 return;
             }
             if (e.Cancelled)
+            {
                 return;
+            }
+
             if (e.UpdateAvailable)
             {
                 if (e.IsUpdateRequired)
@@ -148,7 +151,7 @@ namespace BililiveRecorder.WPF
         {
             UpdateBar.Dispatcher.Invoke(() =>
             {
-                var p = (e.BytesTotal == 0) ? 100d : ((double)e.BytesCompleted / (double)e.BytesTotal) * 100d;
+                var p = (e.BytesTotal == 0) ? 100d : (e.BytesCompleted / (double)e.BytesTotal) * 100d;
                 UpdateBar.Progress = p;
                 UpdateBar.ProgressText = string.Format("{0}KiB / {1}KiB - {2}%", e.BytesCompleted / 1024, e.BytesTotal / 1024, p.ToString("0.##"));
             });
@@ -228,7 +231,9 @@ namespace BililiveRecorder.WPF
                 if (int.TryParse(r[0], out int roomid) && bool.TryParse(r[1], out bool enabled))
                 {
                     if (roomid > 0)
+                    {
                         Recorder.AddRoom(roomid, enabled);
+                    }
                 }
             });
 
@@ -250,7 +255,11 @@ namespace BililiveRecorder.WPF
         private void Clip_Click(object sender, RoutedEventArgs e)
         {
             var rr = _GetSenderAsRecordedRoom(sender);
-            if (rr == null) return;
+            if (rr == null)
+            {
+                return;
+            }
+
             Task.Run(() => rr.Clip());
         }
 
@@ -262,7 +271,11 @@ namespace BililiveRecorder.WPF
         private void EnableAutoRec(object sender, RoutedEventArgs e)
         {
             var rr = _GetSenderAsRecordedRoom(sender);
-            if (rr == null) return;
+            if (rr == null)
+            {
+                return;
+            }
+
             Task.Run(() => rr.Start());
         }
 
@@ -274,7 +287,11 @@ namespace BililiveRecorder.WPF
         private void DisableAutoRec(object sender, RoutedEventArgs e)
         {
             var rr = _GetSenderAsRecordedRoom(sender);
-            if (rr == null) return;
+            if (rr == null)
+            {
+                return;
+            }
+
             Task.Run(() => rr.Stop());
         }
 
@@ -286,7 +303,11 @@ namespace BililiveRecorder.WPF
         private void TriggerRec(object sender, RoutedEventArgs e)
         {
             var rr = _GetSenderAsRecordedRoom(sender);
-            if (rr == null) return;
+            if (rr == null)
+            {
+                return;
+            }
+
             Task.Run(() => rr.StartRecord());
         }
 
@@ -298,7 +319,11 @@ namespace BililiveRecorder.WPF
         private void CutRec(object sender, RoutedEventArgs e)
         {
             var rr = _GetSenderAsRecordedRoom(sender);
-            if (rr == null) return;
+            if (rr == null)
+            {
+                return;
+            }
+
             Task.Run(() => rr.StopRecord());
         }
 
@@ -310,7 +335,11 @@ namespace BililiveRecorder.WPF
         private void RemoveRecRoom(object sender, RoutedEventArgs e)
         {
             var rr = _GetSenderAsRecordedRoom(sender);
-            if (rr == null) return;
+            if (rr == null)
+            {
+                return;
+            }
+
             Recorder.RemoveRoom(rr);
         }
 
@@ -373,7 +402,7 @@ namespace BililiveRecorder.WPF
             }
         }
 
-        private RecordedRoom _GetSenderAsRecordedRoom(object sender) => (sender as Button)?.DataContext as RecordedRoom;
+        private IRecordedRoom _GetSenderAsRecordedRoom(object sender) => (sender as Button)?.DataContext as IRecordedRoom;
 
 
     }

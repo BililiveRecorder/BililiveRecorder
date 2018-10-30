@@ -1,7 +1,6 @@
 ﻿using BililiveRecorder.FlvProcessor;
 using NLog;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -11,7 +10,7 @@ using System.Net;
 
 namespace BililiveRecorder.Core
 {
-    public class RecordedRoom : INotifyPropertyChanged
+    public class RecordedRoom : IRecordedRoom
     {
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
 
@@ -19,16 +18,17 @@ namespace BililiveRecorder.Core
         public int RealRoomid { get => RoomInfo?.RealRoomid ?? Roomid; }
         public string StreamerName { get => RoomInfo?.Username ?? string.Empty; }
         public RoomInfo RoomInfo { get; private set; }
-        public RecordInfo RecordInfo { get; private set; }
+        public IRecordInfo RecordInfo { get; private set; }
 
-        public bool IsMonitoring => StreamMonitor.receiver.IsConnected;
+        public bool IsMonitoring => StreamMonitor.Receiver.IsConnected;
         public bool IsRecording => flvStream != null;
 
-        public FlvStreamProcessor Processor; // FlvProcessor
-        public ObservableCollection<FlvClipProcessor> Clips { get; private set; } = new ObservableCollection<FlvClipProcessor>();
+        private readonly Func<string, bool, IFlvStreamProcessor> newIFlvStreamProcessor;
+        public IFlvStreamProcessor Processor { get; set; } // FlvProcessor
+        public ObservableCollection<IFlvClipProcessor> Clips { get; private set; } = new ObservableCollection<IFlvClipProcessor>();
 
-        internal StreamMonitor StreamMonitor { get; }
-        private Settings _settings { get; }
+        public IStreamMonitor StreamMonitor { get; }
+        private ISettings _settings { get; }
         private HttpWebRequest webRequest;
         private Stream flvStream;
         private bool flv_shutdown = false;
@@ -42,21 +42,25 @@ namespace BililiveRecorder.Core
         public DateTime LastUpdateDateTime { get; private set; } = DateTime.Now;
         public long LastUpdateSize { get; private set; } = 0;
 
-        public RecordedRoom(Settings settings, int roomid)
+        public RecordedRoom(ISettings settings,
+            Func<string, IRecordInfo> newIRecordInfo,
+            Func<int, IStreamMonitor> newIStreamMonitor,
+            Func<string, bool, IFlvStreamProcessor> newIFlvStreamProcessor,
+            int roomid)
         {
+            this.newIFlvStreamProcessor = newIFlvStreamProcessor;
+
             _settings = settings;
-            _settings.PropertyChanged += _settings_PropertyChanged;
+            // _settings.PropertyChanged += _settings_PropertyChanged;
+            // TODO: 事件导致的内存泄漏
 
             Roomid = roomid;
 
             UpdateRoomInfo();
 
-            RecordInfo = new RecordInfo(StreamerName)
-            {
-                SavePath = _settings.SavePath
-            };
+            RecordInfo = newIRecordInfo(StreamerName);
 
-            StreamMonitor = new StreamMonitor(RealRoomid);
+            StreamMonitor = newIStreamMonitor(RealRoomid);
             StreamMonitor.StreamStatusChanged += StreamMonitor_StreamStatusChanged;
         }
 
@@ -75,21 +79,31 @@ namespace BililiveRecorder.Core
 
         private void _settings_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
+            // TODO: 事件导致的内存泄漏
+            /**
             if (e.PropertyName == nameof(_settings.Clip_Past))
             {
                 if (Processor != null)
+                {
                     Processor.Clip_Past = _settings.Clip_Past;
+                }
             }
             else if (e.PropertyName == nameof(_settings.Clip_Future))
             {
                 if (Processor != null)
+                {
                     Processor.Clip_Future = _settings.Clip_Future;
+                }
             }
+            
             else if (e.PropertyName == nameof(_settings.SavePath))
             {
                 if (RecordInfo != null)
+                {
                     RecordInfo.SavePath = _settings.SavePath;
+                }
             }
+            */
         }
 
         private void StreamMonitor_StreamStatusChanged(object sender, StreamStatusChangedArgs e)
@@ -159,7 +173,8 @@ namespace BililiveRecorder.Core
                         triggerType = TriggerType.HttpApi;
                     }
 
-                    Processor = new FlvStreamProcessor(savepath, _settings.Feature == EnabledFeature.RecordOnly);
+                    // Processor = new FlvStreamProcessor(savepath, _settings.Feature == EnabledFeature.RecordOnly);
+                    Processor = newIFlvStreamProcessor(savepath, _settings.Feature == EnabledFeature.RecordOnly);
                     Processor.TagProcessed += Processor_TagProcessed;
                     Processor.StreamFinalized += Processor_StreamFinalized;
                     Processor.GetFileName = RecordInfo.GetStreamFilePath;
@@ -183,14 +198,20 @@ namespace BililiveRecorder.Core
                                 _CleanupFlvRequest();
                                 logger.Log(RealRoomid, LogLevel.Info, "直播已结束，停止录制。" + (triggerType != TriggerType.HttpApiRecheck ? "将在30秒后重试启动。" : ""));
                                 if (triggerType != TriggerType.HttpApiRecheck)
+                                {
                                     StreamMonitor.CheckAfterSeconeds(30);
+                                }
                             }
                             else
                             {
                                 if (bytesRead != buffer.Length)
+                                {
                                     Processor.AddBytes(buffer.Take(bytesRead).ToArray());
+                                }
                                 else
+                                {
                                     Processor.AddBytes(buffer);
+                                }
 
                                 flvStream.BeginRead(buffer, 0, BUF_SIZE, callback, null);
                             }
@@ -202,7 +223,9 @@ namespace BililiveRecorder.Core
                             {
                                 logger.Log(RealRoomid, LogLevel.Info, "直播流下载连接出错。" + (triggerType != TriggerType.HttpApiRecheck ? "将在30秒后重试启动。" : ""), ex);
                                 if (triggerType != TriggerType.HttpApiRecheck)
+                                {
                                     StreamMonitor.CheckAfterSeconeds(30);
+                                }
                             }
                             else
                             {
@@ -220,7 +243,9 @@ namespace BililiveRecorder.Core
                 _CleanupFlvRequest();
                 logger.Log(RealRoomid, LogLevel.Warn, "启动直播流下载出错。" + (triggerType != TriggerType.HttpApiRecheck ? "将在30秒后重试启动。" : ""), ex);
                 if (triggerType != TriggerType.HttpApiRecheck)
+                {
                     StreamMonitor.CheckAfterSeconeds(30);
+                }
             }
         }
 
@@ -286,7 +311,11 @@ namespace BililiveRecorder.Core
         // Called by API or GUI
         public void Clip()
         {
-            if (Processor == null) return;
+            if (Processor == null)
+            {
+                return;
+            }
+
             var clip = Processor.Clip();
             clip.ClipFinalized += CallBack_ClipFinalized;
             clip.GetFileName = RecordInfo.GetClipFilePath;
@@ -295,6 +324,7 @@ namespace BililiveRecorder.Core
 
         private void CallBack_ClipFinalized(object sender, ClipFinalizedArgs e)
         {
+            e.ClipProcessor.ClipFinalized -= CallBack_ClipFinalized; 
             if (Clips.Remove(e.ClipProcessor))
             {
                 Debug.WriteLine("Clip Finalized");

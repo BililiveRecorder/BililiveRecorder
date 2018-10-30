@@ -1,9 +1,7 @@
 ﻿using NLog;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -13,13 +11,17 @@ namespace BililiveRecorder.Core
     {
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
 
-        public ObservableCollection<RecordedRoom> Rooms { get; } = new ObservableCollection<RecordedRoom>();
-        public Settings Settings { get; } = new Settings();
+        public ObservableCollection<IRecordedRoom> Rooms { get; } = new ObservableCollection<IRecordedRoom>();
+        public ISettings Settings { get; }
 
+        private readonly Func<int, IRecordedRoom> newIRecordedRoom;
         private CancellationTokenSource tokenSource;
 
-        public Recorder()
+        public Recorder(ISettings settings, Func<int, IRecordedRoom> iRecordedRoom)
         {
+            Settings = settings;
+            newIRecordedRoom = iRecordedRoom;
+
             tokenSource = new CancellationTokenSource();
             Repeat.Interval(TimeSpan.FromSeconds(6), DownloadWatchdog, tokenSource.Token);
         }
@@ -55,10 +57,16 @@ namespace BililiveRecorder.Core
         public void AddRoom(int roomid, bool enabled = false)
         {
             if (roomid <= 0)
+            {
                 throw new ArgumentOutOfRangeException(nameof(roomid), "房间号需要大于0");
-            var rr = new RecordedRoom(Settings, roomid);
+            }
+            // var rr = new RecordedRoom(Settings, roomid);
+            var rr = newIRecordedRoom(roomid);
             if (enabled)
+            {
                 Task.Run(() => rr.Start());
+            }
+
             Rooms.Add(rr);
         }
 
@@ -66,7 +74,7 @@ namespace BililiveRecorder.Core
         /// 从录播姬移除直播间
         /// </summary>
         /// <param name="rr">直播间</param>
-        public void RemoveRoom(RecordedRoom rr)
+        public void RemoveRoom(IRecordedRoom rr)
         {
             rr.Stop();
             rr.StopRecord();

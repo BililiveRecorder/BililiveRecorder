@@ -10,15 +10,17 @@ using System.Xml;
 
 namespace BililiveRecorder.Core
 {
-    public class DanmakuReceiver
+    public class DanmakuReceiver : IDanmakuReceiver
     {
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
 
         private const string defaulthosts = "broadcastlv.chat.bilibili.com";
-        private string CIDInfoUrl = "http://live.bilibili.com/api/player?id=cid:";
+        private const string CIDInfoUrl = "http://live.bilibili.com/api/player?id=cid:";
+
         private string ChatHost = defaulthosts;
         private int ChatPort = 2243;
 
+        private readonly Func<TcpClient> funcTcpClient;
         private TcpClient Client;
         private NetworkStream NetStream;
 
@@ -30,10 +32,20 @@ namespace BililiveRecorder.Core
             get => _isConnected;
             private set
             {
-                _isConnected = value; if (!value) HeartbeatLoopSource.Cancel();
+                _isConnected = value;
+                if (!value)
+                {
+                    HeartbeatLoopSource.Cancel();
+                }
             }
         }
         private bool _isConnected = false;
+
+        public DanmakuReceiver(Func<TcpClient> funcTcpClient)
+        {
+            this.funcTcpClient = funcTcpClient;
+        }
+
         public Exception Error { get; private set; } = null;
         public uint ViewerCount { get; private set; } = 0;
 
@@ -45,7 +57,11 @@ namespace BililiveRecorder.Core
         {
             try
             {
-                if (this.IsConnected) throw new InvalidOperationException();
+                if (IsConnected)
+                {
+                    throw new InvalidOperationException();
+                }
+
                 int channelId = roomId;
 
                 try
@@ -83,7 +99,8 @@ namespace BililiveRecorder.Core
                     logger.Log(roomId, LogLevel.Warn, "获取弹幕服务器地址时出现未知错误", ex);
                 }
 
-                Client = new TcpClient();
+                Client = funcTcpClient();
+                
                 Client.Connect(ChatHost, ChatPort);
                 if (!Client.Connected)
                 {
@@ -93,7 +110,7 @@ namespace BililiveRecorder.Core
                 SendSocketData(7, "{\"roomid\":" + channelId + ",\"uid\":0}");
                 IsConnected = true;
 
-                ReceiveMessageLoopThread = new Thread(this.ReceiveMessageLoop)
+                ReceiveMessageLoopThread = new Thread(ReceiveMessageLoop)
                 {
                     Name = "ReceiveMessageLoop " + channelId,
                     IsBackground = true
@@ -101,7 +118,7 @@ namespace BililiveRecorder.Core
                 ReceiveMessageLoopThread.Start();
 
                 HeartbeatLoopSource = new CancellationTokenSource();
-                Repeat.Interval(TimeSpan.FromSeconds(30), this.SendHeartbeat, HeartbeatLoopSource.Token);
+                Repeat.Interval(TimeSpan.FromSeconds(30), SendHeartbeat, HeartbeatLoopSource.Token);
 
                 // HeartbeatLoopThread = new Thread(this.HeartbeatLoop);
                 // HeartbeatLoopThread.IsBackground = true;
@@ -111,7 +128,7 @@ namespace BililiveRecorder.Core
             }
             catch (Exception ex)
             {
-                this.Error = ex;
+                Error = ex;
                 logger.Log(roomId, LogLevel.Error, "连接弹幕服务器时发生了未知错误", ex);
                 return false;
             }
@@ -136,7 +153,7 @@ namespace BililiveRecorder.Core
             try
             {
                 var stableBuffer = new byte[Client.ReceiveBufferSize];
-                while (this.IsConnected)
+                while (IsConnected)
                 {
 
                     NetStream.ReadB(stableBuffer, 0, 4);
@@ -144,7 +161,9 @@ namespace BililiveRecorder.Core
                     packetlength = IPAddress.NetworkToHostOrder(packetlength);
 
                     if (packetlength < 16)
+                    {
                         throw new NotSupportedException("协议失败: (L:" + packetlength + ")");
+                    }
 
                     NetStream.ReadB(stableBuffer, 0, 2);//magic
                     NetStream.ReadB(stableBuffer, 0, 2);//protocol_version 
@@ -155,7 +174,10 @@ namespace BililiveRecorder.Core
                     NetStream.ReadB(stableBuffer, 0, 4);//magic, params?
                     var playloadlength = packetlength - 16;
                     if (playloadlength == 0)
+                    {
                         continue;//没有内容了
+                    }
+
                     typeId = typeId - 1;//和反编译的代码对应 
                     var buffer = new byte[playloadlength];
                     NetStream.ReadB(buffer, 0, playloadlength);
@@ -203,7 +225,7 @@ namespace BililiveRecorder.Core
             {
                 if (IsConnected)
                 {
-                    this.Error = ex;
+                    Error = ex;
                     logger.Error(ex);
                     _disconnect();
                 }
