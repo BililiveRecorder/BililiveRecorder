@@ -289,7 +289,7 @@ namespace BililiveRecorder.Core
             // r.Connection = "keep-alive";
             r.Referer = "https://live.bilibili.com";
             r.Headers["Origin"] = "https://live.bilibili.com";
-            r.UserAgent = "Mozilla/5.0 BililiveRecorder/0.0.0.0 (+https://github.com/Bililive/BililiveRecorder;bliverec@genteure.com)";
+            r.UserAgent = Utils.UserAgent;
         }
 
         public bool UpdateRoomInfo()

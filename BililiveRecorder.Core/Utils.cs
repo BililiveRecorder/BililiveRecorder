@@ -9,13 +9,23 @@ namespace BililiveRecorder.Core
     {
         internal static byte[] ToBE(this byte[] b)
         {
-            if (BitConverter.IsLittleEndian) return b.Reverse().ToArray(); else return b;
+            if (BitConverter.IsLittleEndian)
+            {
+                return b.Reverse().ToArray();
+            }
+            else
+            {
+                return b;
+            }
         }
 
         internal static void ReadB(this NetworkStream stream, byte[] buffer, int offset, int count)
         {
             if (offset + count > buffer.Length)
+            {
                 throw new ArgumentException();
+            }
+
             int read = 0;
             while (read < count)
             {
@@ -35,7 +45,9 @@ namespace BililiveRecorder.Core
             {
                 var val = p.GetValue(val1);
                 if (!val.Equals(p.GetValue(val2)))
+                {
                     p.SetValue(val2, val);
+                }
             }
         }
 
@@ -50,5 +62,20 @@ namespace BililiveRecorder.Core
             log.Properties["roomid"] = id;
             logger.Log(log);
         }
+
+        private static string _useragent;
+        internal static string UserAgent
+        {
+            get
+            {
+                if (string.IsNullOrWhiteSpace(_useragent))
+                {
+                    string version = typeof(Utils).Assembly.GetName().Version.ToString();
+                    _useragent = $"Mozilla/5.0 BililiveRecorder/{version} (+https://github.com/Bililive/BililiveRecorder;bliverec@danmuji.org)";
+                }
+                return _useragent;
+            }
+        }
+
     }
 }
