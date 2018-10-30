@@ -57,14 +57,25 @@ namespace BililiveRecorder.Core
         public bool IsRecording => !(StreamDownloadTask?.IsCompleted ?? true);
 
         private readonly Func<IFlvStreamProcessor> newIFlvStreamProcessor;
-        public IFlvStreamProcessor Processor { get; private set; } // FlvProcessor
+        public IFlvStreamProcessor Processor
+        {
+            get => _processor;
+            private set
+            {
+                if (value == _processor) { return; }
+                _processor = value;
+                TriggerPropertyChanged(nameof(Processor));
+            }
+        }
+        private IFlvStreamProcessor _processor;
         private ObservableCollection<IFlvClipProcessor> Clips { get; set; } = new ObservableCollection<IFlvClipProcessor>();
 
         public IStreamMonitor StreamMonitor { get; }
         private ISettings _settings { get; }
 
-        public Task StreamDownloadTask;
-        public CancellationTokenSource cancellationTokenSource;
+        private Task StartupTask = null;
+        public Task StreamDownloadTask = null;
+        public CancellationTokenSource cancellationTokenSource = null;
 
 
         public double DownloadSpeedKiBps
@@ -85,8 +96,6 @@ namespace BililiveRecorder.Core
             this.newIFlvStreamProcessor = newIFlvStreamProcessor;
 
             _settings = settings;
-            // _settings.PropertyChanged += _settings_PropertyChanged;
-            // TODO: 事件导致的内存泄漏
 
             Roomid = roomid;
 
@@ -115,44 +124,17 @@ namespace BililiveRecorder.Core
             TriggerPropertyChanged(nameof(IsMonitoring));
         }
 
-        private void _settings_PropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            // TODO: 事件导致的内存泄漏
-            /**
-            if (e.PropertyName == nameof(_settings.Clip_Past))
-            {
-                if (Processor != null)
-                {
-                    Processor.Clip_Past = _settings.Clip_Past;
-                }
-            }
-            else if (e.PropertyName == nameof(_settings.Clip_Future))
-            {
-                if (Processor != null)
-                {
-                    Processor.Clip_Future = _settings.Clip_Future;
-                }
-            }
-            
-            else if (e.PropertyName == nameof(_settings.SavePath))
-            {
-                if (RecordInfo != null)
-                {
-                    RecordInfo.SavePath = _settings.SavePath;
-                }
-            }
-            */
-        }
-
         private void StreamMonitor_StreamStatusChanged(object sender, StreamStatusChangedArgs e)
         {
-            _StartRecordAsync(e.type);
+            if (StartupTask?.IsCompleted ?? true)
+            {
+                StartupTask = _StartRecordAsync(e.type);
+            }
         }
 
         public void StartRecord()
         {
             StreamMonitor.Check(TriggerType.Manual);
-            // _StartRecord(TriggerType.Manual);
         }
 
         public void StopRecord()
@@ -166,15 +148,6 @@ namespace BililiveRecorder.Core
 
         private async Task _StartRecordAsync(TriggerType triggerType)
         {
-            /* *
-             * if (recording) return;
-             * try catch {
-             *     if type == retry return;
-             *     else retry()
-             * }
-             * */
-
-            // if (webRequest != null || flvStream != null || Processor != null)
             if (IsRecording)
             {
                 logger.Log(RealRoomid, LogLevel.Debug, "已经在录制中了");
@@ -208,8 +181,8 @@ namespace BililiveRecorder.Core
                     request = null;
                     if (response.StatusCode == HttpStatusCode.NotFound)
                     {
-                        logger.Log(RealRoomid, LogLevel.Info, "将在30秒后重试");
-                        StreamMonitor.CheckAfterSeconeds(30); // TODO: 重试次数和时间
+                        logger.Log(RealRoomid, LogLevel.Info, "将在15秒后重试");
+                        StreamMonitor.CheckAfterSeconeds(15); // TODO: 重试次数和时间
                     }
                     return;
                 }
@@ -242,10 +215,10 @@ namespace BililiveRecorder.Core
 
                                 logger.Log(RealRoomid, LogLevel.Info,
                                     (token.IsCancellationRequested ? "用户操作" : "直播已结束") + "，停止录制。"
-                                    + (triggerType != TriggerType.HttpApiRecheck ? "将在30秒后重试启动。" : ""));
+                                    + (triggerType != TriggerType.HttpApiRecheck ? "将在15秒后重试启动。" : ""));
                                 if (triggerType != TriggerType.HttpApiRecheck)
                                 {
-                                    StreamMonitor.CheckAfterSeconeds(30);
+                                    StreamMonitor.CheckAfterSeconeds(15);
                                 }
                                 break;
                             }
@@ -271,10 +244,10 @@ namespace BililiveRecorder.Core
             catch (Exception ex)
             {
                 _CleanupFlvRequest();
-                logger.Log(RealRoomid, LogLevel.Warn, "启动直播流下载出错。" + (triggerType != TriggerType.HttpApiRecheck ? "将在30秒后重试启动。" : ""), ex);
+                logger.Log(RealRoomid, LogLevel.Warn, "启动直播流下载出错。" + (triggerType != TriggerType.HttpApiRecheck ? "将在15秒后重试启动。" : ""), ex);
                 if (triggerType != TriggerType.HttpApiRecheck)
                 {
-                    StreamMonitor.CheckAfterSeconeds(30);
+                    StreamMonitor.CheckAfterSeconeds(15);
                 }
             }
             void _CleanupFlvRequest()

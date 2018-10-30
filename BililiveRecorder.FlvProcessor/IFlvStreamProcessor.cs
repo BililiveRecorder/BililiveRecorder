@@ -8,26 +8,14 @@ namespace BililiveRecorder.FlvProcessor
         event TagProcessedEvent TagProcessed;
         event StreamFinalizedEvent StreamFinalized;
 
-        ObservableCollection<IFlvClipProcessor> Clips { get; }
-
         IFlvMetadata Metadata { get; set; }
-
-        Func<string> GetStreamFileName { get; }
-        Func<string> GetClipFileName { get; }
-
-        IFlvStreamProcessor Initialize(Func<string> getStreamFileName, Func<string> getClipFileName, EnabledFeature enabledFeature);
-
+        ObservableCollection<IFlvClipProcessor> Clips { get; }
         uint ClipLengthPast { get; set; }
         uint ClipLengthFuture { get; set; }
 
-        int LasttimeRemovedTimestamp { get; }
-        int MaxTimeStamp { get; }
-        int BaseTimeStamp { get; }
-        int TagVideoCount { get; }
-        int TagAudioCount { get; }
-
-        void AddBytes(byte[] data);
+        IFlvStreamProcessor Initialize(Func<string> getStreamFileName, Func<string> getClipFileName, EnabledFeature enabledFeature);
         IFlvClipProcessor Clip();
+        void AddBytes(byte[] data);
         void FinallizeFile();
     }
 }
