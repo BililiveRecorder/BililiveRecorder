@@ -133,6 +133,26 @@
                     <Button Grid.Row="1" Grid.Column="1" Margin="5" Click="CutRec">切断当前录制</Button>
                     <Button Grid.Row="2" Grid.ColumnSpan="2" Margin="5,0" Click="RemoveRecRoom">删除这个直播间</Button>
                 </Grid>
+
+                <Border Grid.Row="9" Grid.ColumnSpan="2" Margin="7" BorderThickness="2" >
+                    <Border.BorderBrush>
+                        <LinearGradientBrush EndPoint="0.5,1" MappingMode="RelativeToBoundingBox" StartPoint="0.5,0">
+                            <GradientStop Color="#FF631313"/>
+                            <GradientStop Color="#FFE42323" Offset="1"/>
+                        </LinearGradientBrush>
+                    </Border.BorderBrush>
+                    <Border.Effect>
+                        <DropShadowEffect Color="Black" Direction="0" ShadowDepth="0" BlurRadius="12" Opacity="1" />
+                    </Border.Effect>
+                </Border>
+                <Border Grid.Row="9" Grid.ColumnSpan="2" Margin="7" BorderThickness="2" Visibility="Visible" Background="White">
+                    <StackPanel>
+                        <TextBlock TextWrapping="Wrap">录播姬更换了进行安装、更新、卸载的技术</TextBlock>
+                        <TextBlock TextWrapping="Wrap">请在控制面板卸载当前安装的版本，然后使用官网上最新版本的安装包重新安装。本版本将不会再进行维护更新。QQ群：689636812</TextBlock>
+                        <TextBlock TextWrapping="Wrap">官网：https://rec.danmuji.org/</TextBlock>
+                        <TextBlock HorizontalAlignment="Right" Margin="0,0,5,0" Text="2018年11月"/>
+                    </StackPanel>
+                </Border>
             </Grid>
             <Grid Grid.Column="1" Grid.Row="2">
                 <Grid.RowDefinitions>

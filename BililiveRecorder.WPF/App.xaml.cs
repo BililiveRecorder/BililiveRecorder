@@ -22,7 +22,23 @@ namespace BililiveRecorder.WPF
                 || true
 #endif
                     )
+            {
                 return;
+            }
+
+            if (DateTime.Now > new DateTime(2019, 1, 4, 17, 0, 0))
+            {
+                MessageBox.Show("请使用最新版本\n官网： https://rec.danmuji.org/", "录播姬", MessageBoxButton.OK, MessageBoxImage.Error);
+                Current.Shutdown();
+                return;
+            }
+            else if (DateTime.Now > new DateTime(2018, 12, 1))
+            {
+                MessageBox.Show("此版本已不再维护更新。\n" +
+                    "请在控制面板卸载此版本，使用官网上最新版本安装包重新安装。\n" +
+                    "官网： https://rec.danmuji.org/ \n" +
+                    "QQ群： 689636812", "录播姬", MessageBoxButton.OK, MessageBoxImage.Warning);
+            }
 
             if (ApplicationDeployment.IsNetworkDeployed)
             {
