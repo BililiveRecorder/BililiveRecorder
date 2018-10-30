@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.ObjectModel;
 
 namespace BililiveRecorder.FlvProcessor
 {
@@ -7,10 +8,18 @@ namespace BililiveRecorder.FlvProcessor
         event TagProcessedEvent TagProcessed;
         event StreamFinalizedEvent StreamFinalized;
 
+        ObservableCollection<IFlvClipProcessor> Clips { get; }
+
         IFlvMetadata Metadata { get; set; }
-        Func<string> GetFileName { get; set; }
-        uint Clip_Past { get; set; }
-        uint Clip_Future { get; set; }
+
+        Func<string> GetStreamFileName { get; }
+        Func<string> GetClipFileName { get; }
+
+        IFlvStreamProcessor Initialize(Func<string> getStreamFileName, Func<string> getClipFileName, EnabledFeature enabledFeature);
+
+        uint ClipLengthPast { get; set; }
+        uint ClipLengthFuture { get; set; }
+
         int LasttimeRemovedTimestamp { get; }
         int MaxTimeStamp { get; }
         int BaseTimeStamp { get; }

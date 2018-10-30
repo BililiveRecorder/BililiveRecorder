@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace BililiveRecorder.FlvProcessor
 {
@@ -8,9 +7,8 @@ namespace BililiveRecorder.FlvProcessor
         IFlvMetadata Header { get; }
         List<IFlvTag> HTags { get; }
         List<IFlvTag> Tags { get; }
-        Func<string> GetFileName { get; set; }
 
-        IFlvClipProcessor Initialize(IFlvMetadata metadata, List<IFlvTag> head, List<IFlvTag> data, uint seconds);
+        IFlvClipProcessor Initialize(string path, IFlvMetadata metadata, List<IFlvTag> head, List<IFlvTag> data, uint seconds);
         void AddTag(IFlvTag tag);
         void FinallizeFile();
         event ClipFinalizedEvent ClipFinalized;

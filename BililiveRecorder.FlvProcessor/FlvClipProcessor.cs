@@ -13,15 +13,15 @@ namespace BililiveRecorder.FlvProcessor
         public List<IFlvTag> HTags { get; private set; }
         public List<IFlvTag> Tags { get; private set; }
         private int target = -1;
-
-        public Func<string> GetFileName { get; set; }
+        private string path;
 
         public FlvClipProcessor()
         {
         }
 
-        public IFlvClipProcessor Initialize(IFlvMetadata metadata, List<IFlvTag> head, List<IFlvTag> data, uint seconds)
+        public IFlvClipProcessor Initialize(string path, IFlvMetadata metadata, List<IFlvTag> head, List<IFlvTag> data, uint seconds)
         {
+            this.path = path;
             Header = metadata;
             HTags = head;
             Tags = data;
@@ -45,8 +45,7 @@ namespace BililiveRecorder.FlvProcessor
         {
             try
             {
-                string filepath = GetFileName();
-                using (var fs = new FileStream(filepath, FileMode.CreateNew, FileAccess.ReadWrite))
+                using (var fs = new FileStream(path, FileMode.CreateNew, FileAccess.ReadWrite))
                 {
                     fs.Write(FlvStreamProcessor.FLV_HEADER_BYTES, 0, FlvStreamProcessor.FLV_HEADER_BYTES.Length);
                     fs.Write(new byte[] { 0, 0, 0, 0, }, 0, 4);
@@ -66,7 +65,7 @@ namespace BililiveRecorder.FlvProcessor
                     HTags.ForEach(tag => tag.WriteTo(fs));
                     Tags.ForEach(tag => tag.WriteTo(fs, offset));
 
-                    logger.Info("剪辑已保存：{0}", Path.GetFileName(filepath));
+                    logger.Info("剪辑已保存：{0}", Path.GetFileName(path));
 
                     fs.Close();
                 }

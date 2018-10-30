@@ -8,9 +8,8 @@ namespace BililiveRecorder.Core
         int Roomid { get; }
         int RealRoomid { get; }
         string StreamerName { get; }
-        RoomInfo RoomInfo { get; }
-        IRecordInfo RecordInfo { get; }
 
+        IRecordInfo RecordInfo { get; }
         IStreamMonitor StreamMonitor { get; }
 
         bool IsMonitoring { get; }
@@ -19,6 +18,8 @@ namespace BililiveRecorder.Core
         double DownloadSpeedKiBps { get; }
         DateTime LastUpdateDateTime { get; }
 
+        void Clip();
+
         bool Start();
         void Stop();
 
@@ -26,9 +27,5 @@ namespace BililiveRecorder.Core
         void StopRecord();
 
         void Shutdown();
-
-        bool UpdateRoomInfo();
-
-        void Clip();
     }
 }

@@ -1,6 +1,7 @@
 ﻿using NLog;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 
@@ -32,25 +33,32 @@ namespace BililiveRecorder.FlvProcessor
             // 0x00, // the "0th" tag has a length of 0
         };
 
-        public IFlvMetadata Metadata { get; set; } = null;
-        public event TagProcessedEvent TagProcessed;
-        public event StreamFinalizedEvent StreamFinalized;
-        public Func<string> GetFileName { get; set; }
-
-        public uint Clip_Past { get; set; } = 90;
-        public uint Clip_Future { get; set; } = 30;
-        private readonly bool _noClip = false;
-
         private bool _headerParsed = false;
         private readonly List<IFlvTag> HTags = new List<IFlvTag>();
         private readonly List<IFlvTag> Tags = new List<IFlvTag>();
         private readonly MemoryStream _buffer = new MemoryStream();
         private readonly MemoryStream _data = new MemoryStream();
+        private FileStream targetFile;
         private IFlvTag currentTag = null;
         private readonly object _writelock = new object();
         private bool Finallized = false;
 
-        private readonly FileStream _fs;
+        private readonly Func<IFlvClipProcessor> funcFlvClipProcessor;
+        private readonly Func<byte[], IFlvMetadata> funcFlvMetadata;
+        private readonly Func<IFlvTag> funcFlvTag;
+
+        public IFlvMetadata Metadata { get; set; } = null;
+        public event TagProcessedEvent TagProcessed;
+        public event StreamFinalizedEvent StreamFinalized;
+        public Func<string> GetStreamFileName { get; private set; }
+        public Func<string> GetClipFileName { get; private set; }
+
+        public ObservableCollection<IFlvClipProcessor> Clips { get; } = new ObservableCollection<IFlvClipProcessor>();
+
+        public EnabledFeature EnabledFeature { get; private set; }
+
+        public uint ClipLengthPast { get; set; } = 90;
+        public uint ClipLengthFuture { get; set; } = 30;
 
         public int LasttimeRemovedTimestamp { get; private set; } = 0;
         public int MaxTimeStamp { get; private set; } = 0;
@@ -59,32 +67,29 @@ namespace BililiveRecorder.FlvProcessor
         public int TagAudioCount { get; private set; } = 0;
         private bool hasOffset = false;
 
-        private readonly Func<IFlvClipProcessor> funcFlvClipProcessor;
-        private readonly Func<byte[], IFlvMetadata> funcFlvMetadata;
-        private readonly Func<IFlvTag> funcFlvTag;
-
-        public FlvStreamProcessor(Func<IFlvClipProcessor> funcFlvClipProcessor, Func<byte[], IFlvMetadata> funcFlvMetadata, Func<IFlvTag> funcFlvTag, string path, bool noclip)
+        public FlvStreamProcessor(Func<IFlvClipProcessor> funcFlvClipProcessor, Func<byte[], IFlvMetadata> funcFlvMetadata, Func<IFlvTag> funcFlvTag)
         {
             this.funcFlvClipProcessor = funcFlvClipProcessor;
             this.funcFlvMetadata = funcFlvMetadata;
             this.funcFlvTag = funcFlvTag;
 
-            _noClip = noclip;
-            if (path == null)
+
+        }
+
+        public IFlvStreamProcessor Initialize(Func<string> getStreamFileName, Func<string> getClipFileName, EnabledFeature enabledFeature)
+        {
+            GetStreamFileName = getStreamFileName;
+            GetClipFileName = getClipFileName;
+            EnabledFeature = enabledFeature;
+
+            if (EnabledFeature.IsRecordEnabled())
             {
-                // 不保存到硬盘，只在内存储存
-                _fs = null;
+                string path = GetStreamFileName();
+                try { Directory.CreateDirectory(Path.GetDirectoryName(path)); } catch (Exception) { }
+                targetFile = new FileStream(path, FileMode.CreateNew, FileAccess.ReadWrite);
             }
-            else
-            {
-                _fs = new FileStream(path, FileMode.CreateNew, FileAccess.ReadWrite);
-                if (!_fs.CanSeek)
-                {
-                    _fs.Dispose();
-                    try { File.Delete(path); } catch (Exception) { }
-                    throw new NotSupportedException("Target File Cannot Seek");
-                }
-            }
+
+            return this;
         }
 
         public void AddBytes(byte[] data)
@@ -158,15 +163,15 @@ namespace BililiveRecorder.FlvProcessor
             {
                 if (tag.TagType == TagType.DATA)
                 {
-                    _fs?.Write(FLV_HEADER_BYTES, 0, FLV_HEADER_BYTES.Length);
-                    _fs?.Write(new byte[] { 0, 0, 0, 0, }, 0, 4);
+                    targetFile?.Write(FLV_HEADER_BYTES, 0, FLV_HEADER_BYTES.Length);
+                    targetFile?.Write(new byte[] { 0, 0, 0, 0, }, 0, 4);
 
                     Metadata = funcFlvMetadata(tag.Data);
 
                     // TODO: 添加录播姬标记、录制信息
 
                     tag.Data = Metadata.ToBytes();
-                    tag.WriteTo(_fs);
+                    tag.WriteTo(targetFile);
                 }
                 else
                 {
@@ -225,8 +230,8 @@ namespace BililiveRecorder.FlvProcessor
                     tag.TimeStamp = 0;
                 }
 
-                // 如果没有禁用 Clip 功能
-                if (!_noClip)
+                // 如果启用了 Clip 功能
+                if (EnabledFeature.IsClipEnabled())
                 {
                     Tags.Add(tag); // Clip 缓存
 
@@ -234,7 +239,7 @@ namespace BililiveRecorder.FlvProcessor
                     if (MaxTimeStamp - LasttimeRemovedTimestamp > 800)
                     {
                         LasttimeRemovedTimestamp = MaxTimeStamp;
-                        int max_remove_index = Tags.FindLastIndex(x => x.IsVideoKeyframe && ((MaxTimeStamp - x.TimeStamp) > (Clip_Past * SEC_TO_MS)));
+                        int max_remove_index = Tags.FindLastIndex(x => x.IsVideoKeyframe && ((MaxTimeStamp - x.TimeStamp) > (ClipLengthPast * SEC_TO_MS)));
                         if (max_remove_index > 0)
                         {
                             Tags.RemoveRange(0, max_remove_index);
@@ -245,8 +250,9 @@ namespace BililiveRecorder.FlvProcessor
                 }
 
                 // 写入硬盘
-                tag.WriteTo(_fs);
+                tag.WriteTo(targetFile);
 
+                Clips.ToList().ForEach(fcp => fcp.AddTag(tag));
                 TagProcessed?.Invoke(this, new TagProcessedArgs() { Tag = tag });
             } // if (Metadata == null) else
         }
@@ -292,7 +298,7 @@ namespace BililiveRecorder.FlvProcessor
         public IFlvClipProcessor Clip()
         {
             // 如果禁用 clip 功能 或者 已经结束处理了
-            if (_noClip || Finallized)
+            if (!EnabledFeature.IsClipEnabled() || Finallized)
             {
                 return null;
             }
@@ -300,8 +306,10 @@ namespace BililiveRecorder.FlvProcessor
             {
                 lock (_writelock)
                 {
-                    logger.Info("剪辑处理中，将会保存过去 {0} 秒和将来 {1} 秒的直播流", (Tags[Tags.Count - 1].TimeStamp - Tags[0].TimeStamp) / 1000d, Clip_Future);
-                    return ((funcFlvClipProcessor()).Initialize(Metadata, HTags, new List<IFlvTag>(Tags.ToArray()), Clip_Future));
+                    logger.Info("剪辑处理中，将会保存过去 {0} 秒和将来 {1} 秒的直播流", (Tags[Tags.Count - 1].TimeStamp - Tags[0].TimeStamp) / 1000d, ClipLengthFuture);
+                    IFlvClipProcessor clip = funcFlvClipProcessor().Initialize(GetClipFileName(), Metadata, HTags, new List<IFlvTag>(Tags.ToArray()), ClipLengthFuture);
+                    Clips.Add(clip);
+                    return clip;
                 }
             }
         }
@@ -321,8 +329,8 @@ namespace BililiveRecorder.FlvProcessor
 
                         // 13 for FLV header & "0th" tag size
                         // 11 for 1st tag header
-                        _fs?.Seek(13 + 11, SeekOrigin.Begin);
-                        _fs?.Write(metadata, 0, metadata.Length);
+                        targetFile?.Seek(13 + 11, SeekOrigin.Begin);
+                        targetFile?.Write(metadata, 0, metadata.Length);
                     }
                     catch (Exception ex)
                     {
@@ -330,13 +338,14 @@ namespace BililiveRecorder.FlvProcessor
                     }
                     finally
                     {
-                        _fs?.Close();
+                        targetFile?.Close();
                         _buffer.Close();
                         _data.Close();
                         Tags.Clear();
 
                         Finallized = true;
 
+                        Clips.ToList().ForEach(fcp => fcp.FinallizeFile());
                         StreamFinalized?.Invoke(this, new StreamFinalizedArgs() { StreamProcessor = this });
                     }
                 }
@@ -354,7 +363,7 @@ namespace BililiveRecorder.FlvProcessor
                 {
                     _buffer.Dispose();
                     _data.Dispose();
-                    _fs?.Dispose();
+                    targetFile?.Dispose();
                 }
                 Tags.Clear();
                 disposedValue = true;
