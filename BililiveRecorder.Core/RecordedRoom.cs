@@ -322,9 +322,15 @@ namespace BililiveRecorder.Core
             Clips.Add(clip);
         }
 
+        public void Shutdown()
+        {
+            Stop();
+            StopRecord();
+        }
+
         private void CallBack_ClipFinalized(object sender, ClipFinalizedArgs e)
         {
-            e.ClipProcessor.ClipFinalized -= CallBack_ClipFinalized; 
+            e.ClipProcessor.ClipFinalized -= CallBack_ClipFinalized;
             if (Clips.Remove(e.ClipProcessor))
             {
                 Debug.WriteLine("Clip Finalized");

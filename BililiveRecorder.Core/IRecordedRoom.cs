@@ -25,6 +25,8 @@ namespace BililiveRecorder.Core
         void StartRecord();
         void StopRecord();
 
+        void Shutdown();
+
         bool UpdateRoomInfo();
 
         void Clip();

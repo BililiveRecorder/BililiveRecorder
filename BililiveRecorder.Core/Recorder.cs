@@ -76,8 +76,7 @@ namespace BililiveRecorder.Core
         /// <param name="rr">直播间</param>
         public void RemoveRoom(IRecordedRoom rr)
         {
-            rr.Stop();
-            rr.StopRecord();
+            rr.Shutdown();
             Rooms.Remove(rr);
         }
 
@@ -87,8 +86,7 @@ namespace BililiveRecorder.Core
 
             Rooms.ToList().ForEach(rr =>
             {
-                rr.Stop();
-                rr.StopRecord();
+                rr.Shutdown();
             });
         }
     }
