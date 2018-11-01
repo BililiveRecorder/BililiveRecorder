@@ -9,7 +9,6 @@ namespace BililiveRecorder.Core
         int RealRoomid { get; }
         string StreamerName { get; }
 
-        IRecordInfo RecordInfo { get; }
         IStreamMonitor StreamMonitor { get; }
 
         bool IsMonitoring { get; }

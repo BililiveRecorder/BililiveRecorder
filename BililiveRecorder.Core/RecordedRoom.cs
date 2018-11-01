@@ -16,6 +16,7 @@ namespace BililiveRecorder.Core
     public class RecordedRoom : IRecordedRoom
     {
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
+        private static readonly Random random = new Random();
 
         private int _roomid;
         private int _realRoomid;
@@ -52,8 +53,6 @@ namespace BililiveRecorder.Core
             }
         }
 
-        public IRecordInfo RecordInfo { get; private set; }
-
         public bool IsMonitoring => StreamMonitor.Receiver.IsConnected;
         public bool IsRecording => !(StreamDownloadTask?.IsCompleted ?? true);
 
@@ -89,7 +88,6 @@ namespace BililiveRecorder.Core
         public long LastUpdateSize { get; private set; } = 0;
 
         public RecordedRoom(ConfigV1 config,
-            Func<string, IRecordInfo> newIRecordInfo,
             Func<int, IStreamMonitor> newIStreamMonitor,
             Func<IFlvStreamProcessor> newIFlvStreamProcessor,
             int roomid)
@@ -105,8 +103,6 @@ namespace BililiveRecorder.Core
                 RealRoomid = roomInfo.RealRoomid;
                 StreamerName = roomInfo.Username;
             }
-
-            RecordInfo = newIRecordInfo(StreamerName);
 
             StreamMonitor = newIStreamMonitor(RealRoomid);
             StreamMonitor.StreamStatusChanged += StreamMonitor_StreamStatusChanged;
@@ -194,7 +190,7 @@ namespace BililiveRecorder.Core
                         triggerType = TriggerType.HttpApi;
                     }
 
-                    Processor = newIFlvStreamProcessor().Initialize(RecordInfo.GetStreamFilePath, RecordInfo.GetClipFilePath, _config.EnabledFeature);
+                    Processor = newIFlvStreamProcessor().Initialize(GetStreamFilePath, GetClipFilePath, _config.EnabledFeature);
                     Processor.ClipLengthFuture = _config.ClipLengthFuture;
                     Processor.ClipLengthPast = _config.ClipLengthPast;
 
@@ -294,6 +290,12 @@ namespace BililiveRecorder.Core
             Stop();
             StopRecord();
         }
+
+        private string GetStreamFilePath() => Path.Combine(_config.WorkDirectory, RealRoomid.ToString(), "record",
+            $@"record-{RealRoomid}-{DateTime.Now.ToString("yyyyMMdd-HHmmss")}-{random.Next(100, 999)}.flv".RemoveInvalidFileName());
+
+        private string GetClipFilePath() => Path.Combine(_config.WorkDirectory, RealRoomid.ToString(), "clip",
+            $@"clip-{RealRoomid}-{DateTime.Now.ToString("yyyyMMdd-HHmmss")}-{random.Next(100, 999)}.flv".RemoveInvalidFileName());
 
         private void CallBack_ClipFinalized(object sender, ClipFinalizedArgs e)
         {

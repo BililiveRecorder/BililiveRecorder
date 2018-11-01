@@ -1,5 +1,6 @@
 ﻿using NLog;
 using System;
+using System.IO;
 using System.Linq;
 using System.Net.Sockets;
 
@@ -37,6 +38,15 @@ namespace BililiveRecorder.Core
                 read += available;
                 offset += available;
             }
+        }
+
+        internal static string RemoveInvalidFileName(this string name)
+        {
+            foreach (char c in Path.GetInvalidFileNameChars())
+            {
+                name = name.Replace(c, '_');
+            }
+            return name;
         }
 
         public static bool CopyPropertiesTo<T>(this T val1, T val2) where T : class
