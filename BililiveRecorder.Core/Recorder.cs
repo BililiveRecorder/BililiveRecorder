@@ -90,6 +90,8 @@ namespace BililiveRecorder.Core
             {
                 rr.Shutdown();
             });
+
+            ConfigParser.Save(Config.WorkDirectory, Config);
         }
 
         private void DownloadWatchdog()

@@ -62,18 +62,18 @@ namespace BililiveRecorder.WPF
                             var j = JObject.Parse(text);
                             if (j["version"] == null || j["data"] == null)
                             {
-                                StatusText = "配置文件不是录播姬文件";
+                                StatusText = "配置文件损坏";
                                 ConfirmEnabled = false;
                             }
                             else
                             {
-                                StatusText = "已有录播姬目录";
+                                StatusText = "录播姬曾经使用过的目录";
                                 ConfirmEnabled = true;
                             }
                         }
                         catch (Exception)
                         {
-                            StatusText = "读取配置文件出错";
+                            StatusText = "配置文件不可读";
                             ConfirmEnabled = false;
                         }
                     }
@@ -99,10 +99,10 @@ namespace BililiveRecorder.WPF
         private string _workPath;
         public string WorkPath { get => _workPath; set => SetField(ref _workPath, value); }
 
-        private string _statusText;
+        private string _statusText = "请选择目录";
         public string StatusText { get => _statusText; set => SetField(ref _statusText, value); }
 
-        private SolidColorBrush _statusColor;
+        private SolidColorBrush _statusColor = Red;
         public SolidColorBrush StatusColor { get => _statusColor; set => SetField(ref _statusColor, value); }
 
         private bool _confirmEnabled;
