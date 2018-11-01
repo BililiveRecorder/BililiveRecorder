@@ -42,32 +42,51 @@ namespace BililiveRecorder.WPF
 
         public MainWindow()
         {
+            Title += "   版本号: " + BuildInfo.Version + "  " + BuildInfo.HeadShaShort;
+            _AddLog = (message) => Log.Dispatcher.Invoke(() => { Logs.Add(message); while (Logs.Count > MAX_LOG_ROW) { Logs.RemoveAt(0); } });
+
             var builder = new ContainerBuilder();
             builder.RegisterModule<FlvProcessorModule>();
             builder.RegisterModule<CoreModule>();
             Container = builder.Build();
             RootScope = Container.BeginLifetimeScope("recorder_root");
 
-            _AddLog = (message) => Log.Dispatcher.Invoke(() => { Logs.Add(message); while (Logs.Count > MAX_LOG_ROW) { Logs.RemoveAt(0); } });
+            Recorder = RootScope.Resolve<Recorder>();
 
             InitializeComponent();
 
-            Recorder = RootScope.Resolve<Recorder>();
             DataContext = this;
-
-
-            Title += "   版本号: " + BuildInfo.Version + "  " + BuildInfo.HeadShaShort;
         }
 
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            InitSettings();
-
-            if (string.IsNullOrWhiteSpace(Recorder.Settings.SavePath) || (ApplicationDeployment.IsNetworkDeployed && ApplicationDeployment.CurrentDeployment.IsFirstRun))
+            //if (string.IsNullOrWhiteSpace(Recorder.Config.WorkDirectory) || (ApplicationDeployment.IsNetworkDeployed && ApplicationDeployment.CurrentDeployment.IsFirstRun))
+            //{
+            //    ShowSettingsWindow();
+            //}
+            string workdir;
+            var wdw = new WorkDirectoryWindow()
             {
-                ShowSettingsWindow();
+                Owner = this
+            };
+            if (wdw.ShowDialog() == true)
+            {
+                workdir = wdw.WorkPath;
             }
+            else
+            {
+                Environment.Exit(-1);
+                return;
+            }
+
+            if (!Recorder.Initialize(workdir))
+            {
+                MessageBox.Show("初始化错误", "录播姬", MessageBoxButton.OK, MessageBoxImage.Error);
+                Environment.Exit(-2);
+                return;
+            }
+
 
             Task.Run(() => CheckVersion());
         }
@@ -186,58 +205,6 @@ namespace BililiveRecorder.WPF
         }
 
         #endregion
-
-
-        private void InitSettings()
-        {
-            var s = Recorder.Settings;
-
-            if (ps.UpgradeRequired)
-            {
-                ps.Upgrade();
-                ps.UpgradeRequired = false;
-                ps.Save();
-            }
-
-            s.Clip_Future = ps.Clip_Future;
-            s.Clip_Past = ps.Clip_Past;
-            s.SavePath = ps.SavePath;
-            s.Feature = (EnabledFeature)ps.Feature;
-            s.PropertyChanged += (sender, e) =>
-            {
-                switch (e.PropertyName)
-                {
-                    case nameof(s.Clip_Future):
-                        ps.Clip_Future = s.Clip_Future;
-                        break;
-                    case nameof(s.Clip_Past):
-                        ps.Clip_Past = s.Clip_Past;
-                        break;
-                    case nameof(s.SavePath):
-                        ps.SavePath = s.SavePath;
-                        break;
-                    case nameof(s.Feature):
-                        ps.Feature = (int)s.Feature;
-                        break;
-                    default:
-                        break;
-                }
-            };
-
-
-            ps.RoomIDs.Split(';').ToList().ForEach(rs =>
-            {
-                var r = rs.Split(',');
-                if (int.TryParse(r[0], out int roomid) && bool.TryParse(r[1], out bool enabled))
-                {
-                    if (roomid > 0)
-                    {
-                        Recorder.AddRoom(roomid, enabled);
-                    }
-                }
-            });
-
-        }
 
         private void TextBlock_MouseRightButtonUp(object sender, MouseButtonEventArgs e)
         {
@@ -395,10 +362,10 @@ namespace BililiveRecorder.WPF
 
         private void ShowSettingsWindow()
         {
-            var sw = new SettingsWindow(this, Recorder.Settings);
+            var sw = new SettingsWindow(this, Recorder.Config);
             if (sw.ShowDialog() == true)
             {
-                sw.Settings.ApplyTo(Recorder.Settings);
+                sw.Config.CopyPropertiesTo(Recorder.Config);
             }
         }
 

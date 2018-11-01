@@ -40,7 +40,7 @@
                     </Style>
                 </ResourceDictionary>
             </Grid.Resources>
-
+<!--
             <TextBlock Grid.Row="0" Grid.Column="0">保存位置：</TextBlock>
             <Grid Grid.Row="0" Grid.Column="1" VerticalAlignment="Center">
                 <Grid.ColumnDefinitions>
@@ -50,8 +50,8 @@
                 <local:ClickSelectTextBox Grid.Column="0" Text="{Binding SavePath}"/>
                 <Button Grid.Column="1" Click="Button_Click">浏览...</Button>
             </Grid>
-
-            <TextBlock Grid.Row="1" Grid.Column="0">剪辑回放时长：</TextBlock>
+-->
+            <TextBlock Grid.Row="1" Grid.Column="0">剪辑过去时长：</TextBlock>
             <Grid Grid.Row="1" Grid.Column="1" VerticalAlignment="Center">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="1*"/>
@@ -61,7 +61,7 @@
                 <TextBlock Grid.Column="1" Margin="5,0,10,0">秒</TextBlock>
             </Grid>
 
-            <TextBlock Grid.Row="2" Grid.Column="0">剪辑录制时长：</TextBlock>
+            <TextBlock Grid.Row="2" Grid.Column="0">剪辑将来时长：</TextBlock>
             <Grid Grid.Row="2" Grid.Column="1" VerticalAlignment="Center">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="1*"/>

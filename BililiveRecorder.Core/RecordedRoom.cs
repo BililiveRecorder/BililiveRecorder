@@ -1,4 +1,5 @@
-﻿using BililiveRecorder.FlvProcessor;
+﻿using BililiveRecorder.Core.Config;
+using BililiveRecorder.FlvProcessor;
 using NLog;
 using System;
 using System.Collections.ObjectModel;
@@ -71,7 +72,7 @@ namespace BililiveRecorder.Core
         private ObservableCollection<IFlvClipProcessor> Clips { get; set; } = new ObservableCollection<IFlvClipProcessor>();
 
         public IStreamMonitor StreamMonitor { get; }
-        private ISettings _settings { get; }
+        private ConfigV1 _config { get; }
 
         private Task StartupTask = null;
         public Task StreamDownloadTask = null;
@@ -87,7 +88,7 @@ namespace BililiveRecorder.Core
         public DateTime LastUpdateDateTime { get; private set; } = DateTime.Now;
         public long LastUpdateSize { get; private set; } = 0;
 
-        public RecordedRoom(ISettings settings,
+        public RecordedRoom(ConfigV1 config,
             Func<string, IRecordInfo> newIRecordInfo,
             Func<int, IStreamMonitor> newIStreamMonitor,
             Func<IFlvStreamProcessor> newIFlvStreamProcessor,
@@ -95,7 +96,7 @@ namespace BililiveRecorder.Core
         {
             this.newIFlvStreamProcessor = newIFlvStreamProcessor;
 
-            _settings = settings;
+            _config = config;
 
             Roomid = roomid;
 
@@ -193,9 +194,9 @@ namespace BililiveRecorder.Core
                         triggerType = TriggerType.HttpApi;
                     }
 
-                    Processor = newIFlvStreamProcessor().Initialize(RecordInfo.GetStreamFilePath, RecordInfo.GetClipFilePath, _settings.Feature);
-                    Processor.ClipLengthFuture = _settings.Clip_Future;
-                    Processor.ClipLengthPast = _settings.Clip_Past;
+                    Processor = newIFlvStreamProcessor().Initialize(RecordInfo.GetStreamFilePath, RecordInfo.GetClipFilePath, _config.EnabledFeature);
+                    Processor.ClipLengthFuture = _config.ClipLengthFuture;
+                    Processor.ClipLengthPast = _config.ClipLengthPast;
 
                     stream = response.GetResponseStream();
 

@@ -1,4 +1,5 @@
-﻿using NLog;
+﻿using BililiveRecorder.Core.Config;
+using NLog;
 using System;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -12,22 +13,88 @@ namespace BililiveRecorder.Core
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
 
         public ObservableCollection<IRecordedRoom> Rooms { get; } = new ObservableCollection<IRecordedRoom>();
-        public ISettings Settings { get; }
+        public ConfigV1 Config { get; }
 
         private readonly Func<int, IRecordedRoom> newIRecordedRoom;
         private CancellationTokenSource tokenSource;
 
-        public Recorder(ISettings settings, Func<int, IRecordedRoom> iRecordedRoom)
+        private bool _valid = false;
+
+        public Recorder(ConfigV1 config, Func<int, IRecordedRoom> iRecordedRoom)
         {
-            Settings = settings;
+            Config = config;
             newIRecordedRoom = iRecordedRoom;
 
             tokenSource = new CancellationTokenSource();
             Repeat.Interval(TimeSpan.FromSeconds(6), DownloadWatchdog, tokenSource.Token);
         }
 
+        public bool Initialize(string workdir)
+        {
+            if (ConfigParser.Load(directory: workdir, config: Config))
+            {
+                _valid = true;
+                Config.WorkDirectory = workdir;
+                if ((Config.RoomList?.Count ?? 0) > 0)
+                {
+                    Config.RoomList.ForEach((r) => AddRoom(r.Roomid, r.Enabled));
+                }
+                ConfigParser.Save(Config.WorkDirectory, Config);
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// 添加直播间到录播姬
+        /// </summary>
+        /// <param name="roomid">房间号（支持短号）</param>
+        /// <exception cref="ArgumentOutOfRangeException"/>
+        public void AddRoom(int roomid, bool enabled = false)
+        {
+            if (!_valid) { throw new InvalidOperationException("Not Initialized"); }
+            if (roomid <= 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(roomid), "房间号需要大于0");
+            }
+            // var rr = new RecordedRoom(Settings, roomid);
+            var rr = newIRecordedRoom(roomid);
+            if (enabled)
+            {
+                Task.Run(() => rr.Start());
+            }
+
+            Rooms.Add(rr);
+        }
+
+        /// <summary>
+        /// 从录播姬移除直播间
+        /// </summary>
+        /// <param name="rr">直播间</param>
+        public void RemoveRoom(IRecordedRoom rr)
+        {
+            if (!_valid) { throw new InvalidOperationException("Not Initialized"); }
+            rr.Shutdown();
+            Rooms.Remove(rr);
+        }
+
+        public void Shutdown()
+        {
+            if (!_valid) { throw new InvalidOperationException("Not Initialized"); }
+            tokenSource.Cancel();
+
+            Rooms.ToList().ForEach(rr =>
+            {
+                rr.Shutdown();
+            });
+        }
+
         private void DownloadWatchdog()
         {
+            if (!_valid) { return; }
             try
             {
                 Rooms.ToList().ForEach(room =>
@@ -49,45 +116,5 @@ namespace BililiveRecorder.Core
             }
         }
 
-        /// <summary>
-        /// 添加直播间到录播姬
-        /// </summary>
-        /// <param name="roomid">房间号（支持短号）</param>
-        /// <exception cref="ArgumentOutOfRangeException"/>
-        public void AddRoom(int roomid, bool enabled = false)
-        {
-            if (roomid <= 0)
-            {
-                throw new ArgumentOutOfRangeException(nameof(roomid), "房间号需要大于0");
-            }
-            // var rr = new RecordedRoom(Settings, roomid);
-            var rr = newIRecordedRoom(roomid);
-            if (enabled)
-            {
-                Task.Run(() => rr.Start());
-            }
-
-            Rooms.Add(rr);
-        }
-
-        /// <summary>
-        /// 从录播姬移除直播间
-        /// </summary>
-        /// <param name="rr">直播间</param>
-        public void RemoveRoom(IRecordedRoom rr)
-        {
-            rr.Shutdown();
-            Rooms.Remove(rr);
-        }
-
-        public void Shutdown()
-        {
-            tokenSource.Cancel();
-
-            Rooms.ToList().ForEach(rr =>
-            {
-                rr.Shutdown();
-            });
-        }
     }
 }

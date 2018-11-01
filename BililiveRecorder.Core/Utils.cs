@@ -39,17 +39,27 @@ namespace BililiveRecorder.Core
             }
         }
 
-        public static void ApplyTo(this ISettings val1, ISettings val2)
+        public static bool CopyPropertiesTo<T>(this T val1, T val2) where T : class
         {
+            if (val1 == null || val2 == null || val1 == val2) { return false; }
             foreach (var p in val1.GetType().GetProperties())
             {
+                if (Attribute.IsDefined(p, typeof(DoNotCopyProperty)))
+                {
+                    continue;
+                }
+
                 var val = p.GetValue(val1);
                 if (!val.Equals(p.GetValue(val2)))
                 {
                     p.SetValue(val2, val);
                 }
             }
+            return true;
         }
+
+        [AttributeUsage(AttributeTargets.Property, AllowMultiple = false, Inherited = true)]
+        public class DoNotCopyProperty : Attribute { }
 
         internal static void Log(this Logger logger, int id, LogLevel level, string message, Exception exception = null)
         {
