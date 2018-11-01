@@ -4,10 +4,8 @@ using BililiveRecorder.FlvProcessor;
 using NLog;
 using System;
 using System.Collections.ObjectModel;
-using System.Deployment.Application;
 using System.IO;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -89,7 +87,7 @@ namespace BililiveRecorder.WPF
                 return;
             }
 
-            Task.Run(() => CheckVersion());
+            // Task.Run(() => CheckVersion());
         }
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
@@ -104,109 +102,6 @@ namespace BililiveRecorder.WPF
         }
 
         #region - 更新检查 -
-
-        private void CheckVersion()
-        {
-            UpdateBar.MainButtonClick += UpdateBar_MainButtonClick;
-            // 定时每6小时检查一次
-            Repeat.Interval(TimeSpan.FromHours(6), () => UpdateBar.Dispatcher.Invoke(() =>
-            {
-                if (ApplicationDeployment.IsNetworkDeployed && UpdateAction == null)
-                {
-                    ApplicationDeployment ad = ApplicationDeployment.CurrentDeployment;
-                    ad.CheckForUpdateCompleted += Ad_CheckForUpdateCompleted;
-                    ad.CheckForUpdateAsync();
-                }
-            }), new CancellationToken());
-        }
-
-        private Action UpdateAction = null;
-        private void UpdateBar_MainButtonClick(object sender, RoutedEventArgs e) => UpdateAction?.Invoke();
-
-        private void Ad_CheckForUpdateCompleted(object sender, CheckForUpdateCompletedEventArgs e)
-        {
-            ApplicationDeployment ad = ApplicationDeployment.CurrentDeployment;
-            if (e.Error != null)
-            {
-                logger.Error(e.Error, "检查版本更新出错");
-                return;
-            }
-            if (e.Cancelled)
-            {
-                return;
-            }
-
-            if (e.UpdateAvailable)
-            {
-                if (e.IsUpdateRequired)
-                {
-                    BeginUpdate();
-                }
-                else
-                {
-                    UpdateAction = () => BeginUpdate();
-                    UpdateBar.Dispatcher.Invoke(() =>
-                    {
-                        UpdateBar.MainText = string.Format("发现新版本: {0} 大小: {1}KiB", e.AvailableVersion, e.UpdateSizeBytes / 1024);
-                        UpdateBar.ButtonText = "下载更新";
-                        UpdateBar.Display = true;
-                    });
-                }
-            }
-        }
-
-        private void BeginUpdate()
-        {
-            ApplicationDeployment ad = ApplicationDeployment.CurrentDeployment;
-            ad.UpdateCompleted += Ad_UpdateCompleted;
-            ad.UpdateProgressChanged += Ad_UpdateProgressChanged;
-            ad.UpdateAsync();
-            UpdateBar.Dispatcher.Invoke(() =>
-            {
-                UpdateBar.ProgressText = "0KiB / 0KiB - 0%";
-                UpdateBar.Progress = 0;
-                UpdateBar.Display = true;
-                UpdateBar.ShowProgressBar = true;
-            });
-        }
-
-        private void Ad_UpdateProgressChanged(object sender, DeploymentProgressChangedEventArgs e)
-        {
-            UpdateBar.Dispatcher.Invoke(() =>
-            {
-                var p = (e.BytesTotal == 0) ? 100d : (e.BytesCompleted / (double)e.BytesTotal) * 100d;
-                UpdateBar.Progress = p;
-                UpdateBar.ProgressText = string.Format("{0}KiB / {1}KiB - {2}%", e.BytesCompleted / 1024, e.BytesTotal / 1024, p.ToString("0.##"));
-            });
-        }
-
-        private void Ad_UpdateCompleted(object sender, System.ComponentModel.AsyncCompletedEventArgs e)
-        {
-            UpdateBar.Dispatcher.Invoke(() =>
-            {
-                if (e.Cancelled)
-                {
-                    UpdateBar.Display = false;
-                    return;
-                }
-                if (e.Error != null)
-                {
-                    UpdateBar.Display = false;
-                    logger.Error(e.Error, "下载更新时出现错误");
-                    return;
-                }
-
-                UpdateAction = () =>
-                    {
-                        Recorder.Shutdown();
-                        System.Windows.Forms.Application.Restart();
-                        Application.Current.Shutdown();
-                    };
-                UpdateBar.MainText = "更新已下载好，要现在重启软件吗？";
-                UpdateBar.ButtonText = "重启软件";
-                UpdateBar.ShowProgressBar = false;
-            });
-        }
 
         #endregion
 
