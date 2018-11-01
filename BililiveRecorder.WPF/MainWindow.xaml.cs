@@ -5,6 +5,7 @@ using NLog;
 using System;
 using System.Collections.ObjectModel;
 using System.Deployment.Application;
+using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -21,9 +22,9 @@ namespace BililiveRecorder.WPF
     public partial class MainWindow : Window
     {
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
-        private static readonly Properties.Settings ps = Properties.Settings.Default;
 
         private const int MAX_LOG_ROW = 25;
+        private const string LAST_WORK_DIR_FILE = "lastworkdir";
 
         private IContainer Container { get; set; }
         private ILifetimeScope RootScope { get; set; }
@@ -58,17 +59,18 @@ namespace BililiveRecorder.WPF
             DataContext = this;
         }
 
-
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            //if (string.IsNullOrWhiteSpace(Recorder.Config.WorkDirectory) || (ApplicationDeployment.IsNetworkDeployed && ApplicationDeployment.CurrentDeployment.IsFirstRun))
-            //{
-            //    ShowSettingsWindow();
-            //}
-            string workdir;
+            string workdir = string.Empty;
+            try
+            {
+                workdir = File.ReadAllText(LAST_WORK_DIR_FILE);
+            }
+            catch (Exception) { }
             var wdw = new WorkDirectoryWindow()
             {
-                Owner = this
+                Owner = this,
+                WorkPath = workdir,
             };
             if (wdw.ShowDialog() == true)
             {
@@ -87,16 +89,18 @@ namespace BililiveRecorder.WPF
                 return;
             }
 
-
             Task.Run(() => CheckVersion());
         }
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             _AddLog = null;
-            ps.RoomIDs = string.Join(";", Recorder.Rooms.Select(x => x.Roomid + "," + x.IsMonitoring));
-            ps.Save();
             Recorder.Shutdown();
+            try
+            {
+                File.WriteAllText(LAST_WORK_DIR_FILE, Recorder.Config.WorkDirectory);
+            }
+            catch (Exception) { }
         }
 
         #region - 更新检查 -
