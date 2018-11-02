@@ -8,6 +8,9 @@ namespace BililiveRecorder.FlvProcessor
         event TagProcessedEvent TagProcessed;
         event StreamFinalizedEvent StreamFinalized;
 
+        int CurrentTimestamp { get; set; }
+        DateTime StartDateTime { get; set; }
+
         IFlvMetadata Metadata { get; set; }
         ObservableCollection<IFlvClipProcessor> Clips { get; }
         uint ClipLengthPast { get; set; }

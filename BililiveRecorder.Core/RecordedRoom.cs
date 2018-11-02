@@ -2,9 +2,7 @@
 using BililiveRecorder.FlvProcessor;
 using NLog;
 using System;
-using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -57,6 +55,7 @@ namespace BililiveRecorder.Core
         public bool IsRecording => !(StreamDownloadTask?.IsCompleted ?? true);
 
         private readonly Func<IFlvStreamProcessor> newIFlvStreamProcessor;
+        private IFlvStreamProcessor _processor;
         public IFlvStreamProcessor Processor
         {
             get => _processor;
@@ -67,26 +66,31 @@ namespace BililiveRecorder.Core
                 TriggerPropertyChanged(nameof(Processor));
             }
         }
-        private IFlvStreamProcessor _processor;
-        private ObservableCollection<IFlvClipProcessor> Clips { get; set; } = new ObservableCollection<IFlvClipProcessor>();
 
-        public IStreamMonitor StreamMonitor { get; }
         private ConfigV1 _config { get; }
+        public IStreamMonitor StreamMonitor { get; }
 
+        private HttpWebResponse _response;
+        private Stream _stream;
         private Task StartupTask = null;
         public Task StreamDownloadTask = null;
         public CancellationTokenSource cancellationTokenSource = null;
-        private HttpWebResponse _response;
-        private Stream _stream;
 
+        private double _DownloadSpeedPersentage = 0;
+        private double _DownloadSpeedKiBps = 0;
+        private long _lastUpdateSize = 0;
+        private int _lastUpdateTimestamp = 0;
+        public DateTime LastUpdateDateTime { get; private set; } = DateTime.Now;
+        public double DownloadSpeedPersentage
+        {
+            get { return _DownloadSpeedPersentage; }
+            private set { if (value != _DownloadSpeedPersentage) { _DownloadSpeedPersentage = value; TriggerPropertyChanged(nameof(DownloadSpeedPersentage)); } }
+        }
         public double DownloadSpeedKiBps
         {
             get { return _DownloadSpeedKiBps; }
             private set { if (value != _DownloadSpeedKiBps) { _DownloadSpeedKiBps = value; TriggerPropertyChanged(nameof(DownloadSpeedKiBps)); } }
         }
-        private double _DownloadSpeedKiBps = 0;
-        public DateTime LastUpdateDateTime { get; private set; } = DateTime.Now;
-        public long LastUpdateSize { get; private set; } = 0;
 
         public RecordedRoom(ConfigV1 config,
             Func<int, IStreamMonitor> newIStreamMonitor,
@@ -284,19 +288,21 @@ namespace BililiveRecorder.Core
                 _response = null;
 
                 DownloadSpeedKiBps = 0d;
+                DownloadSpeedPersentage = 0d;
                 TriggerPropertyChanged(nameof(IsRecording));
             }
             void _UpdateDownloadSpeed(int bytesRead)
             {
                 DateTime now = DateTime.Now;
-                double sec = (now - LastUpdateDateTime).TotalSeconds;
-                LastUpdateSize += bytesRead;
-                if (sec > 1)
+                double passedSeconds = (now - LastUpdateDateTime).TotalSeconds;
+                _lastUpdateSize += bytesRead;
+                if (passedSeconds > 1.5)
                 {
-                    var speed = LastUpdateSize / sec;
+                    DownloadSpeedKiBps = _lastUpdateSize / passedSeconds / 1024; // KiB per sec
+                    DownloadSpeedPersentage = (Processor.CurrentTimestamp - _lastUpdateTimestamp) / passedSeconds / 1000; // ((RecordedTime/1000) / RealTime)%
+                    _lastUpdateTimestamp = Processor.CurrentTimestamp;
+                    _lastUpdateSize = 0;
                     LastUpdateDateTime = now;
-                    LastUpdateSize = 0;
-                    DownloadSpeedKiBps = speed / 1024; // KiB per sec
                 }
             }
         }
@@ -318,19 +324,6 @@ namespace BililiveRecorder.Core
 
         private string GetClipFilePath() => Path.Combine(_config.WorkDirectory, RealRoomid.ToString(), "clip",
             $@"clip-{RealRoomid}-{DateTime.Now.ToString("yyyyMMdd-HHmmss")}-{random.Next(100, 999)}.flv".RemoveInvalidFileName());
-
-        private void CallBack_ClipFinalized(object sender, ClipFinalizedArgs e)
-        {
-            e.ClipProcessor.ClipFinalized -= CallBack_ClipFinalized;
-            if (Clips.Remove(e.ClipProcessor))
-            {
-                Debug.WriteLine("Clip Finalized");
-            }
-            else
-            {
-                Debug.WriteLine("Warning! Clip Finalized but was not in Collection.");
-            }
-        }
 
         public event PropertyChangedEventHandler PropertyChanged;
         protected void TriggerPropertyChanged(string propertyName)

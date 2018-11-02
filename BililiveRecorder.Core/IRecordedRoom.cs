@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BililiveRecorder.FlvProcessor;
+using System;
 using System.ComponentModel;
 
 namespace BililiveRecorder.Core
@@ -10,10 +11,12 @@ namespace BililiveRecorder.Core
         string StreamerName { get; }
 
         IStreamMonitor StreamMonitor { get; }
+        IFlvStreamProcessor Processor { get; }
 
         bool IsMonitoring { get; }
         bool IsRecording { get; }
 
+        double DownloadSpeedPersentage { get; }
         double DownloadSpeedKiBps { get; }
         DateTime LastUpdateDateTime { get; }
 

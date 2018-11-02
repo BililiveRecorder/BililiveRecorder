@@ -45,10 +45,12 @@ namespace BililiveRecorder.FlvProcessor
         private bool _headerParsed = false;
         private bool _hasOffset = false;
         private int _lasttimeRemovedTimestamp = 0;
-        private int _biggestTimeStamp = 0;
         private int _baseTimeStamp = 0;
         private int _tagVideoCount = 0;
         private int _tagAudioCount = 0;
+
+        public int CurrentTimestamp { get; set; } = 0;
+        public DateTime StartDateTime { get; set; } = DateTime.Now;
 
         private readonly Func<IFlvClipProcessor> funcFlvClipProcessor;
         private readonly Func<byte[], IFlvMetadata> funcFlvMetadata;
@@ -232,10 +234,10 @@ namespace BililiveRecorder.FlvProcessor
                     _tags.Add(tag); // Clip 缓存
 
                     // 移除过旧的数据
-                    if (_biggestTimeStamp - _lasttimeRemovedTimestamp > 800)
+                    if (CurrentTimestamp - _lasttimeRemovedTimestamp > 800)
                     {
-                        _lasttimeRemovedTimestamp = _biggestTimeStamp;
-                        int max_remove_index = _tags.FindLastIndex(x => x.IsVideoKeyframe && ((_biggestTimeStamp - x.TimeStamp) > (ClipLengthPast * SEC_TO_MS)));
+                        _lasttimeRemovedTimestamp = CurrentTimestamp;
+                        int max_remove_index = _tags.FindLastIndex(x => x.IsVideoKeyframe && ((CurrentTimestamp - x.TimeStamp) > (ClipLengthPast * SEC_TO_MS)));
                         if (max_remove_index > 0)
                         {
                             _tags.RemoveRange(0, max_remove_index);
@@ -262,7 +264,7 @@ namespace BililiveRecorder.FlvProcessor
                         tag.TimeStamp = 0;
                     }
 
-                    _biggestTimeStamp = Math.Max(_biggestTimeStamp, tag.TimeStamp);
+                    CurrentTimestamp = Math.Max(CurrentTimestamp, tag.TimeStamp);
                 }
                 else
                 {
@@ -283,6 +285,7 @@ namespace BililiveRecorder.FlvProcessor
                     {
                         _baseTimeStamp = tag.TimeStamp;
                         _hasOffset = true;
+                        StartDateTime = DateTime.Now;
                         logger.Trace("重设时间戳 {0} 毫秒", _baseTimeStamp);
                     }
                 }
@@ -298,6 +301,7 @@ namespace BililiveRecorder.FlvProcessor
                     {
                         _baseTimeStamp = tag.TimeStamp;
                         _hasOffset = true;
+                        StartDateTime = DateTime.Now;
                         logger.Trace("重设时间戳 {0} 毫秒", _baseTimeStamp);
                     }
                 }
@@ -351,8 +355,8 @@ namespace BililiveRecorder.FlvProcessor
                 {
                     try
                     {
-                        Metadata.Meta["duration"] = _biggestTimeStamp / 1000.0;
-                        Metadata.Meta["lasttimestamp"] = (double)_biggestTimeStamp;
+                        Metadata.Meta["duration"] = CurrentTimestamp / 1000.0;
+                        Metadata.Meta["lasttimestamp"] = (double)CurrentTimestamp;
                         byte[] metadata = Metadata.ToBytes();
 
 

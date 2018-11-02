@@ -120,6 +120,16 @@ namespace BililiveRecorder.Core
                             room.StopRecord();
                             room.StreamMonitor.CheckAfterSeconeds(1, TriggerType.HttpApi);
                         }
+                        else if (room.Processor != null &&
+                                    ((DateTime.Now - room.Processor.StartDateTime).TotalMilliseconds
+                                    >
+                                    (room.Processor.CurrentTimestamp + (10 * 1000)))
+                                )
+                        {
+                            logger.Warn("{0} 直播间的下载速度达不到录制标准，将断开重连。请检查网络是否稳定", room.Roomid);
+                            room.StopRecord();
+                            room.StreamMonitor.CheckAfterSeconeds(1, TriggerType.HttpApi);
+                        }
                     }
                 });
             }
