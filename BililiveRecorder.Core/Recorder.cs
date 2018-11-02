@@ -1,6 +1,7 @@
 ﻿using BililiveRecorder.Core.Config;
 using NLog;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading;
@@ -85,6 +86,16 @@ namespace BililiveRecorder.Core
         {
             if (!_valid) { throw new InvalidOperationException("Not Initialized"); }
             tokenSource.Cancel();
+
+            Config.RoomList = new List<RoomV1>();
+            Rooms.ToList().ForEach(rr =>
+            {
+                Config.RoomList.Add(new RoomV1()
+                {
+                    Roomid = rr.RealRoomid,
+                    Enabled = rr.IsMonitoring,
+                });
+            });
 
             Rooms.ToList().ForEach(rr =>
             {
