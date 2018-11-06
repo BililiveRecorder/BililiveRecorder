@@ -60,7 +60,7 @@
                     <DataGridTextColumn Binding="{Binding Processor.Clips.Count}" Header="剪辑数量"/>
                 </DataGrid.Columns>
             </DataGrid>
-            <ItemsControl Grid.Row="1" Grid.RowSpan="2" x:Name="Log" ItemsSource="{Binding Logs}" ItemTemplate="{StaticResource LogTemplate}" >
+            <ItemsControl Grid.Row="1" Grid.RowSpan="2" x:Name="Log" ItemsSource="{Binding Logs}" ItemTemplate="{StaticResource LogTemplate}" ToolTip="右键点击可以复制单行日志">
                 <ItemsControl.Template>
                     <ControlTemplate>
                         <ScrollViewer x:Name="LogScroll" CanContentScroll="True">
@@ -118,11 +118,11 @@
 
                 <TextBlock Grid.Row="6" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right">下载速度：</TextBlock>
                 <TextBlock Grid.Row="6" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left" Text="{Binding DownloadSpeedKiBps,StringFormat=0.## KiB/s}"/>
- 
+
                 <TextBlock Grid.Row="7" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right">速度百分比：</TextBlock>
                 <TextBlock Grid.Row="7" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left" Text="{Binding DownloadSpeedPersentage,StringFormat=0.## %}"/>
 
-                
+
                 <Grid Grid.Row="9" Grid.ColumnSpan="2">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="*"/>
