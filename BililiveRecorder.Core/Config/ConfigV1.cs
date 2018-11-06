@@ -43,6 +43,18 @@ namespace BililiveRecorder.Core.Config
         [JsonProperty("clip_length_past")]
         public uint ClipLengthPast { get => _clipLengthPast; set => SetField(ref _clipLengthPast, value); }
 
+        /// <summary>
+        /// 自动切割模式
+        /// </summary>
+        [JsonProperty("cutting_mode")]
+        public AutoCuttingMode CuttingMode { get => _cuttingMode; set => SetField(ref _cuttingMode, value); }
+
+        /// <summary>
+        /// 自动切割数值（分钟/MiB）
+        /// </summary>
+        [JsonProperty("cutting_number")]
+        public uint CuttingNumber { get => _cuttingNumber; set => SetField(ref _cuttingNumber, value); }
+
         #region INotifyPropertyChanged
         public event PropertyChangedEventHandler PropertyChanged;
         protected virtual void OnPropertyChanged(string propertyName) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
@@ -56,6 +68,8 @@ namespace BililiveRecorder.Core.Config
 
         private uint _clipLengthPast = 20;
         private uint _clipLengthFuture = 10;
+        private uint _cuttingNumber = 10;
         private EnabledFeature _enabledFeature = EnabledFeature.Both;
+        private AutoCuttingMode _cuttingMode = AutoCuttingMode.Disabled;
     }
 }

@@ -209,9 +209,10 @@ namespace BililiveRecorder.Core
                         triggerType = TriggerType.HttpApi;
                     }
 
-                    Processor = newIFlvStreamProcessor().Initialize(GetStreamFilePath, GetClipFilePath, _config.EnabledFeature);
+                    Processor = newIFlvStreamProcessor().Initialize(GetStreamFilePath, GetClipFilePath, _config.EnabledFeature, _config.CuttingMode);
                     Processor.ClipLengthFuture = _config.ClipLengthFuture;
                     Processor.ClipLengthPast = _config.ClipLengthPast;
+                    Processor.CuttingNumber = _config.CuttingNumber;
 
                     _stream = _response.GetResponseStream();
                     _stream.ReadTimeout = 3 * 1000;
@@ -299,8 +300,8 @@ namespace BililiveRecorder.Core
                 if (passedSeconds > 1.5)
                 {
                     DownloadSpeedKiBps = _lastUpdateSize / passedSeconds / 1024; // KiB per sec
-                    DownloadSpeedPersentage = (Processor.CurrentTimestamp - _lastUpdateTimestamp) / passedSeconds / 1000; // ((RecordedTime/1000) / RealTime)%
-                    _lastUpdateTimestamp = Processor.CurrentTimestamp;
+                    DownloadSpeedPersentage = (Processor.TotalMaxTimestamp - _lastUpdateTimestamp) / passedSeconds / 1000; // ((RecordedTime/1000) / RealTime)%
+                    _lastUpdateTimestamp = Processor.TotalMaxTimestamp;
                     _lastUpdateSize = 0;
                     LastUpdateDateTime = now;
                 }

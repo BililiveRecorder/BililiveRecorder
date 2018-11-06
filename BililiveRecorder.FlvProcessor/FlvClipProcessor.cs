@@ -22,7 +22,7 @@ namespace BililiveRecorder.FlvProcessor
         public IFlvClipProcessor Initialize(string path, IFlvMetadata metadata, List<IFlvTag> head, List<IFlvTag> data, uint seconds)
         {
             this.path = path;
-            Header = metadata;
+            Header = metadata; // TODO: Copy a copy, do not share
             HTags = head;
             Tags = data;
             target = Tags[Tags.Count - 1].TimeStamp + (int)(seconds * FlvStreamProcessor.SEC_TO_MS);
