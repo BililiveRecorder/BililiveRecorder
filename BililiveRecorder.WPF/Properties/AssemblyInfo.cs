@@ -8,7 +8,7 @@ using System.Windows;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("B站录播姬")]
-[assembly: AssemblyDescription("录制 BiliBili 直播")]
+[assembly: AssemblyDescription("B站录播姬")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Genteure")]
 [assembly: AssemblyProduct("B站录播姬")]

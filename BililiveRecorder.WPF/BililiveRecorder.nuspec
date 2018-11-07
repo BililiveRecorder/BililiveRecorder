@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata>
+    <id>BililiveRecorder</id>
+    <version>0.0.0</version>
+    <title>B站录播姬</title>
+    <authors>Genteure</authors>
+    <owners>Genteure</owners>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <iconUrl>https://rec.danmuji.org/favicon.ico</iconUrl>
+    <description>B站录播姬</description>
+    <language>zh-CN</language>
+  </metadata>
+  <files>
+    <file src="*.*" target="lib\net45\" exclude="*.pdb;*.nupkg;*.vshost.*"/>
+  </files>
+</package>
