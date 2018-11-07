@@ -41,7 +41,6 @@ namespace BililiveRecorder.WPF
 
         public MainWindow()
         {
-            Title += "   版本号: " + BuildInfo.Version + "  " + BuildInfo.HeadShaShort;
             _AddLog = (message) => Log.Dispatcher.Invoke(() => { Logs.Add(message); while (Logs.Count > MAX_LOG_ROW) { Logs.RemoveAt(0); } });
 
             var builder = new ContainerBuilder();
@@ -59,6 +58,8 @@ namespace BililiveRecorder.WPF
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
+            Title += "     版本号: " + BuildInfo.Version + "  " + BuildInfo.HeadShaShort;
+
             string workdir = string.Empty;
             try
             {

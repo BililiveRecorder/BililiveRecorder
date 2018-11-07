@@ -54,7 +54,7 @@
                     <Setter Property="FontSize" Value="16"/>
                 </Style>
             </Grid.Resources>
-            <Button IsEnabled="{Binding ConfirmEnabled}" IsDefault="True" Click="Button_Click_1">
+            <Button IsEnabled="{Binding Status}" IsDefault="True" Click="Button_Click_1">
                 确认
             </Button>
             <Button Grid.Column="1" IsCancel="True" Click="Button_Click_2">
