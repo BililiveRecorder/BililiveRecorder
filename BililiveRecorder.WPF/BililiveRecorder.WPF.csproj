@@ -33,9 +33,6 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <SignManifests>true</SignManifests>
-    <ManifestCertificateThumbprint>9097810D08593788E799F3C1DBFDDEF603D37940</ManifestCertificateThumbprint>
-    <ManifestTimestampUrl>http://timestamp.comodoca.com/?td=sha256</ManifestTimestampUrl>
   </PropertyGroup>
   <PropertyGroup>
     <StartupObject>BililiveRecorder.WPF.App</StartupObject>
@@ -219,10 +216,7 @@ copy /y .\BililiveRecorder.WPF\Nlog.$(ConfigurationName).config .\BililiveRecord
     <SquirrelBuildTarget Condition=" '$(SquirrelBuildTarget)' == '' ">.\SquirrelRelease</SquirrelBuildTarget>
   </PropertyGroup>
   <Target Name="AfterBuild" Condition=" '$(Configuration)' == 'Release'">
-    <GetAssemblyIdentity AssemblyFiles="$(TargetPath)">
-      <Output TaskParameter="Assemblies" ItemName="myAssemblyInfo"/>
-    </GetAssemblyIdentity>
-    <Exec Command="..\packages\NuGet.CommandLine.4.7.1\tools\NuGet.exe pack BililiveRecorder.nuspec -Version %(myAssemblyInfo.Version) -Properties Configuration=Release -OutputDirectory $(OutDir) -BasePath $(OutDir)" />
-    <Exec Command="..\packages\squirrel.windows.1.9.0\tools\Squirrel.exe --releasify $(OutDir)BililiveRecorder.$([System.Version]::Parse(%(myAssemblyInfo.Version)).ToString(3)).nupkg -r $(SquirrelBuildTarget) --framework-version net462 --no-msi" />
+    <Exec Command="..\packages\NuGet.CommandLine.4.7.1\tools\NuGet.exe pack BililiveRecorder.nuspec -Version $([System.IO.File]::ReadAllText('../VERSION')) -Properties Configuration=Release -OutputDirectory $(OutDir) -BasePath $(OutDir)" />
+    <Exec Command="..\packages\squirrel.windows.1.9.0\tools\Squirrel.exe --releasify $(OutDir)BililiveRecorder.$([System.IO.File]::ReadAllText('../VERSION')).nupkg -r $(SquirrelBuildTarget) --framework-version net462 --no-msi" />
   </Target>
 </Project>

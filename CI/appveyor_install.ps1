@@ -1,4 +1,4 @@
-if ($env:APPVEYOR -eq "True" -and $env:CONFIGURATION -eq "Release") {
+if ($env:APPVEYOR -and (-not $env:APPVEYOR_PULL_REQUEST_NUMBER) -and $env:CONFIGURATION -eq "Release") {
     git config --global credential.helper store
     Add-Content "$env:USERPROFILE\.git-credentials" "https://$($env:github_access_token):x-oauth-basic@github.com`n"
     git config --global user.email "appveyor@genteure.com"
@@ -10,7 +10,7 @@ if ($env:APPVEYOR -eq "True" -and $env:CONFIGURATION -eq "Release") {
     $env:DEPLOY_SITE_GIT="C:\projects\site"
     git clone --quiet --depth 1 "https://github.com/Bililive/soft.danmuji.org.git" $env:DEPLOY_SITE_GIT
     $env:DEPLOY_SITE_BRANCH="rec$env:APPVEYOR_BUILD_VERSION"
-    git checkout -b $env:DEPLOY_SITE_BRANCH
+    git checkout --quiet -b $env:DEPLOY_SITE_BRANCH
 }
 
 Write-Host "Current build version is $env:APPVEYOR_BUILD_VERSION"
