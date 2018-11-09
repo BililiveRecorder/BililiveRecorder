@@ -29,7 +29,7 @@ environment:
 cache:
   - packages
 
-  install:
+install:
   - ps: ./CI/appveyor_install.ps1
 
 before_build:
@@ -41,6 +41,8 @@ build_script:
 
 on_success:
   - ps: ./CI/appveyor_on_success.ps1
+
+for:
 
 -
   branches:
