@@ -1,6 +1,6 @@
 git --git-dir="$env:DEPLOY_SITE_GIT\.git\" --work-tree="$env:DEPLOY_SITE_GIT" add -A
 git --git-dir="$env:DEPLOY_SITE_GIT\.git\" --work-tree="$env:DEPLOY_SITE_GIT" commit --quiet -m "BililiveRecorder $env:APPVEYOR_BUILD_VERSION"
-git --git-dir="$env:DEPLOY_SITE_GIT\.git\" --work-tree="$env:DEPLOY_SITE_GIT" push --quiet
+git --git-dir="$env:DEPLOY_SITE_GIT\.git\" --work-tree="$env:DEPLOY_SITE_GIT" push --quiet --set-upstream origin $env:DEPLOY_SITE_BRANCH
 
 $headers = @{
     'Accept'        = 'application/vnd.github.v3+json'
