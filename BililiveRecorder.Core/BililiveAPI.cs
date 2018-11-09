@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using System.Net;
-using System.Text;
 using System.Text.RegularExpressions;
 
 namespace BililiveRecorder.Core
@@ -38,7 +38,21 @@ namespace BililiveRecorder.Core
         {
             string url = $@"https://api.live.bilibili.com/room/v1/Room/playUrl?cid={roomid}&quality=0&platform=web";
             var data = HttpGetJson(url);
-            return data?["data"]?["durl"]?[0]?["url"]?.str?.Decode() ?? throw new Exception("没有直播播放地址");
+            var array = data?["data"]?["durl"];
+            if (array != null)
+            {
+                List<string> urls = new List<string>();
+                for (int i = 0; i < array.Count; i++)
+                {
+                    urls.Add(array[i]?["url"]?.str?.Decode());
+                }
+                var distinct = urls.Distinct().ToArray();
+                if (distinct.Length > 0)
+                {
+                    return distinct[random.Next(0, distinct.Count() - 1)];
+                }
+            }
+            throw new Exception("没有直播播放地址");
         }
 
         /// <summary>
@@ -64,5 +78,6 @@ namespace BililiveRecorder.Core
 
         private static readonly Regex rx = new Regex(@"\\[uU]([0-9A-Fa-f]{4})", RegexOptions.Compiled);
         internal static string Decode(this string str) => rx.Replace(str, match => ((char)Int32.Parse(match.Value.Substring(2), NumberStyles.HexNumber)).ToString());
+        private static readonly Random random = new Random();
     }
 }

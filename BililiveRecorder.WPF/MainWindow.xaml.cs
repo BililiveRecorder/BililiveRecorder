@@ -1,25 +1,15 @@
-﻿using BililiveRecorder.Core;
+﻿using Autofac;
+using BililiveRecorder.Core;
+using BililiveRecorder.FlvProcessor;
 using NLog;
-using NLog.Config;
-using NLog.Targets;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Deployment.Application;
-using System.Diagnostics;
+using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 
 namespace BililiveRecorder.WPF
@@ -30,9 +20,12 @@ namespace BililiveRecorder.WPF
     public partial class MainWindow : Window
     {
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
-        private static readonly Properties.Settings ps = Properties.Settings.Default;
 
         private const int MAX_LOG_ROW = 25;
+        private const string LAST_WORK_DIR_FILE = "lastworkdir";
+
+        private IContainer Container { get; set; }
+        private ILifetimeScope RootScope { get; set; }
 
         public Recorder Recorder { get; set; }
         public ObservableCollection<string> Logs { get; set; } =
@@ -48,191 +41,70 @@ namespace BililiveRecorder.WPF
 
         public MainWindow()
         {
-            _AddLog = (message) => Log.Dispatcher.Invoke(() => { Logs.Add(message); while (Logs.Count > MAX_LOG_ROW) Logs.RemoveAt(0); });
+            _AddLog = (message) => Log.Dispatcher.Invoke(() => { Logs.Add(message); while (Logs.Count > MAX_LOG_ROW) { Logs.RemoveAt(0); } });
+
+            var builder = new ContainerBuilder();
+            builder.RegisterModule<FlvProcessorModule>();
+            builder.RegisterModule<CoreModule>();
+            Container = builder.Build();
+            RootScope = Container.BeginLifetimeScope("recorder_root");
+
+            Recorder = RootScope.Resolve<Recorder>();
 
             InitializeComponent();
 
-            Recorder = new Recorder();
             DataContext = this;
-
-
-            Title += "   版本号: " + BuildInfo.Version + "  " + BuildInfo.HeadShaShort;
         }
-
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            InitSettings();
+            Title += "     版本号: " + BuildInfo.Version + "  " + BuildInfo.HeadShaShort;
 
-            if (string.IsNullOrWhiteSpace(Recorder.Settings.SavePath) || (ApplicationDeployment.IsNetworkDeployed && ApplicationDeployment.CurrentDeployment.IsFirstRun))
+            string workdir = string.Empty;
+            try
             {
-                ShowSettingsWindow();
+                workdir = File.ReadAllText(LAST_WORK_DIR_FILE);
+            }
+            catch (Exception) { }
+            var wdw = new WorkDirectoryWindow()
+            {
+                Owner = this,
+                WorkPath = workdir,
+            };
+            if (wdw.ShowDialog() == true)
+            {
+                workdir = wdw.WorkPath;
+            }
+            else
+            {
+                Environment.Exit(-1);
+                return;
             }
 
-            Task.Run(() => CheckVersion());
+            if (!Recorder.Initialize(workdir))
+            {
+                MessageBox.Show("初始化错误", "录播姬", MessageBoxButton.OK, MessageBoxImage.Error);
+                Environment.Exit(-2);
+                return;
+            }
+
+            // Task.Run(() => CheckVersion());
         }
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             _AddLog = null;
-            ps.RoomIDs = string.Join(";", Recorder.Rooms.Select(x => x.Roomid + "," + x.IsMonitoring));
-            ps.Save();
             Recorder.Shutdown();
+            try
+            {
+                File.WriteAllText(LAST_WORK_DIR_FILE, Recorder.Config.WorkDirectory);
+            }
+            catch (Exception) { }
         }
 
         #region - 更新检查 -
 
-        private void CheckVersion()
-        {
-            UpdateBar.MainButtonClick += UpdateBar_MainButtonClick;
-            // 定时每6小时检查一次
-            Repeat.Interval(TimeSpan.FromHours(6), () => UpdateBar.Dispatcher.Invoke(() =>
-            {
-                if (ApplicationDeployment.IsNetworkDeployed && UpdateAction == null)
-                {
-                    ApplicationDeployment ad = ApplicationDeployment.CurrentDeployment;
-                    ad.CheckForUpdateCompleted += Ad_CheckForUpdateCompleted;
-                    ad.CheckForUpdateAsync();
-                }
-            }), new CancellationToken());
-        }
-
-        private Action UpdateAction = null;
-        private void UpdateBar_MainButtonClick(object sender, RoutedEventArgs e) => UpdateAction?.Invoke();
-
-        private void Ad_CheckForUpdateCompleted(object sender, CheckForUpdateCompletedEventArgs e)
-        {
-            ApplicationDeployment ad = ApplicationDeployment.CurrentDeployment;
-            if (e.Error != null)
-            {
-                logger.Error(e.Error, "检查版本更新出错");
-                return;
-            }
-            if (e.Cancelled)
-                return;
-            if (e.UpdateAvailable)
-            {
-                if (e.IsUpdateRequired)
-                {
-                    BeginUpdate();
-                }
-                else
-                {
-                    UpdateAction = () => BeginUpdate();
-                    UpdateBar.Dispatcher.Invoke(() =>
-                    {
-                        UpdateBar.MainText = string.Format("发现新版本: {0} 大小: {1}KiB", e.AvailableVersion, e.UpdateSizeBytes / 1024);
-                        UpdateBar.ButtonText = "下载更新";
-                        UpdateBar.Display = true;
-                    });
-                }
-            }
-        }
-
-        private void BeginUpdate()
-        {
-            ApplicationDeployment ad = ApplicationDeployment.CurrentDeployment;
-            ad.UpdateCompleted += Ad_UpdateCompleted;
-            ad.UpdateProgressChanged += Ad_UpdateProgressChanged;
-            ad.UpdateAsync();
-            UpdateBar.Dispatcher.Invoke(() =>
-            {
-                UpdateBar.ProgressText = "0KiB / 0KiB - 0%";
-                UpdateBar.Progress = 0;
-                UpdateBar.Display = true;
-                UpdateBar.ShowProgressBar = true;
-            });
-        }
-
-        private void Ad_UpdateProgressChanged(object sender, DeploymentProgressChangedEventArgs e)
-        {
-            UpdateBar.Dispatcher.Invoke(() =>
-            {
-                var p = (e.BytesTotal == 0) ? 100d : ((double)e.BytesCompleted / (double)e.BytesTotal) * 100d;
-                UpdateBar.Progress = p;
-                UpdateBar.ProgressText = string.Format("{0}KiB / {1}KiB - {2}%", e.BytesCompleted / 1024, e.BytesTotal / 1024, p.ToString("0.##"));
-            });
-        }
-
-        private void Ad_UpdateCompleted(object sender, System.ComponentModel.AsyncCompletedEventArgs e)
-        {
-            UpdateBar.Dispatcher.Invoke(() =>
-            {
-                if (e.Cancelled)
-                {
-                    UpdateBar.Display = false;
-                    return;
-                }
-                if (e.Error != null)
-                {
-                    UpdateBar.Display = false;
-                    logger.Error(e.Error, "下载更新时出现错误");
-                    return;
-                }
-
-                UpdateAction = () =>
-                    {
-                        Recorder.Shutdown();
-                        System.Windows.Forms.Application.Restart();
-                        Application.Current.Shutdown();
-                    };
-                UpdateBar.MainText = "更新已下载好，要现在重启软件吗？";
-                UpdateBar.ButtonText = "重启软件";
-                UpdateBar.ShowProgressBar = false;
-            });
-        }
-
         #endregion
-
-
-        private void InitSettings()
-        {
-            var s = Recorder.Settings;
-
-            if (ps.UpgradeRequired)
-            {
-                ps.Upgrade();
-                ps.UpgradeRequired = false;
-                ps.Save();
-            }
-
-            s.Clip_Future = ps.Clip_Future;
-            s.Clip_Past = ps.Clip_Past;
-            s.SavePath = ps.SavePath;
-            s.Feature = (EnabledFeature)ps.Feature;
-            s.PropertyChanged += (sender, e) =>
-            {
-                switch (e.PropertyName)
-                {
-                    case nameof(s.Clip_Future):
-                        ps.Clip_Future = s.Clip_Future;
-                        break;
-                    case nameof(s.Clip_Past):
-                        ps.Clip_Past = s.Clip_Past;
-                        break;
-                    case nameof(s.SavePath):
-                        ps.SavePath = s.SavePath;
-                        break;
-                    case nameof(s.Feature):
-                        ps.Feature = (int)s.Feature;
-                        break;
-                    default:
-                        break;
-                }
-            };
-
-
-            ps.RoomIDs.Split(';').ToList().ForEach(rs =>
-            {
-                var r = rs.Split(',');
-                if (int.TryParse(r[0], out int roomid) && bool.TryParse(r[1], out bool enabled))
-                {
-                    if (roomid > 0)
-                        Recorder.AddRoom(roomid, enabled);
-                }
-            });
-
-        }
 
         private void TextBlock_MouseRightButtonUp(object sender, MouseButtonEventArgs e)
         {
@@ -250,7 +122,11 @@ namespace BililiveRecorder.WPF
         private void Clip_Click(object sender, RoutedEventArgs e)
         {
             var rr = _GetSenderAsRecordedRoom(sender);
-            if (rr == null) return;
+            if (rr == null)
+            {
+                return;
+            }
+
             Task.Run(() => rr.Clip());
         }
 
@@ -262,7 +138,11 @@ namespace BililiveRecorder.WPF
         private void EnableAutoRec(object sender, RoutedEventArgs e)
         {
             var rr = _GetSenderAsRecordedRoom(sender);
-            if (rr == null) return;
+            if (rr == null)
+            {
+                return;
+            }
+
             Task.Run(() => rr.Start());
         }
 
@@ -274,7 +154,11 @@ namespace BililiveRecorder.WPF
         private void DisableAutoRec(object sender, RoutedEventArgs e)
         {
             var rr = _GetSenderAsRecordedRoom(sender);
-            if (rr == null) return;
+            if (rr == null)
+            {
+                return;
+            }
+
             Task.Run(() => rr.Stop());
         }
 
@@ -286,7 +170,11 @@ namespace BililiveRecorder.WPF
         private void TriggerRec(object sender, RoutedEventArgs e)
         {
             var rr = _GetSenderAsRecordedRoom(sender);
-            if (rr == null) return;
+            if (rr == null)
+            {
+                return;
+            }
+
             Task.Run(() => rr.StartRecord());
         }
 
@@ -298,7 +186,11 @@ namespace BililiveRecorder.WPF
         private void CutRec(object sender, RoutedEventArgs e)
         {
             var rr = _GetSenderAsRecordedRoom(sender);
-            if (rr == null) return;
+            if (rr == null)
+            {
+                return;
+            }
+
             Task.Run(() => rr.StopRecord());
         }
 
@@ -310,7 +202,11 @@ namespace BililiveRecorder.WPF
         private void RemoveRecRoom(object sender, RoutedEventArgs e)
         {
             var rr = _GetSenderAsRecordedRoom(sender);
-            if (rr == null) return;
+            if (rr == null)
+            {
+                return;
+            }
+
             Recorder.RemoveRoom(rr);
         }
 
@@ -366,14 +262,14 @@ namespace BililiveRecorder.WPF
 
         private void ShowSettingsWindow()
         {
-            var sw = new SettingsWindow(this, Recorder.Settings);
+            var sw = new SettingsWindow(this, Recorder.Config);
             if (sw.ShowDialog() == true)
             {
-                sw.Settings.ApplyTo(Recorder.Settings);
+                sw.Config.CopyPropertiesTo(Recorder.Config);
             }
         }
 
-        private RecordedRoom _GetSenderAsRecordedRoom(object sender) => (sender as Button)?.DataContext as RecordedRoom;
+        private IRecordedRoom _GetSenderAsRecordedRoom(object sender) => (sender as Button)?.DataContext as IRecordedRoom;
 
 
     }

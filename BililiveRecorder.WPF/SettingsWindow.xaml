@@ -5,11 +5,16 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:BililiveRecorder.WPF"
         xmlns:core="clr-namespace:BililiveRecorder.Core;assembly=BililiveRecorder.Core"
+        xmlns:flv="clr-namespace:BililiveRecorder.FlvProcessor;assembly=BililiveRecorder.FlvProcessor"
         mc:Ignorable="d"
         ShowInTaskbar="False" ResizeMode="NoResize"
-        Title="设置 - 录播姬" Height="260" Width="250">
+        Title="设置 - 录播姬" Height="300" Width="250">
     <Window.Resources>
-        <local:EnumToBooleanConverter x:Key="EnumToBooleanConverter" />
+        <local:ValueConverterGroup x:Key="EnumToInvertBooleanConverter">
+            <local:EnumToBooleanConverter/>
+            <local:BooleanInverterConverter/>
+        </local:ValueConverterGroup>
+        <local:EnumToBooleanConverter x:Key="EnumToBooleanConverter"/>
     </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
@@ -19,6 +24,9 @@
 
         <Grid Margin="5">
             <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
@@ -39,7 +47,7 @@
                     </Style>
                 </ResourceDictionary>
             </Grid.Resources>
-
+            <!--
             <TextBlock Grid.Row="0" Grid.Column="0">保存位置：</TextBlock>
             <Grid Grid.Row="0" Grid.Column="1" VerticalAlignment="Center">
                 <Grid.ColumnDefinitions>
@@ -49,57 +57,96 @@
                 <local:ClickSelectTextBox Grid.Column="0" Text="{Binding SavePath}"/>
                 <Button Grid.Column="1" Click="Button_Click">浏览...</Button>
             </Grid>
-
-            <TextBlock Grid.Row="1" Grid.Column="0">剪辑回放时长：</TextBlock>
+-->
+            <TextBlock Grid.Row="1" Grid.Column="0">剪辑过去时长：</TextBlock>
             <Grid Grid.Row="1" Grid.Column="1" VerticalAlignment="Center">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="1*"/>
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
-                <local:ClickSelectTextBox Grid.Column="0" Text="{Binding Clip_Past}"/>
+                <local:ClickSelectTextBox Grid.Column="0" Text="{Binding ClipLengthPast,Delay=500,UpdateSourceTrigger=PropertyChanged}"
+                                          IsEnabled="{Binding Path=EnabledFeature, Converter={StaticResource EnumToInvertBooleanConverter},
+                                          ConverterParameter={x:Static flv:EnabledFeature.RecordOnly}}"/>
                 <TextBlock Grid.Column="1" Margin="5,0,10,0">秒</TextBlock>
             </Grid>
 
-            <TextBlock Grid.Row="2" Grid.Column="0">剪辑录制时长：</TextBlock>
+            <TextBlock Grid.Row="2" Grid.Column="0">剪辑将来时长：</TextBlock>
             <Grid Grid.Row="2" Grid.Column="1" VerticalAlignment="Center">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="1*"/>
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
-                <local:ClickSelectTextBox Grid.Column="0" Text="{Binding Clip_Future}"/>
+                <local:ClickSelectTextBox Grid.Column="0" Text="{Binding ClipLengthFuture,Delay=500,UpdateSourceTrigger=PropertyChanged}"
+                                          IsEnabled="{Binding Path=EnabledFeature, Converter={StaticResource EnumToInvertBooleanConverter},
+                                          ConverterParameter={x:Static flv:EnabledFeature.RecordOnly}}"/>
                 <TextBlock Grid.Column="1" Margin="5,0,10,0">秒</TextBlock>
             </Grid>
 
             <StackPanel Grid.Row="3" Grid.ColumnSpan="2" Margin="10,0">
-                <RadioButton IsChecked="{Binding Path=Feature, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter={x:Static core:EnabledFeature.ClipOnly}}">
-                    <TextBlock>
-                        只使用即时回放剪辑功能
-                        <LineBreak/>
-                        （不保存所有直播数据到硬盘）
-                    </TextBlock>
-                </RadioButton>
-                <RadioButton IsChecked="{Binding Path=Feature, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter={x:Static core:EnabledFeature.RecordOnly}}">
-                    <TextBlock>
-                        只使用录制功能
-                        <LineBreak/>
-                        （占内存更少，但不能剪辑回放）
-                    </TextBlock>
-                </RadioButton>
-                <RadioButton IsChecked="{Binding Path=Feature, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter={x:Static core:EnabledFeature.Both}}">同时启用两个功能</RadioButton>
+                <RadioButton GroupName="EnabledFeature" IsChecked="{Binding Path=EnabledFeature, Converter={StaticResource EnumToBooleanConverter}, 
+                    ConverterParameter={x:Static flv:EnabledFeature.ClipOnly}}" ToolTipService.InitialShowDelay="0"
+                             ToolTip="不保存所有直播数据到硬盘">只使用即时回放剪辑功能</RadioButton>
+                <RadioButton GroupName="EnabledFeature" IsChecked="{Binding Path=EnabledFeature, Converter={StaticResource EnumToBooleanConverter},
+                    ConverterParameter={x:Static flv:EnabledFeature.RecordOnly}}" ToolTipService.InitialShowDelay="0"
+                             ToolTip="占内存更少，但不能剪辑回放">只使用录制功能</RadioButton>
+                <RadioButton GroupName="EnabledFeature" IsChecked="{Binding Path=EnabledFeature, Converter={StaticResource EnumToBooleanConverter},
+                    ConverterParameter={x:Static flv:EnabledFeature.Both}}">同时启用两个功能</RadioButton>
             </StackPanel>
 
+            <Separator Grid.Row="4" Grid.ColumnSpan="2" />
+
+            <TextBlock Grid.Row="5" Grid.Column="0">自动切割单位：</TextBlock>
+            <Grid Grid.Row="5" Grid.Column="1" VerticalAlignment="Center">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <local:ClickSelectTextBox Grid.Column="0" Text="{Binding CuttingNumber,Delay=500,UpdateSourceTrigger=PropertyChanged}"
+                                          ToolTipService.InitialShowDelay="0" ToolTipService.ShowDuration="20000"
+                                          IsEnabled="{Binding Path=CuttingMode, Converter={StaticResource EnumToInvertBooleanConverter},
+                                          ConverterParameter={x:Static flv:AutoCuttingMode.Disabled}}">
+                    <local:ClickSelectTextBox.ToolTip>
+                        <ToolTip>
+                            <StackPanel>
+                                <StackPanel.Resources>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="TextAlignment" Value="Left"/>
+                                    </Style>
+                                </StackPanel.Resources>
+                                <TextBlock FontWeight="Bold">注：</TextBlock>
+                                <TextBlock>实际切割出来的视频文件会比设定的要大一点</TextBlock>
+                                <TextBlock>根据实际情况不同，可能会 大不到1MiB 或 长几秒钟</TextBlock>
+                                <TextBlock>请根据实际需求调整</TextBlock>
+                            </StackPanel>
+                        </ToolTip>
+                    </local:ClickSelectTextBox.ToolTip>
+                </local:ClickSelectTextBox>
+                <TextBlock Grid.Column="1" Margin="5,0,10,0">分 或 MiB</TextBlock>
+            </Grid>
+
+
+            <StackPanel Grid.Row="6" Grid.ColumnSpan="2" Margin="10,0">
+                <RadioButton GroupName="CuttingMode" IsChecked="{Binding Path=CuttingMode, Converter={StaticResource EnumToBooleanConverter},
+                    ConverterParameter={x:Static flv:AutoCuttingMode.Disabled}}">不切割录制的视频文件</RadioButton>
+                <RadioButton GroupName="CuttingMode" IsChecked="{Binding Path=CuttingMode, Converter={StaticResource EnumToBooleanConverter},
+                    ConverterParameter={x:Static flv:AutoCuttingMode.ByTime}}">根据视频时间(分)切割</RadioButton>
+                <RadioButton GroupName="CuttingMode" IsChecked="{Binding Path=CuttingMode, Converter={StaticResource EnumToBooleanConverter},
+                    ConverterParameter={x:Static flv:AutoCuttingMode.BySize}}">根据文件大小(MiB)切割</RadioButton>
+            </StackPanel>
+
+            <!--
             <TextBlock Grid.Row="4" Grid.Column="0"></TextBlock>
             <StackPanel Grid.Row="4" Grid.Column="1">
 
             </StackPanel>
-
+            -->
         </Grid>
 
         <StackPanel Orientation="Horizontal" Grid.Row="1"
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center">
-            <Button Click="Save" Padding="20,5" Margin="5">保存</Button>
-            <Button Click="Cancel" Padding="20,5" Margin="5">取消</Button>
+            <Button Click="Save" Padding="20,5" Margin="5" IsDefault="True">保存</Button>
+            <Button Click="Cancel" Padding="20,5" Margin="5" IsCancel="True">取消</Button>
         </StackPanel>
     </Grid>
 </Window>

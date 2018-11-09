@@ -5,22 +5,23 @@ using System.Threading.Tasks;
 
 namespace BililiveRecorder.Core
 {
-    public class StreamMonitor
+    public class StreamMonitor : IStreamMonitor
     {
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
 
         public int Roomid { get; private set; } = 0;
         public event StreamStatusChangedEvent StreamStatusChanged;
-        public readonly DanmakuReceiver receiver = new DanmakuReceiver();
+        public IDanmakuReceiver Receiver { get; }
         private CancellationTokenSource TokenSource = null;
 
-        public StreamMonitor(int roomid)
+        public StreamMonitor(int roomid, IDanmakuReceiver danmakuReceiver)
         {
+            Receiver = danmakuReceiver;
             Roomid = roomid;
 
-            receiver.Disconnected += Receiver_Disconnected;
-            receiver.ReceivedDanmaku += Receiver_ReceivedDanmaku;
-            receiver.ReceivedRoomCount += Receiver_ReceivedRoomCount;
+            Receiver.Disconnected += Receiver_Disconnected;
+            Receiver.ReceivedDanmaku += Receiver_ReceivedDanmaku;
+            Receiver.ReceivedRoomCount += Receiver_ReceivedRoomCount;
         }
 
         private void Receiver_ReceivedRoomCount(object sender, ReceivedRoomCountArgs e)
@@ -44,13 +45,13 @@ namespace BililiveRecorder.Core
 
         private void Receiver_Disconnected(object sender, DisconnectEvtArgs e)
         {
-            logger.Warn(e.Error, "弹幕连接被断开，将每30秒尝试重连一次");
+            logger.Warn(e.Error, "弹幕连接被断开，将每15秒尝试重连一次"); // TODO: 设置重连时间间隔
             bool connect_result = false;
-            while (!receiver.IsConnected && !TokenSource.Token.IsCancellationRequested)
+            while (!Receiver.IsConnected && !TokenSource.Token.IsCancellationRequested)
             {
-                Thread.Sleep(1000 * 30); // 备注：这是运行在 ReceiveMessageLoop 线程上的
+                Thread.Sleep(1000 * 15); // 备注：这是运行在 ReceiveMessageLoop 线程上的
                 logger.Log(Roomid, LogLevel.Info, "重连弹幕服务器...");
-                connect_result = receiver.Connect(Roomid);
+                connect_result = Receiver.Connect(Roomid);
             }
 
             if (connect_result)
@@ -64,47 +65,50 @@ namespace BililiveRecorder.Core
             Task.Run(() => StreamStatusChanged?.Invoke(this, new StreamStatusChangedArgs() { type = status }));
         }
 
-        private void HttpCheck()
-        {
-            try
-            {
-                if (BililiveAPI.GetRoomInfo(Roomid).isStreaming)
-                    _StartRecord(TriggerType.HttpApi);
-            }
-            catch (Exception ex)
-            {
-                logger.Log(Roomid, LogLevel.Warn, "获取直播间开播状态出错", ex);
-            }
-        }
-
         public bool Start()
         {
-            if (!receiver.IsConnected)
-                if (!receiver.Connect(Roomid))
+            if (!Receiver.IsConnected)
+            {
+                if (!Receiver.Connect(Roomid))
+                {
                     return false;
+                }
+            }
+
             logger.Log(Roomid, LogLevel.Info, "弹幕服务器连接成功");
 
-            // Run 96 times a day.
             if (TokenSource == null)
             {
                 TokenSource = new CancellationTokenSource();
-                Repeat.Interval(TimeSpan.FromMinutes(15), HttpCheck, TokenSource.Token);
+                Repeat.Interval(TimeSpan.FromMinutes(5), () => // TODO: 设置查询时间间隔
+                {
+                    try
+                    {
+                        Check(TriggerType.HttpApi);
+                    }
+                    catch (Exception ex)
+                    {
+                        logger.Log(Roomid, LogLevel.Warn, "获取直播间开播状态出错", ex);
+                    }
+                }, TokenSource.Token);
             }
             return true;
         }
 
         public void Stop()
         {
-            if (receiver.IsConnected)
-                receiver.Disconnect();
+            if (Receiver.IsConnected)
+            {
+                Receiver.Disconnect();
+            }
+
             TokenSource?.Cancel();
             TokenSource = null;
         }
 
         public void Check(TriggerType type = TriggerType.HttpApiRecheck)
         {
-            var info = BililiveAPI.GetRoomInfo(Roomid);
-            if (info.isStreaming)
+            if (BililiveAPI.GetRoomInfo(Roomid).isStreaming)
             {
                 _StartRecord(type);
             }
@@ -113,7 +117,9 @@ namespace BililiveRecorder.Core
         public void CheckAfterSeconeds(int seconds, TriggerType type = TriggerType.HttpApiRecheck)
         {
             if (seconds < 0)
+            {
                 throw new ArgumentOutOfRangeException(nameof(seconds), "不能小于0");
+            }
 
             Task.Run(() =>
             {

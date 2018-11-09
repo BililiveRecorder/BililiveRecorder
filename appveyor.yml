@@ -1,36 +1,22 @@
 image: Visual Studio 2017
-
-version: Oops{build}
-
+version: 0.0.0.{build}
 platform: Any CPU
-
-branches:
-  except:
-  - master
 skip_tags: true
-
-configuration:
-  - Debug
-  #- Release
 
 assembly_info:
   patch: true
   file: '**\AssemblyInfo.*'
-  assembly_version: $(p_version)
-  assembly_file_version: $(p_version)
-  assembly_informational_version: $(p_version)
+  assembly_version: $(APPVEYOR_BUILD_VERSION)
+  assembly_file_version: $(APPVEYOR_BUILD_VERSION)
+  assembly_informational_version: $(APPVEYOR_BUILD_VERSION)
 dotnet_csproj:
   patch: true
   file: '**\*.csproj'
-  version: $(p_version)
-  package_version: $(p_version)
-  assembly_version: $(p_version)
-  file_version: $(p_version)
-  informational_version: $(p_version)
-
-artifacts:
-  - path: BililiveRecorder.WPF\bin\Debug
-    name: BililiveRecorderDebugBuild
+  version: $(APPVEYOR_BUILD_VERSION)
+  package_version: $(APPVEYOR_BUILD_VERSION)
+  assembly_version: $(APPVEYOR_BUILD_VERSION)
+  file_version: $(APPVEYOR_BUILD_VERSION)
+  informational_version: $(APPVEYOR_BUILD_VERSION)
 
 environment:
   github_access_token:
@@ -48,26 +34,36 @@ install:
 
 before_build:
   - nuget restore -Verbosity quiet
-  - msbuild /t:Clean /verbosity:quiet /nologo
+  - msbuild /t:Clean /v:q /nologo
 
-build:
-  verbosity: minimal
-
-after_build:
-  - ps: ./CI/appveyor_after_build.ps1
-
-on_success:
-  - ps: ./CI/appveyor_on_success.ps1
+build_script:
+  - ps: msbuild /nologo /v:q /p:Configuration="$env:CONFIGURATION" /p:SquirrelBuildTarget="$env:DEPLOY_SITE_GIT\Recorder"
 
 
-# after_deploy:
+for:
 
-# clone soft.danmuji.org
-# copy files
-#  - git commit ...
-#  - git push ...
+-
+  branches:
+    only:
+      - master
+  configuration: Release
+  artifacts:
+  before_deploy:
+    - ps: ./CI/appveyor_deploy.ps1
+  deploy:
+    provider: GitHub
+    release: v$(APPVEYOR_BUILD_VERSION)
+    description: '# Fill out this before publish'
+    auth_token:
+      secure: 3n2WMbrqWb0nmy2LBmu7w6dJltiHHC4LCoNuIKBh7fKV0xfxCwVGOxbTpunLI2pe
+    artifact: github
+    draft: true
 
-# TODO: Github Release
+-
+  configuration: Debug
+  artifacts:
+    - path: BililiveRecorder.WPF\bin\Debug
+      name: BililiveRecorderDebugBuild
 
 #on_finish:
 #  - ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))

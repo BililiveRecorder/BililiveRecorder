@@ -56,10 +56,11 @@
                         </DataGridTextColumn.Binding>
                     </DataGridTextColumn>
                     <DataGridTextColumn Binding="{Binding DownloadSpeedKiBps,StringFormat=0.## KiB/s}" Header="下载速度"/>
-                    <DataGridTextColumn Binding="{Binding Clips.Count}" Header="在处理的剪辑数量"/>
+                    <DataGridTextColumn Binding="{Binding DownloadSpeedPersentage,StringFormat=0.## %}" Header="速度百分比"/>
+                    <DataGridTextColumn Binding="{Binding Processor.Clips.Count}" Header="剪辑数量"/>
                 </DataGrid.Columns>
             </DataGrid>
-            <ItemsControl Grid.Row="1" Grid.RowSpan="2" x:Name="Log" ItemsSource="{Binding Logs}" ItemTemplate="{StaticResource LogTemplate}" >
+            <ItemsControl Grid.Row="1" Grid.RowSpan="2" x:Name="Log" ItemsSource="{Binding Logs}" ItemTemplate="{StaticResource LogTemplate}" ToolTip="右键点击可以复制单行日志">
                 <ItemsControl.Template>
                     <ControlTemplate>
                         <ScrollViewer x:Name="LogScroll" CanContentScroll="True">
@@ -76,6 +77,7 @@
             <Grid Grid.Column="1" DataContext="{Binding ElementName=RoomList,Path=SelectedItem}" Grid.RowSpan="2">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="10"/>
+                    <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
@@ -112,12 +114,16 @@
                 </TextBlock>
 
                 <TextBlock Grid.Row="5" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right">剪辑数量：</TextBlock>
-                <TextBlock Grid.Row="5" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left" Text="{Binding Clips.Count}"/>
+                <TextBlock Grid.Row="5" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left" Text="{Binding Processor.Clips.Count}"/>
 
                 <TextBlock Grid.Row="6" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right">下载速度：</TextBlock>
                 <TextBlock Grid.Row="6" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left" Text="{Binding DownloadSpeedKiBps,StringFormat=0.## KiB/s}"/>
 
-                <Grid Grid.Row="8" Grid.ColumnSpan="2">
+                <TextBlock Grid.Row="7" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right">速度百分比：</TextBlock>
+                <TextBlock Grid.Row="7" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left" Text="{Binding DownloadSpeedPersentage,StringFormat=0.## %}"/>
+
+
+                <Grid Grid.Row="9" Grid.ColumnSpan="2">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="*"/>
                         <RowDefinition Height="*"/>

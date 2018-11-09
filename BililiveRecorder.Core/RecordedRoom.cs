@@ -1,62 +1,115 @@
-﻿using BililiveRecorder.FlvProcessor;
+﻿using BililiveRecorder.Core.Config;
+using BililiveRecorder.FlvProcessor;
 using NLog;
 using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace BililiveRecorder.Core
 {
-    public class RecordedRoom : INotifyPropertyChanged
+    public class RecordedRoom : IRecordedRoom
     {
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
+        private static readonly Random random = new Random();
 
-        public int Roomid { get; private set; }
-        public int RealRoomid { get => RoomInfo?.RealRoomid ?? Roomid; }
-        public string StreamerName { get => RoomInfo?.Username ?? string.Empty; }
-        public RoomInfo RoomInfo { get; private set; }
-        public RecordInfo RecordInfo { get; private set; }
+        private int _roomid;
+        private int _realRoomid;
+        private string _streamerName;
 
-        public bool IsMonitoring => StreamMonitor.receiver.IsConnected;
-        public bool IsRecording => flvStream != null;
+        public int Roomid
+        {
+            get => _roomid;
+            private set
+            {
+                if (value == _roomid) { return; }
+                _roomid = value;
+                TriggerPropertyChanged(nameof(Roomid));
+            }
+        }
+        public int RealRoomid
+        {
+            get => _realRoomid;
+            private set
+            {
+                if (value == _realRoomid) { return; }
+                _realRoomid = value;
+                TriggerPropertyChanged(nameof(RealRoomid));
+            }
+        }
+        public string StreamerName
+        {
+            get => _streamerName;
+            private set
+            {
+                if (value == _streamerName) { return; }
+                _streamerName = value;
+                TriggerPropertyChanged(nameof(StreamerName));
+            }
+        }
 
-        public FlvStreamProcessor Processor; // FlvProcessor
-        public ObservableCollection<FlvClipProcessor> Clips { get; private set; } = new ObservableCollection<FlvClipProcessor>();
+        public bool IsMonitoring => StreamMonitor.Receiver.IsConnected;
+        public bool IsRecording => !(StreamDownloadTask?.IsCompleted ?? true);
 
-        internal StreamMonitor StreamMonitor { get; }
-        private Settings _settings { get; }
-        private HttpWebRequest webRequest;
-        private Stream flvStream;
-        private bool flv_shutdown = false;
+        private readonly Func<IFlvStreamProcessor> newIFlvStreamProcessor;
+        private IFlvStreamProcessor _processor;
+        public IFlvStreamProcessor Processor
+        {
+            get => _processor;
+            private set
+            {
+                if (value == _processor) { return; }
+                _processor = value;
+                TriggerPropertyChanged(nameof(Processor));
+            }
+        }
 
+        private ConfigV1 _config { get; }
+        public IStreamMonitor StreamMonitor { get; }
+
+        private HttpWebResponse _response;
+        private Stream _stream;
+        private Task StartupTask = null;
+        public Task StreamDownloadTask = null;
+        public CancellationTokenSource cancellationTokenSource = null;
+
+        private double _DownloadSpeedPersentage = 0;
+        private double _DownloadSpeedKiBps = 0;
+        private long _lastUpdateSize = 0;
+        private int _lastUpdateTimestamp = 0;
+        public DateTime LastUpdateDateTime { get; private set; } = DateTime.Now;
+        public double DownloadSpeedPersentage
+        {
+            get { return _DownloadSpeedPersentage; }
+            private set { if (value != _DownloadSpeedPersentage) { _DownloadSpeedPersentage = value; TriggerPropertyChanged(nameof(DownloadSpeedPersentage)); } }
+        }
         public double DownloadSpeedKiBps
         {
             get { return _DownloadSpeedKiBps; }
             private set { if (value != _DownloadSpeedKiBps) { _DownloadSpeedKiBps = value; TriggerPropertyChanged(nameof(DownloadSpeedKiBps)); } }
         }
-        private double _DownloadSpeedKiBps = 0;
-        public DateTime LastUpdateDateTime { get; private set; } = DateTime.Now;
-        public long LastUpdateSize { get; private set; } = 0;
 
-        public RecordedRoom(Settings settings, int roomid)
+        public RecordedRoom(ConfigV1 config,
+            Func<int, IStreamMonitor> newIStreamMonitor,
+            Func<IFlvStreamProcessor> newIFlvStreamProcessor,
+            int roomid)
         {
-            _settings = settings;
-            _settings.PropertyChanged += _settings_PropertyChanged;
+            this.newIFlvStreamProcessor = newIFlvStreamProcessor;
+
+            _config = config;
 
             Roomid = roomid;
 
-            UpdateRoomInfo();
-
-            RecordInfo = new RecordInfo(StreamerName)
             {
-                SavePath = _settings.SavePath
-            };
+                var roomInfo = BililiveAPI.GetRoomInfo(Roomid);
+                RealRoomid = roomInfo.RealRoomid;
+                StreamerName = roomInfo.Username;
+            }
 
-            StreamMonitor = new StreamMonitor(RealRoomid);
+            StreamMonitor = newIStreamMonitor(RealRoomid);
             StreamMonitor.StreamStatusChanged += StreamMonitor_StreamStatusChanged;
         }
 
@@ -73,248 +126,205 @@ namespace BililiveRecorder.Core
             TriggerPropertyChanged(nameof(IsMonitoring));
         }
 
-        private void _settings_PropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            if (e.PropertyName == nameof(_settings.Clip_Past))
-            {
-                if (Processor != null)
-                    Processor.Clip_Past = _settings.Clip_Past;
-            }
-            else if (e.PropertyName == nameof(_settings.Clip_Future))
-            {
-                if (Processor != null)
-                    Processor.Clip_Future = _settings.Clip_Future;
-            }
-            else if (e.PropertyName == nameof(_settings.SavePath))
-            {
-                if (RecordInfo != null)
-                    RecordInfo.SavePath = _settings.SavePath;
-            }
-        }
-
         private void StreamMonitor_StreamStatusChanged(object sender, StreamStatusChangedArgs e)
         {
-            _StartRecord(e.type);
+            if (StartupTask?.IsCompleted ?? true)
+            {
+                StartupTask = _StartRecordAsync(e.type);
+            }
         }
 
         public void StartRecord()
         {
             StreamMonitor.Check(TriggerType.Manual);
-            // _StartRecord(TriggerType.Manual);
         }
 
         public void StopRecord()
         {
-            if (flvStream != null)
+            try
             {
-                flv_shutdown = true;
-                flvStream.Close();
+                if (cancellationTokenSource != null)
+                {
+                    cancellationTokenSource.Cancel();
+                    if (!(StreamDownloadTask?.Wait(TimeSpan.FromSeconds(2)) ?? true))
+                    {
+                        logger.Log(RealRoomid, LogLevel.Warn, "尝试强制关闭连接，请检查网络连接是否稳定");
+
+                        _stream?.Close();
+                        _stream?.Dispose();
+                        _response?.Close();
+                        _response?.Dispose();
+                        StreamDownloadTask?.Wait();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                logger.Log(RealRoomid, LogLevel.Error, "在尝试停止录制时发生错误，请检查网络连接是否稳定", ex);
             }
         }
 
-        private void _StartRecord(TriggerType triggerType)
+        private async Task _StartRecordAsync(TriggerType triggerType)
         {
-            /* *
-             * if (recording) return;
-             * try catch {
-             *     if type == retry return;
-             *     else retry()
-             * }
-             * */
-
-            if (webRequest != null || flvStream != null || Processor != null)
+            if (IsRecording)
             {
                 logger.Log(RealRoomid, LogLevel.Debug, "已经在录制中了");
                 return;
             }
 
+            HttpWebRequest request = null;
+
+            cancellationTokenSource = new CancellationTokenSource();
+            var token = cancellationTokenSource.Token;
             try
             {
-                flv_shutdown = false;
 
-                string flv_path = BililiveAPI.GetPlayUrl(RoomInfo.RealRoomid);
+                string flv_path = BililiveAPI.GetPlayUrl(RealRoomid);
 
-                webRequest = WebRequest.CreateHttp(flv_path);
-                _SetupFlvRequest(webRequest);
-                HttpWebResponse response = webRequest.GetResponse() as HttpWebResponse;
-                if (response.StatusCode != HttpStatusCode.OK)
+                request = WebRequest.CreateHttp(flv_path);
+                request.Accept = "*/*";
+                request.AllowAutoRedirect = true;
+                request.Referer = "https://live.bilibili.com";
+                request.Headers["Origin"] = "https://live.bilibili.com";
+                request.UserAgent = Utils.UserAgent;
+
+                _response = await request.GetResponseAsync() as HttpWebResponse;
+
+                if (_response.StatusCode != HttpStatusCode.OK)
                 {
-                    logger.Log(RealRoomid, LogLevel.Info, string.Format("尝试下载直播流时服务器返回了 ({0}){1}", response.StatusCode, response.StatusDescription));
-                    response.Close();
-                    webRequest = null;
-                    if (response.StatusCode == HttpStatusCode.NotFound)
+                    logger.Log(RealRoomid, LogLevel.Info, string.Format("尝试下载直播流时服务器返回了 ({0}){1}", _response.StatusCode, _response.StatusDescription));
+                    _response.Close();
+                    request = null;
+                    if (_response.StatusCode == HttpStatusCode.NotFound)
                     {
-                        logger.Log(RealRoomid, LogLevel.Info, "将在30秒后重试");
-                        StreamMonitor.CheckAfterSeconeds(30);
+                        logger.Log(RealRoomid, LogLevel.Info, "将在15秒后重试");
+                        StreamMonitor.CheckAfterSeconeds(15); // TODO: 重试次数和时间
                     }
                     return;
                 }
                 else
                 {
-                    string savepath = _settings.Feature != EnabledFeature.ClipOnly ? RecordInfo.GetStreamFilePath() : null;
-                    logger.Log(RealRoomid, LogLevel.Info, "开始下载直播流" + (savepath != null ? " 并保存到 " + Path.GetFileName(savepath) : ""));
-
                     if (triggerType == TriggerType.HttpApiRecheck)
                     {
                         triggerType = TriggerType.HttpApi;
                     }
 
-                    Processor = new FlvStreamProcessor(savepath, _settings.Feature == EnabledFeature.RecordOnly);
-                    Processor.TagProcessed += Processor_TagProcessed;
-                    Processor.StreamFinalized += Processor_StreamFinalized;
-                    Processor.GetFileName = RecordInfo.GetStreamFilePath;
-                    Processor.Clip_Future = _settings.Clip_Future;
-                    Processor.Clip_Past = _settings.Clip_Past;
+                    Processor = newIFlvStreamProcessor().Initialize(GetStreamFilePath, GetClipFilePath, _config.EnabledFeature, _config.CuttingMode);
+                    Processor.ClipLengthFuture = _config.ClipLengthFuture;
+                    Processor.ClipLengthPast = _config.ClipLengthPast;
+                    Processor.CuttingNumber = _config.CuttingNumber;
 
-                    flvStream = response.GetResponseStream();
-                    const int BUF_SIZE = 1024 * 8;// 8 KiB
-                    byte[] buffer = new byte[BUF_SIZE];
+                    _stream = _response.GetResponseStream();
+                    _stream.ReadTimeout = 3 * 1000;
 
-                    void callback(IAsyncResult ar)
+                    StreamDownloadTask = Task.Run(async () =>
                     {
                         try
                         {
-                            int bytesRead = flvStream.EndRead(ar);
-
-                            _UpdateDownloadSpeed(bytesRead);
-
-                            if (bytesRead == 0)
+                            const int BUF_SIZE = 1024 * 8;
+                            byte[] buffer = new byte[BUF_SIZE];
+                            while (!token.IsCancellationRequested)
                             {
-                                _CleanupFlvRequest();
-                                logger.Log(RealRoomid, LogLevel.Info, "直播已结束，停止录制。" + (triggerType != TriggerType.HttpApiRecheck ? "将在30秒后重试启动。" : ""));
-                                if (triggerType != TriggerType.HttpApiRecheck)
-                                    StreamMonitor.CheckAfterSeconeds(30);
-                            }
-                            else
-                            {
-                                if (bytesRead != buffer.Length)
-                                    Processor.AddBytes(buffer.Take(bytesRead).ToArray());
+                                int bytesRead = await _stream.ReadAsync(buffer, 0, BUF_SIZE, token);
+                                _UpdateDownloadSpeed(bytesRead);
+                                if (bytesRead == 0)
+                                {
+                                    // 录制已结束
+                                    // TODO: 重试次数和时间
+                                    // TODO: 用户操作停止时不重新继续
+
+                                    logger.Log(RealRoomid, LogLevel.Info,
+                                        (token.IsCancellationRequested ? "用户操作" : "直播已结束") + "，停止录制。"
+                                        + (triggerType != TriggerType.HttpApiRecheck ? "将在15秒后重试启动。" : ""));
+                                    if (triggerType != TriggerType.HttpApiRecheck)
+                                    {
+                                        StreamMonitor.CheckAfterSeconeds(15);
+                                    }
+                                    break;
+                                }
                                 else
-                                    Processor.AddBytes(buffer);
-
-                                flvStream.BeginRead(buffer, 0, BUF_SIZE, callback, null);
-                            }
+                                {
+                                    if (bytesRead != BUF_SIZE)
+                                    {
+                                        Processor.AddBytes(buffer.Take(bytesRead).ToArray());
+                                    }
+                                    else
+                                    {
+                                        Processor.AddBytes(buffer);
+                                    }
+                                }
+                            } // while(true)
+                              // outside of while
                         }
-                        catch (Exception ex)
+                        finally
                         {
                             _CleanupFlvRequest();
-                            if (!flv_shutdown)
-                            {
-                                logger.Log(RealRoomid, LogLevel.Info, "直播流下载连接出错。" + (triggerType != TriggerType.HttpApiRecheck ? "将在30秒后重试启动。" : ""), ex);
-                                if (triggerType != TriggerType.HttpApiRecheck)
-                                    StreamMonitor.CheckAfterSeconeds(30);
-                            }
-                            else
-                            {
-                                logger.Log(RealRoomid, LogLevel.Info, "直播流下载已结束。");
-                            }
                         }
-                    }
+                    });
 
-                    flvStream.BeginRead(buffer, 0, BUF_SIZE, callback, null);
                     TriggerPropertyChanged(nameof(IsRecording));
                 }
             }
             catch (Exception ex)
             {
                 _CleanupFlvRequest();
-                logger.Log(RealRoomid, LogLevel.Warn, "启动直播流下载出错。" + (triggerType != TriggerType.HttpApiRecheck ? "将在30秒后重试启动。" : ""), ex);
+                logger.Log(RealRoomid, LogLevel.Warn, "启动直播流下载出错。" + (triggerType != TriggerType.HttpApiRecheck ? "将在15秒后重试启动。" : ""), ex);
                 if (triggerType != TriggerType.HttpApiRecheck)
-                    StreamMonitor.CheckAfterSeconeds(30);
+                {
+                    StreamMonitor.CheckAfterSeconeds(15);
+                }
             }
-        }
+            void _CleanupFlvRequest()
+            {
+                if (Processor != null)
+                {
+                    Processor.FinallizeFile();
+                    Processor.Dispose();
+                    Processor = null;
+                }
+                request = null;
+                _stream?.Dispose();
+                _stream = null;
+                _response?.Dispose();
+                _response = null;
 
-        private void _UpdateDownloadSpeed(int bytesRead)
-        {
-            DateTime now = DateTime.Now;
-            double sec = (now - LastUpdateDateTime).TotalSeconds;
-            LastUpdateSize += bytesRead;
-            if (sec > 1)
-            {
-                var speed = LastUpdateSize / sec;
-                LastUpdateDateTime = now;
-                LastUpdateSize = 0;
-                DownloadSpeedKiBps = speed / 1024; // KiB per sec
+                DownloadSpeedKiBps = 0d;
+                DownloadSpeedPersentage = 0d;
+                TriggerPropertyChanged(nameof(IsRecording));
             }
-        }
-
-        private void _CleanupFlvRequest()
-        {
-            if (Processor != null)
+            void _UpdateDownloadSpeed(int bytesRead)
             {
-                Processor.FinallizeFile();
-                Processor.Dispose();
-                Processor = null;
-            }
-            webRequest = null;
-            if (flvStream != null)
-            {
-                flvStream.Close();
-                flvStream.Dispose();
-                flvStream = null;
-            }
-            DownloadSpeedKiBps = 0d;
-            TriggerPropertyChanged(nameof(IsRecording));
-        }
-
-        private static void _SetupFlvRequest(HttpWebRequest r)
-        {
-            r.Accept = "*/*";
-            r.AllowAutoRedirect = true;
-            // r.Connection = "keep-alive";
-            r.Referer = "https://live.bilibili.com";
-            r.Headers["Origin"] = "https://live.bilibili.com";
-            r.UserAgent = "Mozilla/5.0 BililiveRecorder/0.0.0.0 (+https://github.com/Bililive/BililiveRecorder;bliverec@genteure.com)";
-        }
-
-        public bool UpdateRoomInfo()
-        {
-            try
-            {
-                RoomInfo = BililiveAPI.GetRoomInfo(Roomid);
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(RealRoomid)));
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(StreamerName)));
-                return true;
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine(ex.ToString());
-                return false;
+                DateTime now = DateTime.Now;
+                double passedSeconds = (now - LastUpdateDateTime).TotalSeconds;
+                _lastUpdateSize += bytesRead;
+                if (passedSeconds > 1.5)
+                {
+                    DownloadSpeedKiBps = _lastUpdateSize / passedSeconds / 1024; // KiB per sec
+                    DownloadSpeedPersentage = (Processor.TotalMaxTimestamp - _lastUpdateTimestamp) / passedSeconds / 1000; // ((RecordedTime/1000) / RealTime)%
+                    _lastUpdateTimestamp = Processor.TotalMaxTimestamp;
+                    _lastUpdateSize = 0;
+                    LastUpdateDateTime = now;
+                }
             }
         }
 
         // Called by API or GUI
         public void Clip()
         {
-            if (Processor == null) return;
-            var clip = Processor.Clip();
-            clip.ClipFinalized += CallBack_ClipFinalized;
-            clip.GetFileName = RecordInfo.GetClipFilePath;
-            Clips.Add(clip);
+            Processor?.Clip();
         }
 
-        private void CallBack_ClipFinalized(object sender, ClipFinalizedArgs e)
+        public void Shutdown()
         {
-            if (Clips.Remove(e.ClipProcessor))
-            {
-                Debug.WriteLine("Clip Finalized");
-            }
-            else
-            {
-                Debug.WriteLine("Warning! Clip Finalized but was not in Collection.");
-            }
+            Stop();
+            StopRecord();
         }
 
-        private void Processor_TagProcessed(object sender, TagProcessedArgs e)
-        {
-            Clips.ToList().ForEach(fcp => fcp.AddTag(e.Tag));
-        }
+        private string GetStreamFilePath() => Path.Combine(_config.WorkDirectory, RealRoomid.ToString(), "record",
+            $@"record-{RealRoomid}-{DateTime.Now.ToString("yyyyMMdd-HHmmss")}-{random.Next(100, 999)}.flv".RemoveInvalidFileName());
 
-        private void Processor_StreamFinalized(object sender, StreamFinalizedArgs e)
-        {
-            Clips.ToList().ForEach(fcp => fcp.FinallizeFile());
-        }
-
+        private string GetClipFilePath() => Path.Combine(_config.WorkDirectory, RealRoomid.ToString(), "clip",
+            $@"clip-{RealRoomid}-{DateTime.Now.ToString("yyyyMMdd-HHmmss")}-{random.Next(100, 999)}.flv".RemoveInvalidFileName());
 
         public event PropertyChangedEventHandler PropertyChanged;
         protected void TriggerPropertyChanged(string propertyName)

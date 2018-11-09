@@ -2,32 +2,37 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Text;
 
 namespace BililiveRecorder.FlvProcessor
 {
-    public class FlvClipProcessor
+    public class FlvClipProcessor : IFlvClipProcessor
     {
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
 
-        public readonly FlvMetadata Header;
-        public readonly List<FlvTag> HTags;
-        public readonly List<FlvTag> Tags;
+        public IFlvMetadata Header { get; private set; }
+        public List<IFlvTag> HTags { get; private set; }
+        public List<IFlvTag> Tags { get; private set; }
         private int target = -1;
+        private string path;
 
-        public Func<string> GetFileName;
-
-        public FlvClipProcessor(FlvMetadata header, List<FlvTag> head, List<FlvTag> past, uint future)
+        public FlvClipProcessor()
         {
-            Header = header;
-            HTags = head;
-            Tags = past;
-            target = Tags[Tags.Count - 1].TimeStamp + (int)(future * FlvStreamProcessor.SEC_TO_MS);
-            logger.Debug("Clip 创建 Tags.Count={0} Tags[0].TimeStamp={1} Tags[Tags.Count-1].TimeStamp={2} Tags里秒数={3}",
-                Tags.Count, Tags[0].TimeStamp, Tags[Tags.Count - 1].TimeStamp, (Tags[Tags.Count - 1].TimeStamp - Tags[0].TimeStamp) / 1000d);
         }
 
-        public void AddTag(FlvTag tag)
+        public IFlvClipProcessor Initialize(string path, IFlvMetadata metadata, List<IFlvTag> head, List<IFlvTag> data, uint seconds)
+        {
+            this.path = path;
+            Header = metadata; // TODO: Copy a copy, do not share
+            HTags = head;
+            Tags = data;
+            target = Tags[Tags.Count - 1].TimeStamp + (int)(seconds * FlvStreamProcessor.SEC_TO_MS);
+            logger.Debug("Clip 创建 Tags.Count={0} Tags[0].TimeStamp={1} Tags[Tags.Count-1].TimeStamp={2} Tags里秒数={3}",
+                Tags.Count, Tags[0].TimeStamp, Tags[Tags.Count - 1].TimeStamp, (Tags[Tags.Count - 1].TimeStamp - Tags[0].TimeStamp) / 1000d);
+
+            return this;
+        }
+
+        public void AddTag(IFlvTag tag)
         {
             Tags.Add(tag);
             if (tag.TimeStamp >= target)
@@ -40,8 +45,11 @@ namespace BililiveRecorder.FlvProcessor
         {
             try
             {
-                string filepath = GetFileName();
-                using (var fs = new FileStream(filepath, FileMode.CreateNew, FileAccess.ReadWrite))
+                if (!Directory.Exists(Path.GetDirectoryName(path)))
+                {
+                    Directory.CreateDirectory(Path.GetDirectoryName(path));
+                }
+                using (var fs = new FileStream(path, FileMode.CreateNew, FileAccess.ReadWrite))
                 {
                     fs.Write(FlvStreamProcessor.FLV_HEADER_BYTES, 0, FlvStreamProcessor.FLV_HEADER_BYTES.Length);
                     fs.Write(new byte[] { 0, 0, 0, 0, }, 0, 4);
@@ -61,19 +69,19 @@ namespace BililiveRecorder.FlvProcessor
                     HTags.ForEach(tag => tag.WriteTo(fs));
                     Tags.ForEach(tag => tag.WriteTo(fs, offset));
 
-                    logger.Info("剪辑已保存：{0}", Path.GetFileName(filepath));
+                    logger.Info("剪辑已保存：{0}", Path.GetFileName(path));
 
                     fs.Close();
                 }
                 Tags.Clear();
 
-                ClipFinalized?.Invoke(this, new ClipFinalizedArgs() { ClipProcessor = this });
 
             }
             catch (Exception ex)
             {
                 logger.Error(ex, "保存剪辑文件时出错");
             }
+            ClipFinalized?.Invoke(this, new ClipFinalizedArgs() { ClipProcessor = this });
         }
 
         public event ClipFinalizedEvent ClipFinalized;

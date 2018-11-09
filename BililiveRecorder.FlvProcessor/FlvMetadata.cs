@@ -6,23 +6,29 @@ using System.Text;
 
 namespace BililiveRecorder.FlvProcessor
 {
-    public class FlvMetadata
+    public class FlvMetadata : IFlvMetadata
     {
-        public IDictionary<string, object> Meta = new Dictionary<string, object>();
+        public IDictionary<string, object> Meta { get; set; } = new Dictionary<string, object>();
 
-        public static FlvMetadata Parse(byte[] data)
+        public FlvMetadata()
         {
-            var m = new FlvMetadata
+            Meta["duration"] = 0.0;
+            Meta["lasttimestamp"] = 0.0;
+        }
+
+        public FlvMetadata(byte[] data)
+        {
+            Meta = _Decode(data);
+
+            if (!Meta.ContainsKey("duration"))
             {
-                Meta = _Decode(data)
-            };
+                Meta["duration"] = 0.0;
+            }
 
-            if (!m.Meta.ContainsKey("duration"))
-                m.Meta["duration"] = 0.0;
-            if (!m.Meta.ContainsKey("lasttimestamp"))
-                m.Meta["lasttimestamp"] = 0.0;
-
-            return m;
+            if (!Meta.ContainsKey("lasttimestamp"))
+            {
+                Meta["lasttimestamp"] = 0.0;
+            }
         }
 
         public byte[] ToBytes()
