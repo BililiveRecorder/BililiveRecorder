@@ -1,6 +1,6 @@
 git --git-dir="$env:DEPLOY_SITE_GIT\.git\" --work-tree="$env:DEPLOY_SITE_GIT" add -A
 git --git-dir="$env:DEPLOY_SITE_GIT\.git\" --work-tree="$env:DEPLOY_SITE_GIT" commit --quiet -m "BililiveRecorder $env:APPVEYOR_BUILD_VERSION"
-git --git-dir="$env:DEPLOY_SITE_GIT\.git\" --work-tree="$env:DEPLOY_SITE_GIT" push --quiet+
+git --git-dir="$env:DEPLOY_SITE_GIT\.git\" --work-tree="$env:DEPLOY_SITE_GIT" push --quiet
 
 $headers = @{
     'Accept'        = 'application/vnd.github.v3+json'
@@ -13,7 +13,7 @@ $body = @{
     'body'                  = "Update file for BililiveRecorder $env:APPVEYOR_BUILD_VERSION"
     'base'                  = 'master'
     'maintainer_can_modify' = $true
-}
+} | ConvertTo-Json
 
 Invoke-RestMethod -Method Post -Headers $headers -Body $body -Uri "https://api.github.com/repos/Bililive/rec.danmuji.org/pulls" -ErrorAction:SilentlyContinue | Out-Null
 Push-AppveyorArtifact "..\site\Recorder\Setup.exe" -FileName "Setup.exe" -DeploymentName "github"

@@ -1,3 +1,5 @@
+Write-Host "Current build configuration is $env:CONFIGURATION"
+
 if ($env:APPVEYOR -and (-not $env:APPVEYOR_PULL_REQUEST_NUMBER) -and $env:CONFIGURATION -eq "Release") {
     git config --global credential.helper store
     Add-Content "$env:USERPROFILE\.git-credentials" "https://$($env:github_access_token):x-oauth-basic@github.com`n"
