@@ -39,8 +39,6 @@ before_build:
 build_script:
   - ps: msbuild /nologo /v:q /p:Configuration="$env:CONFIGURATION" /p:SquirrelBuildTarget="$env:DEPLOY_SITE_GIT\Recorder"
 
-on_success:
-  - ps: ./CI/appveyor_on_success.ps1
 
 for:
 
@@ -51,9 +49,15 @@ for:
   configuration: Release
   artifacts:
   before_deploy:
-    - ps: ./CI/deploy.ps1
+    - ps: ./CI/appveyor_deploy.ps1
   deploy:
-    #provider: 
+    provider: GitHub
+    release: v$(APPVEYOR_BUILD_VERSION)
+    description: '# Fill out this before publish'
+    auth_token:
+      secure: 3n2WMbrqWb0nmy2LBmu7w6dJltiHHC4LCoNuIKBh7fKV0xfxCwVGOxbTpunLI2pe
+    artifact: github
+    draft: true
 
 -
   configuration: Debug
