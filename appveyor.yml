@@ -47,13 +47,12 @@ for:
     only:
       - master
   configuration: Release
-  artifacts:
   before_deploy:
     - ps: ./CI/appveyor_deploy.ps1
   deploy:
     provider: GitHub
     release: v$(APPVEYOR_BUILD_VERSION)
-    description: '# Fill out this before publish'
+    description: '# !!Fill out this before publish!!'
     auth_token:
       secure: 3n2WMbrqWb0nmy2LBmu7w6dJltiHHC4LCoNuIKBh7fKV0xfxCwVGOxbTpunLI2pe
     artifact: github

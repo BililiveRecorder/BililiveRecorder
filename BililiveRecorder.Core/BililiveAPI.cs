@@ -19,7 +19,7 @@ namespace BililiveRecorder.Core
         public static JSONObject HttpGetJson(string url)
         {
             var c = new WebClient();
-            c.Headers.Add(HttpRequestHeader.UserAgent, "Mozilla/5.0 BililiveRecorder/0.0.0.0 (+https://github.com/Bililive/BililiveRecorder;bliverec@genteure.com)");
+            c.Headers.Add(HttpRequestHeader.UserAgent, Utils.UserAgent);
             c.Headers.Add(HttpRequestHeader.Accept, "application/json, text/javascript, */*; q=0.01");
             c.Headers.Add(HttpRequestHeader.Referer, "https://live.bilibili.com/");
             var s = c.DownloadString(url);
