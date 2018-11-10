@@ -32,8 +32,8 @@ namespace BililiveRecorder.WPF
             new ObservableCollection<string>()
             {
                 "当前版本：" + BuildInfo.Version,
-                "注：按鼠标右键复制日志",
                 "网站： https://rec.danmuji.org",
+                "QQ群： 689636812",
             };
 
         public static void AddLog(string message) => _AddLog?.Invoke(message);
