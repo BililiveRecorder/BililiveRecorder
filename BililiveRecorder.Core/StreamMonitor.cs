@@ -26,7 +26,7 @@ namespace BililiveRecorder.Core
 
         private void Receiver_ReceivedRoomCount(object sender, ReceivedRoomCountArgs e)
         {
-            logger.Log(Roomid, LogLevel.Trace, "直播间人气: " + e.UserCount.ToString());
+            // logger.Log(Roomid, LogLevel.Trace, "直播间人气: " + e.UserCount.ToString());
         }
 
         private void Receiver_ReceivedDanmaku(object sender, ReceivedDanmakuArgs e)

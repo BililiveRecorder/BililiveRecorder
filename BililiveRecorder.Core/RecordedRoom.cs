@@ -180,7 +180,7 @@ namespace BililiveRecorder.Core
             {
 
                 string flv_path = BililiveAPI.GetPlayUrl(RealRoomid);
-
+                logger.Log(RealRoomid, LogLevel.Debug, "直播流地址: " + flv_path);
                 request = WebRequest.CreateHttp(flv_path);
                 request.Accept = "*/*";
                 request.AllowAutoRedirect = true;

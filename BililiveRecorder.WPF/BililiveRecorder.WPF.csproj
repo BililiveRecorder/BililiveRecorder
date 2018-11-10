@@ -128,6 +128,7 @@
     <Compile Include="ClickSelectTextBox.xaml.cs">
       <DependentUpon>ClickSelectTextBox.xaml</DependentUpon>
     </Compile>
+    <Compile Include="EnumerableExtensions.cs" />
     <Compile Include="ValueConverters.cs" />
     <Compile Include="SettingsWindow.xaml.cs">
       <DependentUpon>SettingsWindow.xaml</DependentUpon>

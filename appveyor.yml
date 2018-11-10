@@ -34,30 +34,27 @@ install:
 
 before_build:
   - nuget restore -Verbosity quiet
-  - msbuild /t:Clean /v:q /nologo
+  - msbuild /nologo /v:q /t:Clean
 
 build_script:
-  - ps: msbuild /nologo /v:q /p:Configuration="$env:CONFIGURATION" /p:SquirrelBuildTarget="$env:DEPLOY_SITE_GIT\Recorder"
-
+  - ps: msbuild /nologo /v:q /p:Configuration="$env:CONFIGURATION" /p:SquirrelBuildTarget="$env:DEPLOY_SITE_GIT\BililiveRecorder" /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
 
 for:
-
 -
   branches:
     only:
-      - master
+      - master # including pull requests target at master
   configuration: Release
-  before_deploy:
+  before_deploy: # wont run on pull request
     - ps: ./CI/appveyor_deploy.ps1
-  deploy:
+  deploy: # wont run on pull request
     provider: GitHub
     release: v$(APPVEYOR_BUILD_VERSION)
-    description: '# !!Fill out this before publish!!'
+    description: '# ◁☆Fill out this before publish☆▷'
     auth_token:
       secure: 3n2WMbrqWb0nmy2LBmu7w6dJltiHHC4LCoNuIKBh7fKV0xfxCwVGOxbTpunLI2pe
     artifact: github
     draft: true
-
 -
   configuration: Debug
   artifacts:

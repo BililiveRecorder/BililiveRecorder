@@ -87,8 +87,6 @@ namespace BililiveRecorder.WPF
                 Environment.Exit(-2);
                 return;
             }
-
-            // Task.Run(() => CheckVersion());
         }
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
@@ -101,10 +99,6 @@ namespace BililiveRecorder.WPF
             }
             catch (Exception) { }
         }
-
-        #region - 更新检查 -
-
-        #endregion
 
         private void TextBlock_MouseRightButtonUp(object sender, MouseButtonEventArgs e)
         {
