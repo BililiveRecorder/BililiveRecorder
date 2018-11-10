@@ -21,7 +21,7 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <local:UpdateBarUserControl Grid.Row="0" x:Name="UpdateBar"/>
+        <!--<local:UpdateBarUserControl Grid.Row="0" x:Name="UpdateBar"/>-->
         <Grid Grid.Row="1">
             <Grid.RowDefinitions>
                 <RowDefinition Height="7*"/>
