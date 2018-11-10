@@ -41,6 +41,8 @@ namespace BililiveRecorder.Core
         }
         private bool _isConnected = false;
 
+        private int RoomId;
+
         public DanmakuReceiver(Func<TcpClient> funcTcpClient)
         {
             this.funcTcpClient = funcTcpClient;
@@ -62,11 +64,11 @@ namespace BililiveRecorder.Core
                     throw new InvalidOperationException();
                 }
 
-                int channelId = roomId;
+                RoomId = roomId;
 
                 try
                 {
-                    var request2 = WebRequest.Create(CIDInfoUrl + channelId);
+                    var request2 = WebRequest.Create(CIDInfoUrl + RoomId);
                     request2.Timeout = 2000;
                     var response2 = request2.GetResponse();
                     using (var stream = response2.GetResponseStream())
@@ -87,32 +89,32 @@ namespace BililiveRecorder.Core
                     HttpWebResponse errorResponse = ex.Response as HttpWebResponse;
                     if (errorResponse?.StatusCode == HttpStatusCode.NotFound)
                     { // 直播间不存在（HTTP 404）
-                        logger.Log(roomId, LogLevel.Warn, "该直播间疑似不存在", ex);
+                        logger.Log(RoomId, LogLevel.Warn, "该直播间疑似不存在", ex);
                     }
                     else
                     { // B站服务器响应错误
-                        logger.Log(roomId, LogLevel.Warn, "B站服务器响应弹幕服务器地址出错", ex);
+                        logger.Log(RoomId, LogLevel.Warn, "B站服务器响应弹幕服务器地址出错", ex);
                     }
                 }
                 catch (Exception ex)
                 { // 其他错误（XML解析错误？）
-                    logger.Log(roomId, LogLevel.Warn, "获取弹幕服务器地址时出现未知错误", ex);
+                    logger.Log(RoomId, LogLevel.Warn, "获取弹幕服务器地址时出现未知错误", ex);
                 }
 
                 Client = funcTcpClient();
-                
+
                 Client.Connect(ChatHost, ChatPort);
                 if (!Client.Connected)
                 {
                     return false;
                 }
                 NetStream = Client.GetStream();
-                SendSocketData(7, "{\"roomid\":" + channelId + ",\"uid\":0}");
+                SendSocketData(7, "{\"roomid\":" + RoomId + ",\"uid\":0}");
                 IsConnected = true;
 
                 ReceiveMessageLoopThread = new Thread(ReceiveMessageLoop)
                 {
-                    Name = "ReceiveMessageLoop " + channelId,
+                    Name = "ReceiveMessageLoop " + RoomId,
                     IsBackground = true
                 };
                 ReceiveMessageLoopThread.Start();
@@ -129,7 +131,7 @@ namespace BililiveRecorder.Core
             catch (Exception ex)
             {
                 Error = ex;
-                logger.Log(roomId, LogLevel.Error, "连接弹幕服务器时发生了未知错误", ex);
+                logger.Log(RoomId, LogLevel.Error, "连接弹幕服务器时发生了未知错误", ex);
                 return false;
             }
         }
@@ -149,7 +151,7 @@ namespace BililiveRecorder.Core
 
         private void ReceiveMessageLoop()
         {
-            logger.Trace("ReceiveMessageLoop Started!");
+            logger.Trace("ReceiveMessageLoop Started! " + RoomId);
             try
             {
                 var stableBuffer = new byte[Client.ReceiveBufferSize];
@@ -236,7 +238,7 @@ namespace BililiveRecorder.Core
         {
             if (IsConnected)
             {
-                logger.Debug("Disconnected");
+                logger.Debug("Disconnected " + RoomId);
                 IsConnected = false;
                 Client.Close();
                 NetStream = null;
@@ -254,7 +256,7 @@ namespace BililiveRecorder.Core
         private void SendHeartbeat()
         {
             SendSocketData(2);
-            logger.Trace("Message Sent: Heartbeat");
+            // logger.Trace("Message Sent: Heartbeat");
         }
 
         private void SendSocketData(int action, string body = "")

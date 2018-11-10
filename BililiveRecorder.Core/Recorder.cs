@@ -28,10 +28,18 @@ namespace BililiveRecorder.Core
 
             tokenSource = new CancellationTokenSource();
             Repeat.Interval(TimeSpan.FromSeconds(6), DownloadWatchdog, tokenSource.Token);
+
+            Rooms.CollectionChanged += (sender, e) =>
+            {
+                logger.Debug($"Rooms.CollectionChanged;{e.Action};" +
+                    $"O:{e.OldItems.Cast<IRecordedRoom>().Select(rr => rr.RealRoomid.ToString()).Aggregate((current, next) => current + "," + next)};" +
+                    $"N:{e.NewItems.Cast<IRecordedRoom>().Select(rr => rr.RealRoomid.ToString()).Aggregate((current, next) => current + "," + next)}");
+            };
         }
 
         public bool Initialize(string workdir)
         {
+            logger.Debug("Initialize: " + workdir);
             if (ConfigParser.Load(directory: workdir, config: Config))
             {
                 _valid = true;
@@ -54,7 +62,15 @@ namespace BililiveRecorder.Core
         /// </summary>
         /// <param name="roomid">房间号（支持短号）</param>
         /// <exception cref="ArgumentOutOfRangeException"/>
-        public void AddRoom(int roomid, bool enabled = false)
+        public void AddRoom(int roomid) => AddRoom(roomid, false);
+
+        /// <summary>
+        /// 添加直播间到录播姬
+        /// </summary>
+        /// <param name="roomid">房间号（支持短号）</param>
+        /// <param name="enabled">是否默认启用</param>
+        /// <exception cref="ArgumentOutOfRangeException"/>
+        public void AddRoom(int roomid, bool enabled)
         {
             if (!_valid) { throw new InvalidOperationException("Not Initialized"); }
             if (roomid <= 0)
@@ -69,6 +85,7 @@ namespace BililiveRecorder.Core
             }
 
             Rooms.Add(rr);
+            logger.Debug("AddRoom 添加了直播间 " + rr.RealRoomid);
         }
 
         /// <summary>
@@ -80,11 +97,13 @@ namespace BililiveRecorder.Core
             if (!_valid) { throw new InvalidOperationException("Not Initialized"); }
             rr.Shutdown();
             Rooms.Remove(rr);
+            logger.Debug("RemoveRoom 移除了直播间 " + rr.RealRoomid);
         }
 
         public void Shutdown()
         {
             if (!_valid) { throw new InvalidOperationException("Not Initialized"); }
+            logger.Debug("Shutdown called.");
             tokenSource.Cancel();
 
             Config.RoomList = new List<RoomV1>();
