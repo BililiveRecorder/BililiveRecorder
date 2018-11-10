@@ -16,4 +16,4 @@ $body = @{
 } | ConvertTo-Json
 
 Invoke-RestMethod -Method Post -Headers $headers -Body $body -Uri "https://api.github.com/repos/Bililive/rec.danmuji.org/pulls" -ErrorAction:SilentlyContinue | Out-Null
-Push-AppveyorArtifact "..\site\Recorder\Setup.exe" -FileName "Setup.exe" -DeploymentName "github"
+Push-AppveyorArtifact "..\site\BililiveRecorder\Setup.exe" -FileName "Setup.exe" -DeploymentName "github"

@@ -37,7 +37,7 @@ before_build:
   - msbuild /nologo /v:q /t:Clean
 
 build_script:
-  - ps: msbuild /nologo /v:q /p:Configuration="$env:CONFIGURATION" /p:SquirrelBuildTarget="$env:DEPLOY_SITE_GIT\Recorder" /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
+  - ps: msbuild /nologo /v:q /p:Configuration="$env:CONFIGURATION" /p:SquirrelBuildTarget="$env:DEPLOY_SITE_GIT\BililiveRecorder" /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
 
 for:
 -
