@@ -32,8 +32,8 @@ namespace BililiveRecorder.Core
             Rooms.CollectionChanged += (sender, e) =>
             {
                 logger.Debug($"Rooms.CollectionChanged;{e.Action};" +
-                    $"O:{e.OldItems.Cast<IRecordedRoom>().Select(rr => rr.RealRoomid.ToString()).Aggregate((current, next) => current + "," + next)};" +
-                    $"N:{e.NewItems.Cast<IRecordedRoom>().Select(rr => rr.RealRoomid.ToString()).Aggregate((current, next) => current + "," + next)}");
+                    $"O:{e.OldItems?.Cast<IRecordedRoom>()?.Select(rr => rr.RealRoomid.ToString())?.Aggregate((current, next) => current + "," + next)};" +
+                    $"N:{e.NewItems?.Cast<IRecordedRoom>()?.Select(rr => rr.RealRoomid.ToString())?.Aggregate((current, next) => current + "," + next)}");
             };
         }
 
@@ -84,8 +84,8 @@ namespace BililiveRecorder.Core
                 Task.Run(() => rr.Start());
             }
 
-            Rooms.Add(rr);
             logger.Debug("AddRoom 添加了直播间 " + rr.RealRoomid);
+            Rooms.Add(rr);
         }
 
         /// <summary>
@@ -96,8 +96,8 @@ namespace BililiveRecorder.Core
         {
             if (!_valid) { throw new InvalidOperationException("Not Initialized"); }
             rr.Shutdown();
-            Rooms.Remove(rr);
             logger.Debug("RemoveRoom 移除了直播间 " + rr.RealRoomid);
+            Rooms.Remove(rr);
         }
 
         public void Shutdown()
