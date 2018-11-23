@@ -150,7 +150,7 @@
                         <TextBlock TextWrapping="Wrap">录播姬更换了进行安装、更新、卸载的技术</TextBlock>
                         <TextBlock TextWrapping="Wrap">请在控制面板卸载当前安装的版本，然后使用官网上最新版本的安装包重新安装。本版本将不会再进行维护更新。QQ群：689636812</TextBlock>
                         <TextBlock TextWrapping="Wrap">官网：https://rec.danmuji.org/</TextBlock>
-                        <TextBlock HorizontalAlignment="Right" Margin="0,0,5,0" Text="2018年11月"/>
+                        <TextBlock HorizontalAlignment="Right" Margin="0,0,5,0" Text="2018年11月23日"/>
                     </StackPanel>
                 </Border>
             </Grid>
