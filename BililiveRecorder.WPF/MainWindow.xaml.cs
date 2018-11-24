@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-
+using System.Windows.Threading;
 
 namespace BililiveRecorder.WPF
 {
@@ -41,7 +41,12 @@ namespace BililiveRecorder.WPF
 
         public MainWindow()
         {
-            _AddLog = (message) => Log.Dispatcher.Invoke(() => { Logs.Add(message); while (Logs.Count > MAX_LOG_ROW) { Logs.RemoveAt(0); } });
+
+            _AddLog = (message) =>
+                Log.Dispatcher.BeginInvoke(
+                    DispatcherPriority.DataBind,
+                    new Action(() => { Logs.Add(message); while (Logs.Count > MAX_LOG_ROW) { Logs.RemoveAt(0); } })
+                    );
 
             var builder = new ContainerBuilder();
             builder.RegisterModule<FlvProcessorModule>();

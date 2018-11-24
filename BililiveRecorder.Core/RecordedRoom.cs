@@ -51,7 +51,7 @@ namespace BililiveRecorder.Core
             }
         }
 
-        public bool IsMonitoring => StreamMonitor.Receiver.IsConnected;
+        public bool IsMonitoring => StreamMonitor.IsMonitoring;
         public bool IsRecording => !(StreamDownloadTask?.IsCompleted ?? true);
 
         private readonly Func<IFlvStreamProcessor> newIFlvStreamProcessor;
@@ -115,6 +115,11 @@ namespace BililiveRecorder.Core
 
         public bool Start()
         {
+            if (disposedValue)
+            {
+                throw new ObjectDisposedException(nameof(RecordedRoom));
+            }
+
             var r = StreamMonitor.Start();
             TriggerPropertyChanged(nameof(IsMonitoring));
             return r;
@@ -122,6 +127,11 @@ namespace BililiveRecorder.Core
 
         public void Stop()
         {
+            if (disposedValue)
+            {
+                throw new ObjectDisposedException(nameof(RecordedRoom));
+            }
+
             StreamMonitor.Stop();
             TriggerPropertyChanged(nameof(IsMonitoring));
         }
@@ -136,11 +146,21 @@ namespace BililiveRecorder.Core
 
         public void StartRecord()
         {
+            if (disposedValue)
+            {
+                throw new ObjectDisposedException(nameof(RecordedRoom));
+            }
+
             StreamMonitor.Check(TriggerType.Manual);
         }
 
         public void StopRecord()
         {
+            if (disposedValue)
+            {
+                throw new ObjectDisposedException(nameof(RecordedRoom));
+            }
+
             try
             {
                 if (cancellationTokenSource != null)
@@ -198,7 +218,7 @@ namespace BililiveRecorder.Core
                     if (_response.StatusCode == HttpStatusCode.NotFound)
                     {
                         logger.Log(RealRoomid, LogLevel.Info, "将在15秒后重试");
-                        StreamMonitor.CheckAfterSeconeds(15); // TODO: 重试次数和时间
+                        StreamMonitor.Check(TriggerType.HttpApiRecheck, 15); // TODO: 重试次数和时间
                     }
                     return;
                 }
@@ -238,7 +258,7 @@ namespace BililiveRecorder.Core
                                         + (triggerType != TriggerType.HttpApiRecheck ? "将在15秒后重试启动。" : ""));
                                     if (triggerType != TriggerType.HttpApiRecheck)
                                     {
-                                        StreamMonitor.CheckAfterSeconeds(15);
+                                        StreamMonitor.Check(TriggerType.HttpApiRecheck, 15);
                                     }
                                     break;
                                 }
@@ -271,7 +291,7 @@ namespace BililiveRecorder.Core
                 logger.Log(RealRoomid, LogLevel.Warn, "启动直播流下载出错。" + (triggerType != TriggerType.HttpApiRecheck ? "将在15秒后重试启动。" : ""), ex);
                 if (triggerType != TriggerType.HttpApiRecheck)
                 {
-                    StreamMonitor.CheckAfterSeconeds(15);
+                    StreamMonitor.Check(TriggerType.HttpApiRecheck, 15);
                 }
             }
             void _CleanupFlvRequest()
@@ -316,8 +336,7 @@ namespace BililiveRecorder.Core
 
         public void Shutdown()
         {
-            Stop();
-            StopRecord();
+            Dispose(true);
         }
 
         private string GetStreamFilePath() => Path.Combine(_config.WorkDirectory, RealRoomid.ToString(), "record",
@@ -329,5 +348,39 @@ namespace BililiveRecorder.Core
         public event PropertyChangedEventHandler PropertyChanged;
         protected void TriggerPropertyChanged(string propertyName)
             => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+
+        #region IDisposable Support
+        private bool disposedValue = false; // 要检测冗余调用
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                    Stop();
+                    StopRecord();
+                    Processor?.Dispose();
+                    StreamMonitor?.Dispose();
+                    _response?.Dispose();
+                    _stream?.Dispose();
+                    cancellationTokenSource.Dispose();
+                }
+
+                Processor = null;
+                _response = null;
+                _stream = null;
+                cancellationTokenSource = null;
+
+                disposedValue = true;
+            }
+        }
+
+        public void Dispose()
+        {
+            // 请勿更改此代码。将清理代码放入以上 Dispose(bool disposing) 中。
+            Dispose(true);
+        }
+        #endregion
     }
 }

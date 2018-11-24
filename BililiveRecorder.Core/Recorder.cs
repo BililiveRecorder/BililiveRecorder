@@ -137,7 +137,7 @@ namespace BililiveRecorder.Core
                         {
                             logger.Warn("服务器停止提供 {0} 直播间的直播数据，通常是录制时网络不稳定导致，将会断开重连", room.Roomid);
                             room.StopRecord();
-                            room.StreamMonitor.CheckAfterSeconeds(1, TriggerType.HttpApi);
+                            room.StreamMonitor.Check(TriggerType.HttpApi, 1);
                         }
                         else if (room.Processor != null &&
                                     ((DateTime.Now - room.Processor.StartDateTime).TotalMilliseconds
@@ -147,7 +147,7 @@ namespace BililiveRecorder.Core
                         {
                             logger.Warn("{0} 直播间的下载速度达不到录制标准，将断开重连。请检查网络是否稳定", room.Roomid);
                             room.StopRecord();
-                            room.StreamMonitor.CheckAfterSeconeds(1, TriggerType.HttpApi);
+                            room.StreamMonitor.Check(TriggerType.HttpApi, 1);
                         }
                     }
                 });

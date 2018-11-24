@@ -4,7 +4,7 @@ using System.ComponentModel;
 
 namespace BililiveRecorder.Core
 {
-    public interface IRecordedRoom : INotifyPropertyChanged
+    public interface IRecordedRoom : INotifyPropertyChanged, IDisposable
     {
         int Roomid { get; }
         int RealRoomid { get; }
