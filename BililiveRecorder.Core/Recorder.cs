@@ -1,25 +1,40 @@
 ﻿using BililiveRecorder.Core.Config;
 using NLog;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
+using System.ComponentModel;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace BililiveRecorder.Core
 {
-    public class Recorder
+    public class Recorder : IRecorder
     {
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
 
-        public ObservableCollection<IRecordedRoom> Rooms { get; } = new ObservableCollection<IRecordedRoom>();
+        private ObservableCollection<IRecordedRoom> Rooms { get; } = new ObservableCollection<IRecordedRoom>();
         public ConfigV1 Config { get; }
+
+        ConfigV1 IRecorder.Config => Config;
+
+        public int Count => Rooms.Count;
+
+        public bool IsReadOnly => true;
+
+        int ICollection<IRecordedRoom>.Count => Rooms.Count;
+
+        bool ICollection<IRecordedRoom>.IsReadOnly => true;
 
         private readonly Func<int, IRecordedRoom> newIRecordedRoom;
         private CancellationTokenSource tokenSource;
 
         private bool _valid = false;
+
+        public IRecordedRoom this[int index] => Rooms[index];
 
         public Recorder(ConfigV1 config, Func<int, IRecordedRoom> iRecordedRoom)
         {
@@ -36,6 +51,32 @@ namespace BililiveRecorder.Core
                     $"N:{e.NewItems?.Cast<IRecordedRoom>()?.Select(rr => rr.RealRoomid.ToString())?.Aggregate((current, next) => current + "," + next)}");
             };
         }
+
+        public event PropertyChangedEventHandler PropertyChanged
+        {
+            add => (Rooms as INotifyPropertyChanged).PropertyChanged += value;
+            remove => (Rooms as INotifyPropertyChanged).PropertyChanged -= value;
+        }
+
+        public event NotifyCollectionChangedEventHandler CollectionChanged
+        {
+            add => (Rooms as INotifyCollectionChanged).CollectionChanged += value;
+            remove => (Rooms as INotifyCollectionChanged).CollectionChanged -= value;
+        }
+
+        event PropertyChangedEventHandler INotifyPropertyChanged.PropertyChanged
+        {
+            add => (Rooms as INotifyPropertyChanged).PropertyChanged += value;
+            remove => (Rooms as INotifyPropertyChanged).PropertyChanged -= value;
+        }
+
+        event NotifyCollectionChangedEventHandler INotifyCollectionChanged.CollectionChanged
+        {
+            add => (Rooms as INotifyCollectionChanged).CollectionChanged += value;
+            remove => (Rooms as INotifyCollectionChanged).CollectionChanged -= value;
+        }
+
+        bool IRecorder.Initialize(string workdir) => Initialize(workdir);
 
         public bool Initialize(string workdir)
         {
@@ -157,6 +198,21 @@ namespace BililiveRecorder.Core
                 logger.Error(ex, "直播流下载监控出错");
             }
         }
+
+        void ICollection<IRecordedRoom>.Add(IRecordedRoom item) => throw new NotSupportedException("Collection is readonly");
+
+        void ICollection<IRecordedRoom>.Clear() => throw new NotSupportedException("Collection is readonly");
+
+        bool ICollection<IRecordedRoom>.Remove(IRecordedRoom item) => throw new NotSupportedException("Collection is readonly");
+
+        bool ICollection<IRecordedRoom>.Contains(IRecordedRoom item) => Rooms.Contains(item);
+
+        void ICollection<IRecordedRoom>.CopyTo(IRecordedRoom[] array, int arrayIndex) => Rooms.CopyTo(array, arrayIndex);
+
+        public IEnumerator<IRecordedRoom> GetEnumerator() => Rooms.GetEnumerator();
+        IEnumerator<IRecordedRoom> IEnumerable<IRecordedRoom>.GetEnumerator() => Rooms.GetEnumerator();
+
+        IEnumerator IEnumerable.GetEnumerator() => Rooms.GetEnumerator();
 
     }
 }

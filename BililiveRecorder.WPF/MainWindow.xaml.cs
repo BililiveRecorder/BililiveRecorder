@@ -27,7 +27,7 @@ namespace BililiveRecorder.WPF
         private IContainer Container { get; set; }
         private ILifetimeScope RootScope { get; set; }
 
-        public Recorder Recorder { get; set; }
+        public IRecorder Recorder { get; set; }
         public ObservableCollection<string> Logs { get; set; } =
             new ObservableCollection<string>()
             {
@@ -54,7 +54,7 @@ namespace BililiveRecorder.WPF
             Container = builder.Build();
             RootScope = Container.BeginLifetimeScope("recorder_root");
 
-            Recorder = RootScope.Resolve<Recorder>();
+            Recorder = RootScope.Resolve<IRecorder>();
 
             InitializeComponent();
 
@@ -216,7 +216,7 @@ namespace BililiveRecorder.WPF
         /// <param name="e"></param>
         private void EnableAllAutoRec(object sender, RoutedEventArgs e)
         {
-            Recorder.Rooms.ToList().ForEach(rr => Task.Run(() => rr.Start()));
+            Recorder.ToList().ForEach(rr => Task.Run(() => rr.Start()));
         }
 
         /// <summary>
@@ -226,7 +226,7 @@ namespace BililiveRecorder.WPF
         /// <param name="e"></param>
         private void DisableAllAutoRec(object sender, RoutedEventArgs e)
         {
-            Recorder.Rooms.ToList().ForEach(rr => Task.Run(() => rr.Stop()));
+            Recorder.ToList().ForEach(rr => Task.Run(() => rr.Stop()));
         }
 
         /// <summary>
