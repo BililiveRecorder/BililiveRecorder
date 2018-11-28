@@ -202,6 +202,7 @@ namespace BililiveRecorder.Core
                 string flv_path = BililiveAPI.GetPlayUrl(RealRoomid);
                 logger.Log(RealRoomid, LogLevel.Debug, "直播流地址: " + flv_path);
                 request = WebRequest.CreateHttp(flv_path);
+                request.Timeout = 3000; // TODO
                 request.Accept = "*/*";
                 request.AllowAutoRedirect = true;
                 request.Referer = "https://live.bilibili.com";
@@ -320,7 +321,7 @@ namespace BililiveRecorder.Core
                 if (passedSeconds > 1.5)
                 {
                     DownloadSpeedKiBps = _lastUpdateSize / passedSeconds / 1024; // KiB per sec
-                    DownloadSpeedPersentage = (Processor.TotalMaxTimestamp - _lastUpdateTimestamp) / passedSeconds / 1000; // ((RecordedTime/1000) / RealTime)%
+                    DownloadSpeedPersentage = (DownloadSpeedPersentage / 2) + ((Processor.TotalMaxTimestamp - _lastUpdateTimestamp) / passedSeconds / 1000 / 2); // ((RecordedTime/1000) / RealTime)%
                     _lastUpdateTimestamp = Processor.TotalMaxTimestamp;
                     _lastUpdateSize = 0;
                     LastUpdateDateTime = now;
@@ -364,7 +365,7 @@ namespace BililiveRecorder.Core
                     StreamMonitor?.Dispose();
                     _response?.Dispose();
                     _stream?.Dispose();
-                    cancellationTokenSource.Dispose();
+                    cancellationTokenSource?.Dispose();
                 }
 
                 Processor = null;
