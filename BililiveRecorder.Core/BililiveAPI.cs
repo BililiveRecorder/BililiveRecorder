@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -16,14 +17,14 @@ namespace BililiveRecorder.Core
         /// <returns>数据</returns>
         /// <exception cref="ArgumentNullException"/>
         /// <exception cref="WebException"/>
-        public static JSONObject HttpGetJson(string url)
+        public static JObject HttpGetJson(string url)
         {
             var c = new WebClient();
             c.Headers.Add(HttpRequestHeader.UserAgent, Utils.UserAgent);
             c.Headers.Add(HttpRequestHeader.Accept, "application/json, text/javascript, */*; q=0.01");
             c.Headers.Add(HttpRequestHeader.Referer, "https://live.bilibili.com/");
             var s = c.DownloadString(url);
-            var j = new JSONObject(s);
+            var j = JObject.Parse(s);
             return j;
         }
 
@@ -37,14 +38,12 @@ namespace BililiveRecorder.Core
         public static string GetPlayUrl(int roomid)
         {
             string url = $@"https://api.live.bilibili.com/room/v1/Room/playUrl?cid={roomid}&quality=0&platform=web";
-            var data = HttpGetJson(url);
-            var array = data?["data"]?["durl"];
-            if (array != null)
+            if (HttpGetJson(url)?["data"]?["durl"] is JArray array)
             {
                 List<string> urls = new List<string>();
                 for (int i = 0; i < array.Count; i++)
                 {
-                    urls.Add(array[i]?["url"]?.str?.Decode());
+                    urls.Add(array[i]?["url"]?.ToObject<string>());
                 }
                 var distinct = urls.Distinct().ToArray();
                 if (distinct.Length > 0)
@@ -68,10 +67,10 @@ namespace BililiveRecorder.Core
             var data = HttpGetJson(url);
             var i = new RoomInfo()
             {
-                DisplayRoomid = (int)(data?["data"]?["show_room_id"]?.n ?? throw new Exception("未获取到直播间信息")),
-                RealRoomid = (int)(data?["data"]?["room_id"]?.n ?? throw new Exception("未获取到直播间信息")),
-                Username = data?["data"]?["uname"]?.str?.Decode() ?? throw new Exception("未获取到直播间信息"),
-                isStreaming = "LIVE" == (data?["data"]?["status"]?.str?.Decode() ?? throw new Exception("未获取到直播间信息")),
+                DisplayRoomid = data?["data"]?["show_room_id"]?.ToObject<int>() ?? throw new Exception("未获取到直播间信息"),
+                RealRoomid = (int)(data?["data"]?["room_id"]?.ToObject<int>() ?? throw new Exception("未获取到直播间信息")),
+                Username = data?["data"]?["uname"]?.ToObject<string>() ?? throw new Exception("未获取到直播间信息"),
+                isStreaming = "LIVE" == (data?["data"]?["status"]?.ToObject<string>() ?? throw new Exception("未获取到直播间信息")),
             };
             return i;
         }
