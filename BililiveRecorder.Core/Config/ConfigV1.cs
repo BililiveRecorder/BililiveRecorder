@@ -17,7 +17,8 @@ namespace BililiveRecorder.Core.Config
         /// </summary>
         [JsonIgnore]
         [Utils.DoNotCopyProperty]
-        public string WorkDirectory { get; set; }
+        public string WorkDirectory { get => _workDirectory; set => SetField(ref _workDirectory, value); }
+
 
         /// <summary>
         /// 房间号列表
@@ -71,5 +72,6 @@ namespace BililiveRecorder.Core.Config
         private uint _cuttingNumber = 10;
         private EnabledFeature _enabledFeature = EnabledFeature.Both;
         private AutoCuttingMode _cuttingMode = AutoCuttingMode.Disabled;
+        private string _workDirectory;
     }
 }

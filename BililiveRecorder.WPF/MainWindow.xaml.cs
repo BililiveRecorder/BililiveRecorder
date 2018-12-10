@@ -1,6 +1,7 @@
 ﻿using Autofac;
 using BililiveRecorder.Core;
 using BililiveRecorder.FlvProcessor;
+using Hardcodet.Wpf.TaskbarNotification;
 using NLog;
 using System;
 using System.Collections.ObjectModel;
@@ -63,7 +64,7 @@ namespace BililiveRecorder.WPF
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            Title += "     版本号: " + BuildInfo.Version + "  " + BuildInfo.HeadShaShort;
+            Title += " " + BuildInfo.Version + " " + BuildInfo.HeadShaShort;
 
             string workdir = string.Empty;
             try
@@ -92,6 +93,8 @@ namespace BililiveRecorder.WPF
                 Environment.Exit(-2);
                 return;
             }
+
+            NotifyIcon.Visibility = Visibility.Visible;
         }
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
@@ -270,6 +273,27 @@ namespace BililiveRecorder.WPF
 
         private IRecordedRoom _GetSenderAsRecordedRoom(object sender) => (sender as Button)?.DataContext as IRecordedRoom;
 
+        private void Taskbar_Quit_Click(object sender, RoutedEventArgs e)
+        {
+            Close();
+        }
 
+        private void Window_StateChanged(object sender, EventArgs e)
+        {
+            if (WindowState == WindowState.Minimized)
+            {
+                Hide();
+                NotifyIcon.ShowBalloonTip("B站录播姬", "录播姬已最小化到托盘，左键单击图标恢复界面。", BalloonIcon.Info);
+            }
+        }
+
+        private void Taskbar_Click(object sender, RoutedEventArgs e)
+        {
+            Show();
+            WindowState = WindowState.Normal;
+            Topmost ^= true;
+            Topmost ^= true;
+            Focus();
+        }
     }
 }
