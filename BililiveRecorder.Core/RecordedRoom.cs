@@ -6,6 +6,8 @@ using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -70,7 +72,7 @@ namespace BililiveRecorder.Core
         private ConfigV1 _config { get; }
         public IStreamMonitor StreamMonitor { get; }
 
-        private HttpWebResponse _response;
+        private HttpResponseMessage _response;
         private Stream _stream;
         private Task StartupTask = null;
         public Task StreamDownloadTask = null;
@@ -172,7 +174,6 @@ namespace BililiveRecorder.Core
 
                         _stream?.Close();
                         _stream?.Dispose();
-                        _response?.Close();
                         _response?.Dispose();
                         StreamDownloadTask?.Wait();
                     }
@@ -192,35 +193,39 @@ namespace BililiveRecorder.Core
                 return;
             }
 
-            HttpWebRequest request = null;
+            // HttpWebRequest request = null;
 
             cancellationTokenSource = new CancellationTokenSource();
             var token = cancellationTokenSource.Token;
             try
             {
+                using (var client = new HttpClient())
+                {
+                    client.Timeout = TimeSpan.FromSeconds(3); // TODO
+                    client.DefaultRequestHeaders.Accept.Clear();
+                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("*/*"));
+                    client.DefaultRequestHeaders.UserAgent.Clear();
+                    client.DefaultRequestHeaders.UserAgent.ParseAdd(Utils.UserAgent);
+                    client.DefaultRequestHeaders.Referrer = new Uri("https://live.bilibili.com");
+                    client.DefaultRequestHeaders.Add("Origin", "https://live.bilibili.com");
 
-                string flv_path = BililiveAPI.GetPlayUrl(RealRoomid);
-                logger.Log(RealRoomid, LogLevel.Debug, "直播流地址: " + flv_path);
-                request = WebRequest.CreateHttp(flv_path);
-                request.Timeout = 3000; // TODO
-                request.Accept = "*/*";
-                request.AllowAutoRedirect = true;
-                request.Referer = "https://live.bilibili.com";
-                request.Headers["Origin"] = "https://live.bilibili.com";
-                request.UserAgent = Utils.UserAgent;
+                    string flv_path = BililiveAPI.GetPlayUrl(RealRoomid);
+                    logger.Log(RealRoomid, LogLevel.Info, "连接直播服务器 " + new Uri(flv_path).Host);
+                    logger.Log(RealRoomid, LogLevel.Debug, "直播流地址: " + flv_path);
 
-                _response = await request.GetResponseAsync() as HttpWebResponse;
+                    _response = await client.GetAsync(flv_path, HttpCompletionOption.ResponseHeadersRead);
+                }
 
                 if (_response.StatusCode != HttpStatusCode.OK)
                 {
-                    logger.Log(RealRoomid, LogLevel.Info, string.Format("尝试下载直播流时服务器返回了 ({0}){1}", _response.StatusCode, _response.StatusDescription));
-                    _response.Close();
-                    request = null;
+                    logger.Log(RealRoomid, LogLevel.Info, string.Format("尝试下载直播流时服务器返回了 ({0}){1}", _response.StatusCode, _response.ReasonPhrase));
+
                     if (_response.StatusCode == HttpStatusCode.NotFound)
                     {
                         logger.Log(RealRoomid, LogLevel.Info, "将在15秒后重试");
                         StreamMonitor.Check(TriggerType.HttpApiRecheck, 15); // TODO: 重试次数和时间
                     }
+                    _CleanupFlvRequest();
                     return;
                 }
                 else
@@ -235,56 +240,21 @@ namespace BililiveRecorder.Core
                     Processor.ClipLengthPast = _config.ClipLengthPast;
                     Processor.CuttingNumber = _config.CuttingNumber;
 
-                    _stream = _response.GetResponseStream();
+                    _stream = await _response.Content.ReadAsStreamAsync();
                     _stream.ReadTimeout = 3 * 1000;
 
-                    StreamDownloadTask = Task.Run(async () =>
-                    {
-                        try
-                        {
-                            const int BUF_SIZE = 1024 * 8;
-                            byte[] buffer = new byte[BUF_SIZE];
-                            while (!token.IsCancellationRequested)
-                            {
-                                int bytesRead = await _stream.ReadAsync(buffer, 0, BUF_SIZE, token);
-                                _UpdateDownloadSpeed(bytesRead);
-                                if (bytesRead == 0)
-                                {
-                                    // 录制已结束
-                                    // TODO: 重试次数和时间
-                                    // TODO: 用户操作停止时不重新继续
-
-                                    logger.Log(RealRoomid, LogLevel.Info,
-                                        (token.IsCancellationRequested ? "用户操作" : "直播已结束") + "，停止录制。"
-                                        + (triggerType != TriggerType.HttpApiRecheck ? "将在15秒后重试启动。" : ""));
-                                    if (triggerType != TriggerType.HttpApiRecheck)
-                                    {
-                                        StreamMonitor.Check(TriggerType.HttpApiRecheck, 15);
-                                    }
-                                    break;
-                                }
-                                else
-                                {
-                                    if (bytesRead != BUF_SIZE)
-                                    {
-                                        Processor.AddBytes(buffer.Take(bytesRead).ToArray());
-                                    }
-                                    else
-                                    {
-                                        Processor.AddBytes(buffer);
-                                    }
-                                }
-                            } // while(true)
-                              // outside of while
-                        }
-                        finally
-                        {
-                            _CleanupFlvRequest();
-                        }
-                    });
-
+                    StreamDownloadTask = Task.Run(_ReadStreamLoop);
                     TriggerPropertyChanged(nameof(IsRecording));
                 }
+            }
+            catch (TaskCanceledException)
+            {
+                // client.GetAsync timed out
+                // useless exception message :/
+
+                _CleanupFlvRequest();
+                logger.Log(RealRoomid, LogLevel.Warn, "连接直播服务器超时。");
+                StreamMonitor.Check(TriggerType.HttpApiRecheck, 1);
             }
             catch (Exception ex)
             {
@@ -295,6 +265,60 @@ namespace BililiveRecorder.Core
                     StreamMonitor.Check(TriggerType.HttpApiRecheck, 15);
                 }
             }
+            return;
+
+            async Task _ReadStreamLoop()
+            {
+                try
+                {
+                    const int BUF_SIZE = 1024 * 8;
+                    byte[] buffer = new byte[BUF_SIZE];
+                    while (!token.IsCancellationRequested)
+                    {
+                        int bytesRead = await _stream.ReadAsync(buffer, 0, BUF_SIZE, token);
+                        _UpdateDownloadSpeed(bytesRead);
+                        if (bytesRead != 0)
+                        {
+                            if (bytesRead != BUF_SIZE)
+                            {
+                                Processor.AddBytes(buffer.Take(bytesRead).ToArray());
+                            }
+                            else
+                            {
+                                Processor.AddBytes(buffer);
+                            }
+                        }
+                        else
+                        {
+                            // 录制已结束
+                            // TODO: 重试次数和时间
+                            // TODO: 用户操作停止时不重新继续
+
+                            logger.Log(RealRoomid, LogLevel.Info,
+                                   (token.IsCancellationRequested ? "用户操作" : "直播已结束") + "，停止录制。"
+                                   + (triggerType != TriggerType.HttpApiRecheck ? "将在15秒后重试启动。" : ""));
+                            if (triggerType != TriggerType.HttpApiRecheck)
+                            {
+                                StreamMonitor.Check(TriggerType.HttpApiRecheck, 15);
+                            }
+                            break;
+                        }
+                    }
+                    // while(true)
+                }
+                catch (ObjectDisposedException)
+                {
+                    // ignore O.D.E. from _stream.ReadAsync()
+                }
+                catch (Exception e)
+                {
+                    logger.Log(RealRoomid, LogLevel.Warn, "录播发生错误", e);
+                }
+                finally
+                {
+                    _CleanupFlvRequest();
+                }
+            }
             void _CleanupFlvRequest()
             {
                 if (Processor != null)
@@ -303,7 +327,6 @@ namespace BililiveRecorder.Core
                     Processor.Dispose();
                     Processor = null;
                 }
-                request = null;
                 _stream?.Dispose();
                 _stream = null;
                 _response?.Dispose();
