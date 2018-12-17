@@ -72,6 +72,7 @@ namespace BililiveRecorder.Core
         private ConfigV1 _config { get; }
         public IStreamMonitor StreamMonitor { get; }
 
+        private bool _retry = true;
         private HttpResponseMessage _response;
         private Stream _stream;
         private Task StartupTask = null;
@@ -140,9 +141,10 @@ namespace BililiveRecorder.Core
 
         private void StreamMonitor_StreamStatusChanged(object sender, StreamStatusChangedArgs e)
         {
-            if (StartupTask?.IsCompleted ?? true)
+            // if (StartupTask?.IsCompleted ?? true)
+            if (!IsRecording)
             {
-                StartupTask = _StartRecordAsync(e.type);
+                StartupTask = _StartRecordAsync();
             }
         }
 
@@ -163,6 +165,7 @@ namespace BililiveRecorder.Core
                 throw new ObjectDisposedException(nameof(RecordedRoom));
             }
 
+            _retry = false;
             try
             {
                 if (cancellationTokenSource != null)
@@ -183,9 +186,13 @@ namespace BililiveRecorder.Core
             {
                 logger.Log(RealRoomid, LogLevel.Error, "在尝试停止录制时发生错误，请检查网络连接是否稳定", ex);
             }
+            finally
+            {
+                _retry = true;
+            }
         }
 
-        private async Task _StartRecordAsync(TriggerType triggerType)
+        private async Task _StartRecordAsync()
         {
             if (IsRecording)
             {
@@ -230,11 +237,6 @@ namespace BililiveRecorder.Core
                 }
                 else
                 {
-                    if (triggerType == TriggerType.HttpApiRecheck)
-                    {
-                        triggerType = TriggerType.HttpApi;
-                    }
-
                     Processor = newIFlvStreamProcessor().Initialize(GetStreamFilePath, GetClipFilePath, _config.EnabledFeature, _config.CuttingMode);
                     Processor.ClipLengthFuture = _config.ClipLengthFuture;
                     Processor.ClipLengthPast = _config.ClipLengthPast;
@@ -259,10 +261,10 @@ namespace BililiveRecorder.Core
             catch (Exception ex)
             {
                 _CleanupFlvRequest();
-                logger.Log(RealRoomid, LogLevel.Warn, "启动直播流下载出错。" + (triggerType != TriggerType.HttpApiRecheck ? "将在15秒后重试启动。" : ""), ex);
-                if (triggerType != TriggerType.HttpApiRecheck)
+                logger.Log(RealRoomid, LogLevel.Warn, "启动直播流下载出错。" + (_retry ? "将重试启动。" : ""), ex);
+                if (_retry)
                 {
-                    StreamMonitor.Check(TriggerType.HttpApiRecheck, 15);
+                    StreamMonitor.Check(TriggerType.HttpApiRecheck, 15); // TODO
                 }
             }
             return;
@@ -290,28 +292,26 @@ namespace BililiveRecorder.Core
                         }
                         else
                         {
-                            // 录制已结束
-                            // TODO: 重试次数和时间
-                            // TODO: 用户操作停止时不重新继续
-
-                            logger.Log(RealRoomid, LogLevel.Info,
-                                   (token.IsCancellationRequested ? "用户操作" : "直播已结束") + "，停止录制。"
-                                   + (triggerType != TriggerType.HttpApiRecheck ? "将在15秒后重试启动。" : ""));
-                            if (triggerType != TriggerType.HttpApiRecheck)
-                            {
-                                StreamMonitor.Check(TriggerType.HttpApiRecheck, 15);
-                            }
                             break;
                         }
                     }
-                    // while(true)
-                }
-                catch (ObjectDisposedException)
-                {
-                    // ignore O.D.E. from _stream.ReadAsync()
+
+                    // 录制已结束
+                    // TODO: 重试次数和时间
+                    // TODO: 用户操作停止时不重新继续
+
+                    logger.Log(RealRoomid, LogLevel.Info,
+                           (token.IsCancellationRequested ? "用户操作" : "直播已结束") + "，停止录制。"
+                           + (_retry ? "将在15秒后重试启动。" : ""));
+                    if (_retry)
+                    {
+                        StreamMonitor.Check(TriggerType.HttpApiRecheck, 15);
+                    }
                 }
                 catch (Exception e)
                 {
+                    if (e is ObjectDisposedException && token.IsCancellationRequested) { return; }
+
                     logger.Log(RealRoomid, LogLevel.Warn, "录播发生错误", e);
                 }
                 finally
@@ -332,6 +332,7 @@ namespace BililiveRecorder.Core
                 _response?.Dispose();
                 _response = null;
 
+                _lastUpdateTimestamp = 0;
                 DownloadSpeedKiBps = 0d;
                 DownloadSpeedPersentage = 0d;
                 TriggerPropertyChanged(nameof(IsRecording));
