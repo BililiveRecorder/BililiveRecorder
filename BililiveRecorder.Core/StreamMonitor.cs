@@ -27,7 +27,7 @@ namespace BililiveRecorder.Core
     {
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
         private const string defaulthosts = "broadcastlv.chat.bilibili.com";
-        private const string CIDInfoUrl = "http://live.bilibili.com/api/player?id=cid:";
+        private const string CIDInfoUrl = "https://live.bilibili.com/api/player?id=cid:";
 
         private readonly Func<TcpClient> funcTcpClient;
 

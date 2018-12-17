@@ -63,7 +63,7 @@ namespace BililiveRecorder.Core
         /// <exception cref="Exception"/>
         public static RoomInfo GetRoomInfo(int roomid)
         {
-            string url = $@"http://api.live.bilibili.com/AppRoom/index?room_id={roomid}&platform=android";
+            string url = $@"https://api.live.bilibili.com/AppRoom/index?room_id={roomid}&platform=android";
             var data = HttpGetJson(url);
             var i = new RoomInfo()
             {
