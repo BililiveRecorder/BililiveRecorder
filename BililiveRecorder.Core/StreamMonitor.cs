@@ -1,4 +1,5 @@
-﻿using NLog;
+﻿using BililiveRecorder.Core.Config;
+using NLog;
 using System;
 using System.IO;
 using System.Linq;
@@ -8,6 +9,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Xml;
+using Timer = System.Timers.Timer;
 
 namespace BililiveRecorder.Core
 {
@@ -30,6 +32,7 @@ namespace BililiveRecorder.Core
         private const string CIDInfoUrl = "https://live.bilibili.com/api/player?id=cid:";
 
         private readonly Func<TcpClient> funcTcpClient;
+        private readonly ConfigV1 config;
 
         private int dmChatPort = 2243;
         private string dmChatHost = defaulthosts;
@@ -41,16 +44,17 @@ namespace BililiveRecorder.Core
         private NetworkStream dmNetStream;
         private Thread dmReceiveMessageLoopThread;
         private CancellationTokenSource dmTokenSource = null;
-        private CancellationTokenSource httpTokenSource = null;
+        private readonly Timer httpTimer;
 
         public int Roomid { get; private set; } = 0;
         public bool IsMonitoring { get; private set; } = false;
         public event StreamStatusChangedEvent StreamStatusChanged;
         public event ReceivedDanmakuEvt ReceivedDanmaku;
 
-        public StreamMonitor(int roomid, Func<TcpClient> funcTcpClient)
+        public StreamMonitor(int roomid, Func<TcpClient> funcTcpClient, ConfigV1 config)
         {
             this.funcTcpClient = funcTcpClient;
+            this.config = config;
 
             Roomid = roomid;
 
@@ -68,6 +72,33 @@ namespace BililiveRecorder.Core
                     catch (Exception) { }
                 }
             }, dmTokenSource.Token);
+
+            httpTimer = new Timer(config.TimingCheckInterval * 1000)
+            {
+                Enabled = false,
+                AutoReset = true,
+                SynchronizingObject = null,
+                Site = null
+            };
+            httpTimer.Elapsed += (sender, e) =>
+            {
+                try
+                {
+                    Check(TriggerType.HttpApi);
+                }
+                catch (Exception ex)
+                {
+                    logger.Log(Roomid, LogLevel.Warn, "获取直播间开播状态出错", ex);
+                }
+            };
+
+            config.PropertyChanged += (sender, e) =>
+            {
+                if (e.PropertyName.Equals(nameof(config.TimingCheckInterval)))
+                {
+                    httpTimer.Interval = config.TimingCheckInterval * 1000;
+                }
+            };
 
             Task.Run(() => ConnectWithRetry());
         }
@@ -96,21 +127,7 @@ namespace BililiveRecorder.Core
             }
 
             IsMonitoring = true;
-            if (httpTokenSource == null)
-            {
-                httpTokenSource = new CancellationTokenSource();
-                Repeat.Interval(TimeSpan.FromMinutes(5), () => // TODO: 设置查询时间间隔
-                {
-                    try
-                    {
-                        Check(TriggerType.HttpApi);
-                    }
-                    catch (Exception ex)
-                    {
-                        logger.Log(Roomid, LogLevel.Warn, "获取直播间开播状态出错", ex);
-                    }
-                }, httpTokenSource.Token);
-            }
+            httpTimer.Start();
             return true;
         }
 
@@ -122,40 +139,29 @@ namespace BililiveRecorder.Core
             }
 
             IsMonitoring = false;
-            httpTokenSource?.Cancel();
-            httpTokenSource = null;
+            httpTimer.Stop();
         }
 
-        public void Check(TriggerType type, int seconds = 0)
+        public void Check(TriggerType type, int millisecondsDelay = 0)
         {
             if (disposedValue)
             {
                 throw new ObjectDisposedException(nameof(StreamMonitor));
             }
 
-            if (seconds < 0)
+            if (millisecondsDelay < 0)
             {
-                throw new ArgumentOutOfRangeException(nameof(seconds), "不能小于0");
+                throw new ArgumentOutOfRangeException(nameof(millisecondsDelay), "不能小于0");
             }
 
-            if (seconds == 0)
+            Task.Run(() =>
             {
+                Task.Delay(millisecondsDelay).Wait();
                 if (BililiveAPI.GetRoomInfo(Roomid).isStreaming)
                 {
-                    Task.Run(() => StreamStatusChanged?.Invoke(this, new StreamStatusChangedArgs() { type = type }));
+                    StreamStatusChanged?.Invoke(this, new StreamStatusChangedArgs() { type = type });
                 }
-            }
-            else
-            {
-                Task.Run(() =>
-                {
-                    Task.Delay(seconds * 1000).Wait();
-                    if (BililiveAPI.GetRoomInfo(Roomid).isStreaming)
-                    {
-                        Task.Run(() => StreamStatusChanged?.Invoke(this, new StreamStatusChangedArgs() { type = type }));
-                    }
-                });
-            }
+            });
         }
 
         #endregion
@@ -166,7 +172,7 @@ namespace BililiveRecorder.Core
             bool connect_result = false;
             while (!dmTcpConnected && !dmTokenSource.Token.IsCancellationRequested)
             {
-                Thread.Sleep(1000 * 2); // TODO: fix me
+                Thread.Sleep((int)Math.Max(config.TimingDanmakuRetry, int.MaxValue));
                 logger.Log(Roomid, LogLevel.Info, "连接弹幕服务器...");
                 connect_result = Connect();
             }
@@ -276,7 +282,6 @@ namespace BililiveRecorder.Core
             }
             catch (Exception ex)
             {
-                // TODO: check logic
                 dmError = ex;
                 // logger.Error(ex);
 
@@ -285,7 +290,7 @@ namespace BililiveRecorder.Core
                 dmNetStream = null;
                 if (!(dmTokenSource?.IsCancellationRequested ?? true))
                 {
-                    logger.Warn(ex, "弹幕连接被断开，将尝试重连"); // TODO: 设置重连时间间隔
+                    logger.Warn(ex, "弹幕连接被断开，将尝试重连");
                     ConnectWithRetry();
                 }
             }
@@ -366,7 +371,8 @@ namespace BililiveRecorder.Core
                 if (disposing)
                 {
                     dmTokenSource?.Cancel();
-                    httpTokenSource?.Cancel();
+                    dmTokenSource?.Dispose();
+                    httpTimer?.Dispose();
                     dmClient?.Close();
                 }
 

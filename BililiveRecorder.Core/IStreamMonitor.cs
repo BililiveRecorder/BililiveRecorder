@@ -11,6 +11,6 @@ namespace BililiveRecorder.Core
 
         bool Start();
         void Stop();
-        void Check(TriggerType type, int seconds = 0);
+        void Check(TriggerType type, int millisecondsDelay = 0);
     }
 }

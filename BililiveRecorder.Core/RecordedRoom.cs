@@ -208,7 +208,7 @@ namespace BililiveRecorder.Core
             {
                 using (var client = new HttpClient())
                 {
-                    client.Timeout = TimeSpan.FromSeconds(3); // TODO
+                    client.Timeout = TimeSpan.FromMilliseconds(_config.TimingStreamConnect);
                     client.DefaultRequestHeaders.Accept.Clear();
                     client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("*/*"));
                     client.DefaultRequestHeaders.UserAgent.Clear();
@@ -227,11 +227,8 @@ namespace BililiveRecorder.Core
                 {
                     logger.Log(RealRoomid, LogLevel.Info, string.Format("尝试下载直播流时服务器返回了 ({0}){1}", _response.StatusCode, _response.ReasonPhrase));
 
-                    if (_response.StatusCode == HttpStatusCode.NotFound)
-                    {
-                        logger.Log(RealRoomid, LogLevel.Info, "将在15秒后重试");
-                        StreamMonitor.Check(TriggerType.HttpApiRecheck, 15); // TODO: 重试次数和时间
-                    }
+                    StreamMonitor.Check(TriggerType.HttpApiRecheck, (int)_config.TimingStreamRetry);
+
                     _CleanupFlvRequest();
                     return;
                 }
@@ -256,7 +253,7 @@ namespace BililiveRecorder.Core
 
                 _CleanupFlvRequest();
                 logger.Log(RealRoomid, LogLevel.Warn, "连接直播服务器超时。");
-                StreamMonitor.Check(TriggerType.HttpApiRecheck, 1);
+                StreamMonitor.Check(TriggerType.HttpApiRecheck, (int)_config.TimingStreamRetry);
             }
             catch (Exception ex)
             {
@@ -264,7 +261,7 @@ namespace BililiveRecorder.Core
                 logger.Log(RealRoomid, LogLevel.Warn, "启动直播流下载出错。" + (_retry ? "将重试启动。" : ""), ex);
                 if (_retry)
                 {
-                    StreamMonitor.Check(TriggerType.HttpApiRecheck, 15); // TODO
+                    StreamMonitor.Check(TriggerType.HttpApiRecheck, (int)_config.TimingStreamRetry);
                 }
             }
             return;
@@ -296,16 +293,12 @@ namespace BililiveRecorder.Core
                         }
                     }
 
-                    // 录制已结束
-                    // TODO: 重试次数和时间
-                    // TODO: 用户操作停止时不重新继续
-
                     logger.Log(RealRoomid, LogLevel.Info,
                            (token.IsCancellationRequested ? "用户操作" : "直播已结束") + "，停止录制。"
-                           + (_retry ? "将在15秒后重试启动。" : ""));
+                           + (_retry ? "将重试启动。" : ""));
                     if (_retry)
                     {
-                        StreamMonitor.Check(TriggerType.HttpApiRecheck, 15);
+                        StreamMonitor.Check(TriggerType.HttpApiRecheck, (int)_config.TimingStreamRetry);
                     }
                 }
                 catch (Exception e)
