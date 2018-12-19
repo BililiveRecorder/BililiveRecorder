@@ -42,7 +42,7 @@ namespace BililiveRecorder.Core
             newIRecordedRoom = iRecordedRoom;
 
             tokenSource = new CancellationTokenSource();
-            Repeat.Interval(TimeSpan.FromSeconds(6), DownloadWatchdog, tokenSource.Token);
+            Repeat.Interval(TimeSpan.FromSeconds(3), DownloadWatchdog, tokenSource.Token);
 
             Rooms.CollectionChanged += (sender, e) =>
             {
@@ -174,7 +174,7 @@ namespace BililiveRecorder.Core
                 {
                     if (room.IsRecording)
                     {
-                        if (DateTime.Now - room.LastUpdateDateTime > TimeSpan.FromSeconds(3))
+                        if (DateTime.Now - room.LastUpdateDateTime > TimeSpan.FromMilliseconds(Config.TimingWatchdogTimeout))
                         {
                             logger.Warn("服务器停止提供 {0} 直播间的直播数据，通常是录制时网络不稳定导致，将会断开重连", room.Roomid);
                             room.StopRecord();
@@ -183,7 +183,7 @@ namespace BililiveRecorder.Core
                         else if (room.Processor != null &&
                                     ((DateTime.Now - room.Processor.StartDateTime).TotalMilliseconds
                                     >
-                                    (room.Processor.TotalMaxTimestamp + (10 * 1000)))
+                                    (room.Processor.TotalMaxTimestamp + Config.TimingWatchdogBehind))
                                 )
                         {
                             logger.Warn("{0} 直播间的下载速度达不到录制标准，将断开重连。请检查网络是否稳定", room.Roomid);

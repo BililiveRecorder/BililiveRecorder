@@ -48,6 +48,9 @@
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="2*"/>
@@ -59,7 +62,21 @@
                         <ColumnDefinition Width="1*"/>
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
-                    <local:ClickSelectTextBox Grid.Column="0" Text="{Binding TimingStreamRetry,Delay=500,UpdateSourceTrigger=PropertyChanged}"/>
+                    <local:ClickSelectTextBox Grid.Column="0" Text="{Binding TimingStreamRetry,Delay=500,UpdateSourceTrigger=PropertyChanged}">
+                        <local:ClickSelectTextBox.ToolTip>
+                            <ToolTip>
+                                <StackPanel>
+                                    <StackPanel.Resources>
+                                        <Style TargetType="TextBlock">
+                                            <Setter Property="TextAlignment" Value="Left"/>
+                                        </Style>
+                                    </StackPanel.Resources>
+                                    <TextBlock FontWeight="Bold">注：</TextBlock>
+                                    <TextBlock>录制断开后等待多长时间再尝试开始录制</TextBlock>
+                                </StackPanel>
+                            </ToolTip>
+                        </local:ClickSelectTextBox.ToolTip>
+                    </local:ClickSelectTextBox>
                     <TextBlock Grid.Column="1" Margin="5,0,10,0">毫秒</TextBlock>
                 </Grid>
                 <TextBlock Grid.Row="1" Grid.Column="0">录制连接超时：</TextBlock>
@@ -68,7 +85,22 @@
                         <ColumnDefinition Width="1*"/>
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
-                    <local:ClickSelectTextBox Grid.Column="0" Text="{Binding TimingStreamConnect,Delay=500,UpdateSourceTrigger=PropertyChanged}"/>
+                    <local:ClickSelectTextBox Grid.Column="0" Text="{Binding TimingStreamConnect,Delay=500,UpdateSourceTrigger=PropertyChanged}">
+                        <local:ClickSelectTextBox.ToolTip>
+                            <ToolTip>
+                                <StackPanel>
+                                    <StackPanel.Resources>
+                                        <Style TargetType="TextBlock">
+                                            <Setter Property="TextAlignment" Value="Left"/>
+                                        </Style>
+                                    </StackPanel.Resources>
+                                    <TextBlock FontWeight="Bold">注：</TextBlock>
+                                    <TextBlock>发出连接直播服务器的请求后等待多长时间</TextBlock>
+                                    <TextBlock>防止直播服务器长时间不返回数据导致卡住</TextBlock>
+                                </StackPanel>
+                            </ToolTip>
+                        </local:ClickSelectTextBox.ToolTip>
+                    </local:ClickSelectTextBox>
                     <TextBlock Grid.Column="1" Margin="5,0,10,0">毫秒</TextBlock>
                 </Grid>
                 <TextBlock Grid.Row="2" Grid.Column="0">弹幕重连间隔：</TextBlock>
@@ -77,11 +109,75 @@
                         <ColumnDefinition Width="1*"/>
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
-                    <local:ClickSelectTextBox Grid.Column="0" Text="{Binding TimingDanmakuRetry,Delay=500,UpdateSourceTrigger=PropertyChanged}"/>
+                    <local:ClickSelectTextBox Grid.Column="0" Text="{Binding TimingDanmakuRetry,Delay=500,UpdateSourceTrigger=PropertyChanged}">
+                        <local:ClickSelectTextBox.ToolTip>
+                            <ToolTip>
+                                <StackPanel>
+                                    <StackPanel.Resources>
+                                        <Style TargetType="TextBlock">
+                                            <Setter Property="TextAlignment" Value="Left"/>
+                                        </Style>
+                                    </StackPanel.Resources>
+                                    <TextBlock FontWeight="Bold">注：</TextBlock>
+                                    <TextBlock>弹幕服务器被断开后等待多长时间再尝试连接</TextBlock>
+                                    <TextBlock>监控开播的主要途径是通过弹幕服务器发送的信息</TextBlock>
+                                </StackPanel>
+                            </ToolTip>
+                        </local:ClickSelectTextBox.ToolTip>
+                    </local:ClickSelectTextBox>
                     <TextBlock Grid.Column="1" Margin="5,0,10,0">毫秒</TextBlock>
                 </Grid>
-                <TextBlock Grid.Row="3" Grid.Column="0">开播检查间隔：</TextBlock>
+                <TextBlock Grid.Row="3" Grid.Column="0">录制超时时间：</TextBlock>
                 <Grid Grid.Row="3" Grid.Column="1" VerticalAlignment="Center">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="1*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <local:ClickSelectTextBox Grid.Column="0" Text="{Binding TimingWatchdogTimeout,Delay=500,UpdateSourceTrigger=PropertyChanged}">
+                        <local:ClickSelectTextBox.ToolTip>
+                            <ToolTip>
+                                <StackPanel>
+                                    <StackPanel.Resources>
+                                        <Style TargetType="TextBlock">
+                                            <Setter Property="TextAlignment" Value="Left"/>
+                                        </Style>
+                                    </StackPanel.Resources>
+                                    <TextBlock FontWeight="Bold">注：</TextBlock>
+                                    <TextBlock>在一定时间没有收到直播服务器发送的数据后断开重连。</TextBlock>
+                                    <TextBlock>用于防止因为玄学网络问题导致卡住</TextBlock>
+                                </StackPanel>
+                            </ToolTip>
+                        </local:ClickSelectTextBox.ToolTip>
+                    </local:ClickSelectTextBox>
+                    <TextBlock Grid.Column="1" Margin="5,0,10,0">毫秒</TextBlock>
+                </Grid>
+                <TextBlock Grid.Row="4" Grid.Column="0">录制最长落后：</TextBlock>
+                <Grid Grid.Row="4" Grid.Column="1" VerticalAlignment="Center">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="1*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <local:ClickSelectTextBox Grid.Column="0" Text="{Binding TimingWatchdogBehind,Delay=500,UpdateSourceTrigger=PropertyChanged}">
+                        <local:ClickSelectTextBox.ToolTip>
+                            <ToolTip>
+                                <StackPanel>
+                                    <StackPanel.Resources>
+                                        <Style TargetType="TextBlock">
+                                            <Setter Property="TextAlignment" Value="Left"/>
+                                        </Style>
+                                    </StackPanel.Resources>
+                                    <TextBlock FontWeight="Bold">注：</TextBlock>
+                                    <TextBlock>录制比主播直播落后一定时间后自动断开重连。</TextBlock>
+                                    <TextBlock>实际使用中如果发生了因为跟不上主播直播</TextBlock>
+                                    <TextBlock>的情况，说明录制电脑的网速不够。</TextBlock>
+                                </StackPanel>
+                            </ToolTip>
+                        </local:ClickSelectTextBox.ToolTip>
+                    </local:ClickSelectTextBox>
+                    <TextBlock Grid.Column="1" Margin="5,0,10,0">毫秒</TextBlock>
+                </Grid>
+                <TextBlock Grid.Row="5" Grid.Column="0">开播检查间隔：</TextBlock>
+                <Grid Grid.Row="5" Grid.Column="1" VerticalAlignment="Center">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="1*"/>
                         <ColumnDefinition Width="Auto"/>
