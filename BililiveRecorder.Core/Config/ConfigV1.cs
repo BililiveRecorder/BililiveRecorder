@@ -17,7 +17,8 @@ namespace BililiveRecorder.Core.Config
         /// </summary>
         [JsonIgnore]
         [Utils.DoNotCopyProperty]
-        public string WorkDirectory { get; set; }
+        public string WorkDirectory { get => _workDirectory; set => SetField(ref _workDirectory, value); }
+
 
         /// <summary>
         /// 房间号列表
@@ -55,6 +56,42 @@ namespace BililiveRecorder.Core.Config
         [JsonProperty("cutting_number")]
         public uint CuttingNumber { get => _cuttingNumber; set => SetField(ref _cuttingNumber, value); }
 
+        /// <summary>
+        /// 录制断开重连时间间隔 毫秒
+        /// </summary>
+        [JsonProperty("timing_stream_retry")]
+        public uint TimingStreamRetry { get => _timingStreamRetry; set => SetField(ref _timingStreamRetry, value); }
+
+        /// <summary>
+        /// 连接直播服务器超时时间 毫秒
+        /// </summary>
+        [JsonProperty("timing_stream_connect")]
+        public uint TimingStreamConnect { get => _timingStreamConnect; set => SetField(ref _timingStreamConnect, value); }
+
+        /// <summary>
+        /// 弹幕服务器重连时间间隔 毫秒
+        /// </summary>
+        [JsonProperty("timing_danmaku_retry")]
+        public uint TimingDanmakuRetry { get => _timingDanmakuRetry; set => SetField(ref _timingDanmakuRetry, value); }
+
+        /// <summary>
+        /// HTTP API 检查时间间隔 秒
+        /// </summary>
+        [JsonProperty("timing_check_interval")]
+        public uint TimingCheckInterval { get => _timingCheckInterval; set => SetField(ref _timingCheckInterval, value); }
+
+        /// <summary>
+        /// 最大未收到新直播数据时间 毫秒
+        /// </summary>
+        [JsonProperty("timing_watchdog_timeout")]
+        public uint TimingWatchdogTimeout { get => _timingWatchdogTimeout; set => SetField(ref _timingWatchdogTimeout, value); }
+
+        /// <summary>
+        /// 最大直播数据落后时间 毫秒
+        /// </summary>
+        [JsonProperty("timing_watchdog_behind")]
+        public uint TimingWatchdogBehind { get => _timingWatchdogBehind; set => SetField(ref _timingWatchdogBehind, value); }
+
         #region INotifyPropertyChanged
         public event PropertyChangedEventHandler PropertyChanged;
         protected virtual void OnPropertyChanged(string propertyName) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
@@ -71,5 +108,13 @@ namespace BililiveRecorder.Core.Config
         private uint _cuttingNumber = 10;
         private EnabledFeature _enabledFeature = EnabledFeature.Both;
         private AutoCuttingMode _cuttingMode = AutoCuttingMode.Disabled;
+        private string _workDirectory;
+
+        private uint _timingWatchdogTimeout = 5 * 1000;
+        private uint _timingWatchdogBehind = 5 * 1000;
+        private uint _timingStreamRetry = 6 * 1000;
+        private uint _timingStreamConnect = 3 * 1000;
+        private uint _timingDanmakuRetry = 2 * 1000;
+        private uint _timingCheckInterval = 5 * 60;
     }
 }

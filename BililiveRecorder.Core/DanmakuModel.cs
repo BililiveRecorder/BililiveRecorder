@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json.Linq;
+using System;
 using System.Globalization;
 using System.Text.RegularExpressions;
 
@@ -181,63 +182,64 @@ namespace BililiveRecorder.Core
 
         public DanmakuModel(string JSON)
         {
+            // TODO: 检查验证
             RawData = JSON;
             JSON_Version = 2;
-            var obj = new JSONObject(JSON);
-            string cmd = obj["cmd"].str?.Decode();
+            //var obj = new JSONObject(JSON);
+            var obj = JObject.Parse(JSON);
+            string cmd = obj["cmd"].ToObject<string>();
             switch (cmd)
             {
                 case "LIVE":
                     MsgType = MsgTypeEnum.LiveStart;
-                    RoomID = obj["roomid"].str?.Decode();
+                    RoomID = obj["roomid"].ToObject<string>();
                     break;
                 case "PREPARING":
                     MsgType = MsgTypeEnum.LiveEnd;
-                    RoomID = obj["roomid"].str?.Decode();
+                    RoomID = obj["roomid"].ToObject<string>();
                     break;
                 case "DANMU_MSG":
                     MsgType = MsgTypeEnum.Comment;
-                    CommentText = obj["info"][1].str?.Decode();
-                    UserID = (int)obj["info"][2][0].i;
-                    UserName = obj["info"][2][1].str?.Decode();
-                    IsAdmin = obj["info"][2][2].str?.Decode() == "1";
-                    IsVIP = obj["info"][2][3].str?.Decode() == "1";
-                    UserGuardLevel = (int)obj["info"][7].i;
+                    CommentText = obj["info"][1].ToObject<string>();
+                    UserID = obj["info"][2][0].ToObject<int>();
+                    UserName = obj["info"][2][1].ToObject<string>();
+                    IsAdmin = obj["info"][2][2].ToObject<string>() == "1";
+                    IsVIP = obj["info"][2][3].ToObject<string>() == "1";
+                    UserGuardLevel = obj["info"][7].ToObject<int>();
                     break;
                 case "SEND_GIFT":
                     MsgType = MsgTypeEnum.GiftSend;
-                    GiftName = obj["data"]["giftName"].str?.Decode();
-                    UserName = obj["data"]["uname"].str?.Decode();
-                    UserID = (int)obj["data"]["uid"].i;
-                    // Giftrcost = obj["data"]["rcost"].ToString();
-                    GiftCount = (int)obj["data"]["num"].i;
+                    GiftName = obj["data"]["giftName"].ToObject<string>();
+                    UserName = obj["data"]["uname"].ToObject<string>();
+                    UserID = obj["data"]["uid"].ToObject<int>();
+                    GiftCount = obj["data"]["num"].ToObject<int>();
                     break;
                 case "WELCOME":
                     {
                         MsgType = MsgTypeEnum.Welcome;
-                        UserName = obj["data"]["uname"].str?.Decode();
-                        UserID = (int)obj["data"]["uid"].i;
+                        UserName = obj["data"]["uname"].ToObject<string>();
+                        UserID = obj["data"]["uid"].ToObject<int>();
                         IsVIP = true;
-                        IsAdmin = obj["data"]?["is_admin"]?.b ?? obj["data"]?["isadmin"]?.str == "1";
+                        IsAdmin = obj["data"]?["is_admin"]?.ToObject<bool>() ?? obj["data"]?["isadmin"]?.ToObject<string>() == "1";
                         break;
 
                     }
                 case "WELCOME_GUARD":
                     {
                         MsgType = MsgTypeEnum.WelcomeGuard;
-                        UserName = obj["data"]["username"].str?.Decode();
-                        UserID = (int)obj["data"]["uid"].i;
-                        UserGuardLevel = (int)obj["data"]["guard_level"].i;
+                        UserName = obj["data"]["username"].ToObject<string>();
+                        UserID = obj["data"]["uid"].ToObject<int>();
+                        UserGuardLevel = obj["data"]["guard_level"].ToObject<int>();
                         break;
                     }
                 case "GUARD_BUY":
                     {
                         MsgType = MsgTypeEnum.GuardBuy;
-                        UserID = (int)obj["data"]["uid"].i;
-                        UserName = obj["data"]["username"].str?.Decode();
-                        UserGuardLevel = (int)obj["data"]["guard_level"].i;
+                        UserID = obj["data"]["uid"].ToObject<int>();
+                        UserName = obj["data"]["username"].ToObject<string>();
+                        UserGuardLevel = obj["data"]["guard_level"].ToObject<int>();
                         GiftName = UserGuardLevel == 3 ? "舰长" : UserGuardLevel == 2 ? "提督" : UserGuardLevel == 1 ? "总督" : "";
-                        GiftCount = (int)obj["data"]["num"].i;
+                        GiftCount = obj["data"]["num"].ToObject<int>();
                         break;
                     }
                 default:

@@ -1,25 +1,40 @@
 ﻿using BililiveRecorder.Core.Config;
 using NLog;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
+using System.ComponentModel;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace BililiveRecorder.Core
 {
-    public class Recorder
+    public class Recorder : IRecorder
     {
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
 
-        public ObservableCollection<IRecordedRoom> Rooms { get; } = new ObservableCollection<IRecordedRoom>();
+        private ObservableCollection<IRecordedRoom> Rooms { get; } = new ObservableCollection<IRecordedRoom>();
         public ConfigV1 Config { get; }
+
+        ConfigV1 IRecorder.Config => Config;
+
+        public int Count => Rooms.Count;
+
+        public bool IsReadOnly => true;
+
+        int ICollection<IRecordedRoom>.Count => Rooms.Count;
+
+        bool ICollection<IRecordedRoom>.IsReadOnly => true;
 
         private readonly Func<int, IRecordedRoom> newIRecordedRoom;
         private CancellationTokenSource tokenSource;
 
         private bool _valid = false;
+
+        public IRecordedRoom this[int index] => Rooms[index];
 
         public Recorder(ConfigV1 config, Func<int, IRecordedRoom> iRecordedRoom)
         {
@@ -27,7 +42,7 @@ namespace BililiveRecorder.Core
             newIRecordedRoom = iRecordedRoom;
 
             tokenSource = new CancellationTokenSource();
-            Repeat.Interval(TimeSpan.FromSeconds(6), DownloadWatchdog, tokenSource.Token);
+            Repeat.Interval(TimeSpan.FromSeconds(3), DownloadWatchdog, tokenSource.Token);
 
             Rooms.CollectionChanged += (sender, e) =>
             {
@@ -36,6 +51,32 @@ namespace BililiveRecorder.Core
                     $"N:{e.NewItems?.Cast<IRecordedRoom>()?.Select(rr => rr.RealRoomid.ToString())?.Aggregate((current, next) => current + "," + next)}");
             };
         }
+
+        public event PropertyChangedEventHandler PropertyChanged
+        {
+            add => (Rooms as INotifyPropertyChanged).PropertyChanged += value;
+            remove => (Rooms as INotifyPropertyChanged).PropertyChanged -= value;
+        }
+
+        public event NotifyCollectionChangedEventHandler CollectionChanged
+        {
+            add => (Rooms as INotifyCollectionChanged).CollectionChanged += value;
+            remove => (Rooms as INotifyCollectionChanged).CollectionChanged -= value;
+        }
+
+        event PropertyChangedEventHandler INotifyPropertyChanged.PropertyChanged
+        {
+            add => (Rooms as INotifyPropertyChanged).PropertyChanged += value;
+            remove => (Rooms as INotifyPropertyChanged).PropertyChanged -= value;
+        }
+
+        event NotifyCollectionChangedEventHandler INotifyCollectionChanged.CollectionChanged
+        {
+            add => (Rooms as INotifyCollectionChanged).CollectionChanged += value;
+            remove => (Rooms as INotifyCollectionChanged).CollectionChanged -= value;
+        }
+
+        bool IRecorder.Initialize(string workdir) => Initialize(workdir);
 
         public bool Initialize(string workdir)
         {
@@ -133,21 +174,21 @@ namespace BililiveRecorder.Core
                 {
                     if (room.IsRecording)
                     {
-                        if (DateTime.Now - room.LastUpdateDateTime > TimeSpan.FromSeconds(3))
+                        if (DateTime.Now - room.LastUpdateDateTime > TimeSpan.FromMilliseconds(Config.TimingWatchdogTimeout))
                         {
                             logger.Warn("服务器停止提供 {0} 直播间的直播数据，通常是录制时网络不稳定导致，将会断开重连", room.Roomid);
                             room.StopRecord();
-                            room.StreamMonitor.CheckAfterSeconeds(1, TriggerType.HttpApi);
+                            room.StartRecord();
                         }
                         else if (room.Processor != null &&
                                     ((DateTime.Now - room.Processor.StartDateTime).TotalMilliseconds
                                     >
-                                    (room.Processor.TotalMaxTimestamp + (10 * 1000)))
+                                    (room.Processor.TotalMaxTimestamp + Config.TimingWatchdogBehind))
                                 )
                         {
                             logger.Warn("{0} 直播间的下载速度达不到录制标准，将断开重连。请检查网络是否稳定", room.Roomid);
                             room.StopRecord();
-                            room.StreamMonitor.CheckAfterSeconeds(1, TriggerType.HttpApi);
+                            room.StartRecord();
                         }
                     }
                 });
@@ -157,6 +198,21 @@ namespace BililiveRecorder.Core
                 logger.Error(ex, "直播流下载监控出错");
             }
         }
+
+        void ICollection<IRecordedRoom>.Add(IRecordedRoom item) => throw new NotSupportedException("Collection is readonly");
+
+        void ICollection<IRecordedRoom>.Clear() => throw new NotSupportedException("Collection is readonly");
+
+        bool ICollection<IRecordedRoom>.Remove(IRecordedRoom item) => throw new NotSupportedException("Collection is readonly");
+
+        bool ICollection<IRecordedRoom>.Contains(IRecordedRoom item) => Rooms.Contains(item);
+
+        void ICollection<IRecordedRoom>.CopyTo(IRecordedRoom[] array, int arrayIndex) => Rooms.CopyTo(array, arrayIndex);
+
+        public IEnumerator<IRecordedRoom> GetEnumerator() => Rooms.GetEnumerator();
+        IEnumerator<IRecordedRoom> IEnumerable<IRecordedRoom>.GetEnumerator() => Rooms.GetEnumerator();
+
+        IEnumerator IEnumerable.GetEnumerator() => Rooms.GetEnumerator();
 
     }
 }

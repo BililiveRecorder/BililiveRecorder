@@ -1,13 +1,16 @@
-﻿namespace BililiveRecorder.Core
+﻿using System;
+
+namespace BililiveRecorder.Core
 {
-    public interface IStreamMonitor
+    public interface IStreamMonitor : IDisposable
     {
         int Roomid { get; }
+        bool IsMonitoring { get; }
         event StreamStatusChangedEvent StreamStatusChanged;
-        IDanmakuReceiver Receiver { get; } // TODO: 改掉这个写法
+        event ReceivedDanmakuEvt ReceivedDanmaku;
+
         bool Start();
         void Stop();
-        void Check(TriggerType type = TriggerType.HttpApiRecheck);
-        void CheckAfterSeconeds(int seconds, TriggerType type = TriggerType.HttpApiRecheck);
+        void Check(TriggerType type, int millisecondsDelay = 0);
     }
 }

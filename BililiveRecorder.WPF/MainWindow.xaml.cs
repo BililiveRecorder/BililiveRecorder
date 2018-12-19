@@ -1,6 +1,7 @@
 ﻿using Autofac;
 using BililiveRecorder.Core;
 using BililiveRecorder.FlvProcessor;
+using Hardcodet.Wpf.TaskbarNotification;
 using NLog;
 using System;
 using System.Collections.ObjectModel;
@@ -10,7 +11,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-
+using System.Windows.Threading;
 
 namespace BililiveRecorder.WPF
 {
@@ -27,7 +28,7 @@ namespace BililiveRecorder.WPF
         private IContainer Container { get; set; }
         private ILifetimeScope RootScope { get; set; }
 
-        public Recorder Recorder { get; set; }
+        public IRecorder Recorder { get; set; }
         public ObservableCollection<string> Logs { get; set; } =
             new ObservableCollection<string>()
             {
@@ -41,7 +42,12 @@ namespace BililiveRecorder.WPF
 
         public MainWindow()
         {
-            _AddLog = (message) => Log.Dispatcher.Invoke(() => { Logs.Add(message); while (Logs.Count > MAX_LOG_ROW) { Logs.RemoveAt(0); } });
+
+            _AddLog = (message) =>
+                Log.Dispatcher.BeginInvoke(
+                    DispatcherPriority.DataBind,
+                    new Action(() => { Logs.Add(message); while (Logs.Count > MAX_LOG_ROW) { Logs.RemoveAt(0); } })
+                    );
 
             var builder = new ContainerBuilder();
             builder.RegisterModule<FlvProcessorModule>();
@@ -49,7 +55,7 @@ namespace BililiveRecorder.WPF
             Container = builder.Build();
             RootScope = Container.BeginLifetimeScope("recorder_root");
 
-            Recorder = RootScope.Resolve<Recorder>();
+            Recorder = RootScope.Resolve<IRecorder>();
 
             InitializeComponent();
 
@@ -58,7 +64,7 @@ namespace BililiveRecorder.WPF
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            Title += "     版本号: " + BuildInfo.Version + "  " + BuildInfo.HeadShaShort;
+            Title += " " + BuildInfo.Version + " " + BuildInfo.HeadShaShort;
 
             string workdir = string.Empty;
             try
@@ -87,6 +93,8 @@ namespace BililiveRecorder.WPF
                 Environment.Exit(-2);
                 return;
             }
+
+            NotifyIcon.Visibility = Visibility.Visible;
         }
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
@@ -211,7 +219,7 @@ namespace BililiveRecorder.WPF
         /// <param name="e"></param>
         private void EnableAllAutoRec(object sender, RoutedEventArgs e)
         {
-            Recorder.Rooms.ToList().ForEach(rr => Task.Run(() => rr.Start()));
+            Recorder.ToList().ForEach(rr => Task.Run(() => rr.Start()));
         }
 
         /// <summary>
@@ -221,7 +229,7 @@ namespace BililiveRecorder.WPF
         /// <param name="e"></param>
         private void DisableAllAutoRec(object sender, RoutedEventArgs e)
         {
-            Recorder.Rooms.ToList().ForEach(rr => Task.Run(() => rr.Stop()));
+            Recorder.ToList().ForEach(rr => Task.Run(() => rr.Stop()));
         }
 
         /// <summary>
@@ -265,6 +273,27 @@ namespace BililiveRecorder.WPF
 
         private IRecordedRoom _GetSenderAsRecordedRoom(object sender) => (sender as Button)?.DataContext as IRecordedRoom;
 
+        private void Taskbar_Quit_Click(object sender, RoutedEventArgs e)
+        {
+            Close();
+        }
 
+        private void Window_StateChanged(object sender, EventArgs e)
+        {
+            if (WindowState == WindowState.Minimized)
+            {
+                Hide();
+                NotifyIcon.ShowBalloonTip("B站录播姬", "录播姬已最小化到托盘，左键单击图标恢复界面。", BalloonIcon.Info);
+            }
+        }
+
+        private void Taskbar_Click(object sender, RoutedEventArgs e)
+        {
+            Show();
+            WindowState = WindowState.Normal;
+            Topmost ^= true;
+            Topmost ^= true;
+            Focus();
+        }
     }
 }

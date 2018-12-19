@@ -6,6 +6,8 @@ using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -51,7 +53,7 @@ namespace BililiveRecorder.Core
             }
         }
 
-        public bool IsMonitoring => StreamMonitor.Receiver.IsConnected;
+        public bool IsMonitoring => StreamMonitor.IsMonitoring;
         public bool IsRecording => !(StreamDownloadTask?.IsCompleted ?? true);
 
         private readonly Func<IFlvStreamProcessor> newIFlvStreamProcessor;
@@ -70,7 +72,8 @@ namespace BililiveRecorder.Core
         private ConfigV1 _config { get; }
         public IStreamMonitor StreamMonitor { get; }
 
-        private HttpWebResponse _response;
+        private bool _retry = true;
+        private HttpResponseMessage _response;
         private Stream _stream;
         private Task StartupTask = null;
         public Task StreamDownloadTask = null;
@@ -115,6 +118,11 @@ namespace BililiveRecorder.Core
 
         public bool Start()
         {
+            if (disposedValue)
+            {
+                throw new ObjectDisposedException(nameof(RecordedRoom));
+            }
+
             var r = StreamMonitor.Start();
             TriggerPropertyChanged(nameof(IsMonitoring));
             return r;
@@ -122,25 +130,42 @@ namespace BililiveRecorder.Core
 
         public void Stop()
         {
+            if (disposedValue)
+            {
+                throw new ObjectDisposedException(nameof(RecordedRoom));
+            }
+
             StreamMonitor.Stop();
             TriggerPropertyChanged(nameof(IsMonitoring));
         }
 
         private void StreamMonitor_StreamStatusChanged(object sender, StreamStatusChangedArgs e)
         {
-            if (StartupTask?.IsCompleted ?? true)
+            // if (StartupTask?.IsCompleted ?? true)
+            if (!IsRecording)
             {
-                StartupTask = _StartRecordAsync(e.type);
+                StartupTask = _StartRecordAsync();
             }
         }
 
         public void StartRecord()
         {
+            if (disposedValue)
+            {
+                throw new ObjectDisposedException(nameof(RecordedRoom));
+            }
+
             StreamMonitor.Check(TriggerType.Manual);
         }
 
         public void StopRecord()
         {
+            if (disposedValue)
+            {
+                throw new ObjectDisposedException(nameof(RecordedRoom));
+            }
+
+            _retry = false;
             try
             {
                 if (cancellationTokenSource != null)
@@ -152,7 +177,6 @@ namespace BililiveRecorder.Core
 
                         _stream?.Close();
                         _stream?.Dispose();
-                        _response?.Close();
                         _response?.Dispose();
                         StreamDownloadTask?.Wait();
                     }
@@ -162,9 +186,13 @@ namespace BililiveRecorder.Core
             {
                 logger.Log(RealRoomid, LogLevel.Error, "在尝试停止录制时发生错误，请检查网络连接是否稳定", ex);
             }
+            finally
+            {
+                _retry = true;
+            }
         }
 
-        private async Task _StartRecordAsync(TriggerType triggerType)
+        private async Task _StartRecordAsync()
         {
             if (IsRecording)
             {
@@ -172,106 +200,116 @@ namespace BililiveRecorder.Core
                 return;
             }
 
-            HttpWebRequest request = null;
+            // HttpWebRequest request = null;
 
             cancellationTokenSource = new CancellationTokenSource();
             var token = cancellationTokenSource.Token;
             try
             {
+                using (var client = new HttpClient())
+                {
+                    client.Timeout = TimeSpan.FromMilliseconds(_config.TimingStreamConnect);
+                    client.DefaultRequestHeaders.Accept.Clear();
+                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("*/*"));
+                    client.DefaultRequestHeaders.UserAgent.Clear();
+                    client.DefaultRequestHeaders.UserAgent.ParseAdd(Utils.UserAgent);
+                    client.DefaultRequestHeaders.Referrer = new Uri("https://live.bilibili.com");
+                    client.DefaultRequestHeaders.Add("Origin", "https://live.bilibili.com");
 
-                string flv_path = BililiveAPI.GetPlayUrl(RealRoomid);
-                logger.Log(RealRoomid, LogLevel.Debug, "直播流地址: " + flv_path);
-                request = WebRequest.CreateHttp(flv_path);
-                request.Accept = "*/*";
-                request.AllowAutoRedirect = true;
-                request.Referer = "https://live.bilibili.com";
-                request.Headers["Origin"] = "https://live.bilibili.com";
-                request.UserAgent = Utils.UserAgent;
+                    string flv_path = BililiveAPI.GetPlayUrl(RealRoomid);
+                    logger.Log(RealRoomid, LogLevel.Info, "连接直播服务器 " + new Uri(flv_path).Host);
+                    logger.Log(RealRoomid, LogLevel.Debug, "直播流地址: " + flv_path);
 
-                _response = await request.GetResponseAsync() as HttpWebResponse;
+                    _response = await client.GetAsync(flv_path, HttpCompletionOption.ResponseHeadersRead);
+                }
 
                 if (_response.StatusCode != HttpStatusCode.OK)
                 {
-                    logger.Log(RealRoomid, LogLevel.Info, string.Format("尝试下载直播流时服务器返回了 ({0}){1}", _response.StatusCode, _response.StatusDescription));
-                    _response.Close();
-                    request = null;
-                    if (_response.StatusCode == HttpStatusCode.NotFound)
-                    {
-                        logger.Log(RealRoomid, LogLevel.Info, "将在15秒后重试");
-                        StreamMonitor.CheckAfterSeconeds(15); // TODO: 重试次数和时间
-                    }
+                    logger.Log(RealRoomid, LogLevel.Info, string.Format("尝试下载直播流时服务器返回了 ({0}){1}", _response.StatusCode, _response.ReasonPhrase));
+
+                    StreamMonitor.Check(TriggerType.HttpApiRecheck, (int)_config.TimingStreamRetry);
+
+                    _CleanupFlvRequest();
                     return;
                 }
                 else
                 {
-                    if (triggerType == TriggerType.HttpApiRecheck)
-                    {
-                        triggerType = TriggerType.HttpApi;
-                    }
-
                     Processor = newIFlvStreamProcessor().Initialize(GetStreamFilePath, GetClipFilePath, _config.EnabledFeature, _config.CuttingMode);
                     Processor.ClipLengthFuture = _config.ClipLengthFuture;
                     Processor.ClipLengthPast = _config.ClipLengthPast;
                     Processor.CuttingNumber = _config.CuttingNumber;
 
-                    _stream = _response.GetResponseStream();
+                    _stream = await _response.Content.ReadAsStreamAsync();
                     _stream.ReadTimeout = 3 * 1000;
 
-                    StreamDownloadTask = Task.Run(async () =>
-                    {
-                        try
-                        {
-                            const int BUF_SIZE = 1024 * 8;
-                            byte[] buffer = new byte[BUF_SIZE];
-                            while (!token.IsCancellationRequested)
-                            {
-                                int bytesRead = await _stream.ReadAsync(buffer, 0, BUF_SIZE, token);
-                                _UpdateDownloadSpeed(bytesRead);
-                                if (bytesRead == 0)
-                                {
-                                    // 录制已结束
-                                    // TODO: 重试次数和时间
-                                    // TODO: 用户操作停止时不重新继续
-
-                                    logger.Log(RealRoomid, LogLevel.Info,
-                                        (token.IsCancellationRequested ? "用户操作" : "直播已结束") + "，停止录制。"
-                                        + (triggerType != TriggerType.HttpApiRecheck ? "将在15秒后重试启动。" : ""));
-                                    if (triggerType != TriggerType.HttpApiRecheck)
-                                    {
-                                        StreamMonitor.CheckAfterSeconeds(15);
-                                    }
-                                    break;
-                                }
-                                else
-                                {
-                                    if (bytesRead != BUF_SIZE)
-                                    {
-                                        Processor.AddBytes(buffer.Take(bytesRead).ToArray());
-                                    }
-                                    else
-                                    {
-                                        Processor.AddBytes(buffer);
-                                    }
-                                }
-                            } // while(true)
-                              // outside of while
-                        }
-                        finally
-                        {
-                            _CleanupFlvRequest();
-                        }
-                    });
-
+                    StreamDownloadTask = Task.Run(_ReadStreamLoop);
                     TriggerPropertyChanged(nameof(IsRecording));
                 }
+            }
+            catch (TaskCanceledException)
+            {
+                // client.GetAsync timed out
+                // useless exception message :/
+
+                _CleanupFlvRequest();
+                logger.Log(RealRoomid, LogLevel.Warn, "连接直播服务器超时。");
+                StreamMonitor.Check(TriggerType.HttpApiRecheck, (int)_config.TimingStreamRetry);
             }
             catch (Exception ex)
             {
                 _CleanupFlvRequest();
-                logger.Log(RealRoomid, LogLevel.Warn, "启动直播流下载出错。" + (triggerType != TriggerType.HttpApiRecheck ? "将在15秒后重试启动。" : ""), ex);
-                if (triggerType != TriggerType.HttpApiRecheck)
+                logger.Log(RealRoomid, LogLevel.Warn, "启动直播流下载出错。" + (_retry ? "将重试启动。" : ""), ex);
+                if (_retry)
                 {
-                    StreamMonitor.CheckAfterSeconeds(15);
+                    StreamMonitor.Check(TriggerType.HttpApiRecheck, (int)_config.TimingStreamRetry);
+                }
+            }
+            return;
+
+            async Task _ReadStreamLoop()
+            {
+                try
+                {
+                    const int BUF_SIZE = 1024 * 8;
+                    byte[] buffer = new byte[BUF_SIZE];
+                    while (!token.IsCancellationRequested)
+                    {
+                        int bytesRead = await _stream.ReadAsync(buffer, 0, BUF_SIZE, token);
+                        _UpdateDownloadSpeed(bytesRead);
+                        if (bytesRead != 0)
+                        {
+                            if (bytesRead != BUF_SIZE)
+                            {
+                                Processor.AddBytes(buffer.Take(bytesRead).ToArray());
+                            }
+                            else
+                            {
+                                Processor.AddBytes(buffer);
+                            }
+                        }
+                        else
+                        {
+                            break;
+                        }
+                    }
+
+                    logger.Log(RealRoomid, LogLevel.Info,
+                           (token.IsCancellationRequested ? "用户操作" : "直播已结束") + "，停止录制。"
+                           + (_retry ? "将重试启动。" : ""));
+                    if (_retry)
+                    {
+                        StreamMonitor.Check(TriggerType.HttpApiRecheck, (int)_config.TimingStreamRetry);
+                    }
+                }
+                catch (Exception e)
+                {
+                    if (e is ObjectDisposedException && token.IsCancellationRequested) { return; }
+
+                    logger.Log(RealRoomid, LogLevel.Warn, "录播发生错误", e);
+                }
+                finally
+                {
+                    _CleanupFlvRequest();
                 }
             }
             void _CleanupFlvRequest()
@@ -282,12 +320,12 @@ namespace BililiveRecorder.Core
                     Processor.Dispose();
                     Processor = null;
                 }
-                request = null;
                 _stream?.Dispose();
                 _stream = null;
                 _response?.Dispose();
                 _response = null;
 
+                _lastUpdateTimestamp = 0;
                 DownloadSpeedKiBps = 0d;
                 DownloadSpeedPersentage = 0d;
                 TriggerPropertyChanged(nameof(IsRecording));
@@ -300,7 +338,7 @@ namespace BililiveRecorder.Core
                 if (passedSeconds > 1.5)
                 {
                     DownloadSpeedKiBps = _lastUpdateSize / passedSeconds / 1024; // KiB per sec
-                    DownloadSpeedPersentage = (Processor.TotalMaxTimestamp - _lastUpdateTimestamp) / passedSeconds / 1000; // ((RecordedTime/1000) / RealTime)%
+                    DownloadSpeedPersentage = (DownloadSpeedPersentage / 2) + ((Processor.TotalMaxTimestamp - _lastUpdateTimestamp) / passedSeconds / 1000 / 2); // ((RecordedTime/1000) / RealTime)%
                     _lastUpdateTimestamp = Processor.TotalMaxTimestamp;
                     _lastUpdateSize = 0;
                     LastUpdateDateTime = now;
@@ -316,8 +354,7 @@ namespace BililiveRecorder.Core
 
         public void Shutdown()
         {
-            Stop();
-            StopRecord();
+            Dispose(true);
         }
 
         private string GetStreamFilePath() => Path.Combine(_config.WorkDirectory, RealRoomid.ToString(), "record",
@@ -329,5 +366,39 @@ namespace BililiveRecorder.Core
         public event PropertyChangedEventHandler PropertyChanged;
         protected void TriggerPropertyChanged(string propertyName)
             => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+
+        #region IDisposable Support
+        private bool disposedValue = false; // 要检测冗余调用
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                    Stop();
+                    StopRecord();
+                    Processor?.Dispose();
+                    StreamMonitor?.Dispose();
+                    _response?.Dispose();
+                    _stream?.Dispose();
+                    cancellationTokenSource?.Dispose();
+                }
+
+                Processor = null;
+                _response = null;
+                _stream = null;
+                cancellationTokenSource = null;
+
+                disposedValue = true;
+            }
+        }
+
+        public void Dispose()
+        {
+            // 请勿更改此代码。将清理代码放入以上 Dispose(bool disposing) 中。
+            Dispose(true);
+        }
+        #endregion
     }
 }
