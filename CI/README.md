@@ -1,5 +1,14 @@
 # CI
 
+## 发布 checklist
+
+1. 在 dev 分支完成修改的功能，实际运行测试一遍
+2. 修改 `VERSION` 文件并 commit push **文件末尾不能有 CRLF**
+3. 在 GitHub 创建 Pull Request 从 dev 合并到 master
+4. Merge Pull Request
+5. Merge `Bililive/soft.danmuji.org` Pull Request
+6. Fast-Forward merge back to dev
+
 ## 发布新版本流程
 
 - commit 所有代码和文件修改 ...
