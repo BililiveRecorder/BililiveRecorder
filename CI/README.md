@@ -7,7 +7,10 @@
 3. 在 GitHub 创建 Pull Request 从 dev 合并到 master
 4. Merge Pull Request
 5. Merge `Bililive/soft.danmuji.org` Pull Request
-6. Fast-Forward merge back to dev
+6. 发布 GitHub Release
+7. 修改 `rec.danmuji.org` 上的更新日志
+8. Fast-Forward merge back to dev
+
 
 ## 发布新版本流程
 
