@@ -8,7 +8,7 @@
         xmlns:flv="clr-namespace:BililiveRecorder.FlvProcessor;assembly=BililiveRecorder.FlvProcessor"
         mc:Ignorable="d"
         ShowInTaskbar="False" ResizeMode="NoResize"
-        Title="设置 - 录播姬" Height="350" Width="270">
+        Title="设置 - 录播姬" Height="400" Width="270">
     <Window.Resources>
         <local:ValueConverterGroup x:Key="EnumToInvertBooleanConverter">
             <local:EnumToBooleanConverter/>
