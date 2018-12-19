@@ -128,6 +128,7 @@ namespace BililiveRecorder.Core
 
             IsMonitoring = true;
             httpTimer.Start();
+            Check(TriggerType.HttpApi);
             return true;
         }
 
