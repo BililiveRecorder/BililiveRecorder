@@ -363,8 +363,8 @@ namespace BililiveRecorder.FlvProcessor
             try
             {
                 logger.Debug("正在关闭当前录制文件: " + _targetFile.Name);
-                Metadata.Meta["duration"] = CurrentMaxTimestamp / 1000.0;
-                Metadata.Meta["lasttimestamp"] = (double)CurrentMaxTimestamp;
+                Metadata["duration"] = CurrentMaxTimestamp / 1000.0;
+                Metadata["lasttimestamp"] = (double)CurrentMaxTimestamp;
                 byte[] metadata = Metadata.ToBytes();
 
                 // 13 for FLV header & "0th" tag size

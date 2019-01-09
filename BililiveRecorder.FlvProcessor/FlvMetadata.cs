@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -8,7 +9,17 @@ namespace BililiveRecorder.FlvProcessor
 {
     public class FlvMetadata : IFlvMetadata
     {
-        public IDictionary<string, object> Meta { get; set; } = new Dictionary<string, object>();
+        private IDictionary<string, object> Meta { get; set; } = new Dictionary<string, object>();
+
+        public ICollection<string> Keys => Meta.Keys;
+
+        public ICollection<object> Values => Meta.Values;
+
+        public int Count => Meta.Count;
+
+        public bool IsReadOnly => false;
+
+        public object this[string key] { get => Meta[key]; set => Meta[key] = value; }
 
         public FlvMetadata()
         {
@@ -198,6 +209,62 @@ namespace BililiveRecorder.FlvProcessor
         }
 
         #endregion
+
+        public void Add(string key, object value)
+        {
+            Meta.Add(key, value);
+        }
+
+        public bool ContainsKey(string key)
+        {
+            return Meta.ContainsKey(key);
+        }
+
+        public bool Remove(string key)
+        {
+            return Meta.Remove(key);
+        }
+
+        public bool TryGetValue(string key, out object value)
+        {
+            return Meta.TryGetValue(key, out value);
+        }
+
+        public void Add(KeyValuePair<string, object> item)
+        {
+            Meta.Add(item);
+        }
+
+        public void Clear()
+        {
+            Meta.Clear();
+        }
+
+        public bool Contains(KeyValuePair<string, object> item)
+        {
+            return Meta.Contains(item);
+        }
+
+        public void CopyTo(KeyValuePair<string, object>[] array, int arrayIndex)
+        {
+            Meta.CopyTo(array, arrayIndex);
+        }
+
+        public bool Remove(KeyValuePair<string, object> item)
+        {
+            return Meta.Remove(item);
+        }
+
+        public IEnumerator<KeyValuePair<string, object>> GetEnumerator()
+        {
+            return Meta.GetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return Meta.GetEnumerator();
+        }
+
 
     }
 }
