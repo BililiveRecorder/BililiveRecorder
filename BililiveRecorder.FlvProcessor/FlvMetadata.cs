@@ -48,7 +48,7 @@ namespace BililiveRecorder.FlvProcessor
                 UInt16 strSize = (UInt16)onMetaData.Length;
                 byte[] strSizeb = BitConverter.GetBytes(strSize).ToBE();
                 ms.Write(strSizeb, 0, strSizeb.Length);
-                ms.Write(Encoding.ASCII.GetBytes(onMetaData), 0, onMetaData.Length);
+                ms.Write(Encoding.UTF8.GetBytes(onMetaData), 0, onMetaData.Length);
                 ms.WriteByte((byte)AMFTypes.Array);
                 byte[] asize = BitConverter.GetBytes(Meta.Keys.Count).ToBE();
                 ms.Write(asize, 0, asize.Length);
@@ -84,7 +84,7 @@ namespace BililiveRecorder.FlvProcessor
             UInt16 strSize = (UInt16)key.Length;
             byte[] strSizeb = BitConverter.GetBytes(strSize).ToBE();
             Buffer.BlockCopy(strSizeb, 0, ret, 0, strSizeb.Length);
-            Buffer.BlockCopy(Encoding.ASCII.GetBytes(key), 0, ret, 2, key.Length);
+            Buffer.BlockCopy(Encoding.UTF8.GetBytes(key), 0, ret, 2, key.Length);
             return ret;
         }
         private byte[] _EncodeVal(object val)
@@ -105,7 +105,7 @@ namespace BililiveRecorder.FlvProcessor
                 UInt16 strSize = (UInt16)str.Length;
                 byte[] strSizeb = BitConverter.GetBytes(strSize).ToBE();
                 Buffer.BlockCopy(strSizeb, 0, ret, 1, strSizeb.Length);
-                Buffer.BlockCopy(Encoding.ASCII.GetBytes(str), 0, ret, 3, str.Length);
+                Buffer.BlockCopy(Encoding.UTF8.GetBytes(str), 0, ret, 3, str.Length);
                 return ret;
             }
             else if (val is byte bit)
@@ -133,7 +133,7 @@ namespace BililiveRecorder.FlvProcessor
             flip[0] = buff[_readHead++];
             flip[1] = buff[_readHead++];
             ushort klen = BitConverter.ToUInt16(flip.ToBE(), 0);
-            string name = Encoding.Default.GetString(buff, _readHead, klen);
+            string name = Encoding.UTF8.GetString(buff, _readHead, klen);
             _readHead += klen;
             return name;
         }
