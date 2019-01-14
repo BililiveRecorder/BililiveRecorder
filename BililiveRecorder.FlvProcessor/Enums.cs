@@ -7,16 +7,63 @@
         DATA = 18,
     }
 
-    public enum AMFTypes
+    public enum AMFTypes : byte
     {
-        Number = 0x00, // (Encoded as IEEE 64-bit double-precision floating point number)
-        Boolean = 0x01, // (Encoded as a single byte of value 0x00 or 0x01)
-        String = 0x02, //(ASCII encoded)
-        Object = 0x03, // (Set of key/value pairs)
-        Null = 0x05,
-        Array = 0x08,
-        End = 0x09,
+        /// <summary>
+        /// 非标准类型。在 Decode 过程中作为函数参数使用
+        /// </summary>
+        Any = 0xFF,
+        /// <summary>
+        /// Double
+        /// </summary>
+        Number = 0,
+        /// <summary>
+        /// 8 bit unsigned integer
+        /// </summary>
+        Boolean = 1,
+        /// <summary>
+        /// ScriptDataString
+        /// </summary>
+        String = 2,
+        /// <summary>
+        /// ScriptDataObject
+        /// </summary>
+        Object = 3,
+        /// <summary>
+        /// Not Supported
+        /// </summary>
+        MovieClip = 4,
+        /// <summary>
+        /// Nothing
+        /// </summary>
+        Null = 5,
+        /// <summary>
+        /// Nothing
+        /// </summary>
+        Undefined = 6,
+        /// <summary>
+        /// Not Supported
+        /// </summary>
+        Reference = 7,
+        /// <summary>
+        /// ScriptDataEcmaArray
+        /// </summary>
+        ECMAArray = 8,
+        /// <summary>
+        /// Nothing
+        /// </summary>
+        ObjectEndMarker = 9,
+        /// <summary>
+        /// ScriptDataStrictArray
+        /// </summary>
+        StrictArray = 10,
+        /// <summary>
+        /// ScriptDataDate
+        /// </summary>
+        Date = 11,
+        /// <summary>
+        /// ScriptDataLongString
+        /// </summary>
+        LongString = 12
     }
-
-
 }
