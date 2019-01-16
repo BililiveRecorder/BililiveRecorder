@@ -104,11 +104,10 @@ namespace BililiveRecorder.FlvProcessor
                 _targetFile.Write(FlvStreamProcessor.FLV_HEADER_BYTES, 0, FlvStreamProcessor.FLV_HEADER_BYTES.Length);
                 _targetFile.Write(new byte[] { 0, 0, 0, 0, }, 0, 4);
 
-                new FlvTag
-                {
-                    TagType = TagType.DATA,
-                    Data = Metadata.ToBytes()
-                }.WriteTo(_targetFile);
+                var script_tag = funcFlvTag();
+                script_tag.TagType = TagType.DATA;
+                script_tag.Data = Metadata.ToBytes();
+                script_tag.WriteTo(_targetFile);
 
                 _headerTags.ForEach(tag => tag.WriteTo(_targetFile));
             }

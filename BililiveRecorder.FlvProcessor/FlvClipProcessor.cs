@@ -9,14 +9,17 @@ namespace BililiveRecorder.FlvProcessor
     {
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
 
+        private readonly Func<IFlvTag> funcFlvTag;
+
         public IFlvMetadata Header { get; private set; }
         public List<IFlvTag> HTags { get; private set; }
         public List<IFlvTag> Tags { get; private set; }
         private int target = -1;
         private string path;
 
-        public FlvClipProcessor()
+        public FlvClipProcessor(Func<IFlvTag> funcFlvTag)
         {
+            this.funcFlvTag = funcFlvTag;
         }
 
         public IFlvClipProcessor Initialize(string path, IFlvMetadata metadata, List<IFlvTag> head, List<IFlvTag> data, uint seconds)
@@ -57,11 +60,9 @@ namespace BililiveRecorder.FlvProcessor
                     Header["duration"] = (Tags[Tags.Count - 1].TimeStamp - Tags[0].TimeStamp) / 1000d;
                     Header["lasttimestamp"] = (Tags[Tags.Count - 1].TimeStamp - Tags[0].TimeStamp);
 
-                    var t = new FlvTag
-                    {
-                        TagType = TagType.DATA,
-                        Data = Header.ToBytes()
-                    };
+                    var t = funcFlvTag();
+                    t.TagType = TagType.DATA;
+                    t.Data = Header.ToBytes();
                     t.WriteTo(fs);
 
                     int offset = Tags[0].TimeStamp;
