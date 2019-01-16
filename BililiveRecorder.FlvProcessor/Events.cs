@@ -1,11 +1,17 @@
 ﻿namespace BililiveRecorder.FlvProcessor
 {
+    public delegate void FlvMetadataEvent(object sender, FlvMetadataArgs e);
+    public class FlvMetadataArgs
+    {
+        public IFlvMetadata Metadata;
+    }
+
     public delegate void TagProcessedEvent(object sender, TagProcessedArgs e);
     public class TagProcessedArgs
     {
         public IFlvTag Tag;
     }
-    
+
     public delegate void ClipFinalizedEvent(object sender, ClipFinalizedArgs e);
     public class ClipFinalizedArgs
     {

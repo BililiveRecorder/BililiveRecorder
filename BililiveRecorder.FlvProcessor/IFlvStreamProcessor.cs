@@ -7,6 +7,7 @@ namespace BililiveRecorder.FlvProcessor
     {
         event TagProcessedEvent TagProcessed;
         event StreamFinalizedEvent StreamFinalized;
+        event FlvMetadataEvent OnMetaData;
 
         int TotalMaxTimestamp { get; }
         int CurrentMaxTimestamp { get; }

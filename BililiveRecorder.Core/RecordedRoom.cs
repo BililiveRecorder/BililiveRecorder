@@ -3,6 +3,7 @@ using BililiveRecorder.FlvProcessor;
 using DnsClient;
 using NLog;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
@@ -250,6 +251,29 @@ namespace BililiveRecorder.Core
                     Processor.ClipLengthFuture = _config.ClipLengthFuture;
                     Processor.ClipLengthPast = _config.ClipLengthPast;
                     Processor.CuttingNumber = _config.CuttingNumber;
+                    Processor.OnMetaData += (sender, e) =>
+                    {
+                        // TODO: Clip 和自动切割时也要更新这里的数据
+                        e.Metadata["BililiveRecorder"] = new Dictionary<string, object>()
+                        {
+                            {
+                                "starttime",
+                                DateTime.UtcNow
+                            },
+                            {
+                                "version",
+                                "TEST"
+                            },
+                            {
+                                "roomid",
+                                RealRoomid.ToString()
+                            },
+                            {
+                                "streamername",
+                                StreamerName
+                            },
+                        };
+                    };
 
                     _stream = await _response.Content.ReadAsStreamAsync();
                     _stream.ReadTimeout = 3 * 1000;

@@ -61,6 +61,7 @@ namespace BililiveRecorder.FlvProcessor
 
         public event TagProcessedEvent TagProcessed;
         public event StreamFinalizedEvent StreamFinalized;
+        public event FlvMetadataEvent OnMetaData;
 
         public uint ClipLengthPast { get; set; } = 20;
         public uint ClipLengthFuture { get; set; } = 10;
@@ -330,7 +331,7 @@ namespace BililiveRecorder.FlvProcessor
 
                     Metadata = funcFlvMetadata(tag.Data);
 
-                    // TODO: 添加录播姬标记、录制信息
+                    OnMetaData?.Invoke(this, new FlvMetadataArgs() { Metadata = Metadata });
 
                     tag.Data = Metadata.ToBytes();
                     tag.WriteTo(_targetFile);
@@ -418,6 +419,9 @@ namespace BililiveRecorder.FlvProcessor
                 {
                     _data.Dispose();
                     _targetFile?.Dispose();
+                    OnMetaData = null;
+                    StreamFinalized = null;
+                    TagProcessed = null;
                 }
                 _tags.Clear();
                 disposedValue = true;
