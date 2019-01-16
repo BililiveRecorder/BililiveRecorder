@@ -148,7 +148,7 @@ namespace BililiveRecorder.Core
         private void StreamMonitor_StreamStatusChanged(object sender, StreamStatusChangedArgs e)
         {
             // if (StartupTask?.IsCompleted ?? true)
-            if (!IsRecording)
+            if (!IsRecording && (StartupTask?.IsCompleted ?? true))
             {
                 StartupTask = _StartRecordAsync();
             }
