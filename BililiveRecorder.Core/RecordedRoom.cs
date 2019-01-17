@@ -253,7 +253,6 @@ namespace BililiveRecorder.Core
                     Processor.CuttingNumber = _config.CuttingNumber;
                     Processor.OnMetaData += (sender, e) =>
                     {
-                        // TODO: Clip 和自动切割时也要更新这里的数据
                         e.Metadata["BililiveRecorder"] = new Dictionary<string, object>()
                         {
                             {

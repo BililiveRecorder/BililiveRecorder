@@ -62,6 +62,12 @@ namespace BililiveRecorder.FlvProcessor
 
                     var t = funcFlvTag();
                     t.TagType = TagType.DATA;
+
+                    if (Header.ContainsKey("BililiveRecorder"))
+                    {
+                        // TODO: 更好的写法
+                        (Header["BililiveRecorder"] as Dictionary<string, object>)["starttime"] = DateTime.UtcNow;
+                    }
                     t.Data = Header.ToBytes();
                     t.WriteTo(fs);
 
