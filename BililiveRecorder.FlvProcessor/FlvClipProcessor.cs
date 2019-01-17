@@ -9,14 +9,17 @@ namespace BililiveRecorder.FlvProcessor
     {
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
 
+        private readonly Func<IFlvTag> funcFlvTag;
+
         public IFlvMetadata Header { get; private set; }
         public List<IFlvTag> HTags { get; private set; }
         public List<IFlvTag> Tags { get; private set; }
         private int target = -1;
         private string path;
 
-        public FlvClipProcessor()
+        public FlvClipProcessor(Func<IFlvTag> funcFlvTag)
         {
+            this.funcFlvTag = funcFlvTag;
         }
 
         public IFlvClipProcessor Initialize(string path, IFlvMetadata metadata, List<IFlvTag> head, List<IFlvTag> data, uint seconds)
@@ -54,14 +57,18 @@ namespace BililiveRecorder.FlvProcessor
                     fs.Write(FlvStreamProcessor.FLV_HEADER_BYTES, 0, FlvStreamProcessor.FLV_HEADER_BYTES.Length);
                     fs.Write(new byte[] { 0, 0, 0, 0, }, 0, 4);
 
-                    Header.Meta["duration"] = (Tags[Tags.Count - 1].TimeStamp - Tags[0].TimeStamp) / 1000d;
-                    Header.Meta["lasttimestamp"] = (Tags[Tags.Count - 1].TimeStamp - Tags[0].TimeStamp);
+                    Header["duration"] = (Tags[Tags.Count - 1].TimeStamp - Tags[0].TimeStamp) / 1000d;
+                    Header["lasttimestamp"] = (Tags[Tags.Count - 1].TimeStamp - Tags[0].TimeStamp);
 
-                    var t = new FlvTag
+                    var t = funcFlvTag();
+                    t.TagType = TagType.DATA;
+
+                    if (Header.ContainsKey("BililiveRecorder"))
                     {
-                        TagType = TagType.DATA,
-                        Data = Header.ToBytes()
-                    };
+                        // TODO: 更好的写法
+                        (Header["BililiveRecorder"] as Dictionary<string, object>)["starttime"] = DateTime.UtcNow;
+                    }
+                    t.Data = Header.ToBytes();
                     t.WriteTo(fs);
 
                     int offset = Tags[0].TimeStamp;

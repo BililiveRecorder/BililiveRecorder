@@ -1,7 +1,9 @@
 ﻿using BililiveRecorder.Core.Config;
 using BililiveRecorder.FlvProcessor;
+using DnsClient;
 using NLog;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
@@ -17,6 +19,11 @@ namespace BililiveRecorder.Core
     {
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
         private static readonly Random random = new Random();
+
+        private static readonly LookupClient lookupClient = new LookupClient()
+        {
+            ThrowDnsErrors = true,
+        };
 
         private int _roomid;
         private int _realRoomid;
@@ -142,7 +149,7 @@ namespace BililiveRecorder.Core
         private void StreamMonitor_StreamStatusChanged(object sender, StreamStatusChangedArgs e)
         {
             // if (StartupTask?.IsCompleted ?? true)
-            if (!IsRecording)
+            if (!IsRecording && (StartupTask?.IsCompleted ?? true))
             {
                 StartupTask = _StartRecordAsync();
             }
@@ -208,7 +215,11 @@ namespace BililiveRecorder.Core
             {
                 using (var client = new HttpClient())
                 {
+                    var raw_uri = new Uri(BililiveAPI.GetPlayUrl(RealRoomid));
+
                     client.Timeout = TimeSpan.FromMilliseconds(_config.TimingStreamConnect);
+
+                    client.DefaultRequestHeaders.Host = raw_uri.Host;
                     client.DefaultRequestHeaders.Accept.Clear();
                     client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("*/*"));
                     client.DefaultRequestHeaders.UserAgent.Clear();
@@ -216,11 +227,13 @@ namespace BililiveRecorder.Core
                     client.DefaultRequestHeaders.Referrer = new Uri("https://live.bilibili.com");
                     client.DefaultRequestHeaders.Add("Origin", "https://live.bilibili.com");
 
-                    string flv_path = BililiveAPI.GetPlayUrl(RealRoomid);
-                    logger.Log(RealRoomid, LogLevel.Info, "连接直播服务器 " + new Uri(flv_path).Host);
-                    logger.Log(RealRoomid, LogLevel.Debug, "直播流地址: " + flv_path);
+                    var ips = lookupClient.Query(raw_uri.DnsSafeHost, QueryType.A).Answers?.ARecords()?.ToArray();
+                    var ip = ips[random.Next(0, ips.Count())].Address;
 
-                    _response = await client.GetAsync(flv_path, HttpCompletionOption.ResponseHeadersRead);
+                    logger.Log(RealRoomid, LogLevel.Info, "连接直播服务器 " + raw_uri.Host + " (" + ip + ")");
+                    logger.Log(RealRoomid, LogLevel.Debug, "直播流地址: " + raw_uri.ToString());
+
+                    _response = await client.GetAsync(new UriBuilder(raw_uri) { Host = ip.ToString() }.Uri, HttpCompletionOption.ResponseHeadersRead);
                 }
 
                 if (_response.StatusCode != HttpStatusCode.OK)
@@ -238,6 +251,28 @@ namespace BililiveRecorder.Core
                     Processor.ClipLengthFuture = _config.ClipLengthFuture;
                     Processor.ClipLengthPast = _config.ClipLengthPast;
                     Processor.CuttingNumber = _config.CuttingNumber;
+                    Processor.OnMetaData += (sender, e) =>
+                    {
+                        e.Metadata["BililiveRecorder"] = new Dictionary<string, object>()
+                        {
+                            {
+                                "starttime",
+                                DateTime.UtcNow
+                            },
+                            {
+                                "version",
+                                "TEST"
+                            },
+                            {
+                                "roomid",
+                                RealRoomid.ToString()
+                            },
+                            {
+                                "streamername",
+                                StreamerName
+                            },
+                        };
+                    };
 
                     _stream = await _response.Content.ReadAsStreamAsync();
                     _stream.ReadTimeout = 3 * 1000;

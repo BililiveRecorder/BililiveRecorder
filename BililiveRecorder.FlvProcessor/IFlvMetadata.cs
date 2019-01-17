@@ -2,9 +2,8 @@
 
 namespace BililiveRecorder.FlvProcessor
 {
-    public interface IFlvMetadata
+    public interface IFlvMetadata : IDictionary<string, object>
     {
-        IDictionary<string, object> Meta { get; set; }
         byte[] ToBytes();
     }
 }
