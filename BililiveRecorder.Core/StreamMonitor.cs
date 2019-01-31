@@ -173,7 +173,7 @@ namespace BililiveRecorder.Core
             bool connect_result = false;
             while (!dmTcpConnected && !dmTokenSource.Token.IsCancellationRequested)
             {
-                Thread.Sleep((int)Math.Max(config.TimingDanmakuRetry, int.MaxValue));
+                Thread.Sleep((int)Math.Max(config.TimingDanmakuRetry, 0));
                 logger.Log(Roomid, LogLevel.Info, "连接弹幕服务器...");
                 connect_result = Connect();
             }
