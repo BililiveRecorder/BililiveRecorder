@@ -1,6 +1,7 @@
 ﻿using Autofac;
 using BililiveRecorder.Core;
 using BililiveRecorder.FlvProcessor;
+using CommandLine;
 using Hardcodet.Wpf.TaskbarNotification;
 using NLog;
 using System;
@@ -66,30 +67,50 @@ namespace BililiveRecorder.WPF
         {
             Title += " " + BuildInfo.Version + " " + BuildInfo.HeadShaShort;
 
+            bool skip_ui = false;
             string workdir = string.Empty;
-            try
+
+            CommandLineOption commandLineOption = null;
+            Parser.Default
+                .ParseArguments<CommandLineOption>(Environment.GetCommandLineArgs())
+                .WithParsed(x => commandLineOption = x);
+
+            if (commandLineOption?.WorkDirectory != null)
             {
-                workdir = File.ReadAllText(LAST_WORK_DIR_FILE);
+                skip_ui = true;
+                workdir = commandLineOption.WorkDirectory;
             }
-            catch (Exception) { }
-            var wdw = new WorkDirectoryWindow()
+
+            if (!skip_ui)
             {
-                Owner = this,
-                WorkPath = workdir,
-            };
-            if (wdw.ShowDialog() == true)
-            {
-                workdir = wdw.WorkPath;
-            }
-            else
-            {
-                Environment.Exit(-1);
-                return;
+                try
+                {
+                    workdir = File.ReadAllText(LAST_WORK_DIR_FILE);
+                }
+                catch (Exception) { }
+                var wdw = new WorkDirectoryWindow()
+                {
+                    Owner = this,
+                    WorkPath = workdir,
+                };
+
+                if (wdw.ShowDialog() == true)
+                {
+                    workdir = wdw.WorkPath;
+                }
+                else
+                {
+                    Environment.Exit(-1);
+                    return;
+                }
             }
 
             if (!Recorder.Initialize(workdir))
             {
-                MessageBox.Show("初始化错误", "录播姬", MessageBoxButton.OK, MessageBoxImage.Error);
+                if (!skip_ui)
+                {
+                    MessageBox.Show("初始化错误", "录播姬", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
                 Environment.Exit(-2);
                 return;
             }

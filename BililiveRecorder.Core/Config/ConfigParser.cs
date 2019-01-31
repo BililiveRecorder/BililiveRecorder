@@ -8,6 +8,11 @@ namespace BililiveRecorder.Core.Config
     {
         public static bool Load(string directory, ConfigV1 config = null)
         {
+            if (!Directory.Exists(directory))
+            {
+                return false;
+            }
+
             var filepath = Path.Combine(directory, "config.json");
             if (File.Exists(filepath))
             {
