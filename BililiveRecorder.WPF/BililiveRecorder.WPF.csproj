@@ -53,6 +53,9 @@
     <Reference Include="Autofac, Version=4.8.1.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
       <HintPath>..\packages\Autofac.4.8.1\lib\net45\Autofac.dll</HintPath>
     </Reference>
+    <Reference Include="CommandLine, Version=2.4.3.0, Culture=neutral, PublicKeyToken=de6f01bd326f8c32, processorArchitecture=MSIL">
+      <HintPath>..\packages\CommandLineParser.2.4.3\lib\netstandard2.0\CommandLine.dll</HintPath>
+    </Reference>
     <Reference Include="DeltaCompressionDotNet, Version=1.1.0.0, Culture=neutral, PublicKeyToken=1d14d6e5194e7f4a, processorArchitecture=MSIL">
       <HintPath>..\packages\DeltaCompressionDotNet.1.1.0\lib\net20\DeltaCompressionDotNet.dll</HintPath>
     </Reference>
@@ -132,6 +135,7 @@
     <Compile Include="ClickSelectTextBox.xaml.cs">
       <DependentUpon>ClickSelectTextBox.xaml</DependentUpon>
     </Compile>
+    <Compile Include="CommandLineOption.cs" />
     <Compile Include="EnumerableExtensions.cs" />
     <Compile Include="ValueConverters.cs" />
     <Compile Include="SettingsWindow.xaml.cs">
