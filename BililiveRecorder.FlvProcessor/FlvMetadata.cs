@@ -143,6 +143,7 @@ namespace BililiveRecorder.FlvProcessor
                     {
                         ms.WriteByte((byte)AMFTypes.Date);
                         ms.Write(BitConverter.GetBytes(dateTime.ToUniversalTime().Subtract(new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc)).TotalMilliseconds).ToBE(), 0, sizeof(double));
+                        ms.Write(BitConverter.GetBytes((short)0).ToBE(), 0, sizeof(short)); // UTC
                         break;
                     }
                 default:
