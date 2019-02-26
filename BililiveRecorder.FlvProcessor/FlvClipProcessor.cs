@@ -58,7 +58,7 @@ namespace BililiveRecorder.FlvProcessor
                     fs.Write(new byte[] { 0, 0, 0, 0, }, 0, 4);
 
                     Header["duration"] = (Tags[Tags.Count - 1].TimeStamp - Tags[0].TimeStamp) / 1000d;
-                    Header["lasttimestamp"] = (Tags[Tags.Count - 1].TimeStamp - Tags[0].TimeStamp);
+                    Header["lasttimestamp"] = (double)(Tags[Tags.Count - 1].TimeStamp - Tags[0].TimeStamp);
 
                     var t = funcFlvTag();
                     t.TagType = TagType.DATA;
