@@ -76,6 +76,13 @@ namespace BililiveRecorder.FlvProcessor
         {
             switch (value)
             {
+                case int number:
+                    {
+                        double asDouble = number;
+                        ms.WriteByte((byte)AMFTypes.Number);
+                        ms.Write(BitConverter.GetBytes(asDouble).ToBE(), 0, sizeof(double));
+                        break;
+                    }
                 case double number:
                     {
                         ms.WriteByte((byte)AMFTypes.Number);
