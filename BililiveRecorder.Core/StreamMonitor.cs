@@ -219,7 +219,7 @@ namespace BililiveRecorder.Core
 
         private void ReceiveMessageLoop()
         {
-            logger.Trace("ReceiveMessageLoop Started! " + Roomid);
+            logger.Log(Roomid, LogLevel.Trace, "ReceiveMessageLoop Started");
             try
             {
                 var stableBuffer = new byte[dmClient.ReceiveBufferSize];
@@ -269,7 +269,7 @@ namespace BililiveRecorder.Core
                                 }
                                 catch (Exception ex)
                                 {
-                                    logger.Warn(ex);
+                                    logger.Log(Roomid, LogLevel.Warn, "", ex);
                                 }
                                 break;
                             }
@@ -286,12 +286,12 @@ namespace BililiveRecorder.Core
                 dmError = ex;
                 // logger.Error(ex);
 
-                logger.Debug("Disconnected " + Roomid);
+                logger.Log(Roomid, LogLevel.Debug, "Disconnected");
                 dmClient?.Close();
                 dmNetStream = null;
                 if (!(dmTokenSource?.IsCancellationRequested ?? true))
                 {
-                    logger.Warn(ex, "弹幕连接被断开，将尝试重连");
+                    logger.Log(Roomid, LogLevel.Warn, "弹幕连接被断开，将尝试重连", ex);
                     ConnectWithRetry();
                 }
             }
