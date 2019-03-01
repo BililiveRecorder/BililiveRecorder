@@ -57,8 +57,9 @@ namespace BililiveRecorder.FlvProcessor
                     fs.Write(FlvStreamProcessor.FLV_HEADER_BYTES, 0, FlvStreamProcessor.FLV_HEADER_BYTES.Length);
                     fs.Write(new byte[] { 0, 0, 0, 0, }, 0, 4);
 
-                    Header["duration"] = (Tags[Tags.Count - 1].TimeStamp - Tags[0].TimeStamp) / 1000d;
-                    Header["lasttimestamp"] = (Tags[Tags.Count - 1].TimeStamp - Tags[0].TimeStamp);
+                    double clipDuration = (Tags[Tags.Count - 1].TimeStamp - Tags[0].TimeStamp) / 1000d;
+                    Header["duration"] = clipDuration;
+                    Header["lasttimestamp"] = (double)(Tags[Tags.Count - 1].TimeStamp - Tags[0].TimeStamp);
 
                     var t = funcFlvTag();
                     t.TagType = TagType.DATA;
@@ -66,7 +67,7 @@ namespace BililiveRecorder.FlvProcessor
                     if (Header.ContainsKey("BililiveRecorder"))
                     {
                         // TODO: 更好的写法
-                        (Header["BililiveRecorder"] as Dictionary<string, object>)["starttime"] = DateTime.UtcNow;
+                        (Header["BililiveRecorder"] as Dictionary<string, object>)["starttime"] = DateTime.UtcNow - TimeSpan.FromSeconds(clipDuration);
                     }
                     t.Data = Header.ToBytes();
                     t.WriteTo(fs);

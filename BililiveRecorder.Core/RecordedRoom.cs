@@ -109,6 +109,12 @@ namespace BililiveRecorder.Core
 
             {
                 var roomInfo = BililiveAPI.GetRoomInfo(Roomid);
+
+                if (roomInfo == null)
+                {
+                    throw new Exception("no roominfo");
+                }
+
                 RealRoomid = roomInfo.RealRoomid;
                 StreamerName = roomInfo.Username;
             }

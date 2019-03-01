@@ -113,20 +113,27 @@ namespace BililiveRecorder.Core
         /// <exception cref="ArgumentOutOfRangeException"/>
         public void AddRoom(int roomid, bool enabled)
         {
-            if (!_valid) { throw new InvalidOperationException("Not Initialized"); }
-            if (roomid <= 0)
+            try
             {
-                throw new ArgumentOutOfRangeException(nameof(roomid), "房间号需要大于0");
-            }
-            // var rr = new RecordedRoom(Settings, roomid);
-            var rr = newIRecordedRoom(roomid);
-            if (enabled)
-            {
-                Task.Run(() => rr.Start());
-            }
+                if (!_valid) { throw new InvalidOperationException("Not Initialized"); }
+                if (roomid <= 0)
+                {
+                    throw new ArgumentOutOfRangeException(nameof(roomid), "房间号需要大于0");
+                }
 
-            logger.Debug("AddRoom 添加了直播间 " + rr.RealRoomid);
-            Rooms.Add(rr);
+                var rr = newIRecordedRoom(roomid);
+                if (enabled)
+                {
+                    Task.Run(() => rr.Start());
+                }
+
+                logger.Debug("AddRoom 添加了 {roomid} 直播间 ", rr.RealRoomid);
+                Rooms.Add(rr);
+            }
+            catch (Exception ex)
+            {
+                logger.Debug(ex, "AddRoom 添加 {roomid} 直播间错误 ", roomid);
+            }
         }
 
         /// <summary>
@@ -137,7 +144,7 @@ namespace BililiveRecorder.Core
         {
             if (!_valid) { throw new InvalidOperationException("Not Initialized"); }
             rr.Shutdown();
-            logger.Debug("RemoveRoom 移除了直播间 " + rr.RealRoomid);
+            logger.Debug("RemoveRoom 移除了直播间 {roomid}", rr.RealRoomid);
             Rooms.Remove(rr);
         }
 
@@ -176,7 +183,7 @@ namespace BililiveRecorder.Core
                     {
                         if (DateTime.Now - room.LastUpdateDateTime > TimeSpan.FromMilliseconds(Config.TimingWatchdogTimeout))
                         {
-                            logger.Warn("服务器停止提供 {0} 直播间的直播数据，通常是录制时网络不稳定导致，将会断开重连", room.Roomid);
+                            logger.Warn("服务器停止提供 [{roomid}] 直播间的直播数据，通常是录制时网络不稳定导致，将会断开重连", room.Roomid);
                             room.StopRecord();
                             room.StartRecord();
                         }
@@ -186,7 +193,7 @@ namespace BililiveRecorder.Core
                                     (room.Processor.TotalMaxTimestamp + Config.TimingWatchdogBehind))
                                 )
                         {
-                            logger.Warn("{0} 直播间的下载速度达不到录制标准，将断开重连。请检查网络是否稳定", room.Roomid);
+                            logger.Warn("直播间 [{roomid}] 的下载速度达不到录制标准，将断开重连。请检查网络是否稳定", room.Roomid);
                             room.StopRecord();
                             room.StartRecord();
                         }

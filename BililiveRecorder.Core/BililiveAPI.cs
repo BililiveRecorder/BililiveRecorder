@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json.Linq;
+using NLog;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -10,6 +11,8 @@ namespace BililiveRecorder.Core
 {
     internal static class BililiveAPI
     {
+        private static readonly Logger logger = LogManager.GetCurrentClassLogger();
+
         /// <summary>
         /// 下载json并解析
         /// </summary>
@@ -63,16 +66,30 @@ namespace BililiveRecorder.Core
         /// <exception cref="Exception"/>
         public static RoomInfo GetRoomInfo(int roomid)
         {
-            string url = $@"https://api.live.bilibili.com/AppRoom/index?room_id={roomid}&platform=android";
-            var data = HttpGetJson(url);
-            var i = new RoomInfo()
+            try
             {
-                DisplayRoomid = data?["data"]?["show_room_id"]?.ToObject<int>() ?? throw new Exception("未获取到直播间信息"),
-                RealRoomid = (int)(data?["data"]?["room_id"]?.ToObject<int>() ?? throw new Exception("未获取到直播间信息")),
-                Username = data?["data"]?["uname"]?.ToObject<string>() ?? throw new Exception("未获取到直播间信息"),
-                isStreaming = "LIVE" == (data?["data"]?["status"]?.ToObject<string>() ?? throw new Exception("未获取到直播间信息")),
-            };
-            return i;
+                string url = $@"https://api.live.bilibili.com/AppRoom/index?room_id={roomid}&platform=android";
+                var data = HttpGetJson(url);
+                if (data["code"].ToObject<int>() != 0)
+                {
+                    logger.Warn("不能获取 {roomid} 的信息: {errormsg}", roomid, data["message"]?.ToObject<string>());
+                    return null;
+                }
+
+                var i = new RoomInfo()
+                {
+                    DisplayRoomid = data?["data"]?["show_room_id"]?.ToObject<int>() ?? throw new Exception("未获取到直播间信息"),
+                    RealRoomid = data?["data"]?["room_id"]?.ToObject<int>() ?? throw new Exception("未获取到直播间信息"),
+                    Username = data?["data"]?["uname"]?.ToObject<string>() ?? throw new Exception("未获取到直播间信息"),
+                    isStreaming = "LIVE" == (data?["data"]?["status"]?.ToObject<string>() ?? throw new Exception("未获取到直播间信息")),
+                };
+                return i;
+            }
+            catch (Exception ex)
+            {
+                logger.Warn(ex, "获取直播间 {roomid} 的信息时出错", roomid);
+                throw;
+            }
         }
 
         private static readonly Regex rx = new Regex(@"\\[uU]([0-9A-Fa-f]{4})", RegexOptions.Compiled);
