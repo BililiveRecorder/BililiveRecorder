@@ -108,7 +108,10 @@ namespace BililiveRecorder.Core
             switch (e.Danmaku.MsgType)
             {
                 case MsgTypeEnum.LiveStart:
-                    Task.Run(() => StreamStatusChanged?.Invoke(this, new StreamStatusChangedArgs() { type = TriggerType.Danmaku }));
+                    if (IsMonitoring)
+                    {
+                        Task.Run(() => StreamStatusChanged?.Invoke(this, new StreamStatusChangedArgs() { type = TriggerType.Danmaku }));
+                    }
                     break;
                 case MsgTypeEnum.LiveEnd:
                     break;
