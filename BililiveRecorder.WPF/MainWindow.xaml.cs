@@ -120,13 +120,20 @@ namespace BililiveRecorder.WPF
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            _AddLog = null;
-            Recorder.Shutdown();
-            try
+            if (new TimedMessageBox { Title = "关闭录播姬？", Message = "确定要关闭录播姬吗？", CountDown = 10 }.ShowDialog() == true)
             {
-                File.WriteAllText(LAST_WORK_DIR_FILE, Recorder.Config.WorkDirectory);
+                _AddLog = null;
+                Recorder.Shutdown();
+                try
+                {
+                    File.WriteAllText(LAST_WORK_DIR_FILE, Recorder.Config.WorkDirectory);
+                }
+                catch (Exception) { }
             }
-            catch (Exception) { }
+            else
+            {
+                e.Cancel = true;
+            }
         }
 
         private void TextBlock_MouseRightButtonUp(object sender, MouseButtonEventArgs e)
