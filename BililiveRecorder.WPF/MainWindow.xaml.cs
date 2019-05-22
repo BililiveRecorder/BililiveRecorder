@@ -36,6 +36,12 @@ namespace BililiveRecorder.WPF
                 "当前版本：" + BuildInfo.Version,
                 "网站： https://rec.danmuji.org",
                 "QQ群： 689636812",
+                "",
+                "【公告】问卷调查",
+                "如果有空的话麻烦填一下问卷调查，问卷统计结果将会影响到增删什么功能的决定。",
+                "问卷共 4 页，大约 25 题，预计用时 7 分钟。右键点击链接可以复制。谢谢。",
+                "https://wj.qq.com/s2/3740592/5e24",
+                "",
             };
 
         public static void AddLog(string message) => _AddLog?.Invoke(message);
