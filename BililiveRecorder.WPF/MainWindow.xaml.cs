@@ -35,6 +35,7 @@ namespace BililiveRecorder.WPF
             {
                 "当前版本：" + BuildInfo.Version,
                 "网站： https://rec.danmuji.org",
+                "更新日志： https://rec.danmuji.org/allposts",
                 "QQ群： 689636812",
                 "",
                 "【公告】问卷调查",
