@@ -88,8 +88,6 @@ namespace BililiveRecorder.FlvProcessor
             EnabledFeature = enabledFeature;
             CuttingMode = autoCuttingMode;
 
-            if (EnabledFeature.IsRecordEnabled()) { OpenNewRecordFile(); }
-
             return this;
         }
 
@@ -269,6 +267,11 @@ namespace BililiveRecorder.FlvProcessor
                         OpenNewRecordFile();
                         _writeTimeStamp = TotalMaxTimestamp;
                     }
+                }
+
+                if (!(_targetFile?.CanWrite ?? false))
+                {
+                    OpenNewRecordFile();
                 }
 
                 tag.WriteTo(_targetFile, _writeTimeStamp);

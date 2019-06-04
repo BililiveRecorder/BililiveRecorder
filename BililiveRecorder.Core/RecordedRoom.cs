@@ -77,6 +77,7 @@ namespace BililiveRecorder.Core
         private HttpResponseMessage _response;
         private Stream _stream;
         private Task StartupTask = null;
+        private readonly object StartupTaskLock = new object();
         public Task StreamDownloadTask = null;
         public CancellationTokenSource cancellationTokenSource = null;
 
@@ -148,10 +149,12 @@ namespace BililiveRecorder.Core
 
         private void StreamMonitor_StreamStatusChanged(object sender, StreamStatusChangedArgs e)
         {
-            // if (StartupTask?.IsCompleted ?? true)
-            if (!IsRecording && (StartupTask?.IsCompleted ?? true))
+            lock (StartupTaskLock)
             {
-                StartupTask = _StartRecordAsync();
+                if (!IsRecording && (StartupTask?.IsCompleted ?? true))
+                {
+                    StartupTask = _StartRecordAsync();
+                }
             }
         }
 
