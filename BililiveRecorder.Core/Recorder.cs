@@ -154,6 +154,16 @@ namespace BililiveRecorder.Core
             logger.Debug("Shutdown called.");
             tokenSource.Cancel();
 
+            SaveConfigToFile();
+
+            Rooms.ToList().ForEach(rr =>
+            {
+                rr.Shutdown();
+            });
+        }
+
+        public void SaveConfigToFile()
+        {
             Config.RoomList = new List<RoomV1>();
             Rooms.ToList().ForEach(rr =>
             {
@@ -162,11 +172,6 @@ namespace BililiveRecorder.Core
                     Roomid = rr.RealRoomid,
                     Enabled = rr.IsMonitoring,
                 });
-            });
-
-            Rooms.ToList().ForEach(rr =>
-            {
-                rr.Shutdown();
             });
 
             ConfigParser.Save(Config.WorkDirectory, Config);

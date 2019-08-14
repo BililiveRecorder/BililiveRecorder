@@ -36,12 +36,8 @@ namespace BililiveRecorder.WPF
                 "当前版本：" + BuildInfo.Version,
                 "网站： https://rec.danmuji.org",
                 "更新日志： https://rec.danmuji.org/allposts",
+                "问题反馈邮箱： rec@danmuji.org",
                 "QQ群： 689636812",
-                "",
-                "【公告】问卷调查",
-                "如果有空的话麻烦填一下问卷调查，问卷统计结果将会影响到增删什么功能的决定。",
-                "问卷共 4 页，大约 25 题，预计用时 7 分钟。右键点击链接可以复制。谢谢。",
-                "https://wj.qq.com/s2/3740592/5e24",
                 "",
             };
 
@@ -145,9 +141,15 @@ namespace BililiveRecorder.WPF
 
         private void TextBlock_MouseRightButtonUp(object sender, MouseButtonEventArgs e)
         {
-            if (sender is TextBlock textBlock)
+            try
             {
-                Clipboard.SetText(textBlock.Text);
+                if (sender is TextBlock textBlock)
+                {
+                    Clipboard.SetText(textBlock.Text);
+                }
+            }
+            catch (Exception)
+            {
             }
         }
 
@@ -180,7 +182,11 @@ namespace BililiveRecorder.WPF
                 return;
             }
 
-            Task.Run(() => rr.Start());
+            Task.Run(() =>
+            {
+                rr.Start();
+                Recorder.SaveConfigToFile();
+            });
         }
 
         /// <summary>
@@ -196,7 +202,11 @@ namespace BililiveRecorder.WPF
                 return;
             }
 
-            Task.Run(() => rr.Stop());
+            Task.Run(() =>
+            {
+                rr.Stop();
+                Recorder.SaveConfigToFile();
+            });
         }
 
         /// <summary>
@@ -245,6 +255,7 @@ namespace BililiveRecorder.WPF
             }
 
             Recorder.RemoveRoom(rr);
+            Recorder.SaveConfigToFile();
         }
 
         /// <summary>
@@ -252,9 +263,10 @@ namespace BililiveRecorder.WPF
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void EnableAllAutoRec(object sender, RoutedEventArgs e)
+        private async void EnableAllAutoRec(object sender, RoutedEventArgs e)
         {
-            Recorder.ToList().ForEach(rr => Task.Run(() => rr.Start()));
+            await Task.WhenAll(Recorder.ToList().Select(rr => Task.Run(() => rr.Start())));
+            Recorder.SaveConfigToFile();
         }
 
         /// <summary>
@@ -262,9 +274,10 @@ namespace BililiveRecorder.WPF
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void DisableAllAutoRec(object sender, RoutedEventArgs e)
+        private async void DisableAllAutoRec(object sender, RoutedEventArgs e)
         {
-            Recorder.ToList().ForEach(rr => Task.Run(() => rr.Stop()));
+            await Task.WhenAll(Recorder.ToList().Select(rr => Task.Run(() => rr.Stop())));
+            Recorder.SaveConfigToFile();
         }
 
         /// <summary>
@@ -279,6 +292,7 @@ namespace BililiveRecorder.WPF
                 if (roomid > 0)
                 {
                     Recorder.AddRoom(roomid);
+                    Recorder.SaveConfigToFile();
                 }
                 else
                 {
@@ -304,6 +318,7 @@ namespace BililiveRecorder.WPF
             {
                 sw.Config.CopyPropertiesTo(Recorder.Config);
             }
+            Recorder.SaveConfigToFile();
         }
 
         private IRecordedRoom _GetSenderAsRecordedRoom(object sender) => (sender as Button)?.DataContext as IRecordedRoom;
