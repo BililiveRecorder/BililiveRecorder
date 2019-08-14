@@ -186,7 +186,11 @@ namespace BililiveRecorder.WPF
                 return;
             }
 
-            Task.Run(() => rr.Start());
+            Task.Run(() =>
+            {
+                rr.Start();
+                Recorder.SaveConfigToFile();
+            });
         }
 
         /// <summary>
@@ -202,7 +206,11 @@ namespace BililiveRecorder.WPF
                 return;
             }
 
-            Task.Run(() => rr.Stop());
+            Task.Run(() =>
+            {
+                rr.Stop();
+                Recorder.SaveConfigToFile();
+            });
         }
 
         /// <summary>
@@ -251,6 +259,7 @@ namespace BililiveRecorder.WPF
             }
 
             Recorder.RemoveRoom(rr);
+            Recorder.SaveConfigToFile();
         }
 
         /// <summary>
@@ -258,9 +267,10 @@ namespace BililiveRecorder.WPF
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void EnableAllAutoRec(object sender, RoutedEventArgs e)
+        private async void EnableAllAutoRec(object sender, RoutedEventArgs e)
         {
-            Recorder.ToList().ForEach(rr => Task.Run(() => rr.Start()));
+            await Task.WhenAll(Recorder.ToList().Select(rr => Task.Run(() => rr.Start())));
+            Recorder.SaveConfigToFile();
         }
 
         /// <summary>
@@ -268,9 +278,10 @@ namespace BililiveRecorder.WPF
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void DisableAllAutoRec(object sender, RoutedEventArgs e)
+        private async void DisableAllAutoRec(object sender, RoutedEventArgs e)
         {
-            Recorder.ToList().ForEach(rr => Task.Run(() => rr.Stop()));
+            await Task.WhenAll(Recorder.ToList().Select(rr => Task.Run(() => rr.Stop())));
+            Recorder.SaveConfigToFile();
         }
 
         /// <summary>
@@ -285,6 +296,7 @@ namespace BililiveRecorder.WPF
                 if (roomid > 0)
                 {
                     Recorder.AddRoom(roomid);
+                    Recorder.SaveConfigToFile();
                 }
                 else
                 {
@@ -310,6 +322,7 @@ namespace BililiveRecorder.WPF
             {
                 sw.Config.CopyPropertiesTo(Recorder.Config);
             }
+            Recorder.SaveConfigToFile();
         }
 
         private IRecordedRoom _GetSenderAsRecordedRoom(object sender) => (sender as Button)?.DataContext as IRecordedRoom;
