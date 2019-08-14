@@ -145,9 +145,15 @@ namespace BililiveRecorder.WPF
 
         private void TextBlock_MouseRightButtonUp(object sender, MouseButtonEventArgs e)
         {
-            if (sender is TextBlock textBlock)
+            try
             {
-                Clipboard.SetText(textBlock.Text);
+                if (sender is TextBlock textBlock)
+                {
+                    Clipboard.SetText(textBlock.Text);
+                }
+            }
+            catch (Exception)
+            {
             }
         }
 
