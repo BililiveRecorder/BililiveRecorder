@@ -42,6 +42,8 @@ namespace BililiveRecorder.WPF
         private void ConfirmClick(object sender, RoutedEventArgs e)
         {
             DialogResult = true;
+            timer.Stop();
+            timer = null;
             Close();
         }
 
@@ -50,6 +52,8 @@ namespace BililiveRecorder.WPF
         private void Cancel()
         {
             DialogResult = false;
+            timer.Stop();
+            timer = null;
             Close();
         }
 
