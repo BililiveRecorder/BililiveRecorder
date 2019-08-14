@@ -40,7 +40,7 @@ namespace BililiveRecorder.Core
         /// <exception cref="Exception"/>
         public static string GetPlayUrl(int roomid)
         {
-            string url = $@"https://api.live.bilibili.com/room/v1/Room/playUrl?cid={roomid}&quality=0&platform=web";
+            string url = $@"https://api.live.bilibili.com/room/v1/Room/playUrl?cid={roomid}&quality=4&platform=web";
             if (HttpGetJson(url)?["data"]?["durl"] is JArray array)
             {
                 List<string> urls = new List<string>();
