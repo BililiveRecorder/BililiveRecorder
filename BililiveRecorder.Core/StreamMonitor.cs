@@ -8,7 +8,6 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Xml;
 using Timer = System.Timers.Timer;
 
 namespace BililiveRecorder.Core
@@ -28,14 +27,13 @@ namespace BililiveRecorder.Core
     public class StreamMonitor : IStreamMonitor
     {
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
-        private const string defaulthosts = "broadcastlv.chat.bilibili.com";
-        private const string CIDInfoUrl = "https://live.bilibili.com/api/player?id=cid:";
 
         private readonly Func<TcpClient> funcTcpClient;
         private readonly ConfigV1 config;
 
-        private int dmChatPort = 2243;
-        private string dmChatHost = defaulthosts;
+        private const string DM_SERVER_HOST = "broadcastlv.chat.bilibili.com";
+        private const int DM_SERVER_PORT = 2243;
+
 #pragma warning disable IDE1006 // 命名样式
         private bool dmTcpConnected => dmClient?.Connected ?? false;
 #pragma warning restore IDE1006 // 命名样式
@@ -201,10 +199,8 @@ namespace BililiveRecorder.Core
 
             try
             {
-                FetchServerAddress(Roomid, ref dmChatHost, ref dmChatPort);
-
                 dmClient = funcTcpClient();
-                dmClient.Connect(dmChatHost, dmChatPort);
+                dmClient.Connect(DM_SERVER_HOST, DM_SERVER_PORT);
                 dmNetStream = dmClient.GetStream();
 
                 dmReceiveMessageLoopThread = new Thread(ReceiveMessageLoop)
@@ -335,39 +331,6 @@ namespace BililiveRecorder.Core
                 }
                 dmNetStream.Write(buffer, 0, buffer.Length);
                 dmNetStream.Flush();
-            }
-        }
-
-        private static void FetchServerAddress(int roomid, ref string chatHost, ref int chatPort)
-        {
-            try
-            {
-                var request2 = WebRequest.Create(CIDInfoUrl + roomid);
-                request2.Timeout = 2000;
-                using (var stream = request2.GetResponse().GetResponseStream())
-                using (var sr = new StreamReader(stream))
-                {
-                    XmlDocument doc = new XmlDocument();
-                    doc.LoadXml("<root>" + sr.ReadToEnd() + "</root>");
-                    chatHost = doc["root"]["dm_server"].InnerText;
-                    chatPort = int.Parse(doc["root"]["dm_port"].InnerText);
-                }
-            }
-            catch (WebException ex)
-            {
-                HttpWebResponse errorResponse = ex.Response as HttpWebResponse;
-                if (errorResponse?.StatusCode == HttpStatusCode.NotFound)
-                { // 直播间不存在（HTTP 404）
-                    logger.Log(roomid, LogLevel.Warn, "该直播间疑似不存在", ex);
-                }
-                else
-                { // B站服务器响应错误
-                    logger.Log(roomid, LogLevel.Warn, "B站服务器响应弹幕服务器地址出错", ex);
-                }
-            }
-            catch (Exception ex)
-            { // 其他错误（XML解析错误？）
-                logger.Log(roomid, LogLevel.Warn, "获取弹幕服务器地址时出现未知错误", ex);
             }
         }
 
