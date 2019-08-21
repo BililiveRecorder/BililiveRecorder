@@ -8,7 +8,7 @@
         xmlns:flv="clr-namespace:BililiveRecorder.FlvProcessor;assembly=BililiveRecorder.FlvProcessor"
         mc:Ignorable="d"
         ShowInTaskbar="False" ResizeMode="NoResize"
-        Title="设置 - 录播姬" Height="400" Width="270">
+        Title="设置 - 录播姬" Height="450" Width="270">
     <Window.Resources>
         <local:ValueConverterGroup x:Key="EnumToInvertBooleanConverter">
             <local:EnumToBooleanConverter/>
@@ -23,6 +23,7 @@
         </Grid.RowDefinitions>
         <Grid Margin="5">
             <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
@@ -295,6 +296,28 @@
                     <RadioButton GroupName="CuttingMode" IsChecked="{Binding Path=CuttingMode, Converter={StaticResource EnumToBooleanConverter},
                     ConverterParameter={x:Static flv:AutoCuttingMode.BySize}}">根据文件大小(MiB)切割</RadioButton>
                 </StackPanel>
+            </Grid>
+            <Separator Grid.Row="5"/>
+            <Grid Grid.Row="6" Margin="10,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <CheckBox Grid.ColumnSpan="2" IsChecked="{Binding UseProxyForApi}">除了直播流以外的请求使用 HTTP 代理</CheckBox>
+                <TextBlock Grid.Row="1">地址：</TextBlock>
+                <local:ClickSelectTextBox Grid.Row="1" Grid.Column="1" Text="{Binding ProxyAddress,Delay=500,UpdateSourceTrigger=PropertyChanged}"/>
+                <CheckBox Grid.Row="2" Grid.ColumnSpan="2" Margin="0,5,0,0" IsChecked="{Binding ProxyRequireCredentials}">使用用户名密码验证</CheckBox>
+                <TextBlock Grid.Row="3">用户名：</TextBlock>
+                <local:ClickSelectTextBox Grid.Row="3" Grid.Column="1" Text="{Binding ProxyUsername,Delay=500,UpdateSourceTrigger=PropertyChanged}"/>
+                <TextBlock Grid.Row="4">密码：</TextBlock>
+                <local:ClickSelectTextBox Grid.Row="4" Grid.Column="1" Text="{Binding ProxyPassword,Delay=500,UpdateSourceTrigger=PropertyChanged}"/>
             </Grid>
             <!--
             <TextBlock Grid.Row="4" Grid.Column="0"></TextBlock>

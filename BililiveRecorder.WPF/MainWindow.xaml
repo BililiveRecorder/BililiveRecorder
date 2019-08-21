@@ -13,7 +13,7 @@
         <Grid.Resources>
             <ResourceDictionary>
                 <DataTemplate x:Key="LogTemplate" >
-                    <TextBlock Text="{Binding}" TextWrapping="Wrap" Cursor="Hand" MouseRightButtonUp="TextBlock_MouseRightButtonUp"/>
+                    <TextBlock Text="{Binding}" TextWrapping="Wrap" MouseRightButtonUp="TextBlock_MouseRightButtonUp"/>
                 </DataTemplate>
                 <local:RecordStatusConverter x:Key="RSC"/>
                 <local:BoolToStringConverter x:Key="RecordStatusConverter" TrueValue="录制中" FalseValue="闲置"/>
