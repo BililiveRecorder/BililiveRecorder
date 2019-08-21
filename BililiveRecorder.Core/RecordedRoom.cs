@@ -160,14 +160,17 @@ namespace BililiveRecorder.Core
                 throw new ObjectDisposedException(nameof(RecordedRoom));
             }
 
-            try
+            Task.Run(() =>
             {
-                StreamMonitor.FetchRoomInfo();
-            }
-            catch (Exception ex)
-            {
-                logger.Log(Roomid, LogLevel.Debug, "RecordedRoom.RefreshRoomInfo()", ex);
-            }
+                try
+                {
+                    StreamMonitor.FetchRoomInfo();
+                }
+                catch (Exception ex)
+                {
+                    logger.Log(Roomid, LogLevel.Debug, "RecordedRoom.RefreshRoomInfo()", ex);
+                }
+            });
         }
 
         private void StreamMonitor_StreamStarted(object sender, StreamStartedArgs e)

@@ -39,6 +39,7 @@ namespace BililiveRecorder.WPF
                 "问题反馈邮箱： rec@danmuji.org",
                 "QQ群： 689636812",
                 "",
+                "功能调整：删除直播间按钮调整了位置，从软件界面右侧移动到了列表右键菜单"
             };
 
         public static void AddLog(string message) => _AddLog?.Invoke(message);
@@ -123,7 +124,14 @@ namespace BililiveRecorder.WPF
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            if (new TimedMessageBox { Title = "关闭录播姬？", Message = "确定要关闭录播姬吗？", CountDown = 10 }.ShowDialog() == true)
+            if (new TimedMessageBox
+            {
+                Title = "关闭录播姬？",
+                Message = "确定要关闭录播姬吗？",
+                CountDown = 10,
+                Left = Left,
+                Top = Top
+            }.ShowDialog() == true)
             {
                 _AddLog = null;
                 Recorder.Shutdown();
@@ -248,7 +256,7 @@ namespace BililiveRecorder.WPF
         /// <param name="e"></param>
         private void RemoveRecRoom(object sender, RoutedEventArgs e)
         {
-            var rr = _GetSenderAsRecordedRoom(sender);
+            var rr = (IRecordedRoom)((DataGrid)((ContextMenu)((MenuItem)sender)?.Parent)?.PlacementTarget)?.SelectedItem;
             if (rr == null)
             {
                 return;
@@ -256,6 +264,17 @@ namespace BililiveRecorder.WPF
 
             Recorder.RemoveRoom(rr);
             Recorder.SaveConfigToFile();
+        }
+
+        private void RefreshRoomInfo(object sender, RoutedEventArgs e)
+        {
+            var rr = (IRecordedRoom)((DataGrid)((ContextMenu)((MenuItem)sender)?.Parent)?.PlacementTarget)?.SelectedItem;
+            if (rr == null)
+            {
+                return;
+            }
+
+            rr.RefreshRoomInfo();
         }
 
         /// <summary>
