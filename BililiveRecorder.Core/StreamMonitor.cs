@@ -48,7 +48,8 @@ namespace BililiveRecorder.Core
 
         public int Roomid { get; private set; } = 0;
         public bool IsMonitoring { get; private set; } = false;
-        public event StreamStatusChangedEvent StreamStatusChanged;
+        public event RoomInfoUpdatedEvent RoomInfoUpdated;
+        public event StreamStartedEvent StreamStarted;
         public event ReceivedDanmakuEvt ReceivedDanmaku;
 
         public StreamMonitor(int roomid, Func<TcpClient> funcTcpClient, ConfigV1 config)
@@ -110,7 +111,7 @@ namespace BililiveRecorder.Core
                 case MsgTypeEnum.LiveStart:
                     if (IsMonitoring)
                     {
-                        Task.Run(() => StreamStatusChanged?.Invoke(this, new StreamStatusChangedArgs() { type = TriggerType.Danmaku }));
+                        Task.Run(() => StreamStarted?.Invoke(this, new StreamStartedArgs() { type = TriggerType.Danmaku }));
                     }
                     break;
                 case MsgTypeEnum.LiveEnd:
@@ -161,11 +162,18 @@ namespace BililiveRecorder.Core
             Task.Run(() =>
             {
                 Task.Delay(millisecondsDelay).Wait();
-                if (BililiveAPI.GetRoomInfo(Roomid).isStreaming)
+                if (FetchRoomInfo().isStreaming)
                 {
-                    StreamStatusChanged?.Invoke(this, new StreamStatusChangedArgs() { type = type });
+                    StreamStarted?.Invoke(this, new StreamStartedArgs() { type = type });
                 }
             });
+        }
+
+        public RoomInfo FetchRoomInfo()
+        {
+            RoomInfo roomInfo = BililiveAPI.GetRoomInfo(Roomid);
+            RoomInfoUpdated?.Invoke(this, new RoomInfoUpdatedArgs { RoomInfo = roomInfo });
+            return roomInfo;
         }
 
         #endregion

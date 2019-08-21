@@ -106,22 +106,28 @@ namespace BililiveRecorder.Core
 
             _config = config;
 
-            Roomid = roomid;
-
-            {
-                var roomInfo = BililiveAPI.GetRoomInfo(Roomid);
-
-                if (roomInfo == null)
-                {
-                    throw new Exception("no roominfo");
-                }
-
-                RealRoomid = roomInfo.RealRoomid;
-                StreamerName = roomInfo.Username;
-            }
+            RealRoomid = roomid;
+            StreamerName = "...";
 
             StreamMonitor = newIStreamMonitor(RealRoomid);
-            StreamMonitor.StreamStatusChanged += StreamMonitor_StreamStatusChanged;
+            StreamMonitor.RoomInfoUpdated += StreamMonitor_RoomInfoUpdated;
+            StreamMonitor.StreamStarted += StreamMonitor_StreamStarted;
+
+            try
+            {
+                StreamMonitor.FetchRoomInfo();
+            }
+            catch (Exception ex)
+            {
+                logger.Log(roomid, LogLevel.Warn, "初始化房间信息时出错，有可能该直播间不存在或网络错误", ex);
+            }
+        }
+
+        private void StreamMonitor_RoomInfoUpdated(object sender, RoomInfoUpdatedArgs e)
+        {
+            RealRoomid = e.RoomInfo.RealRoomid;
+            Roomid = e.RoomInfo.DisplayRoomid;
+            StreamerName = e.RoomInfo.Username;
         }
 
         public bool Start()
@@ -147,7 +153,24 @@ namespace BililiveRecorder.Core
             TriggerPropertyChanged(nameof(IsMonitoring));
         }
 
-        private void StreamMonitor_StreamStatusChanged(object sender, StreamStatusChangedArgs e)
+        public void RefreshRoomInfo()
+        {
+            if (disposedValue)
+            {
+                throw new ObjectDisposedException(nameof(RecordedRoom));
+            }
+
+            try
+            {
+                StreamMonitor.FetchRoomInfo();
+            }
+            catch (Exception ex)
+            {
+                logger.Log(Roomid, LogLevel.Debug, "RecordedRoom.RefreshRoomInfo()", ex);
+            }
+        }
+
+        private void StreamMonitor_StreamStarted(object sender, StreamStartedArgs e)
         {
             lock (StartupTaskLock)
             {

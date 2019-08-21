@@ -1,11 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace BililiveRecorder.Core
+﻿namespace BililiveRecorder.Core
 {
-    public delegate void StreamStatusChangedEvent(object sender, StreamStatusChangedArgs e);
-    public class StreamStatusChangedArgs
+    public delegate void RoomInfoUpdatedEvent(object sender, RoomInfoUpdatedArgs e);
+    public class RoomInfoUpdatedArgs
+    {
+        public RoomInfo RoomInfo;
+    }
+
+    public delegate void StreamStartedEvent(object sender, StreamStartedArgs e);
+    public class StreamStartedArgs
     {
         public TriggerType type;
     }
