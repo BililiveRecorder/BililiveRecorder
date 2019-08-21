@@ -2,9 +2,9 @@
 {
     public class RoomInfo
     {
-        public int DisplayRoomid;
-        public int RealRoomid;
-        public string Username;
-        public bool isStreaming;
+        public int ShortRoomId;
+        public int RoomId;
+        public string UserName;
+        public bool IsStreaming;
     }
 }

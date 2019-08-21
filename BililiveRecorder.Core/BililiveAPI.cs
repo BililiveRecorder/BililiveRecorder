@@ -2,16 +2,83 @@
 using NLog;
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using System.Net;
-using System.Text.RegularExpressions;
+using System.Net.Http;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace BililiveRecorder.Core
 {
     internal static class BililiveAPI
     {
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
+        private static readonly Random random = new Random();
+        private static readonly SemaphoreSlim semaphoreSlim = new SemaphoreSlim(1, 1);
+        private static HttpClient httpclient;
+
+        static BililiveAPI()
+        {
+            httpclient = new HttpClient { Timeout = TimeSpan.FromSeconds(5) };
+            httpclient.DefaultRequestHeaders.Add("Accept", "application/json, text/javascript, */*; q=0.01");
+            httpclient.DefaultRequestHeaders.Add("Referer", "https://live.bilibili.com/");
+            httpclient.DefaultRequestHeaders.Add("User-Agent", Utils.UserAgent);
+        }
+
+        public static async Task ApplyProxySettings(bool useProxy, string address, bool useCredential, string user, string pass)
+        {
+            await semaphoreSlim.WaitAsync();
+            try
+            {
+                if (useProxy)
+                {
+                    try
+                    {
+
+                        var proxy = new WebProxy
+                        {
+                            Address = new Uri(address),
+                            BypassProxyOnLocal = false,
+                            UseDefaultCredentials = false
+                        };
+
+                        if (useCredential)
+                        {
+                            proxy.Credentials = new NetworkCredential(userName: user, password: pass);
+                        }
+
+                        var pclient = new HttpClient(handler: new HttpClientHandler
+                        {
+                            Proxy = proxy,
+                        }, disposeHandler: true)
+                        {
+                            Timeout = TimeSpan.FromSeconds(5)
+                        };
+                        pclient.DefaultRequestHeaders.Add("Accept", "application/json, text/javascript, */*; q=0.01");
+                        pclient.DefaultRequestHeaders.Add("Referer", "https://live.bilibili.com/");
+                        pclient.DefaultRequestHeaders.Add("User-Agent", Utils.UserAgent);
+
+                        httpclient = pclient;
+                        return;
+                    }
+                    catch (Exception ex)
+                    {
+                        logger.Error(ex, "设置代理时发生错误");
+
+                    }
+                }
+
+                var cleanclient = new HttpClient { Timeout = TimeSpan.FromSeconds(5) };
+                cleanclient.DefaultRequestHeaders.Add("Accept", "application/json, text/javascript, */*; q=0.01");
+                cleanclient.DefaultRequestHeaders.Add("Referer", "https://live.bilibili.com/");
+                cleanclient.DefaultRequestHeaders.Add("User-Agent", Utils.UserAgent);
+                httpclient = cleanclient;
+            }
+            finally
+            {
+                semaphoreSlim.Release();
+            }
+        }
 
         /// <summary>
         /// 下载json并解析
@@ -20,15 +87,19 @@ namespace BililiveRecorder.Core
         /// <returns>数据</returns>
         /// <exception cref="ArgumentNullException"/>
         /// <exception cref="WebException"/>
-        public static JObject HttpGetJson(string url)
+        public static async Task<JObject> HttpGetJsonAsync(string url)
         {
-            var c = new WebClient();
-            c.Headers.Add(HttpRequestHeader.UserAgent, Utils.UserAgent);
-            c.Headers.Add(HttpRequestHeader.Accept, "application/json, text/javascript, */*; q=0.01");
-            c.Headers.Add(HttpRequestHeader.Referer, "https://live.bilibili.com/");
-            var s = c.DownloadString(url);
-            var j = JObject.Parse(s);
-            return j;
+            await semaphoreSlim.WaitAsync();
+            try
+            {
+                var s = await httpclient.GetStringAsync(url);
+                var j = JObject.Parse(s);
+                return j;
+            }
+            finally
+            {
+                semaphoreSlim.Release();
+            }
         }
 
         /// <summary>
@@ -38,10 +109,10 @@ namespace BililiveRecorder.Core
         /// <returns>FLV播放地址</returns>
         /// <exception cref="WebException"/>
         /// <exception cref="Exception"/>
-        public static string GetPlayUrl(int roomid)
+        public static async Task<string> GetPlayUrlAsync(int roomid)
         {
             string url = $@"https://api.live.bilibili.com/room/v1/Room/playUrl?cid={roomid}&quality=4&platform=web";
-            if (HttpGetJson(url)?["data"]?["durl"] is JArray array)
+            if ((await HttpGetJsonAsync(url))?["data"]?["durl"] is JArray array)
             {
                 List<string> urls = new List<string>();
                 for (int i = 0; i < array.Count; i++)
@@ -64,24 +135,30 @@ namespace BililiveRecorder.Core
         /// <returns>直播间信息</returns>
         /// <exception cref="WebException"/>
         /// <exception cref="Exception"/>
-        public static RoomInfo GetRoomInfo(int roomid)
+        public static async Task<RoomInfo> GetRoomInfoAsync(int roomid)
         {
             try
             {
-                string url = $@"https://api.live.bilibili.com/AppRoom/index?room_id={roomid}&platform=android";
-                var data = HttpGetJson(url);
-                if (data["code"].ToObject<int>() != 0)
+                var room = await HttpGetJsonAsync($@"https://api.live.bilibili.com/room/v1/Room/get_info?id={roomid}");
+                if (room["code"].ToObject<int>() != 0)
                 {
-                    logger.Warn("不能获取 {roomid} 的信息: {errormsg}", roomid, data["message"]?.ToObject<string>());
+                    logger.Warn("不能获取 {roomid} 的信息1: {errormsg}", roomid, room["message"]?.ToObject<string>());
+                    return null;
+                }
+
+                var user = await HttpGetJsonAsync($@"https://api.live.bilibili.com/live_user/v1/UserInfo/get_anchor_in_room?roomid={roomid}");
+                if (user["code"].ToObject<int>() != 0)
+                {
+                    logger.Warn("不能获取 {roomid} 的信息2: {errormsg}", roomid, room["message"]?.ToObject<string>());
                     return null;
                 }
 
                 var i = new RoomInfo()
                 {
-                    DisplayRoomid = data?["data"]?["show_room_id"]?.ToObject<int>() ?? throw new Exception("未获取到直播间信息"),
-                    RealRoomid = data?["data"]?["room_id"]?.ToObject<int>() ?? throw new Exception("未获取到直播间信息"),
-                    Username = data?["data"]?["uname"]?.ToObject<string>() ?? throw new Exception("未获取到直播间信息"),
-                    isStreaming = "LIVE" == (data?["data"]?["status"]?.ToObject<string>() ?? throw new Exception("未获取到直播间信息")),
+                    ShortRoomId = room?["data"]?["short_id"]?.ToObject<int>() ?? throw new Exception("未获取到直播间信息"),
+                    RoomId = room?["data"]?["room_id"]?.ToObject<int>() ?? throw new Exception("未获取到直播间信息"),
+                    IsStreaming = 1 == (room?["data"]?["live_status"]?.ToObject<int>() ?? throw new Exception("未获取到直播间信息")),
+                    UserName = user?["data"]?["info"]?["uname"]?.ToObject<string>() ?? throw new Exception("未获取到直播间信息"),
                 };
                 return i;
             }
@@ -91,9 +168,5 @@ namespace BililiveRecorder.Core
                 throw;
             }
         }
-
-        private static readonly Regex rx = new Regex(@"\\[uU]([0-9A-Fa-f]{4})", RegexOptions.Compiled);
-        internal static string Decode(this string str) => rx.Replace(str, match => ((char)Int32.Parse(match.Value.Substring(2), NumberStyles.HexNumber)).ToString());
-        private static readonly Random random = new Random();
     }
 }

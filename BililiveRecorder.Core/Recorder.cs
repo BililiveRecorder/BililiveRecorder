@@ -47,8 +47,38 @@ namespace BililiveRecorder.Core
             Rooms.CollectionChanged += (sender, e) =>
             {
                 logger.Debug($"Rooms.CollectionChanged;{e.Action};" +
-                    $"O:{e.OldItems?.Cast<IRecordedRoom>()?.Select(rr => rr.RealRoomid.ToString())?.Aggregate((current, next) => current + "," + next)};" +
-                    $"N:{e.NewItems?.Cast<IRecordedRoom>()?.Select(rr => rr.RealRoomid.ToString())?.Aggregate((current, next) => current + "," + next)}");
+                    $"O:{e.OldItems?.Cast<IRecordedRoom>()?.Select(rr => rr.RoomId.ToString())?.Aggregate((current, next) => current + "," + next)};" +
+                    $"N:{e.NewItems?.Cast<IRecordedRoom>()?.Select(rr => rr.RoomId.ToString())?.Aggregate((current, next) => current + "," + next)}");
+            };
+
+            var debouncing = new SemaphoreSlim(1, 1);
+            Config.PropertyChanged += async (sender, e) =>
+            {
+                if (e.PropertyName == nameof(Config.UseProxyForApi)
+                    || e.PropertyName == nameof(Config.ProxyAddress)
+                    || e.PropertyName == nameof(Config.ProxyRequireCredentials)
+                    || e.PropertyName == nameof(Config.ProxyUsername)
+                    || e.PropertyName == nameof(Config.ProxyPassword)
+                )
+                {
+                    if (await debouncing.WaitAsync(0))
+                    {
+                        try
+                        {
+                            logger.Debug("设置代理等待...");
+                            await Task.Delay(50);
+                            logger.Debug("设置代理信息...");
+                            await BililiveAPI.ApplyProxySettings(
+                                Config.UseProxyForApi, Config.ProxyAddress,
+                                Config.ProxyRequireCredentials, Config.ProxyUsername, Config.ProxyPassword);
+                            logger.Debug("设置成功");
+                        }
+                        finally
+                        {
+                            debouncing.Release();
+                        }
+                    }
+                }
             };
         }
 
@@ -127,7 +157,7 @@ namespace BililiveRecorder.Core
                     Task.Run(() => rr.Start());
                 }
 
-                logger.Debug("AddRoom 添加了 {roomid} 直播间 ", rr.RealRoomid);
+                logger.Debug("AddRoom 添加了 {roomid} 直播间 ", rr.RoomId);
                 Rooms.Add(rr);
             }
             catch (Exception ex)
@@ -144,7 +174,7 @@ namespace BililiveRecorder.Core
         {
             if (!_valid) { throw new InvalidOperationException("Not Initialized"); }
             rr.Shutdown();
-            logger.Debug("RemoveRoom 移除了直播间 {roomid}", rr.RealRoomid);
+            logger.Debug("RemoveRoom 移除了直播间 {roomid}", rr.RoomId);
             Rooms.Remove(rr);
         }
 
@@ -169,7 +199,7 @@ namespace BililiveRecorder.Core
             {
                 Config.RoomList.Add(new RoomV1()
                 {
-                    Roomid = rr.RealRoomid,
+                    Roomid = rr.RoomId,
                     Enabled = rr.IsMonitoring,
                 });
             });
@@ -188,7 +218,7 @@ namespace BililiveRecorder.Core
                     {
                         if (DateTime.Now - room.LastUpdateDateTime > TimeSpan.FromMilliseconds(Config.TimingWatchdogTimeout))
                         {
-                            logger.Warn("服务器停止提供 [{roomid}] 直播间的直播数据，通常是录制时网络不稳定导致，将会断开重连", room.Roomid);
+                            logger.Warn("服务器停止提供 [{roomid}] 直播间的直播数据，通常是录制时网络不稳定导致，将会断开重连", room.RoomId);
                             room.StopRecord();
                             room.StartRecord();
                         }
@@ -198,7 +228,7 @@ namespace BililiveRecorder.Core
                                     (room.Processor.TotalMaxTimestamp + Config.TimingWatchdogBehind))
                                 )
                         {
-                            logger.Warn("直播间 [{roomid}] 的下载速度达不到录制标准，将断开重连。请检查网络是否稳定", room.Roomid);
+                            logger.Warn("直播间 [{roomid}] 的下载速度达不到录制标准，将断开重连。请检查网络是否稳定", room.RoomId);
                             room.StopRecord();
                             room.StartRecord();
                         }

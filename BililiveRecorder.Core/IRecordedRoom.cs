@@ -6,8 +6,8 @@ namespace BililiveRecorder.Core
 {
     public interface IRecordedRoom : INotifyPropertyChanged, IDisposable
     {
-        int Roomid { get; }
-        int RealRoomid { get; }
+        int ShortRoomId { get; }
+        int RoomId { get; }
         string StreamerName { get; }
 
         IStreamMonitor StreamMonitor { get; }
@@ -27,6 +27,8 @@ namespace BililiveRecorder.Core
 
         void StartRecord();
         void StopRecord();
+
+        void RefreshRoomInfo();
 
         void Shutdown();
     }
