@@ -90,8 +90,8 @@
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
-                    <DataGridTextColumn Binding="{Binding Roomid,Mode=OneWay}" Header="房间号"/>
-                    <DataGridTextColumn Binding="{Binding RealRoomid,Mode=OneWay}" Header="原房间号"/>
+                    <DataGridTextColumn Binding="{Binding ShortRoomId,Mode=OneWay}" Header="短号"/>
+                    <DataGridTextColumn Binding="{Binding RoomId,Mode=OneWay}" Header="房间号"/>
                     <DataGridTextColumn Binding="{Binding StreamerName,Mode=OneWay}" Header="主播名字"/>
                     <DataGridTextColumn Binding="{Binding IsRecording,Converter={StaticResource RecordStatusConverter},Mode=OneWay}" Header="录制状态"/>
                     <DataGridTextColumn Binding="{Binding IsMonitoring,Converter={StaticResource MonitorStatusConverter},Mode=OneWay}" Header="是否自动录制"/>
@@ -134,11 +134,11 @@
                 </Grid.ColumnDefinitions>
 
 
-                <TextBlock Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right">房间号：</TextBlock>
-                <TextBlock Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left" Text="{Binding Roomid,Mode=OneWay}"/>
+                <TextBlock Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right">短号：</TextBlock>
+                <TextBlock Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left" Text="{Binding ShortRoomId,Mode=OneWay}"/>
 
-                <TextBlock Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right">原房间号：</TextBlock>
-                <TextBlock Grid.Row="2" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left" Text="{Binding RealRoomid,Mode=OneWay}"/>
+                <TextBlock Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right">房间号：</TextBlock>
+                <TextBlock Grid.Row="2" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left" Text="{Binding RoomId,Mode=OneWay}"/>
 
                 <TextBlock Grid.Row="3" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right">主播名字：</TextBlock>
                 <TextBlock Grid.Row="3" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left" Text="{Binding StreamerName,Mode=OneWay}"/>
@@ -155,7 +155,6 @@
 
                 <TextBlock Grid.Row="5" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right">处理中剪辑数量：</TextBlock>
                 <TextBlock Grid.Row="5" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left" Text="{Binding Processor.Clips.Count,Mode=OneWay}"/>
-                <!-- TODO: Fix Binding Memory Leak -->
 
                 <TextBlock Grid.Row="6" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right">录制下载速度：</TextBlock>
                 <TextBlock Grid.Row="6" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left" Text="{Binding DownloadSpeedKiBps,StringFormat=0.## KiB/s,Mode=OneWay}"/>

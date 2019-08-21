@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 
 namespace BililiveRecorder.Core
 {
@@ -13,6 +14,6 @@ namespace BililiveRecorder.Core
         bool Start();
         void Stop();
         void Check(TriggerType type, int millisecondsDelay = 0);
-        RoomInfo FetchRoomInfo();
+        Task<RoomInfo> FetchRoomInfoAsync();
     }
 }

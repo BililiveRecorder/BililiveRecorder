@@ -159,19 +159,19 @@ namespace BililiveRecorder.Core
                 throw new ArgumentOutOfRangeException(nameof(millisecondsDelay), "不能小于0");
             }
 
-            Task.Run(() =>
+            Task.Run(async () =>
             {
                 Task.Delay(millisecondsDelay).Wait();
-                if (FetchRoomInfo().isStreaming)
+                if ((await FetchRoomInfoAsync()).IsStreaming)
                 {
                     StreamStarted?.Invoke(this, new StreamStartedArgs() { type = type });
                 }
             });
         }
 
-        public RoomInfo FetchRoomInfo()
+        public async Task<RoomInfo> FetchRoomInfoAsync()
         {
-            RoomInfo roomInfo = BililiveAPI.GetRoomInfo(Roomid);
+            RoomInfo roomInfo = await BililiveAPI.GetRoomInfoAsync(Roomid);
             RoomInfoUpdated?.Invoke(this, new RoomInfoUpdatedArgs { RoomInfo = roomInfo });
             return roomInfo;
         }

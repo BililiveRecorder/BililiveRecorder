@@ -23,24 +23,24 @@ namespace BililiveRecorder.Core
         private int _realRoomid;
         private string _streamerName;
 
-        public int Roomid
+        public int ShortRoomId
         {
             get => _roomid;
             private set
             {
                 if (value == _roomid) { return; }
                 _roomid = value;
-                TriggerPropertyChanged(nameof(Roomid));
+                TriggerPropertyChanged(nameof(ShortRoomId));
             }
         }
-        public int RealRoomid
+        public int RoomId
         {
             get => _realRoomid;
             private set
             {
                 if (value == _realRoomid) { return; }
                 _realRoomid = value;
-                TriggerPropertyChanged(nameof(RealRoomid));
+                TriggerPropertyChanged(nameof(RoomId));
             }
         }
         public string StreamerName
@@ -106,28 +106,21 @@ namespace BililiveRecorder.Core
 
             _config = config;
 
-            RealRoomid = roomid;
+            RoomId = roomid;
             StreamerName = "...";
 
-            StreamMonitor = newIStreamMonitor(RealRoomid);
+            StreamMonitor = newIStreamMonitor(RoomId);
             StreamMonitor.RoomInfoUpdated += StreamMonitor_RoomInfoUpdated;
             StreamMonitor.StreamStarted += StreamMonitor_StreamStarted;
 
-            try
-            {
-                StreamMonitor.FetchRoomInfo();
-            }
-            catch (Exception ex)
-            {
-                logger.Log(roomid, LogLevel.Warn, "初始化房间信息时出错，有可能该直播间不存在或网络错误", ex);
-            }
+            StreamMonitor.FetchRoomInfoAsync();
         }
 
         private void StreamMonitor_RoomInfoUpdated(object sender, RoomInfoUpdatedArgs e)
         {
-            RealRoomid = e.RoomInfo.RealRoomid;
-            Roomid = e.RoomInfo.DisplayRoomid;
-            StreamerName = e.RoomInfo.Username;
+            RoomId = e.RoomInfo.RoomId;
+            ShortRoomId = e.RoomInfo.ShortRoomId;
+            StreamerName = e.RoomInfo.UserName;
         }
 
         public bool Start()
@@ -160,17 +153,7 @@ namespace BililiveRecorder.Core
                 throw new ObjectDisposedException(nameof(RecordedRoom));
             }
 
-            Task.Run(() =>
-            {
-                try
-                {
-                    StreamMonitor.FetchRoomInfo();
-                }
-                catch (Exception ex)
-                {
-                    logger.Log(Roomid, LogLevel.Debug, "RecordedRoom.RefreshRoomInfo()", ex);
-                }
-            });
+            StreamMonitor.FetchRoomInfoAsync();
         }
 
         private void StreamMonitor_StreamStarted(object sender, StreamStartedArgs e)
@@ -209,7 +192,7 @@ namespace BililiveRecorder.Core
                     cancellationTokenSource.Cancel();
                     if (!(StreamDownloadTask?.Wait(TimeSpan.FromSeconds(2)) ?? true))
                     {
-                        logger.Log(RealRoomid, LogLevel.Warn, "尝试强制关闭连接，请检查网络连接是否稳定");
+                        logger.Log(RoomId, LogLevel.Warn, "尝试强制关闭连接，请检查网络连接是否稳定");
 
                         _stream?.Close();
                         _stream?.Dispose();
@@ -220,7 +203,7 @@ namespace BililiveRecorder.Core
             }
             catch (Exception ex)
             {
-                logger.Log(RealRoomid, LogLevel.Error, "在尝试停止录制时发生错误，请检查网络连接是否稳定", ex);
+                logger.Log(RoomId, LogLevel.Error, "在尝试停止录制时发生错误，请检查网络连接是否稳定", ex);
             }
             finally
             {
@@ -232,7 +215,7 @@ namespace BililiveRecorder.Core
         {
             if (IsRecording)
             {
-                logger.Log(RealRoomid, LogLevel.Debug, "已经在录制中了");
+                logger.Log(RoomId, LogLevel.Debug, "已经在录制中了");
                 return;
             }
 
@@ -252,16 +235,16 @@ namespace BililiveRecorder.Core
                     client.DefaultRequestHeaders.Referrer = new Uri("https://live.bilibili.com");
                     client.DefaultRequestHeaders.Add("Origin", "https://live.bilibili.com");
 
-                    string flv_path = BililiveAPI.GetPlayUrl(RealRoomid);
-                    logger.Log(RealRoomid, LogLevel.Info, "连接直播服务器 " + new Uri(flv_path).Host);
-                    logger.Log(RealRoomid, LogLevel.Debug, "直播流地址: " + flv_path);
+                    string flv_path = await BililiveAPI.GetPlayUrlAsync(RoomId);
+                    logger.Log(RoomId, LogLevel.Info, "连接直播服务器 " + new Uri(flv_path).Host);
+                    logger.Log(RoomId, LogLevel.Debug, "直播流地址: " + flv_path);
 
                     _response = await client.GetAsync(flv_path, HttpCompletionOption.ResponseHeadersRead);
                 }
 
                 if (_response.StatusCode != HttpStatusCode.OK)
                 {
-                    logger.Log(RealRoomid, LogLevel.Info, string.Format("尝试下载直播流时服务器返回了 ({0}){1}", _response.StatusCode, _response.ReasonPhrase));
+                    logger.Log(RoomId, LogLevel.Info, string.Format("尝试下载直播流时服务器返回了 ({0}){1}", _response.StatusCode, _response.ReasonPhrase));
 
                     StreamMonitor.Check(TriggerType.HttpApiRecheck, (int)_config.TimingStreamRetry);
 
@@ -288,7 +271,7 @@ namespace BililiveRecorder.Core
                             },
                             {
                                 "roomid",
-                                RealRoomid.ToString()
+                                RoomId.ToString()
                             },
                             {
                                 "streamername",
@@ -310,13 +293,13 @@ namespace BililiveRecorder.Core
                 // useless exception message :/
 
                 _CleanupFlvRequest();
-                logger.Log(RealRoomid, LogLevel.Warn, "连接直播服务器超时。");
+                logger.Log(RoomId, LogLevel.Warn, "连接直播服务器超时。");
                 StreamMonitor.Check(TriggerType.HttpApiRecheck, (int)_config.TimingStreamRetry);
             }
             catch (Exception ex)
             {
                 _CleanupFlvRequest();
-                logger.Log(RealRoomid, LogLevel.Warn, "启动直播流下载出错。" + (_retry ? "将重试启动。" : ""), ex);
+                logger.Log(RoomId, LogLevel.Warn, "启动直播流下载出错。" + (_retry ? "将重试启动。" : ""), ex);
                 if (_retry)
                 {
                     StreamMonitor.Check(TriggerType.HttpApiRecheck, (int)_config.TimingStreamRetry);
@@ -351,7 +334,7 @@ namespace BililiveRecorder.Core
                         }
                     }
 
-                    logger.Log(RealRoomid, LogLevel.Info,
+                    logger.Log(RoomId, LogLevel.Info,
                            (token.IsCancellationRequested ? "用户操作" : "直播已结束") + "，停止录制。"
                            + (_retry ? "将重试启动。" : ""));
                     if (_retry)
@@ -363,7 +346,7 @@ namespace BililiveRecorder.Core
                 {
                     if (e is ObjectDisposedException && token.IsCancellationRequested) { return; }
 
-                    logger.Log(RealRoomid, LogLevel.Warn, "录播发生错误", e);
+                    logger.Log(RoomId, LogLevel.Warn, "录播发生错误", e);
                 }
                 finally
                 {
@@ -415,11 +398,11 @@ namespace BililiveRecorder.Core
             Dispose(true);
         }
 
-        private string GetStreamFilePath() => Path.Combine(_config.WorkDirectory, RealRoomid.ToString(), "record",
-            $@"record-{RealRoomid}-{DateTime.Now.ToString("yyyyMMdd-HHmmss")}-{random.Next(100, 999)}.flv".RemoveInvalidFileName());
+        private string GetStreamFilePath() => Path.Combine(_config.WorkDirectory, RoomId.ToString(), "record",
+            $@"record-{RoomId}-{DateTime.Now.ToString("yyyyMMdd-HHmmss")}-{random.Next(100, 999)}.flv".RemoveInvalidFileName());
 
-        private string GetClipFilePath() => Path.Combine(_config.WorkDirectory, RealRoomid.ToString(), "clip",
-            $@"clip-{RealRoomid}-{DateTime.Now.ToString("yyyyMMdd-HHmmss")}-{random.Next(100, 999)}.flv".RemoveInvalidFileName());
+        private string GetClipFilePath() => Path.Combine(_config.WorkDirectory, RoomId.ToString(), "clip",
+            $@"clip-{RoomId}-{DateTime.Now.ToString("yyyyMMdd-HHmmss")}-{random.Next(100, 999)}.flv".RemoveInvalidFileName());
 
         public event PropertyChangedEventHandler PropertyChanged;
         protected void TriggerPropertyChanged(string propertyName)
