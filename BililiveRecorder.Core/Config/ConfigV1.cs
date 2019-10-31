@@ -92,36 +92,6 @@ namespace BililiveRecorder.Core.Config
         [JsonProperty("timing_watchdog_behind")]
         public uint TimingWatchdogBehind { get => _timingWatchdogBehind; set => SetField(ref _timingWatchdogBehind, value); }
 
-        /// <summary>
-        /// 是否对API请求使用HTTP代理
-        /// </summary>
-        [JsonProperty("proxy_enable")]
-        public bool UseProxyForApi { get => _useProxyForApi; set => SetField(ref _useProxyForApi, value); }
-
-        /// <summary>
-        /// HTTP代理服务器地址
-        /// </summary>
-        [JsonProperty("proxy_address")]
-        public string ProxyAddress { get => _proxyAddress; set => SetField(ref _proxyAddress, value); }
-
-        /// <summary>
-        /// HTTP代理是否需要身份验证
-        /// </summary>
-        [JsonProperty("proxy_auth")]
-        public bool ProxyRequireCredentials { get => _proxyRequireCredentials; set => SetField(ref _proxyRequireCredentials, value); }
-
-        /// <summary>
-        /// HTTP代理用户名
-        /// </summary>
-        [JsonProperty("proxy_user")]
-        public string ProxyUsername { get => _proxyUsername; set => SetField(ref _proxyUsername, value); }
-
-        /// <summary>
-        /// HTTP代理密码
-        /// </summary>
-        [JsonProperty("proxy_pass")]
-        public string ProxyPassword { get => _proxyPassword; set => SetField(ref _proxyPassword, value); }
-
         #region INotifyPropertyChanged
         public event PropertyChangedEventHandler PropertyChanged;
         protected virtual void OnPropertyChanged(string propertyName) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
@@ -146,11 +116,5 @@ namespace BililiveRecorder.Core.Config
         private uint _timingStreamConnect = 3 * 1000;
         private uint _timingDanmakuRetry = 2 * 1000;
         private uint _timingCheckInterval = 5 * 60;
-
-        private bool _useProxyForApi = false;
-        private string _proxyAddress = "";
-        private bool _proxyRequireCredentials = false;
-        private string _proxyUsername = "";
-        private string _proxyPassword = "";
     }
 }

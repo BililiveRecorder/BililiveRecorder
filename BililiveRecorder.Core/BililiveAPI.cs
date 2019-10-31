@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace BililiveRecorder.Core
@@ -14,8 +13,7 @@ namespace BililiveRecorder.Core
     {
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
         private static readonly Random random = new Random();
-        private static readonly SemaphoreSlim semaphoreSlim = new SemaphoreSlim(1, 1);
-        private static HttpClient httpclient;
+        private static readonly HttpClient httpclient;
 
         static BililiveAPI()
         {
@@ -25,60 +23,6 @@ namespace BililiveRecorder.Core
             httpclient.DefaultRequestHeaders.Add("User-Agent", Utils.UserAgent);
         }
 
-        public static async Task ApplyProxySettings(bool useProxy, string address, bool useCredential, string user, string pass)
-        {
-            await semaphoreSlim.WaitAsync();
-            try
-            {
-                if (useProxy)
-                {
-                    try
-                    {
-
-                        var proxy = new WebProxy
-                        {
-                            Address = new Uri(address),
-                            BypassProxyOnLocal = false,
-                            UseDefaultCredentials = false
-                        };
-
-                        if (useCredential)
-                        {
-                            proxy.Credentials = new NetworkCredential(userName: user, password: pass);
-                        }
-
-                        var pclient = new HttpClient(handler: new HttpClientHandler
-                        {
-                            Proxy = proxy,
-                        }, disposeHandler: true)
-                        {
-                            Timeout = TimeSpan.FromSeconds(5)
-                        };
-                        pclient.DefaultRequestHeaders.Add("Accept", "application/json, text/javascript, */*; q=0.01");
-                        pclient.DefaultRequestHeaders.Add("Referer", "https://live.bilibili.com/");
-                        pclient.DefaultRequestHeaders.Add("User-Agent", Utils.UserAgent);
-
-                        httpclient = pclient;
-                        return;
-                    }
-                    catch (Exception ex)
-                    {
-                        logger.Error(ex, "设置代理时发生错误");
-
-                    }
-                }
-
-                var cleanclient = new HttpClient { Timeout = TimeSpan.FromSeconds(5) };
-                cleanclient.DefaultRequestHeaders.Add("Accept", "application/json, text/javascript, */*; q=0.01");
-                cleanclient.DefaultRequestHeaders.Add("Referer", "https://live.bilibili.com/");
-                cleanclient.DefaultRequestHeaders.Add("User-Agent", Utils.UserAgent);
-                httpclient = cleanclient;
-            }
-            finally
-            {
-                semaphoreSlim.Release();
-            }
-        }
 
         /// <summary>
         /// 下载json并解析
@@ -89,17 +33,9 @@ namespace BililiveRecorder.Core
         /// <exception cref="WebException"/>
         public static async Task<JObject> HttpGetJsonAsync(string url)
         {
-            await semaphoreSlim.WaitAsync();
-            try
-            {
-                var s = await httpclient.GetStringAsync(url);
-                var j = JObject.Parse(s);
-                return j;
-            }
-            finally
-            {
-                semaphoreSlim.Release();
-            }
+            var s = await httpclient.GetStringAsync(url);
+            var j = JObject.Parse(s);
+            return j;
         }
 
         /// <summary>
