@@ -92,6 +92,12 @@ namespace BililiveRecorder.Core.Config
         [JsonProperty("timing_watchdog_behind")]
         public uint TimingWatchdogBehind { get => _timingWatchdogBehind; set => SetField(ref _timingWatchdogBehind, value); }
 
+        /// <summary>
+        /// 请求 API 时使用的 Cookie
+        /// </summary>
+        [JsonProperty("cookie")]
+        public string Cookie { get => _cookie; set => SetField(ref _cookie, value); }
+
         #region INotifyPropertyChanged
         public event PropertyChangedEventHandler PropertyChanged;
         protected virtual void OnPropertyChanged(string propertyName) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
@@ -116,5 +122,7 @@ namespace BililiveRecorder.Core.Config
         private uint _timingStreamConnect = 3 * 1000;
         private uint _timingDanmakuRetry = 2 * 1000;
         private uint _timingCheckInterval = 5 * 60;
+
+        private string _cookie = string.Empty;
     }
 }

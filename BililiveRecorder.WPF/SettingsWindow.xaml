@@ -8,7 +8,7 @@
         xmlns:flv="clr-namespace:BililiveRecorder.FlvProcessor;assembly=BililiveRecorder.FlvProcessor"
         mc:Ignorable="d"
         ShowInTaskbar="False" ResizeMode="NoResize"
-        Title="设置 - 录播姬" Height="400" Width="270">
+        Title="设置 - 录播姬" Height="450" Width="270">
     <Window.Resources>
         <local:ValueConverterGroup x:Key="EnumToInvertBooleanConverter">
             <local:EnumToBooleanConverter/>
@@ -44,6 +44,7 @@
             </Grid.Resources>
             <Grid Grid.Row="0">
                 <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
@@ -295,6 +296,15 @@
                     <RadioButton GroupName="CuttingMode" IsChecked="{Binding Path=CuttingMode, Converter={StaticResource EnumToBooleanConverter},
                     ConverterParameter={x:Static flv:AutoCuttingMode.BySize}}">根据文件大小(MiB)切割</RadioButton>
                 </StackPanel>
+            </Grid>
+            <Separator Grid.Row="5"/>
+            <Grid Grid.Row="6" Margin="10,0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <TextBlock HorizontalAlignment="Left">请求 API 时使用 Cookie: （可选）</TextBlock>
+                <local:ClickSelectTextBox Grid.Row="1" Text="{Binding Cookie,Delay=500,UpdateSourceTrigger=PropertyChanged}"/>
             </Grid>
             <!--
             <TextBlock Grid.Row="4" Grid.Column="0"></TextBlock>
