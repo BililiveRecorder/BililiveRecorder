@@ -116,8 +116,8 @@ namespace BililiveRecorder.Core.Config
         private AutoCuttingMode _cuttingMode = AutoCuttingMode.Disabled;
         private string _workDirectory;
 
-        private uint _timingWatchdogTimeout = 5 * 1000;
-        private uint _timingWatchdogBehind = 5 * 1000;
+        private uint _timingWatchdogTimeout = 10 * 1000;
+        private uint _timingWatchdogBehind = 10 * 1000;
         private uint _timingStreamRetry = 6 * 1000;
         private uint _timingStreamConnect = 3 * 1000;
         private uint _timingDanmakuRetry = 2 * 1000;
