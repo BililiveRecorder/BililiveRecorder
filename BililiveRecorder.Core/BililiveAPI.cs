@@ -25,31 +25,35 @@ namespace BililiveRecorder.Core
             httpclient.DefaultRequestHeaders.Add("User-Agent", Utils.UserAgent);
         }
 
-        public static async Task ApplyProxySettings(bool useProxy, string address, bool useCredential, string user, string pass)
+        public static async Task ApplyCookieSettings(string cookie_string)
         {
             await semaphoreSlim.WaitAsync();
             try
             {
-                if (useProxy)
+                if (!string.IsNullOrWhiteSpace(cookie_string))
                 {
                     try
                     {
-
-                        var proxy = new WebProxy
+                        CookieContainer cc = new CookieContainer();
+                        cc.PerDomainCapacity = 300;
+                        foreach (var t in cookie_string.Trim(' ', ';').Split(';').Select(x => x.Trim().Split(new[] { '=' }, 2)))
                         {
-                            Address = new Uri(address),
-                            BypassProxyOnLocal = false,
-                            UseDefaultCredentials = false
-                        };
+                            try
+                            {
+                                string v = string.Empty;
+                                if (t.Length == 2)
+                                {
+                                    v = System.Web.HttpUtility.UrlDecode(t[1]).Trim();
+                                }
 
-                        if (useCredential)
-                        {
-                            proxy.Credentials = new NetworkCredential(userName: user, password: pass);
+                                cc.Add(new Cookie(t[0].Trim(), v, "/", ".bilibili.com"));
+                            }
+                            catch (Exception) { }
                         }
 
                         var pclient = new HttpClient(handler: new HttpClientHandler
                         {
-                            Proxy = proxy,
+                            CookieContainer = cc
                         }, disposeHandler: true)
                         {
                             Timeout = TimeSpan.FromSeconds(5)
@@ -63,7 +67,7 @@ namespace BililiveRecorder.Core
                     }
                     catch (Exception ex)
                     {
-                        logger.Error(ex, "设置代理时发生错误");
+                        logger.Error(ex, "设置 Cookie 时发生错误");
 
                     }
                 }

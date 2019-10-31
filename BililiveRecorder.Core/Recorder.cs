@@ -54,23 +54,16 @@ namespace BililiveRecorder.Core
             var debouncing = new SemaphoreSlim(1, 1);
             Config.PropertyChanged += async (sender, e) =>
             {
-                if (e.PropertyName == nameof(Config.UseProxyForApi)
-                    || e.PropertyName == nameof(Config.ProxyAddress)
-                    || e.PropertyName == nameof(Config.ProxyRequireCredentials)
-                    || e.PropertyName == nameof(Config.ProxyUsername)
-                    || e.PropertyName == nameof(Config.ProxyPassword)
-                )
+                if (e.PropertyName == nameof(Config.Cookie))
                 {
                     if (await debouncing.WaitAsync(0))
                     {
                         try
                         {
-                            logger.Debug("设置代理等待...");
-                            await Task.Delay(50);
-                            logger.Debug("设置代理信息...");
-                            await BililiveAPI.ApplyProxySettings(
-                                Config.UseProxyForApi, Config.ProxyAddress,
-                                Config.ProxyRequireCredentials, Config.ProxyUsername, Config.ProxyPassword);
+                            logger.Debug("设置 Cookie 等待...");
+                            await Task.Delay(100);
+                            logger.Debug("设置 Cookie 信息...");
+                            await BililiveAPI.ApplyCookieSettings(Config.Cookie);
                             logger.Debug("设置成功");
                         }
                         finally

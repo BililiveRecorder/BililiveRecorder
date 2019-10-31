@@ -30,7 +30,6 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
                 <RowDefinition Height="1*"/>
             </Grid.RowDefinitions>
             <Grid.Resources>
@@ -45,6 +44,7 @@
             </Grid.Resources>
             <Grid Grid.Row="0">
                 <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
@@ -299,25 +299,12 @@
             </Grid>
             <Separator Grid.Row="5"/>
             <Grid Grid.Row="6" Margin="10,0">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="*"/>
-                </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="*"/>
-                    <RowDefinition Height="*"/>
-                    <RowDefinition Height="*"/>
-                    <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
-                <CheckBox Grid.ColumnSpan="2" IsChecked="{Binding UseProxyForApi}">除了直播流以外的请求使用 HTTP 代理</CheckBox>
-                <TextBlock Grid.Row="1">地址：</TextBlock>
-                <local:ClickSelectTextBox Grid.Row="1" Grid.Column="1" Text="{Binding ProxyAddress,Delay=500,UpdateSourceTrigger=PropertyChanged}"/>
-                <CheckBox Grid.Row="2" Grid.ColumnSpan="2" Margin="0,5,0,0" IsChecked="{Binding ProxyRequireCredentials}">使用用户名密码验证</CheckBox>
-                <TextBlock Grid.Row="3">用户名：</TextBlock>
-                <local:ClickSelectTextBox Grid.Row="3" Grid.Column="1" Text="{Binding ProxyUsername,Delay=500,UpdateSourceTrigger=PropertyChanged}"/>
-                <TextBlock Grid.Row="4">密码：</TextBlock>
-                <local:ClickSelectTextBox Grid.Row="4" Grid.Column="1" Text="{Binding ProxyPassword,Delay=500,UpdateSourceTrigger=PropertyChanged}"/>
+                <TextBlock HorizontalAlignment="Left">请求 API 时使用 Cookie: （可选）</TextBlock>
+                <local:ClickSelectTextBox Grid.Row="1" Text="{Binding Cookie,Delay=500,UpdateSourceTrigger=PropertyChanged}"/>
             </Grid>
             <!--
             <TextBlock Grid.Row="4" Grid.Column="0"></TextBlock>

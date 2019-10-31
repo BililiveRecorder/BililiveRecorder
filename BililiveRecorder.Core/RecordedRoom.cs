@@ -225,8 +225,17 @@ namespace BililiveRecorder.Core
             var token = cancellationTokenSource.Token;
             try
             {
-                using (var client = new HttpClient())
+                string flv_path = await BililiveAPI.GetPlayUrlAsync(RoomId);
+
+            unwrap_redir:
+
+                using (var client = new HttpClient(new HttpClientHandler
                 {
+                    AllowAutoRedirect = false,
+                    AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate,
+                }))
+                {
+
                     client.Timeout = TimeSpan.FromMilliseconds(_config.TimingStreamConnect);
                     client.DefaultRequestHeaders.Accept.Clear();
                     client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("*/*"));
@@ -235,14 +244,21 @@ namespace BililiveRecorder.Core
                     client.DefaultRequestHeaders.Referrer = new Uri("https://live.bilibili.com");
                     client.DefaultRequestHeaders.Add("Origin", "https://live.bilibili.com");
 
-                    string flv_path = await BililiveAPI.GetPlayUrlAsync(RoomId);
+
                     logger.Log(RoomId, LogLevel.Info, "连接直播服务器 " + new Uri(flv_path).Host);
                     logger.Log(RoomId, LogLevel.Debug, "直播流地址: " + flv_path);
 
                     _response = await client.GetAsync(flv_path, HttpCompletionOption.ResponseHeadersRead);
                 }
 
-                if (_response.StatusCode != HttpStatusCode.OK)
+                if (_response.StatusCode == HttpStatusCode.Redirect || _response.StatusCode == HttpStatusCode.Moved)
+                {
+                    // workaround for missing Referrer
+                    flv_path = _response.Headers.Location.OriginalString;
+                    _response.Dispose();
+                    goto unwrap_redir;
+                }
+                else if (_response.StatusCode != HttpStatusCode.OK)
                 {
                     logger.Log(RoomId, LogLevel.Info, string.Format("尝试下载直播流时服务器返回了 ({0}){1}", _response.StatusCode, _response.ReasonPhrase));
 
