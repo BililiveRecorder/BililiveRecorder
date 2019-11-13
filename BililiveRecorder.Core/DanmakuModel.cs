@@ -1,7 +1,5 @@
 ﻿using Newtonsoft.Json.Linq;
 using System;
-using System.Globalization;
-using System.Text.RegularExpressions;
 
 namespace BililiveRecorder.Core
 {
@@ -182,12 +180,11 @@ namespace BililiveRecorder.Core
 
         public DanmakuModel(string JSON)
         {
-            // TODO: 检查验证
             RawData = JSON;
             JSON_Version = 2;
-            //var obj = new JSONObject(JSON);
+
             var obj = JObject.Parse(JSON);
-            string cmd = obj["cmd"].ToObject<string>();
+            string cmd = obj["cmd"]?.ToObject<string>();
             switch (cmd)
             {
                 case "LIVE":
@@ -249,6 +246,5 @@ namespace BililiveRecorder.Core
                     }
             }
         }
-
     }
 }
