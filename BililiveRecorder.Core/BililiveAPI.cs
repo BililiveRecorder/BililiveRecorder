@@ -188,7 +188,7 @@ namespace BililiveRecorder.Core
                 var user = await HttpGetJsonAsync($@"https://api.live.bilibili.com/live_user/v1/UserInfo/get_anchor_in_room?roomid={roomid}");
                 if (user["code"].ToObject<int>() != 0)
                 {
-                    logger.Warn("不能获取 {roomid} 的信息2: {errormsg}", roomid, room["message"]?.ToObject<string>());
+                    logger.Warn("不能获取 {roomid} 的信息2: {errormsg}", roomid, user["message"]?.ToObject<string>());
                     return null;
                 }
 
