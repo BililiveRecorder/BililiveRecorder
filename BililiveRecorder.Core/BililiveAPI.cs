@@ -16,6 +16,7 @@ namespace BililiveRecorder.Core
         private static readonly Random random = new Random();
         private static readonly SemaphoreSlim semaphoreSlim = new SemaphoreSlim(1, 1);
         private static HttpClient httpclient;
+        internal static Config.ConfigV1 Config = null; // TODO: 以后有空把整个 class 改成非 static 的然后用 DI 获取 config
 
         static BililiveAPI()
         {
@@ -120,20 +121,50 @@ namespace BililiveRecorder.Core
         public static async Task<string> GetPlayUrlAsync(int roomid)
         {
             string url = $@"https://api.live.bilibili.com/room/v1/Room/playUrl?cid={roomid}&quality=4&platform=web";
-            if ((await HttpGetJsonAsync(url))?["data"]?["durl"] is JArray array)
+            if (Config.AvoidTxy)
             {
-                List<string> urls = new List<string>();
-                for (int i = 0; i < array.Count; i++)
+                // 尽量避开腾讯云
+                int attempt_left = 3;
+                while (true)
                 {
-                    urls.Add(array[i]?["url"]?.ToObject<string>());
-                }
-                var distinct = urls.Distinct().ToArray();
-                if (distinct.Length > 0)
-                {
-                    return distinct[random.Next(0, distinct.Count() - 1)];
+                    attempt_left--;
+                    if ((await HttpGetJsonAsync(url))?["data"]?["durl"] is JArray all_jtoken && all_jtoken.Count > 0)
+                    {
+                        var all = all_jtoken.Select(x => x["url"].ToObject<string>()).ToArray();
+                        var withoutTxy = all.Where(x => !x.Contains("txy.")).ToArray();
+                        if (withoutTxy.Length > 0)
+                        {
+                            return withoutTxy[random.Next(0, withoutTxy.Length - 1)];
+                        }
+                        else if (attempt_left <= 0)
+                        {
+                            return all[random.Next(0, all.Length - 1)];
+                        }
+                    }
+                    else
+                    {
+                        throw new Exception("没有直播播放地址");
+                    }
                 }
             }
-            throw new Exception("没有直播播放地址");
+            else
+            {
+                // 随机选择一个 url
+                if ((await HttpGetJsonAsync(url))?["data"]?["durl"] is JArray array)
+                {
+                    List<string> urls = new List<string>();
+                    for (int i = 0; i < array.Count; i++)
+                    {
+                        urls.Add(array[i]?["url"]?.ToObject<string>());
+                    }
+                    var distinct = urls.Distinct().ToArray();
+                    if (distinct.Length > 0)
+                    {
+                        return distinct[random.Next(0, distinct.Count() - 1)];
+                    }
+                }
+                throw new Exception("没有直播播放地址");
+            }
         }
 
         /// <summary>
