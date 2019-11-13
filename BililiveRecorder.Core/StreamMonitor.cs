@@ -159,8 +159,8 @@ namespace BililiveRecorder.Core
 
             Task.Run(async () =>
             {
-                Task.Delay(millisecondsDelay).Wait();
-                if ((await FetchRoomInfoAsync()).IsStreaming)
+                await Task.Delay(millisecondsDelay).ConfigureAwait(false);
+                if ((await FetchRoomInfoAsync().ConfigureAwait(false)).IsStreaming)
                 {
                     StreamStarted?.Invoke(this, new StreamStartedArgs() { type = type });
                 }
@@ -169,7 +169,7 @@ namespace BililiveRecorder.Core
 
         public async Task<RoomInfo> FetchRoomInfoAsync()
         {
-            RoomInfo roomInfo = await BililiveAPI.GetRoomInfoAsync(Roomid);
+            RoomInfo roomInfo = await BililiveAPI.GetRoomInfoAsync(Roomid).ConfigureAwait(false);
             RoomInfoUpdated?.Invoke(this, new RoomInfoUpdatedArgs { RoomInfo = roomInfo });
             return roomInfo;
         }

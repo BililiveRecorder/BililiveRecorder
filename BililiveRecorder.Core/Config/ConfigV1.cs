@@ -98,6 +98,12 @@ namespace BililiveRecorder.Core.Config
         [JsonProperty("cookie")]
         public string Cookie { get => _cookie; set => SetField(ref _cookie, value); }
 
+        /// <summary>
+        /// 尽量避开腾讯云服务器，可有效提升录制文件能正常播放的概率。（垃圾腾讯云直播服务）
+        /// </summary>
+        [JsonProperty("avoidtxy")]
+        public bool AvoidTxy { get => _avoidTxy; set => SetField(ref _avoidTxy, value); }
+
         #region INotifyPropertyChanged
         public event PropertyChangedEventHandler PropertyChanged;
         protected virtual void OnPropertyChanged(string propertyName) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
@@ -124,5 +130,7 @@ namespace BililiveRecorder.Core.Config
         private uint _timingCheckInterval = 5 * 60;
 
         private string _cookie = string.Empty;
+
+        private bool _avoidTxy = true;
     }
 }

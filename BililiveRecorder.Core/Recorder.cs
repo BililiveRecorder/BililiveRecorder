@@ -38,8 +38,10 @@ namespace BililiveRecorder.Core
 
         public Recorder(ConfigV1 config, Func<int, IRecordedRoom> iRecordedRoom)
         {
-            Config = config;
             newIRecordedRoom = iRecordedRoom;
+            Config = config;
+
+            BililiveAPI.Config = config;
 
             tokenSource = new CancellationTokenSource();
             Repeat.Interval(TimeSpan.FromSeconds(3), DownloadWatchdog, tokenSource.Token);
