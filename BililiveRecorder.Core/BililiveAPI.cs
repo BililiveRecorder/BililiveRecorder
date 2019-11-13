@@ -19,7 +19,7 @@ namespace BililiveRecorder.Core
 
         static BililiveAPI()
         {
-            httpclient = new HttpClient { Timeout = TimeSpan.FromSeconds(5) };
+            httpclient = new HttpClient { Timeout = TimeSpan.FromSeconds(10) };
             httpclient.DefaultRequestHeaders.Add("Accept", "application/json, text/javascript, */*; q=0.01");
             httpclient.DefaultRequestHeaders.Add("Referer", "https://live.bilibili.com/");
             httpclient.DefaultRequestHeaders.Add("User-Agent", Utils.UserAgent);
@@ -99,6 +99,10 @@ namespace BililiveRecorder.Core
                 var s = await httpclient.GetStringAsync(url);
                 var j = JObject.Parse(s);
                 return j;
+            }
+            catch (TaskCanceledException)
+            {
+                return null;
             }
             finally
             {
