@@ -134,11 +134,11 @@ namespace BililiveRecorder.Core
                         var withoutTxy = all.Where(x => !x.Contains("txy.")).ToArray();
                         if (withoutTxy.Length > 0)
                         {
-                            return withoutTxy[random.Next(0, withoutTxy.Length - 1)];
+                            return withoutTxy[random.Next(withoutTxy.Length)];
                         }
                         else if (attempt_left <= 0)
                         {
-                            return all[random.Next(0, all.Length - 1)];
+                            return all[random.Next(all.Length)];
                         }
                     }
                     else
@@ -160,7 +160,7 @@ namespace BililiveRecorder.Core
                     var distinct = urls.Distinct().ToArray();
                     if (distinct.Length > 0)
                     {
-                        return distinct[random.Next(0, distinct.Count() - 1)];
+                        return distinct[random.Next(distinct.Length)];
                     }
                 }
                 throw new Exception("没有直播播放地址");
