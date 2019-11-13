@@ -1,7 +1,6 @@
 ﻿using Newtonsoft.Json.Linq;
 using NLog;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -152,11 +151,7 @@ namespace BililiveRecorder.Core
                 // 随机选择一个 url
                 if ((await HttpGetJsonAsync(url))?["data"]?["durl"] is JArray array)
                 {
-                    List<string> urls = new List<string>();
-                    for (int i = 0; i < array.Count; i++)
-                    {
-                        urls.Add(array[i]?["url"]?.ToObject<string>());
-                    }
+                    var urls = array.Select(t => t?["url"]?.ToObject<string>());
                     var distinct = urls.Distinct().ToArray();
                     if (distinct.Length > 0)
                     {
