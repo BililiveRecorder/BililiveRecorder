@@ -105,9 +105,10 @@ namespace BililiveRecorder.FlvProcessor
 
                 var script_tag = funcFlvTag();
                 script_tag.TagType = TagType.DATA;
-                if (Metadata.TryGetValue("BililiveRecorder", out var metadata) && metadata is Dictionary<string, object> dictionary)
+                if (Metadata.ContainsKey("BililiveRecorder"))
                 {
-                    dictionary["starttime"] = DateTime.UtcNow;
+                    // TODO: 更好的写法
+                    (Metadata["BililiveRecorder"] as Dictionary<string, object>)["starttime"] = DateTime.UtcNow;
                 }
                 script_tag.Data = Metadata.ToBytes();
                 script_tag.WriteTo(_targetFile);
