@@ -13,11 +13,11 @@
 ## 功能
 
 - 使用简单
-- 自动修复视频时间戳
+- 使录出的文件时间戳从 0 开始
+- 录制结束后自动写入总时长信息
 - 可以主播开播后自动录制
 - 可以同时录制多个直播间
-- 可以录制“即时回放剪辑”（类似 [Twitch 的 Clip](https://help.twitch.tv/customer/portal/articles/2442508-how-to-use-clips)）
-- 纯 C# 实现，无 Native 依赖
+- 纯 C# 实现，无 ffmpeg 等 native 依赖
 - 开源！
 
 ## 入门 & 开发
@@ -34,7 +34,7 @@
 BililiveRecorder.WPF | .NET Framework 4.6.2
 BililiveRecorder.Core | .NET Standard 2.0
 BililiveRecorder.FlvProcessor | .NET Standard 2.0
-BililiveRecorder.Server | .NET Core 2.0 | 预留坑，将来填
+BililiveRecorder.Server | .NET Core 2.0 | 预留坑，将来填（咕咕咕）
 
 如果你想研究这个项目的源代码，或修改功能的话：
 
@@ -42,8 +42,14 @@ BililiveRecorder.Server | .NET Core 2.0 | 预留坑，将来填
 - 录制逻辑建议从 `BililiveRecorder.Core/Recorder.cs` 开始看
 - FLV数据处理建议从 `BililiveRecorder.FlvProcessor/FlvStreamProcessor.cs` 开始看
 
+## Server 版说明
+
+本项目核心逻辑均与 WPF 界面分离，使用 .NET Standard 2.0 而不是 .NET Framework，可以较轻松地改出可在 Linux 上运行的 .NET Core 版本，但因为本人没时间等原因一直没有做。
+
+如果有有能人士有在 Linux 上运行本项目的需求的话可以自行 fork 修改（但我大概不会 merge 回来）
+
 ## 参考资料 & 鸣谢
 
-- [coreyauger/flv-streamer-2-file](https://github.com/coreyauger/flv-streamer-2-file): 在FLV处理方面参考了很多
-- [zyzsdy/biliroku](https://github.com/zyzsdy/biliroku): 第一个B站直播录播工具
-- [Video File Format Specification Version 10.pdf](https://wwwimages2.adobe.com/content/dam/acom/en/devnet/flv/video_file_format_spec_v10.pdf): FLV视频文件格式规范
+- [Adobe Flash Video File Format Specification 10.1.2.01.pdf](https://www.adobe.com/content/dam/acom/en/devnet/flv/video_file_format_spec_v10_1.pdf)
+- [coreyauger/flv-streamer-2-file](https://github.com/coreyauger/flv-streamer-2-file)
+- [zyzsdy/biliroku](https://github.com/zyzsdy/biliroku): (大概是)第一个B站直播录播工具

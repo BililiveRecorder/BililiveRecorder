@@ -87,12 +87,6 @@ namespace BililiveRecorder.Core.Config
         public uint TimingWatchdogTimeout { get => _timingWatchdogTimeout; set => SetField(ref _timingWatchdogTimeout, value); }
 
         /// <summary>
-        /// 最大直播数据落后时间 毫秒
-        /// </summary>
-        [JsonProperty("timing_watchdog_behind")]
-        public uint TimingWatchdogBehind { get => _timingWatchdogBehind; set => SetField(ref _timingWatchdogBehind, value); }
-
-        /// <summary>
         /// 请求 API 时使用的 Cookie
         /// </summary>
         [JsonProperty("cookie")]
@@ -123,7 +117,6 @@ namespace BililiveRecorder.Core.Config
         private string _workDirectory;
 
         private uint _timingWatchdogTimeout = 10 * 1000;
-        private uint _timingWatchdogBehind = 10 * 1000;
         private uint _timingStreamRetry = 6 * 1000;
         private uint _timingStreamConnect = 3 * 1000;
         private uint _timingDanmakuRetry = 2 * 1000;

@@ -1,4 +1,4 @@
-﻿namespace BililiveRecorder.WPF
+﻿namespace BililiveRecorder.[PROJECT_NAME]
 {
     internal class BuildInfo
     {

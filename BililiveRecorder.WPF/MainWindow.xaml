@@ -95,7 +95,7 @@
                     <DataGridTextColumn Binding="{Binding StreamerName,Mode=OneWay}" Header="主播名字"/>
                     <DataGridTextColumn Binding="{Binding IsRecording,Converter={StaticResource RecordStatusConverter},Mode=OneWay}" Header="录制状态"/>
                     <DataGridTextColumn Binding="{Binding IsMonitoring,Converter={StaticResource MonitorStatusConverter},Mode=OneWay}" Header="是否自动录制"/>
-                    <DataGridTextColumn Binding="{Binding DownloadSpeedKiBps,StringFormat=0.## KiB/s,Mode=OneWay}" Header="录制下载速度"/>
+                    <DataGridTextColumn Binding="{Binding DownloadSpeedMegaBitps,StringFormat=0.## Mbps,Mode=OneWay}" Header="实时下载速度"/>
                     <DataGridTextColumn Binding="{Binding DownloadSpeedPersentage,StringFormat=0.## %,Mode=OneWay}" Header="录制速度比"/>
                     <DataGridTextColumn Binding="{Binding Processor.Clips.Count,Mode=OneWay}" Header="剪辑数量"/>
                 </DataGrid.Columns>
@@ -156,8 +156,8 @@
                 <TextBlock Grid.Row="5" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right">处理中剪辑数量：</TextBlock>
                 <TextBlock Grid.Row="5" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left" Text="{Binding Processor.Clips.Count,Mode=OneWay}"/>
 
-                <TextBlock Grid.Row="6" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right">录制下载速度：</TextBlock>
-                <TextBlock Grid.Row="6" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left" Text="{Binding DownloadSpeedKiBps,StringFormat=0.## KiB/s,Mode=OneWay}"/>
+                <TextBlock Grid.Row="6" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right">实时下载速度：</TextBlock>
+                <TextBlock Grid.Row="6" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left" Text="{Binding DownloadSpeedMegaBitps,StringFormat=0.## Mbps,Mode=OneWay}"/>
 
                 <TextBlock Grid.Row="7" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right">录制速度比：</TextBlock>
                 <TextBlock Grid.Row="7" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left" Text="{Binding DownloadSpeedPersentage,StringFormat=0.## %,Mode=OneWay}"/>

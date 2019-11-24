@@ -261,5 +261,5 @@ paket-files/
 __pycache__/
 *.pyc
 
-BililiveRecorder.WPF/BuildInfo.cs
+**/BuildInfo.cs
 BililiveRecorder.WPF/Nlog.config

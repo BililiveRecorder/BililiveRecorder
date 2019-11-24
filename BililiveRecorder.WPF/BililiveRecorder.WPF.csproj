@@ -196,7 +196,6 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <None Include="BuildInfo.txt" />
     <None Include="Properties\app.manifest" />
     <Resource Include="ico.ico" />
     <Content Include="NLog.config">
@@ -225,7 +224,7 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>cd $(SolutionDir)
-PowerShell -ExecutionPolicy Bypass -File .\CI\patch_buildinfo.ps1
+powershell -ExecutionPolicy Bypass -File .\CI\patch_buildinfo.ps1 WPF
 copy /y .\BililiveRecorder.WPF\Nlog.$(ConfigurationName).config .\BililiveRecorder.WPF\NLog.config</PreBuildEvent>
   </PropertyGroup>
   <PropertyGroup>

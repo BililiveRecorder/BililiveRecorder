@@ -1,7 +1,6 @@
 ﻿using Newtonsoft.Json.Linq;
 using NLog;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -134,11 +133,11 @@ namespace BililiveRecorder.Core
                         var withoutTxy = all.Where(x => !x.Contains("txy.")).ToArray();
                         if (withoutTxy.Length > 0)
                         {
-                            return withoutTxy[random.Next(0, withoutTxy.Length - 1)];
+                            return withoutTxy[random.Next(withoutTxy.Length)];
                         }
                         else if (attempt_left <= 0)
                         {
-                            return all[random.Next(0, all.Length - 1)];
+                            return all[random.Next(all.Length)];
                         }
                     }
                     else
@@ -152,15 +151,11 @@ namespace BililiveRecorder.Core
                 // 随机选择一个 url
                 if ((await HttpGetJsonAsync(url))?["data"]?["durl"] is JArray array)
                 {
-                    List<string> urls = new List<string>();
-                    for (int i = 0; i < array.Count; i++)
-                    {
-                        urls.Add(array[i]?["url"]?.ToObject<string>());
-                    }
+                    var urls = array.Select(t => t?["url"]?.ToObject<string>());
                     var distinct = urls.Distinct().ToArray();
                     if (distinct.Length > 0)
                     {
-                        return distinct[random.Next(0, distinct.Count() - 1)];
+                        return distinct[random.Next(distinct.Length)];
                     }
                 }
                 throw new Exception("没有直播播放地址");

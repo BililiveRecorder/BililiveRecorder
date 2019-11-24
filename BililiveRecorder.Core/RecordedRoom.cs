@@ -82,7 +82,7 @@ namespace BililiveRecorder.Core
         public CancellationTokenSource cancellationTokenSource = null;
 
         private double _DownloadSpeedPersentage = 0;
-        private double _DownloadSpeedKiBps = 0;
+        private double _DownloadSpeedMegaBitps = 0;
         private long _lastUpdateSize = 0;
         private int _lastUpdateTimestamp = 0;
         public DateTime LastUpdateDateTime { get; private set; } = DateTime.Now;
@@ -91,10 +91,10 @@ namespace BililiveRecorder.Core
             get { return _DownloadSpeedPersentage; }
             private set { if (value != _DownloadSpeedPersentage) { _DownloadSpeedPersentage = value; TriggerPropertyChanged(nameof(DownloadSpeedPersentage)); } }
         }
-        public double DownloadSpeedKiBps
+        public double DownloadSpeedMegaBitps
         {
-            get { return _DownloadSpeedKiBps; }
-            private set { if (value != _DownloadSpeedKiBps) { _DownloadSpeedKiBps = value; TriggerPropertyChanged(nameof(DownloadSpeedKiBps)); } }
+            get { return _DownloadSpeedMegaBitps; }
+            private set { if (value != _DownloadSpeedMegaBitps) { _DownloadSpeedMegaBitps = value; TriggerPropertyChanged(nameof(DownloadSpeedMegaBitps)); } }
         }
 
         public RecordedRoom(ConfigV1 config,
@@ -192,7 +192,7 @@ namespace BililiveRecorder.Core
                     cancellationTokenSource.Cancel();
                     if (!(StreamDownloadTask?.Wait(TimeSpan.FromSeconds(2)) ?? true))
                     {
-                        logger.Log(RoomId, LogLevel.Warn, "尝试强制关闭连接，请检查网络连接是否稳定");
+                        logger.Log(RoomId, LogLevel.Warn, "停止录制超时，尝试强制关闭连接，请检查网络连接是否稳定");
 
                         _stream?.Close();
                         _stream?.Dispose();
@@ -283,7 +283,7 @@ namespace BililiveRecorder.Core
                             },
                             {
                                 "version",
-                                "TEST"
+                                BuildInfo.Version + " " + BuildInfo.HeadShaShort
                             },
                             {
                                 "roomid",
@@ -351,8 +351,8 @@ namespace BililiveRecorder.Core
                     }
 
                     logger.Log(RoomId, LogLevel.Info,
-                           (token.IsCancellationRequested ? "用户操作" : "直播已结束") + "，停止录制。"
-                           + (_retry ? "将重试启动。" : ""));
+                        (token.IsCancellationRequested ? "本地操作结束当前录制。" : "服务器关闭直播流，可能是直播已结束。")
+                        + (_retry ? "将重试启动。" : ""));
                     if (_retry)
                     {
                         StreamMonitor.Check(TriggerType.HttpApiRecheck, (int)_config.TimingStreamRetry);
@@ -383,7 +383,7 @@ namespace BililiveRecorder.Core
                 _response = null;
 
                 _lastUpdateTimestamp = 0;
-                DownloadSpeedKiBps = 0d;
+                DownloadSpeedMegaBitps = 0d;
                 DownloadSpeedPersentage = 0d;
                 TriggerPropertyChanged(nameof(IsRecording));
             }
@@ -394,7 +394,7 @@ namespace BililiveRecorder.Core
                 _lastUpdateSize += bytesRead;
                 if (passedSeconds > 1.5)
                 {
-                    DownloadSpeedKiBps = _lastUpdateSize / passedSeconds / 1024; // KiB per sec
+                    DownloadSpeedMegaBitps = _lastUpdateSize / passedSeconds * 8d / 1_000_000d; // mega bit per second
                     DownloadSpeedPersentage = (DownloadSpeedPersentage / 2) + ((Processor.TotalMaxTimestamp - _lastUpdateTimestamp) / passedSeconds / 1000 / 2); // ((RecordedTime/1000) / RealTime)%
                     _lastUpdateTimestamp = Processor.TotalMaxTimestamp;
                     _lastUpdateSize = 0;
