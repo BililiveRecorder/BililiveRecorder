@@ -17,7 +17,7 @@ namespace BililiveRecorder.Core
         bool IsRecording { get; }
 
         double DownloadSpeedPersentage { get; }
-        double DownloadSpeedKiBps { get; }
+        double DownloadSpeedMegaBitps { get; }
         DateTime LastUpdateDateTime { get; }
 
         void Clip();

@@ -39,7 +39,10 @@ namespace BililiveRecorder.WPF
                 "问题反馈邮箱： rec@danmuji.org",
                 "QQ群： 689636812",
                 "",
-                "功能调整：删除直播间按钮调整了位置，从软件界面右侧移动到了列表右键菜单"
+                "删除直播间按钮在列表右键菜单里",
+                "",
+                "录制速度比 在 100% 左右说明跟上了主播直播的速度",
+                "小于 100% 说明录播电脑的下载带宽不够，跟不上录制直播"
             };
 
         public static void AddLog(string message) => _AddLog?.Invoke(message);

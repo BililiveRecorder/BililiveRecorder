@@ -82,7 +82,7 @@ namespace BililiveRecorder.Core
         public CancellationTokenSource cancellationTokenSource = null;
 
         private double _DownloadSpeedPersentage = 0;
-        private double _DownloadSpeedKiBps = 0;
+        private double _DownloadSpeedMegaBitps = 0;
         private long _lastUpdateSize = 0;
         private int _lastUpdateTimestamp = 0;
         public DateTime LastUpdateDateTime { get; private set; } = DateTime.Now;
@@ -91,10 +91,10 @@ namespace BililiveRecorder.Core
             get { return _DownloadSpeedPersentage; }
             private set { if (value != _DownloadSpeedPersentage) { _DownloadSpeedPersentage = value; TriggerPropertyChanged(nameof(DownloadSpeedPersentage)); } }
         }
-        public double DownloadSpeedKiBps
+        public double DownloadSpeedMegaBitps
         {
-            get { return _DownloadSpeedKiBps; }
-            private set { if (value != _DownloadSpeedKiBps) { _DownloadSpeedKiBps = value; TriggerPropertyChanged(nameof(DownloadSpeedKiBps)); } }
+            get { return _DownloadSpeedMegaBitps; }
+            private set { if (value != _DownloadSpeedMegaBitps) { _DownloadSpeedMegaBitps = value; TriggerPropertyChanged(nameof(DownloadSpeedMegaBitps)); } }
         }
 
         public RecordedRoom(ConfigV1 config,
@@ -383,7 +383,7 @@ namespace BililiveRecorder.Core
                 _response = null;
 
                 _lastUpdateTimestamp = 0;
-                DownloadSpeedKiBps = 0d;
+                DownloadSpeedMegaBitps = 0d;
                 DownloadSpeedPersentage = 0d;
                 TriggerPropertyChanged(nameof(IsRecording));
             }
@@ -394,7 +394,7 @@ namespace BililiveRecorder.Core
                 _lastUpdateSize += bytesRead;
                 if (passedSeconds > 1.5)
                 {
-                    DownloadSpeedKiBps = _lastUpdateSize / passedSeconds / 1024; // KiB per sec
+                    DownloadSpeedMegaBitps = _lastUpdateSize / passedSeconds * 8d / 1_000_000d; // mega bit per second
                     DownloadSpeedPersentage = (DownloadSpeedPersentage / 2) + ((Processor.TotalMaxTimestamp - _lastUpdateTimestamp) / passedSeconds / 1000 / 2); // ((RecordedTime/1000) / RealTime)%
                     _lastUpdateTimestamp = Processor.TotalMaxTimestamp;
                     _lastUpdateSize = 0;
