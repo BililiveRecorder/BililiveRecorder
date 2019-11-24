@@ -20,4 +20,8 @@
     <PackageReference Include="Autofac" Version="4.8.1" />
     <PackageReference Include="NLog" Version="4.5.10" />
   </ItemGroup>
+  <PropertyGroup>
+    <PreBuildEvent>cd $(SolutionDir)
+powershell -ExecutionPolicy Bypass -File .\CI\patch_buildinfo.ps1 FlvProcessor</PreBuildEvent>
+  </PropertyGroup>
 </Project>

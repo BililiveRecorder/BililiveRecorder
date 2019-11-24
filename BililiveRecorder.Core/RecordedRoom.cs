@@ -283,7 +283,7 @@ namespace BililiveRecorder.Core
                             },
                             {
                                 "version",
-                                "TEST"
+                                BuildInfo.Version + " " + BuildInfo.HeadShaShort
                             },
                             {
                                 "roomid",
