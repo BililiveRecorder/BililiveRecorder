@@ -249,7 +249,7 @@ namespace BililiveRecorder.FlvProcessor
             {
                 if (_hasOffset)
                 {
-                    tag.SetTimeStamp(Math.Max(0, tag.TimeStamp - _baseTimeStamp)); // 修复时间戳
+                    tag.SetTimeStamp(tag.TimeStamp - _baseTimeStamp);
                     TotalMaxTimestamp = Math.Max(TotalMaxTimestamp, tag.TimeStamp);
                 }
                 else

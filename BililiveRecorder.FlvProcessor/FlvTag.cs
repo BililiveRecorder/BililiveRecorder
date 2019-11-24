@@ -77,8 +77,7 @@ namespace BililiveRecorder.FlvProcessor
             var size = BitConverter.GetBytes(useDataSize ? Data.Length : TagSize).ToBE();
             Buffer.BlockCopy(size, 1, tag, 1, 3);
 
-            byte[] timing = new byte[4];
-            Buffer.BlockCopy(BitConverter.GetBytes(Math.Max(0, TimeStamp - offset)).ToBE(), 0, timing, 0, timing.Length);
+            byte[] timing = BitConverter.GetBytes(TimeStamp - offset).ToBE();
             Buffer.BlockCopy(timing, 1, tag, 4, 3);
             Buffer.BlockCopy(timing, 0, tag, 7, 1);
 
