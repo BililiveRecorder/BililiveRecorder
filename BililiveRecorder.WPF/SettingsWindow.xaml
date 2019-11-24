@@ -59,7 +59,7 @@
                     <ColumnDefinition Width="2*"/>
                     <ColumnDefinition Width="3*"/>
                 </Grid.ColumnDefinitions>
-                <TextBlock Grid.Row="0" Grid.Column="0">录制重连间隔：</TextBlock>
+                <TextBlock Grid.Row="0" Grid.Column="0">录制重试间隔：</TextBlock>
                 <Grid Grid.Row="0" Grid.Column="1" VerticalAlignment="Center">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="1*"/>
@@ -130,7 +130,7 @@
                     </local:ClickSelectTextBox>
                     <TextBlock Grid.Column="1" Margin="5,0,10,0">毫秒</TextBlock>
                 </Grid>
-                <TextBlock Grid.Row="3" Grid.Column="0">录制超时时间：</TextBlock>
+                <TextBlock Grid.Row="3" Grid.Column="0">接收数据超时：</TextBlock>
                 <Grid Grid.Row="3" Grid.Column="1" VerticalAlignment="Center">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="1*"/>
@@ -148,31 +148,6 @@
                                     <TextBlock FontWeight="Bold">注：</TextBlock>
                                     <TextBlock>在一定时间没有收到直播服务器发送的数据后断开重连。</TextBlock>
                                     <TextBlock>用于防止因为玄学网络问题导致卡住</TextBlock>
-                                </StackPanel>
-                            </ToolTip>
-                        </local:ClickSelectTextBox.ToolTip>
-                    </local:ClickSelectTextBox>
-                    <TextBlock Grid.Column="1" Margin="5,0,10,0">毫秒</TextBlock>
-                </Grid>
-                <TextBlock Grid.Row="4" Grid.Column="0">录制最长落后：</TextBlock>
-                <Grid Grid.Row="4" Grid.Column="1" VerticalAlignment="Center">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="1*"/>
-                        <ColumnDefinition Width="Auto"/>
-                    </Grid.ColumnDefinitions>
-                    <local:ClickSelectTextBox Grid.Column="0" Text="{Binding TimingWatchdogBehind,Delay=500,UpdateSourceTrigger=PropertyChanged}">
-                        <local:ClickSelectTextBox.ToolTip>
-                            <ToolTip>
-                                <StackPanel>
-                                    <StackPanel.Resources>
-                                        <Style TargetType="TextBlock">
-                                            <Setter Property="TextAlignment" Value="Left"/>
-                                        </Style>
-                                    </StackPanel.Resources>
-                                    <TextBlock FontWeight="Bold">注：</TextBlock>
-                                    <TextBlock>录制比主播直播落后一定时间后自动断开重连。</TextBlock>
-                                    <TextBlock>实际使用中如果发生了因为跟不上主播直播</TextBlock>
-                                    <TextBlock>的情况，说明录制电脑的网速不够。</TextBlock>
                                 </StackPanel>
                             </ToolTip>
                         </local:ClickSelectTextBox.ToolTip>

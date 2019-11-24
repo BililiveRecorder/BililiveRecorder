@@ -192,7 +192,7 @@ namespace BililiveRecorder.Core
                     cancellationTokenSource.Cancel();
                     if (!(StreamDownloadTask?.Wait(TimeSpan.FromSeconds(2)) ?? true))
                     {
-                        logger.Log(RoomId, LogLevel.Warn, "尝试强制关闭连接，请检查网络连接是否稳定");
+                        logger.Log(RoomId, LogLevel.Warn, "停止录制超时，尝试强制关闭连接，请检查网络连接是否稳定");
 
                         _stream?.Close();
                         _stream?.Dispose();
@@ -351,8 +351,8 @@ namespace BililiveRecorder.Core
                     }
 
                     logger.Log(RoomId, LogLevel.Info,
-                           (token.IsCancellationRequested ? "用户操作" : "直播已结束") + "，停止录制。"
-                           + (_retry ? "将重试启动。" : ""));
+                        (token.IsCancellationRequested ? "本地操作结束当前录制。" : "服务器关闭直播流，可能是直播已结束。")
+                        + (_retry ? "将重试启动。" : ""));
                     if (_retry)
                     {
                         StreamMonitor.Check(TriggerType.HttpApiRecheck, (int)_config.TimingStreamRetry);

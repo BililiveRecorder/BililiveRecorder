@@ -213,17 +213,7 @@ namespace BililiveRecorder.Core
                     {
                         if (DateTime.Now - room.LastUpdateDateTime > TimeSpan.FromMilliseconds(Config.TimingWatchdogTimeout))
                         {
-                            logger.Warn("服务器停止提供 [{roomid}] 直播间的直播数据，通常是录制时网络不稳定导致，将会断开重连", room.RoomId);
-                            room.StopRecord();
-                            room.StartRecord();
-                        }
-                        else if (room.Processor != null &&
-                                    ((DateTime.Now - room.Processor.StartDateTime).TotalMilliseconds
-                                    >
-                                    (room.Processor.TotalMaxTimestamp + Config.TimingWatchdogBehind))
-                                )
-                        {
-                            logger.Warn("直播间 [{roomid}] 的下载速度达不到录制标准，将断开重连。请检查网络是否稳定", room.RoomId);
+                            logger.Warn("服务器未断开连接但停止提供 [{roomid}] 直播间的直播数据，通常是录制侧网络不稳定导致，将会断开重连", room.RoomId);
                             room.StopRecord();
                             room.StartRecord();
                         }
