@@ -16,7 +16,7 @@ namespace BililiveRecorder.WPF
 
         private void CheckUpdate(object sender, StartupEventArgs e)
         {
-            logger.Debug($"Starting. FileV:{typeof(App).Assembly.GetName().Version.ToString(4)}, BuildV:{BuildInfo.Version}, Hash:{BuildInfo.HeadSha1}");
+            logger.Debug($"Starting. FileV:{typeof(App).Assembly.GetName().Version.ToString(4)}, BuildV:{ThisAssembly.Git.BaseTag}, Hash:{ThisAssembly.Git.Commit}");
             logger.Debug("Environment.CommandLine: " + Environment.CommandLine);
             logger.Debug("Environment.CurrentDirectory: " + Environment.CurrentDirectory);
 #if !DEBUG

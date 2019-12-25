@@ -33,7 +33,7 @@ namespace BililiveRecorder.WPF
         public ObservableCollection<string> Logs { get; set; } =
             new ObservableCollection<string>()
             {
-                "当前版本：" + BuildInfo.Version,
+                $"当前版本：{ThisAssembly.Git.BaseTag}",
                 "网站： https://rec.danmuji.org",
                 "更新日志： https://rec.danmuji.org/allposts",
                 "问题反馈邮箱： rec@danmuji.org",
@@ -72,7 +72,7 @@ namespace BililiveRecorder.WPF
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            Title += " " + BuildInfo.Version + " " + BuildInfo.HeadShaShort;
+            Title += $"{ThisAssembly.Git.BaseTag} {ThisAssembly.Git.Commit}";
 
             bool skip_ui = false;
             string workdir = string.Empty;
