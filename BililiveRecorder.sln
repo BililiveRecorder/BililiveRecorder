@@ -1,16 +1,18 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.27428.1
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29728.190
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BililiveRecorder.WPF", "BililiveRecorder.WPF\BililiveRecorder.WPF.csproj", "{0C7D4236-BF43-4944-81FE-E07E05A3F31D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BililiveRecorder.Core", "BililiveRecorder.Core\BililiveRecorder.Core.csproj", "{CB9F2D58-181D-49F7-9560-D35A9B9C1D8C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BililiveRecorder.Core", "BililiveRecorder.Core\BililiveRecorder.Core.csproj", "{CB9F2D58-181D-49F7-9560-D35A9B9C1D8C}"
 	ProjectSection(ProjectDependencies) = postProject
 		{51748048-1949-4218-8DED-94014ABE7633} = {51748048-1949-4218-8DED-94014ABE7633}
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BililiveRecorder.FlvProcessor", "BililiveRecorder.FlvProcessor\BililiveRecorder.FlvProcessor.csproj", "{51748048-1949-4218-8DED-94014ABE7633}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BililiveRecorder.FlvProcessor", "BililiveRecorder.FlvProcessor\BililiveRecorder.FlvProcessor.csproj", "{51748048-1949-4218-8DED-94014ABE7633}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BililiveRecorder.DanmakuRec", "BililiveRecorder.DanmakuRec\BililiveRecorder.DanmakuRec.csproj", "{62BC7C11-3FC2-4120-A564-01AF8507A103}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -18,10 +20,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{51748048-1949-4218-8DED-94014ABE7633}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{51748048-1949-4218-8DED-94014ABE7633}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{51748048-1949-4218-8DED-94014ABE7633}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{51748048-1949-4218-8DED-94014ABE7633}.Release|Any CPU.Build.0 = Release|Any CPU
 		{0C7D4236-BF43-4944-81FE-E07E05A3F31D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{0C7D4236-BF43-4944-81FE-E07E05A3F31D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0C7D4236-BF43-4944-81FE-E07E05A3F31D}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -30,6 +28,14 @@ Global
 		{CB9F2D58-181D-49F7-9560-D35A9B9C1D8C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CB9F2D58-181D-49F7-9560-D35A9B9C1D8C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CB9F2D58-181D-49F7-9560-D35A9B9C1D8C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{51748048-1949-4218-8DED-94014ABE7633}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{51748048-1949-4218-8DED-94014ABE7633}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{51748048-1949-4218-8DED-94014ABE7633}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{51748048-1949-4218-8DED-94014ABE7633}.Release|Any CPU.Build.0 = Release|Any CPU
+		{62BC7C11-3FC2-4120-A564-01AF8507A103}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{62BC7C11-3FC2-4120-A564-01AF8507A103}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{62BC7C11-3FC2-4120-A564-01AF8507A103}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{62BC7C11-3FC2-4120-A564-01AF8507A103}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
