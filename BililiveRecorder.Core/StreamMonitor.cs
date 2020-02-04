@@ -103,7 +103,7 @@ namespace BililiveRecorder.Core
             Task.Run(() => ConnectWithRetry());
         }
 
-        public void Setup_DanmakuRec(IRecordedRoom recroom)
+        public void Setup_DanmakuRec(RecordedRoom recroom)
         {
             this.danmaku_rec = new DanmakuRecorder(this, config, recroom);
         }
