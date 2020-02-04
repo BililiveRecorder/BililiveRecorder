@@ -23,6 +23,7 @@ namespace BililiveRecorder.Core
         /// <param name="config">设置</param>
         public DanmakuRecorder(StreamMonitor monitor, ConfigV1 config, IRecordedRoom recordedRoom)
         {
+            logger.Log(LogLevel.Debug, "弹幕录制模块已装载");
             record_filter = new List<MsgTypeEnum>();
             if (config.RecDanmaku) record_filter.Add(MsgTypeEnum.Comment);
             if (config.RecDanmaku_gift) record_filter.Add(MsgTypeEnum.GiftSend);
@@ -40,6 +41,7 @@ namespace BililiveRecorder.Core
 
         private void Receiver_ReceivedDanmaku(object sender, ReceivedDanmakuArgs e)
         {
+            logger.Log(LogLevel.Debug, "收到一条弹幕；" + _recordedRoom.IsRecording);
             if (_recordedRoom.IsRecording && record_filter.Contains(e.Danmaku.MsgType))//正在录制符合要记录的类型
             {
                 switch (e.Danmaku.MsgType)
