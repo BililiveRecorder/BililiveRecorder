@@ -216,6 +216,10 @@
       <Project>{cb9f2d58-181d-49f7-9560-d35a9b9c1d8c}</Project>
       <Name>BililiveRecorder.Core</Name>
     </ProjectReference>
+    <ProjectReference Include="..\BililiveRecorder.DanmakuRec\BililiveRecorder.DanmakuRec.csproj">
+      <Project>{62bc7c11-3fc2-4120-a564-01af8507a103}</Project>
+      <Name>BililiveRecorder.DanmakuRec</Name>
+    </ProjectReference>
     <ProjectReference Include="..\BililiveRecorder.FlvProcessor\BililiveRecorder.FlvProcessor.csproj">
       <Project>{51748048-1949-4218-8ded-94014abe7633}</Project>
       <Name>BililiveRecorder.FlvProcessor</Name>

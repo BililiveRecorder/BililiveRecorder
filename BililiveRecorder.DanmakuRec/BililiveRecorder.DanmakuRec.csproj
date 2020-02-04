@@ -7,7 +7,6 @@
   <ItemGroup>
     <ProjectReference Include="..\BililiveRecorder.Core\BililiveRecorder.Core.csproj" />
     <ProjectReference Include="..\BililiveRecorder.FlvProcessor\BililiveRecorder.FlvProcessor.csproj" />
-    <ProjectReference Include="..\BililiveRecorder.WPF\BililiveRecorder.WPF.csproj" />
   </ItemGroup>
 
 </Project>
