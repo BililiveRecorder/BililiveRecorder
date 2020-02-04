@@ -112,6 +112,7 @@ namespace BililiveRecorder.Core
             StreamMonitor = newIStreamMonitor(RoomId);
             StreamMonitor.RoomInfoUpdated += StreamMonitor_RoomInfoUpdated;
             StreamMonitor.StreamStarted += StreamMonitor_StreamStarted;
+            StreamMonitor.Setup_DanmakuRec(this);
 
             StreamMonitor.FetchRoomInfoAsync();
         }
@@ -131,7 +132,6 @@ namespace BililiveRecorder.Core
             }
 
             var r = StreamMonitor.Start();
-            StreamMonitor.Setup_DanmakuRec(this);
             TriggerPropertyChanged(nameof(IsMonitoring));
             return r;
         }

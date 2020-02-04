@@ -41,9 +41,12 @@ namespace BililiveRecorder.Core
 
         private void Receiver_ReceivedDanmaku(object sender, ReceivedDanmakuArgs e)
         {
-            logger.Log(LogLevel.Debug, "收到一条弹幕；" + _recordedRoom.IsRecording);
             if (_recordedRoom.IsRecording && record_filter.Contains(e.Danmaku.MsgType))//正在录制符合要记录的类型
             {
+                //logger.Log(LogLevel.Debug, "收到一条弹幕；" + e.Danmaku.RawData);
+
+                //TODO: 从Json中拿出发送时间戳和其他信息并转存为某一格式
+
                 switch (e.Danmaku.MsgType)
                 {
                     case MsgTypeEnum.Comment:
@@ -72,7 +75,7 @@ namespace BililiveRecorder.Core
 
         private void _StreamStarted(object sender, StreamStartedArgs e)
         {
-
+            logger.Log(LogLevel.Debug, "弹幕录制：直播间开播");
         }
     }
 }
