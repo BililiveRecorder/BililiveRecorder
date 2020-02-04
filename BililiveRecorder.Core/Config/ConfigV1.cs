@@ -98,6 +98,42 @@ namespace BililiveRecorder.Core.Config
         [JsonProperty("avoidtxy")]
         public bool AvoidTxy { get => _avoidTxy; set => SetField(ref _avoidTxy, value); }
 
+        /// <summary>
+        /// 是否记录文本弹幕
+        /// </summary>
+        [JsonProperty("RecDanmaku")]
+        public bool RecDanmaku { get => _rec_danmaku; set => SetField(ref _rec_danmaku, value); }
+
+        /// <summary>
+        /// 是否记录礼物
+        /// </summary>
+        [JsonProperty("RecDanmaku_gift")]
+        public bool RecDanmaku_gift { get => _rec_danmaku_gift; set => SetField(ref _rec_danmaku_gift, value); }
+
+        /// <summary>
+        /// 是否记录欢迎老爷
+        /// </summary>
+        [JsonProperty("RecDanmaku_welcome")]
+        public bool RecDanmaku_welcome { get => _rec_danmaku_welcome; set => SetField(ref _rec_danmaku_welcome, value); }
+
+        /// <summary>
+        /// 是否记录欢迎船员
+        /// </summary>
+        [JsonProperty("RecDanmaku_welguard")]
+        public bool RecDanmaku_welguard { get => _rec_danmaku_welguard; set => SetField(ref _rec_danmaku_welguard, value); }
+
+        /// <summary>
+        /// 是否记录上船
+        /// </summary>
+        [JsonProperty("RecDanmaku_guardbuy")]
+        public bool RecDanmaku_guardbuy { get => _rec_danmaku_guardbuy; set => SetField(ref _rec_danmaku_guardbuy, value); }
+
+        /// <summary>
+        /// 是否记录未知弹幕类型
+        /// </summary>
+        [JsonProperty("RecDanmaku_unknown")]
+        public bool RecDanmaku_unknown { get => _rec_danmaku_unknown; set => SetField(ref _rec_danmaku_unknown, value); }
+
         #region INotifyPropertyChanged
         public event PropertyChangedEventHandler PropertyChanged;
         protected virtual void OnPropertyChanged(string propertyName) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
@@ -121,6 +157,13 @@ namespace BililiveRecorder.Core.Config
         private uint _timingStreamConnect = 3 * 1000;
         private uint _timingDanmakuRetry = 2 * 1000;
         private uint _timingCheckInterval = 5 * 60;
+
+        private bool _rec_danmaku = false;
+        private bool _rec_danmaku_gift = false;
+        private bool _rec_danmaku_welcome = false;
+        private bool _rec_danmaku_welguard = false;
+        private bool _rec_danmaku_guardbuy = false;
+        private bool _rec_danmaku_unknown = false;
 
         private string _cookie = string.Empty;
 
