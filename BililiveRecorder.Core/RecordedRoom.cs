@@ -131,6 +131,7 @@ namespace BililiveRecorder.Core
             }
 
             var r = StreamMonitor.Start();
+            StreamMonitor.Setup_DanmakuRec(this);
             TriggerPropertyChanged(nameof(IsMonitoring));
             return r;
         }

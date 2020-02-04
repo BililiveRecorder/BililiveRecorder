@@ -4,9 +4,9 @@ using NLog;
 using System;
 using System.Collections.Generic;
 
-namespace BililiveRecorder.DanmakuRec
+namespace BililiveRecorder.Core
 {
-    public class Recorder
+    public class DanmakuRecorder
     {
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
         public List<MsgTypeEnum> record_filter;
@@ -21,7 +21,7 @@ namespace BililiveRecorder.DanmakuRec
         /// </summary>
         /// <param name="monitor">对应房间的监视器</param>
         /// <param name="config">设置</param>
-        public Recorder(StreamMonitor monitor, ConfigV1 config, IRecordedRoom recordedRoom)
+        public DanmakuRecorder(StreamMonitor monitor, ConfigV1 config, IRecordedRoom recordedRoom)
         {
             record_filter = new List<MsgTypeEnum>();
             if (config.RecDanmaku) record_filter.Add(MsgTypeEnum.Comment);

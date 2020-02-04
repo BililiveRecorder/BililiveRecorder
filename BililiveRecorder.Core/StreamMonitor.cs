@@ -43,6 +43,7 @@ namespace BililiveRecorder.Core
         private Thread dmReceiveMessageLoopThread;
         private CancellationTokenSource dmTokenSource = null;
         private readonly Timer httpTimer;
+        private DanmakuRecorder danmaku_rec;
 
         public int Roomid { get; private set; } = 0;
         public bool IsMonitoring { get; private set; } = false;
@@ -100,6 +101,11 @@ namespace BililiveRecorder.Core
             };
 
             Task.Run(() => ConnectWithRetry());
+        }
+
+        public void Setup_DanmakuRec(IRecordedRoom recroom)
+        {
+            this.danmaku_rec = new DanmakuRecorder(this, config, recroom);
         }
 
         private void Receiver_ReceivedDanmaku(object sender, ReceivedDanmakuArgs e)
