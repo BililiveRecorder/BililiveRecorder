@@ -23,6 +23,11 @@ namespace BililiveRecorder.Core
         private int _realRoomid;
         private string _streamerName;
 
+        /// <summary>
+        /// 视频写入到的文件
+        /// </summary>
+        public string rec_path;
+
         public int ShortRoomId
         {
             get => _roomid;
@@ -112,7 +117,6 @@ namespace BililiveRecorder.Core
             StreamMonitor = newIStreamMonitor(RoomId);
             StreamMonitor.RoomInfoUpdated += StreamMonitor_RoomInfoUpdated;
             StreamMonitor.StreamStarted += StreamMonitor_StreamStarted;
-            StreamMonitor.Setup_DanmakuRec(this);
 
             StreamMonitor.FetchRoomInfoAsync();
         }
@@ -221,6 +225,8 @@ namespace BililiveRecorder.Core
             }
 
             // HttpWebRequest request = null;
+
+            StreamMonitor.Setup_DanmakuRec(this);
 
             cancellationTokenSource = new CancellationTokenSource();
             var token = cancellationTokenSource.Token;
@@ -415,8 +421,12 @@ namespace BililiveRecorder.Core
             Dispose(true);
         }
 
-        private string GetStreamFilePath() => Path.Combine(_config.WorkDirectory, RoomId.ToString(), "record",
+        private string GetStreamFilePath()
+        {
+            rec_path = Path.Combine(_config.WorkDirectory, RoomId.ToString(), "record",
             $@"record-{RoomId}-{DateTime.Now.ToString("yyyyMMdd-HHmmss")}-{random.Next(100, 999)}.flv".RemoveInvalidFileName());
+            return rec_path;
+        }
 
         private string GetClipFilePath() => Path.Combine(_config.WorkDirectory, RoomId.ToString(), "clip",
             $@"clip-{RoomId}-{DateTime.Now.ToString("yyyyMMdd-HHmmss")}-{random.Next(100, 999)}.flv".RemoveInvalidFileName());
