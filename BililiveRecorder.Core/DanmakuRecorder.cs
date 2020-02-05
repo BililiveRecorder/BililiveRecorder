@@ -50,6 +50,18 @@ namespace BililiveRecorder.Core
 
             #region 弹幕文件的头部
             stream_to_file.WriteLine("<?xml version=\"1.0\" encoding=\"UTF - 8\"?>");
+            stream_to_file.WriteLine("<!-- " +
+                "BililiveRecorder\n" +
+                "文件中将包含一些必要的冗余信息以便在时间轴错乱时有机会重新校对时间轴\n" +
+                "这些冗余信息不能被其余的弹幕查看软件所理解\n" +
+                "如果这个文件无法被正确使用，而里面记录了您重要的录播等弹幕数据，请联系我；\n" +
+                "如果你相信软件存在问题，欢迎创建Issue\n\n" +
+                "[弹幕部分开发者]\n" +
+                "Github: @developer_ken\n" +
+                "E-mail: dengbw01@outlook.com\n" +
+                "Bilibili: @鸡生蛋蛋生鸡鸡生万物\n" +
+                "QQ: 1250542735\n" +
+                " -->");
             stream_to_file.WriteLine("<i>");
             stream_to_file.WriteLine("<chatserver>chat.bilibili.com</chatserver>");
             stream_to_file.WriteLine("<chatid>000" + roomId + "</chatid>");//用000开头表示直播弹幕
@@ -68,7 +80,7 @@ namespace BililiveRecorder.Core
             _list.Add(roomId, this);
 
             stream_begin = DateTimeToUnixTime(DateTime.Now);
-
+            stream_to_file.WriteLine("<RECOVER_INFO Time_Start=" + stream_begin + " />");
             logger.Log(roomId, LogLevel.Debug, "弹幕录制：直播间开播(@" + stream_begin + ")");
         }
         public static int DateTimeToUnixTime(DateTime dateTime)
@@ -90,16 +102,18 @@ namespace BililiveRecorder.Core
                         logger.Log(LogLevel.Info, "[弹幕]<" + e.Danmaku.UserName + ">" + e.Danmaku.CommentText);
                         string[] displaydata_ = e.Danmaku.DanmakuDisplayInfo.ToString()
                             .Replace("[","").Replace("]", "").Replace("\r", "").Replace("\n", "").Replace(" ", "").Split(',');
-                        logger.Log(LogLevel.Info, "[弹幕]<" + e.Danmaku.UserName + ">SENDTIME = " + e.Danmaku.SendTime);
+                        //logger.Log(LogLevel.Info, "[弹幕]<" + e.Danmaku.UserName + ">SENDTIME = " + e.Danmaku.SendTime);
                         StringBuilder sb = new StringBuilder(70);
                         displaydata_[0] = (e.Danmaku.SendTime - stream_begin).ToString();
-                        foreach(string arg in displaydata_)
+                        displaydata_[6] = e.Danmaku.UserID.ToString();
+                        displaydata_[7] = displaydata_[7].Replace("\"", "");
+                        foreach (string arg in displaydata_)
                         {
                             sb.Append(arg + ",");
                         }
                         sb.Remove(sb.Length-1, 1);
                         logger.Log(LogLevel.Debug, "[弹幕]" + sb);
-                        stream_to_file.WriteLine("<d p=\"" + sb + "\">" + e.Danmaku.CommentText + "</d>");
+                        stream_to_file.WriteLine("<d p=\"" + sb + "\" recover_info_sendtime=" + e.Danmaku.SendTime + ">" + e.Danmaku.CommentText + "</d>");
                         break;
                     case MsgTypeEnum.GiftSend:
                         logger.Log(LogLevel.Info, "[弹幕]<" + e.Danmaku.UserName + ">(" + e.Danmaku.GiftName + ") * " + e.Danmaku.GiftCount);
