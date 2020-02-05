@@ -58,6 +58,19 @@ namespace BililiveRecorder.Core
         /// </list></para>
         /// </summary>
         public string CommentText { get; set; }
+        
+        /// <summary>
+        /// 弹幕被发送的时间
+        /// </summary>
+        public int SendTime { get; set; }
+
+        /// <summary>
+        /// 弹幕该如何被显示
+        /// <para>此项有值的消息类型：<list type="bullet">
+        /// <item><see cref="MsgTypeEnum.Comment"/></item>
+        /// </list></para>
+        /// </summary>
+        public JToken DanmakuDisplayInfo { get; set; }
 
         /// <summary>
         /// 彈幕用戶
@@ -203,6 +216,8 @@ namespace BililiveRecorder.Core
                     IsAdmin = obj["info"][2][2].ToObject<string>() == "1";
                     IsVIP = obj["info"][2][3].ToObject<string>() == "1";
                     UserGuardLevel = obj["info"][7].ToObject<int>();
+                    SendTime = obj["info"][9]["ts"].ToObject<int>();
+                    DanmakuDisplayInfo = obj["info"][0];
                     break;
                 case "SEND_GIFT":
                     MsgType = MsgTypeEnum.GiftSend;

@@ -13,7 +13,7 @@ namespace BililiveRecorder.Core
 
         bool Start();
         void Stop();
-        void Setup_DanmakuRec(RecordedRoom recordedRoom);
+        //DanmakuRecorder Setup_DanmakuRec(RecordedRoom recordedRoom);
         void Check(TriggerType type, int millisecondsDelay = 0);
         Task<RoomInfo> FetchRoomInfoAsync();
     }

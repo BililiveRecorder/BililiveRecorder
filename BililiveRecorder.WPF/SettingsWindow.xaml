@@ -298,11 +298,11 @@
             </Grid>
             <Separator Grid.Row="9" Margin="0,0,0,154"/>
             <CheckBox x:Name="danm_rec_comment" Content="记录弹幕" HorizontalAlignment="Left" Margin="10,6,0,0" Grid.Row="9" VerticalAlignment="Top" IsChecked="{Binding RecDanmaku}"/>
-            <CheckBox x:Name="danm_rec_gift" Content="记录礼物" HorizontalAlignment="Left" Margin="10,26,0,0" Grid.Row="9" VerticalAlignment="Top" IsChecked="{Binding RecDanmaku_gift}"/>
-            <CheckBox x:Name="damn_rec_welcome" Content="记录欢迎信息(老爷)" HorizontalAlignment="Left" Margin="105,5,0,0" Grid.Row="9" VerticalAlignment="Top" IsChecked="{Binding RecDanmaku_welcome}"/>
-            <CheckBox x:Name="damn_rec_welcomeguard" Content="记录欢迎信息(船员)" HorizontalAlignment="Left" Margin="105,26,0,0" Grid.Row="9" VerticalAlignment="Top"  IsChecked="{Binding RecDanmaku_welguard}"/>
-            <CheckBox x:Name="damn_rec_guardbuy" Content="记录上船" HorizontalAlignment="Left" Margin="10,46,0,0" Grid.Row="9" VerticalAlignment="Top"  IsChecked="{Binding RecDanmaku_guardbuy}"/>
-            <CheckBox x:Name="damn_rec_unknown" Content="记录其它未知信息" HorizontalAlignment="Left" Margin="105,46,0,0" Grid.Row="9" VerticalAlignment="Top" IsChecked="{Binding RecDanmaku_unknown}"/>
+            <CheckBox x:Name="danm_rec_gift" Content="记录礼物" HorizontalAlignment="Left" Margin="10,26,0,0" Grid.Row="9" VerticalAlignment="Top" IsChecked="{Binding RecDanmaku_gift}" IsEnabled="False"/>
+            <CheckBox x:Name="damn_rec_welcome" Content="记录欢迎信息(老爷)" HorizontalAlignment="Left" Margin="105,5,0,0" Grid.Row="9" VerticalAlignment="Top" IsChecked="{Binding RecDanmaku_welcome}" IsEnabled="False"/>
+            <CheckBox x:Name="damn_rec_welcomeguard" Content="记录欢迎信息(船员)" HorizontalAlignment="Left" Margin="105,26,0,0" Grid.Row="9" VerticalAlignment="Top"  IsChecked="{Binding RecDanmaku_welguard}" IsEnabled="False"/>
+            <CheckBox x:Name="damn_rec_guardbuy" Content="记录上船" HorizontalAlignment="Left" Margin="10,46,0,0" Grid.Row="9" VerticalAlignment="Top"  IsChecked="{Binding RecDanmaku_guardbuy}" IsEnabled="False"/>
+            <CheckBox x:Name="damn_rec_unknown" Content="记录其它未知信息" HorizontalAlignment="Left" Margin="105,46,0,0" Grid.Row="9" VerticalAlignment="Top" IsChecked="{Binding RecDanmaku_unknown}" IsEnabled="False"/>
             <!--
             <TextBlock Grid.Row="4" Grid.Column="0"></TextBlock>
             <StackPanel Grid.Row="4" Grid.Column="1">

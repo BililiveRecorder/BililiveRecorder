@@ -1,9 +1,11 @@
 ﻿using BililiveRecorder.Core;
 using BililiveRecorder.Core.Config;
+using Newtonsoft.Json.Linq;
 using NLog;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
 using System.Threading;
 
 namespace BililiveRecorder.Core
@@ -12,10 +14,17 @@ namespace BililiveRecorder.Core
     {
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
         public List<MsgTypeEnum> record_filter;
+        private static Dictionary<int,DanmakuRecorder> _list = new Dictionary<int, DanmakuRecorder>();
         private StreamMonitor _monitor;
         int roomId = 0;
         RecordedRoom _recordedRoom;
         StreamWriter stream_to_file;
+        /// <summary>
+        /// 注意！这个变量没有后缀的
+        /// </summary>
+        string using_fname;
+
+        int stream_begin;
 
         //private bool isRecording = false;
 
@@ -26,8 +35,10 @@ namespace BililiveRecorder.Core
         /// <param name="config">设置</param>
         public DanmakuRecorder(StreamMonitor monitor, ConfigV1 config, RecordedRoom recordedRoom)
         {
-            stream_to_file = new StreamWriter(recordedRoom.rec_path.Replace(".flv",".xml"));
-            logger.Log(LogLevel.Debug, "弹幕录制模块已装载");
+            //recordedRoom.rec_path
+            using_fname = (DateTime.Now - new DateTime(1970, 1, 1, 0, 0, 0, 0)).TotalSeconds.ToString();
+            stream_to_file = new StreamWriter(using_fname + ".xml");
+            logger.Log(LogLevel.Debug, "弹幕录制暂存为:" + using_fname);
             record_filter = new List<MsgTypeEnum>();
             
             if (config.RecDanmaku) record_filter.Add(MsgTypeEnum.Comment);
@@ -52,23 +63,43 @@ namespace BililiveRecorder.Core
             _recordedRoom = recordedRoom;
             roomId = recordedRoom.RoomId;
             _monitor = monitor;
-            monitor.StreamStarted += _StreamStarted;
+            //monitor.StreamStarted += _StreamStarted;
             monitor.ReceivedDanmaku += Receiver_ReceivedDanmaku;
+            _list.Add(roomId, this);
+
+            stream_begin = DateTimeToUnixTime(DateTime.Now);
+
+            logger.Log(roomId, LogLevel.Debug, "弹幕录制：直播间开播(@" + stream_begin + ")");
+        }
+        public static int DateTimeToUnixTime(DateTime dateTime)
+        {
+            return (int)(dateTime - TimeZone.CurrentTimeZone.ToLocalTime(new DateTime(1970, 1, 1))).TotalSeconds;
         }
 
         private void Receiver_ReceivedDanmaku(object sender, ReceivedDanmakuArgs e)
         {
+            //logger.Log(LogLevel.Debug, "收到一条弹幕；" + e.Danmaku.RawData);
             if (_recordedRoom.IsRecording && record_filter.Contains(e.Danmaku.MsgType))//正在录制符合要记录的类型
             {
-                //logger.Log(LogLevel.Debug, "收到一条弹幕；" + e.Danmaku.RawData);
 
                 //TODO: 从Json中拿出发送时间戳和其他信息并转存为某一格式
                 //<d p="time, type, fontsize, color, timestamp, pool, userID, danmuID">TEXT</d>
-                logger.Log(LogLevel.Debug, "[弹幕]" + e.Danmaku.RawData);
                 switch (e.Danmaku.MsgType)
                 {
                     case MsgTypeEnum.Comment:
                         logger.Log(LogLevel.Info, "[弹幕]<" + e.Danmaku.UserName + ">" + e.Danmaku.CommentText);
+                        string[] displaydata_ = e.Danmaku.DanmakuDisplayInfo.ToString()
+                            .Replace("[","").Replace("]", "").Replace("\r", "").Replace("\n", "").Replace(" ", "").Split(',');
+                        logger.Log(LogLevel.Info, "[弹幕]<" + e.Danmaku.UserName + ">SENDTIME = " + e.Danmaku.SendTime);
+                        StringBuilder sb = new StringBuilder(70);
+                        displaydata_[0] = (e.Danmaku.SendTime - stream_begin).ToString();
+                        foreach(string arg in displaydata_)
+                        {
+                            sb.Append(arg + ",");
+                        }
+                        sb.Remove(sb.Length-1, 1);
+                        logger.Log(LogLevel.Debug, "[弹幕]" + sb);
+                        stream_to_file.WriteLine("<d p=\"" + sb + "\">" + e.Danmaku.CommentText + "</d>");
                         break;
                     case MsgTypeEnum.GiftSend:
                         logger.Log(LogLevel.Info, "[弹幕]<" + e.Danmaku.UserName + ">(" + e.Danmaku.GiftName + ") * " + e.Danmaku.GiftCount);
@@ -83,7 +114,7 @@ namespace BililiveRecorder.Core
                         logger.Log(LogLevel.Info, "[弹幕]<" + e.Danmaku.UserName + ">(欢迎船员)");
                         break;
                     case MsgTypeEnum.Unknown:
-                        logger.Log(LogLevel.Warn, "[弹幕](未解析)" + e.Danmaku.RawData);
+                        logger.Log(LogLevel.Debug, "[弹幕](未解析)" + e.Danmaku.RawData);
                         break;
                     default:
                         break;
@@ -91,9 +122,25 @@ namespace BililiveRecorder.Core
             }
         }
 
-        private void _StreamStarted(object sender, StreamStartedArgs e)
+        public static DanmakuRecorder getRecorderbyRoomId(int roomid)
         {
-            //logger.Log(LogLevel.Debug, "弹幕录制：直播间开播");
+            return _list[roomid];
+        }
+
+        public void FinishFile()
+        {
+            try
+            {
+                stream_to_file.WriteLine("</i>");
+                stream_to_file.Flush();
+                stream_to_file.Close();
+                File.Move(using_fname + ".xml", _recordedRoom.rec_path + ".xml");
+                logger.Log(LogLevel.Debug, "弹幕文件已保存到：" + _recordedRoom.rec_path + ".xml");
+                _list.Remove(roomId);
+            }
+            catch(Exception err) {
+                logger.Log(LogLevel.Error, err.Message);
+            }
         }
     }
 }
