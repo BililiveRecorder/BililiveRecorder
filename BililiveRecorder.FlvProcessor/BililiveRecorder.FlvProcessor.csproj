@@ -17,7 +17,7 @@
     <DebugSymbols>false</DebugSymbols>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="BuildInfo.cs" />
+    <Compile Include="..\TempBuildInfo\BuildInfo.FlvProcessor.cs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Autofac" Version="4.8.1" />
