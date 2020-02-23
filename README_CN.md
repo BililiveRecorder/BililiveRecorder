@@ -5,6 +5,7 @@
 [![需要帮助的 issue](https://img.shields.io/github/issues/Bililive/BililiveRecorder/help%20wanted.svg?label=需要帮助的%20issue)](https://github.com/Bililive/BililiveRecorder/issues?q=is%3Aissue+is%3Aopen+label%3A%22help+wanted%22)
 [![Pull Request Welcome](https://img.shields.io/badge/Pull%20request-欢迎-brightgreen.svg)](#)
 [![开源协议](https://img.shields.io/github/license/Bililive/BililiveRecorder.svg?label=开源协议)](#)
+[<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="112" height="20"><linearGradient id="b" x2="0" y2="100%"><stop offset="0" stop-color="#bbb" stop-opacity=".1"/><stop offset="1" stop-opacity=".1"/></linearGradient><clipPath id="a"><rect width="112" height="20" rx="3" fill="#fff"/></clipPath><g clip-path="url(#a)"><path fill="#555" d="M0 0h39v20H0z"/><path fill="#4c1" d="M39 0h73v20H39z"/><path fill="url(#b)" d="M0 0h112v20H0z"/></g><g fill="#fff" text-anchor="middle" font-family="DejaVu Sans,Verdana,Geneva,sans-serif" font-size="110"> <text x="205" y="150" fill="#010101" fill-opacity=".3" transform="scale(.1)" textLength="290">QQ群</text><text x="205" y="140" transform="scale(.1)" textLength="290">QQ群</text><text x="745" y="150" fill="#010101" fill-opacity=".3" transform="scale(.1)" textLength="630">689636812</text><text x="745" y="140" transform="scale(.1)" textLength="630">689636812</text></g> </svg>](https://jq.qq.com/?_wv=1027&k=5zVwEyf)
 
 ## 安装 & 使用
 
@@ -24,7 +25,7 @@
 
 开发之前，你需要
 
-- Visual Studio 2017 并安装 .NET Core 开发环境
+- Visual Studio 2017 / 2019 并安装 .NET Core 开发环境
 - PowerShell
 
 项目中有两个文件是由 [编译前脚本](./CI/patch_buildinfo.ps1) 生成的，打开项目后先编译整个项目（执行脚本）可以消除 Visual Studio 给出的错误提醒。
