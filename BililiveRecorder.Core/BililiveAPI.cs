@@ -174,16 +174,16 @@ namespace BililiveRecorder.Core
             try
             {
                 var room = await HttpGetJsonAsync($@"https://api.live.bilibili.com/room/v1/Room/get_info?id={roomid}");
-                if (room["code"].ToObject<int>() != 0)
+                if (room?["code"]?.ToObject<int>() != 0)
                 {
-                    logger.Warn("不能获取 {roomid} 的信息1: {errormsg}", roomid, room["message"]?.ToObject<string>());
+                    logger.Warn("不能获取 {roomid} 的信息1: {errormsg}", roomid, room?["message"]?.ToObject<string>() ?? "网络超时");
                     return null;
                 }
 
                 var user = await HttpGetJsonAsync($@"https://api.live.bilibili.com/live_user/v1/UserInfo/get_anchor_in_room?roomid={roomid}");
-                if (user["code"].ToObject<int>() != 0)
+                if (user?["code"]?.ToObject<int>() != 0)
                 {
-                    logger.Warn("不能获取 {roomid} 的信息2: {errormsg}", roomid, user["message"]?.ToObject<string>());
+                    logger.Warn("不能获取 {roomid} 的信息2: {errormsg}", roomid, user?["message"]?.ToObject<string>() ?? "网络超时");
                     return null;
                 }
 
