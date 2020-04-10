@@ -2,6 +2,7 @@
 using NLog;
 using System;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
@@ -229,47 +230,67 @@ namespace BililiveRecorder.Core
             logger.Log(Roomid, LogLevel.Trace, "ReceiveMessageLoop Started");
             try
             {
-                var stableBuffer = new byte[dmClient.ReceiveBufferSize];
+                var stableBuffer = new byte[16];
+                var buffer = new byte[4096];
                 while (dmTcpConnected)
                 {
-                    dmNetStream.ReadB(stableBuffer, 0, 4);
-                    var packetlength = BitConverter.ToInt32(stableBuffer, 0);
-                    packetlength = IPAddress.NetworkToHostOrder(packetlength);
+                    dmNetStream.ReadB(stableBuffer, 0, 16);
+                    Parse2Protocol(stableBuffer, out DanmakuProtocol protocol);
 
-                    if (packetlength < 16)
+                    if (protocol.PacketLength < 16)
                     {
-                        throw new NotSupportedException("协议失败: (L:" + packetlength + ")");
+                        throw new NotSupportedException("协议失败: (L:" + protocol.PacketLength + ")");
                     }
 
-                    dmNetStream.ReadB(stableBuffer, 0, 2);//magic
-                    dmNetStream.ReadB(stableBuffer, 0, 2);//protocol_version 
-                    dmNetStream.ReadB(stableBuffer, 0, 4);
-                    var typeId = BitConverter.ToInt32(stableBuffer, 0);
-                    typeId = IPAddress.NetworkToHostOrder(typeId);
-
-                    dmNetStream.ReadB(stableBuffer, 0, 4);//magic, params?
-                    var playloadlength = packetlength - 16;
-                    if (playloadlength == 0)
+                    var payloadlength = protocol.PacketLength - 16;
+                    if (payloadlength == 0)
                     {
                         continue;//没有内容了
                     }
 
-                    typeId = typeId - 1;//和反编译的代码对应 
-                    var buffer = new byte[playloadlength];
-                    dmNetStream.ReadB(buffer, 0, playloadlength);
-                    switch (typeId)
+                    if (buffer.Length < payloadlength) // 不够长再申请
                     {
-                        case 0:
-                        case 1:
-                        case 2:
+                        buffer = new byte[payloadlength];
+                    }
+
+                    dmNetStream.ReadB(buffer, 0, payloadlength);
+
+                    if (protocol.Version == 2 && protocol.Action == 5) // 处理deflate消息
+                    {
+                        // Skip 0x78 0xDA
+                        using (DeflateStream deflate = new DeflateStream(new MemoryStream(buffer, 2, payloadlength - 2), CompressionMode.Decompress))
+                        {
+                            while (deflate.Read(stableBuffer, 0, 16) > 0)
                             {
-                                var viewer = BitConverter.ToUInt32(buffer.Take(4).Reverse().ToArray(), 0); //观众人数
-                                break;
+                                Parse2Protocol(stableBuffer, out protocol);
+                                payloadlength = protocol.PacketLength - 16;
+                                if (payloadlength == 0)
+                                {
+                                    continue; // 没有内容了
+                                }
+                                if (buffer.Length < payloadlength) // 不够长再申请
+                                {
+                                    buffer = new byte[payloadlength];
+                                }
+                                deflate.Read(buffer, 0, payloadlength);
+                                ProcessDanmaku(protocol.Action, buffer, payloadlength);
                             }
-                        case 3:
-                        case 4://playerCommand
-                            {
-                                var json = Encoding.UTF8.GetString(buffer, 0, playloadlength);
+                        }
+                    }
+                    else
+                    {
+                        ProcessDanmaku(protocol.Action, buffer, payloadlength);
+                    }
+
+                    void ProcessDanmaku(int action, byte[] local_buffer, int length)
+                    {
+                        switch (action)
+                        {
+                            case 3:
+                                // var viewer = BitConverter.ToUInt32(local_buffer.Take(4).Reverse().ToArray(), 0); //观众人数
+                                break;
+                            case 5://playerCommand
+                                var json = Encoding.UTF8.GetString(local_buffer, 0, length);
                                 try
                                 {
                                     ReceivedDanmaku?.Invoke(this, new ReceivedDanmakuArgs() { Danmaku = new DanmakuModel(json) });
@@ -279,12 +300,9 @@ namespace BililiveRecorder.Core
                                     logger.Log(Roomid, LogLevel.Warn, "", ex);
                                 }
                                 break;
-                            }
-                        case 5://newScrollMessage
-                        case 7:
-                        case 16:
-                        default:
-                            break;
+                            default:
+                                break;
+                        }
                     }
                 }
             }
@@ -333,6 +351,51 @@ namespace BililiveRecorder.Core
                 dmNetStream.Flush();
             }
         }
+
+        private static unsafe void Parse2Protocol(byte[] buffer, out DanmakuProtocol protocol)
+        {
+            fixed (byte* ptr = buffer)
+            {
+                protocol = *(DanmakuProtocol*)ptr;
+            }
+            protocol.ChangeEndian();
+        }
+
+        private struct DanmakuProtocol
+        {
+            /// <summary>
+            /// 消息总长度 (协议头 + 数据长度)
+            /// </summary>
+            public int PacketLength;
+            /// <summary>
+            /// 消息头长度 (固定为16[sizeof(DanmakuProtocol)])
+            /// </summary>
+            public short HeaderLength;
+            /// <summary>
+            /// 消息版本号
+            /// </summary>
+            public short Version;
+            /// <summary>
+            /// 消息类型
+            /// </summary>
+            public int Action;
+            /// <summary>
+            /// 参数, 固定为1
+            /// </summary>
+            public int Parameter;
+            /// <summary>
+            /// 转为本机字节序
+            /// </summary>
+            public void ChangeEndian()
+            {
+                PacketLength = IPAddress.HostToNetworkOrder(PacketLength);
+                HeaderLength = IPAddress.HostToNetworkOrder(HeaderLength);
+                Version = IPAddress.HostToNetworkOrder(Version);
+                Action = IPAddress.HostToNetworkOrder(Action);
+                Parameter = IPAddress.HostToNetworkOrder(Parameter);
+            }
+        }
+
 
         #endregion
 
