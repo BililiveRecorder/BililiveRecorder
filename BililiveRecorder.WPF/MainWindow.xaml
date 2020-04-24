@@ -94,6 +94,7 @@
                     <DataGridTextColumn Binding="{Binding RoomId,Mode=OneWay}" Header="房间号"/>
                     <DataGridTextColumn Binding="{Binding StreamerName,Mode=OneWay}" Header="主播名字"/>
                     <DataGridTextColumn Binding="{Binding IsRecording,Converter={StaticResource RecordStatusConverter},Mode=OneWay}" Header="录制状态"/>
+                    <DataGridTextColumn Binding="{Binding Title,Mode=OneWay}" Header="直播间标题"/>
                     <DataGridTextColumn Binding="{Binding IsMonitoring,Converter={StaticResource MonitorStatusConverter},Mode=OneWay}" Header="是否自动录制"/>
                     <DataGridTextColumn Binding="{Binding DownloadSpeedMegaBitps,StringFormat=0.## Mbps,Mode=OneWay}" Header="实时下载速度"/>
                     <DataGridTextColumn Binding="{Binding DownloadSpeedPersentage,StringFormat=0.## %,Mode=OneWay}" Header="录制速度比"/>
