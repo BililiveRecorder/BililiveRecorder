@@ -282,8 +282,8 @@
             <Grid Grid.Row="6" Margin="10,0">
                 <CheckBox IsChecked="{Binding AvoidTxy}">
                     <TextBlock>
-                        尽量不使用有问题的腾讯云服务器
-                        <LineBreak/> 可减少录出奇葩损坏文件的概率
+                        尽量不使用腾讯云服务器
+                        <LineBreak/> 注：目前这个选项勾选与否，没有什么区别。
                     </TextBlock>
                 </CheckBox>
             </Grid>

@@ -141,6 +141,6 @@ namespace BililiveRecorder.Core.Config
         private string _record_filename_format = @"{roomid}-{name}\录制-{roomid}-{date}-{time}-{title}.flv";
         private string _clip_filename_format = @"{roomid}-{name}\剪辑片段-{roomid}-{date}-{time}-{title}.flv";
 
-        private bool _avoidTxy = true;
+        private bool _avoidTxy = false;
     }
 }
