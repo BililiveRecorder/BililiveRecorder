@@ -322,9 +322,8 @@
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
                 <TextBlock HorizontalAlignment="Left">文件名变量说明：</TextBlock>
-                <TextBlock Grid.Row="1" HorizontalAlignment="Left">日期: {date}  时间: {time}   房号: {room_id}</TextBlock>
-                <TextBlock Grid.Row="2" HorizontalAlignment="Left">随机数: {random}  主播名: {streamer_name}</TextBlock>
-                <TextBlock Grid.Row="4" HorizontalAlignment="Left">直播标题: {title}</TextBlock>
+                <TextBlock Grid.Row="1" HorizontalAlignment="Left">日期: {date} 时间: {time} 房间号: {roomid}</TextBlock>
+                <TextBlock Grid.Row="2" HorizontalAlignment="Left">标题: {title} 主播名: {name} 随机数: {random}</TextBlock>
             </Grid>
             <!--
             <TextBlock Grid.Row="4" Grid.Column="0"></TextBlock>

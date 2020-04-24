@@ -138,8 +138,8 @@ namespace BililiveRecorder.Core.Config
 
         private string _cookie = string.Empty;
 
-        private string _record_filename_format = @"record-{room_id}-{date}-{time}-{random}";
-        private string _clip_filename_format = @"record-{room_id}-{date}-{time}-{random}";
+        private string _record_filename_format = @"{roomid}-{name}\录制-{roomid}-{date}-{time}-{title}.flv";
+        private string _clip_filename_format = @"{roomid}-{name}\剪辑片段-{roomid}-{date}-{time}-{title}.flv";
 
         private bool _avoidTxy = true;
     }
