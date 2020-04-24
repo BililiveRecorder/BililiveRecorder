@@ -98,6 +98,20 @@ namespace BililiveRecorder.Core.Config
         [JsonProperty("avoidtxy")]
         public bool AvoidTxy { get => _avoidTxy; set => SetField(ref _avoidTxy, value); }
 
+        [JsonProperty("record_filename_format")]
+        public string RecordFilenameFormat
+        {
+            get => _record_filename_format;
+            set => SetField(ref _record_filename_format, value);
+        }
+
+        [JsonProperty("clip_filename_format")]
+        public string ClipFilenameFormat
+        {
+            get => _clip_filename_format;
+            set => SetField(ref _clip_filename_format, value);
+        }
+
         #region INotifyPropertyChanged
         public event PropertyChangedEventHandler PropertyChanged;
         protected virtual void OnPropertyChanged(string propertyName) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
@@ -123,6 +137,9 @@ namespace BililiveRecorder.Core.Config
         private uint _timingCheckInterval = 5 * 60;
 
         private string _cookie = string.Empty;
+
+        private string _record_filename_format = @"record-{room_id}-{date}-{time}-{random}";
+        private string _clip_filename_format = @"record-{room_id}-{date}-{time}-{random}";
 
         private bool _avoidTxy = true;
     }

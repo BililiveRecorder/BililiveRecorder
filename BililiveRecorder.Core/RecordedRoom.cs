@@ -22,6 +22,7 @@ namespace BililiveRecorder.Core
         private int _roomid;
         private int _realRoomid;
         private string _streamerName;
+        private string _title;
 
         public int ShortRoomId
         {
@@ -51,6 +52,17 @@ namespace BililiveRecorder.Core
                 if (value == _streamerName) { return; }
                 _streamerName = value;
                 TriggerPropertyChanged(nameof(StreamerName));
+            }
+        }
+
+        public string Title
+        {
+            get => _title;
+            private set
+            {
+                if (value == _title) { return; }
+                _title = value;
+                TriggerPropertyChanged(nameof(Title));
             }
         }
 
@@ -121,6 +133,7 @@ namespace BililiveRecorder.Core
             RoomId = e.RoomInfo.RoomId;
             ShortRoomId = e.RoomInfo.ShortRoomId;
             StreamerName = e.RoomInfo.UserName;
+            Title = e.RoomInfo.Title;
         }
 
         public bool Start()
@@ -415,10 +428,24 @@ namespace BililiveRecorder.Core
         }
 
         private string GetStreamFilePath() => Path.Combine(_config.WorkDirectory, RoomId.ToString(), "record",
-            $@"record-{RoomId}-{DateTime.Now.ToString("yyyyMMdd-HHmmss")}-{random.Next(100, 999)}.flv".RemoveInvalidFileName());
+            $@"{FormatFilename(_config.RecordFilenameFormat)}.flv".RemoveInvalidFileName());
 
         private string GetClipFilePath() => Path.Combine(_config.WorkDirectory, RoomId.ToString(), "clip",
-            $@"clip-{RoomId}-{DateTime.Now.ToString("yyyyMMdd-HHmmss")}-{random.Next(100, 999)}.flv".RemoveInvalidFileName());
+            $@"{FormatFilename(_config.ClipFilenameFormat)}.flv".RemoveInvalidFileName());
+
+        private string FormatFilename(string formatString)
+        {
+            DateTime now = DateTime.Now;
+            string date = now.ToString("yyyyMMdd");
+            string time = now.ToString("HHmmss");
+            string randomStr = random.Next(100, 999).ToString();
+            return formatString.Replace(@"{date}", date)
+                .Replace(@"{time}", time)
+                .Replace(@"{random}", randomStr)
+                .Replace(@"{room_id}", RoomId.ToString())
+                .Replace(@"{title}", Title)
+                .Replace(@"{streamer_name}", StreamerName);
+        }
 
         public event PropertyChangedEventHandler PropertyChanged;
         protected void TriggerPropertyChanged(string propertyName)

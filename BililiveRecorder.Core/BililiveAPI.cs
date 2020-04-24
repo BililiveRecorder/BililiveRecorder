@@ -193,6 +193,7 @@ namespace BililiveRecorder.Core
                     RoomId = room?["data"]?["room_id"]?.ToObject<int>() ?? throw new Exception("未获取到直播间信息"),
                     IsStreaming = 1 == (room?["data"]?["live_status"]?.ToObject<int>() ?? throw new Exception("未获取到直播间信息")),
                     UserName = user?["data"]?["info"]?["uname"]?.ToObject<string>() ?? throw new Exception("未获取到直播间信息"),
+                    Title = room?["data"]?["title"]?.ToObject<string>() ?? throw new Exception("未获取到直播间信息")
                 };
                 return i;
             }
