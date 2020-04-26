@@ -8,7 +8,7 @@
         xmlns:flv="clr-namespace:BililiveRecorder.FlvProcessor;assembly=BililiveRecorder.FlvProcessor"
         mc:Ignorable="d"
         ShowInTaskbar="False" ResizeMode="NoResize"
-        Title="设置 - 录播姬" Height="500" Width="270">
+        Title="设置 - 录播姬" Height="550" Width="300">
     <Window.Resources>
         <local:ValueConverterGroup x:Key="EnumToInvertBooleanConverter">
             <local:EnumToBooleanConverter/>
@@ -23,6 +23,10 @@
         </Grid.RowDefinitions>
         <Grid Margin="5">
             <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
@@ -278,8 +282,8 @@
             <Grid Grid.Row="6" Margin="10,0">
                 <CheckBox IsChecked="{Binding AvoidTxy}">
                     <TextBlock>
-                        尽量不使用有问题的腾讯云服务器
-                        <LineBreak/> 可减少录出奇葩损坏文件的概率
+                        尽量不使用腾讯云服务器
+                        <LineBreak/> 注：目前这个选项勾选与否，没有什么区别。
                     </TextBlock>
                 </CheckBox>
             </Grid>
@@ -291,6 +295,35 @@
                 </Grid.RowDefinitions>
                 <TextBlock HorizontalAlignment="Left">请求 API 时使用 Cookie: （可选）</TextBlock>
                 <local:ClickSelectTextBox Grid.Row="1" Text="{Binding Cookie,Delay=500,UpdateSourceTrigger=PropertyChanged}"/>
+            </Grid>
+            <Separator Grid.Row="9"/>
+            <Grid Grid.Row="10" Margin="10,0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <TextBlock HorizontalAlignment="Left">录制保存文件名格式：</TextBlock>
+                <local:ClickSelectTextBox Grid.Row="1" Text="{Binding RecordFilenameFormat,Delay=500,UpdateSourceTrigger=PropertyChanged}"/>
+            </Grid>
+
+            <Grid Grid.Row="11" Margin="10,0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <TextBlock HorizontalAlignment="Left">剪辑保存文件名格式：</TextBlock>
+                <local:ClickSelectTextBox Grid.Row="1" Text="{Binding ClipFilenameFormat,Delay=500,UpdateSourceTrigger=PropertyChanged}"/>
+            </Grid>
+            <Grid Grid.Row="12" Margin="10,0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <TextBlock HorizontalAlignment="Left">文件名变量说明：</TextBlock>
+                <TextBlock Grid.Row="1" HorizontalAlignment="Left">日期: {date} 时间: {time} 房间号: {roomid}</TextBlock>
+                <TextBlock Grid.Row="2" HorizontalAlignment="Left">标题: {title} 主播名: {name} 随机数: {random}</TextBlock>
             </Grid>
             <!--
             <TextBlock Grid.Row="4" Grid.Column="0"></TextBlock>

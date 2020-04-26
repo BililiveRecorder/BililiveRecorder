@@ -40,10 +40,12 @@ namespace BililiveRecorder.Core
             }
         }
 
-        internal static string RemoveInvalidFileName(this string name)
+        internal static string RemoveInvalidFileName(this string name, bool ignore_slash = false)
         {
             foreach (char c in Path.GetInvalidFileNameChars())
             {
+                if (ignore_slash && (c == '\\' || c == '/'))
+                    continue;
                 name = name.Replace(c, '_');
             }
             return name;

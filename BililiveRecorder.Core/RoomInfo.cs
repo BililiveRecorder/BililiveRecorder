@@ -6,5 +6,6 @@
         public int RoomId;
         public string UserName;
         public bool IsStreaming;
+        public string Title;
     }
 }

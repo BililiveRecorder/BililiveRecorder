@@ -22,6 +22,7 @@ namespace BililiveRecorder.Core
         private int _roomid;
         private int _realRoomid;
         private string _streamerName;
+        private string _title;
 
         public int ShortRoomId
         {
@@ -51,6 +52,17 @@ namespace BililiveRecorder.Core
                 if (value == _streamerName) { return; }
                 _streamerName = value;
                 TriggerPropertyChanged(nameof(StreamerName));
+            }
+        }
+
+        public string Title
+        {
+            get => _title;
+            private set
+            {
+                if (value == _title) { return; }
+                _title = value;
+                TriggerPropertyChanged(nameof(Title));
             }
         }
 
@@ -121,6 +133,7 @@ namespace BililiveRecorder.Core
             RoomId = e.RoomInfo.RoomId;
             ShortRoomId = e.RoomInfo.ShortRoomId;
             StreamerName = e.RoomInfo.UserName;
+            Title = e.RoomInfo.Title;
         }
 
         public bool Start()
@@ -414,11 +427,65 @@ namespace BililiveRecorder.Core
             Dispose(true);
         }
 
-        private string GetStreamFilePath() => Path.Combine(_config.WorkDirectory, RoomId.ToString(), "record",
-            $@"record-{RoomId}-{DateTime.Now.ToString("yyyyMMdd-HHmmss")}-{random.Next(100, 999)}.flv".RemoveInvalidFileName());
+        private string GetStreamFilePath() => FormatFilename(_config.RecordFilenameFormat);
 
-        private string GetClipFilePath() => Path.Combine(_config.WorkDirectory, RoomId.ToString(), "clip",
-            $@"clip-{RoomId}-{DateTime.Now.ToString("yyyyMMdd-HHmmss")}-{random.Next(100, 999)}.flv".RemoveInvalidFileName());
+        private string GetClipFilePath() => FormatFilename(_config.ClipFilenameFormat);
+
+        private string FormatFilename(string formatString)
+        {
+            DateTime now = DateTime.Now;
+            string date = now.ToString("yyyyMMdd");
+            string time = now.ToString("HHmmss");
+            string randomStr = random.Next(100, 999).ToString();
+
+            var filename = formatString
+                .Replace(@"{date}", date)
+                .Replace(@"{time}", time)
+                .Replace(@"{random}", randomStr)
+                .Replace(@"{roomid}", RoomId.ToString())
+                .Replace(@"{title}", Title.RemoveInvalidFileName())
+                .Replace(@"{name}", StreamerName.RemoveInvalidFileName());
+
+            if (!filename.EndsWith(".flv", StringComparison.OrdinalIgnoreCase))
+                filename += ".flv";
+
+            filename = filename.RemoveInvalidFileName(ignore_slash: true);
+            filename = Path.Combine(_config.WorkDirectory, filename);
+            filename = Path.GetFullPath(filename);
+
+            if (!CheckPath(_config.WorkDirectory, Path.GetDirectoryName(filename)))
+            {
+                logger.Log(RoomId, LogLevel.Warn, "录制文件位置超出允许范围，请检查设置。将写入到默认路径。");
+                filename = Path.Combine(_config.WorkDirectory, RoomId.ToString(), $"{RoomId}-{date}-{time}-{randomStr}.flv");
+            }
+
+            if (new FileInfo(filename).Exists)
+            {
+                logger.Log(RoomId, LogLevel.Warn, "录制文件名冲突，请检查设置。将写入到默认路径。");
+                filename = Path.Combine(_config.WorkDirectory, RoomId.ToString(), $"{RoomId}-{date}-{time}-{randomStr}.flv");
+            }
+
+            return filename;
+        }
+
+        private static bool CheckPath(string parent, string child)
+        {
+            DirectoryInfo di_p = new DirectoryInfo(parent);
+            DirectoryInfo di_c = new DirectoryInfo(child);
+
+            bool isParent = false;
+            while (di_c.Parent != null)
+            {
+                if (di_c.Parent.FullName == di_p.FullName)
+                {
+                    isParent = true;
+                    break;
+                }
+                else
+                    di_c = di_c.Parent;
+            }
+            return isParent;
+        }
 
         public event PropertyChangedEventHandler PropertyChanged;
         protected void TriggerPropertyChanged(string propertyName)
