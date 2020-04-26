@@ -449,6 +449,7 @@ namespace BililiveRecorder.Core
             if (!filename.EndsWith(".flv", StringComparison.OrdinalIgnoreCase))
                 filename += ".flv";
 
+            filename = filename.RemoveInvalidFileName(ignore_slash: true);
             filename = Path.Combine(_config.WorkDirectory, filename);
             filename = Path.GetFullPath(filename);
 
