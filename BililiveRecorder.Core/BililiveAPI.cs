@@ -196,6 +196,11 @@ namespace BililiveRecorder.Core
             }
         }
 
+        /// <summary>
+        /// 获取弹幕连接信息
+        /// </summary>
+        /// <param name="roomid"></param>
+        /// <returns></returns>
         public static async Task<(string token, string host, int port)> GetDanmuConf(int roomid)
         {
             try
@@ -204,7 +209,7 @@ namespace BililiveRecorder.Core
 
                 if (result?["code"]?.ToObject<int>() == 0)
                 {
-                    var token = result?["token"]?.ToObject<string>() ?? string.Empty;
+                    var token = result?["data"]?["token"]?.ToObject<string>() ?? string.Empty;
 
                     List<(string host, int port)> servers = new List<(string host, int port)>();
 
