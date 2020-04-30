@@ -32,51 +32,32 @@ namespace BililiveRecorder.Core
             {
                 if (!string.IsNullOrWhiteSpace(cookie_string))
                 {
-                    try
+                    var pclient = new HttpClient(handler: new HttpClientHandler
                     {
-                        CookieContainer cc = new CookieContainer();
-                        cc.PerDomainCapacity = 300;
-                        foreach (var t in cookie_string.Trim(' ', ';').Split(';').Select(x => x.Trim().Split(new[] { '=' }, 2)))
-                        {
-                            try
-                            {
-                                string v = string.Empty;
-                                if (t.Length == 2)
-                                {
-                                    v = System.Web.HttpUtility.UrlDecode(t[1]).Trim();
-                                }
-
-                                cc.Add(new Cookie(t[0].Trim(), v, "/", ".bilibili.com"));
-                            }
-                            catch (Exception) { }
-                        }
-
-                        var pclient = new HttpClient(handler: new HttpClientHandler
-                        {
-                            CookieContainer = cc
-                        }, disposeHandler: true)
-                        {
-                            Timeout = TimeSpan.FromSeconds(5)
-                        };
-                        pclient.DefaultRequestHeaders.Add("Accept", "application/json, text/javascript, */*; q=0.01");
-                        pclient.DefaultRequestHeaders.Add("Referer", "https://live.bilibili.com/");
-                        pclient.DefaultRequestHeaders.Add("User-Agent", Utils.UserAgent);
-
-                        httpclient = pclient;
-                        return;
-                    }
-                    catch (Exception ex)
+                        UseCookies = false,
+                        UseDefaultCredentials = false,
+                    }, disposeHandler: true)
                     {
-                        logger.Error(ex, "设置 Cookie 时发生错误");
-
-                    }
+                        Timeout = TimeSpan.FromSeconds(5)
+                    };
+                    pclient.DefaultRequestHeaders.Add("Accept", "application/json, text/javascript, */*; q=0.01");
+                    pclient.DefaultRequestHeaders.Add("Referer", "https://live.bilibili.com/");
+                    pclient.DefaultRequestHeaders.Add("User-Agent", Utils.UserAgent);
+                    pclient.DefaultRequestHeaders.Add("Cookie", cookie_string);
+                    httpclient = pclient;
                 }
-
-                var cleanclient = new HttpClient { Timeout = TimeSpan.FromSeconds(5) };
-                cleanclient.DefaultRequestHeaders.Add("Accept", "application/json, text/javascript, */*; q=0.01");
-                cleanclient.DefaultRequestHeaders.Add("Referer", "https://live.bilibili.com/");
-                cleanclient.DefaultRequestHeaders.Add("User-Agent", Utils.UserAgent);
-                httpclient = cleanclient;
+                else
+                {
+                    var cleanclient = new HttpClient { Timeout = TimeSpan.FromSeconds(5) };
+                    cleanclient.DefaultRequestHeaders.Add("Accept", "application/json, text/javascript, */*; q=0.01");
+                    cleanclient.DefaultRequestHeaders.Add("Referer", "https://live.bilibili.com/");
+                    cleanclient.DefaultRequestHeaders.Add("User-Agent", Utils.UserAgent);
+                    httpclient = cleanclient;
+                }
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex, "设置 Cookie 时发生错误");
             }
             finally
             {
