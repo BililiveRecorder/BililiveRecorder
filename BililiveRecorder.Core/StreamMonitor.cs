@@ -1,4 +1,5 @@
 ﻿using BililiveRecorder.Core.Config;
+using Newtonsoft.Json;
 using NLog;
 using System;
 using System.IO;
@@ -31,9 +32,6 @@ namespace BililiveRecorder.Core
 
         private readonly Func<TcpClient> funcTcpClient;
         private readonly ConfigV1 config;
-
-        private const string DM_SERVER_HOST = "broadcastlv.chat.bilibili.com";
-        private const int DM_SERVER_PORT = 2243;
 
 #pragma warning disable IDE1006 // 命名样式
         private bool dmTcpConnected => dmClient?.Connected ?? false;
@@ -100,7 +98,7 @@ namespace BililiveRecorder.Core
                 }
             };
 
-            Task.Run(() => ConnectWithRetry());
+            Task.Run(() => ConnectWithRetryAsync());
         }
 
         private void Receiver_ReceivedDanmaku(object sender, ReceivedDanmakuArgs e)
@@ -178,14 +176,14 @@ namespace BililiveRecorder.Core
         #endregion
         #region 弹幕连接
 
-        private void ConnectWithRetry()
+        private async Task ConnectWithRetryAsync()
         {
             bool connect_result = false;
             while (!dmTcpConnected && !dmTokenSource.Token.IsCancellationRequested)
             {
                 Thread.Sleep((int)Math.Max(config.TimingDanmakuRetry, 0));
                 logger.Log(Roomid, LogLevel.Info, "连接弹幕服务器...");
-                connect_result = Connect();
+                connect_result = await ConnectAsync().ConfigureAwait(false);
             }
 
             if (connect_result)
@@ -194,14 +192,18 @@ namespace BililiveRecorder.Core
             }
         }
 
-        private bool Connect()
+        private async Task<bool> ConnectAsync()
         {
             if (dmTcpConnected) { return true; }
 
             try
             {
+                var (token, host, port) = await BililiveAPI.GetDanmuConf(Roomid);
+
+                logger.Log(Roomid, LogLevel.Debug, $"连接弹幕服务器 {host}:{port} {(string.IsNullOrWhiteSpace(token) ? "无" : "有")} token");
+
                 dmClient = funcTcpClient();
-                dmClient.Connect(DM_SERVER_HOST, DM_SERVER_PORT);
+                dmClient.Connect(host, port);
                 dmNetStream = dmClient.GetStream();
 
                 dmReceiveMessageLoopThread = new Thread(ReceiveMessageLoop)
@@ -211,7 +213,18 @@ namespace BililiveRecorder.Core
                 };
                 dmReceiveMessageLoopThread.Start();
 
-                SendSocketData(7, "{\"roomid\":" + Roomid + ",\"uid\":0}");
+                var hello = JsonConvert.SerializeObject(new
+                {
+                    uid = 0,
+                    roomid = Roomid,
+                    protover = 2,
+                    platform = "web",
+                    clientver = "1.11.0",
+                    type = 2,
+                    key = token,
+
+                }, Formatting.None);
+                SendSocketData(7, hello);
                 SendSocketData(2);
 
                 return true;
@@ -317,7 +330,7 @@ namespace BililiveRecorder.Core
                 if (!(dmTokenSource?.IsCancellationRequested ?? true))
                 {
                     logger.Log(Roomid, LogLevel.Warn, "弹幕连接被断开，将尝试重连", ex);
-                    ConnectWithRetry();
+                    _ = ConnectWithRetryAsync();
                 }
             }
         }
