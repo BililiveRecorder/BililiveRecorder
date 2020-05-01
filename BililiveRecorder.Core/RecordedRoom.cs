@@ -473,6 +473,9 @@ namespace BililiveRecorder.Core
             DirectoryInfo di_p = new DirectoryInfo(parent);
             DirectoryInfo di_c = new DirectoryInfo(child);
 
+            if (di_c.FullName == di_p.FullName)
+                return true;
+
             bool isParent = false;
             while (di_c.Parent != null)
             {
