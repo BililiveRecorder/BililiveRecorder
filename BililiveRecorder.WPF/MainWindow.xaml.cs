@@ -8,6 +8,7 @@ using System;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -22,6 +23,7 @@ namespace BililiveRecorder.WPF
     public partial class MainWindow : Window
     {
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
+        private static readonly Regex UrlToRoomidRegex = new Regex(@"^https?:\/\/live\.bilibili\.com\/(?<roomid>\d+)(?:[#\?].*)?$", RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.Singleline);
 
         private const int MAX_LOG_ROW = 25;
         private const string LAST_WORK_DIR_FILE = "lastworkdir";
@@ -303,29 +305,69 @@ namespace BililiveRecorder.WPF
         }
 
         /// <summary>
-        /// 添加直播间
+        /// 输入框按下回车键
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void AddRoomidTextBox_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+                AddRoom();
+        }
+
+        /// <summary>
+        /// 添加直播间按钮
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void AddRoomidButton_Click(object sender, RoutedEventArgs e)
         {
-            if (int.TryParse(AddRoomidTextBox.Text, out int roomid))
+            AddRoom();
+        }
+
+        private void AddRoom()
+        {
+            var match = UrlToRoomidRegex.Match(AddRoomidTextBox.Text);
+            if (match.Success)
             {
-                if (roomid > 0)
+                if (int.TryParse(match.Groups["roomid"].Value, out int roomid))
                 {
-                    Recorder.AddRoom(roomid);
-                    Recorder.SaveConfigToFile();
+                    Add(roomid);
                 }
                 else
                 {
-                    logger.Info("房间号是大于0的数字！");
+                    logger.Warn("添加房间时发生了不应该出现的错误");
                 }
+            }
+            else if (int.TryParse(AddRoomidTextBox.Text, out int roomid))
+            {
+                Add(roomid);
             }
             else
             {
                 logger.Info("房间号是数字！");
             }
             AddRoomidTextBox.Text = string.Empty;
+
+            void Add(int roomid)
+            {
+                if (roomid > 0)
+                {
+                    if (Recorder.Any(x => x.RoomId == roomid || x.ShortRoomId == roomid))
+                    {
+                        logger.Info("该直播间已经添加过了");
+                    }
+                    else
+                    {
+                        Recorder.AddRoom(roomid);
+                        Recorder.SaveConfigToFile();
+                    }
+                }
+                else
+                {
+                    logger.Info("房间号是大于0的数字！");
+                }
+            }
         }
 
         private void SettingsButton_Click(object sender, RoutedEventArgs e)

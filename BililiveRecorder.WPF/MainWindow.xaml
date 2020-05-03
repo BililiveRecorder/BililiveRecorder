@@ -194,7 +194,7 @@
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
                     <TextBlock VerticalAlignment="Center" Margin="5,2" Grid.Column="0">添加直播间：</TextBlock>
-                    <TextBox VerticalAlignment="Center" Margin="0,2" Grid.Column="1" x:Name="AddRoomidTextBox"/>
+                    <TextBox VerticalAlignment="Center" Margin="0,2" Grid.Column="1" x:Name="AddRoomidTextBox" KeyUp="AddRoomidTextBox_KeyUp"/>
                     <Button VerticalAlignment="Center" Margin="5,2" Padding="10,0" Grid.Column="2" x:Name="AddRoomidButton" Click="AddRoomidButton_Click">添加</Button>
                 </Grid>
                 <Grid Grid.Row="1">

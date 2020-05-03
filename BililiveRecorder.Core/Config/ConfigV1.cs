@@ -132,14 +132,14 @@ namespace BililiveRecorder.Core.Config
 
         private uint _timingWatchdogTimeout = 10 * 1000;
         private uint _timingStreamRetry = 6 * 1000;
-        private uint _timingStreamConnect = 3 * 1000;
-        private uint _timingDanmakuRetry = 2 * 1000;
+        private uint _timingStreamConnect = 5 * 1000;
+        private uint _timingDanmakuRetry = 15 * 1000;
         private uint _timingCheckInterval = 5 * 60;
 
         private string _cookie = string.Empty;
 
-        private string _record_filename_format = @"{roomid}-{name}\录制-{roomid}-{date}-{time}-{title}.flv";
-        private string _clip_filename_format = @"{roomid}-{name}\剪辑片段-{roomid}-{date}-{time}-{title}.flv";
+        private string _record_filename_format = @"{roomid}-{name}/录制-{roomid}-{date}-{time}-{title}.flv";
+        private string _clip_filename_format = @"{roomid}-{name}/剪辑片段-{roomid}-{date}-{time}-{title}.flv";
 
         private bool _avoidTxy = false;
     }
