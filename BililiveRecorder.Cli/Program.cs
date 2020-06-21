@@ -6,16 +6,16 @@ using Autofac;
 using BililiveRecorder.Core;
 using BililiveRecorder.FlvProcessor;
 using CommandLine;
+using NLog;
 
 namespace BililiveRecorder.Cli
 {
     class Program
     {
-        private static int roomid = 528819;
         private static IContainer Container { get; set; }
         private static ILifetimeScope RootScope { get; set; }
         private static IRecorder Recorder { get; set; }
-        private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+        private static readonly Logger logger = LogManager.GetCurrentClassLogger();
 
         static void Main(string[] _)
         {
@@ -37,19 +37,23 @@ namespace BililiveRecorder.Cli
 
         private static void Run(CommandLineOption option)
         {
-            if (option.RoomID == 0) return;
-            roomid = option.RoomID;
             Recorder.Config.AvoidTxy = true;
 
-            if (Recorder.Where(r => r.RoomId == roomid).Count() == 0)
+            if (option.RoomID != null)
             {
-                Recorder.AddRoom(roomid);
+                int roomid = (int)option.RoomID;
+                if (Recorder.Where(r => r.RoomId == roomid).Count() == 0)
+                {
+                    Recorder.AddRoom(roomid);
+                }
             }
+            
+            
             logger.Info("开始录播");
-            Task.WhenAll(Recorder.Where(r => r.RoomId == roomid).Select(x => Task.Run(() => x.Start()))).Wait();
+            Task.WhenAll(Recorder.Select(x => Task.Run(() => x.Start()))).Wait();
             Console.CancelKeyPress += (sender, e) =>
             {
-                Task.WhenAll(Recorder.Where(r => r.RoomId == roomid).Select(x => Task.Run(() => x.StopRecord()))).Wait();
+                Task.WhenAll(Recorder.Select(x => Task.Run(() => x.StopRecord()))).Wait();
                 logger.Info("停止录播");
             };
             while (true)
@@ -61,7 +65,7 @@ namespace BililiveRecorder.Cli
 
     public class CommandLineOption
     {
-        [Option('i', "id", Default = 0, HelpText = "room id", Required = false)]
-        public int RoomID { get; set; }
+        [Option('i', "id", HelpText = "room id", Required = false)]
+        public int? RoomID { get; set; }
     }
 }
