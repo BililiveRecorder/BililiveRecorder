@@ -97,6 +97,12 @@ namespace BililiveRecorder.Core.Config
         /// </summary>
         [JsonProperty("avoidtxy")]
         public bool AvoidTxy { get => _avoidTxy; set => SetField(ref _avoidTxy, value); }
+        
+        /// <summary>
+        /// 替换api.live.bilibili.com服务器为其他反代，可以支持在云服务器上录制
+        /// </summary>
+        [JsonProperty("live_api_host")]
+        public string LiveApiHost { get => _liveApiHost; set => SetField(ref _liveApiHost, value); }
 
         [JsonProperty("record_filename_format")]
         public string RecordFilenameFormat
@@ -142,5 +148,7 @@ namespace BililiveRecorder.Core.Config
         private string _clip_filename_format = @"{roomid}-{name}/剪辑片段-{roomid}-{date}-{time}-{title}.flv";
 
         private bool _avoidTxy = false;
+
+        private string _liveApiHost = "https://api.live.bilibili.com";
     }
 }
