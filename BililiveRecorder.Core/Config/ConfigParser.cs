@@ -1,11 +1,14 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.IO;
+using NLog;
 
 namespace BililiveRecorder.Core.Config
 {
     public static class ConfigParser
     {
+        private static readonly Logger logger = LogManager.GetCurrentClassLogger();
+
         public static bool Load(string directory, ConfigV1 config = null)
         {
             if (!Directory.Exists(directory))
@@ -42,9 +45,9 @@ namespace BililiveRecorder.Core.Config
                             return false;
                     }
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
-                    // TODO: Log Exception
+                    logger.Error(ex, "Failed to parse config!");
                     return false;
                 }
             }
