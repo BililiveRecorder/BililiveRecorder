@@ -18,6 +18,7 @@ namespace BililiveRecorder.Core
     {
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
         private static readonly Random random = new Random();
+        private static readonly Version VERSION_1_0 = new Version(1, 0);
 
         private int _roomid;
         private int _realRoomid;
@@ -310,9 +311,13 @@ namespace BililiveRecorder.Core
                     };
 
                     _stream = await _response.Content.ReadAsStreamAsync();
-                    
-                    if (!new object[] { null, true }.Contains(_response.Headers.ConnectionClose))
-                        _stream.ReadTimeout = 3 * 1000;
+
+                    try
+                    {
+                        if (_response.Headers.ConnectionClose == false || (_response.Headers.ConnectionClose is null && _response.Version != VERSION_1_0))
+                            _stream.ReadTimeout = 3 * 1000;
+                    }
+                    catch (InvalidOperationException) { }
 
                     StreamDownloadTask = Task.Run(_ReadStreamLoop);
                     TriggerPropertyChanged(nameof(IsRecording));
