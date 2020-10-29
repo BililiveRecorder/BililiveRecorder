@@ -1,6 +1,7 @@
 ﻿using BililiveRecorder.FlvProcessor;
 using System;
 using System.ComponentModel;
+using System.Threading.Tasks;
 
 namespace BililiveRecorder.Core
 {

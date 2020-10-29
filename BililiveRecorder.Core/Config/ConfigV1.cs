@@ -117,7 +117,17 @@ namespace BililiveRecorder.Core.Config
             get => _clip_filename_format;
             set => SetField(ref _clip_filename_format, value);
         }
-
+        [JsonProperty("danmu_font_size")]
+        public uint DanmuFontSize {
+            get => _danmuFontSize;
+            set => SetField(ref _danmuFontSize, value);
+        }
+        [JsonProperty("danmu_fly_speed")]
+        public double DanmuFlySpeed
+        {
+            get => _danmuFlySpeed;
+            set => SetField(ref _danmuFlySpeed, value);
+        }
         #region INotifyPropertyChanged
         public event PropertyChangedEventHandler PropertyChanged;
         protected virtual void OnPropertyChanged(string propertyName) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
@@ -141,7 +151,8 @@ namespace BililiveRecorder.Core.Config
         private uint _timingStreamConnect = 5 * 1000;
         private uint _timingDanmakuRetry = 15 * 1000;
         private uint _timingCheckInterval = 5 * 60;
-
+        private uint _danmuFontSize = 26;
+        private double _danmuFlySpeed = 1.0;
         private string _cookie = string.Empty;
 
         private string _record_filename_format = @"{roomid}-{name}/录制-{roomid}-{date}-{time}-{title}.flv";

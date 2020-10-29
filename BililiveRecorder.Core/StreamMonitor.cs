@@ -1,7 +1,12 @@
 ﻿using BililiveRecorder.Core.Config;
+using BililiveRecorder.FlvProcessor;
 using Newtonsoft.Json;
 using NLog;
+using NLog.LayoutRenderers.Wrappers;
 using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Globalization;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
@@ -10,6 +15,7 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Timers;
 using Timer = System.Timers.Timer;
 
 namespace BililiveRecorder.Core
@@ -44,7 +50,13 @@ namespace BililiveRecorder.Core
         private readonly Timer httpTimer;
 
         public int Roomid { get; private set; } = 0;
+        public string StreamerName { get; set; } = "...";
+        public DateTime Time { get; set; }
+        public string path { get; set; }
+        public string Title { get; set; }
+        public bool IsRecording { get; set; }
         public bool IsMonitoring { get; private set; } = false;
+
         public event RoomInfoUpdatedEvent RoomInfoUpdated;
         public event StreamStartedEvent StreamStarted;
         public event ReceivedDanmakuEvt ReceivedDanmaku;
@@ -53,9 +65,7 @@ namespace BililiveRecorder.Core
         {
             this.funcTcpClient = funcTcpClient;
             this.config = config;
-
             Roomid = roomid;
-
             ReceivedDanmaku += Receiver_ReceivedDanmaku;
 
             dmTokenSource = new CancellationTokenSource();
@@ -91,16 +101,59 @@ namespace BililiveRecorder.Core
             };
 
             config.PropertyChanged += (sender, e) =>
-            {
-                if (e.PropertyName.Equals(nameof(config.TimingCheckInterval)))
-                {
-                    httpTimer.Interval = config.TimingCheckInterval * 1000;
-                }
-            };
-
+                    {
+                        if (e.PropertyName.Equals(nameof(config.TimingCheckInterval)))
+                        {
+                            httpTimer.Interval = config.TimingCheckInterval * 1000;
+                        }
+                    };
+            firstConnent = true;
             Task.Run(() => ConnectWithRetryAsync());
         }
+        private List<danmuinMem> danmuMem = new List<danmuinMem>();
+        private List<danmutoCal> danmu = new List<danmutoCal>();
+        private List<danmutoCal> liwu = new List<danmutoCal>();
+        private List<danmutoCal> SC = new List<danmutoCal>();
 
+        private int deleted;
+        private int liwuDeleted;
+        private int SCDeleted;
+        private int danmuQueue;
+        private int fontsize;
+        private int liwufontsize;
+        private double flyspeed;
+        private string readytoWrite;
+        private string saveinMem;
+        private async void resetDanmuQueue(int danmuQueueNow, string filename)
+        {
+            await Task.Delay(200);
+            if (danmuQueueNow == danmuQueue && danmuQueue != 0)
+            {
+                danmuQueue = 0;
+                if (readytoWrite != null && readytoWrite != "")
+                {
+                    using (var outfile = new StreamWriter(filename, true))
+                    {
+                        outfile.WriteLine(readytoWrite.Remove(readytoWrite.Length - 2));
+                    }
+                }
+                readytoWrite = null;
+            }
+        }
+        private void saveClipDanmu(DanmakuModel e)
+        {
+            DateTime Now = DateTime.Now;
+            danmuMem.Add(new danmuinMem
+            {
+                danmakuModel = e,
+                dateTime = DateTime.Now
+            });
+
+            for (int i = 0; (Now - danmuMem[i].dateTime).TotalSeconds < config.ClipLengthPast; i++)
+            {
+                danmuMem.Remove(danmuMem[i]);
+            }
+        }
         private void Receiver_ReceivedDanmaku(object sender, ReceivedDanmakuArgs e)
         {
             switch (e.Danmaku.MsgType)
@@ -113,11 +166,399 @@ namespace BililiveRecorder.Core
                     break;
                 case MsgTypeEnum.LiveEnd:
                     break;
+                case MsgTypeEnum.Comment:
+                case MsgTypeEnum.GiftSend:
+                case MsgTypeEnum.GuardBuy:
+                case MsgTypeEnum.SuperChat:
+                    if (IsRecording)
+                    {
+                        danmuQueue++;
+                        logging();
+                    }
+                    //saveClipDanmu(e.Danmaku);
+                    break;
                 default:
                     break;
             }
-        }
+            void logging()
+            {
+                DateTime now = Time;
+                string date = now.ToString("yyyyMMdd");
+                string time = now.ToString("HHmmss");
+                string filename = path.Replace("flv", "ass");
+                if (!File.Exists(filename) && (readytoWrite == null || readytoWrite == ""))
+                {
+                    deleted = 0;
+                    liwuDeleted = 0;
+                    SCDeleted = 0;
+                    danmu.Clear();
+                    liwu.Clear();
+                    SC.Clear();
+                    fontsize = (int)Math.Max(config.DanmuFontSize, 1);
+                    liwufontsize = (int)Math.Max(Math.Round(fontsize / 26.0 * 22.0, 0), 1);
+                    flyspeed = Math.Max(config.DanmuFlySpeed, 0.01);
+                    readytoWrite += "[Script Info]\r\nScriptType: v4.00+\r\n" +
+                                      "WrapStyle: 0\r\n" +
+                                      "ScaledBorderAndShadow: yes\r\n" +
+                                      "PlayResX: 1920\r\n" +
+                                      "PlayResY: 1080\r\n" +
+                                      "\r\n" +
+                                      "[V4+ Styles]\r\n" +
+                                      "Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding  \r\n" +
+                                      "Style: danmu,SimHei," + fontsize + ",&H00FFFFFF,&H000000FF,&H40000000,&H00000000,-1,0,0,0,100,100,0,0,1," + Math.Round(fontsize / 26.0, 2) + ",0,7,10,10,10,1\r\n" +
+                                      "Style: liwu,SimHei," + liwufontsize + ",&H00FFFFFF,&H000000FF,&H40000000,&H00000000,-1,0,0,0,100,100,0,0,1," + Math.Round(liwufontsize / 22.0, 2) + ",0,1,10,10,10,1\r\n" +
+                                      "Style: SC,SimHei," + liwufontsize + ",&H00FFFFFF,&H000000FF,&H40000000,&H00000000,-1,0,0,0,100,100,0,0,1," + Math.Round(liwufontsize / 22.0, 2) + ",0,1,10,10,10,1\r\n" +
+                                      "\r\n" +
+                                      "[Events]\r\n" +
+                                      "Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text\r\n";
+                }
+                string LinetoWritten;
+                if ((LinetoWritten = convert(DateTime.Now)) != "")
+                {
+                    readytoWrite += LinetoWritten + "\r\n";
+                }
 
+                Task.Run(() => resetDanmuQueue(danmuQueue, filename));
+
+                string convert(DateTime DanmuTime)
+                {
+                    DanmakuModel danmaku = e.Danmaku;
+                    TimeSpan timeDiff = DanmuTime - now;
+                    int startTimePre = (int)((timeDiff.TotalMilliseconds - 1000.0 / danmuQueue + 1000) / 10.0);
+                    int startTimeHour = startTimePre / 100 / 3600;
+                    int startTimeMin = startTimePre / 100 / 60 % 60;
+                    int startTimeSec = startTimePre / 100 % 60;
+                    int startTimeMs = startTimePre % 100;
+                    string startTime = startTimeHour.ToString() + ':' +
+                                       startTimeMin.ToString().PadLeft(2, '0') + ':' +
+                                       startTimeSec.ToString().PadLeft(2, '0') + '.' +
+                                       startTimeMs.ToString().PadLeft(2, '0');//获取字幕开始时间
+
+                    string result;
+                    switch (danmaku.MsgType)
+                    {
+                        case MsgTypeEnum.Comment:
+                            {
+                                string color = danmaku.CommentColor.Substring(4, 2) + danmaku.CommentColor.Substring(2, 2) + danmaku.CommentColor.Substring(0, 2);
+                                string name = danmaku.UserName;
+                                string text = danmaku.CommentText;
+                                int danmuBasicFlyTime = 15000;
+                                int danmuLength = danmaku.CommentText.Length;
+                                int danmuDiffFlyTime = (int)(Math.Log10(danmuLength) * 2.33 * 1000.0);
+                                int danmuFlyTime = (int)((danmuBasicFlyTime - danmuDiffFlyTime) / (((fontsize - 26) * 0.0125 + 1) * flyspeed));
+                                int endTimePre = startTimePre + danmuFlyTime / 10;
+                                int endTimeHour = endTimePre / 100 / 3600;
+                                int endTimeMin = endTimePre / 100 / 60 % 60;
+                                int endTimeSec = endTimePre / 100 % 60;
+                                int endTimeMs = endTimePre % 100;
+                                string endTime = endTimeHour.ToString() + ':' +
+                                                 endTimeMin.ToString().PadLeft(2, '0') + ':' +
+                                                 endTimeSec.ToString().PadLeft(2, '0') + '.' +
+                                                 endTimeMs.ToString().PadLeft(2, '0');//获取字幕结束时间
+                                danmu?.Add(new danmutoCal
+                                {
+                                    Length = danmuLength,
+                                    StartTime = startTimePre,
+                                    EndTime = endTimePre,
+                                    FlyTime = danmuFlyTime / 10,
+                                    FlySpeed = (1920 + danmuLength * (double)fontsize) / (endTimePre - startTimePre),
+                                    Pos = 0
+                                });
+                                for (int i = deleted; i < danmu.Count; i++)
+                                {
+                                    if (danmu[i] != null && danmu[i].EndTime < danmu[danmu.Count - 1].StartTime)
+                                    {
+                                        danmu[i] = null;
+                                        deleted++;
+                                    }
+                                }
+                                if (danmu.Count > 1 && deleted != danmu.Count - 1)
+                                    CalPos(danmu[danmu.Count - 1]);
+                                double pos = danmu[danmu.Count - 1].Pos;
+                                int danmuXend = 0 - danmuLength * (int)fontsize;
+                                int danmuY = (int)(pos * (fontsize * 1.0 + 4.0) + 1);
+                                string effect = "{\\be" + Math.Round(fontsize / 26.0, 2) + "\\move(1920," + danmuY + "," + danmuXend + "," + danmuY + ")" + (color == "FFFFFF" ? "" : "\\c" + color) + "}";
+                                result = "Dialogue: 0," + startTime + "," + endTime + ",danmu,,0,0,0," + name + "," + effect + text;
+                                break;
+                            }
+                        case MsgTypeEnum.GiftSend:
+                        case MsgTypeEnum.GuardBuy:
+                            {
+                                string name = danmaku.UserName;//获取赠送人
+                                string text = name + " 赠送了 " + danmaku.GiftName + " x " + danmaku.GiftCount;//获取赠送信息
+                                int endTimePre = startTimePre + 300;
+                                int endTimeHour = endTimePre / 100 / 3600;
+                                int endTimeMin = (endTimePre / 100 / 60) % 60;
+                                int endTimeSec = (endTimePre / 100) % 60;
+                                int endTimeMs = endTimePre % 100;
+                                string endTime = endTimeHour.ToString() + ':' +
+                                                   endTimeMin.ToString().PadLeft(2, '0') + ':' +
+                                                   endTimeSec.ToString().PadLeft(2, '0') + '.' +
+                                                   endTimeMs.ToString().PadLeft(2, '0');//获取字幕结束时间
+
+                                liwu.Add(new danmutoCal
+                                {
+                                    StartTime = startTimePre,
+                                    EndTime = endTimePre,
+                                    Pos = 0
+                                });
+                                for (int i = liwuDeleted; i < liwu.Count; i++)
+                                {
+                                    if (liwu[i] != null)
+                                    {
+                                        if (liwu[i].EndTime < liwu[liwu.Count - 1].StartTime)
+                                        {
+                                            liwu[i] = null;
+                                            liwuDeleted++;
+                                        }
+                                    }
+                                }
+                                if (liwu.Count > 1 && liwuDeleted != liwu.Count - 1)
+                                    CalLiwuPos(liwu[liwu.Count - 1]);
+                                int danmuPos = liwu[liwu.Count - 1].Pos;
+                                int danmuY = (int)(1080 - 20 - danmuPos * liwufontsize * 1.2);
+                                string effect = "{\\be1\\fad(500,500)\\clip(0,440,1920,1080)\\pos(20," + danmuY + ")}";
+                                result = "Dialogue: 1," + startTime + "," + endTime + ",liwu,,0,0,0," + name + "," + effect + text;
+                                break;
+                            }
+                        case MsgTypeEnum.SuperChat:
+                            {
+                                string name = danmaku.UserName + ": ";//获取赠送人
+                                string price = "￥" + danmaku.Price + " ";
+                                string commenttext = danmaku.CommentText;
+                                string text = price + name + commenttext;//获取赠送信息
+                                if (commenttext == "") text.Remove(text.Length - 1);
+                                int endTimePre = startTimePre + 1500;
+                                int endTimeHour = endTimePre / 100 / 3600;
+                                int endTimeMin = (endTimePre / 100 / 60) % 60;
+                                int endTimeSec = (endTimePre / 100) % 60;
+                                int endTimeMs = endTimePre % 100;
+                                string endTime = endTimeHour.ToString() + ':' +
+                                                   endTimeMin.ToString().PadLeft(2, '0') + ':' +
+                                                   endTimeSec.ToString().PadLeft(2, '0') + '.' +
+                                                   endTimeMs.ToString().PadLeft(2, '0');//获取字幕结束时间
+
+                                SC.Add(new danmutoCal
+                                {
+                                    StartTime = startTimePre,
+                                    EndTime = endTimePre,
+                                    Pos = 0
+                                });
+                                for (int i = SCDeleted; i < SC.Count; i++)
+                                {
+                                    if (SC[i] != null)
+                                    {
+                                        if (SC[i].EndTime < SC[SC.Count - 1].StartTime)
+                                        {
+                                            SC[i] = null;
+                                            SCDeleted++;
+                                        }
+                                    }
+                                }
+                                if (SC.Count > 1 && SCDeleted != SC.Count - 1)
+                                    CalSCPos(SC[SC.Count - 1]);
+                                int danmuPos = SC[SC.Count - 1].Pos;
+                                string UnderlingColor = "FFFFFF";
+                                switch (danmaku.SCKeepTime)
+                                {
+                                    case 60:
+                                        UnderlingColor = "B05F2E";
+                                        break;
+                                    case 120:
+                                        UnderlingColor = "9E7C46";
+                                        break;
+                                    case 300:
+                                        UnderlingColor = "37B6E0";
+                                        break;
+                                    case 1800:
+                                        UnderlingColor = "4995DD";
+                                        break;
+                                    case 3600:
+                                        UnderlingColor = "5151E0";
+                                        break;
+                                    case 7200:
+                                        UnderlingColor = "3520A7";
+                                        break;
+                                    default:
+                                        UnderlingColor = "FFFFFF";
+                                        break;
+                                }
+                                int danmuY = (int)(1080 - 20 - danmuPos * liwufontsize * 1.2);
+                                string effect = "{\\an3\\be" + Math.Round(liwufontsize / 22.0, 2) + "\\fad(500,500)\\clip(0,440,1920,1080)\\pos(1900," + danmuY + ")}";
+                                result = "Dialogue: 2," + startTime + "," + endTime + ",SC,,0,0,0," + name + "," + effect + text + "\r\n";
+                                string countdowneffect = "{\\fad(500,500)\\an3\\move(1900," + danmuY + "," + (1900 + liwufontsize * 8) + "," + danmuY + ")\\3aff\\c" + UnderlingColor + "\\clip(" + (1900 - liwufontsize * 8) + ",0,1900,1080)}";
+                                result += "Dialogue: 3," + startTime + "," + endTime + ",SC,,0,0,0,SuperChat," + countdowneffect + "＿＿＿＿＿＿＿＿";
+                                break;
+                            }
+                        default:
+                            result = "";
+                            break;
+                    }
+                    return result;
+                }
+                void CalPos(danmutoCal dm)
+                {
+                    //算法原理：将当前弹幕和前面相同位置的弹幕做位置判断，如不可放，往下移动1行并继续判断，如此循环。
+                    //int maxPos = 0;
+                    bool ifSuccess = false;
+                    int start = 0;
+                    for (int i = 0; i < danmu.Count; i++)
+                    {
+                        if (danmu[i] != null)
+                        {
+                            start = i;
+                            break;
+                        }
+                    }
+                    while (!ifSuccess)
+                    {
+                        int i = danmu.Count - 2;
+                        for (; i >= start; i--)
+                        {
+                            if (danmu[i] != null)
+                            {
+                                if (danmu[i].Pos > dm.Pos)
+                                {
+                                    //if (danmu[i].Pos - maxPos == 1) maxPos = danmu[i].Pos;
+                                    continue;
+                                }
+                                if (danmu[i].Pos == dm.Pos)
+                                {
+                                    if (ifCanBePosed(danmu[i], dm))
+                                    {
+                                        return;
+                                    }
+                                    else
+                                    {
+                                        dm.Pos++;
+                                        break;
+                                    }
+                                }
+                                else
+                                {
+                                    continue;
+                                }
+                            }
+                        }
+                        if (i == start - 1) return;
+                    }
+                }
+                void CalLiwuPos(danmutoCal lw)
+                {
+                    //int maxPos = 0;
+                    bool ifSuccess = false;
+                    int start = 0;
+                    for (int i = 0; i < liwu.Count; i++)
+                    {
+                        if (liwu[i] != null)
+                        {
+                            start = i;
+                            break;
+                        }
+                    }
+                    while (!ifSuccess)
+                    {
+                        int i = liwu.Count - 2;
+                        for (; i >= start; i--)
+                        {
+                            if (liwu[i] != null)
+                            {
+                                if (liwu[i].Pos > lw.Pos)
+                                {
+                                    //if (liwu[i].Pos - maxPos == 1) maxPos = liwu[i].Pos;
+                                    continue;
+                                }
+                                if (liwu[i].Pos == lw.Pos)
+                                {
+                                    if (liwu[i].EndTime < lw.StartTime)
+                                    {
+                                        return;
+                                    }
+                                    else
+                                    {
+                                        lw.Pos++;
+                                        break;
+                                    }
+                                }
+                                else
+                                {
+                                    continue;
+                                }
+                            }
+                        }
+                        if (i == start - 1) return;
+                    }
+                }
+                void CalSCPos(danmutoCal sc)
+                {
+                    //int maxPos = 0;
+                    bool ifSuccess = false;
+                    int start = 0;
+                    for (int i = 0; i < SC.Count; i++)
+                    {
+                        if (SC[i] != null)
+                        {
+                            start = i;
+                            break;
+                        }
+                    }
+                    while (!ifSuccess)
+                    {
+                        int i = SC.Count - 2;
+                        for (; i >= start; i--)
+                        {
+                            if (SC[i] != null)
+                            {
+                                if (SC[i].Pos > sc.Pos)
+                                {
+                                    //if (SC[i].Pos - maxPos == 1) maxPos = SC[i].Pos;
+                                    continue;
+                                }
+                                if (SC[i].Pos == sc.Pos)
+                                {
+                                    if (SC[i].EndTime < sc.StartTime)
+                                    {
+                                        return;
+                                    }
+                                    else
+                                    {
+                                        sc.Pos++;
+                                        break;
+                                    }
+                                }
+                                else
+                                {
+                                    continue;
+                                }
+                            }
+                        }
+                        if (i == start - 1) return;
+                    }
+                }
+                bool ifCanBePosed(danmutoCal dm1, danmutoCal dm2)
+                {
+                    //判断方法：dm2飞到头时，dm1有没有消失
+                    //                                                                                   dm2到头前的时间=1280/dm2的速度
+                    //                                                                   dm1还剩下的时间=dm2到头前的时间
+                    //                                         dm1还能飞的距离=dm1的速度*dm1还剩下的时间
+                    //dm1在dm2到头前飞出的距离=dm1已经飞的距离+dm1还能飞的距离
+                    //                         dm1已经飞的距离=dm1的速度*dm1已经飞的时间
+                    //                                                   dm1已经飞的时间=dm2的开始时间-dm1的开始时间
+                    //原式：dm1.FlySpeed * (dm2.StartTime - dm1.StartTime) + dm1.FlySpeed * (dm1.EndTime - (1280 / dm2.FlySpeed))
+                    //简化：dm1.FlySpeed * (dm2.StartTime - dm1.StartTime + dm1.EndTime - (1280 / dm2.FlySpeed))
+
+                    if (dm1.FlySpeed * (dm2.StartTime - dm1.StartTime) > (dm1.Length * (config.DanmuFontSize + 1) + 4))
+                    {
+                        if ((dm1.FlySpeed * (dm2.StartTime - dm1.StartTime + (1920 / dm2.FlySpeed))) > (1920 + dm1.Length * config.DanmuFontSize))
+                            return true;
+                        else
+                            return false;
+                    }
+                    return false;
+                }
+
+            }
+        }
         #region 对外API
 
         public bool Start()
@@ -141,6 +582,7 @@ namespace BililiveRecorder.Core
             }
 
             IsMonitoring = false;
+            path = null;
             httpTimer.Stop();
         }
 
@@ -175,24 +617,31 @@ namespace BililiveRecorder.Core
 
         #endregion
         #region 弹幕连接
-
+        private bool firstConnent;
         private async Task ConnectWithRetryAsync()
         {
             bool connect_result = false;
-            while (!dmTcpConnected && !dmTokenSource.Token.IsCancellationRequested)
+            if (firstConnent)
             {
-                Thread.Sleep((int)Math.Max(config.TimingDanmakuRetry, 0));
                 logger.Log(Roomid, LogLevel.Info, "连接弹幕服务器...");
                 connect_result = await ConnectAsync().ConfigureAwait(false);
+                firstConnent = false;
             }
-
+            else
+            {
+                while (!dmTcpConnected && !dmTokenSource.Token.IsCancellationRequested)
+                {
+                    Thread.Sleep((int)Math.Max(config.TimingDanmakuRetry, 0));
+                    logger.Log(Roomid, LogLevel.Info, "连接弹幕服务器...");
+                    connect_result = await ConnectAsync().ConfigureAwait(false);
+                }
+            }
             if (connect_result)
             {
                 logger.Log(Roomid, LogLevel.Info, "弹幕服务器连接成功");
             }
         }
-
-        private async Task<bool> ConnectAsync()
+        public async Task<bool> ConnectAsync()
         {
             if (dmTcpConnected) { return true; }
 
@@ -425,6 +874,7 @@ namespace BililiveRecorder.Core
                     dmTokenSource?.Dispose();
                     httpTimer?.Dispose();
                     dmClient?.Close();
+
                 }
 
                 dmNetStream = null;
@@ -436,6 +886,22 @@ namespace BililiveRecorder.Core
         {
             // 请勿更改此代码。将清理代码放入以上 Dispose(bool disposing) 中。
             Dispose(true);
+        }
+
+        private class danmutoCal
+        {
+            public int Length { get; set; }
+            public int StartTime { get; set; }
+            public int EndTime { get; set; }
+            public int FlyTime { get; set; }
+            public int Pos { get; set; }
+            public int Number { get; set; }
+            public double FlySpeed { get; set; }
+        }
+        private class danmuinMem
+        {
+            public DanmakuModel danmakuModel { set; get; }
+            public DateTime dateTime { set; get; }
         }
         #endregion
     }

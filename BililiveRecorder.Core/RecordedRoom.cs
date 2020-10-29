@@ -1,5 +1,6 @@
 ﻿using BililiveRecorder.Core.Config;
 using BililiveRecorder.FlvProcessor;
+using JetBrains.Annotations;
 using NLog;
 using System;
 using System.Collections.Generic;
@@ -124,7 +125,6 @@ namespace BililiveRecorder.Core
             StreamMonitor = newIStreamMonitor(RoomId);
             StreamMonitor.RoomInfoUpdated += StreamMonitor_RoomInfoUpdated;
             StreamMonitor.StreamStarted += StreamMonitor_StreamStarted;
-
             StreamMonitor.FetchRoomInfoAsync();
         }
 
@@ -133,7 +133,9 @@ namespace BililiveRecorder.Core
             RoomId = e.RoomInfo.RoomId;
             ShortRoomId = e.RoomInfo.ShortRoomId;
             StreamerName = e.RoomInfo.UserName;
+            StreamMonitor.StreamerName = StreamerName;
             Title = e.RoomInfo.Title;
+            StreamMonitor.Title = Title;
         }
 
         public bool Start()
@@ -156,6 +158,7 @@ namespace BililiveRecorder.Core
             }
 
             StreamMonitor.Stop();
+            StreamMonitor.IsRecording = false;
             TriggerPropertyChanged(nameof(IsMonitoring));
         }
 
@@ -308,27 +311,45 @@ namespace BililiveRecorder.Core
                             },
                         };
                     };
-
+                    StreamMonitor.Time = DateTime.Now;
                     _stream = await _response.Content.ReadAsStreamAsync();
-                    
+
                     if (!new object[] { null, true }.Contains(_response.Headers.ConnectionClose))
                         _stream.ReadTimeout = 3 * 1000;
 
                     StreamDownloadTask = Task.Run(_ReadStreamLoop);
                     TriggerPropertyChanged(nameof(IsRecording));
+                    if (_config.EnabledFeature != EnabledFeature.ClipOnly)
+                    {
+                        while (StreamMonitor.path == null || StreamMonitor.path != Processor.path)
+                        {
+                            Thread.Sleep(100);
+                            try
+                            {
+                                StreamMonitor.path = Processor.path;
+                            }
+                            catch { }
+                        }
+                        StreamMonitor.IsRecording = true;
+                    }
+                    else
+                    {
+                        StreamMonitor.IsRecording = false;
+                    }
                 }
             }
             catch (TaskCanceledException)
             {
                 // client.GetAsync timed out
                 // useless exception message :/
-
+                StreamMonitor.IsRecording = false;
                 _CleanupFlvRequest();
                 logger.Log(RoomId, LogLevel.Warn, "连接直播服务器超时。");
                 StreamMonitor.Check(TriggerType.HttpApiRecheck, (int)_config.TimingStreamRetry);
             }
             catch (Exception ex)
             {
+                StreamMonitor.IsRecording = false;
                 _CleanupFlvRequest();
                 logger.Log(RoomId, LogLevel.Warn, "启动直播流下载出错。" + (_retry ? "将重试启动。" : ""), ex);
                 if (_retry)
@@ -337,7 +358,6 @@ namespace BililiveRecorder.Core
                 }
             }
             return;
-
             async Task _ReadStreamLoop()
             {
                 try
@@ -364,7 +384,7 @@ namespace BililiveRecorder.Core
                             break;
                         }
                     }
-
+                    StreamMonitor.IsRecording = false;
                     logger.Log(RoomId, LogLevel.Info,
                         (token.IsCancellationRequested ? "本地操作结束当前录制。" : "服务器关闭直播流，可能是直播已结束。")
                         + (_retry ? "将重试启动。" : ""));
@@ -375,6 +395,7 @@ namespace BililiveRecorder.Core
                 }
                 catch (Exception e)
                 {
+                    StreamMonitor.IsRecording = false;
                     if (e is ObjectDisposedException && token.IsCancellationRequested) { return; }
 
                     logger.Log(RoomId, LogLevel.Warn, "录播发生错误", e);
@@ -400,6 +421,7 @@ namespace BililiveRecorder.Core
                 _lastUpdateTimestamp = 0;
                 DownloadSpeedMegaBitps = 0d;
                 DownloadSpeedPersentage = 0d;
+                StreamMonitor.IsRecording = false;
                 TriggerPropertyChanged(nameof(IsRecording));
             }
             void _UpdateDownloadSpeed(int bytesRead)

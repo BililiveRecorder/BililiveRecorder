@@ -40,7 +40,11 @@ namespace BililiveRecorder.Core
         /// <summary>
         /// 购买船票（上船）
         /// </summary>
-        GuardBuy
+        GuardBuy,
+        /// <summary>
+        /// SC
+        /// </summary>
+        SuperChat
 
     }
 
@@ -50,6 +54,7 @@ namespace BililiveRecorder.Core
         /// 消息類型
         /// </summary>
         public MsgTypeEnum MsgType { get; set; }
+        public string CommentColor { get; set; }
 
         /// <summary>
         /// 彈幕內容
@@ -175,6 +180,16 @@ namespace BililiveRecorder.Core
         /// </summary>
         public int JSON_Version { get; set; }
 
+        /// <summary>
+        /// SC的金额, 如果以后有礼物金额也可以放进去
+        /// </summary>
+        public decimal Price { get; set; }
+
+        /// <summary>
+        /// SC保留时间
+        /// </summary>
+        public int SCKeepTime { get; set; }
+
         public DanmakuModel()
         { }
 
@@ -197,6 +212,7 @@ namespace BililiveRecorder.Core
                     break;
                 case "DANMU_MSG":
                     MsgType = MsgTypeEnum.Comment;
+                    CommentColor = obj["info"][0][3].ToObject<int>().ToString("X6");
                     CommentText = obj["info"][1].ToObject<string>();
                     UserID = obj["info"][2][0].ToObject<int>();
                     UserName = obj["info"][2][1].ToObject<string>();
@@ -237,6 +253,16 @@ namespace BililiveRecorder.Core
                         UserGuardLevel = obj["data"]["guard_level"].ToObject<int>();
                         GiftName = UserGuardLevel == 3 ? "舰长" : UserGuardLevel == 2 ? "提督" : UserGuardLevel == 1 ? "总督" : "";
                         GiftCount = obj["data"]["num"].ToObject<int>();
+                        break;
+                    }
+                case "SUPER_CHAT_MESSAGE":
+                    {
+                        MsgType = MsgTypeEnum.SuperChat;
+                        CommentText = obj["data"]["message"]?.ToString();
+                        UserID = obj["data"]["uid"].ToObject<int>();
+                        UserName = obj["data"]["user_info"]["uname"].ToString();
+                        Price = obj["data"]["price"].ToObject<decimal>();
+                        SCKeepTime = obj["data"]["time"].ToObject<int>();
                         break;
                     }
                 default:

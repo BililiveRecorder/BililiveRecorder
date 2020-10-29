@@ -78,7 +78,7 @@ namespace BililiveRecorder.FlvProcessor
             this.funcFlvMetadata = funcFlvMetadata;
             this.funcFlvTag = funcFlvTag;
 
-
+            path = null;
         }
 
         public IFlvStreamProcessor Initialize(Func<string> getStreamFileName, Func<string> getClipFileName, EnabledFeature enabledFeature, AutoCuttingMode autoCuttingMode)
@@ -90,10 +90,10 @@ namespace BililiveRecorder.FlvProcessor
 
             return this;
         }
-
+        public string path { set; get; }
         private void OpenNewRecordFile()
         {
-            string path = GetStreamFileName();
+            path = GetStreamFileName();
             logger.Debug("打开新录制文件: " + path);
             try { Directory.CreateDirectory(Path.GetDirectoryName(path)); } catch (Exception) { }
             _targetFile = new FileStream(path, FileMode.CreateNew, FileAccess.ReadWrite);

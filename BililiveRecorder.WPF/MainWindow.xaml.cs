@@ -236,6 +236,7 @@ namespace BililiveRecorder.WPF
             }
 
             Task.Run(() => rr.StartRecord());
+
         }
 
         /// <summary>

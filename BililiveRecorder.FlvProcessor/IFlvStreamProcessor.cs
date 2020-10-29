@@ -18,7 +18,7 @@ namespace BililiveRecorder.FlvProcessor
         uint ClipLengthPast { get; set; }
         uint ClipLengthFuture { get; set; }
         uint CuttingNumber { get; set; }
-
+        string path { set; get; }
         IFlvStreamProcessor Initialize(Func<string> getStreamFileName, Func<string> getClipFileName, EnabledFeature enabledFeature, AutoCuttingMode autoCuttingMode);
         IFlvClipProcessor Clip();
         void AddBytes(byte[] data);

@@ -8,7 +8,7 @@
         xmlns:flv="clr-namespace:BililiveRecorder.FlvProcessor;assembly=BililiveRecorder.FlvProcessor"
         mc:Ignorable="d"
         ShowInTaskbar="False" ResizeMode="NoResize"
-        Title="设置 - 录播姬" Height="550" Width="300">
+        Title="设置 - 录播姬" Height="580" Width="300">
     <Window.Resources>
         <local:ValueConverterGroup x:Key="EnumToInvertBooleanConverter">
             <local:EnumToBooleanConverter/>
@@ -23,6 +23,7 @@
         </Grid.RowDefinitions>
         <Grid Margin="5">
             <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
@@ -324,6 +325,41 @@
                 <TextBlock HorizontalAlignment="Left">文件名变量说明：</TextBlock>
                 <TextBlock Grid.Row="1" HorizontalAlignment="Left">日期: {date} 时间: {time} 房间号: {roomid}</TextBlock>
                 <TextBlock Grid.Row="2" HorizontalAlignment="Left">标题: {title} 主播名: {name} 随机数: {random}</TextBlock>
+            </Grid>
+
+            <Separator Grid.Row="13"/>
+            <Grid Grid.Row="14" Margin="10,0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="2*"/>
+                    <ColumnDefinition Width="3*"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Row="1" Grid.Column="0">弹幕字体大小：</TextBlock>
+                <Grid Grid.Row="1" Grid.Column="1" VerticalAlignment="Center">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="1*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <local:ClickSelectTextBox Grid.Column="0" Text="{Binding DanmuFontSize,Delay=500,UpdateSourceTrigger=PropertyChanged}"/>
+                    <TextBlock Grid.Column="1" Margin="5,0,10,0">号</TextBlock>
+                </Grid>
+                <TextBlock Grid.Row="2" Grid.Column="0">弹幕飞行速度：</TextBlock>
+                <Grid Grid.Row="2" Grid.Column="1" VerticalAlignment="Center">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="1*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <local:ClickSelectTextBox Grid.Column="0" Text="{Binding DanmuFlySpeed,Delay=500,UpdateSourceTrigger=PropertyChanged}"/>
+                    <TextBlock Grid.Column="1" Margin="5,0,10,0">倍</TextBlock>
+                </Grid>
+                <Grid Grid.Row="3" Grid.ColumnSpan="2" HorizontalAlignment="Left">
+                    <TextBlock Text="注：弹幕设置在下次录制时生效！"/>
+                </Grid>
             </Grid>
             <!--
             <TextBlock Grid.Row="4" Grid.Column="0"></TextBlock>
