@@ -6,7 +6,8 @@
         xmlns:local="clr-namespace:BililiveRecorder.WPF"
         mc:Ignorable="d" ResizeMode="NoResize"
         Title="TimedMessageBox" Height="200" Width="320"
-        Loaded="Window_Loaded">
+        ></Window><!--Loaded="Window_Loaded">
+    
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="1*"/>
@@ -24,4 +25,4 @@
             <TextBlock FontSize="20">取消 (<TextBlock Text="{Binding CountDown}"/>)</TextBlock>
         </Button>
     </Grid>
-</Window>
+</Window-->

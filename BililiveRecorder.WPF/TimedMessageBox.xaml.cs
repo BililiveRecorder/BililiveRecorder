@@ -10,8 +10,8 @@ namespace BililiveRecorder.WPF
     /// <summary>
     /// TimedMessageBox.xaml 的交互逻辑
     /// </summary>
-    public partial class TimedMessageBox : Window, INotifyPropertyChanged
-    {
+    public partial class TimedMessageBox : Window//, INotifyPropertyChanged
+    {/*
         public string Message { get => _message; set => SetField(ref _message, value); }
         private string _message = string.Empty;
 
@@ -68,6 +68,6 @@ namespace BililiveRecorder.WPF
         {
             if (EqualityComparer<T>.Default.Equals(field, value)) { return false; }
             field = value; OnPropertyChanged(propertyName); return true;
-        }
+        }*/
     }
 }

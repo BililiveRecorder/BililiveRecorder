@@ -124,6 +124,7 @@ namespace BililiveRecorder.Core
         private double flyspeed;
         private string readytoWrite;
         private string saveinMem;
+        private bool isWriting;
         private async void resetDanmuQueue(int danmuQueueNow, string filename)
         {
             await Task.Delay(200);
@@ -132,13 +133,23 @@ namespace BililiveRecorder.Core
                 danmuQueue = 0;
                 if (readytoWrite != null && readytoWrite != "")
                 {
-                    using (var outfile = new StreamWriter(filename, true))
-                    {
-                        outfile.WriteLine(readytoWrite.Remove(readytoWrite.Length - 2));
-                    }
+                    wrirteDanmuToFile(filename, readytoWrite.Remove(readytoWrite.Length - 2));
                 }
                 readytoWrite = null;
             }
+        }
+        private void wrirteDanmuToFile(string filename, string content)
+        {
+            while (isWriting)
+            {
+                Thread.Sleep(100);
+            }
+            isWriting = true;
+            using (var outfile = new StreamWriter(filename, true))
+            {
+                outfile.WriteLine(content);
+            }
+            isWriting = false;
         }
         private void saveClipDanmu(DanmakuModel e)
         {
@@ -188,6 +199,7 @@ namespace BililiveRecorder.Core
                 string filename = path.Replace("flv", "ass");
                 if (!File.Exists(filename) && (readytoWrite == null || readytoWrite == ""))
                 {
+                    isWriting = false;
                     deleted = 0;
                     liwuDeleted = 0;
                     SCDeleted = 0;
@@ -211,6 +223,7 @@ namespace BililiveRecorder.Core
                                       "\r\n" +
                                       "[Events]\r\n" +
                                       "Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text\r\n";
+                    logger.Log(LogLevel.Debug, "保存弹幕文件: " + filename);
                 }
                 string LinetoWritten;
                 if ((LinetoWritten = convert(DateTime.Now)) != "")
@@ -268,7 +281,7 @@ namespace BililiveRecorder.Core
                                 {
                                     if (danmu[i] != null && danmu[i].EndTime < danmu[danmu.Count - 1].StartTime)
                                     {
-                                        danmu[i] = null;
+                                        danmu.RemoveAt(i);
                                         deleted++;
                                     }
                                 }
@@ -308,7 +321,7 @@ namespace BililiveRecorder.Core
                                     {
                                         if (liwu[i].EndTime < liwu[liwu.Count - 1].StartTime)
                                         {
-                                            liwu[i] = null;
+                                            liwu.RemoveAt(i);
                                             liwuDeleted++;
                                         }
                                     }
@@ -350,7 +363,7 @@ namespace BililiveRecorder.Core
                                     {
                                         if (SC[i].EndTime < SC[SC.Count - 1].StartTime)
                                         {
-                                            SC[i] = null;
+                                            SC.RemoveAt(i);
                                             SCDeleted++;
                                         }
                                     }
@@ -584,6 +597,12 @@ namespace BililiveRecorder.Core
             IsMonitoring = false;
             path = null;
             httpTimer.Stop();
+            deleted = 0;
+            liwuDeleted = 0;
+            SCDeleted = 0;
+            danmu.Clear();
+            liwu.Clear();
+            SC.Clear();
         }
 
         public void Check(TriggerType type, int millisecondsDelay = 0)

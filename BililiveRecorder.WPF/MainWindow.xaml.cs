@@ -129,14 +129,14 @@ namespace BililiveRecorder.WPF
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            if (new TimedMessageBox
+            if (/*new TimedMessageBox
             {
                 Title = "关闭录播姬？",
                 Message = "确定要关闭录播姬吗？",
                 CountDown = 10,
                 Left = Left,
                 Top = Top
-            }.ShowDialog() == true)
+            }.ShowDialog() == */true)
             {
                 _AddLog = null;
                 Recorder.Shutdown();
