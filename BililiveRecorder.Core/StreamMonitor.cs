@@ -127,7 +127,7 @@ namespace BililiveRecorder.Core
         private async void resetDanmuQueue(int danmuQueueNow, string filename)
         {
             await Task.Delay(200);
-            if (danmuQueueNow == danmuQueue && danmuQueue != 0)
+            if (danmuQueueNow == danmuQueue && danmuQueue != 0 && danmus.Count != 0)
             {
                 if (isCaling)
                 {
@@ -169,8 +169,10 @@ namespace BililiveRecorder.Core
 
             }
             danmustemp.Clear();
-            if (danmus.Count != 0) danmus.RemoveRange(0, danmuQueue);
-            this.danmuQueue -= danmuQueue;
+            if (danmus.Count >= danmuQueue)
+                danmus.RemoveRange(0, danmuQueue);
+            if (this.danmuQueue >= danmuQueue)
+                this.danmuQueue -= danmuQueue;
 
         }
         private string convert(DanmakuModel danmaku, int leftCount, DateTime now)
@@ -559,7 +561,7 @@ namespace BililiveRecorder.Core
                 isCaling = false;
                 isWriting = false;
                 danmu?.Clear();
-                danmus.Clear();
+                danmus?.Clear();
                 liwu?.Clear();
                 SC?.Clear();
                 fontsize = (int)Math.Max(config.DanmuFontSize, 1);
