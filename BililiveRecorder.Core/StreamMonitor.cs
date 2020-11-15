@@ -558,10 +558,10 @@ namespace BililiveRecorder.Core
             {
                 isCaling = false;
                 isWriting = false;
-                danmu.Clear();
-                liwu.Clear();
-                SC.Clear();
+                danmu?.Clear();
                 danmus.Clear();
+                liwu?.Clear();
+                SC?.Clear();
                 fontsize = (int)Math.Max(config.DanmuFontSize, 1);
                 liwufontsize = (int)Math.Max(Math.Round(fontsize / 26.0 * 22.0, 0), 1);
                 flyspeed = Math.Max(config.DanmuFlySpeed, 0.01);
@@ -615,10 +615,10 @@ namespace BililiveRecorder.Core
             IsMonitoring = false;
             path = null;
             httpTimer.Stop();
-            danmu.Clear();
-            danmus.Clear();
-            liwu.Clear();
-            SC.Clear();
+            danmu?.Clear();
+            danmus?.Clear();
+            liwu?.Clear();
+            SC?.Clear();
         }
 
         public void Check(TriggerType type, int millisecondsDelay = 0)
@@ -813,9 +813,10 @@ namespace BililiveRecorder.Core
 
                 logger.Log(Roomid, LogLevel.Debug, "Disconnected");
                 dmClient?.Close();
-                danmu.Clear();
-                liwu.Clear();
-                SC.Clear();
+                danmu?.Clear();
+                danmus?.Clear();
+                liwu?.Clear();
+                SC?.Clear();
                 dmNetStream = null;
                 if (!(dmTokenSource?.IsCancellationRequested ?? true))
                 {
@@ -915,9 +916,10 @@ namespace BililiveRecorder.Core
                     dmTokenSource?.Dispose();
                     httpTimer?.Dispose();
                     dmClient?.Close();
-                    danmu.Clear();
-                    liwu.Clear();
-                    SC.Clear();
+                    danmu?.Clear();
+                    danmus?.Clear();
+                    liwu?.Clear();
+                    SC?.Clear();
 
                 }
 
