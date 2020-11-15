@@ -111,10 +111,10 @@ namespace BililiveRecorder.Core
             Task.Run(() => ConnectWithRetryAsync());
         }
         //private List<danmuinMem> danmuMem;
-        private List<danmutoCal> danmu;
-        private List<danmutoCal> liwu;
-        private List<danmutoCal> SC;
-        private List<DanmakuModel> danmus;
+        private List<danmutoCal> danmu = new List<danmutoCal>();
+        private List<danmutoCal> liwu = new List<danmutoCal>();
+        private List<danmutoCal> SC = new List<danmutoCal>();
+        private List<DanmakuModel> danmus = new List<DanmakuModel>();
 
         private int danmuQueue;
         private int fontsize;
@@ -558,10 +558,10 @@ namespace BililiveRecorder.Core
             {
                 isCaling = false;
                 isWriting = false;
-                danmu = new List<danmutoCal>();
-                liwu = new List<danmutoCal>();
-                SC = new List<danmutoCal>();
-                danmus = new List<DanmakuModel>();
+                danmu.Clear();
+                liwu.Clear();
+                SC.Clear();
+                danmus.Clear();
                 fontsize = (int)Math.Max(config.DanmuFontSize, 1);
                 liwufontsize = (int)Math.Max(Math.Round(fontsize / 26.0 * 22.0, 0), 1);
                 flyspeed = Math.Max(config.DanmuFlySpeed, 0.01);
