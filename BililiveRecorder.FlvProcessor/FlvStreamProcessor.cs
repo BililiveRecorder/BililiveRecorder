@@ -121,7 +121,7 @@ namespace BililiveRecorder.FlvProcessor
         {
             lock (_writelock)
             {
-                if (_finalized) { throw new InvalidOperationException("Processor Already Closed"); }
+                if (_finalized) { return; /*throw new InvalidOperationException("Processor Already Closed");*/ }
                 if (_leftover != null)
                 {
                     byte[] c = new byte[_leftover.Length + data.Length];
@@ -356,7 +356,11 @@ namespace BililiveRecorder.FlvProcessor
             if (!EnabledFeature.IsClipEnabled()) { return null; }
             lock (_writelock)
             {
-                if (_finalized) { throw new InvalidOperationException("Processor Already Closed"); }
+                if (_finalized)
+                {
+                    return null;
+                    // throw new InvalidOperationException("Processor Already Closed"); 
+                }
 
                 logger.Info("剪辑处理中，将会保存过去 {0} 秒和将来 {1} 秒的直播流", (_tags[_tags.Count - 1].TimeStamp - _tags[0].TimeStamp) / 1000d, ClipLengthFuture);
                 IFlvClipProcessor clip = funcFlvClipProcessor().Initialize(GetClipFileName(), Metadata, _headerTags, new List<IFlvTag>(_tags.ToArray()), ClipLengthFuture);

@@ -70,6 +70,7 @@ namespace BililiveRecorder.Core
         public bool IsMonitoring => StreamMonitor.IsMonitoring;
         public bool IsRecording => !(StreamDownloadTask?.IsCompleted ?? true);
 
+        private readonly IBasicDanmakuWriter basicDanmakuWriter;
         private readonly Func<IFlvStreamProcessor> newIFlvStreamProcessor;
         private IFlvStreamProcessor _processor;
         public IFlvStreamProcessor Processor
@@ -111,6 +112,7 @@ namespace BililiveRecorder.Core
         }
 
         public RecordedRoom(ConfigV1 config,
+            IBasicDanmakuWriter basicDanmakuWriter,
             Func<int, IStreamMonitor> newIStreamMonitor,
             Func<IFlvStreamProcessor> newIFlvStreamProcessor,
             int roomid)
@@ -119,14 +121,22 @@ namespace BililiveRecorder.Core
 
             _config = config;
 
+            this.basicDanmakuWriter = basicDanmakuWriter;
+
             RoomId = roomid;
-            StreamerName = "...";
+            StreamerName = "获取中...";
 
             StreamMonitor = newIStreamMonitor(RoomId);
             StreamMonitor.RoomInfoUpdated += StreamMonitor_RoomInfoUpdated;
             StreamMonitor.StreamStarted += StreamMonitor_StreamStarted;
+            StreamMonitor.ReceivedDanmaku += StreamMonitor_ReceivedDanmaku;
 
             StreamMonitor.FetchRoomInfoAsync();
+        }
+
+        private void StreamMonitor_ReceivedDanmaku(object sender, ReceivedDanmakuArgs e)
+        {
+            basicDanmakuWriter.Write(e.Danmaku);
         }
 
         private void StreamMonitor_RoomInfoUpdated(object sender, RoomInfoUpdatedArgs e)
@@ -287,6 +297,7 @@ namespace BililiveRecorder.Core
                     Processor.ClipLengthFuture = _config.ClipLengthFuture;
                     Processor.ClipLengthPast = _config.ClipLengthPast;
                     Processor.CuttingNumber = _config.CuttingNumber;
+                    Processor.StreamFinalized += (sender, e) => { basicDanmakuWriter.Disable(); };
                     Processor.OnMetaData += (sender, e) =>
                     {
                         e.Metadata["BililiveRecorder"] = new Dictionary<string, object>()
@@ -434,7 +445,19 @@ namespace BililiveRecorder.Core
             Dispose(true);
         }
 
-        private string GetStreamFilePath() => FormatFilename(_config.RecordFilenameFormat);
+        private string GetStreamFilePath()
+        {
+            string path = FormatFilename(_config.RecordFilenameFormat);
+
+            // 有点脏的写法，不过凑合吧
+            if (_config.RecordDanmaku)
+            {
+                var xmlpath = Path.ChangeExtension(path, "xml");
+                basicDanmakuWriter.EnableWithPath(xmlpath);
+            }
+
+            return path;
+        }
 
         private string GetClipFilePath() => FormatFilename(_config.ClipFilenameFormat);
 
@@ -512,11 +535,13 @@ namespace BililiveRecorder.Core
                 {
                     Stop();
                     StopRecord();
+                    Processor?.FinallizeFile();
                     Processor?.Dispose();
                     StreamMonitor?.Dispose();
                     _response?.Dispose();
                     _stream?.Dispose();
                     cancellationTokenSource?.Dispose();
+                    basicDanmakuWriter?.Dispose();
                 }
 
                 Processor = null;

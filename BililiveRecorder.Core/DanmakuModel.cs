@@ -40,8 +40,11 @@ namespace BililiveRecorder.Core
         /// <summary>
         /// 购买船票（上船）
         /// </summary>
-        GuardBuy
-
+        GuardBuy,
+        /// <summary>
+        /// SuperChat
+        /// </summary>
+        SuperChat
     }
 
     public class DanmakuModel
@@ -171,6 +174,11 @@ namespace BililiveRecorder.Core
         public string RawData { get; set; }
 
         /// <summary>
+        /// 原始数据, 高级开发用
+        /// </summary>
+        public JObject RawObj { get; set; }
+
+        /// <summary>
         /// 内部用, JSON数据版本号 通常应该是2
         /// </summary>
         public int JSON_Version { get; set; }
@@ -184,6 +192,7 @@ namespace BililiveRecorder.Core
             JSON_Version = 2;
 
             var obj = JObject.Parse(JSON);
+            RawObj = obj;
             string cmd = obj["cmd"]?.ToObject<string>();
             switch (cmd)
             {
@@ -219,7 +228,6 @@ namespace BililiveRecorder.Core
                         IsVIP = true;
                         IsAdmin = obj["data"]?["is_admin"]?.ToObject<bool>() ?? obj["data"]?["isadmin"]?.ToObject<string>() == "1";
                         break;
-
                     }
                 case "WELCOME_GUARD":
                     {
@@ -237,6 +245,16 @@ namespace BililiveRecorder.Core
                         UserGuardLevel = obj["data"]["guard_level"].ToObject<int>();
                         GiftName = UserGuardLevel == 3 ? "舰长" : UserGuardLevel == 2 ? "提督" : UserGuardLevel == 1 ? "总督" : "";
                         GiftCount = obj["data"]["num"].ToObject<int>();
+                        break;
+                    }
+                case "SUPER_CHAT_MESSAGE":
+                    {
+                        MsgType = MsgTypeEnum.SuperChat;
+                        CommentText = obj["data"]["message"]?.ToString();
+                        UserID = obj["data"]["uid"].ToObject<int>();
+                        UserName = obj["data"]["user_info"]["uname"].ToString();
+                        // Price = obj["data"]["price"].ToObject<decimal>();
+                        // SCKeepTime = obj["data"]["time"].ToObject<int>();
                         break;
                     }
                 default:

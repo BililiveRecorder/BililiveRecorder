@@ -44,7 +44,7 @@
                                             </TextBlock.Text>
                                         </TextBlock>
                                         <TextBlock Text="{Binding DownloadSpeedPersentage,StringFormat=0.##%,Mode=OneWay}" Margin="5,0,0,0"/>
-                                        <TextBlock Margin="5,0" Text="{Binding RealRoomid,Mode=OneWay}"/>
+                                        <TextBlock Margin="5,0" Text="{Binding RoomId,Mode=OneWay}"/>
                                         <TextBlock Text="{Binding StreamerName,Mode=OneWay}"/>
                                     </StackPanel>
                                 </DataTemplate>
@@ -56,9 +56,7 @@
             <tb:TaskbarIcon.ContextMenu>
                 <ContextMenu DataContext="{Binding Path=PlacementTarget.Tag, RelativeSource={RelativeSource Self}}">
                     <!--<MenuItem IsCheckable="True">不弹出提醒</MenuItem>-->
-                    <MenuItem Header="退出">
-                        <MenuItem Header="确认退出" Click="Taskbar_Quit_Click"/>
-                    </MenuItem>
+                    <MenuItem Header="退出" Click="Taskbar_Quit_Click"/>
                 </ContextMenu>
             </tb:TaskbarIcon.ContextMenu>
         </tb:TaskbarIcon>

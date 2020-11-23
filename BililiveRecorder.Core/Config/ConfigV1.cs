@@ -93,11 +93,17 @@ namespace BililiveRecorder.Core.Config
         public string Cookie { get => _cookie; set => SetField(ref _cookie, value); }
 
         /// <summary>
+        /// 是否同时录制弹幕
+        /// </summary>
+        [JsonProperty("record_danmaku")]
+        public bool RecordDanmaku { get => _recordDanmaku; set => SetField(ref _recordDanmaku, value); }
+
+        /// <summary>
         /// 尽量避开腾讯云服务器，可有效提升录制文件能正常播放的概率。（垃圾腾讯云直播服务）
         /// </summary>
         [JsonProperty("avoidtxy")]
         public bool AvoidTxy { get => _avoidTxy; set => SetField(ref _avoidTxy, value); }
-        
+
         /// <summary>
         /// 替换api.live.bilibili.com服务器为其他反代，可以支持在云服务器上录制
         /// </summary>
@@ -132,7 +138,7 @@ namespace BililiveRecorder.Core.Config
         private uint _clipLengthPast = 20;
         private uint _clipLengthFuture = 10;
         private uint _cuttingNumber = 10;
-        private EnabledFeature _enabledFeature = EnabledFeature.Both;
+        private EnabledFeature _enabledFeature = EnabledFeature.RecordOnly;
         private AutoCuttingMode _cuttingMode = AutoCuttingMode.Disabled;
         private string _workDirectory;
 
@@ -147,6 +153,7 @@ namespace BililiveRecorder.Core.Config
         private string _record_filename_format = @"{roomid}-{name}/录制-{roomid}-{date}-{time}-{title}.flv";
         private string _clip_filename_format = @"{roomid}-{name}/剪辑片段-{roomid}-{date}-{time}-{title}.flv";
 
+        private bool _recordDanmaku = false;
         private bool _avoidTxy = false;
 
         private string _liveApiHost = "https://api.live.bilibili.com";
