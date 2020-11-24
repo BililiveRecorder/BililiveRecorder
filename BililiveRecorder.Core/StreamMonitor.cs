@@ -41,6 +41,7 @@ namespace BililiveRecorder.Core
         private NetworkStream dmNetStream;
         private Thread dmReceiveMessageLoopThread;
         private CancellationTokenSource dmTokenSource = null;
+        private bool dmConnectionTriggered = false;
         private readonly Timer httpTimer;
 
         public int Roomid { get; private set; } = 0;
@@ -57,6 +58,7 @@ namespace BililiveRecorder.Core
             Roomid = roomid;
 
             ReceivedDanmaku += Receiver_ReceivedDanmaku;
+            RoomInfoUpdated += StreamMonitor_RoomInfoUpdated;
 
             dmTokenSource = new CancellationTokenSource();
             Repeat.Interval(TimeSpan.FromSeconds(30), () =>
@@ -97,8 +99,16 @@ namespace BililiveRecorder.Core
                     httpTimer.Interval = config.TimingCheckInterval * 1000;
                 }
             };
+        }
 
-            Task.Run(() => ConnectWithRetryAsync());
+        private void StreamMonitor_RoomInfoUpdated(object sender, RoomInfoUpdatedArgs e)
+        {
+            Roomid = e.RoomInfo.RoomId;
+            if (!dmConnectionTriggered)
+            {
+                dmConnectionTriggered = true;
+                Task.Run(() => ConnectWithRetryAsync());
+            }
         }
 
         private void Receiver_ReceivedDanmaku(object sender, ReceivedDanmakuArgs e)

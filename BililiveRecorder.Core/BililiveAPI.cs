@@ -111,7 +111,7 @@ namespace BililiveRecorder.Core
         /// <exception cref="Exception"/>
         public static async Task<string> GetPlayUrlAsync(int roomid)
         {
-            string url = $@"https://api.live.bilibili.com/room/v1/Room/playUrl?cid={roomid}&quality=4&platform=web";
+            string url = $@"{Config.LiveApiHost}/room/v1/Room/playUrl?cid={roomid}&quality=4&platform=web";
             if (Config.AvoidTxy)
             {
                 // 尽量避开腾讯云

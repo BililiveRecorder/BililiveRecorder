@@ -25,7 +25,7 @@ namespace BililiveRecorder.WPF
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
         private static readonly Regex UrlToRoomidRegex = new Regex(@"^https?:\/\/live\.bilibili\.com\/(?<roomid>\d+)(?:[#\?].*)?$", RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.Singleline);
 
-        private const int MAX_LOG_ROW = 25;
+        private const int MAX_LOG_ROW = 30;
         private const string LAST_WORK_DIR_FILE = "lastworkdir";
 
         private IContainer Container { get; set; }
@@ -42,6 +42,7 @@ namespace BililiveRecorder.WPF
                 "QQ群： 689636812",
                 "",
                 "删除直播间按钮在列表右键菜单里",
+                "新增了弹幕录制功能，默认关闭，设置里可开启",
                 "",
                 "录制速度比 在 100% 左右说明跟上了主播直播的速度",
                 "小于 100% 说明录播电脑的下载带宽不够，跟不上录制直播"

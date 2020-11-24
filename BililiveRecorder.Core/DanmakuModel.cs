@@ -40,8 +40,11 @@ namespace BililiveRecorder.Core
         /// <summary>
         /// 购买船票（上船）
         /// </summary>
-        GuardBuy
-
+        GuardBuy,
+        /// <summary>
+        /// SuperChat
+        /// </summary>
+        SuperChat
     }
 
     public class DanmakuModel
@@ -80,6 +83,16 @@ namespace BililiveRecorder.Core
         /// </list></para>
         /// </summary>
         public string UserName { get; set; }
+
+        /// <summary>
+        /// SC 价格
+        /// </summary>
+        public double Price { get; set; }
+
+        /// <summary>
+        /// SC 保持时间
+        /// </summary>
+        public int SCKeepTime { get; set; }
 
         /// <summary>
         /// 消息触发者用户ID
@@ -171,6 +184,11 @@ namespace BililiveRecorder.Core
         public string RawData { get; set; }
 
         /// <summary>
+        /// 原始数据, 高级开发用
+        /// </summary>
+        public JObject RawObj { get; set; }
+
+        /// <summary>
         /// 内部用, JSON数据版本号 通常应该是2
         /// </summary>
         public int JSON_Version { get; set; }
@@ -184,6 +202,7 @@ namespace BililiveRecorder.Core
             JSON_Version = 2;
 
             var obj = JObject.Parse(JSON);
+            RawObj = obj;
             string cmd = obj["cmd"]?.ToObject<string>();
             switch (cmd)
             {
@@ -211,24 +230,6 @@ namespace BililiveRecorder.Core
                     UserID = obj["data"]["uid"].ToObject<int>();
                     GiftCount = obj["data"]["num"].ToObject<int>();
                     break;
-                case "WELCOME":
-                    {
-                        MsgType = MsgTypeEnum.Welcome;
-                        UserName = obj["data"]["uname"].ToObject<string>();
-                        UserID = obj["data"]["uid"].ToObject<int>();
-                        IsVIP = true;
-                        IsAdmin = obj["data"]?["is_admin"]?.ToObject<bool>() ?? obj["data"]?["isadmin"]?.ToObject<string>() == "1";
-                        break;
-
-                    }
-                case "WELCOME_GUARD":
-                    {
-                        MsgType = MsgTypeEnum.WelcomeGuard;
-                        UserName = obj["data"]["username"].ToObject<string>();
-                        UserID = obj["data"]["uid"].ToObject<int>();
-                        UserGuardLevel = obj["data"]["guard_level"].ToObject<int>();
-                        break;
-                    }
                 case "GUARD_BUY":
                     {
                         MsgType = MsgTypeEnum.GuardBuy;
@@ -239,6 +240,35 @@ namespace BililiveRecorder.Core
                         GiftCount = obj["data"]["num"].ToObject<int>();
                         break;
                     }
+                case "SUPER_CHAT_MESSAGE":
+                    {
+                        MsgType = MsgTypeEnum.SuperChat;
+                        CommentText = obj["data"]["message"]?.ToString();
+                        UserID = obj["data"]["uid"].ToObject<int>();
+                        UserName = obj["data"]["user_info"]["uname"].ToString();
+                        Price = obj["data"]["price"].ToObject<double>();
+                        SCKeepTime = obj["data"]["time"].ToObject<int>();
+                        break;
+                    }
+                /*
+                case "WELCOME":
+                    {
+                        MsgType = MsgTypeEnum.Welcome;
+                        UserName = obj["data"]["uname"].ToObject<string>();
+                        UserID = obj["data"]["uid"].ToObject<int>();
+                        IsVIP = true;
+                        IsAdmin = obj["data"]?["is_admin"]?.ToObject<bool>() ?? obj["data"]?["isadmin"]?.ToObject<string>() == "1";
+                        break;
+                    }
+                case "WELCOME_GUARD":
+                    {
+                        MsgType = MsgTypeEnum.WelcomeGuard;
+                        UserName = obj["data"]["username"].ToObject<string>();
+                        UserID = obj["data"]["uid"].ToObject<int>();
+                        UserGuardLevel = obj["data"]["guard_level"].ToObject<int>();
+                        break;
+                    }
+                */
                 default:
                     {
                         MsgType = MsgTypeEnum.Unknown;

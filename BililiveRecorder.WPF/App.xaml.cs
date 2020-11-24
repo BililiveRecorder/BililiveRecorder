@@ -74,6 +74,8 @@ namespace BililiveRecorder.WPF
             {
                 logger.Error(ex, "检查更新时出错，如持续出错请联系开发者 rec@danmuji.org");
             }
+
+            _ = Task.Run(async () => { await Task.Delay(TimeSpan.FromDays(1)); await RunCheckUpdate(); });
         }
     }
 }

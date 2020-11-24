@@ -93,10 +93,40 @@ namespace BililiveRecorder.Core.Config
         public string Cookie { get => _cookie; set => SetField(ref _cookie, value); }
 
         /// <summary>
+        /// 是否同时录制弹幕
+        /// </summary>
+        [JsonProperty("record_danmaku")]
+        public bool RecordDanmaku { get => _recordDanmaku; set => SetField(ref _recordDanmaku, value); }
+
+        /// <summary>
+        /// 是否同时录制 SuperChat
+        /// </summary>
+        [JsonProperty("record_danmaku_sc")]
+        public bool RecordDanmakuSuperChat { get => _recordDanmakuSuperChat; set => SetField(ref _recordDanmakuSuperChat, value); }
+
+        /// <summary>
+        /// 是否同时录制 礼物
+        /// </summary>
+        [JsonProperty("record_danmaku_gift")]
+        public bool RecordDanmakuGift { get => _recordDanmakuGift; set => SetField(ref _recordDanmakuGift, value); }
+
+        /// <summary>
+        /// 是否同时录制 上船
+        /// </summary>
+        [JsonProperty("record_danmaku_guard")]
+        public bool RecordDanmakuGuard { get => _recordDanmakuGuard; set => SetField(ref _recordDanmakuGuard, value); }
+
+        /// <summary>
         /// 尽量避开腾讯云服务器，可有效提升录制文件能正常播放的概率。（垃圾腾讯云直播服务）
         /// </summary>
         [JsonProperty("avoidtxy")]
         public bool AvoidTxy { get => _avoidTxy; set => SetField(ref _avoidTxy, value); }
+
+        /// <summary>
+        /// 替换api.live.bilibili.com服务器为其他反代，可以支持在云服务器上录制
+        /// </summary>
+        [JsonProperty("live_api_host")]
+        public string LiveApiHost { get => _liveApiHost; set => SetField(ref _liveApiHost, value); }
 
         [JsonProperty("record_filename_format")]
         public string RecordFilenameFormat
@@ -118,7 +148,7 @@ namespace BililiveRecorder.Core.Config
         protected bool SetField<T>(ref T field, T value, [CallerMemberName] string propertyName = "")
         {
             if (EqualityComparer<T>.Default.Equals(field, value)) { return false; }
-            logger.Debug("设置 [{0}] 的值已从 [{1}] 修改到 [{2}]", propertyName, field, value);
+            logger.Trace("设置 [{0}] 的值已从 [{1}] 修改到 [{2}]", propertyName, field, value);
             field = value; OnPropertyChanged(propertyName); return true;
         }
         #endregion
@@ -126,7 +156,7 @@ namespace BililiveRecorder.Core.Config
         private uint _clipLengthPast = 20;
         private uint _clipLengthFuture = 10;
         private uint _cuttingNumber = 10;
-        private EnabledFeature _enabledFeature = EnabledFeature.Both;
+        private EnabledFeature _enabledFeature = EnabledFeature.RecordOnly;
         private AutoCuttingMode _cuttingMode = AutoCuttingMode.Disabled;
         private string _workDirectory;
 
@@ -141,6 +171,13 @@ namespace BililiveRecorder.Core.Config
         private string _record_filename_format = @"{roomid}-{name}/录制-{roomid}-{date}-{time}-{title}.flv";
         private string _clip_filename_format = @"{roomid}-{name}/剪辑片段-{roomid}-{date}-{time}-{title}.flv";
 
+        private bool _recordDanmaku = false;
+        private bool _recordDanmakuSuperChat = false;
+        private bool _recordDanmakuGift = false;
+        private bool _recordDanmakuGuard = false;
+
         private bool _avoidTxy = false;
+
+        private string _liveApiHost = "https://api.live.bilibili.com";
     }
 }

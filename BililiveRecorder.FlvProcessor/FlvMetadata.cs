@@ -204,7 +204,8 @@ namespace BililiveRecorder.FlvProcessor
                                 _readHead += text_size;
                             }
                             object value = DecodeScriptDataValue(buff, ref _readHead);
-                            d.Add(key, value);
+                            // d.Add(key, value);
+                            d[key] = value; // fix duplicates
                         }
                         _readHead += 3;
                         return d;

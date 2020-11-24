@@ -121,7 +121,7 @@ namespace BililiveRecorder.FlvProcessor
         {
             lock (_writelock)
             {
-                if (_finalized) { throw new InvalidOperationException("Processor Already Closed"); }
+                if (_finalized) { return; /*throw new InvalidOperationException("Processor Already Closed");*/ }
                 if (_leftover != null)
                 {
                     byte[] c = new byte[_leftover.Length + data.Length];
@@ -302,7 +302,7 @@ namespace BililiveRecorder.FlvProcessor
                     _tagVideoCount++;
                     if (_tagVideoCount < 2)
                     {
-                        logger.Trace("第一个 Video Tag 时间戳 {0} ms", tag.TimeStamp);
+                        logger.Debug("第一个 Video Tag 时间戳 {0} ms", tag.TimeStamp);
                         _headerTags.Add(tag);
                     }
                     else
@@ -310,7 +310,7 @@ namespace BililiveRecorder.FlvProcessor
                         _baseTimeStamp = tag.TimeStamp;
                         _hasOffset = true;
                         StartDateTime = DateTime.Now;
-                        logger.Trace("重设时间戳 {0} 毫秒", _baseTimeStamp);
+                        logger.Debug("重设时间戳 {0} 毫秒", _baseTimeStamp);
                     }
                 }
                 else if (tag.TagType == TagType.AUDIO)
@@ -318,7 +318,7 @@ namespace BililiveRecorder.FlvProcessor
                     _tagAudioCount++;
                     if (_tagAudioCount < 2)
                     {
-                        logger.Trace("第一个 Audio Tag 时间戳 {0} ms", tag.TimeStamp);
+                        logger.Debug("第一个 Audio Tag 时间戳 {0} ms", tag.TimeStamp);
                         _headerTags.Add(tag);
                     }
                     else
@@ -326,7 +326,7 @@ namespace BililiveRecorder.FlvProcessor
                         _baseTimeStamp = tag.TimeStamp;
                         _hasOffset = true;
                         StartDateTime = DateTime.Now;
-                        logger.Trace("重设时间戳 {0} 毫秒", _baseTimeStamp);
+                        logger.Debug("重设时间戳 {0} 毫秒", _baseTimeStamp);
                     }
                 }
             }
@@ -356,7 +356,11 @@ namespace BililiveRecorder.FlvProcessor
             if (!EnabledFeature.IsClipEnabled()) { return null; }
             lock (_writelock)
             {
-                if (_finalized) { throw new InvalidOperationException("Processor Already Closed"); }
+                if (_finalized)
+                {
+                    return null;
+                    // throw new InvalidOperationException("Processor Already Closed"); 
+                }
 
                 logger.Info("剪辑处理中，将会保存过去 {0} 秒和将来 {1} 秒的直播流", (_tags[_tags.Count - 1].TimeStamp - _tags[0].TimeStamp) / 1000d, ClipLengthFuture);
                 IFlvClipProcessor clip = funcFlvClipProcessor().Initialize(GetClipFileName(), Metadata, _headerTags, new List<IFlvTag>(_tags.ToArray()), ClipLengthFuture);
