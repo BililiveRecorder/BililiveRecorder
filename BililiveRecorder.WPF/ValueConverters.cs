@@ -1,11 +1,44 @@
-﻿using System;
+﻿using BililiveRecorder.FlvProcessor;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Windows;
 using System.Windows.Data;
 
 namespace BililiveRecorder.WPF
 {
+    internal class ClipButtonVisibilityConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (value is null) return Visibility.Visible;
+            return EnabledFeature.RecordOnly == ((EnabledFeature)value) ? Visibility.Collapsed : Visibility.Visible;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    internal class BindingProxy : Freezable
+    {
+        protected override Freezable CreateInstanceCore()
+        {
+            return new BindingProxy();
+        }
+
+        public object Data
+        {
+            get { return (object)GetValue(DataProperty); }
+            set { SetValue(DataProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for Data.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty DataProperty = DependencyProperty.Register("Data", typeof(object), typeof(BindingProxy), new UIPropertyMetadata(null));
+    }
+
     internal class ValueConverterGroup : List<IValueConverter>, IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)

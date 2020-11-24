@@ -4,7 +4,9 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:tb="http://www.hardcodet.net/taskbar"
+        xmlns:core="clr-namespace:BililiveRecorder.Core;assembly=BililiveRecorder.Core"
         xmlns:local="clr-namespace:BililiveRecorder.WPF"
+        d:DataContext="{d:DesignInstance Type=core:Recorder}"
         mc:Ignorable="d"
         MinHeight="400" MinWidth="650"
         Title="录播姬" Height="450" Width="850"
@@ -16,6 +18,7 @@
                     <TextBlock Text="{Binding}" TextWrapping="Wrap" MouseRightButtonUp="TextBlock_MouseRightButtonUp"/>
                 </DataTemplate>
                 <local:RecordStatusConverter x:Key="RSC"/>
+                <local:ClipButtonVisibilityConverter x:Key="ClipButtonVisibilityConverter"/>
                 <local:BoolToStringConverter x:Key="RecordStatusConverter" TrueValue="录制中" FalseValue="闲置"/>
                 <local:BoolToStringConverter x:Key="MonitorStatusConverter" TrueValue="自动录制" FalseValue="非自动"/>
             </ResourceDictionary>
@@ -62,8 +65,8 @@
         </tb:TaskbarIcon>
         <Grid Grid.Row="1">
             <Grid.RowDefinitions>
-                <RowDefinition Height="7*"/>
-                <RowDefinition Height="4*"/>
+                <RowDefinition Height="8*"/>
+                <RowDefinition Height="2*"/>
                 <RowDefinition Height="4*"/>
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
@@ -80,11 +83,14 @@
                         <MenuItem Header="删除" Click="RemoveRecRoom"/>
                     </ContextMenu>
                 </DataGrid.ContextMenu>
+                <DataGrid.Resources>
+                    <local:BindingProxy x:Key="proxy" Data="{Binding Recorder}" />
+                </DataGrid.Resources>
                 <DataGrid.Columns>
-                    <DataGridTemplateColumn Header="回放剪辑">
+                    <DataGridTemplateColumn Visibility="{Binding Data.Config.EnabledFeature,Converter={StaticResource ClipButtonVisibilityConverter},Source={StaticResource proxy}}" Header="回放剪辑">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <Button Click="Clip_Click">剪辑</Button>
+                                <Button Click="Clip_Click" Content="{Binding Processor.Clips.Count,Mode=OneWay,FallbackValue=0}" ContentStringFormat="剪辑 ({0})"/>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
@@ -96,7 +102,6 @@
                     <DataGridTextColumn Binding="{Binding IsMonitoring,Converter={StaticResource MonitorStatusConverter},Mode=OneWay}" Header="是否自动录制"/>
                     <DataGridTextColumn Binding="{Binding DownloadSpeedMegaBitps,StringFormat=0.## Mbps,Mode=OneWay}" Header="实时下载速度"/>
                     <DataGridTextColumn Binding="{Binding DownloadSpeedPersentage,StringFormat=0.## %,Mode=OneWay}" Header="录制速度比"/>
-                    <DataGridTextColumn Binding="{Binding Processor.Clips.Count,Mode=OneWay}" Header="剪辑数量"/>
                 </DataGrid.Columns>
             </DataGrid>
             <ItemsControl Grid.Row="1" Grid.RowSpan="2" x:Name="Log" ItemsSource="{Binding Logs}" ItemTemplate="{StaticResource LogTemplate}" ToolTip="右键点击可以复制单行日志">
