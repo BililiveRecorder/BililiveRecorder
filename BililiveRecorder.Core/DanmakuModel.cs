@@ -85,6 +85,16 @@ namespace BililiveRecorder.Core
         public string UserName { get; set; }
 
         /// <summary>
+        /// SC 价格
+        /// </summary>
+        public double Price { get; set; }
+
+        /// <summary>
+        /// SC 保持时间
+        /// </summary>
+        public int SCKeepTime { get; set; }
+
+        /// <summary>
         /// 消息触发者用户ID
         /// <para>此项有值的消息类型：<list type="bullet">
         /// <item><see cref="MsgTypeEnum.Comment"/></item>
@@ -220,6 +230,27 @@ namespace BililiveRecorder.Core
                     UserID = obj["data"]["uid"].ToObject<int>();
                     GiftCount = obj["data"]["num"].ToObject<int>();
                     break;
+                case "GUARD_BUY":
+                    {
+                        MsgType = MsgTypeEnum.GuardBuy;
+                        UserID = obj["data"]["uid"].ToObject<int>();
+                        UserName = obj["data"]["username"].ToObject<string>();
+                        UserGuardLevel = obj["data"]["guard_level"].ToObject<int>();
+                        GiftName = UserGuardLevel == 3 ? "舰长" : UserGuardLevel == 2 ? "提督" : UserGuardLevel == 1 ? "总督" : "";
+                        GiftCount = obj["data"]["num"].ToObject<int>();
+                        break;
+                    }
+                case "SUPER_CHAT_MESSAGE":
+                    {
+                        MsgType = MsgTypeEnum.SuperChat;
+                        CommentText = obj["data"]["message"]?.ToString();
+                        UserID = obj["data"]["uid"].ToObject<int>();
+                        UserName = obj["data"]["user_info"]["uname"].ToString();
+                        Price = obj["data"]["price"].ToObject<double>();
+                        SCKeepTime = obj["data"]["time"].ToObject<int>();
+                        break;
+                    }
+                /*
                 case "WELCOME":
                     {
                         MsgType = MsgTypeEnum.Welcome;
@@ -237,26 +268,7 @@ namespace BililiveRecorder.Core
                         UserGuardLevel = obj["data"]["guard_level"].ToObject<int>();
                         break;
                     }
-                case "GUARD_BUY":
-                    {
-                        MsgType = MsgTypeEnum.GuardBuy;
-                        UserID = obj["data"]["uid"].ToObject<int>();
-                        UserName = obj["data"]["username"].ToObject<string>();
-                        UserGuardLevel = obj["data"]["guard_level"].ToObject<int>();
-                        GiftName = UserGuardLevel == 3 ? "舰长" : UserGuardLevel == 2 ? "提督" : UserGuardLevel == 1 ? "总督" : "";
-                        GiftCount = obj["data"]["num"].ToObject<int>();
-                        break;
-                    }
-                case "SUPER_CHAT_MESSAGE":
-                    {
-                        MsgType = MsgTypeEnum.SuperChat;
-                        CommentText = obj["data"]["message"]?.ToString();
-                        UserID = obj["data"]["uid"].ToObject<int>();
-                        UserName = obj["data"]["user_info"]["uname"].ToString();
-                        // Price = obj["data"]["price"].ToObject<decimal>();
-                        // SCKeepTime = obj["data"]["time"].ToObject<int>();
-                        break;
-                    }
+                */
                 default:
                     {
                         MsgType = MsgTypeEnum.Unknown;

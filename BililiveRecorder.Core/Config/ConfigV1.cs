@@ -99,6 +99,24 @@ namespace BililiveRecorder.Core.Config
         public bool RecordDanmaku { get => _recordDanmaku; set => SetField(ref _recordDanmaku, value); }
 
         /// <summary>
+        /// 是否同时录制 SuperChat
+        /// </summary>
+        [JsonProperty("record_danmaku_sc")]
+        public bool RecordDanmakuSuperChat { get => _recordDanmakuSuperChat; set => SetField(ref _recordDanmakuSuperChat, value); }
+
+        /// <summary>
+        /// 是否同时录制 礼物
+        /// </summary>
+        [JsonProperty("record_danmaku_gift")]
+        public bool RecordDanmakuGift { get => _recordDanmakuGift; set => SetField(ref _recordDanmakuGift, value); }
+
+        /// <summary>
+        /// 是否同时录制 上船
+        /// </summary>
+        [JsonProperty("record_danmaku_guard")]
+        public bool RecordDanmakuGuard { get => _recordDanmakuGuard; set => SetField(ref _recordDanmakuGuard, value); }
+
+        /// <summary>
         /// 尽量避开腾讯云服务器，可有效提升录制文件能正常播放的概率。（垃圾腾讯云直播服务）
         /// </summary>
         [JsonProperty("avoidtxy")]
@@ -154,6 +172,10 @@ namespace BililiveRecorder.Core.Config
         private string _clip_filename_format = @"{roomid}-{name}/剪辑片段-{roomid}-{date}-{time}-{title}.flv";
 
         private bool _recordDanmaku = false;
+        private bool _recordDanmakuSuperChat = false;
+        private bool _recordDanmakuGift = false;
+        private bool _recordDanmakuGuard = false;
+
         private bool _avoidTxy = false;
 
         private string _liveApiHost = "https://api.live.bilibili.com";

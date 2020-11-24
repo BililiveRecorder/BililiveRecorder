@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BililiveRecorder.Core.Config;
+using System;
 using System.IO;
 using System.Text;
 using System.Threading;
@@ -18,6 +19,13 @@ namespace BililiveRecorder.Core
 
         private XmlWriter xmlWriter = null;
         private DateTimeOffset offset = DateTimeOffset.UtcNow;
+        private readonly ConfigV1 config;
+
+        public BasicDanmakuWriter(ConfigV1 config)
+        {
+            this.config = config ?? throw new ArgumentNullException(nameof(config));
+        }
+
         private readonly SemaphoreSlim semaphoreSlim = new SemaphoreSlim(1, 1);
 
         public void EnableWithPath(string path)
@@ -90,14 +98,45 @@ namespace BililiveRecorder.Core
 
                                 xmlWriter.WriteStartElement("d");
                                 xmlWriter.WriteAttributeString("p", $"{ts},{type},{size},{color},{st},0,{danmakuModel.UserID},0");
+                                xmlWriter.WriteAttributeString("user", danmakuModel.UserName);
                                 xmlWriter.WriteAttributeString("raw", danmakuModel.RawObj?["info"]?.ToString(Newtonsoft.Json.Formatting.None));
                                 xmlWriter.WriteValue(danmakuModel.CommentText);
                                 xmlWriter.WriteEndElement();
                             }
                             break;
+                        case MsgTypeEnum.SuperChat:
+                            if (config.RecordDanmakuSuperChat)
+                            {
+                                xmlWriter.WriteStartElement("sc");
+                                xmlWriter.WriteAttributeString("user", danmakuModel.UserName);
+                                xmlWriter.WriteAttributeString("price", danmakuModel.Price.ToString());
+                                xmlWriter.WriteAttributeString("time", danmakuModel.SCKeepTime.ToString());
+                                xmlWriter.WriteAttributeString("raw", danmakuModel.RawObj?["data"]?.ToString(Newtonsoft.Json.Formatting.None));
+                                xmlWriter.WriteValue(danmakuModel.CommentText);
+                                xmlWriter.WriteEndElement();
+                            }
+                            break;
                         case MsgTypeEnum.GiftSend:
+                            if (config.RecordDanmakuGift)
+                            {
+                                xmlWriter.WriteStartElement("gift");
+                                xmlWriter.WriteAttributeString("user", danmakuModel.UserName);
+                                xmlWriter.WriteAttributeString("giftname", danmakuModel.GiftName);
+                                xmlWriter.WriteAttributeString("giftcount", danmakuModel.GiftCount.ToString());
+                                xmlWriter.WriteAttributeString("raw", danmakuModel.RawObj?["data"]?.ToString(Newtonsoft.Json.Formatting.None));
+                                xmlWriter.WriteEndElement();
+                            }
                             break;
                         case MsgTypeEnum.GuardBuy:
+                            if (config.RecordDanmakuGuard)
+                            {
+                                xmlWriter.WriteStartElement("guard");
+                                xmlWriter.WriteAttributeString("user", danmakuModel.UserName);
+                                xmlWriter.WriteAttributeString("level", danmakuModel.UserGuardLevel.ToString()); ;
+                                xmlWriter.WriteAttributeString("count", danmakuModel.GiftCount.ToString());
+                                xmlWriter.WriteAttributeString("raw", danmakuModel.RawObj?["data"]?.ToString(Newtonsoft.Json.Formatting.None));
+                                xmlWriter.WriteEndElement();
+                            }
                             break;
                         default:
                             break;
@@ -115,7 +154,7 @@ namespace BililiveRecorder.Core
             writer.WriteStartDocument();
             writer.WriteStartElement("i");
             writer.WriteAttributeString("BililiveRecorder", "B站录播姬拓展版弹幕文件");
-            writer.WriteComment("B站录播姬 " + BuildInfo.Version + "  " + BuildInfo.HeadSha1 + "\n本文件在B站主站视频弹幕XML格式的基础上进行了拓展\nsc为SuperChat\ngift为礼物");
+            writer.WriteComment("\nB站录播姬 " + BuildInfo.Version + "  " + BuildInfo.HeadSha1 + "\n本文件在B站主站视频弹幕XML格式的基础上进行了拓展\n\nsc为SuperChat\ngift为礼物\nguard为上船\n\nattribute \"raw\" 为原始数据\n");
             writer.WriteElementString("chatserver", "chat.bilibili.com");
             writer.WriteElementString("chatid", "0");
             writer.WriteElementString("mission", "0");
@@ -123,6 +162,7 @@ namespace BililiveRecorder.Core
             writer.WriteElementString("state", "0");
             writer.WriteElementString("real_name", "0");
             writer.WriteElementString("source", "0");
+            writer.Flush();
         }
 
         private bool disposedValue;

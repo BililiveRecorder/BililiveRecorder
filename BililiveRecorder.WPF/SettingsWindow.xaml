@@ -5,10 +5,12 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:BililiveRecorder.WPF"
         xmlns:core="clr-namespace:BililiveRecorder.Core;assembly=BililiveRecorder.Core"
+        xmlns:config="clr-namespace:BililiveRecorder.Core.Config;assembly=BililiveRecorder.Core"
         xmlns:flv="clr-namespace:BililiveRecorder.FlvProcessor;assembly=BililiveRecorder.FlvProcessor"
+        d:DataContext="{d:DesignInstance Type=config:ConfigV1}"
         mc:Ignorable="d"
         ShowInTaskbar="False" ResizeMode="NoResize"
-        Title="设置 - 录播姬" Height="580" Width="300">
+        Title="设置 - 录播姬" Height="630" Width="300">
     <Window.Resources>
         <local:ValueConverterGroup x:Key="EnumToInvertBooleanConverter">
             <local:EnumToBooleanConverter/>
@@ -52,11 +54,25 @@
                     </Style>
                 </ResourceDictionary>
             </Grid.Resources>
-            <Grid Grid.Row="0">
-                <CheckBox Margin="10,0" IsChecked="{Binding RecordDanmaku}">
-                    同时录制弹幕
+            <StackPanel Grid.Row="0">
+                <StackPanel.Resources>
+                    <Style TargetType="CheckBox">
+                        <Setter Property="Margin" Value="10,1"/>
+                    </Style>
+                </StackPanel.Resources>
+                <CheckBox IsChecked="{Binding RecordDanmaku}">
+                    录制弹幕
                 </CheckBox>
-            </Grid>
+                <CheckBox IsEnabled="{Binding RecordDanmaku}" IsChecked="{Binding RecordDanmakuSuperChat}">
+                    同时保存 SuperChat
+                </CheckBox>
+                <CheckBox IsEnabled="{Binding RecordDanmaku}" IsChecked="{Binding RecordDanmakuGift}">
+                    同时保存 送礼信息
+                </CheckBox>
+                <CheckBox IsEnabled="{Binding RecordDanmaku}" IsChecked="{Binding RecordDanmakuGuard}">
+                    同时保存 舰长购买
+                </CheckBox>
+            </StackPanel>
             <Separator Grid.Row="1"/>
             <Grid Grid.Row="2">
                 <Grid.RowDefinitions>
@@ -177,7 +193,7 @@
                 <TextBlock Grid.Row="2" HorizontalAlignment="Left">标题: {title} 主播名: {name} 随机数: {random}</TextBlock>
             </Grid>
             <Separator Grid.Row="9"/>
-            <TextBlock Grid.Row="10" FontSize="16" TextAlignment="Center" HorizontalAlignment="Center">
+            <TextBlock Grid.Row="10" FontSize="16" FontWeight="Bold" TextAlignment="Center" HorizontalAlignment="Center">
                 以下设置项谨慎修改，建议保留默认
             </TextBlock>
             <Separator Grid.Row="11"/>
