@@ -48,7 +48,7 @@ namespace BililiveRecorder.Core
 
             Rooms.CollectionChanged += (sender, e) =>
             {
-                logger.Debug($"Rooms.CollectionChanged;{e.Action};" +
+                logger.Trace($"Rooms.CollectionChanged;{e.Action};" +
                     $"O:{e.OldItems?.Cast<IRecordedRoom>()?.Select(rr => rr.RoomId.ToString())?.Aggregate((current, next) => current + "," + next)};" +
                     $"N:{e.NewItems?.Cast<IRecordedRoom>()?.Select(rr => rr.RoomId.ToString())?.Aggregate((current, next) => current + "," + next)}");
             };
@@ -62,11 +62,11 @@ namespace BililiveRecorder.Core
                     {
                         try
                         {
-                            logger.Debug("设置 Cookie 等待...");
+                            logger.Trace("设置 Cookie 等待...");
                             await Task.Delay(100);
-                            logger.Debug("设置 Cookie 信息...");
+                            logger.Trace("设置 Cookie 信息...");
                             await BililiveAPI.ApplyCookieSettings(Config.Cookie);
-                            logger.Debug("设置成功");
+                            logger.Debug("设置 Cookie 成功");
                         }
                         finally
                         {

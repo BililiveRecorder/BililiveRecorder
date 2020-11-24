@@ -302,7 +302,7 @@ namespace BililiveRecorder.FlvProcessor
                     _tagVideoCount++;
                     if (_tagVideoCount < 2)
                     {
-                        logger.Trace("第一个 Video Tag 时间戳 {0} ms", tag.TimeStamp);
+                        logger.Debug("第一个 Video Tag 时间戳 {0} ms", tag.TimeStamp);
                         _headerTags.Add(tag);
                     }
                     else
@@ -310,7 +310,7 @@ namespace BililiveRecorder.FlvProcessor
                         _baseTimeStamp = tag.TimeStamp;
                         _hasOffset = true;
                         StartDateTime = DateTime.Now;
-                        logger.Trace("重设时间戳 {0} 毫秒", _baseTimeStamp);
+                        logger.Debug("重设时间戳 {0} 毫秒", _baseTimeStamp);
                     }
                 }
                 else if (tag.TagType == TagType.AUDIO)
@@ -318,7 +318,7 @@ namespace BililiveRecorder.FlvProcessor
                     _tagAudioCount++;
                     if (_tagAudioCount < 2)
                     {
-                        logger.Trace("第一个 Audio Tag 时间戳 {0} ms", tag.TimeStamp);
+                        logger.Debug("第一个 Audio Tag 时间戳 {0} ms", tag.TimeStamp);
                         _headerTags.Add(tag);
                     }
                     else
@@ -326,7 +326,7 @@ namespace BililiveRecorder.FlvProcessor
                         _baseTimeStamp = tag.TimeStamp;
                         _hasOffset = true;
                         StartDateTime = DateTime.Now;
-                        logger.Trace("重设时间戳 {0} 毫秒", _baseTimeStamp);
+                        logger.Debug("重设时间戳 {0} 毫秒", _baseTimeStamp);
                     }
                 }
             }

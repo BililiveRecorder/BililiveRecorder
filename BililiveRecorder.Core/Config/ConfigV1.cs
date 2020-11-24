@@ -148,7 +148,7 @@ namespace BililiveRecorder.Core.Config
         protected bool SetField<T>(ref T field, T value, [CallerMemberName] string propertyName = "")
         {
             if (EqualityComparer<T>.Default.Equals(field, value)) { return false; }
-            logger.Debug("设置 [{0}] 的值已从 [{1}] 修改到 [{2}]", propertyName, field, value);
+            logger.Trace("设置 [{0}] 的值已从 [{1}] 修改到 [{2}]", propertyName, field, value);
             field = value; OnPropertyChanged(propertyName); return true;
         }
         #endregion
