@@ -1,4 +1,4 @@
-﻿<Window x:Class="BililiveRecorder.WPF.SettingsWindow"
+<Window x:Class="BililiveRecorder.WPF.SettingsWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -10,7 +10,7 @@
         d:DataContext="{d:DesignInstance Type=config:ConfigV1}"
         mc:Ignorable="d"
         ShowInTaskbar="False" ResizeMode="NoResize"
-        Title="设置 - 录播姬" Height="630" Width="300">
+        Title="设置 - 录播姬" Height="930" Width="300">
     <Window.Resources>
         <local:ValueConverterGroup x:Key="EnumToInvertBooleanConverter">
             <local:EnumToBooleanConverter/>

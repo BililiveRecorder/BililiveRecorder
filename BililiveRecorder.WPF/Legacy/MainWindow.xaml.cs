@@ -1,4 +1,4 @@
-﻿using Autofac;
+using Autofac;
 using BililiveRecorder.Core;
 using BililiveRecorder.FlvProcessor;
 using CommandLine;
@@ -140,7 +140,8 @@ namespace BililiveRecorder.WPF
             }.ShowDialog() == true)
             {
                 _AddLog = null;
-                Recorder.Shutdown();
+                // Recorder.Shutdown();
+                 Recorder.Dispose();
                 try
                 {
                     File.WriteAllText(LAST_WORK_DIR_FILE, Recorder.Config.WorkDirectory);

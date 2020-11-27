@@ -1,9 +1,9 @@
-﻿using BililiveRecorder.FlvProcessor;
-using Newtonsoft.Json;
-using NLog;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using BililiveRecorder.FlvProcessor;
+using Newtonsoft.Json;
+using NLog;
 
 namespace BililiveRecorder.Core.Config
 {
@@ -99,6 +99,12 @@ namespace BililiveRecorder.Core.Config
         public bool RecordDanmaku { get => _recordDanmaku; set => SetField(ref _recordDanmaku, value); }
 
         /// <summary>
+        /// 是否记录弹幕原始数据
+        /// </summary>
+        [JsonProperty("record_danmaku_raw")]
+        public bool RecordDanmakuRaw { get => _recordDanmakuRaw; set => SetField(ref _recordDanmakuRaw, value); }
+
+        /// <summary>
         /// 是否同时录制 SuperChat
         /// </summary>
         [JsonProperty("record_danmaku_sc")]
@@ -115,12 +121,6 @@ namespace BililiveRecorder.Core.Config
         /// </summary>
         [JsonProperty("record_danmaku_guard")]
         public bool RecordDanmakuGuard { get => _recordDanmakuGuard; set => SetField(ref _recordDanmakuGuard, value); }
-
-        /// <summary>
-        /// 尽量避开腾讯云服务器，可有效提升录制文件能正常播放的概率。（垃圾腾讯云直播服务）
-        /// </summary>
-        [JsonProperty("avoidtxy")]
-        public bool AvoidTxy { get => _avoidTxy; set => SetField(ref _avoidTxy, value); }
 
         /// <summary>
         /// 替换api.live.bilibili.com服务器为其他反代，可以支持在云服务器上录制
@@ -153,12 +153,13 @@ namespace BililiveRecorder.Core.Config
         }
         #endregion
 
+        private string _workDirectory;
+
         private uint _clipLengthPast = 20;
         private uint _clipLengthFuture = 10;
         private uint _cuttingNumber = 10;
         private EnabledFeature _enabledFeature = EnabledFeature.RecordOnly;
         private AutoCuttingMode _cuttingMode = AutoCuttingMode.Disabled;
-        private string _workDirectory;
 
         private uint _timingWatchdogTimeout = 10 * 1000;
         private uint _timingStreamRetry = 6 * 1000;
@@ -172,11 +173,10 @@ namespace BililiveRecorder.Core.Config
         private string _clip_filename_format = @"{roomid}-{name}/剪辑片段-{roomid}-{date}-{time}-{title}.flv";
 
         private bool _recordDanmaku = false;
+        private bool _recordDanmakuRaw = false;
         private bool _recordDanmakuSuperChat = false;
         private bool _recordDanmakuGift = false;
         private bool _recordDanmakuGuard = false;
-
-        private bool _avoidTxy = false;
 
         private string _liveApiHost = "https://api.live.bilibili.com";
     }

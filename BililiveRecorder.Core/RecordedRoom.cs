@@ -1,4 +1,4 @@
-﻿using BililiveRecorder.Core.Config;
+using BililiveRecorder.Core.Config;
 using BililiveRecorder.FlvProcessor;
 using NLog;
 using System;
@@ -85,6 +85,7 @@ namespace BililiveRecorder.Core
         }
 
         private ConfigV1 _config { get; }
+        private BililiveAPI BililiveAPI { get; }
         public IStreamMonitor StreamMonitor { get; }
 
         private bool _retry = true;
@@ -115,11 +116,13 @@ namespace BililiveRecorder.Core
             IBasicDanmakuWriter basicDanmakuWriter,
             Func<int, IStreamMonitor> newIStreamMonitor,
             Func<IFlvStreamProcessor> newIFlvStreamProcessor,
+            BililiveAPI bililiveAPI,
             int roomid)
         {
             this.newIFlvStreamProcessor = newIFlvStreamProcessor;
 
             _config = config;
+            BililiveAPI = bililiveAPI;
 
             this.basicDanmakuWriter = basicDanmakuWriter;
 
