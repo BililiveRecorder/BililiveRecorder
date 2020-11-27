@@ -1,8 +1,8 @@
-﻿using NLog;
 using System;
 using System.IO;
 using System.Linq;
 using System.Net.Sockets;
+using NLog;
 
 namespace BililiveRecorder.Core
 {
@@ -62,7 +62,7 @@ namespace BililiveRecorder.Core
                 }
 
                 var val = p.GetValue(val1);
-                if (!val.Equals(p.GetValue(val2)))
+                if (val == p.GetValue(val2))
                 {
                     p.SetValue(val2, val);
                 }

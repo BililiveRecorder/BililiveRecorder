@@ -180,7 +180,8 @@ namespace BililiveRecorder.Core
         public async Task<RoomInfo> FetchRoomInfoAsync()
         {
             RoomInfo roomInfo = await bililiveAPI.GetRoomInfoAsync(Roomid).ConfigureAwait(false);
-            RoomInfoUpdated?.Invoke(this, new RoomInfoUpdatedArgs { RoomInfo = roomInfo });
+            if (roomInfo != null)
+                RoomInfoUpdated?.Invoke(this, new RoomInfoUpdatedArgs { RoomInfo = roomInfo });
             return roomInfo;
         }
 

@@ -8,20 +8,25 @@
     xmlns:local="clr-namespace:BililiveRecorder.WPF.Controls"
     mc:Ignorable="d" 
     d:DesignHeight="110" d:DesignWidth="210">
-    <Grid Margin="0,15">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="2*"/>
-            <RowDefinition Height="3.5*"/>
-        </Grid.RowDefinitions>
-        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-            <ui:PathIcon Margin="5" Data="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z"/>
-            <TextBlock FontSize="20" VerticalAlignment="Center" Text="添加房间"/>
-        </StackPanel>
-        <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="10,0"
+    <Border Background="{DynamicResource SystemControlBackgroundAltHighBrush}"
+            BorderBrush="{DynamicResource SystemControlBackgroundAccentBrush}" 
+            BorderThickness="1"
+            CornerRadius="5">
+        <Grid Margin="0,15">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="2*"/>
+                <RowDefinition Height="3.5*"/>
+            </Grid.RowDefinitions>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                <ui:PathIcon Margin="5" Data="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z"/>
+                <TextBlock FontSize="20" VerticalAlignment="Center" Text="添加房间"/>
+            </StackPanel>
+            <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="10,0"
                     VerticalAlignment="Center" HorizontalAlignment="Center">
-            <TextBox Width="140" x:Name="InputTextBox" KeyDown="InputTextBox_KeyDown"
+                <TextBox Width="140" x:Name="InputTextBox" KeyDown="InputTextBox_KeyDown"
                      ui:ControlHelper.PlaceholderText="房间号或房间链接"/>
-            <Button Content="确定" Click="Button_Click" />
-        </StackPanel>
-    </Grid>
+                <Button Content="确定" Click="Button_Click" />
+            </StackPanel>
+        </Grid>
+    </Border>
 </UserControl>

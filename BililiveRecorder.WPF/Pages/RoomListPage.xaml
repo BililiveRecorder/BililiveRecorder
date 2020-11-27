@@ -17,17 +17,13 @@
     <ui:Page.Resources>
         <DataTemplate x:Key="NormalRoomCardTemplate">
             <ui:ThemeShadowChrome IsShadowEnabled="True" Depth="10">
-                <Border Background="White" CornerRadius="5">
-                    <controls:RoomCard DeleteRequested="RoomCard_DeleteRequested" />
-                </Border>
+                <controls:RoomCard DeleteRequested="RoomCard_DeleteRequested" />
             </ui:ThemeShadowChrome>
         </DataTemplate>
 
         <DataTemplate x:Key="AddRoomCardTemplate">
             <ui:ThemeShadowChrome IsShadowEnabled="True" Depth="10">
-                <Border Background="White" CornerRadius="5">
-                    <controls:AddRoomCard AddRoomRequested="AddRoomCard_AddRoomRequested"/>
-                </Border>
+                <controls:AddRoomCard AddRoomRequested="AddRoomCard_AddRoomRequested"/>
             </ui:ThemeShadowChrome>
         </DataTemplate>
         <converters:NullValueTemplateSelector

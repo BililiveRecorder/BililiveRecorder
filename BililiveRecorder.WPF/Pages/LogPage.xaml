@@ -19,7 +19,9 @@
             <RowDefinition/>
         </Grid.RowDefinitions>
         <ui:ThemeShadowChrome Margin="5">
-            <Border Background="White" CornerRadius="5">
+            <Border Background="{DynamicResource SystemControlBackgroundBaseLowBrush}"
+                    BorderBrush="{DynamicResource SystemControlBackgroundAccentBrush}"
+                    BorderThickness="1" CornerRadius="5">
                 <StackPanel Margin="10" Orientation="Vertical">
                     <StackPanel.Resources>
                         <Style TargetType="TextBlock">
@@ -53,7 +55,9 @@
             </Border>
         </ui:ThemeShadowChrome>
         <ui:ThemeShadowChrome Grid.Row="1" IsShadowEnabled="True" Depth="10" Margin="5">
-            <Border Background="White" CornerRadius="5">
+            <Border Background="{DynamicResource SystemControlBackgroundBaseLowBrush}"
+                    BorderBrush="{DynamicResource SystemControlBackgroundAccentBrush}"
+                    BorderThickness="1" CornerRadius="5">
                 <ItemsControl x:Name="Log" ItemsSource="{Binding Mode=OneWay}" Margin="5" ToolTip="右键点击可以复制单行日志">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
