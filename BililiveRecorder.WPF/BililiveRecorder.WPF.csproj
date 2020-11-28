@@ -97,11 +97,18 @@
     <Compile Include="Controls\RoomCard.xaml.cs">
       <DependentUpon>RoomCard.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\TaskbarIconControl.xaml.cs">
+      <DependentUpon>TaskbarIconControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\TaskbarIconTrayPopup.xaml.cs">
+      <DependentUpon>TaskbarIconTrayPopup.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\WorkDirectorySelectorDialog.xaml.cs">
       <DependentUpon>WorkDirectorySelectorDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="Converters\ClipEnabledToBooleanConverter.cs" />
     <Compile Include="Converters\EnumToBooleanConverter.cs" />
+    <Compile Include="Converters\IsNullToVisibilityConverter.cs" />
     <Compile Include="Converters\ShortRoomIdToVisibilityConverter.cs" />
     <Compile Include="Converters\ValueConverterGroup.cs" />
     <Compile Include="Models\LogModel.cs" />
@@ -151,6 +158,14 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\RoomCard.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\TaskbarIconControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\TaskbarIconTrayPopup.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -15,6 +15,7 @@
         Width="1000" Height="650"
         MinHeight="400" MinWidth="340"
         Closing="Window_Closing"
+        StateChanged="Window_StateChanged"
         Title="录播姬">
-    <pages:RootPage x:Name="RootPage" CloseWindowRequested="RootPage_CloseWindowRequested"/>
+    <pages:RootPage x:Name="RootPage"/>
 </Window>

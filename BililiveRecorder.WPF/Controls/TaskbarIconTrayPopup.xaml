@@ -1,0 +1,68 @@
+<UserControl
+    x:Class="BililiveRecorder.WPF.Controls.TaskbarIconTrayPopup"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:ui="http://schemas.modernwpf.com/2019"
+    xmlns:local="clr-namespace:BililiveRecorder.WPF.Controls"
+    xmlns:models="clr-namespace:BililiveRecorder.WPF.Models"
+    xmlns:converter="clr-namespace:BililiveRecorder.WPF.Converters"
+    mc:Ignorable="d" d:DataContext="{d:DesignInstance Type=models:RootModel}">
+    <UserControl.Resources>
+        <converter:BoolToValueConverter x:Key="BooleanToVisibilityConverter"
+                                        TrueValue="{x:Static Visibility.Visible}"
+                                        FalseValue="{x:Static Visibility.Hidden}" />
+    </UserControl.Resources>
+    <Border Height="250" Width="300"
+            Background="{DynamicResource SystemControlBackgroundAltHighBrush}"
+            BorderBrush="{DynamicResource SystemControlBackgroundAccentBrush}" 
+            BorderThickness="1"
+            CornerRadius="5">
+        <Grid Margin="15">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <StackPanel>
+                <TextBlock Style="{DynamicResource TitleTextBlockStyle}" Text="B站录播姬"/>
+                <TextBlock Text="{Binding Recorder.Config.WorkDirectory,Mode=OneWay}" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis"/>
+            </StackPanel>
+            <Separator Grid.Row="1" Grid.ColumnSpan="2"/>
+            <ItemsControl Grid.Row="2" Grid.ColumnSpan="2" ItemsSource="{Binding Recorder, Mode=OneWay}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="0,5,0,0">
+                            <ui:PathIcon Data="M18.15,4.94C17.77,4.91 17.37,5 17,5.2L8.35,10.2C7.39,10.76 7.07,12 7.62,12.94L9.12,15.53C9.67,16.5 10.89,16.82 11.85,16.27L13.65,15.23C13.92,15.69 14.32,16.06 14.81,16.27V18.04C14.81,19.13 15.7,20 16.81,20H22V18.04H16.81V16.27C17.72,15.87 18.31,14.97 18.31,14C18.31,13.54 18.19,13.11 17.97,12.73L20.5,11.27C21.47,10.71 21.8,9.5 21.24,8.53L19.74,5.94C19.4,5.34 18.79,5 18.15,4.94M6.22,13.17L2,13.87L2.75,15.17L4.75,18.63L5.5,19.93L8.22,16.63L6.22,13.17Z" 
+                                             Visibility="{Binding IsMonitoring,Converter={StaticResource BooleanToVisibilityConverter}}"
+                                             Foreground="DarkOrange" Width="15" ToolTip="监控中"/>
+                            <ui:PathIcon Data="M12.5,5A7.5,7.5 0 0,0 5,12.5A7.5,7.5 0 0,0 12.5,20A7.5,7.5 0 0,0 20,12.5A7.5,7.5 0 0,0 12.5,5M7,10H9A1,1 0 0,1 10,11V12C10,12.5 9.62,12.9 9.14,12.97L10.31,15H9.15L8,13V15H7M12,10H14V11H12V12H14V13H12V14H14V15H12A1,1 0 0,1 11,14V11A1,1 0 0,1 12,10M16,10H18V11H16V14H18V15H16A1,1 0 0,1 15,14V11A1,1 0 0,1 16,10M8,11V12H9V11" 
+                                             Visibility="{Binding IsRecording,Converter={StaticResource BooleanToVisibilityConverter}}"
+                                             Foreground="Red" Width="15" ToolTip="录制中" Margin="3,0"/>
+                            <TextBlock Text="{Binding StreamerName, Mode=OneWay}"
+                                           ToolTip="{Binding StreamerName, Mode=OneWay}"
+                                           TextWrapping="NoWrap" TextTrimming="CharacterEllipsis"/>
+                        </StackPanel>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+                <ItemsControl.Template>
+                    <ControlTemplate>
+                        <ScrollViewer>
+                            <ItemsPresenter/>
+                        </ScrollViewer>
+                    </ControlTemplate>
+                </ItemsControl.Template>
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <VirtualizingStackPanel IsItemsHost="True"/>
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+            </ItemsControl>
+        </Grid>
+    </Border>
+</UserControl>

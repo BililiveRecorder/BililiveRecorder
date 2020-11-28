@@ -9,7 +9,7 @@
     mc:Ignorable="d"
     d:DataContext="{d:DesignInstance Type=local:WorkDirectorySelectorDialog}"
     PrimaryButtonText="确定"
-    IsPrimaryButtonEnabled="True"
+    DefaultButton="Primary"
     CloseButtonText="退出">
     <Grid>
         <Grid.RowDefinitions>

@@ -31,8 +31,6 @@ namespace BililiveRecorder.WPF.Pages
 
         internal RootModel Model { get; private set; }
 
-        public event EventHandler CloseWindowRequested;
-
         public RootPage()
         {
             void AddType(Type t) => PageMap.Add(t.Name, t);
@@ -54,11 +52,6 @@ namespace BililiveRecorder.WPF.Pages
             AdvancedSettingsPageItem.Visibility = Visibility.Hidden;
 
             Loaded += RootPage_Loaded;
-        }
-
-        public void Shutdown()
-        {
-            Model.Dispose();
         }
 
         private async void RootPage_Loaded(object sender, RoutedEventArgs e)
@@ -102,7 +95,7 @@ namespace BililiveRecorder.WPF.Pages
                 var result = await w.ShowAsync();
                 if (result != ContentDialogResult.Primary)
                 {
-                    CloseWindowRequested?.Invoke(this, EventArgs.Empty);
+                    RaiseEvent(new RoutedEventArgs(NewMainWindow.CloseWithoutConfirmEvent));
                     return;
                 }
 
@@ -151,7 +144,7 @@ namespace BililiveRecorder.WPF.Pages
                 }
                 else
                 {
-                    CloseWindowRequested?.Invoke(this, EventArgs.Empty);
+                    RaiseEvent(new RoutedEventArgs(NewMainWindow.CloseWithoutConfirmEvent));
                     return;
                 }
             }
@@ -183,6 +176,12 @@ namespace BililiveRecorder.WPF.Pages
                 SettingsClickCount = 0;
                 AdvancedSettingsPageItem.Visibility = AdvancedSettingsPageItem.Visibility != Visibility.Visible ? Visibility.Visible : Visibility.Hidden;
             }
+        }
+
+        private void UserControl_BeforeWindowClose(object sender, RoutedEventArgs e)
+        {
+            Model.Dispose();
+            SingleInstance.Cleanup();
         }
     }
 }

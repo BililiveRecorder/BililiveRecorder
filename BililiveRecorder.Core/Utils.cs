@@ -51,20 +51,20 @@ namespace BililiveRecorder.Core
             return name;
         }
 
-        public static bool CopyPropertiesTo<T>(this T val1, T val2) where T : class
+        public static bool CopyPropertiesTo<T>(this T source, T target) where T : class
         {
-            if (val1 == null || val2 == null || val1 == val2) { return false; }
-            foreach (var p in val1.GetType().GetProperties())
+            if (source == null || target == null || source == target) { return false; }
+            foreach (var p in source.GetType().GetProperties())
             {
                 if (Attribute.IsDefined(p, typeof(DoNotCopyProperty)))
                 {
                     continue;
                 }
 
-                var val = p.GetValue(val1);
-                if (val == p.GetValue(val2))
+                var val = p.GetValue(source);
+                if (val == null || !val.Equals(p.GetValue(target)))
                 {
-                    p.SetValue(val2, val);
+                    p.SetValue(target, val);
                 }
             }
             return true;
