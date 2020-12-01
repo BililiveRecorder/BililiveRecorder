@@ -39,7 +39,7 @@
                         </Style>
                     </StackPanel.Resources>
                     <StackPanel>
-                        <TextBlock Text="B站录播姬  "/>
+                        <TextBlock Text="B站录播姬 "/>
                         <TextBlock x:Name="VersionTextBlock"/>
                     </StackPanel>
                     <StackPanel>

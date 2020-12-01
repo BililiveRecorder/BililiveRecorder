@@ -8,6 +8,7 @@
     xmlns:local="clr-namespace:BililiveRecorder.WPF.Controls"
     xmlns:models="clr-namespace:BililiveRecorder.WPF.Models"
     xmlns:converter="clr-namespace:BililiveRecorder.WPF.Converters"
+    Foreground="{DynamicResource SystemControlPageTextBaseHighBrush}"
     mc:Ignorable="d" d:DataContext="{d:DesignInstance Type=models:RootModel}">
     <UserControl.Resources>
         <converter:BoolToValueConverter x:Key="BooleanToVisibilityConverter"
@@ -17,7 +18,7 @@
     <Border Height="250" Width="300"
             Background="{DynamicResource SystemControlBackgroundAltHighBrush}"
             BorderBrush="{DynamicResource SystemControlBackgroundAccentBrush}" 
-            BorderThickness="1"
+            BorderThickness="2"
             CornerRadius="5">
         <Grid Margin="15">
             <Grid.RowDefinitions>

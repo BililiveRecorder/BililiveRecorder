@@ -22,7 +22,7 @@
             <Border
                 Background="{DynamicResource SystemControlBackgroundAltHighBrush}"
                 BorderBrush="{DynamicResource SystemControlBackgroundAccentBrush}" 
-                BorderThickness="1"
+                BorderThickness="2"
                 CornerRadius="5">
                 <StackPanel Margin="10">
                     <TextBlock Style="{DynamicResource SubtitleTextBlockStyle}" Text="B站录播姬"/>
