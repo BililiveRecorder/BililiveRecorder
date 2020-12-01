@@ -1,0 +1,130 @@
+<UserControl
+    x:Class="BililiveRecorder.WPF.Controls.RoomCard"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+    xmlns:ui="http://schemas.modernwpf.com/2019"
+    xmlns:local="clr-namespace:BililiveRecorder.WPF.Controls"
+    xmlns:mock="clr-namespace:BililiveRecorder.WPF.MockData"
+    xmlns:converter="clr-namespace:BililiveRecorder.WPF.Converters"
+    xmlns:pages="clr-namespace:BililiveRecorder.WPF.Pages"
+    xmlns:core="clr-namespace:BililiveRecorder.Core;assembly=BililiveRecorder.Core"
+    d:DesignWidth="230" d:DesignHeight="120"
+    d:DataContext="{d:DesignInstance Type=mock:MockRecordedRoom,IsDesignTimeCreatable=True}"
+    mc:Ignorable="d">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <BooleanToVisibilityConverter x:Key="b2vConverter" />
+            <converter:BooleanInverterConverter x:Key="biConverter"/>
+            <converter:MultiBoolToValueConverter x:Key="mbtvConverter" TrueValue="{x:Static Visibility.Visible}" FalseValue="{x:Static Visibility.Collapsed}"/>
+            <converter:PercentageToColorBrushConverter x:Key="PercentageToColorBrushConverter"/>
+            <converter:ClipEnabledToBooleanConverter x:Key="ClipEnabledToBooleanConverter"/>
+            <converter:ShortRoomIdToVisibilityConverter x:Key="ShortRoomIdToVisibilityConverter"/>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Border Background="{DynamicResource SystemControlBackgroundAltHighBrush}"
+            BorderBrush="{DynamicResource SystemControlBackgroundAccentBrush}" 
+            BorderThickness="1"
+            CornerRadius="5">
+        <Grid Margin="5">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="2*"/>
+                <RowDefinition Height="2*"/>
+                <RowDefinition Height="2*"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="0.8*"/>
+                <ColumnDefinition Width="1.1*"/>
+                <ColumnDefinition Width="0.65*"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock Grid.ColumnSpan="3" VerticalAlignment="Center" Margin="5,0,0,0"
+                       Style="{DynamicResource SubtitleTextBlockStyle}" 
+                       TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" 
+                       Text="{Binding StreamerName,Mode=OneWay}"
+                       ToolTip="{Binding StreamerName,Mode=OneWay}"/>
+            <Menu Grid.Row="1" Grid.Column="3" HorizontalAlignment="Right">
+                <MenuItem ToolTip="操作">
+                    <MenuItem.Header>
+                        <ui:PathIcon Height="20" Width="20" Data="M16,12A2,2 0 0,1 18,10A2,2 0 0,1 20,12A2,2 0 0,1 18,14A2,2 0 0,1 16,12M10,12A2,2 0 0,1 12,10A2,2 0 0,1 14,12A2,2 0 0,1 12,14A2,2 0 0,1 10,12M4,12A2,2 0 0,1 6,10A2,2 0 0,1 8,12A2,2 0 0,1 6,14A2,2 0 0,1 4,12Z"/>
+                    </MenuItem.Header>
+                    <MenuItem Header="开始录制" Click="MenuItem_StartRecording_Click">
+                        <MenuItem.Icon>
+                            <ui:PathIcon Data="M12,20C7.59,20 4,16.41 4,12C4,7.59 7.59,4 12,4C16.41,4 20,7.59 20,12C20,16.41 16.41,20 12,20M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M10,16.5L16,12L10,7.5V16.5Z"/>
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <MenuItem Header="停止录制" Click="MenuItem_StopRecording_Click">
+                        <MenuItem.Icon>
+                            <ui:PathIcon Data="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M12,4C16.41,4 20,7.59 20,12C20,16.41 16.41,20 12,20C7.59,20 4,16.41 4,12C4,7.59 7.59,4 12,4M9,9V15H15V9"/>
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <MenuItem Header="刷新直播间信息" Click="MenuItem_RefreshInfo_Click">
+                        <MenuItem.Icon>
+                            <ui:PathIcon Data="M17.65,6.35C16.2,4.9 14.21,4 12,4A8,8 0 0,0 4,12A8,8 0 0,0 12,20C15.73,20 18.84,17.45 19.73,14H17.65C16.83,16.33 14.61,18 12,18A6,6 0 0,1 6,12A6,6 0 0,1 12,6C13.66,6 15.14,6.69 16.22,7.78L13,11H20V4L17.65,6.35Z"/>
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <Separator/>
+                    <ui:RadioMenuItem Header="自动录制" GroupName="自动录制" IsChecked="{Binding IsMonitoring,Mode=OneWay}" Click="MenuItem_StartMonitor_Click">
+                        <ui:RadioMenuItem.Icon>
+                            <ui:PathIcon Foreground="Orange" Data="M18.15,4.94C17.77,4.91 17.37,5 17,5.2L8.35,10.2C7.39,10.76 7.07,12 7.62,12.94L9.12,15.53C9.67,16.5 10.89,16.82 11.85,16.27L13.65,15.23C13.92,15.69 14.32,16.06 14.81,16.27V18.04C14.81,19.13 15.7,20 16.81,20H22V18.04H16.81V16.27C17.72,15.87 18.31,14.97 18.31,14C18.31,13.54 18.19,13.11 17.97,12.73L20.5,11.27C21.47,10.71 21.8,9.5 21.24,8.53L19.74,5.94C19.4,5.34 18.79,5 18.15,4.94M6.22,13.17L2,13.87L2.75,15.17L4.75,18.63L5.5,19.93L8.22,16.63L6.22,13.17Z"/>
+                        </ui:RadioMenuItem.Icon>
+                    </ui:RadioMenuItem>
+                    <ui:RadioMenuItem Header="不自动录制" GroupName="自动录制" IsChecked="{Binding IsMonitoring,Mode=OneWay,Converter={StaticResource biConverter}}" Click="MenuItem_StopMonitor_Click"/>
+                    <Separator/>
+                    <MenuItem Header="删除房间" Click="MenuItem_DeleteRoom_Click">
+                        <MenuItem.Icon>
+                            <ui:PathIcon Foreground="DarkRed" Data="M19,4H15.5L14.5,3H9.5L8.5,4H5V6H19M6,19A2,2 0 0,0 8,21H16A2,2 0 0,0 18,19V7H6V19Z"/>
+                        </MenuItem.Icon>
+                    </MenuItem>
+                </MenuItem>
+            </Menu>
+
+            <StackPanel VerticalAlignment="Center" Orientation="Horizontal" Grid.Row="1" Grid.ColumnSpan="2" Margin="5,0,0,0">
+                <ui:PathIcon Height="10" Data="M6,18V8H8V18H6M6,4.5H8V6.5H6V4.5M17,4H19V18H17V17.75C17,17.75 15.67,18 15,18A5,5 0 0,1 10,13A5,5 0 0,1 15,8C15.67,8 17,8.25 17,8.25V4M17,10.25C17,10.25 15.67,10 15,10A3,3 0 0,0 12,13A3,3 0 0,0 15,16C15.67,16 17,15.75 17,15.75V10.25Z" />
+                <TextBlock Text="{Binding RoomId, StringFormat=\{0\},Mode=OneWay}" Margin="5,0"/>
+                <TextBlock Text="{Binding ShortRoomId, StringFormat=(\{0\}),Mode=OneWay}" Visibility="{Binding ShortRoomId,Converter={StaticResource ShortRoomIdToVisibilityConverter}}"/>
+            </StackPanel>
+            <Border Grid.Row="2" Grid.Column="1" VerticalAlignment="Center" Visibility="{Binding Visibility, ElementName=RecordingIcon}"
+                    Background="{Binding DownloadSpeedPersentage, Converter={StaticResource PercentageToColorBrushConverter},Mode=OneWay}"
+                    BorderThickness="1" BorderBrush="{DynamicResource SystemControlBackgroundChromeBlackMediumBrush}" Margin="2,0" CornerRadius="5">
+                <Border.ToolTip>
+                    <StackPanel>
+                        <TextBlock Text="录制的速度与质量"/>
+                        <TextBlock Text="绿色为良好，红色为差"/>
+                        <TextBlock Margin="0,5,0,0" Text="{Binding DownloadSpeedPersentage,StringFormat=当前速度比： 0.## %,Mode=OneWay}"/>
+                    </StackPanel>
+                </Border.ToolTip>
+                <TextBlock HorizontalAlignment="Center" Foreground="Black" Text="{Binding DownloadSpeedMegaBitps, StringFormat=0.## Mbps,Mode=OneWay}"/>
+            </Border>
+            <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Orientation="Horizontal" Grid.Row="2" Grid.Column="0">
+                <StackPanel.Visibility>
+                    <MultiBinding Converter="{StaticResource mbtvConverter}" Mode="OneWay">
+                        <Binding Path="IsRecording" Converter="{StaticResource biConverter}" Mode="OneWay"/>
+                        <Binding Path="IsMonitoring" Mode="OneWay"/>
+                    </MultiBinding>
+                </StackPanel.Visibility>
+                <ui:PathIcon Data="M18.15,4.94C17.77,4.91 17.37,5 17,5.2L8.35,10.2C7.39,10.76 7.07,12 7.62,12.94L9.12,15.53C9.67,16.5 10.89,16.82 11.85,16.27L13.65,15.23C13.92,15.69 14.32,16.06 14.81,16.27V18.04C14.81,19.13 15.7,20 16.81,20H22V18.04H16.81V16.27C17.72,15.87 18.31,14.97 18.31,14C18.31,13.54 18.19,13.11 17.97,12.73L20.5,11.27C21.47,10.71 21.8,9.5 21.24,8.53L19.74,5.94C19.4,5.34 18.79,5 18.15,4.94M6.22,13.17L2,13.87L2.75,15.17L4.75,18.63L5.5,19.93L8.22,16.63L6.22,13.17Z" Foreground="DarkOrange" Width="15"/>
+                <TextBlock Foreground="DarkOrange" Margin="3,0,0,0" Text="监控中"/>
+            </StackPanel>
+            <StackPanel x:Name="RecordingIcon" Visibility="{Binding IsRecording, Converter={StaticResource b2vConverter},Mode=OneWay}"
+                VerticalAlignment="Center" HorizontalAlignment="Center" Orientation="Horizontal" Grid.Row="2" Grid.Column="0">
+                <ui:PathIcon Data="M12.5,5A7.5,7.5 0 0,0 5,12.5A7.5,7.5 0 0,0 12.5,20A7.5,7.5 0 0,0 20,12.5A7.5,7.5 0 0,0 12.5,5M7,10H9A1,1 0 0,1 10,11V12C10,12.5 9.62,12.9 9.14,12.97L10.31,15H9.15L8,13V15H7M12,10H14V11H12V12H14V13H12V14H14V15H12A1,1 0 0,1 11,14V11A1,1 0 0,1 12,10M16,10H18V11H16V14H18V15H16A1,1 0 0,1 15,14V11A1,1 0 0,1 16,10M8,11V12H9V11" Foreground="Red" Width="15"/>
+                <TextBlock Foreground="Red" Margin="3,0,0,0" Text="录制中"/>
+            </StackPanel>
+            <Button Grid.Column="2" Grid.Row="2" Padding="3,1" HorizontalAlignment="Right" Margin="5,0" ToolTip="回放剪辑（正在处理中的数量）" Click="Button_Clip_Click">
+                <Button.Visibility>
+                    <MultiBinding Converter="{StaticResource mbtvConverter}" Mode="OneWay">
+                        <Binding Path="IsRecording" Mode="OneWay"/>
+                        <Binding RelativeSource="{RelativeSource Mode=FindAncestor,AncestorType=pages:RootPage}" 
+                             Path="DataContext.Recorder.Config.EnabledFeature" Mode="OneWay"
+                             Converter="{StaticResource ClipEnabledToBooleanConverter}"/>
+                    </MultiBinding>
+                </Button.Visibility>
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                    <ui:PathIcon Width="10" Data="M19,3L13,9L15,11L22,4V3M12,12.5A0.5,0.5 0 0,1 11.5,12A0.5,0.5 0 0,1 12,11.5A0.5,0.5 0 0,1 12.5,12A0.5,0.5 0 0,1 12,12.5M6,20A2,2 0 0,1 4,18C4,16.89 4.9,16 6,16A2,2 0 0,1 8,18C8,19.11 7.1,20 6,20M6,8A2,2 0 0,1 4,6C4,4.89 4.9,4 6,4A2,2 0 0,1 8,6C8,7.11 7.1,8 6,8M9.64,7.64C9.87,7.14 10,6.59 10,6A4,4 0 0,0 6,2A4,4 0 0,0 2,6A4,4 0 0,0 6,10C6.59,10 7.14,9.87 7.64,9.64L10,12L7.64,14.36C7.14,14.13 6.59,14 6,14A4,4 0 0,0 2,18A4,4 0 0,0 6,22A4,4 0 0,0 10,18C10,17.41 9.87,16.86 9.64,16.36L12,14L19,21H22V20L9.64,7.64Z"/>
+                    <TextBlock VerticalAlignment="Center" Margin="2,0,0,2" Text="{Binding Processor.Clips.Count,FallbackValue=(-),StringFormat=({0}),Mode=OneWay}"/>
+                </StackPanel>
+            </Button>
+        </Grid>
+    </Border>
+</UserControl>

@@ -11,7 +11,6 @@
 7. 修改 `rec.danmuji.org` 上的更新日志
 8. Fast-Forward merge back to dev
 
-
 ## 发布新版本流程
 
 - commit 所有代码和文件修改 ...

@@ -1,15 +1,14 @@
-﻿using BililiveRecorder.Core.Config;
-using Newtonsoft.Json;
-using NLog;
 using System;
 using System.IO;
 using System.IO.Compression;
-using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using BililiveRecorder.Core.Config;
+using Newtonsoft.Json;
+using NLog;
 using Timer = System.Timers.Timer;
 
 namespace BililiveRecorder.Core
@@ -32,6 +31,7 @@ namespace BililiveRecorder.Core
 
         private readonly Func<TcpClient> funcTcpClient;
         private readonly ConfigV1 config;
+        private readonly BililiveAPI bililiveAPI;
 
 #pragma warning disable IDE1006 // 命名样式
         private bool dmTcpConnected => dmClient?.Connected ?? false;
@@ -40,7 +40,7 @@ namespace BililiveRecorder.Core
         private TcpClient dmClient;
         private NetworkStream dmNetStream;
         private Thread dmReceiveMessageLoopThread;
-        private CancellationTokenSource dmTokenSource = null;
+        private readonly CancellationTokenSource dmTokenSource = null;
         private bool dmConnectionTriggered = false;
         private readonly Timer httpTimer;
 
@@ -50,10 +50,11 @@ namespace BililiveRecorder.Core
         public event StreamStartedEvent StreamStarted;
         public event ReceivedDanmakuEvt ReceivedDanmaku;
 
-        public StreamMonitor(int roomid, Func<TcpClient> funcTcpClient, ConfigV1 config)
+        public StreamMonitor(int roomid, Func<TcpClient> funcTcpClient, ConfigV1 config, BililiveAPI bililiveAPI)
         {
             this.funcTcpClient = funcTcpClient;
             this.config = config;
+            this.bililiveAPI = bililiveAPI;
 
             Roomid = roomid;
 
@@ -178,8 +179,9 @@ namespace BililiveRecorder.Core
 
         public async Task<RoomInfo> FetchRoomInfoAsync()
         {
-            RoomInfo roomInfo = await BililiveAPI.GetRoomInfoAsync(Roomid).ConfigureAwait(false);
-            RoomInfoUpdated?.Invoke(this, new RoomInfoUpdatedArgs { RoomInfo = roomInfo });
+            RoomInfo roomInfo = await bililiveAPI.GetRoomInfoAsync(Roomid).ConfigureAwait(false);
+            if (roomInfo != null)
+                RoomInfoUpdated?.Invoke(this, new RoomInfoUpdatedArgs { RoomInfo = roomInfo });
             return roomInfo;
         }
 
@@ -208,7 +210,7 @@ namespace BililiveRecorder.Core
 
             try
             {
-                var (token, host, port) = await BililiveAPI.GetDanmuConf(Roomid);
+                var (token, host, port) = await bililiveAPI.GetDanmuConf(Roomid);
 
                 logger.Log(Roomid, LogLevel.Debug, $"连接弹幕服务器 {host}:{port} {(string.IsNullOrWhiteSpace(token) ? "无" : "有")} token");
 

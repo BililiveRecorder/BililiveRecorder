@@ -1,4 +1,4 @@
-﻿using BililiveRecorder.Core.Config;
+using BililiveRecorder.Core.Config;
 using System;
 using System.IO;
 using System.Text;
@@ -84,8 +84,6 @@ namespace BililiveRecorder.Core
             {
                 if (xmlWriter != null)
                 {
-                    // TimeSpan diff = DateTimeOffset.UtcNow - offset;
-
                     switch (danmakuModel.MsgType)
                     {
                         case MsgTypeEnum.Comment:
@@ -93,13 +91,14 @@ namespace BililiveRecorder.Core
                                 var type = danmakuModel.RawObj?["info"]?[0]?[1]?.ToObject<int>() ?? 1;
                                 var size = danmakuModel.RawObj?["info"]?[0]?[2]?.ToObject<int>() ?? 25;
                                 var color = danmakuModel.RawObj?["info"]?[0]?[3]?.ToObject<int>() ?? 0XFFFFFF;
-                                long st = danmakuModel.RawObj?["info"]?[0]?[4]?.ToObject<long>() ?? 0L;
+                                var st = danmakuModel.RawObj?["info"]?[0]?[4]?.ToObject<long>() ?? 0L;
                                 var ts = Math.Max((DateTimeOffset.FromUnixTimeMilliseconds(st) - offset).TotalSeconds, 0d);
 
                                 xmlWriter.WriteStartElement("d");
                                 xmlWriter.WriteAttributeString("p", $"{ts},{type},{size},{color},{st},0,{danmakuModel.UserID},0");
                                 xmlWriter.WriteAttributeString("user", danmakuModel.UserName);
-                                xmlWriter.WriteAttributeString("raw", danmakuModel.RawObj?["info"]?.ToString(Newtonsoft.Json.Formatting.None));
+                                if (config.RecordDanmakuRaw)
+                                    xmlWriter.WriteAttributeString("raw", danmakuModel.RawObj?["info"]?.ToString(Newtonsoft.Json.Formatting.None));
                                 xmlWriter.WriteValue(danmakuModel.CommentText);
                                 xmlWriter.WriteEndElement();
                             }
@@ -108,10 +107,13 @@ namespace BililiveRecorder.Core
                             if (config.RecordDanmakuSuperChat)
                             {
                                 xmlWriter.WriteStartElement("sc");
+                                var ts = Math.Max((DateTimeOffset.UtcNow - offset).TotalSeconds, 0d);
+                                xmlWriter.WriteAttributeString("ts", ts.ToString());
                                 xmlWriter.WriteAttributeString("user", danmakuModel.UserName);
                                 xmlWriter.WriteAttributeString("price", danmakuModel.Price.ToString());
                                 xmlWriter.WriteAttributeString("time", danmakuModel.SCKeepTime.ToString());
-                                xmlWriter.WriteAttributeString("raw", danmakuModel.RawObj?["data"]?.ToString(Newtonsoft.Json.Formatting.None));
+                                if (config.RecordDanmakuRaw)
+                                    xmlWriter.WriteAttributeString("raw", danmakuModel.RawObj?["data"]?.ToString(Newtonsoft.Json.Formatting.None));
                                 xmlWriter.WriteValue(danmakuModel.CommentText);
                                 xmlWriter.WriteEndElement();
                             }
@@ -120,10 +122,13 @@ namespace BililiveRecorder.Core
                             if (config.RecordDanmakuGift)
                             {
                                 xmlWriter.WriteStartElement("gift");
+                                var ts = Math.Max((DateTimeOffset.UtcNow - offset).TotalSeconds, 0d);
+                                xmlWriter.WriteAttributeString("ts", ts.ToString());
                                 xmlWriter.WriteAttributeString("user", danmakuModel.UserName);
                                 xmlWriter.WriteAttributeString("giftname", danmakuModel.GiftName);
                                 xmlWriter.WriteAttributeString("giftcount", danmakuModel.GiftCount.ToString());
-                                xmlWriter.WriteAttributeString("raw", danmakuModel.RawObj?["data"]?.ToString(Newtonsoft.Json.Formatting.None));
+                                if (config.RecordDanmakuRaw)
+                                    xmlWriter.WriteAttributeString("raw", danmakuModel.RawObj?["data"]?.ToString(Newtonsoft.Json.Formatting.None));
                                 xmlWriter.WriteEndElement();
                             }
                             break;
@@ -131,10 +136,13 @@ namespace BililiveRecorder.Core
                             if (config.RecordDanmakuGuard)
                             {
                                 xmlWriter.WriteStartElement("guard");
+                                var ts = Math.Max((DateTimeOffset.UtcNow - offset).TotalSeconds, 0d);
+                                xmlWriter.WriteAttributeString("ts", ts.ToString());
                                 xmlWriter.WriteAttributeString("user", danmakuModel.UserName);
                                 xmlWriter.WriteAttributeString("level", danmakuModel.UserGuardLevel.ToString()); ;
                                 xmlWriter.WriteAttributeString("count", danmakuModel.GiftCount.ToString());
-                                xmlWriter.WriteAttributeString("raw", danmakuModel.RawObj?["data"]?.ToString(Newtonsoft.Json.Formatting.None));
+                                if (config.RecordDanmakuRaw)
+                                    xmlWriter.WriteAttributeString("raw", danmakuModel.RawObj?["data"]?.ToString(Newtonsoft.Json.Formatting.None));
                                 xmlWriter.WriteEndElement();
                             }
                             break;
