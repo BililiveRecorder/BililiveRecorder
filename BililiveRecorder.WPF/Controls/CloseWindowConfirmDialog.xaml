@@ -1,0 +1,14 @@
+<ui:ContentDialog
+    x:Class="BililiveRecorder.WPF.Controls.CloseWindowConfirmDialog"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:ui="http://schemas.modernwpf.com/2019"
+    xmlns:local="clr-namespace:BililiveRecorder.WPF.Controls"
+    PrimaryButtonText="退出"
+    CloseButtonText="取消"
+    DefaultButton="Close"
+    mc:Ignorable="d">
+    <TextBlock Text="确定要退出吗？" TextAlignment="Center" VerticalAlignment="Center" FontSize="26"/>
+</ui:ContentDialog>

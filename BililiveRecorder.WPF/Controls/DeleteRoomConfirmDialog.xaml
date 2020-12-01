@@ -1,0 +1,29 @@
+<ui:ContentDialog
+    x:Class="BililiveRecorder.WPF.Controls.DeleteRoomConfirmDialog"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+    xmlns:ui="http://schemas.modernwpf.com/2019"
+    xmlns:local="clr-namespace:BililiveRecorder.WPF.Controls"
+    xmlns:mock="clr-namespace:BililiveRecorder.WPF.MockData"
+    xmlns:conv="clr-namespace:BililiveRecorder.WPF.Converters"
+    DefaultButton="Close"
+    PrimaryButtonText="删除"
+    CloseButtonText="取消"
+    d:DataContext="{d:DesignInstance Type=mock:MockRecordedRoom,IsDesignTimeCreatable=True}"
+    mc:Ignorable="d" >
+    <StackPanel>
+        <StackPanel.Resources>
+            <conv:ShortRoomIdToVisibilityConverter x:Key="ShortRoomIdToVisibilityConverter"/>
+        </StackPanel.Resources>
+        <TextBlock TextAlignment="Center" FontSize="18" Text="确定要删除这个直播间吗？" Margin="0,0,0,5"/>
+        <TextBlock VerticalAlignment="Center" Style="{DynamicResource SubtitleTextBlockStyle}" TextWrapping="NoWrap" HorizontalAlignment="Center"
+                   TextAlignment="Center" TextTrimming="CharacterEllipsis" Text="{Binding StreamerName,Mode=OneWay}" ToolTip="{Binding StreamerName,Mode=OneWay}"/>
+        <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Orientation="Horizontal" Grid.Row="1" Grid.ColumnSpan="2" Margin="5,0,0,0">
+            <ui:PathIcon Height="10" Data="M6,18V8H8V18H6M6,4.5H8V6.5H6V4.5M17,4H19V18H17V17.75C17,17.75 15.67,18 15,18A5,5 0 0,1 10,13A5,5 0 0,1 15,8C15.67,8 17,8.25 17,8.25V4M17,10.25C17,10.25 15.67,10 15,10A3,3 0 0,0 12,13A3,3 0 0,0 15,16C15.67,16 17,15.75 17,15.75V10.25Z" />
+            <TextBlock Text="{Binding RoomId, StringFormat=\{0\},Mode=OneWay}" Margin="5,0"/>
+            <TextBlock Text="{Binding ShortRoomId, StringFormat=(\{0\}),Mode=OneWay}" Visibility="{Binding ShortRoomId,Converter={StaticResource ShortRoomIdToVisibilityConverter}}"/>
+        </StackPanel>
+    </StackPanel>
+</ui:ContentDialog>

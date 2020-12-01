@@ -1,5 +1,3 @@
-﻿using BililiveRecorder.Core.Config;
-using NLog;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -9,6 +7,8 @@ using System.ComponentModel;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using BililiveRecorder.Core.Config;
+using NLog;
 
 namespace BililiveRecorder.Core
 {
@@ -16,32 +16,24 @@ namespace BililiveRecorder.Core
     {
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
 
-        private ObservableCollection<IRecordedRoom> Rooms { get; } = new ObservableCollection<IRecordedRoom>();
-        public ConfigV1 Config { get; }
-
-        ConfigV1 IRecorder.Config => Config;
-
-        public int Count => Rooms.Count;
-
-        public bool IsReadOnly => true;
-
-        int ICollection<IRecordedRoom>.Count => Rooms.Count;
-
-        bool ICollection<IRecordedRoom>.IsReadOnly => true;
-
         private readonly Func<int, IRecordedRoom> newIRecordedRoom;
-        private CancellationTokenSource tokenSource;
+        private readonly CancellationTokenSource tokenSource;
 
         private bool _valid = false;
+        private bool disposedValue;
 
+        private ObservableCollection<IRecordedRoom> Rooms { get; } = new ObservableCollection<IRecordedRoom>();
+
+        public ConfigV1 Config { get; }
+
+        public int Count => Rooms.Count;
+        public bool IsReadOnly => true;
         public IRecordedRoom this[int index] => Rooms[index];
 
         public Recorder(ConfigV1 config, Func<int, IRecordedRoom> iRecordedRoom)
         {
             newIRecordedRoom = iRecordedRoom;
             Config = config;
-
-            BililiveAPI.Config = config;
 
             tokenSource = new CancellationTokenSource();
             Repeat.Interval(TimeSpan.FromSeconds(3), DownloadWatchdog, tokenSource.Token);
@@ -52,56 +44,7 @@ namespace BililiveRecorder.Core
                     $"O:{e.OldItems?.Cast<IRecordedRoom>()?.Select(rr => rr.RoomId.ToString())?.Aggregate((current, next) => current + "," + next)};" +
                     $"N:{e.NewItems?.Cast<IRecordedRoom>()?.Select(rr => rr.RoomId.ToString())?.Aggregate((current, next) => current + "," + next)}");
             };
-
-            var debouncing = new SemaphoreSlim(1, 1);
-            Config.PropertyChanged += async (sender, e) =>
-            {
-                if (e.PropertyName == nameof(Config.Cookie))
-                {
-                    if (await debouncing.WaitAsync(0))
-                    {
-                        try
-                        {
-                            logger.Trace("设置 Cookie 等待...");
-                            await Task.Delay(100);
-                            logger.Trace("设置 Cookie 信息...");
-                            await BililiveAPI.ApplyCookieSettings(Config.Cookie);
-                            logger.Debug("设置 Cookie 成功");
-                        }
-                        finally
-                        {
-                            debouncing.Release();
-                        }
-                    }
-                }
-            };
         }
-
-        public event PropertyChangedEventHandler PropertyChanged
-        {
-            add => (Rooms as INotifyPropertyChanged).PropertyChanged += value;
-            remove => (Rooms as INotifyPropertyChanged).PropertyChanged -= value;
-        }
-
-        public event NotifyCollectionChangedEventHandler CollectionChanged
-        {
-            add => (Rooms as INotifyCollectionChanged).CollectionChanged += value;
-            remove => (Rooms as INotifyCollectionChanged).CollectionChanged -= value;
-        }
-
-        event PropertyChangedEventHandler INotifyPropertyChanged.PropertyChanged
-        {
-            add => (Rooms as INotifyPropertyChanged).PropertyChanged += value;
-            remove => (Rooms as INotifyPropertyChanged).PropertyChanged -= value;
-        }
-
-        event NotifyCollectionChangedEventHandler INotifyCollectionChanged.CollectionChanged
-        {
-            add => (Rooms as INotifyCollectionChanged).CollectionChanged += value;
-            remove => (Rooms as INotifyCollectionChanged).CollectionChanged -= value;
-        }
-
-        bool IRecorder.Initialize(string workdir) => Initialize(workdir);
 
         public bool Initialize(string workdir)
         {
@@ -167,15 +110,16 @@ namespace BililiveRecorder.Core
         /// <param name="rr">直播间</param>
         public void RemoveRoom(IRecordedRoom rr)
         {
+            if (rr is null) return;
             if (!_valid) { throw new InvalidOperationException("Not Initialized"); }
             rr.Shutdown();
             logger.Debug("RemoveRoom 移除了直播间 {roomid}", rr.RoomId);
             Rooms.Remove(rr);
         }
 
-        public void Shutdown()
+        private void Shutdown()
         {
-            if (!_valid) { throw new InvalidOperationException("Not Initialized"); }
+            if (!_valid) { return; }
             logger.Debug("Shutdown called.");
             tokenSource.Cancel();
 
@@ -185,6 +129,8 @@ namespace BililiveRecorder.Core
             {
                 rr.Shutdown();
             });
+
+            Rooms.Clear();
         }
 
         public void SaveConfigToFile()
@@ -227,19 +173,54 @@ namespace BililiveRecorder.Core
         }
 
         void ICollection<IRecordedRoom>.Add(IRecordedRoom item) => throw new NotSupportedException("Collection is readonly");
-
         void ICollection<IRecordedRoom>.Clear() => throw new NotSupportedException("Collection is readonly");
-
         bool ICollection<IRecordedRoom>.Remove(IRecordedRoom item) => throw new NotSupportedException("Collection is readonly");
-
         bool ICollection<IRecordedRoom>.Contains(IRecordedRoom item) => Rooms.Contains(item);
-
         void ICollection<IRecordedRoom>.CopyTo(IRecordedRoom[] array, int arrayIndex) => Rooms.CopyTo(array, arrayIndex);
-
         public IEnumerator<IRecordedRoom> GetEnumerator() => Rooms.GetEnumerator();
         IEnumerator<IRecordedRoom> IEnumerable<IRecordedRoom>.GetEnumerator() => Rooms.GetEnumerator();
-
         IEnumerator IEnumerable.GetEnumerator() => Rooms.GetEnumerator();
 
+        public event PropertyChangedEventHandler PropertyChanged
+        {
+            add => (Rooms as INotifyPropertyChanged).PropertyChanged += value;
+            remove => (Rooms as INotifyPropertyChanged).PropertyChanged -= value;
+        }
+
+        public event NotifyCollectionChangedEventHandler CollectionChanged
+        {
+            add => (Rooms as INotifyCollectionChanged).CollectionChanged += value;
+            remove => (Rooms as INotifyCollectionChanged).CollectionChanged -= value;
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                    // dispose managed state (managed objects)
+                    Shutdown();
+                }
+
+                // free unmanaged resources (unmanaged objects) and override finalizer
+                // set large fields to null
+                disposedValue = true;
+            }
+        }
+
+        // override finalizer only if 'Dispose(bool disposing)' has code to free unmanaged resources
+        // ~Recorder()
+        // {
+        //     // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
+        //     Dispose(disposing: false);
+        // }
+
+        public void Dispose()
+        {
+            // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
+            Dispose(disposing: true);
+            GC.SuppressFinalize(this);
+        }
     }
 }

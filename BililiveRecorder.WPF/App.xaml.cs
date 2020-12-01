@@ -1,9 +1,9 @@
-﻿using NLog;
-using Squirrel;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using NLog;
+using Squirrel;
 
 namespace BililiveRecorder.WPF
 {

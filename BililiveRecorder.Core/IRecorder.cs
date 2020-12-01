@@ -1,11 +1,12 @@
-﻿using BililiveRecorder.Core.Config;
+using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
+using BililiveRecorder.Core.Config;
 
 namespace BililiveRecorder.Core
 {
-    public interface IRecorder : INotifyPropertyChanged, INotifyCollectionChanged, IEnumerable<IRecordedRoom>, ICollection<IRecordedRoom>
+    public interface IRecorder : INotifyPropertyChanged, INotifyCollectionChanged, IEnumerable<IRecordedRoom>, ICollection<IRecordedRoom>, IDisposable
     {
         ConfigV1 Config { get; }
 
@@ -19,6 +20,6 @@ namespace BililiveRecorder.Core
 
         void SaveConfigToFile();
 
-        void Shutdown();
+        // void Shutdown();
     }
 }
