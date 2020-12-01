@@ -123,23 +123,7 @@
     <Compile Include="Converters\NullValueTemplateSelector.cs" />
     <Compile Include="Converters\PercentageToColorBrushConverter.cs" />
     <Compile Include="Converters\RoomListInterceptConverter.cs" />
-    <Compile Include="Legacy\ClickSelectTextBox.xaml.cs">
-      <DependentUpon>ClickSelectTextBox.xaml</DependentUpon>
-    </Compile>
     <Compile Include="CommandLineOption.cs" />
-    <Compile Include="Legacy\TimedMessageBox.xaml.cs">
-      <DependentUpon>TimedMessageBox.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Legacy\ValueConverters.cs" />
-    <Compile Include="Legacy\SettingsWindow.xaml.cs">
-      <DependentUpon>SettingsWindow.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Legacy\UpdateBarUserControl.xaml.cs">
-      <DependentUpon>UpdateBarUserControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Legacy\WorkDirectoryWindow.xaml.cs">
-      <DependentUpon>WorkDirectoryWindow.xaml</DependentUpon>
-    </Compile>
     <Compile Include="SingleInstance.cs" />
     <Page Include="Controls\AddRoomCard.xaml">
       <SubType>Designer</SubType>
@@ -177,15 +161,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Legacy\ClickSelectTextBox.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="DesignTimeResources.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Legacy\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -193,27 +169,7 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Legacy\MainWindow.xaml.cs">
-      <DependentUpon>MainWindow.xaml</DependentUpon>
-      <SubType>Code</SubType>
-    </Compile>
     <Page Include="NewMainWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Legacy\SettingsWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Legacy\TimedMessageBox.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Legacy\UpdateBarUserControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Legacy\WorkDirectoryWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
