@@ -11,9 +11,7 @@
     xmlns:models="clr-namespace:BililiveRecorder.WPF.Models"
     mc:Ignorable="d" d:DesignWidth="900" d:DesignHeight="600"
     d:DataContext="{d:DesignInstance Type=models:RootModel,IsDesignTimeCreatable=True}"
-    Background="{DynamicResource SystemControlPageBackgroundAltHighBrush}"
-    wpf:NewMainWindow.BeforeWindowClose="UserControl_BeforeWindowClose"
-    >
+    Background="{DynamicResource SystemControlPageBackgroundAltHighBrush}">
     <UserControl.Resources>
         <Style x:Key="CascadeDataContextFrame" TargetType="{x:Type ui:Frame}">
             <Setter Property="Template">
