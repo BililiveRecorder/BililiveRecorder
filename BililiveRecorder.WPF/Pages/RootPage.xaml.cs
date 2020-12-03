@@ -78,7 +78,7 @@ namespace BililiveRecorder.WPF.Pages
                         .ParseArguments<CommandLineOption>(Environment.GetCommandLineArgs())
                         .WithParsed(x => commandLineOption = x);
 
-                    if (!string.IsNullOrWhiteSpace(commandLineOption.WorkDirectory))
+                    if (!string.IsNullOrWhiteSpace(commandLineOption?.WorkDirectory))
                     {
                         path = Path.GetFullPath(commandLineOption.WorkDirectory);
                         goto check_path;
