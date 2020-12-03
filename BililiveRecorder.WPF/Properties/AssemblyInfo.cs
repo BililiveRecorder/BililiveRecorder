@@ -12,7 +12,7 @@ using System.Windows;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Genteure")]
 [assembly: AssemblyProduct("B站录播姬")]
-[assembly: AssemblyCopyright("Copyright © 2018 Genteure")]
+[assembly: AssemblyCopyright("Copyright © 2018 - 2021 Genteure")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

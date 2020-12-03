@@ -18,27 +18,17 @@ namespace BililiveRecorder.WPF
 
             Title = "B站录播姬 " + BuildInfo.Version + " " + BuildInfo.HeadShaShort;
 
-            SuperActivate += NewMainWindow_SuperActivate;
-            CloseWithoutConfirm += NewMainWindow_CloseWithoutConfirm;
             SingleInstance.NotificationReceived += (sender, e) => SuperActivateAction();
         }
 
-        internal Action<string, string, BalloonIcon> ShowBalloonTipCallback { get; set; }
+        public event EventHandler NativeBeforeWindowClose;
 
-        private void NewMainWindow_CloseWithoutConfirm(object sender, RoutedEventArgs e)
-        {
-            CloseWithoutConfirmAction();
-        }
+        internal Action<string, string, BalloonIcon> ShowBalloonTipCallback { get; set; }
 
         internal void CloseWithoutConfirmAction()
         {
             CloseConfirmed = true;
             Close();
-        }
-
-        private void NewMainWindow_SuperActivate(object sender, RoutedEventArgs e)
-        {
-            SuperActivateAction();
         }
 
         internal void SuperActivateAction()
@@ -57,68 +47,8 @@ namespace BililiveRecorder.WPF
             {
                 Hide();
                 ShowBalloonTipCallback?.Invoke("B站录播姬", "录播姬已最小化到托盘，左键单击图标恢复界面", BalloonIcon.Info);
-                // RaiseEvent(new RoutedEventArgs(ShowBalloonTipEvent));
-                // RaiseEvent(new ShowBalloonTipRoutedEventArgs(ShowBalloonTipEvent)
-                // {
-                //     Title = "B站录播姬",
-                //     Message = "录播姬已最小化到托盘，左键单击图标恢复界面。",
-                //     Symbol = BalloonIcon.Info
-                // });
             }
         }
-
-        #region Routed Events
-
-        public static readonly RoutedEvent BeforeWindowCloseEvent
-            = EventManager.RegisterRoutedEvent("BeforeWindowClose", RoutingStrategy.Tunnel, typeof(RoutedEventHandler), typeof(NewMainWindow));
-
-        public event RoutedEventHandler BeforeWindowClose
-        {
-            add { AddHandler(BeforeWindowCloseEvent, value); }
-            remove { RemoveHandler(BeforeWindowCloseEvent, value); }
-        }
-
-        public static readonly RoutedEvent CloseWithoutConfirmEvent
-            = EventManager.RegisterRoutedEvent("CloseWithoutConfirm", RoutingStrategy.Bubble, typeof(RoutedEventHandler), typeof(NewMainWindow));
-
-        public event RoutedEventHandler CloseWithoutConfirm
-        {
-            add { AddHandler(CloseWithoutConfirmEvent, value); }
-            remove { RemoveHandler(CloseWithoutConfirmEvent, value); }
-        }
-
-        public static readonly RoutedEvent SuperActivateEvent
-            = EventManager.RegisterRoutedEvent("SuperActivate", RoutingStrategy.Bubble, typeof(RoutedEventHandler), typeof(NewMainWindow));
-
-        public event RoutedEventHandler SuperActivate
-        {
-            add { AddHandler(SuperActivateEvent, value); }
-            remove { RemoveHandler(SuperActivateEvent, value); }
-        }
-
-        public delegate void ShowBalloonTipRoutedEventHandler(object sender, ShowBalloonTipRoutedEventArgs e);
-
-        public static readonly RoutedEvent ShowBalloonTipEvent
-           = EventManager.RegisterRoutedEvent("ShowBalloonTip", RoutingStrategy.Tunnel, typeof(RoutedEventHandler), typeof(NewMainWindow));
-
-        public event RoutedEventHandler ShowBalloonTip
-        {
-            add { AddHandler(ShowBalloonTipEvent, value); }
-            remove { RemoveHandler(ShowBalloonTipEvent, value); }
-        }
-
-        public class ShowBalloonTipRoutedEventArgs : RoutedEventArgs
-        {
-            public string Title { get; set; }
-            public string Message { get; set; }
-            public BalloonIcon Symbol { get; set; }
-
-            public ShowBalloonTipRoutedEventArgs() { }
-            public ShowBalloonTipRoutedEventArgs(RoutedEvent routedEvent) : base(routedEvent) { }
-            public ShowBalloonTipRoutedEventArgs(RoutedEvent routedEvent, object source) : base(routedEvent, source) { }
-        }
-
-        #endregion
 
         #region Confirm Close Window
 
@@ -151,12 +81,11 @@ namespace BililiveRecorder.WPF
             }
             else
             {
-                RaiseEvent(new RoutedEventArgs(BeforeWindowCloseEvent));
+                NativeBeforeWindowClose?.Invoke(this, EventArgs.Empty);
                 return;
             }
         }
 
         #endregion
-
     }
 }

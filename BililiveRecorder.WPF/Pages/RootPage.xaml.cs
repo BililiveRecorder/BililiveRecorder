@@ -51,7 +51,14 @@ namespace BililiveRecorder.WPF.Pages
             InitializeComponent();
             AdvancedSettingsPageItem.Visibility = Visibility.Hidden;
 
+            (Application.Current.MainWindow as NewMainWindow).NativeBeforeWindowClose += RootPage_NativeBeforeWindowClose;
             Loaded += RootPage_Loaded;
+        }
+
+        private void RootPage_NativeBeforeWindowClose(object sender, EventArgs e)
+        {
+            Model.Dispose();
+            SingleInstance.Cleanup();
         }
 
         private async void RootPage_Loaded(object sender, RoutedEventArgs e)
@@ -71,7 +78,7 @@ namespace BililiveRecorder.WPF.Pages
                         .ParseArguments<CommandLineOption>(Environment.GetCommandLineArgs())
                         .WithParsed(x => commandLineOption = x);
 
-                    if (!string.IsNullOrWhiteSpace(commandLineOption.WorkDirectory))
+                    if (!string.IsNullOrWhiteSpace(commandLineOption?.WorkDirectory))
                     {
                         path = Path.GetFullPath(commandLineOption.WorkDirectory);
                         goto check_path;
@@ -95,7 +102,7 @@ namespace BililiveRecorder.WPF.Pages
                 var result = await w.ShowAsync();
                 if (result != ContentDialogResult.Primary)
                 {
-                    RaiseEvent(new RoutedEventArgs(NewMainWindow.CloseWithoutConfirmEvent));
+                    (Application.Current.MainWindow as NewMainWindow).CloseWithoutConfirmAction();
                     return;
                 }
 
@@ -144,7 +151,7 @@ namespace BililiveRecorder.WPF.Pages
                 }
                 else
                 {
-                    RaiseEvent(new RoutedEventArgs(NewMainWindow.CloseWithoutConfirmEvent));
+                    (Application.Current.MainWindow as NewMainWindow).CloseWithoutConfirmAction();
                     return;
                 }
             }
@@ -178,10 +185,5 @@ namespace BililiveRecorder.WPF.Pages
             }
         }
 
-        private void UserControl_BeforeWindowClose(object sender, RoutedEventArgs e)
-        {
-            Model.Dispose();
-            SingleInstance.Cleanup();
-        }
     }
 }
