@@ -176,6 +176,7 @@ namespace BililiveRecorder.Core
         /// <returns></returns>
         public async Task<(string token, string host, int port)> GetDanmuConf(int roomid)
         {
+            System.Threading.Thread.Sleep(2000);
             try
             {
                 var result = await HttpGetJsonAsync(danmakuhttpclient, $@"https://api.live.bilibili.com/room/v1/Danmu/getConf?room_id={roomid}&platform=pc&player=web");
