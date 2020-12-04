@@ -136,6 +136,7 @@ namespace BililiveRecorder.Core
         /// <exception cref="Exception"/>
         public async Task<RoomInfo> GetRoomInfoAsync(int roomid)
         {
+            ///这里想表达的是能否直播间获取之间设置冷却CD，15个直播间同时有概率也会412
             try
             {
                 var room = await HttpGetJsonAsync(httpclient, $@"https://api.live.bilibili.com/room/v1/Room/get_info?id={roomid}");
