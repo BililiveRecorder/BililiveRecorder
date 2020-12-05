@@ -77,5 +77,11 @@ namespace BililiveRecorder.WPF
 
             _ = Task.Run(async () => { await Task.Delay(TimeSpan.FromDays(1)); await RunCheckUpdate(); });
         }
+
+        private void Application_SessionEnding(object sender, SessionEndingCancelEventArgs e)
+        {
+            e.Cancel = true;
+            (Current.MainWindow as NewMainWindow).CloseWithoutConfirmAction();
+        }
     }
 }
