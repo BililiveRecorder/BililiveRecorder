@@ -112,6 +112,8 @@ namespace BililiveRecorder.Core
             private set { if (value != _DownloadSpeedMegaBitps) { _DownloadSpeedMegaBitps = value; TriggerPropertyChanged(nameof(DownloadSpeedMegaBitps)); } }
         }
 
+        public Guid Guid { get; } = Guid.NewGuid();
+
         public RecordedRoom(ConfigV1 config,
             IBasicDanmakuWriter basicDanmakuWriter,
             Func<int, IStreamMonitor> newIStreamMonitor,

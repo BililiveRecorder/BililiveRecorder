@@ -40,6 +40,7 @@
             </Grid.ColumnDefinitions>
             <TextBlock Grid.ColumnSpan="3" VerticalAlignment="Center" Margin="5,0,0,0"
                        Style="{DynamicResource SubtitleTextBlockStyle}" 
+                       FontFamily="Microsoft Yahei"
                        TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" 
                        Text="{Binding StreamerName,Mode=OneWay}"
                        ToolTip="{Binding StreamerName,Mode=OneWay}"/>

@@ -41,6 +41,8 @@ namespace BililiveRecorder.WPF.MockData
 
         public DateTime LastUpdateDateTime { get; set; }
 
+        public Guid Guid { get; } = Guid.NewGuid();
+
         public event PropertyChangedEventHandler PropertyChanged;
 
         public void Clip()

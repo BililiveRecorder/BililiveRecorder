@@ -20,7 +20,6 @@
                 <controls:RoomCard DeleteRequested="RoomCard_DeleteRequested" />
             </ui:ThemeShadowChrome>
         </DataTemplate>
-
         <DataTemplate x:Key="AddRoomCardTemplate">
             <ui:ThemeShadowChrome IsShadowEnabled="True" Depth="10">
                 <controls:AddRoomCard AddRoomRequested="AddRoomCard_AddRoomRequested"/>
@@ -38,13 +37,71 @@
             MinColumnSpacing="5" />
         <converters:RoomListInterceptConverter x:Key="RoomListInterceptConverter"/>
     </ui:Page.Resources>
-    <ui:ItemsRepeaterScrollHost>
-        <ScrollViewer>
-            <ui:ItemsRepeater
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition x:Name="RoomListRowDefinition" Height="*"/>
+            <RowDefinition Height="3"/>
+            <RowDefinition x:Name="LogRowDefinition" Height="0"/>
+        </Grid.RowDefinitions>
+        <Menu>
+            <Separator/>
+            <MenuItem Header="自动录制">
+                <MenuItem Header="自动录制全部房间" Click="MenuItem_EnableAutoRecAll_Click"/>
+                <MenuItem Header="取消自动录制全部房间" Click="MenuItem_DisableAutoRecAll_Click"/>
+            </MenuItem>
+            <MenuItem Header="排序">
+                <MenuItem Header="房间号" Tag="{x:Static local:SortedBy.RoomId}" Click="MenuItem_SortBy_Click"/>
+                <MenuItem Header="录制状态" Tag="{x:Static local:SortedBy.Status}" Click="MenuItem_SortBy_Click"/>
+            </MenuItem>
+            <MenuItem Header="日志">
+                <MenuItem Header="在本页显示日志" Click="MenuItem_ShowLog_Click"/>
+                <MenuItem Header="不在本页显示日志" Click="MenuItem_HideLog_Click"/>
+            </MenuItem>
+            <Separator/>
+            <MenuItem Header="关于">
+                <MenuItem Header="打开官网"/>
+                <MenuItem Header="关于"/>
+            </MenuItem>
+        </Menu>
+        <ui:ItemsRepeaterScrollHost Grid.Row="1">
+            <ScrollViewer>
+                <ui:ItemsRepeater
                 HorizontalAlignment="Stretch" Margin="8"
                 Layout="{StaticResource UniformGridLayout}"
-                ItemsSource="{Binding Converter={StaticResource RoomListInterceptConverter},Mode=OneWay}"
+                ItemsSource="{Binding SortedRoomList, RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=ui:Page}}"
                 ItemTemplate="{StaticResource SelectorTemplate}" />
-        </ScrollViewer>
-    </ui:ItemsRepeaterScrollHost>
+            </ScrollViewer>
+        </ui:ItemsRepeaterScrollHost>
+        <GridSplitter Grid.Row="2" x:Name="Splitter" ResizeDirection="Rows"  Visibility="Collapsed"
+                      HorizontalAlignment="Stretch" VerticalAlignment="Stretch" ShowsPreview="True"/>
+        <ui:ThemeShadowChrome Grid.Row="3" x:Name="LogElement" IsShadowEnabled="True" Depth="10" Margin="5" Visibility="Collapsed"
+                              DataContext="{Binding RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=local:RootPage},Path=DataContext.Logs,Mode=OneWay}">
+            <Border Background="{DynamicResource SystemControlBackgroundAltHighBrush}"
+                    BorderBrush="{DynamicResource SystemControlBackgroundAccentBrush}"
+                    BorderThickness="1" CornerRadius="5">
+                <ItemsControl ItemsSource="{Binding Mode=OneWay}" Margin="5" ToolTip="右键点击可以复制单行日志">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Border BorderThickness="0,0,0,1" BorderBrush="#FFCCCCCC">
+                                <TextBlock Text="{Binding Mode=OneWay}" TextWrapping="Wrap" MouseRightButtonUp="TextBlock_Copy_MouseRightButtonUp"/>
+                            </Border>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                    <ItemsControl.Template>
+                        <ControlTemplate>
+                            <ScrollViewer Loaded="Log_ScrollViewer_Loaded" CanContentScroll="True">
+                                <ItemsPresenter/>
+                            </ScrollViewer>
+                        </ControlTemplate>
+                    </ItemsControl.Template>
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <VirtualizingStackPanel IsItemsHost="True"/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                </ItemsControl>
+            </Border>
+        </ui:ThemeShadowChrome>
+    </Grid>
 </ui:Page>
