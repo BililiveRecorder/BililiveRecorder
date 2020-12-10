@@ -103,9 +103,6 @@
     <Compile Include="Controls\TaskbarIconControl.xaml.cs">
       <DependentUpon>TaskbarIconControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\TaskbarIconTrayPopup.xaml.cs">
-      <DependentUpon>TaskbarIconTrayPopup.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Controls\WorkDirectorySelectorDialog.xaml.cs">
       <DependentUpon>WorkDirectorySelectorDialog.xaml</DependentUpon>
     </Compile>
@@ -152,10 +149,6 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\TaskbarIconTrayPopup.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Controls\WorkDirectorySelectorDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -189,6 +182,14 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Pages\SettingsPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Resources\ConverterResources.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Resources\IconResources.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

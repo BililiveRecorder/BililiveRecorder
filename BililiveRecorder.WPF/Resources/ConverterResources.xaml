@@ -1,0 +1,17 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:c="clr-namespace:BililiveRecorder.WPF.Converters">
+
+    <c:MultiBoolToValueConverter x:Key="MultiBoolToVisibilityCollapsedConverter" TrueValue="{x:Static Visibility.Visible}" FalseValue="{x:Static Visibility.Collapsed}"/>
+
+    <c:BoolToValueConverter x:Key="BooleanToVisibilityCollapsedConverter" TrueValue="{x:Static Visibility.Visible}" FalseValue="{x:Static Visibility.Collapsed}" />
+    <c:BoolToValueConverter x:Key="InvertBooleanToVisibilityCollapsedConverter" TrueValue="{x:Static Visibility.Collapsed}" FalseValue="{x:Static Visibility.Visible}" />
+    <c:BoolToValueConverter x:Key="BooleanToVisibilityHiddenConverter" TrueValue="{x:Static Visibility.Visible}" FalseValue="{x:Static Visibility.Hidden}" />
+    <c:BooleanInverterConverter x:Key="BooleanInverterConverter"/>
+    <c:ClipEnabledToBooleanConverter x:Key="ClipEnabledToBooleanConverter"/>
+    <c:EnumToBooleanConverter x:Key="EnumToBooleanConverter"/>
+    <c:IsNullToVisibilityConverter x:Key="IsNullToVisibilityCollapsedConverter"/>
+    <c:PercentageToColorBrushConverter x:Key="PercentageToColorBrushConverter"/>
+    <c:ShortRoomIdToVisibilityConverter x:Key="ShortRoomIdToVisibilityConverter"/>
+
+</ResourceDictionary>

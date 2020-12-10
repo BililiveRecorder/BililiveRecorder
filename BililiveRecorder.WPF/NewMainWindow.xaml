@@ -15,7 +15,7 @@
         ui:TitleBar.IsBackEnabled="False"
         ui:TitleBar.IsBackButtonVisible="False"
         ui:TitleBar.IsIconVisible="True"
-        Width="1000" Height="650"
+        Width="960" Height="650"
         MinHeight="400" MinWidth="340"
         Closing="Window_Closing"
         StateChanged="Window_StateChanged"

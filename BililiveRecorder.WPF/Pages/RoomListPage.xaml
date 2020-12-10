@@ -31,11 +31,10 @@
             Null="{StaticResource AddRoomCardTemplate}"/>
         <ui:UniformGridLayout
             x:Key="UniformGridLayout"
-            MinItemWidth="230"
-            MinItemHeight="120"
+            MinItemWidth="220"
+            MinItemHeight="100"
             MinRowSpacing="7"
             MinColumnSpacing="5" />
-        <converters:RoomListInterceptConverter x:Key="RoomListInterceptConverter"/>
     </ui:Page.Resources>
     <Grid>
         <Grid.RowDefinitions>
@@ -46,22 +45,21 @@
         </Grid.RowDefinitions>
         <Menu>
             <Separator/>
-            <MenuItem Header="自动录制">
+            <MenuItem Header="文件">
+                <MenuItem Header="打开工作目录" Click="MenuItem_OpenWorkDirectory_Click"/>
+            </MenuItem>
+            <MenuItem Header="监控">
                 <MenuItem Header="自动录制全部房间" Click="MenuItem_EnableAutoRecAll_Click"/>
                 <MenuItem Header="取消自动录制全部房间" Click="MenuItem_DisableAutoRecAll_Click"/>
             </MenuItem>
             <MenuItem Header="排序">
+                <MenuItem Header="不排序" Tag="{x:Static local:SortedBy.None}" Click="MenuItem_SortBy_Click"/>
                 <MenuItem Header="房间号" Tag="{x:Static local:SortedBy.RoomId}" Click="MenuItem_SortBy_Click"/>
                 <MenuItem Header="录制状态" Tag="{x:Static local:SortedBy.Status}" Click="MenuItem_SortBy_Click"/>
             </MenuItem>
             <MenuItem Header="日志">
                 <MenuItem Header="在本页显示日志" Click="MenuItem_ShowLog_Click"/>
                 <MenuItem Header="不在本页显示日志" Click="MenuItem_HideLog_Click"/>
-            </MenuItem>
-            <Separator/>
-            <MenuItem Header="关于">
-                <MenuItem Header="打开官网"/>
-                <MenuItem Header="关于"/>
             </MenuItem>
         </Menu>
         <ui:ItemsRepeaterScrollHost Grid.Row="1">

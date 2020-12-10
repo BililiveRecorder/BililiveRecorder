@@ -18,7 +18,7 @@
                 <RowDefinition Height="3.5*"/>
             </Grid.RowDefinitions>
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                <ui:PathIcon Margin="5" Data="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z"/>
+                <ui:PathIcon Margin="5" Style="{StaticResource PathIconDataPlus}"/>
                 <TextBlock FontSize="20" VerticalAlignment="Center" Text="添加房间"/>
             </StackPanel>
             <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="10,0"

@@ -2,9 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Threading;
 using Autofac;
 using BililiveRecorder.Core;
 using BililiveRecorder.FlvProcessor;
@@ -12,6 +14,7 @@ using BililiveRecorder.WPF.Controls;
 using BililiveRecorder.WPF.Models;
 using CommandLine;
 using ModernWpf.Controls;
+using ModernWpf.Media.Animation;
 using Path = System.IO.Path;
 
 namespace BililiveRecorder.WPF.Pages
@@ -23,6 +26,7 @@ namespace BililiveRecorder.WPF.Pages
     {
         private readonly Dictionary<string, Type> PageMap = new Dictionary<string, Type>();
         private readonly string lastdir_path = Path.Combine(Path.GetDirectoryName(typeof(RootPage).Assembly.Location), "lastdir.txt");
+        private readonly NavigationTransitionInfo transitionInfo = new DrillInNavigationTransitionInfo();
 
         private IContainer Container { get; set; }
         private ILifetimeScope RootScope { get; set; }
@@ -140,7 +144,15 @@ namespace BililiveRecorder.WPF.Pages
                     if (recorder.Initialize(path))
                     {
                         Model.Recorder = recorder;
-                        RoomListPageNavigationViewItem.IsSelected = true;
+
+                        _ = Task.Run(async () =>
+                        {
+                            await Task.Delay(100);
+                            _ = Dispatcher.BeginInvoke(DispatcherPriority.Normal, method: new Action(() =>
+                            {
+                                RoomListPageNavigationViewItem.IsSelected = true;
+                            }));
+                        });
                         break;
                     }
                     else
@@ -162,7 +174,7 @@ namespace BililiveRecorder.WPF.Pages
             SettingsClickCount = 0;
             if (args.IsSettingsSelected)
             {
-                MainFrame.Navigate(typeof(SettingsPage));
+                MainFrame.Navigate(typeof(SettingsPage), null, transitionInfo);
             }
             else
             {
@@ -171,7 +183,7 @@ namespace BililiveRecorder.WPF.Pages
                 if (PageMap.ContainsKey(selectedItemTag))
                 {
                     var pageType = PageMap[selectedItemTag];
-                    MainFrame.Navigate(pageType);
+                    MainFrame.Navigate(pageType, null, transitionInfo);
                 }
             }
         }
@@ -185,5 +197,20 @@ namespace BililiveRecorder.WPF.Pages
             }
         }
 
+        private void MainFrame_Navigated(object sender, System.Windows.Navigation.NavigationEventArgs e)
+        {
+            try
+            {
+                if (sender is not ModernWpf.Controls.Frame frame) return;
+
+                while (frame.BackStackDepth > 0)
+                {
+                    frame.RemoveBackEntry();
+                }
+            }
+            catch (Exception)
+            {
+            }
+        }
     }
 }

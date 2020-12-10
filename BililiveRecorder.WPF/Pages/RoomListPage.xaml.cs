@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.Diagnostics;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -75,7 +76,7 @@ namespace BililiveRecorder.WPF.Pages
         private async void AddRoomCard_AddRoomRequested(object sender, string e)
         {
             var input = e.Trim();
-            if (string.IsNullOrWhiteSpace(input) || !(DataContext is IRecorder rec)) return;
+            if (string.IsNullOrWhiteSpace(input) || DataContext is not IRecorder rec) return;
 
             if (!int.TryParse(input, out var roomid))
             {
@@ -167,6 +168,18 @@ namespace BililiveRecorder.WPF.Pages
             {
             }
         }
+
+        private void MenuItem_OpenWorkDirectory_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                if (DataContext is IRecorder rec)
+                    Process.Start("explorer.exe", rec.Config.WorkDirectory);
+            }
+            catch (Exception)
+            {
+            }
+        }
     }
 
     internal enum SortedBy
@@ -231,7 +244,7 @@ namespace BililiveRecorder.WPF.Pages
                 IEnumerable<IRecordedRoom> orderedData = SortedBy switch
                 {
                     SortedBy.RoomId => Data.OrderBy(x => x.ShortRoomId == 0 ? x.RoomId : x.ShortRoomId),
-                    SortedBy.Status => Data.OrderBy(x => x.IsRecording).ThenBy(x => x.IsMonitoring),
+                    SortedBy.Status => Data.OrderByDescending(x => x.IsRecording).ThenByDescending(x => x.IsMonitoring),
                     _ => Data,
                 };
                 Sorted = orderedData.Concat(NullRoom).ToList();

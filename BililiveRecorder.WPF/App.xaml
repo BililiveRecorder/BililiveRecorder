@@ -13,6 +13,8 @@
                 <ui:ThemeResources />
                 <ui:XamlControlsResources />
                 <!-- Other merged dictionaries here -->
+                <ResourceDictionary Source="Resources/IconResources.xaml" />
+                <ResourceDictionary Source="Resources/ConverterResources.xaml" />
             </ResourceDictionary.MergedDictionaries>
             <!-- Other app resources here -->
             <FontFamily x:Key="ContentControlThemeFontFamily">Microsoft YaHei</FontFamily>
