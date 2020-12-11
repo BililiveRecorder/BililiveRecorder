@@ -7,31 +7,67 @@
     xmlns:ui="http://schemas.modernwpf.com/2019"
     xmlns:tb="http://www.hardcodet.net/taskbar"
     xmlns:local="clr-namespace:BililiveRecorder.WPF.Controls"
-    xmlns:wpf="clr-namespace:BililiveRecorder.WPF"
-    xmlns:page="clr-namespace:BililiveRecorder.WPF.Pages"
-    xmlns:conv="clr-namespace:BililiveRecorder.WPF.Converters"
     mc:Ignorable="d">
-    <UserControl.Resources>
-        <conv:IsNullToVisibilityConverter x:Key="IsNullToVisibilityConverter"/>
-    </UserControl.Resources>
-    <tb:TaskbarIcon x:Name="TaskbarIcon" IconSource="/ico.ico" TrayLeftMouseUp="TaskbarIcon_TrayLeftMouseUp"
-                    Visibility="{Binding Recorder, Converter={StaticResource IsNullToVisibilityConverter}}"
-                    ToolTipText="B站录播姬" PopupActivation="RightClick"
-                    >
+    <tb:TaskbarIcon 
+        x:Name="TaskbarIcon" IconSource="/ico.ico" TrayLeftMouseUp="TaskbarIcon_TrayLeftMouseUp"
+        Visibility="{Binding Recorder, Converter={StaticResource IsNullToVisibilityCollapsedConverter}}"
+        ToolTipText="B站录播姬" MenuActivation="RightClick"
+        >
+        <tb:TaskbarIcon.ContextMenu>
+            <ContextMenu>
+                <MenuItem Header="打开主界面" Click="MenuItem_OpenMainWindow_Click"/>
+                <Separator/>
+                <MenuItem Header="退出" Click="MenuItem_Quit_Click"/>
+            </ContextMenu>
+        </tb:TaskbarIcon.ContextMenu>
         <tb:TaskbarIcon.TrayToolTip>
             <Border
                 Background="{DynamicResource SystemControlBackgroundAltHighBrush}"
                 BorderBrush="{DynamicResource SystemControlBackgroundAccentBrush}" 
+                MinWidth="250"
                 BorderThickness="2"
                 CornerRadius="5">
-                <StackPanel Margin="10">
-                    <TextBlock Style="{DynamicResource SubtitleTextBlockStyle}" Text="B站录播姬"/>
-                    <TextBlock Text="{Binding Recorder.Config.WorkDirectory,Mode=OneWay}"/>
-                </StackPanel>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <StackPanel Margin="10">
+                        <TextBlock Style="{DynamicResource SubtitleTextBlockStyle}" Text="B站录播姬" FontFamily="Microsoft Yahei"/>
+                        <TextBlock Text="{Binding Recorder.Config.WorkDirectory,Mode=OneWay}" TextWrapping="NoWrap" FontFamily="Microsoft Yahei"/>
+                    </StackPanel>
+                    <Separator Grid.Row="1" Grid.ColumnSpan="2" />
+                    <ItemsControl Grid.Row="2" Grid.ColumnSpan="2" Margin="10,0,10,10" ItemsSource="{Binding Recorder, Mode=OneWay}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="0,5,0,0">
+                                    <ui:PathIcon 
+                                        Visibility="{Binding IsMonitoring,Converter={StaticResource BooleanToVisibilityHiddenConverter}}"
+                                        Style="{StaticResource PathIconDataCctv}" Foreground="DarkOrange" Width="15" ToolTip="监控中"/>
+                                    <ui:PathIcon 
+                                        Visibility="{Binding IsRecording,Converter={StaticResource BooleanToVisibilityHiddenConverter}}"
+                                        Style="{StaticResource PathIconDataRecordRec}" Foreground="Red" Width="15" ToolTip="录制中" Margin="3,0"/>
+                                    <TextBlock Text="{Binding StreamerName, Mode=OneWay}" TextWrapping="NoWrap"
+                                               FontFamily="Microsoft Yahei" TextTrimming="CharacterEllipsis"/>
+                                    <Border VerticalAlignment="Center" MinWidth="80"
+                                            Visibility="{Binding IsRecording,Converter={StaticResource BooleanToVisibilityHiddenConverter}}"
+                                            Background="{Binding DownloadSpeedPersentage, Converter={StaticResource PercentageToColorBrushConverter},Mode=OneWay}"                    
+                                            BorderThickness="1" BorderBrush="{DynamicResource SystemControlBackgroundChromeBlackMediumBrush}" Margin="2,0" CornerRadius="5">
+                                        <TextBlock HorizontalAlignment="Center" Foreground="Black" FontFamily="Microsoft Yahei"
+                                                   Text="{Binding DownloadSpeedMegaBitps, StringFormat=0.## Mbps,Mode=OneWay}"/>
+                                    </Border>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <VirtualizingStackPanel IsItemsHost="True"/>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                    </ItemsControl>
+                </Grid>
             </Border>
         </tb:TaskbarIcon.TrayToolTip>
-        <tb:TaskbarIcon.TrayPopup>
-            <local:TaskbarIconTrayPopup/>
-        </tb:TaskbarIcon.TrayPopup>
     </tb:TaskbarIcon>
 </UserControl>

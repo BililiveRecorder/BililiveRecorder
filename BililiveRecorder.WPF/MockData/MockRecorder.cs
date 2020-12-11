@@ -60,7 +60,6 @@ namespace BililiveRecorder.WPF.MockData
             {
                 DownloadSpeedPersentage = 109
             });
-
         }
 
         private ObservableCollection<IRecordedRoom> Rooms { get; } = new ObservableCollection<IRecordedRoom>();

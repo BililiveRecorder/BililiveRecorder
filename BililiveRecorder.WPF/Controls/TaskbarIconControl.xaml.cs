@@ -29,6 +29,16 @@ namespace BililiveRecorder.WPF.Controls
             (Application.Current.MainWindow as NewMainWindow)?.SuperActivateAction();
         }
 
+        private void MenuItem_OpenMainWindow_Click(object sender, RoutedEventArgs e)
+        {
+            (Application.Current.MainWindow as NewMainWindow)?.SuperActivateAction();
+        }
+
+        private void MenuItem_Quit_Click(object sender, RoutedEventArgs e)
+        {
+            (Application.Current.MainWindow as NewMainWindow)?.CloseWithoutConfirmAction();
+        }
+
         /*
         private void UserControl_ShowBalloonTip(object sender, RoutedEventArgs e)
         {

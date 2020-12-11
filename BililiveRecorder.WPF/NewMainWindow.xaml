@@ -12,10 +12,14 @@
         Foreground="{DynamicResource SystemControlPageTextBaseHighBrush}"
         ui:ThemeManager.IsThemeAware="True"
         ui:WindowHelper.UseModernWindowStyle="True"
-        Width="1000" Height="650"
+        ui:TitleBar.IsBackEnabled="False"
+        ui:TitleBar.IsBackButtonVisible="False"
+        ui:TitleBar.IsIconVisible="True"
+        Width="960" Height="650"
         MinHeight="400" MinWidth="340"
         Closing="Window_Closing"
-        StateChanged="Window_StateChanged"
+        StateChanged="Window_StateChanged" 
+        ui:ThemeManager.RequestedTheme="Default"
         Title="录播姬">
     <pages:RootPage x:Name="RootPage"/>
 </Window>

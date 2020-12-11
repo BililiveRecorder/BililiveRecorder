@@ -1,4 +1,4 @@
-﻿using BililiveRecorder.FlvProcessor;
+using BililiveRecorder.FlvProcessor;
 using System;
 using System.ComponentModel;
 
@@ -6,6 +6,8 @@ namespace BililiveRecorder.Core
 {
     public interface IRecordedRoom : INotifyPropertyChanged, IDisposable
     {
+        Guid Guid { get; }
+
         int ShortRoomId { get; }
         int RoomId { get; }
         string StreamerName { get; }

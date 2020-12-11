@@ -12,6 +12,7 @@
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <WarningLevel>4</WarningLevel>
+    <LangVersion>9.0</LangVersion>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
@@ -102,9 +103,6 @@
     <Compile Include="Controls\TaskbarIconControl.xaml.cs">
       <DependentUpon>TaskbarIconControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\TaskbarIconTrayPopup.xaml.cs">
-      <DependentUpon>TaskbarIconTrayPopup.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Controls\WorkDirectorySelectorDialog.xaml.cs">
       <DependentUpon>WorkDirectorySelectorDialog.xaml</DependentUpon>
     </Compile>
@@ -113,8 +111,12 @@
     <Compile Include="Converters\IsNullToVisibilityConverter.cs" />
     <Compile Include="Converters\ShortRoomIdToVisibilityConverter.cs" />
     <Compile Include="Converters\ValueConverterGroup.cs" />
+    <Compile Include="Models\Commands.cs" />
     <Compile Include="Models\LogModel.cs" />
     <Compile Include="Models\RootModel.cs" />
+    <Compile Include="Pages\AnnouncementPage.xaml.cs">
+      <DependentUpon>AnnouncementPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Pages\RootPage.xaml.cs">
       <DependentUpon>RootPage.xaml</DependentUpon>
     </Compile>
@@ -151,11 +153,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\TaskbarIconTrayPopup.xaml">
+    <Page Include="Controls\WorkDirectorySelectorDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\WorkDirectorySelectorDialog.xaml">
+    <Page Include="Pages\AnnouncementPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -188,6 +190,14 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Pages\SettingsPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Resources\ConverterResources.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Resources\IconResources.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

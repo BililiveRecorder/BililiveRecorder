@@ -6,7 +6,6 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
     xmlns:ui="http://schemas.modernwpf.com/2019"
     xmlns:local="clr-namespace:BililiveRecorder.WPF.Pages"
-    xmlns:conv="clr-namespace:BililiveRecorder.WPF.Converters"
     xmlns:config="clr-namespace:BililiveRecorder.Core.Config;assembly=BililiveRecorder.Core"
     xmlns:flv="clr-namespace:BililiveRecorder.FlvProcessor;assembly=BililiveRecorder.FlvProcessor"
     mc:Ignorable="d" 
@@ -14,12 +13,6 @@
     DataContext="{Binding RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=local:RootPage},Path=DataContext.Recorder.Config}"
     Title="SettingsPage">
     <ui:Page.Resources>
-        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
-        <conv:EnumToBooleanConverter x:Key="EnumToBooleanConverter"/>
-        <conv:ValueConverterGroup x:Key="InvertBooleanToVisibilityConverter">
-            <conv:BooleanInverterConverter/>
-            <BooleanToVisibilityConverter/>
-        </conv:ValueConverterGroup>
         <Style TargetType="TextBlock">
             <Setter Property="FontSize" Value="14"/>
             <Setter Property="VerticalAlignment" Value="Center"/>
@@ -27,11 +20,11 @@
     </ui:Page.Resources>
     <ScrollViewer d:DataContext="{d:DesignInstance Type=config:ConfigV1}">
         <ui:SimpleStackPanel Orientation="Vertical" Spacing="5" Margin="20">
-            <TextBlock Text="设置" Style="{StaticResource TitleTextBlockStyle}" Margin="0,10"/>
+            <TextBlock Text="设置" Style="{StaticResource TitleTextBlockStyle}" FontFamily="Microsoft Yahei" Margin="0,10"/>
             <GroupBox Header="弹幕录制">
                 <StackPanel>
                     <ui:ToggleSwitch IsOn="{Binding RecordDanmaku}" Name="RecordDanmakuCheckbox" OnContent="录播时保存弹幕" OffContent="录播时不保存弹幕"/>
-                    <StackPanel Margin="0,7,0,0" Visibility="{Binding ElementName=RecordDanmakuCheckbox,Path=IsOn,Converter={StaticResource BooleanToVisibilityConverter}}">
+                    <StackPanel Margin="0,7,0,0" Visibility="{Binding ElementName=RecordDanmakuCheckbox,Path=IsOn,Converter={StaticResource BooleanToVisibilityCollapsedConverter}}">
                         <ui:ToggleSwitch IsEnabled="{Binding RecordDanmaku}" IsOn="{Binding RecordDanmakuRaw}" 
                                          OnContent="同时保存 弹幕原始数据" OffContent="不保存 弹幕原始数据"/>
                         <ui:ToggleSwitch IsEnabled="{Binding RecordDanmaku}" IsOn="{Binding RecordDanmakuSuperChat}" 
@@ -56,13 +49,13 @@
                         ConverterParameter={x:Static flv:AutoCuttingMode.ByTime}}" />
 
                     <StackPanel Orientation="Horizontal" Margin="0,5,0,0" 
-                                Visibility="{Binding ElementName=CutDisabledRadioButton,Path=IsChecked,Converter={StaticResource InvertBooleanToVisibilityConverter}}">
+                                Visibility="{Binding ElementName=CutDisabledRadioButton,Path=IsChecked,Converter={StaticResource InvertBooleanToVisibilityCollapsedConverter}}">
                         <TextBlock Text="每"/>
                         <TextBox Margin="5,0" Width="100" Text="{Binding CuttingNumber,Delay=500}" ui:TextBoxHelper.IsDeleteButtonVisible="False"/>
                         <TextBlock Text="MiB 保存为一个文件"
-                                       Visibility="{Binding ElementName=CutBySizeRadioButton,Path=IsChecked,Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                                       Visibility="{Binding ElementName=CutBySizeRadioButton,Path=IsChecked,Converter={StaticResource BooleanToVisibilityCollapsedConverter}}"/>
                         <TextBlock Text="分 保存为一个文件"
-                                       Visibility="{Binding ElementName=CutByTimeRadioButton,Path=IsChecked,Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                                       Visibility="{Binding ElementName=CutByTimeRadioButton,Path=IsChecked,Converter={StaticResource BooleanToVisibilityCollapsedConverter}}"/>
                     </StackPanel>
                 </StackPanel>
             </GroupBox>
@@ -78,7 +71,7 @@
                                  IsChecked="{Binding Path=EnabledFeature, Converter={StaticResource EnumToBooleanConverter},
                         ConverterParameter={x:Static flv:EnabledFeature.Both}}" />
 
-                    <StackPanel Margin="0,5,0,0" Visibility="{Binding ElementName=EnabledFeatureRecordOnlyRadioButton,Path=IsChecked,Converter={StaticResource InvertBooleanToVisibilityConverter}}">
+                    <StackPanel Margin="0,5,0,0" Visibility="{Binding ElementName=EnabledFeatureRecordOnlyRadioButton,Path=IsChecked,Converter={StaticResource InvertBooleanToVisibilityCollapsedConverter}}">
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Text="剪辑过去时长"/>
                             <TextBox Margin="5,0" Width="80" Text="{Binding ClipLengthPast,Delay=500}" ui:TextBoxHelper.IsDeleteButtonVisible="False"/>
@@ -111,13 +104,13 @@
                             </TextBlock>
                         </StackPanel.ToolTip>
                         <TextBlock Text="说明"/>
-                        <ui:PathIcon Margin="2,0" VerticalAlignment="Center" Height="15" Data="M11,9H13V7H11M12,20C7.59,20 4,16.41 4,12C4,7.59 7.59,4 12,4C16.41,4 20,7.59 20,12C20,16.41 16.41,20 12,20M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M11,17H13V11H11V17Z"/>
+                        <ui:PathIcon Margin="2,0" VerticalAlignment="Center" Height="15" Style="{StaticResource PathIconDataInformationOutline}"/>
                     </StackPanel>
                     <TextBlock Text="录制文件名格式"/>
                     <TextBox Text="{Binding RecordFilenameFormat,Delay=500}" ui:TextBoxHelper.IsDeleteButtonVisible="False"/>
-                    <TextBlock Text="剪辑文件名格式" Margin="0,5,0,0" Visibility="{Binding ElementName=EnabledFeatureRecordOnlyRadioButton,Path=IsChecked,Converter={StaticResource InvertBooleanToVisibilityConverter}}"/>
+                    <TextBlock Text="剪辑文件名格式" Margin="0,5,0,0" Visibility="{Binding ElementName=EnabledFeatureRecordOnlyRadioButton,Path=IsChecked,Converter={StaticResource InvertBooleanToVisibilityCollapsedConverter}}"/>
                     <TextBox Text="{Binding ClipFilenameFormat,Delay=500}" ui:TextBoxHelper.IsDeleteButtonVisible="False"
-                             Visibility="{Binding ElementName=EnabledFeatureRecordOnlyRadioButton,Path=IsChecked,Converter={StaticResource InvertBooleanToVisibilityConverter}}"/>
+                             Visibility="{Binding ElementName=EnabledFeatureRecordOnlyRadioButton,Path=IsChecked,Converter={StaticResource InvertBooleanToVisibilityCollapsedConverter}}"/>
                 </StackPanel>
             </GroupBox>
         </ui:SimpleStackPanel>

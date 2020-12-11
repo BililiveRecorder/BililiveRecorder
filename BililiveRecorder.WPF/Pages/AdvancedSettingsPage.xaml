@@ -6,18 +6,12 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
     xmlns:ui="http://schemas.modernwpf.com/2019"
     xmlns:local="clr-namespace:BililiveRecorder.WPF.Pages"
-    xmlns:conv="clr-namespace:BililiveRecorder.WPF.Converters"
     xmlns:config="clr-namespace:BililiveRecorder.Core.Config;assembly=BililiveRecorder.Core"
     mc:Ignorable="d" 
     d:DesignHeight="1500" d:DesignWidth="500"
     DataContext="{Binding RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=local:RootPage},Path=DataContext.Recorder.Config}"
     Title="SettingsPage">
     <ui:Page.Resources>
-        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
-        <conv:ValueConverterGroup x:Key="InvertBooleanToVisibilityConverter">
-            <conv:BooleanInverterConverter/>
-            <BooleanToVisibilityConverter/>
-        </conv:ValueConverterGroup>
         <Style TargetType="TextBlock">
             <Setter Property="FontSize" Value="14"/>
             <Setter Property="VerticalAlignment" Value="Center"/>
