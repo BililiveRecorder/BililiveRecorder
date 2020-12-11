@@ -53,10 +53,9 @@ namespace BililiveRecorder.WPF.Pages
                 {
 #if DEBUG
                     var resp = await client.GetAsync("http://rec.127-0-0-1.nip.io/wpf/announcement.php");
-#elif RELEASE
+#else
                     var resp = await client.GetAsync("https://rec.danmuji.org/wpf/announcement.xml");
 #endif
-
                     var stream = await resp.EnsureSuccessStatusCode().Content.ReadAsStreamAsync();
                     var mstream = new MemoryStream();
                     await stream.CopyToAsync(mstream);
