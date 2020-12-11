@@ -42,6 +42,7 @@ namespace BililiveRecorder.WPF.Pages
             AddType(typeof(LogPage));
             AddType(typeof(SettingsPage));
             AddType(typeof(AdvancedSettingsPage));
+            AddType(typeof(AnnouncementPage));
 
             Model = new RootModel();
             DataContext = Model;
@@ -180,7 +181,17 @@ namespace BililiveRecorder.WPF.Pages
             {
                 var selectedItem = (NavigationViewItem)args.SelectedItem;
                 var selectedItemTag = (string)selectedItem.Tag;
-                if (PageMap.ContainsKey(selectedItemTag))
+                if (selectedItemTag.StartsWith("http"))
+                {
+                    try
+                    {
+                        MainFrame.Navigate(new Uri(selectedItemTag), null, transitionInfo);
+                    }
+                    catch (Exception)
+                    {
+                    }
+                }
+                else if (PageMap.ContainsKey(selectedItemTag))
                 {
                     var pageType = PageMap[selectedItemTag];
                     MainFrame.Navigate(pageType, null, transitionInfo);

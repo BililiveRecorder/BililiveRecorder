@@ -111,8 +111,12 @@
     <Compile Include="Converters\IsNullToVisibilityConverter.cs" />
     <Compile Include="Converters\ShortRoomIdToVisibilityConverter.cs" />
     <Compile Include="Converters\ValueConverterGroup.cs" />
+    <Compile Include="Models\Commands.cs" />
     <Compile Include="Models\LogModel.cs" />
     <Compile Include="Models\RootModel.cs" />
+    <Compile Include="Pages\AnnouncementPage.xaml.cs">
+      <DependentUpon>AnnouncementPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Pages\RootPage.xaml.cs">
       <DependentUpon>RootPage.xaml</DependentUpon>
     </Compile>
@@ -150,6 +154,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\WorkDirectorySelectorDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\AnnouncementPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

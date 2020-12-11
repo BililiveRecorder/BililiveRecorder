@@ -51,6 +51,11 @@
                        SelectionChanged="NavigationView_SelectionChanged"
                        >
             <ui:NavigationView.MenuItems>
+                <ui:NavigationViewItem Content="公告" Tag="AnnouncementPage" IsSelected="True">
+                    <ui:NavigationViewItem.Icon>
+                        <ui:PathIcon Style="{StaticResource PathIconDataBullhornOutline}"/>
+                    </ui:NavigationViewItem.Icon>
+                </ui:NavigationViewItem>
                 <ui:NavigationViewItem Content="房间列表" Tag="RoomListPage" x:Name="RoomListPageNavigationViewItem">
                     <ui:NavigationViewItem.Icon>
                         <ui:PathIcon Style="{StaticResource PathIconDataHomeOutline}"/>

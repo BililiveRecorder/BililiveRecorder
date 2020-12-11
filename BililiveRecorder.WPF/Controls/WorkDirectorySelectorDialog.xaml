@@ -25,7 +25,7 @@
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
-            <TextBox VerticalAlignment="Center" FontSize="14" Text="{Binding Path}"/>
+            <TextBox VerticalAlignment="Center" FontSize="14" Text="{Binding Path, UpdateSourceTrigger=PropertyChanged}"/>
             <Button Grid.Column="1" Click="Button_Click">浏览...</Button>
         </Grid>
     </Grid>
