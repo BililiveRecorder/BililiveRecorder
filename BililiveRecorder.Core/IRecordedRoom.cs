@@ -1,6 +1,6 @@
-using BililiveRecorder.FlvProcessor;
 using System;
 using System.ComponentModel;
+using BililiveRecorder.FlvProcessor;
 
 namespace BililiveRecorder.Core
 {
@@ -17,6 +17,7 @@ namespace BililiveRecorder.Core
 
         bool IsMonitoring { get; }
         bool IsRecording { get; }
+        bool IsStreaming { get; }
 
         double DownloadSpeedPersentage { get; }
         double DownloadSpeedMegaBitps { get; }

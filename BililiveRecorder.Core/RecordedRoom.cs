@@ -24,6 +24,7 @@ namespace BililiveRecorder.Core
         private int _realRoomid;
         private string _streamerName;
         private string _title;
+        private bool _isStreaming;
 
         public int ShortRoomId
         {
@@ -69,6 +70,16 @@ namespace BililiveRecorder.Core
 
         public bool IsMonitoring => StreamMonitor.IsMonitoring;
         public bool IsRecording => !(StreamDownloadTask?.IsCompleted ?? true);
+        public bool IsStreaming
+        {
+            get => _isStreaming;
+            private set
+            {
+                if (value == _isStreaming) { return; }
+                _isStreaming = value;
+                TriggerPropertyChanged(nameof(IsStreaming));
+            }
+        }
 
         private readonly IBasicDanmakuWriter basicDanmakuWriter;
         private readonly Func<IFlvStreamProcessor> newIFlvStreamProcessor;
@@ -141,6 +152,17 @@ namespace BililiveRecorder.Core
 
         private void StreamMonitor_ReceivedDanmaku(object sender, ReceivedDanmakuArgs e)
         {
+            switch (e.Danmaku.MsgType)
+            {
+                case MsgTypeEnum.LiveStart:
+                    IsStreaming = true;
+                    break;
+                case MsgTypeEnum.LiveEnd:
+                    IsStreaming = false;
+                    break;
+                default:
+                    break;
+            }
             basicDanmakuWriter.Write(e.Danmaku);
         }
 
@@ -150,6 +172,7 @@ namespace BililiveRecorder.Core
             ShortRoomId = e.RoomInfo.ShortRoomId;
             StreamerName = e.RoomInfo.UserName;
             Title = e.RoomInfo.Title;
+            IsStreaming = e.RoomInfo.IsStreaming;
         }
 
         public bool Start()

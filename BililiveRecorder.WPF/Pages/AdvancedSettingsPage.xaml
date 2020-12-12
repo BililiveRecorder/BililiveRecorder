@@ -29,7 +29,7 @@
             <GroupBox Header="Cookie">
                 <StackPanel>
                     <TextBlock Text="请求API时使用此 Cookie"/>
-                    <TextBox Text="{Binding Cookie,Delay=500}" Width="250" HorizontalAlignment="Left"/>
+                    <TextBox Text="{Binding Cookie,UpdateSourceTrigger=PropertyChanged,Delay=1000}" Width="250" HorizontalAlignment="Left"/>
                 </StackPanel>
             </GroupBox>
             <GroupBox Header="Timing">

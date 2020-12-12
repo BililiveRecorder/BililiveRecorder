@@ -7,10 +7,16 @@
     xmlns:ui="http://schemas.modernwpf.com/2019"
     xmlns:local="clr-namespace:BililiveRecorder.WPF.Controls"
     xmlns:mock="clr-namespace:BililiveRecorder.WPF.MockData"
+    xmlns:m="clr-namespace:BililiveRecorder.WPF.Models"
     xmlns:pages="clr-namespace:BililiveRecorder.WPF.Pages"
     d:DesignWidth="220" d:DesignHeight="110"
     d:DataContext="{d:DesignInstance Type=mock:MockRecordedRoom,IsDesignTimeCreatable=True}"
     mc:Ignorable="d">
+    <UserControl.Resources>
+        <ContextMenu x:Key="CopyTextContextMenu" DataContext="{Binding RelativeSource={RelativeSource Mode=Self},Path=PlacementTarget}">
+            <MenuItem Header="复制" Command="{x:Static m:Commands.Copy}" CommandParameter="{Binding Text}"/>
+        </ContextMenu>
+    </UserControl.Resources>
     <Border Background="{DynamicResource SystemControlBackgroundAltHighBrush}"
             BorderBrush="{DynamicResource SystemControlBackgroundAccentBrush}" 
             BorderThickness="1"
@@ -28,10 +34,9 @@
             </Grid.ColumnDefinitions>
             <TextBlock Grid.ColumnSpan="3" VerticalAlignment="Center" Margin="5,0,0,0"
                        Style="{DynamicResource SubtitleTextBlockStyle}" 
-                       FontFamily="Microsoft Yahei"
                        TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" 
-                       Text="{Binding StreamerName,Mode=OneWay}"
-                       ToolTip="{Binding StreamerName,Mode=OneWay}"/>
+                       FontFamily="Microsoft Yahei" ContextMenu="{StaticResource CopyTextContextMenu}"
+                       Text="{Binding StreamerName,Mode=OneWay}" ToolTip="{Binding StreamerName,Mode=OneWay}"/>
             <Menu Grid.Row="1" Grid.Column="3" VerticalAlignment="Center" HorizontalAlignment="Right">
                 <MenuItem ToolTip="操作">
                     <MenuItem.Header>
@@ -52,6 +57,11 @@
                             <ui:PathIcon Style="{StaticResource PathIconDataRefresh}"/>
                         </MenuItem.Icon>
                     </MenuItem>
+                    <MenuItem Header="打开直播间页面" Click="MenuItem_OpenInBrowser_Click">
+                        <MenuItem.Icon>
+                            <ui:PathIcon Style="{StaticResource PathIconDataOpenInNew}"/>
+                        </MenuItem.Icon>
+                    </MenuItem>
                     <Separator/>
                     <ui:RadioMenuItem Header="自动录制" GroupName="自动录制" IsChecked="{Binding IsMonitoring,Mode=OneWay}" Click="MenuItem_StartMonitor_Click">
                         <ui:RadioMenuItem.Icon>
@@ -68,11 +78,14 @@
                 </MenuItem>
             </Menu>
             <StackPanel VerticalAlignment="Center" Orientation="Horizontal" Grid.Row="1" Grid.ColumnSpan="2" Margin="5,0,0,0">
+                <ui:PathIcon Height="10" Margin="0,0,5,0" Style="{StaticResource PathIconDataAccessPoint}"
+                             Foreground="{Binding IsStreaming,Converter={StaticResource BooleanToLiveStatusColorBrushConverter}}"
+                             ToolTip="{Binding IsStreaming,Converter={StaticResource BooleanToLiveStatusTooltipConverter}}"/>
                 <ui:PathIcon Height="10" Style="{StaticResource PathIconDataUpperCaseIdentifier}" />
-                <TextBlock Text="{Binding RoomId, StringFormat=\{0\},Mode=OneWay}" Margin="4,0"/>
+                <TextBlock Text="{Binding RoomId, StringFormat=\{0\},Mode=OneWay}" ContextMenu="{StaticResource CopyTextContextMenu}" Margin="4,0"/>
                 <ui:PathIcon Height="10" Style="{StaticResource PathIconDataLowerCaseIdentifier}" Margin="3,0"
                              Visibility="{Binding ShortRoomId,Converter={StaticResource ShortRoomIdToVisibilityConverter}}"/>
-                <TextBlock Text="{Binding ShortRoomId, StringFormat=\{0\},Mode=OneWay}" 
+                <TextBlock Text="{Binding ShortRoomId, StringFormat=\{0\},Mode=OneWay}" ContextMenu="{StaticResource CopyTextContextMenu}"
                            Visibility="{Binding ShortRoomId,Converter={StaticResource ShortRoomIdToVisibilityConverter}}"/>
             </StackPanel>
             <Border Grid.Row="2" Grid.Column="1" VerticalAlignment="Center" Visibility="{Binding Visibility, ElementName=RecordingIcon}"
