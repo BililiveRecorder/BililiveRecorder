@@ -34,11 +34,7 @@ namespace BililiveRecorder.Core
                     ApplyCookieSettings(Config.Cookie);
                 }
             };
-
-            httpclient = new HttpClient { Timeout = TimeSpan.FromSeconds(10) };
-            httpclient.DefaultRequestHeaders.Add("Accept", HTTP_HEADER_ACCEPT);
-            httpclient.DefaultRequestHeaders.Add("Referer", HTTP_HEADER_REFERER);
-            httpclient.DefaultRequestHeaders.Add("User-Agent", Utils.UserAgent);
+            ApplyCookieSettings(Config.Cookie);
 
             danmakuhttpclient = new HttpClient { Timeout = TimeSpan.FromSeconds(10) };
             danmakuhttpclient.DefaultRequestHeaders.Add("Accept", HTTP_HEADER_ACCEPT);
@@ -59,7 +55,7 @@ namespace BililiveRecorder.Core
                         UseDefaultCredentials = false,
                     }, disposeHandler: true)
                     {
-                        Timeout = TimeSpan.FromSeconds(5)
+                        Timeout = TimeSpan.FromSeconds(10)
                     };
                     pclient.DefaultRequestHeaders.Add("Accept", HTTP_HEADER_ACCEPT);
                     pclient.DefaultRequestHeaders.Add("Referer", HTTP_HEADER_REFERER);
@@ -69,7 +65,7 @@ namespace BililiveRecorder.Core
                 }
                 else
                 {
-                    var cleanclient = new HttpClient { Timeout = TimeSpan.FromSeconds(5) };
+                    var cleanclient = new HttpClient { Timeout = TimeSpan.FromSeconds(10) };
                     cleanclient.DefaultRequestHeaders.Add("Accept", HTTP_HEADER_ACCEPT);
                     cleanclient.DefaultRequestHeaders.Add("Referer", HTTP_HEADER_REFERER);
                     cleanclient.DefaultRequestHeaders.Add("User-Agent", Utils.UserAgent);

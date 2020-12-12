@@ -18,6 +18,7 @@ namespace BililiveRecorder.WPF.Pages
         private static readonly HttpClient client;
 
         private static MemoryStream AnnouncementCache = null;
+        private static DateTimeOffset AnnouncementCacheTime = DateTimeOffset.MinValue;
 
         static AnnouncementPage()
         {
@@ -59,6 +60,7 @@ namespace BililiveRecorder.WPF.Pages
                     var stream = await resp.EnsureSuccessStatusCode().Content.ReadAsStreamAsync();
                     var mstream = new MemoryStream();
                     await stream.CopyToAsync(mstream);
+                    AnnouncementCacheTime = DateTimeOffset.Now;
                     data = mstream;
                     success = true;
                 }
@@ -82,7 +84,6 @@ namespace BililiveRecorder.WPF.Pages
                     var obj = System.Windows.Markup.XamlReader.Load(reader);
                     if (obj is UIElement elem)
                         Container.Child = elem;
-                    RefreshButton.ToolTip = "当前公告获取时间: " + DateTimeOffset.Now.ToString("F");
                 }
                 catch (Exception ex)
                 {
@@ -94,9 +95,15 @@ namespace BililiveRecorder.WPF.Pages
 
             Loading.Visibility = Visibility.Collapsed;
             if (success)
+            {
+                RefreshButton.ToolTip = "当前公告获取时间: " + AnnouncementCacheTime.ToString("F");
                 AnnouncementCache = data;
+            }
             else
+            {
+                RefreshButton.ToolTip = null;
                 Error.Visibility = Visibility.Visible;
+            }
         }
 
         private async void Button_MouseRightButtonUp(object sender, MouseButtonEventArgs e)
@@ -122,6 +129,7 @@ namespace BililiveRecorder.WPF.Pages
                         await fs.CopyToAsync(ms);
                     }
                     AnnouncementCache = ms;
+                    AnnouncementCacheTime = DateTimeOffset.Now;
                 }
                 catch (Exception ex)
                 {
