@@ -71,7 +71,7 @@ namespace BililiveRecorder.Core
         /// </summary>
         /// <param name="roomid">房间号（支持短号）</param>
         /// <exception cref="ArgumentOutOfRangeException"/>
-        public void AddRoom(int roomid) => AddRoom(roomid, false);
+        public void AddRoom(int roomid) => AddRoom(roomid, true);
 
         /// <summary>
         /// 添加直播间到录播姬
