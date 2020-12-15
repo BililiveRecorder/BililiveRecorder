@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel;
 using System.IO;
 using System.IO.Compression;
 using System.Net;
@@ -33,9 +34,6 @@ namespace BililiveRecorder.Core
         private readonly ConfigV1 config;
         private readonly BililiveAPI bililiveAPI;
 
-#pragma warning disable IDE1006 // 命名样式
-        private bool dmTcpConnected => dmClient?.Connected ?? false;
-#pragma warning restore IDE1006 // 命名样式
         private Exception dmError = null;
         private TcpClient dmClient;
         private NetworkStream dmNetStream;
@@ -46,9 +44,11 @@ namespace BililiveRecorder.Core
 
         public int Roomid { get; private set; } = 0;
         public bool IsMonitoring { get; private set; } = false;
+        public bool IsDanmakuConnected => dmClient?.Connected ?? false;
         public event RoomInfoUpdatedEvent RoomInfoUpdated;
         public event StreamStartedEvent StreamStarted;
         public event ReceivedDanmakuEvt ReceivedDanmaku;
+        public event PropertyChangedEventHandler PropertyChanged;
 
         public StreamMonitor(int roomid, Func<TcpClient> funcTcpClient, ConfigV1 config, BililiveAPI bililiveAPI)
         {
@@ -191,11 +191,12 @@ namespace BililiveRecorder.Core
         private async Task ConnectWithRetryAsync()
         {
             bool connect_result = false;
-            while (!dmTcpConnected && !dmTokenSource.Token.IsCancellationRequested)
+            while (!IsDanmakuConnected && !dmTokenSource.Token.IsCancellationRequested)
             {
-                Thread.Sleep((int)Math.Max(config.TimingDanmakuRetry, 0));
                 logger.Log(Roomid, LogLevel.Info, "连接弹幕服务器...");
                 connect_result = await ConnectAsync().ConfigureAwait(false);
+                if (!connect_result)
+                    await Task.Delay((int)Math.Max(config.TimingDanmakuRetry, 0));
             }
 
             if (connect_result)
@@ -206,7 +207,7 @@ namespace BililiveRecorder.Core
 
         private async Task<bool> ConnectAsync()
         {
-            if (dmTcpConnected) { return true; }
+            if (IsDanmakuConnected) { return true; }
 
             try
             {
@@ -215,8 +216,9 @@ namespace BililiveRecorder.Core
                 logger.Log(Roomid, LogLevel.Debug, $"连接弹幕服务器 {host}:{port} {(string.IsNullOrWhiteSpace(token) ? "无" : "有")} token");
 
                 dmClient = funcTcpClient();
-                dmClient.Connect(host, port);
+                await dmClient.ConnectAsync(host, port).ConfigureAwait(false);
                 dmNetStream = dmClient.GetStream();
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(IsDanmakuConnected)));
 
                 dmReceiveMessageLoopThread = new Thread(ReceiveMessageLoop)
                 {
@@ -245,7 +247,7 @@ namespace BililiveRecorder.Core
             {
                 dmError = ex;
                 logger.Log(Roomid, LogLevel.Error, "连接弹幕服务器错误", ex);
-
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(IsDanmakuConnected)));
                 return false;
             }
         }
@@ -257,7 +259,7 @@ namespace BililiveRecorder.Core
             {
                 var stableBuffer = new byte[16];
                 var buffer = new byte[4096];
-                while (dmTcpConnected)
+                while (IsDanmakuConnected)
                 {
                     dmNetStream.ReadB(stableBuffer, 0, 16);
                     Parse2Protocol(stableBuffer, out DanmakuProtocol protocol);
@@ -342,8 +344,16 @@ namespace BililiveRecorder.Core
                 if (!(dmTokenSource?.IsCancellationRequested ?? true))
                 {
                     logger.Log(Roomid, LogLevel.Warn, "弹幕连接被断开，将尝试重连", ex);
-                    _ = ConnectWithRetryAsync();
+                    Task.Run(async () =>
+                    {
+                        await Task.Delay((int)Math.Max(config.TimingDanmakuRetry, 0));
+                        await ConnectWithRetryAsync();
+                    });
                 }
+            }
+            finally
+            {
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(IsDanmakuConnected)));
             }
         }
 

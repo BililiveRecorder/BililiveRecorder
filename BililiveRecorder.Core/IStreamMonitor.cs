@@ -1,12 +1,14 @@
-﻿using System;
+using System;
+using System.ComponentModel;
 using System.Threading.Tasks;
 
 namespace BililiveRecorder.Core
 {
-    public interface IStreamMonitor : IDisposable
+    public interface IStreamMonitor : IDisposable, INotifyPropertyChanged
     {
         int Roomid { get; }
         bool IsMonitoring { get; }
+        bool IsDanmakuConnected { get; }
         event RoomInfoUpdatedEvent RoomInfoUpdated;
         event StreamStartedEvent StreamStarted;
         event ReceivedDanmakuEvt ReceivedDanmaku;

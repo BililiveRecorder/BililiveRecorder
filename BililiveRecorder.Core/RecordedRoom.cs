@@ -70,6 +70,7 @@ namespace BililiveRecorder.Core
 
         public bool IsMonitoring => StreamMonitor.IsMonitoring;
         public bool IsRecording => !(StreamDownloadTask?.IsCompleted ?? true);
+        public bool IsDanmakuConnected => StreamMonitor.IsDanmakuConnected;
         public bool IsStreaming
         {
             get => _isStreaming;
@@ -146,8 +147,21 @@ namespace BililiveRecorder.Core
             StreamMonitor.RoomInfoUpdated += StreamMonitor_RoomInfoUpdated;
             StreamMonitor.StreamStarted += StreamMonitor_StreamStarted;
             StreamMonitor.ReceivedDanmaku += StreamMonitor_ReceivedDanmaku;
+            StreamMonitor.PropertyChanged += StreamMonitor_PropertyChanged;
 
             StreamMonitor.FetchRoomInfoAsync();
+        }
+
+        private void StreamMonitor_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            switch (e.PropertyName)
+            {
+                case nameof(IStreamMonitor.IsDanmakuConnected):
+                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(IsDanmakuConnected)));
+                    break;
+                default:
+                    break;
+            }
         }
 
         private void StreamMonitor_ReceivedDanmaku(object sender, ReceivedDanmakuArgs e)

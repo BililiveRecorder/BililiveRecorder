@@ -16,6 +16,16 @@
         </c:BoolToValueConverter.TrueValue>
     </c:BoolToValueConverter>
     <c:BoolToValueConverter x:Key="BooleanToLiveStatusTooltipConverter" TrueValue="直播中" FalseValue="未开播"/>
+    <c:BoolToValueConverter x:Key="BooleanToDanmakuConnectedStyleConverter" TrueValue="{StaticResource PathIconDataCloudCheckOutline}" FalseValue="{StaticResource PathIconDataCloudAlert}"/>
+    <c:BoolToValueConverter x:Key="BooleanToDanmakuConnectedColorBrushConverter">
+        <c:BoolToValueConverter.FalseValue>
+            <SolidColorBrush Color="Red"/>
+        </c:BoolToValueConverter.FalseValue>
+        <c:BoolToValueConverter.TrueValue>
+            <SolidColorBrush Color="#8BC34A"/>
+        </c:BoolToValueConverter.TrueValue>
+    </c:BoolToValueConverter>
+    <c:BoolToValueConverter x:Key="BooleanToDanmakuConnectedTooltipConverter" TrueValue="连接成功 实时接收房间数据中" FalseValue="弹幕连接已断开"/>
     <c:BooleanInverterConverter x:Key="BooleanInverterConverter"/>
     <c:ClipEnabledToBooleanConverter x:Key="ClipEnabledToBooleanConverter"/>
     <c:EnumToBooleanConverter x:Key="EnumToBooleanConverter"/>

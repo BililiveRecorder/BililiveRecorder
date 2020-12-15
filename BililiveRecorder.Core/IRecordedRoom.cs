@@ -17,6 +17,7 @@ namespace BililiveRecorder.Core
 
         bool IsMonitoring { get; }
         bool IsRecording { get; }
+        bool IsDanmakuConnected { get; }
         bool IsStreaming { get; }
 
         double DownloadSpeedPersentage { get; }

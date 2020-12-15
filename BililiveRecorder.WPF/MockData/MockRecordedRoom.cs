@@ -36,6 +36,8 @@ namespace BililiveRecorder.WPF.MockData
 
         public bool IsRecording { get; set; }
 
+        public bool IsDanmakuConnected { get; set; }
+
         public bool IsStreaming { get; set; }
 
         public double DownloadSpeedPersentage { get; set; }
