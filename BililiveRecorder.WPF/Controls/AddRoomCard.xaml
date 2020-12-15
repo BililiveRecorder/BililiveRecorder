@@ -12,21 +12,22 @@
             BorderBrush="{DynamicResource SystemControlBackgroundAccentBrush}" 
             BorderThickness="1"
             CornerRadius="5">
-        <Grid Margin="0,15">
+        <Grid Margin="15">
             <Grid.RowDefinitions>
                 <RowDefinition Height="2*"/>
                 <RowDefinition Height="3.5*"/>
             </Grid.RowDefinitions>
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Grid.ColumnSpan="2">
                 <ui:PathIcon Margin="5" Style="{StaticResource PathIconDataPlus}"/>
                 <TextBlock FontSize="20" VerticalAlignment="Center" Text="添加房间"/>
             </StackPanel>
-            <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="10,0"
-                    VerticalAlignment="Center" HorizontalAlignment="Center">
-                <TextBox Width="140" x:Name="InputTextBox" KeyDown="InputTextBox_KeyDown"
-                     ui:ControlHelper.PlaceholderText="房间号或房间链接"/>
-                <Button Content="确定" Click="Button_Click" />
-            </StackPanel>
+            <TextBox Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Center" x:Name="InputTextBox"
+                     KeyDown="InputTextBox_KeyDown" ui:ControlHelper.PlaceholderText="房间号或房间链接"/>
+            <Button Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" Content="确定" Click="Button_Click" />
         </Grid>
     </Border>
 </UserControl>

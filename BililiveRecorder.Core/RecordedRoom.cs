@@ -481,7 +481,7 @@ namespace BililiveRecorder.Core
             if (_config.RecordDanmaku)
             {
                 var xmlpath = Path.ChangeExtension(path, "xml");
-                basicDanmakuWriter.EnableWithPath(xmlpath);
+                basicDanmakuWriter.EnableWithPath(xmlpath, this);
             }
 
             return path;
