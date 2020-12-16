@@ -1,17 +1,6 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Runtime.Serialization;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace BililiveRecorder.WPF.Pages
 {
@@ -23,6 +12,19 @@ namespace BililiveRecorder.WPF.Pages
         public AdvancedSettingsPage()
         {
             InitializeComponent();
+        }
+
+        private void Crash_Click(object sender, RoutedEventArgs e)
+        {
+            throw new TestException("test crash triggered");
+        }
+
+        public class TestException : Exception
+        {
+            public TestException() { }
+            public TestException(string message) : base(message) { }
+            public TestException(string message, Exception innerException) : base(message, innerException) { }
+            protected TestException(SerializationInfo info, StreamingContext context) : base(info, context) { }
         }
     }
 }

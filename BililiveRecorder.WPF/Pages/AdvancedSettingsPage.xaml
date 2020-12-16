@@ -75,6 +75,18 @@
                     </ui:NumberBox>
                 </ui:SimpleStackPanel>
             </GroupBox>
+            <GroupBox Header="手动崩溃">
+                <Button Content="Crash EVERTHING !!1">
+                    <ui:FlyoutService.Flyout>
+                        <ui:Flyout>
+                            <StackPanel>
+                                <TextBlock Text="Are you sure about that?" Margin="0,0,0,12" />
+                                <Button Click="Crash_Click" Content="Yes" />
+                            </StackPanel>
+                        </ui:Flyout>
+                    </ui:FlyoutService.Flyout>
+                </Button>
+            </GroupBox>
         </ui:SimpleStackPanel>
     </ScrollViewer>
 </ui:Page>

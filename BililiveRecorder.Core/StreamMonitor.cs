@@ -246,7 +246,7 @@ namespace BililiveRecorder.Core
             catch (Exception ex)
             {
                 dmError = ex;
-                logger.Log(Roomid, LogLevel.Error, "连接弹幕服务器错误", ex);
+                logger.Log(Roomid, LogLevel.Warn, "连接弹幕服务器错误", ex);
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(IsDanmakuConnected)));
                 return false;
             }

@@ -269,7 +269,7 @@ namespace BililiveRecorder.Core
             }
             catch (Exception ex)
             {
-                logger.Log(RoomId, LogLevel.Error, "在尝试停止录制时发生错误，请检查网络连接是否稳定", ex);
+                logger.Log(RoomId, LogLevel.Warn, "在尝试停止录制时发生错误，请检查网络连接是否稳定", ex);
             }
             finally
             {
@@ -388,7 +388,7 @@ namespace BililiveRecorder.Core
             catch (Exception ex)
             {
                 _CleanupFlvRequest();
-                logger.Log(RoomId, LogLevel.Warn, "启动直播流下载出错。" + (_retry ? "将重试启动。" : ""), ex);
+                logger.Log(RoomId, LogLevel.Error, "启动直播流下载出错。" + (_retry ? "将重试启动。" : ""), ex);
                 if (_retry)
                 {
                     StreamMonitor.Check(TriggerType.HttpApiRecheck, (int)_config.TimingStreamRetry);
