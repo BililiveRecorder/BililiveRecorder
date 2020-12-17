@@ -41,7 +41,7 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup>
-    <StartupObject>BililiveRecorder.WPF.App</StartupObject>
+    <StartupObject>BililiveRecorder.WPF.Program</StartupObject>
   </PropertyGroup>
   <PropertyGroup>
     <GenerateManifests>false</GenerateManifests>
@@ -128,6 +128,7 @@
     <Compile Include="Converters\PercentageToColorBrushConverter.cs" />
     <Compile Include="Converters\RoomListInterceptConverter.cs" />
     <Compile Include="CommandLineOption.cs" />
+    <Compile Include="Program.cs" />
     <Compile Include="SingleInstance.cs" />
     <Page Include="Controls\AddRoomCard.xaml">
       <SubType>Designer</SubType>
@@ -237,7 +238,7 @@
     <Content Include="NLog.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <None Include="Nlog.Release.config" />
+    <None Include="NLog.Release.config" />
     <None Include="NLog.Debug.config" />
   </ItemGroup>
   <ItemGroup>
@@ -269,13 +270,22 @@
     <PackageReference Include="Newtonsoft.Json">
       <Version>11.0.2</Version>
     </PackageReference>
+    <PackageReference Include="NLog">
+      <Version>4.7.6</Version>
+    </PackageReference>
     <PackageReference Include="NLog.Config">
-      <Version>4.5.10</Version>
+      <Version>4.7.6</Version>
     </PackageReference>
     <PackageReference Include="NuGet.CommandLine">
       <Version>4.7.1</Version>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="Sentry">
+      <Version>2.1.8</Version>
+    </PackageReference>
+    <PackageReference Include="Sentry.NLog">
+      <Version>2.1.8</Version>
     </PackageReference>
     <PackageReference Include="squirrel.windows">
       <Version>2.0.1</Version>
@@ -292,7 +302,7 @@
   <PropertyGroup>
     <PreBuildEvent>cd $(SolutionDir)
 powershell -ExecutionPolicy Bypass -File .\CI\patch_buildinfo.ps1 WPF
-copy /y .\BililiveRecorder.WPF\Nlog.$(ConfigurationName).config .\BililiveRecorder.WPF\NLog.config</PreBuildEvent>
+copy /y .\BililiveRecorder.WPF\NLog.$(ConfigurationName).config .\BililiveRecorder.WPF\NLog.config</PreBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
     <SquirrelBuildTarget Condition=" '$(SquirrelBuildTarget)' == '' ">.\SquirrelRelease</SquirrelBuildTarget>

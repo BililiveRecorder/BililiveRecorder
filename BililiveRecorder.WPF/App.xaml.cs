@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
@@ -28,11 +29,17 @@ namespace BililiveRecorder.WPF
         {
             try
             {
-                if (!string.IsNullOrWhiteSpace(Environment.GetEnvironmentVariable("BILILIVE_RECORDER_DISABLE_UPDATE"))) { return; }
+                if (!string.IsNullOrWhiteSpace(Environment.GetEnvironmentVariable("BILILIVE_RECORDER_DISABLE_UPDATE"))
+                    || File.Exists("BILILIVE_RECORDER_DISABLE_UPDATE"))
+                {
+                    return;
+                }
+
                 var envPath = Environment.GetEnvironmentVariable("BILILIVE_RECORDER_OVERWRITE_UPDATE");
-                string serverUrl = @"https://soft.danmuji.org/BililiveRecorder/";
+                var serverUrl = @"https://soft.danmuji.org/BililiveRecorder/";
                 if (!string.IsNullOrWhiteSpace(envPath)) { serverUrl = envPath; }
-                using (UpdateManager manager = new UpdateManager(urlOrPath: serverUrl))
+                logger.Debug("Checking updates.");
+                using (var manager = new UpdateManager(urlOrPath: serverUrl))
                 {
                     var update = await manager.CheckForUpdate();
                     if (update.CurrentlyInstalledVersion == null)
@@ -72,7 +79,7 @@ namespace BililiveRecorder.WPF
             }
             catch (Exception ex)
             {
-                logger.Error(ex, "检查更新时出错，如持续出错请联系开发者 rec@danmuji.org");
+                logger.Warn(ex, "检查更新时出错，如持续出错请联系开发者 rec@danmuji.org");
             }
 
             _ = Task.Run(async () => { await Task.Delay(TimeSpan.FromDays(1)); await RunCheckUpdate(); });

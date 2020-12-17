@@ -29,8 +29,12 @@
             <GroupBox Header="Cookie">
                 <StackPanel>
                     <TextBlock Text="请求API时使用此 Cookie"/>
-                    <TextBox Text="{Binding Cookie,Delay=500}" Width="250" HorizontalAlignment="Left"/>
+                    <TextBox Text="{Binding Cookie,UpdateSourceTrigger=PropertyChanged,Delay=1000}" Width="250" HorizontalAlignment="Left"/>
                 </StackPanel>
+            </GroupBox>
+            <GroupBox Header="弹幕录制">
+                <ui:NumberBox Minimum="0" Header="触发写硬盘所需弹幕个数" Description="单位: 个" SmallChange="1"
+                              Text="{Binding RecordDanmakuFlushInterval,UpdateSourceTrigger=PropertyChanged}"/>
             </GroupBox>
             <GroupBox Header="Timing">
                 <ui:SimpleStackPanel Spacing="10">
@@ -74,6 +78,18 @@
                         </ui:NumberBox.ToolTip>
                     </ui:NumberBox>
                 </ui:SimpleStackPanel>
+            </GroupBox>
+            <GroupBox Header="手动崩溃">
+                <Button Content="Crash EVERTHING !!1">
+                    <ui:FlyoutService.Flyout>
+                        <ui:Flyout>
+                            <StackPanel>
+                                <TextBlock Text="Are you sure about that?" Margin="0,0,0,12" />
+                                <Button Click="Crash_Click" Content="Yes" />
+                            </StackPanel>
+                        </ui:Flyout>
+                    </ui:FlyoutService.Flyout>
+                </Button>
             </GroupBox>
         </ui:SimpleStackPanel>
     </ScrollViewer>

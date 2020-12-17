@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 using BililiveRecorder.Core;
@@ -50,6 +51,18 @@ namespace BililiveRecorder.WPF.Controls
         private void Button_Clip_Click(object sender, RoutedEventArgs e)
         {
             (DataContext as IRecordedRoom)?.Clip();
+        }
+
+        private void MenuItem_OpenInBrowser_Click(object sender, RoutedEventArgs e)
+        {
+            if (DataContext is IRecordedRoom r && r is not null)
+            {
+                try
+                {
+                    Process.Start("https://live.bilibili.com/" + r.RoomId);
+                }
+                catch (Exception) { }
+            }
         }
     }
 }

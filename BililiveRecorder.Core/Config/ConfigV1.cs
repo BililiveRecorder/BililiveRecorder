@@ -123,6 +123,12 @@ namespace BililiveRecorder.Core.Config
         public bool RecordDanmakuGuard { get => _recordDanmakuGuard; set => SetField(ref _recordDanmakuGuard, value); }
 
         /// <summary>
+        /// 触发 <see cref="System.Xml.XmlWriter.Flush"/> 的弹幕个数
+        /// </summary>
+        [JsonProperty("record_danmaku_flush_interval")]
+        public uint RecordDanmakuFlushInterval { get => _recordDanmakuFlushInterval; set => SetField(ref _recordDanmakuFlushInterval, value); }
+
+        /// <summary>
         /// 替换api.live.bilibili.com服务器为其他反代，可以支持在云服务器上录制
         /// </summary>
         [JsonProperty("live_api_host")]
@@ -177,6 +183,7 @@ namespace BililiveRecorder.Core.Config
         private bool _recordDanmakuSuperChat = false;
         private bool _recordDanmakuGift = false;
         private bool _recordDanmakuGuard = false;
+        private uint _recordDanmakuFlushInterval = 20;
 
         private string _liveApiHost = "https://api.live.bilibili.com";
     }

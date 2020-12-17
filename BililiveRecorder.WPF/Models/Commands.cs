@@ -1,5 +1,6 @@
 using System;
 using System.Diagnostics;
+using System.Windows;
 using System.Windows.Input;
 using ModernWpf.Controls;
 
@@ -17,6 +18,11 @@ namespace BililiveRecorder.WPF.Models
         public static Commands OpenContentDialog { get; } = new Commands
         {
             ExecuteDelegate = async o => { try { await (o as ContentDialog)?.ShowAsync(); } catch (Exception) { } }
+        };
+
+        public static Commands Copy { get; } = new Commands
+        {
+            ExecuteDelegate = e => { try { if (e is string str) Clipboard.SetText(str); } catch (Exception) { } }
         };
 
         #endregion

@@ -17,6 +17,7 @@ namespace BililiveRecorder.WPF.MockData
             StreamerName = "Mock主播名Mock主播名Mock主播名Mock主播名";
             IsMonitoring = false;
             IsRecording = true;
+            IsStreaming = true;
             DownloadSpeedPersentage = 100d;
             DownloadSpeedMegaBitps = 2.45d;
         }
@@ -34,6 +35,10 @@ namespace BililiveRecorder.WPF.MockData
         public bool IsMonitoring { get; set; }
 
         public bool IsRecording { get; set; }
+
+        public bool IsDanmakuConnected { get; set; }
+
+        public bool IsStreaming { get; set; }
 
         public double DownloadSpeedPersentage { get; set; }
 

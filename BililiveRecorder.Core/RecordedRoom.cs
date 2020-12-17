@@ -24,6 +24,7 @@ namespace BililiveRecorder.Core
         private int _realRoomid;
         private string _streamerName;
         private string _title;
+        private bool _isStreaming;
 
         public int ShortRoomId
         {
@@ -69,6 +70,17 @@ namespace BililiveRecorder.Core
 
         public bool IsMonitoring => StreamMonitor.IsMonitoring;
         public bool IsRecording => !(StreamDownloadTask?.IsCompleted ?? true);
+        public bool IsDanmakuConnected => StreamMonitor.IsDanmakuConnected;
+        public bool IsStreaming
+        {
+            get => _isStreaming;
+            private set
+            {
+                if (value == _isStreaming) { return; }
+                _isStreaming = value;
+                TriggerPropertyChanged(nameof(IsStreaming));
+            }
+        }
 
         private readonly IBasicDanmakuWriter basicDanmakuWriter;
         private readonly Func<IFlvStreamProcessor> newIFlvStreamProcessor;
@@ -135,12 +147,36 @@ namespace BililiveRecorder.Core
             StreamMonitor.RoomInfoUpdated += StreamMonitor_RoomInfoUpdated;
             StreamMonitor.StreamStarted += StreamMonitor_StreamStarted;
             StreamMonitor.ReceivedDanmaku += StreamMonitor_ReceivedDanmaku;
+            StreamMonitor.PropertyChanged += StreamMonitor_PropertyChanged;
 
             StreamMonitor.FetchRoomInfoAsync();
         }
 
+        private void StreamMonitor_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            switch (e.PropertyName)
+            {
+                case nameof(IStreamMonitor.IsDanmakuConnected):
+                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(IsDanmakuConnected)));
+                    break;
+                default:
+                    break;
+            }
+        }
+
         private void StreamMonitor_ReceivedDanmaku(object sender, ReceivedDanmakuArgs e)
         {
+            switch (e.Danmaku.MsgType)
+            {
+                case MsgTypeEnum.LiveStart:
+                    IsStreaming = true;
+                    break;
+                case MsgTypeEnum.LiveEnd:
+                    IsStreaming = false;
+                    break;
+                default:
+                    break;
+            }
             basicDanmakuWriter.Write(e.Danmaku);
         }
 
@@ -150,6 +186,7 @@ namespace BililiveRecorder.Core
             ShortRoomId = e.RoomInfo.ShortRoomId;
             StreamerName = e.RoomInfo.UserName;
             Title = e.RoomInfo.Title;
+            IsStreaming = e.RoomInfo.IsStreaming;
         }
 
         public bool Start()
@@ -232,7 +269,7 @@ namespace BililiveRecorder.Core
             }
             catch (Exception ex)
             {
-                logger.Log(RoomId, LogLevel.Error, "在尝试停止录制时发生错误，请检查网络连接是否稳定", ex);
+                logger.Log(RoomId, LogLevel.Warn, "在尝试停止录制时发生错误，请检查网络连接是否稳定", ex);
             }
             finally
             {
@@ -351,7 +388,7 @@ namespace BililiveRecorder.Core
             catch (Exception ex)
             {
                 _CleanupFlvRequest();
-                logger.Log(RoomId, LogLevel.Warn, "启动直播流下载出错。" + (_retry ? "将重试启动。" : ""), ex);
+                logger.Log(RoomId, LogLevel.Error, "启动直播流下载出错。" + (_retry ? "将重试启动。" : ""), ex);
                 if (_retry)
                 {
                     StreamMonitor.Check(TriggerType.HttpApiRecheck, (int)_config.TimingStreamRetry);
@@ -458,7 +495,7 @@ namespace BililiveRecorder.Core
             if (_config.RecordDanmaku)
             {
                 var xmlpath = Path.ChangeExtension(path, "xml");
-                basicDanmakuWriter.EnableWithPath(xmlpath);
+                basicDanmakuWriter.EnableWithPath(xmlpath, this);
             }
 
             return path;

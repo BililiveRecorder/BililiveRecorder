@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
@@ -27,9 +27,8 @@
   <ItemGroup>
     <PackageReference Include="Autofac" Version="4.9.4" />
     <PackageReference Include="CommandLineParser" Version="2.4.3" />
-    <PackageReference Include="NLog" Version="4.5.10" />
-    <PackageReference Include="NLog.Config" Version="4.5.10" />
-    <PackageReference Include="NLog.Schema" Version="4.5.10" />
+    <PackageReference Include="NLog" Version="4.7.6" />
+    <PackageReference Include="NLog.Config" Version="4.7.6" />
   </ItemGroup>
 
   <ItemGroup>

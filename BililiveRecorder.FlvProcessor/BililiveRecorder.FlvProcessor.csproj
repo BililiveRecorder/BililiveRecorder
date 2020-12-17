@@ -22,7 +22,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Autofac" Version="4.9.4" />
-    <PackageReference Include="NLog" Version="4.5.10" />
+    <PackageReference Include="NLog" Version="4.7.6" />
   </ItemGroup>
   <PropertyGroup>
     <PreBuildEvent>cd $(SolutionDir)

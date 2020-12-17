@@ -1,4 +1,4 @@
-﻿using NLog;
+using NLog;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -82,8 +82,6 @@ namespace BililiveRecorder.FlvProcessor
                     fs.Close();
                 }
                 Tags.Clear();
-
-
             }
             catch (Exception ex)
             {
