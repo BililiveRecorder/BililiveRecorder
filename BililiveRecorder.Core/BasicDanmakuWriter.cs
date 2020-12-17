@@ -19,6 +19,7 @@ namespace BililiveRecorder.Core
 
         private XmlWriter xmlWriter = null;
         private DateTimeOffset offset = DateTimeOffset.UtcNow;
+        private uint writeCount = 0;
         private readonly ConfigV1 config;
 
         public BasicDanmakuWriter(ConfigV1 config)
@@ -48,6 +49,7 @@ namespace BililiveRecorder.Core
                 xmlWriter = XmlWriter.Create(stream, xmlWriterSettings);
                 WriteStartDocument(xmlWriter, recordedRoom);
                 offset = DateTimeOffset.UtcNow;
+                writeCount = 0;
             }
             finally
             {
@@ -84,6 +86,7 @@ namespace BililiveRecorder.Core
             {
                 if (xmlWriter != null)
                 {
+                    var write = true;
                     switch (danmakuModel.MsgType)
                     {
                         case MsgTypeEnum.Comment:
@@ -147,7 +150,14 @@ namespace BililiveRecorder.Core
                             }
                             break;
                         default:
+                            write = false;
                             break;
+                    }
+
+                    if (write && writeCount++ >= config.RecordDanmakuFlushInterval)
+                    {
+                        xmlWriter.Flush();
+                        writeCount = 0;
                     }
                 }
             }

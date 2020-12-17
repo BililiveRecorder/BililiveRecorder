@@ -25,7 +25,7 @@
             <SolidColorBrush Color="#8BC34A"/>
         </c:BoolToValueConverter.TrueValue>
     </c:BoolToValueConverter>
-    <c:BoolToValueConverter x:Key="BooleanToDanmakuConnectedTooltipConverter" TrueValue="连接成功 实时接收房间数据中" FalseValue="弹幕连接已断开"/>
+    <c:BoolToValueConverter x:Key="BooleanToDanmakuConnectedTooltipConverter" TrueValue="已连接 实时接收房间数据中" FalseValue="连接被断开"/>
     <c:BooleanInverterConverter x:Key="BooleanInverterConverter"/>
     <c:ClipEnabledToBooleanConverter x:Key="ClipEnabledToBooleanConverter"/>
     <c:EnumToBooleanConverter x:Key="EnumToBooleanConverter"/>
