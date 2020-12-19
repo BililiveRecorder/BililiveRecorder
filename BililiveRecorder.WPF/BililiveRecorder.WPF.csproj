@@ -29,7 +29,6 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <AllowedReferenceRelatedFileExtensions>-</AllowedReferenceRelatedFileExtensions>
     <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>full</DebugType>
     <Optimize>true</Optimize>

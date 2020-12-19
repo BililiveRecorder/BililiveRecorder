@@ -281,17 +281,24 @@ namespace BililiveRecorder.Core
         {
             if (IsRecording)
             {
-                logger.Log(RoomId, LogLevel.Debug, "已经在录制中了");
+                // TODO: 这里逻辑可能有问题，StartupTask 会变成当前这个已经结束的
+                logger.Log(RoomId, LogLevel.Warn, "已经在录制中了");
                 return;
             }
-
-            // HttpWebRequest request = null;
 
             cancellationTokenSource = new CancellationTokenSource();
             var token = cancellationTokenSource.Token;
             try
             {
-                string flv_path = await BililiveAPI.GetPlayUrlAsync(RoomId);
+                var flv_path = await BililiveAPI.GetPlayUrlAsync(RoomId);
+                if (string.IsNullOrWhiteSpace(flv_path))
+                {
+                    if (_retry)
+                    {
+                        StreamMonitor.Check(TriggerType.HttpApiRecheck, (int)_config.TimingStreamRetry);
+                    }
+                    return;
+                }
 
             unwrap_redir:
 

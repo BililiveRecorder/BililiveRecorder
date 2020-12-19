@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Diagnostics;
 using System.Linq;
+using System.Runtime.Serialization;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
@@ -11,6 +13,7 @@ using System.Windows.Controls;
 using BililiveRecorder.Core;
 using BililiveRecorder.WPF.Controls;
 using ModernWpf.Controls;
+using NLog;
 
 namespace BililiveRecorder.WPF.Pages
 {
@@ -191,6 +194,8 @@ namespace BililiveRecorder.WPF.Pages
 
     internal class SortedItemsSourceView : IList, IReadOnlyList<IRecordedRoom>, IKeyIndexMapping, INotifyCollectionChanged
     {
+        private static Logger logger = LogManager.GetCurrentClassLogger();
+
         private ICollection<IRecordedRoom> _data;
         private SortedBy sortedBy;
 
@@ -235,9 +240,12 @@ namespace BililiveRecorder.WPF.Pages
 
         private void Sort()
         {
+            logger.Debug("Sort called with {sortedBy} and {count} rooms.", SortedBy, Data?.Count ?? -1);
+
             if (Data is null)
             {
                 Sorted = NullRoom.ToList();
+                logger.Debug("Sort returned NullRoom.");
             }
             else
             {
@@ -247,7 +255,41 @@ namespace BililiveRecorder.WPF.Pages
                     SortedBy.Status => Data.OrderByDescending(x => x.IsRecording).ThenByDescending(x => x.IsMonitoring),
                     _ => Data,
                 };
-                Sorted = orderedData.Concat(NullRoom).ToList();
+                var result = orderedData.Concat(NullRoom).ToList();
+                logger.Debug("Sorted with {count} items.", result.Count);
+
+                { // 崩溃问题信息收集。。虽然不觉得是这里的问题
+                    var dup = result.GroupBy(x => x?.Guid ?? Guid.Empty).Where(x => x.Count() != 1);
+                    if (dup.Any())
+                    {
+                        var sb = new StringBuilder("排序调试信息\n重复:\n");
+                        foreach (var item in dup)
+                        {
+                            sb.Append("-Guid: ");
+                            sb.AppendLine(item.Key.ToString());
+                            foreach (var room in item)
+                            {
+                                sb.Append("RoomId: ");
+                                sb.AppendLine(room?.RoomId.ToString());
+                            }
+                        }
+                        sb.Append("原始:");
+                        foreach (var room in result)
+                        {
+                            sb.Append("-Guid: ");
+                            sb.AppendLine((room?.Guid ?? Guid.Empty).ToString());
+                            sb.Append("RoomId: ");
+                            sb.AppendLine(room?.RoomId.ToString());
+                        }
+                        logger.Debug(sb.ToString());
+
+                        // trigger sentry
+                        logger.Error(new SortedItemsSourceViewException(), "排序房间时发生了错误");
+                        return;
+                    }
+                }
+
+                Sorted = result;
             }
 
             // Instead of tossing out existing elements and re-creating them,
@@ -356,7 +398,13 @@ namespace BililiveRecorder.WPF.Pages
         }
 
         #endregion
+
+        public class SortedItemsSourceViewException : Exception
+        {
+            public SortedItemsSourceViewException() { }
+            public SortedItemsSourceViewException(string message) : base(message) { }
+            public SortedItemsSourceViewException(string message, Exception innerException) : base(message, innerException) { }
+            protected SortedItemsSourceViewException(SerializationInfo info, StreamingContext context) : base(info, context) { }
+        }
     }
-
-
 }

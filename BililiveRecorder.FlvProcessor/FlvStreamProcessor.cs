@@ -1,4 +1,4 @@
-﻿using NLog;
+using NLog;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -383,6 +383,10 @@ namespace BililiveRecorder.FlvProcessor
                 // 11 for 1st tag header
                 _targetFile?.Seek(13 + 11, SeekOrigin.Begin);
                 _targetFile?.Write(metadata, 0, metadata.Length);
+            }
+            catch (IOException ex)
+            {
+                logger.Warn(ex, "保存录制文件时出错");
             }
             catch (Exception ex)
             {

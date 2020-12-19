@@ -34,6 +34,19 @@ namespace BililiveRecorder.WPF
                 o.AddExceptionFilterForType<System.Net.Http.HttpRequestException>();
             }))
             {
+                SentrySdk.ConfigureScope(s =>
+                {
+                    try
+                    {
+                        var path = Path.GetFullPath(Path.Combine(Path.GetDirectoryName(typeof(Program).Assembly.Location), "..", "packages", ".betaId"));
+                        if (!File.Exists(path)) return;
+                        var content = File.ReadAllText(path);
+                        if (Guid.TryParse(content, out var id))
+                            s.User = new Sentry.Protocol.User { Id = id.ToString() };
+                    }
+                    catch (Exception) { }
+                });
+
                 var app = new App();
                 app.InitializeComponent();
                 app.DispatcherUnhandledException += App_DispatcherUnhandledException;
