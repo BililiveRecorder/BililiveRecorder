@@ -15,6 +15,7 @@ using BililiveRecorder.WPF.Models;
 using CommandLine;
 using ModernWpf.Controls;
 using ModernWpf.Media.Animation;
+using NLog;
 using Path = System.IO.Path;
 
 namespace BililiveRecorder.WPF.Pages
@@ -24,6 +25,8 @@ namespace BililiveRecorder.WPF.Pages
     /// </summary>
     public partial class RootPage : UserControl
     {
+        private static readonly Logger logger = LogManager.GetCurrentClassLogger();
+
         private readonly Dictionary<string, Type> PageMap = new Dictionary<string, Type>();
         private readonly string lastdir_path = Path.Combine(Path.GetDirectoryName(typeof(RootPage).Assembly.Location), "lastdir.txt");
         private readonly NavigationTransitionInfo transitionInfo = new DrillInNavigationTransitionInfo();
@@ -68,104 +71,135 @@ namespace BililiveRecorder.WPF.Pages
 
         private async void RootPage_Loaded(object sender, RoutedEventArgs e)
         {
-            bool first_time = true;
-
             var recorder = RootScope.Resolve<IRecorder>();
+            var first_time = true;
             var error = string.Empty;
             string path;
             while (true)
             {
-                CommandLineOption commandLineOption = null;
-                if (first_time)
-                {
-                    first_time = false;
-                    Parser.Default
-                        .ParseArguments<CommandLineOption>(Environment.GetCommandLineArgs())
-                        .WithParsed(x => commandLineOption = x);
-
-                    if (!string.IsNullOrWhiteSpace(commandLineOption?.WorkDirectory))
-                    {
-                        path = Path.GetFullPath(commandLineOption.WorkDirectory);
-                        goto check_path;
-                    }
-                }
-
-                string lastdir = string.Empty;
                 try
                 {
-                    if (File.Exists(lastdir_path))
+                    CommandLineOption commandLineOption = null;
+                    if (first_time)
                     {
-                        lastdir = File.ReadAllText(lastdir_path).Replace("\r", "").Replace("\n", "").Trim();
-                    }
-                }
-                catch (Exception) { }
-                var w = new WorkDirectorySelectorDialog
-                {
-                    Error = error,
-                    Path = lastdir
-                };
-                var result = await w.ShowAsync();
-                if (result != ContentDialogResult.Primary)
-                {
-                    (Application.Current.MainWindow as NewMainWindow).CloseWithoutConfirmAction();
-                    return;
-                }
-
-                path = Path.GetFullPath(w.Path);
-            check_path:
-                var config = Path.Combine(path, "config.json");
-
-                if (!Directory.Exists(path))
-                {
-                    error = "目录不存在";
-                    continue;
-                }
-                else if (!Directory.EnumerateFiles(path).Any())
-                {
-                    // 可用的空文件夹
-                }
-                else if (!File.Exists(config))
-                {
-                    error = "目录已有其他文件";
-                    continue;
-                }
-
-                try
-                {
-                    if (string.IsNullOrWhiteSpace(commandLineOption?.WorkDirectory))
-                    {
-                        File.WriteAllText(lastdir_path, path);
-                    }
-                }
-                catch (Exception) { }
-
-                // 检查已经在同目录运行的其他进程
-                if (SingleInstance.CheckMutex(path))
-                {
-                    if (recorder.Initialize(path))
-                    {
-                        Model.Recorder = recorder;
-
-                        _ = Task.Run(async () =>
+                        // while 循环第一次运行时检查命令行参数
+                        try
                         {
-                            await Task.Delay(100);
-                            _ = Dispatcher.BeginInvoke(DispatcherPriority.Normal, method: new Action(() =>
+                            first_time = false;
+                            Parser.Default
+                                .ParseArguments<CommandLineOption>(Environment.GetCommandLineArgs())
+                                .WithParsed(x => commandLineOption = x);
+
+                            if (!string.IsNullOrWhiteSpace(commandLineOption?.WorkDirectory))
                             {
-                                RoomListPageNavigationViewItem.IsSelected = true;
-                            }));
-                        });
-                        break;
+                                // 如果有参数直接跳到检查路径
+                                path = Path.GetFullPath(commandLineOption.WorkDirectory);
+                            }
+                            else
+                            {
+                                // 无命令行参数
+                                continue;
+                            }
+                        }
+                        catch (Exception)
+                        {
+                            // 出错直接重新来，不显示 error
+                            continue;
+                        }
                     }
                     else
                     {
-                        error = "配置文件加载失败";
+                        // 尝试读取上次选择的路径
+                        var lastdir = string.Empty;
+                        try
+                        {
+                            if (File.Exists(lastdir_path))
+                                lastdir = File.ReadAllText(lastdir_path).Replace("\r", "").Replace("\n", "").Trim();
+                        }
+                        catch (Exception) { }
+
+                        // 显示路径选择界面
+                        var dialog = new WorkDirectorySelectorDialog
+                        {
+                            Error = error,
+                            Path = lastdir
+                        };
+                        
+                        if (await dialog.ShowAsync() != ContentDialogResult.Primary)
+                        {
+                            (Application.Current.MainWindow as NewMainWindow).CloseWithoutConfirmAction();
+                            return;
+                        }
+
+                        try
+                        { path = Path.GetFullPath(dialog.Path); }
+                        catch (Exception)
+                        {
+                            error = "不支持该路径";
+                            continue;
+                        }
+                    }
+
+                    var config = Path.Combine(path, "config.json");
+
+                    if (!Directory.Exists(path))
+                    {
+                        error = "目录不存在";
                         continue;
                     }
+                    else if (!Directory.EnumerateFiles(path).Any())
+                    {
+                        // 可用的空文件夹
+                    }
+                    else if (!File.Exists(config))
+                    {
+                        error = "目录已有其他文件";
+                        continue;
+                    }
+
+                    // 已经选定工作目录
+
+                    // 如果不是从命令行参数传入的路径，写入 lastdir_path 记录
+                    try
+                    { if (string.IsNullOrWhiteSpace(commandLineOption?.WorkDirectory)) File.WriteAllText(lastdir_path, path); }
+                    catch (Exception) { }
+
+                    // 检查已经在同目录运行的其他进程
+                    if (SingleInstance.CheckMutex(path))
+                    {
+                        // 无已经在同目录运行的进程
+                        if (recorder.Initialize(path))
+                        {
+                            Model.Recorder = recorder;
+
+                            _ = Task.Run(async () =>
+                            {
+                                await Task.Delay(100);
+                                _ = Dispatcher.BeginInvoke(DispatcherPriority.Normal, method: new Action(() =>
+                                {
+                                    RoomListPageNavigationViewItem.IsSelected = true;
+                                }));
+                            });
+                            break;
+                        }
+                        else
+                        {
+                            error = "配置文件加载失败";
+                            continue;
+                        }
+                    }
+                    else
+                    {
+                        // 有已经在其他目录运行的进程，已经通知该进程，本进程退出
+                        (Application.Current.MainWindow as NewMainWindow).CloseWithoutConfirmAction();
+                        return;
+                    }
                 }
-                else
+                catch (Exception ex)
                 {
-                    (Application.Current.MainWindow as NewMainWindow).CloseWithoutConfirmAction();
-                    return;
+                    error = "发生了未知错误";
+                    logger.Error(ex, "选择工作目录时发生了未知错误");
+                    continue;
                 }
             }
         }

@@ -23,16 +23,16 @@
             <TextBlock Text="设置" Style="{StaticResource TitleTextBlockStyle}" FontFamily="Microsoft Yahei" Margin="0,10"/>
             <GroupBox Header="弹幕录制">
                 <StackPanel>
-                    <ui:ToggleSwitch IsOn="{Binding RecordDanmaku}" Name="RecordDanmakuCheckbox" OnContent="录播时保存弹幕" OffContent="录播时不保存弹幕"/>
+                    <ui:ToggleSwitch IsOn="{Binding RecordDanmaku}" Name="RecordDanmakuCheckbox" OnContent="保存弹幕&#160;&#160;（当前为保存）" OffContent="不保存弹幕（当前为不保存）"/>
                     <StackPanel Margin="0,7,0,0" Visibility="{Binding ElementName=RecordDanmakuCheckbox,Path=IsOn,Converter={StaticResource BooleanToVisibilityCollapsedConverter}}">
-                        <ui:ToggleSwitch IsEnabled="{Binding RecordDanmaku}" IsOn="{Binding RecordDanmakuRaw}" 
-                                         OnContent="同时保存 弹幕原始数据" OffContent="不保存 弹幕原始数据"/>
-                        <ui:ToggleSwitch IsEnabled="{Binding RecordDanmaku}" IsOn="{Binding RecordDanmakuSuperChat}" 
+                        <ui:ToggleSwitch IsEnabled="{Binding RecordDanmaku}" IsOn="{Binding RecordDanmakuSuperChat}"
                                          OnContent="同时保存 SuperChat" OffContent="不保存 SuperChat"/>
-                        <ui:ToggleSwitch IsEnabled="{Binding RecordDanmaku}" IsOn="{Binding RecordDanmakuGift}" 
-                                         OnContent="同时保存 送礼信息" OffContent="不保存 送礼信息"/>
                         <ui:ToggleSwitch IsEnabled="{Binding RecordDanmaku}" IsOn="{Binding RecordDanmakuGuard}"
                                          OnContent="同时保存 舰长购买" OffContent="不保存 舰长购买"/>
+                        <ui:ToggleSwitch IsEnabled="{Binding RecordDanmaku}" IsOn="{Binding RecordDanmakuGift}"
+                                         OnContent="同时保存 送礼信息" OffContent="不保存 送礼信息"/>
+                        <ui:ToggleSwitch IsEnabled="{Binding RecordDanmaku}" IsOn="{Binding RecordDanmakuRaw}"
+                                         OnContent="同时保存 弹幕原始数据" OffContent="不保存 弹幕原始数据"/>
                     </StackPanel>
                 </StackPanel>
             </GroupBox>

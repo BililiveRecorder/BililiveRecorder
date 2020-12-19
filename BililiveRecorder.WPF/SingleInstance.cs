@@ -53,14 +53,14 @@ namespace BililiveRecorder.WPF
 
         public static void Cleanup()
         {
-            singleInstanceMutex?.Close();
-            singleInstanceMutex = null;
-
             if (channel != null)
             {
                 ChannelServices.UnregisterChannel(channel);
                 channel = null;
             }
+
+            singleInstanceMutex?.Close();
+            singleInstanceMutex = null;
         }
 
         private static void ActivateFirstInstanceCallback() => NotificationReceived?.Invoke(null, EventArgs.Empty);

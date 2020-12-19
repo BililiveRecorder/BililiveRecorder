@@ -83,6 +83,10 @@ namespace BililiveRecorder.FlvProcessor
                 }
                 Tags.Clear();
             }
+            catch (IOException ex)
+            {
+                logger.Warn(ex, "保存剪辑文件时出错");
+            }
             catch (Exception ex)
             {
                 logger.Error(ex, "保存剪辑文件时出错");

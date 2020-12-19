@@ -18,8 +18,10 @@ namespace BililiveRecorder.WPF
 
             Title = "B站录播姬 " + BuildInfo.Version + " " + BuildInfo.HeadShaShort;
 
-            SingleInstance.NotificationReceived += (sender, e) => SuperActivateAction();
+            SingleInstance.NotificationReceived += SingleInstance_NotificationReceived;
         }
+
+        private void SingleInstance_NotificationReceived(object sender, EventArgs e) => SuperActivateAction();
 
         public event EventHandler NativeBeforeWindowClose;
 
@@ -33,12 +35,17 @@ namespace BililiveRecorder.WPF
 
         internal void SuperActivateAction()
         {
-            Show();
-            WindowState = WindowState.Normal;
-            Topmost = true;
-            Activate();
-            Topmost = false;
-            Focus();
+            try
+            {
+                Show();
+                WindowState = WindowState.Normal;
+                Topmost = true;
+                Activate();
+                Topmost = false;
+                Focus();
+            }
+            catch (Exception)
+            { }
         }
 
         private void Window_StateChanged(object sender, EventArgs e)
@@ -81,6 +88,7 @@ namespace BililiveRecorder.WPF
             }
             else
             {
+                SingleInstance.NotificationReceived -= SingleInstance_NotificationReceived;
                 NativeBeforeWindowClose?.Invoke(this, EventArgs.Empty);
                 return;
             }

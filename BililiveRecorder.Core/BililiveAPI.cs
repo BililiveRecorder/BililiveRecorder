@@ -120,7 +120,7 @@ namespace BililiveRecorder.Core
                     return distinct[random.Next(distinct.Length)];
                 }
             }
-            throw new Exception("没有直播播放地址");
+            return null;
         }
 
         /// <summary>
