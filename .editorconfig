@@ -5,12 +5,18 @@ root = true
 
 # all files
 [*]
+
 indent_style = space
 indent_size = 4
 charset = utf-8
 insert_final_newline = true
 
 [NLog.{Debug,Release}.config]
+
+indent_size = 2
+
+[.csproj]
+
 indent_size = 2
 
 [*.cs]
@@ -41,8 +47,8 @@ csharp_new_line_before_finally = true
 csharp_new_line_before_members_in_anonymous_types = true
 #require members of object intializers to be on separate lines
 csharp_new_line_before_members_in_object_initializers = true
-#require braces to be on a new line for anonymous_types, lambdas, properties, accessors, methods, object_collection_array_initializers, control_blocks, and types (also known as "Allman" style)
-csharp_new_line_before_open_brace = anonymous_types, lambdas, properties, accessors, methods, object_collection_array_initializers, control_blocks, types
+#require braces to be on a new line for methods and types (also known as "Allman" style)
+csharp_new_line_before_open_brace = all
 
 #Formatting - organize using options
 
@@ -80,7 +86,7 @@ csharp_preserve_single_line_statements = true
 #Style - Code block preferences
 
 #prefer curly braces even for one line of code
-csharp_prefer_braces = true:suggestion
+csharp_prefer_braces = false:suggestion
 
 #Style - expression bodied member options
 
@@ -90,8 +96,8 @@ csharp_style_expression_bodied_accessors = true:suggestion
 csharp_style_expression_bodied_constructors = false:suggestion
 #prefer expression-bodied members for indexers
 csharp_style_expression_bodied_indexers = true:suggestion
-#prefer block bodies for methods
-csharp_style_expression_bodied_methods = false:suggestion
+#prefer expression-bodied members for methods
+csharp_style_expression_bodied_methods = true:suggestion
 #prefer expression-bodied members for properties
 csharp_style_expression_bodied_properties = true:suggestion
 
@@ -149,11 +155,11 @@ csharp_style_pattern_matching_over_as_with_null_check = true:suggestion
 
 #Style - qualification options
 
-#prefer events not to be prefaced with this. or Me. in Visual Basic
-dotnet_style_qualification_for_event = false:suggestion
-#prefer fields not to be prefaced with this. or Me. in Visual Basic
-dotnet_style_qualification_for_field = false:suggestion
-#prefer methods not to be prefaced with this. or Me. in Visual Basic
-dotnet_style_qualification_for_method = false:suggestion
-#prefer properties not to be prefaced with this. or Me. in Visual Basic
-dotnet_style_qualification_for_property = false:suggestion
+#prefer events to be prefaced with this. in C# or Me. in Visual Basic
+dotnet_style_qualification_for_event = true:suggestion
+#prefer fields to be prefaced with this. in C# or Me. in Visual Basic
+dotnet_style_qualification_for_field = true:suggestion
+#prefer methods to be prefaced with this. in C# or Me. in Visual Basic
+dotnet_style_qualification_for_method = true:suggestion
+#prefer properties to be prefaced with this. in C# or Me. in Visual Basic
+dotnet_style_qualification_for_property = true:suggestion

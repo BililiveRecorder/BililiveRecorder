@@ -1,5 +1,6 @@
 using System.Net.Sockets;
 using Autofac;
+using BililiveRecorder.Core.Callback;
 using BililiveRecorder.Core.Config;
 
 namespace BililiveRecorder.Core
@@ -15,6 +16,7 @@ namespace BililiveRecorder.Core
         {
             builder.RegisterType<ConfigV1>().AsSelf().InstancePerMatchingLifetimeScope("recorder_root");
             builder.RegisterType<BililiveAPI>().AsSelf().InstancePerMatchingLifetimeScope("recorder_root");
+            builder.RegisterType<BasicWebhook>().AsSelf().InstancePerMatchingLifetimeScope("recorder_root");
             builder.RegisterType<TcpClient>().AsSelf().ExternallyOwned();
             builder.RegisterType<StreamMonitor>().As<IStreamMonitor>().ExternallyOwned();
             builder.RegisterType<RecordedRoom>().As<IRecordedRoom>().ExternallyOwned();

@@ -1,8 +1,10 @@
 using System;
 using System.ComponentModel;
 using BililiveRecorder.Core;
+using BililiveRecorder.Core.Callback;
 using BililiveRecorder.FlvProcessor;
 
+#nullable enable
 namespace BililiveRecorder.WPF.MockData
 {
 #if DEBUG
@@ -28,9 +30,11 @@ namespace BililiveRecorder.WPF.MockData
 
         public string StreamerName { get; set; }
 
-        public IStreamMonitor StreamMonitor { get; set; }
+        public string Title { get; set; } = string.Empty;
 
-        public IFlvStreamProcessor Processor { get; set; }
+        public IStreamMonitor StreamMonitor { get; set; } = null!;
+
+        public IFlvStreamProcessor? Processor { get; set; }
 
         public bool IsMonitoring { get; set; }
 
@@ -48,7 +52,9 @@ namespace BililiveRecorder.WPF.MockData
 
         public Guid Guid { get; } = Guid.NewGuid();
 
-        public event PropertyChangedEventHandler PropertyChanged;
+        public event PropertyChangedEventHandler? PropertyChanged;
+
+        public event EventHandler<RecordEndData>? RecordEnded;
 
         public void Clip()
         {

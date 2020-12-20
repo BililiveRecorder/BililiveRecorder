@@ -1,3 +1,4 @@
+using BililiveRecorder.Core.Callback;
 using BililiveRecorder.Core.Config;
 using BililiveRecorder.FlvProcessor;
 using NLog;
@@ -56,7 +57,6 @@ namespace BililiveRecorder.Core
                 TriggerPropertyChanged(nameof(StreamerName));
             }
         }
-
         public string Title
         {
             get => _title;
@@ -81,6 +81,9 @@ namespace BililiveRecorder.Core
                 TriggerPropertyChanged(nameof(IsStreaming));
             }
         }
+
+        private RecordEndData recordEndData;
+        public event EventHandler<RecordEndData> RecordEnded;
 
         private readonly IBasicDanmakuWriter basicDanmakuWriter;
         private readonly Func<IFlvStreamProcessor> newIFlvStreamProcessor;
@@ -191,10 +194,7 @@ namespace BililiveRecorder.Core
 
         public bool Start()
         {
-            if (disposedValue)
-            {
-                throw new ObjectDisposedException(nameof(RecordedRoom));
-            }
+            if (disposedValue) throw new ObjectDisposedException(nameof(RecordedRoom));
 
             var r = StreamMonitor.Start();
             TriggerPropertyChanged(nameof(IsMonitoring));
@@ -203,10 +203,7 @@ namespace BililiveRecorder.Core
 
         public void Stop()
         {
-            if (disposedValue)
-            {
-                throw new ObjectDisposedException(nameof(RecordedRoom));
-            }
+            if (disposedValue) throw new ObjectDisposedException(nameof(RecordedRoom));
 
             StreamMonitor.Stop();
             TriggerPropertyChanged(nameof(IsMonitoring));
@@ -214,41 +211,26 @@ namespace BililiveRecorder.Core
 
         public void RefreshRoomInfo()
         {
-            if (disposedValue)
-            {
-                throw new ObjectDisposedException(nameof(RecordedRoom));
-            }
-
+            if (disposedValue) throw new ObjectDisposedException(nameof(RecordedRoom));
             StreamMonitor.FetchRoomInfoAsync();
         }
 
         private void StreamMonitor_StreamStarted(object sender, StreamStartedArgs e)
         {
             lock (StartupTaskLock)
-            {
                 if (!IsRecording && (StartupTask?.IsCompleted ?? true))
-                {
                     StartupTask = _StartRecordAsync();
-                }
-            }
         }
 
         public void StartRecord()
         {
-            if (disposedValue)
-            {
-                throw new ObjectDisposedException(nameof(RecordedRoom));
-            }
-
+            if (disposedValue) throw new ObjectDisposedException(nameof(RecordedRoom));
             StreamMonitor.Check(TriggerType.Manual);
         }
 
         public void StopRecord()
         {
-            if (disposedValue)
-            {
-                throw new ObjectDisposedException(nameof(RecordedRoom));
-            }
+            if (disposedValue) throw new ObjectDisposedException(nameof(RecordedRoom));
 
             _retry = false;
             try
@@ -347,6 +329,16 @@ namespace BililiveRecorder.Core
                     Processor.ClipLengthPast = _config.ClipLengthPast;
                     Processor.CuttingNumber = _config.CuttingNumber;
                     Processor.StreamFinalized += (sender, e) => { basicDanmakuWriter.Disable(); };
+                    Processor.FileFinalized += (sender, size) =>
+                    {
+                        if (recordEndData is null) return;
+                        var data = recordEndData;
+                        recordEndData = null;
+
+                        data.EndRecordTime = DateTimeOffset.Now;
+                        data.FileSize = size;
+                        RecordEnded?.Invoke(this, data);
+                    };
                     Processor.OnMetaData += (sender, e) =>
                     {
                         e.Metadata["BililiveRecorder"] = new Dictionary<string, object>()
@@ -484,40 +476,43 @@ namespace BililiveRecorder.Core
         }
 
         // Called by API or GUI
-        public void Clip()
-        {
-            Processor?.Clip();
-        }
+        public void Clip() => Processor?.Clip();
 
-        public void Shutdown()
-        {
-            Dispose(true);
-        }
+        public void Shutdown() => Dispose(true);
 
-        private string GetStreamFilePath()
+        private (string fullPath, string relativePath) GetStreamFilePath()
         {
-            string path = FormatFilename(_config.RecordFilenameFormat);
+            var path = FormatFilename(_config.RecordFilenameFormat);
 
             // 有点脏的写法，不过凑合吧
             if (_config.RecordDanmaku)
             {
-                var xmlpath = Path.ChangeExtension(path, "xml");
+                var xmlpath = Path.ChangeExtension(path.fullPath, "xml");
                 basicDanmakuWriter.EnableWithPath(xmlpath, this);
             }
+
+            recordEndData = new RecordEndData
+            {
+                RoomId = RoomId,
+                Title = Title,
+                Name = StreamerName,
+                StartRecordTime = DateTimeOffset.Now,
+                RelativePath = path.relativePath,
+            };
 
             return path;
         }
 
-        private string GetClipFilePath() => FormatFilename(_config.ClipFilenameFormat);
+        private string GetClipFilePath() => FormatFilename(_config.ClipFilenameFormat).fullPath;
 
-        private string FormatFilename(string formatString)
+        private (string fullPath, string relativePath) FormatFilename(string formatString)
         {
             DateTime now = DateTime.Now;
             string date = now.ToString("yyyyMMdd");
             string time = now.ToString("HHmmss");
             string randomStr = random.Next(100, 999).ToString();
 
-            var filename = formatString
+            var relativePath = formatString
                 .Replace(@"{date}", date)
                 .Replace(@"{time}", time)
                 .Replace(@"{random}", randomStr)
@@ -525,26 +520,28 @@ namespace BililiveRecorder.Core
                 .Replace(@"{title}", Title.RemoveInvalidFileName())
                 .Replace(@"{name}", StreamerName.RemoveInvalidFileName());
 
-            if (!filename.EndsWith(".flv", StringComparison.OrdinalIgnoreCase))
-                filename += ".flv";
+            if (!relativePath.EndsWith(".flv", StringComparison.OrdinalIgnoreCase))
+                relativePath += ".flv";
 
-            filename = filename.RemoveInvalidFileName(ignore_slash: true);
-            filename = Path.Combine(_config.WorkDirectory, filename);
-            filename = Path.GetFullPath(filename);
+            relativePath = relativePath.RemoveInvalidFileName(ignore_slash: true);
+            var fullPath = Path.Combine(_config.WorkDirectory, relativePath);
+            fullPath = Path.GetFullPath(fullPath);
 
-            if (!CheckPath(_config.WorkDirectory, Path.GetDirectoryName(filename)))
+            if (!CheckPath(_config.WorkDirectory, Path.GetDirectoryName(fullPath)))
             {
                 logger.Log(RoomId, LogLevel.Warn, "录制文件位置超出允许范围，请检查设置。将写入到默认路径。");
-                filename = Path.Combine(_config.WorkDirectory, RoomId.ToString(), $"{RoomId}-{date}-{time}-{randomStr}.flv");
+                relativePath = Path.Combine(RoomId.ToString(), $"{RoomId}-{date}-{time}-{randomStr}.flv");
+                fullPath = Path.Combine(_config.WorkDirectory, relativePath);
             }
 
-            if (new FileInfo(filename).Exists)
+            if (new FileInfo(relativePath).Exists)
             {
                 logger.Log(RoomId, LogLevel.Warn, "录制文件名冲突，请检查设置。将写入到默认路径。");
-                filename = Path.Combine(_config.WorkDirectory, RoomId.ToString(), $"{RoomId}-{date}-{time}-{randomStr}.flv");
+                relativePath = Path.Combine(RoomId.ToString(), $"{RoomId}-{date}-{time}-{randomStr}.flv");
+                fullPath = Path.Combine(_config.WorkDirectory, relativePath);
             }
 
-            return filename;
+            return (fullPath, relativePath);
         }
 
         private static bool CheckPath(string parent, string child)
