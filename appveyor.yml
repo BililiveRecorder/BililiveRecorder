@@ -25,6 +25,8 @@ environment:
     secure: 9f78dD9jN5vlVZ0zv15kdD4Mj+/+uacfu29bbGC+cBVFs834aFVf5Ci+n3NP3Bl7
   codesignpasswd:
     secure: iKv14aGuHUDEfb5fSIBMuSsu1JnisWXL8wJ7x/2DCNtggWKevjhOFBOrI7c95xBY
+  gh_token:
+    secure: tAYY5TbyhAGws2MxxoIKdE3B+VlCvnyuzmYbylNnZivghfBYMeC22GqIxDfUUmt8
 
 cache:
   - packages
@@ -38,6 +40,12 @@ before_build:
 
 build_script:
   - ps: msbuild /nologo /v:m /p:Configuration="$env:CONFIGURATION" /p:SquirrelBuildTarget="$env:DEPLOY_SITE_GIT\BililiveRecorder" /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
+  - ps: msbuild /t:Publish /p:PublishProfile=any-$env:CONFIGURATION /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
+  - ps: msbuild /t:Publish /p:PublishProfile=linux-x64-$env:CONFIGURATION /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
+  - ps: msbuild /t:Publish /p:PublishProfile=linux-arm-$env:CONFIGURATION /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
+  - ps: msbuild /t:Publish /p:PublishProfile=linux-arm64-$env:CONFIGURATION /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
+  - ps: msbuild /t:Publish /p:PublishProfile=win-x64-$env:CONFIGURATION /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
+  - ps: msbuild /t:Publish /p:PublishProfile=osx_10_11-x64-$env:CONFIGURATION /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
 
 for:
 -
@@ -60,6 +68,19 @@ for:
   artifacts:
     - path: BililiveRecorder.WPF\bin\Debug
       name: BililiveRecorderDebugBuild
+    - path: BililiveRecorder.Cli\bin\DebugPublish\any
+      name: BililiveRecorderCliDebug-AnyCPU
+    - path: BililiveRecorder.Cli\bin\DebugPublish\win-x64
+      name: BililiveRecorderCliDebug-win-x64
+    - path: BililiveRecorder.Cli\bin\DebugPublish\linux-x64
+      name: BililiveRecorderCliDebug-linux-x64
+    - path: BililiveRecorder.Cli\bin\DebugPublish\linux-arm
+      name: BililiveRecorderCliDebug-linux-arm
+    - path: BililiveRecorder.Cli\bin\DebugPublish\linux-arm64
+      name: BililiveRecorderCliDebug-linux-arm64
+    - path: BililiveRecorder.Cli\bin\DebugPublish\osx.10.11-x64
+      name: BililiveRecorderCliDebug-osx.10.11-x64
 
-#on_finish:
-#  - ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
+on_finish:
+  - cmd: curl -X POST https://api.github.com/repos/NyaMisty/BililiveRecorderDocker/releases -d {\"tag_name\":\"%APPVEYOR_BUILD_VERSION%\"} --user "NyaMisty:%gh_token%"
+  #- ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))

@@ -6,6 +6,10 @@
     <StartupObject>BililiveRecorder.Cli.Program</StartupObject>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <RuntimeIdentifiers>win-x64;osx.10.11-x64;linux-arm64;linux-arm;linux-x64</RuntimeIdentifiers>
+  </PropertyGroup>
+
   <ItemGroup>
     <None Remove="config.json" />
     <None Remove="NLog.config" />
