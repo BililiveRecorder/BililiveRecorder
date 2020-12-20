@@ -198,7 +198,7 @@ namespace BililiveRecorder.WPF.Pages
                 catch (Exception ex)
                 {
                     error = "发生了未知错误";
-                    logger.Error(ex, "选择工作目录时发生了未知错误");
+                    logger.Warn(ex, "选择工作目录时发生了未知错误");
                     continue;
                 }
             }
