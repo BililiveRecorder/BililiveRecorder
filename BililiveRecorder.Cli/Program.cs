@@ -8,6 +8,7 @@ using BililiveRecorder.Core;
 using BililiveRecorder.Core.Config;
 using BililiveRecorder.FlvProcessor;
 using CommandLine;
+using Newtonsoft.Json;
 using NLog;
 
 namespace BililiveRecorder.Cli
@@ -42,6 +43,7 @@ namespace BililiveRecorder.Cli
 
         private static void Run(ConfigV1 option)
         {
+            option.EnabledFeature = EnabledFeature.RecordOnly;
             foreach (var room in option.RoomList)
             {
                 if (Recorder.Where(r => r.RoomId == room.Roomid).Count() == 0)
@@ -50,6 +52,8 @@ namespace BililiveRecorder.Cli
                 }
             }
             
+            logger.Info("Using workDir: " + option.WorkDirectory + "\n\tconfig: " + JsonConvert.SerializeObject(option, Formatting.Indented));
+
             logger.Info("开始录播");
             Task.WhenAll(Recorder.Select(x => Task.Run(() => x.Start()))).Wait();
             Console.CancelKeyPress += (sender, e) =>
@@ -64,33 +68,9 @@ namespace BililiveRecorder.Cli
         }
     }
 
-    class ConfigV1Metadata
-    {
-        [Option('o', "dir", Default = ".", HelpText = "Output directory", Required = false)]
-        [Utils.DoNotCopyProperty]
-        public object WorkDirectory { get; set; }
-
-        [Option("cookie", HelpText = "Provide custom cookies", Required = false)]
-        public object Cookie { get; set; }
-
-        [Option("avoidtxy", HelpText = "Avoid Tencent Cloud server", Required = false)]
-        public object AvoidTxy { get; set; }
-
-        [Option("live_api_host", HelpText = "Use custom api host", Required = false)]
-        public object LiveApiHost { get; set; }
-
-        [Option("record_filename_format", HelpText = "Recording name format", Required = false)]
-        public object RecordFilenameFormat { get; set; }
-
-
-
-    }
-
-    [MetadataType(typeof(ConfigV1Metadata))]
-    class CommandConfigV1 : ConfigV1
+    public partial class CommandConfigV1 : ConfigV1
     {
         [Option('i', "id", HelpText = "room id", Required = true)]
-        [Utils.DoNotCopyProperty]
         public string _RoomList
         {
             set
@@ -107,6 +87,41 @@ namespace BililiveRecorder.Cli
                 }
             }
 
+        }
+
+        [Option('o', "dir", Default = ".", HelpText = "Output directory", Required = false)]
+        public new string WorkDirectory
+        {
+            get { return base.WorkDirectory; }
+            set { base.WorkDirectory = value; }
+        }
+
+        [Option("cookie", HelpText = "Provide custom cookies", Required = false)]
+        public new string Cookie
+        {
+            get { return base.Cookie; }
+            set { base.Cookie = value; }
+        }
+
+        [Option("avoidtxy", HelpText = "Avoid Tencent Cloud server", Required = false)]
+        public new bool AvoidTxy
+        {
+            get { return base.AvoidTxy; }
+            set { base.AvoidTxy = value; }
+        }
+
+        [Option("live_api_host", HelpText = "Use custom api host", Required = false)]
+        public new string LiveApiHost
+        {
+            get { return base.LiveApiHost; }
+            set { base.LiveApiHost = value; }
+        }
+
+        [Option("record_filename_format", HelpText = "Recording name format", Required = false)]
+        public new string RecordFilenameFormat
+        {
+            get { return base.RecordFilenameFormat; }
+            set { base.RecordFilenameFormat = value; }
         }
     }
 }
