@@ -33,7 +33,7 @@
             x:Key="UniformGridLayout"
             MinItemWidth="220"
             MinItemHeight="100"
-            ItemsStretch="Fill"
+            ItemsStretch="None"
             MinRowSpacing="7"
             MinColumnSpacing="5" />
     </ui:Page.Resources>
