@@ -5,7 +5,7 @@
     <Nullable>enable</Nullable>
     <LangVersion>9.0</LangVersion>
     <StartupObject>BililiveRecorder.Cli.Program</StartupObject>
-    <RuntimeIdentifiers>win-x64;osx.10.11-x64;linux-arm64;linux-arm;linux-x64</RuntimeIdentifiers>
+    <RuntimeIdentifiers>win-x64;osx-x64;osx.10.11-x64;linux-arm64;linux-arm;linux-x64</RuntimeIdentifiers>
     <PublishDir Condition=" '$(RuntimeIdentifier)' == '' ">publish\any</PublishDir>
     <PublishDir Condition=" '$(RuntimeIdentifier)' != '' ">publish\$(RuntimeIdentifier)</PublishDir>
     <SelfContained Condition=" '$(RuntimeIdentifier)' == '' ">false</SelfContained>
