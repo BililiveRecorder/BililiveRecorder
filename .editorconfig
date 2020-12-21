@@ -15,7 +15,7 @@ insert_final_newline = true
 
 indent_size = 2
 
-[.csproj]
+[*.csproj]
 
 indent_size = 2
 
