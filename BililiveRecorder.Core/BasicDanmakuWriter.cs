@@ -2,6 +2,7 @@ using BililiveRecorder.Core.Config;
 using System;
 using System.IO;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Xml;
 
@@ -16,6 +17,9 @@ namespace BililiveRecorder.Core
             CloseOutput = true,
             WriteEndDocumentOnClose = true
         };
+
+        private static readonly Regex invalidXMLChars = new Regex(@"(?<![\uD800-\uDBFF])[\uDC00-\uDFFF]|[\uD800-\uDBFF](?![\uDC00-\uDFFF])|[\x00-\x08\x0B\x0C\x0E-\x1F\x7F-\x9F\uFEFF\uFFFE\uFFFF]", RegexOptions.Compiled);
+        private static string RemoveInvalidXMLChars(string text) => string.IsNullOrEmpty(text) ? string.Empty : invalidXMLChars.Replace(text, string.Empty);
 
         private XmlWriter xmlWriter = null;
         private DateTimeOffset offset = DateTimeOffset.UtcNow;
@@ -102,7 +106,7 @@ namespace BililiveRecorder.Core
                                 xmlWriter.WriteAttributeString("user", danmakuModel.UserName);
                                 if (config.RecordDanmakuRaw)
                                     xmlWriter.WriteAttributeString("raw", danmakuModel.RawObj?["info"]?.ToString(Newtonsoft.Json.Formatting.None));
-                                xmlWriter.WriteValue(danmakuModel.CommentText);
+                                xmlWriter.WriteValue(RemoveInvalidXMLChars(danmakuModel.CommentText));
                                 xmlWriter.WriteEndElement();
                             }
                             break;
@@ -117,7 +121,7 @@ namespace BililiveRecorder.Core
                                 xmlWriter.WriteAttributeString("time", danmakuModel.SCKeepTime.ToString());
                                 if (config.RecordDanmakuRaw)
                                     xmlWriter.WriteAttributeString("raw", danmakuModel.RawObj?["data"]?.ToString(Newtonsoft.Json.Formatting.None));
-                                xmlWriter.WriteValue(danmakuModel.CommentText);
+                                xmlWriter.WriteValue(RemoveInvalidXMLChars(danmakuModel.CommentText));
                                 xmlWriter.WriteEndElement();
                             }
                             break;

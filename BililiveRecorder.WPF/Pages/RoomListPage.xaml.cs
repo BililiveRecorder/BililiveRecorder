@@ -7,6 +7,7 @@ using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -238,14 +239,34 @@ namespace BililiveRecorder.WPF.Pages
 
         public List<IRecordedRoom> Sorted { get; private set; }
 
-        private void Sort()
+        private int sortSeboucneCount = int.MinValue;
+        private SemaphoreSlim sortSemaphoreSlim = new SemaphoreSlim(1, 1);
+
+        private async void Sort()
         {
-            logger.Debug("Sort called with {sortedBy} and {count} rooms.", SortedBy, Data?.Count ?? -1);
+            // debounce && lock
+            logger.Debug("Sort called.");
+            var callCount = Interlocked.Increment(ref sortSeboucneCount);
+            await Task.Delay(200);
+            if (sortSeboucneCount != callCount)
+            {
+                logger.Debug("Sort cancelled by debounce.");
+                return;
+            }
+
+            await sortSemaphoreSlim.WaitAsync();
+            try { SortImpl(); }
+            finally { sortSemaphoreSlim.Release(); }
+        }
+
+        private void SortImpl()
+        {
+            logger.Debug("SortImpl called with {sortedBy} and {count} rooms.", SortedBy, Data?.Count ?? -1);
 
             if (Data is null)
             {
                 Sorted = NullRoom.ToList();
-                logger.Debug("Sort returned NullRoom.");
+                logger.Debug("SortImpl returned NullRoom.");
             }
             else
             {
@@ -256,7 +277,7 @@ namespace BililiveRecorder.WPF.Pages
                     _ => Data,
                 };
                 var result = orderedData.Concat(NullRoom).ToList();
-                logger.Debug("Sorted with {count} items.", result.Count);
+                logger.Debug("SortImpl sorted with {count} items.", result.Count);
 
                 { // 崩溃问题信息收集。。虽然不觉得是这里的问题
                     var dup = result.GroupBy(x => x?.Guid ?? Guid.Empty).Where(x => x.Count() != 1);

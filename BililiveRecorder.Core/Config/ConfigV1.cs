@@ -148,6 +148,16 @@ namespace BililiveRecorder.Core.Config
             set => SetField(ref _clip_filename_format, value);
         }
 
+        /// <summary>
+        /// Webhook 地址 每行一个
+        /// </summary>
+        [JsonProperty("webhook_urls")]
+        public string WebHookUrls
+        {
+            get => _webhook_urls;
+            set => SetField(ref _webhook_urls, value);
+        }
+
         #region INotifyPropertyChanged
         public event PropertyChangedEventHandler PropertyChanged;
         protected virtual void OnPropertyChanged(string propertyName) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
@@ -186,5 +196,7 @@ namespace BililiveRecorder.Core.Config
         private uint _recordDanmakuFlushInterval = 20;
 
         private string _liveApiHost = "https://api.live.bilibili.com";
+
+        private string _webhook_urls = "";
     }
 }

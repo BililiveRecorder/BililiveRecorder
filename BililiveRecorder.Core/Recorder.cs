@@ -7,6 +7,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using BililiveRecorder.Core.Callback;
 using BililiveRecorder.Core.Config;
 using NLog;
 
@@ -26,14 +27,17 @@ namespace BililiveRecorder.Core
 
         public ConfigV1 Config { get; }
 
+        private BasicWebhook Webhook { get; }
+
         public int Count => Rooms.Count;
         public bool IsReadOnly => true;
         public IRecordedRoom this[int index] => Rooms[index];
 
-        public Recorder(ConfigV1 config, Func<int, IRecordedRoom> iRecordedRoom)
+        public Recorder(ConfigV1 config, BasicWebhook webhook, Func<int, IRecordedRoom> iRecordedRoom)
         {
-            newIRecordedRoom = iRecordedRoom;
-            Config = config;
+            newIRecordedRoom = iRecordedRoom ?? throw new ArgumentNullException(nameof(iRecordedRoom));
+            Config = config ?? throw new ArgumentNullException(nameof(config));
+            Webhook = webhook ?? throw new ArgumentNullException(nameof(webhook));
 
             tokenSource = new CancellationTokenSource();
             Repeat.Interval(TimeSpan.FromSeconds(3), DownloadWatchdog, tokenSource.Token);
@@ -96,6 +100,7 @@ namespace BililiveRecorder.Core
                 }
 
                 logger.Debug("AddRoom 添加了 {roomid} 直播间 ", rr.RoomId);
+                rr.RecordEnded += this.RecordedRoom_RecordEnded;
                 Rooms.Add(rr);
             }
             catch (Exception ex)
@@ -113,6 +118,7 @@ namespace BililiveRecorder.Core
             if (rr is null) return;
             if (!_valid) { throw new InvalidOperationException("Not Initialized"); }
             rr.Shutdown();
+            rr.RecordEnded -= RecordedRoom_RecordEnded;
             logger.Debug("RemoveRoom 移除了直播间 {roomid}", rr.RoomId);
             Rooms.Remove(rr);
         }
@@ -132,6 +138,8 @@ namespace BililiveRecorder.Core
 
             Rooms.Clear();
         }
+
+        private void RecordedRoom_RecordEnded(object sender, RecordEndData e) => Webhook.Send(e);
 
         public void SaveConfigToFile()
         {

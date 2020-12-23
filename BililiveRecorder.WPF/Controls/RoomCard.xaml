@@ -85,10 +85,10 @@
                              Foreground="{Binding IsStreaming,Converter={StaticResource BooleanToLiveStatusColorBrushConverter}}"
                              ToolTip="{Binding IsStreaming,Converter={StaticResource BooleanToLiveStatusTooltipConverter}}"/>
                 <ui:PathIcon Height="10" Style="{StaticResource PathIconDataUpperCaseIdentifier}" />
-                <TextBlock Text="{Binding RoomId, StringFormat=\{0\},Mode=OneWay}" ContextMenu="{StaticResource CopyTextContextMenu}" Margin="4,0"/>
+                <TextBlock Text="{Binding RoomId, StringFormat=\{0\},Mode=OneWay}" ContextMenu="{StaticResource CopyTextContextMenu}" Margin="4,0" FontSize="11"/>
                 <ui:PathIcon Height="10" Style="{StaticResource PathIconDataLowerCaseIdentifier}" Margin="3,0"
                              Visibility="{Binding ShortRoomId,Converter={StaticResource ShortRoomIdToVisibilityConverter}}"/>
-                <TextBlock Text="{Binding ShortRoomId, StringFormat=\{0\},Mode=OneWay}" ContextMenu="{StaticResource CopyTextContextMenu}"
+                <TextBlock Text="{Binding ShortRoomId, StringFormat=\{0\},Mode=OneWay}" ContextMenu="{StaticResource CopyTextContextMenu}" FontSize="11"
                            Visibility="{Binding ShortRoomId,Converter={StaticResource ShortRoomIdToVisibilityConverter}}"/>
             </StackPanel>
             <Border Grid.Row="2" Grid.Column="1" VerticalAlignment="Center" Visibility="{Binding Visibility, ElementName=RecordingIcon}"

@@ -1,20 +1,23 @@
 <Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp3.1</TargetFramework>
+    <Nullable>enable</Nullable>
+    <LangVersion>9.0</LangVersion>
     <StartupObject>BililiveRecorder.Cli.Program</StartupObject>
+    <RuntimeIdentifiers>win-x64;osx-x64;osx.10.11-x64;linux-arm64;linux-arm;linux-x64</RuntimeIdentifiers>
+    <PublishDir Condition=" '$(RuntimeIdentifier)' == '' ">publish\any</PublishDir>
+    <PublishDir Condition=" '$(RuntimeIdentifier)' != '' ">publish\$(RuntimeIdentifier)</PublishDir>
+    <SelfContained Condition=" '$(RuntimeIdentifier)' == '' ">false</SelfContained>
+    <SelfContained Condition=" '$(SelfContained)' == '' ">true</SelfContained>
   </PropertyGroup>
-
   <ItemGroup>
     <None Remove="config.json" />
     <None Remove="NLog.config" />
   </ItemGroup>
-
   <ItemGroup>
     <Compile Include="..\TempBuildInfo\BuildInfo.Cli.cs" />
   </ItemGroup>
-
   <ItemGroup>
     <Content Include="config.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -23,22 +26,17 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
-  
   <ItemGroup>
     <PackageReference Include="Autofac" Version="4.9.4" />
     <PackageReference Include="CommandLineParser" Version="2.4.3" />
     <PackageReference Include="NLog" Version="4.7.6" />
     <PackageReference Include="NLog.Config" Version="4.7.6" />
   </ItemGroup>
-
   <ItemGroup>
     <ProjectReference Include="..\BililiveRecorder.Core\BililiveRecorder.Core.csproj" />
     <ProjectReference Include="..\BililiveRecorder.FlvProcessor\BililiveRecorder.FlvProcessor.csproj" />
   </ItemGroup>
-
   <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
     <Exec Command="cd $(SolutionDir)&#xD;&#xA;powershell -ExecutionPolicy Bypass -File .\CI\patch_buildinfo.ps1 Cli" />
   </Target>
-
-
 </Project>

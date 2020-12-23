@@ -113,6 +113,13 @@
                              Visibility="{Binding ElementName=EnabledFeatureRecordOnlyRadioButton,Path=IsChecked,Converter={StaticResource InvertBooleanToVisibilityCollapsedConverter}}"/>
                 </StackPanel>
             </GroupBox>
+            <GroupBox Header="Webhook">
+                <StackPanel MaxWidth="400" HorizontalAlignment="Left">
+                    <TextBlock Text="Webhook 地址，一行一个"/>
+                    <TextBox AcceptsReturn="True" TextWrapping="Wrap" VerticalScrollBarVisibility="Visible"
+                             Text="{Binding WebHookUrls,UpdateSourceTrigger=PropertyChanged,Delay=1000}" ui:TextBoxHelper.IsDeleteButtonVisible="False"/>
+                </StackPanel>
+            </GroupBox>
         </ui:SimpleStackPanel>
     </ScrollViewer>
 </ui:Page>

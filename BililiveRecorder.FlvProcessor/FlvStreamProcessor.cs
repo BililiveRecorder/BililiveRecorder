@@ -1,9 +1,9 @@
-using NLog;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
+using NLog;
 
 namespace BililiveRecorder.FlvProcessor
 {
@@ -50,16 +50,16 @@ namespace BililiveRecorder.FlvProcessor
 
         public int TotalMaxTimestamp { get; private set; } = 0;
         public int CurrentMaxTimestamp { get => TotalMaxTimestamp - _writeTimeStamp; }
-        public DateTime StartDateTime { get; private set; } = DateTime.Now;
 
         private readonly Func<IFlvClipProcessor> funcFlvClipProcessor;
         private readonly Func<byte[], IFlvMetadata> funcFlvMetadata;
         private readonly Func<IFlvTag> funcFlvTag;
 
-        private Func<string> GetStreamFileName;
+        private Func<(string fullPath, string relativePath)> GetStreamFileName;
         private Func<string> GetClipFileName;
 
         public event TagProcessedEvent TagProcessed;
+        public event EventHandler<long> FileFinalized;
         public event StreamFinalizedEvent StreamFinalized;
         public event FlvMetadataEvent OnMetaData;
 
@@ -81,7 +81,7 @@ namespace BililiveRecorder.FlvProcessor
 
         }
 
-        public IFlvStreamProcessor Initialize(Func<string> getStreamFileName, Func<string> getClipFileName, EnabledFeature enabledFeature, AutoCuttingMode autoCuttingMode)
+        public IFlvStreamProcessor Initialize(Func<(string fullPath, string relativePath)> getStreamFileName, Func<string> getClipFileName, EnabledFeature enabledFeature, AutoCuttingMode autoCuttingMode)
         {
             GetStreamFileName = getStreamFileName;
             GetClipFileName = getClipFileName;
@@ -93,10 +93,10 @@ namespace BililiveRecorder.FlvProcessor
 
         private void OpenNewRecordFile()
         {
-            string path = GetStreamFileName();
-            logger.Debug("打开新录制文件: " + path);
-            try { Directory.CreateDirectory(Path.GetDirectoryName(path)); } catch (Exception) { }
-            _targetFile = new FileStream(path, FileMode.CreateNew, FileAccess.ReadWrite);
+            var (fullPath, relativePath) = GetStreamFileName();
+            logger.Debug("打开新录制文件: " + fullPath);
+            try { Directory.CreateDirectory(Path.GetDirectoryName(fullPath)); } catch (Exception) { }
+            _targetFile = new FileStream(fullPath, FileMode.CreateNew, FileAccess.ReadWrite, FileShare.Read | FileShare.Delete);
 
             if (_headerParsed)
             {
@@ -309,7 +309,6 @@ namespace BililiveRecorder.FlvProcessor
                     {
                         _baseTimeStamp = tag.TimeStamp;
                         _hasOffset = true;
-                        StartDateTime = DateTime.Now;
                         logger.Debug("重设时间戳 {0} 毫秒", _baseTimeStamp);
                     }
                 }
@@ -325,7 +324,6 @@ namespace BililiveRecorder.FlvProcessor
                     {
                         _baseTimeStamp = tag.TimeStamp;
                         _hasOffset = true;
-                        StartDateTime = DateTime.Now;
                         logger.Debug("重设时间戳 {0} 毫秒", _baseTimeStamp);
                     }
                 }
@@ -374,6 +372,7 @@ namespace BililiveRecorder.FlvProcessor
         {
             try
             {
+                var fileSize = _targetFile?.Length ?? -1;
                 logger.Debug("正在关闭当前录制文件: " + _targetFile?.Name);
                 Metadata["duration"] = CurrentMaxTimestamp / 1000.0;
                 Metadata["lasttimestamp"] = (double)CurrentMaxTimestamp;
@@ -383,6 +382,9 @@ namespace BililiveRecorder.FlvProcessor
                 // 11 for 1st tag header
                 _targetFile?.Seek(13 + 11, SeekOrigin.Begin);
                 _targetFile?.Write(metadata, 0, metadata.Length);
+
+                if (fileSize > 0)
+                    FileFinalized?.Invoke(this, fileSize);
             }
             catch (IOException ex)
             {
