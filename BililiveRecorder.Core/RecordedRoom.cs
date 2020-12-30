@@ -1,7 +1,3 @@
-using BililiveRecorder.Core.Callback;
-using BililiveRecorder.Core.Config;
-using BililiveRecorder.FlvProcessor;
-using NLog;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -12,6 +8,10 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading;
 using System.Threading.Tasks;
+using BililiveRecorder.Core.Callback;
+using BililiveRecorder.Core.Config;
+using BililiveRecorder.FlvProcessor;
+using NLog;
 
 namespace BililiveRecorder.Core
 {
@@ -176,6 +176,9 @@ namespace BililiveRecorder.Core
                     break;
                 case MsgTypeEnum.LiveEnd:
                     IsStreaming = false;
+                    break;
+                case MsgTypeEnum.RoomChange:
+                    Title = e.Danmaku.Title;
                     break;
                 default:
                     break;
