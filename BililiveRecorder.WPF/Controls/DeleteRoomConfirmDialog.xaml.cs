@@ -7,7 +7,7 @@ namespace BililiveRecorder.WPF.Controls
     {
         public DeleteRoomConfirmDialog()
         {
-            InitializeComponent();
+            this.InitializeComponent();
         }
     }
 }

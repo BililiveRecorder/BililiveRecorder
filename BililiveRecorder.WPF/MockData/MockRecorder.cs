@@ -5,7 +5,7 @@ using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using BililiveRecorder.Core;
-using BililiveRecorder.Core.Config;
+using BililiveRecorder.Core.Config.V2;
 
 namespace BililiveRecorder.WPF.MockData
 {
@@ -16,47 +16,47 @@ namespace BililiveRecorder.WPF.MockData
 
         public MockRecorder()
         {
-            Rooms.Add(new MockRecordedRoom
+            this.Rooms.Add(new MockRecordedRoom
             {
                 IsMonitoring = false,
                 IsRecording = false
             });
-            Rooms.Add(new MockRecordedRoom
+            this.Rooms.Add(new MockRecordedRoom
             {
                 IsMonitoring = true,
                 IsRecording = false
             });
-            Rooms.Add(new MockRecordedRoom
+            this.Rooms.Add(new MockRecordedRoom
             {
                 DownloadSpeedPersentage = 100,
                 DownloadSpeedMegaBitps = 12.45
             });
-            Rooms.Add(new MockRecordedRoom
+            this.Rooms.Add(new MockRecordedRoom
             {
                 DownloadSpeedPersentage = 95,
                 DownloadSpeedMegaBitps = 789.45
             });
-            Rooms.Add(new MockRecordedRoom
+            this.Rooms.Add(new MockRecordedRoom
             {
                 DownloadSpeedPersentage = 90
             });
-            Rooms.Add(new MockRecordedRoom
+            this.Rooms.Add(new MockRecordedRoom
             {
                 DownloadSpeedPersentage = 85
             });
-            Rooms.Add(new MockRecordedRoom
+            this.Rooms.Add(new MockRecordedRoom
             {
                 DownloadSpeedPersentage = 80
             });
-            Rooms.Add(new MockRecordedRoom
+            this.Rooms.Add(new MockRecordedRoom
             {
                 DownloadSpeedPersentage = 75
             });
-            Rooms.Add(new MockRecordedRoom
+            this.Rooms.Add(new MockRecordedRoom
             {
                 DownloadSpeedPersentage = 70
             });
-            Rooms.Add(new MockRecordedRoom
+            this.Rooms.Add(new MockRecordedRoom
             {
                 DownloadSpeedPersentage = 109
             });
@@ -64,28 +64,28 @@ namespace BililiveRecorder.WPF.MockData
 
         private ObservableCollection<IRecordedRoom> Rooms { get; } = new ObservableCollection<IRecordedRoom>();
 
-        public ConfigV1 Config { get; } = new ConfigV1();
+        public ConfigV2 Config { get; } = new ConfigV2();
 
-        public int Count => Rooms.Count;
+        public int Count => this.Rooms.Count;
 
         public bool IsReadOnly => true;
 
-        int ICollection<IRecordedRoom>.Count => Rooms.Count;
+        int ICollection<IRecordedRoom>.Count => this.Rooms.Count;
 
         bool ICollection<IRecordedRoom>.IsReadOnly => true;
 
-        public IRecordedRoom this[int index] => Rooms[index];
+        public IRecordedRoom this[int index] => this.Rooms[index];
 
         public event PropertyChangedEventHandler PropertyChanged
         {
-            add => (Rooms as INotifyPropertyChanged).PropertyChanged += value;
-            remove => (Rooms as INotifyPropertyChanged).PropertyChanged -= value;
+            add => (this.Rooms as INotifyPropertyChanged).PropertyChanged += value;
+            remove => (this.Rooms as INotifyPropertyChanged).PropertyChanged -= value;
         }
 
         public event NotifyCollectionChangedEventHandler CollectionChanged
         {
-            add => (Rooms as INotifyCollectionChanged).CollectionChanged += value;
-            remove => (Rooms as INotifyCollectionChanged).CollectionChanged -= value;
+            add => (this.Rooms as INotifyCollectionChanged).CollectionChanged += value;
+            remove => (this.Rooms as INotifyCollectionChanged).CollectionChanged -= value;
         }
 
         void ICollection<IRecordedRoom>.Add(IRecordedRoom item) => throw new NotSupportedException("Collection is readonly");
@@ -94,35 +94,35 @@ namespace BililiveRecorder.WPF.MockData
 
         bool ICollection<IRecordedRoom>.Remove(IRecordedRoom item) => throw new NotSupportedException("Collection is readonly");
 
-        bool ICollection<IRecordedRoom>.Contains(IRecordedRoom item) => Rooms.Contains(item);
+        bool ICollection<IRecordedRoom>.Contains(IRecordedRoom item) => this.Rooms.Contains(item);
 
-        void ICollection<IRecordedRoom>.CopyTo(IRecordedRoom[] array, int arrayIndex) => Rooms.CopyTo(array, arrayIndex);
+        void ICollection<IRecordedRoom>.CopyTo(IRecordedRoom[] array, int arrayIndex) => this.Rooms.CopyTo(array, arrayIndex);
 
-        public IEnumerator<IRecordedRoom> GetEnumerator() => Rooms.GetEnumerator();
+        public IEnumerator<IRecordedRoom> GetEnumerator() => this.Rooms.GetEnumerator();
 
-        IEnumerator<IRecordedRoom> IEnumerable<IRecordedRoom>.GetEnumerator() => Rooms.GetEnumerator();
+        IEnumerator<IRecordedRoom> IEnumerable<IRecordedRoom>.GetEnumerator() => this.Rooms.GetEnumerator();
 
-        IEnumerator IEnumerable.GetEnumerator() => Rooms.GetEnumerator();
+        IEnumerator IEnumerable.GetEnumerator() => this.Rooms.GetEnumerator();
 
         public bool Initialize(string workdir)
         {
-            Config.WorkDirectory = workdir;
+            this.Config.Global.WorkDirectory = workdir;
             return true;
         }
 
         public void AddRoom(int roomid)
         {
-            AddRoom(roomid, false);
+            this.AddRoom(roomid, false);
         }
 
         public void AddRoom(int roomid, bool enabled)
         {
-            Rooms.Add(new MockRecordedRoom { RoomId = roomid, IsMonitoring = enabled });
+            this.Rooms.Add(new MockRecordedRoom { RoomId = roomid, IsMonitoring = enabled });
         }
 
         public void RemoveRoom(IRecordedRoom rr)
         {
-            Rooms.Remove(rr);
+            this.Rooms.Remove(rr);
         }
 
         public void SaveConfigToFile()
@@ -132,17 +132,17 @@ namespace BililiveRecorder.WPF.MockData
 
         protected virtual void Dispose(bool disposing)
         {
-            if (!disposedValue)
+            if (!this.disposedValue)
             {
                 if (disposing)
                 {
                     // dispose managed state (managed objects)
-                    Rooms.Clear();
+                    this.Rooms.Clear();
                 }
 
                 // free unmanaged resources (unmanaged objects) and override finalizer
                 // set large fields to null
-                disposedValue = true;
+                this.disposedValue = true;
             }
         }
 
@@ -156,7 +156,7 @@ namespace BililiveRecorder.WPF.MockData
         public void Dispose()
         {
             // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
-            Dispose(disposing: true);
+            this.Dispose(disposing: true);
             GC.SuppressFinalize(this);
         }
     }

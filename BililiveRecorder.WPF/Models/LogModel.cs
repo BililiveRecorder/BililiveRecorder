@@ -16,37 +16,37 @@ namespace BililiveRecorder.WPF.Models
 
         public LogModel() : base(new[] { "" })
         {
-            LogReceived += LogModel_LogReceived;
+            LogReceived += this.LogModel_LogReceived;
         }
 
         private void LogModel_LogReceived(object sender, string e)
         {
-            _ = Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.DataBind, (Action<string>)AddLogToCollection, e);
+            _ = Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.DataBind, (Action<string>)this.AddLogToCollection, e);
         }
 
         private void AddLogToCollection(string e)
         {
-            Add(e);
-            while (Count > MAX_LINE)
+            this.Add(e);
+            while (this.Count > MAX_LINE)
             {
-                RemoveItem(0);
+                this.RemoveItem(0);
             }
         }
 
         protected virtual void Dispose(bool disposing)
         {
-            if (!disposedValue)
+            if (!this.disposedValue)
             {
                 if (disposing)
                 {
                     // dispose managed state (managed objects)
-                    LogReceived -= LogModel_LogReceived;
-                    ClearItems();
+                    LogReceived -= this.LogModel_LogReceived;
+                    this.ClearItems();
                 }
 
                 // free unmanaged resources (unmanaged objects) and override finalizer
                 // set large fields to null
-                disposedValue = true;
+                this.disposedValue = true;
             }
         }
 
@@ -60,7 +60,7 @@ namespace BililiveRecorder.WPF.Models
         public void Dispose()
         {
             // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
-            Dispose(disposing: true);
+            this.Dispose(disposing: true);
             GC.SuppressFinalize(this);
         }
     }

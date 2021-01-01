@@ -9,7 +9,7 @@ using System.Net.Http.Headers;
 using System.Threading;
 using System.Threading.Tasks;
 using BililiveRecorder.Core.Callback;
-using BililiveRecorder.Core.Config;
+using BililiveRecorder.Core.Config.V2;
 using BililiveRecorder.FlvProcessor;
 using NLog;
 
@@ -21,66 +21,67 @@ namespace BililiveRecorder.Core
         private static readonly Random random = new Random();
         private static readonly Version VERSION_1_0 = new Version(1, 0);
 
-        private int _roomid;
-        private int _realRoomid;
+        private int _shortRoomid;
         private string _streamerName;
         private string _title;
         private bool _isStreaming;
 
         public int ShortRoomId
         {
-            get => _roomid;
+            get => this._shortRoomid;
             private set
             {
-                if (value == _roomid) { return; }
-                _roomid = value;
-                TriggerPropertyChanged(nameof(ShortRoomId));
+                if (value == this._shortRoomid) { return; }
+                this._shortRoomid = value;
+                this.TriggerPropertyChanged(nameof(this.ShortRoomId));
             }
         }
         public int RoomId
         {
-            get => _realRoomid;
+            get => this.RoomConfig.RoomId;
             private set
             {
-                if (value == _realRoomid) { return; }
-                _realRoomid = value;
-                TriggerPropertyChanged(nameof(RoomId));
+                if (value == this.RoomConfig.RoomId) { return; }
+                this.RoomConfig.RoomId = value;
+                this.TriggerPropertyChanged(nameof(this.RoomId));
             }
         }
         public string StreamerName
         {
-            get => _streamerName;
+            get => this._streamerName;
             private set
             {
-                if (value == _streamerName) { return; }
-                _streamerName = value;
-                TriggerPropertyChanged(nameof(StreamerName));
+                if (value == this._streamerName) { return; }
+                this._streamerName = value;
+                this.TriggerPropertyChanged(nameof(this.StreamerName));
             }
         }
         public string Title
         {
-            get => _title;
+            get => this._title;
             private set
             {
-                if (value == _title) { return; }
-                _title = value;
-                TriggerPropertyChanged(nameof(Title));
+                if (value == this._title) { return; }
+                this._title = value;
+                this.TriggerPropertyChanged(nameof(this.Title));
             }
         }
 
-        public bool IsMonitoring => StreamMonitor.IsMonitoring;
-        public bool IsRecording => !(StreamDownloadTask?.IsCompleted ?? true);
-        public bool IsDanmakuConnected => StreamMonitor.IsDanmakuConnected;
+        public bool IsMonitoring => this.StreamMonitor.IsMonitoring;
+        public bool IsRecording => !(this.StreamDownloadTask?.IsCompleted ?? true);
+        public bool IsDanmakuConnected => this.StreamMonitor.IsDanmakuConnected;
         public bool IsStreaming
         {
-            get => _isStreaming;
+            get => this._isStreaming;
             private set
             {
-                if (value == _isStreaming) { return; }
-                _isStreaming = value;
-                TriggerPropertyChanged(nameof(IsStreaming));
+                if (value == this._isStreaming) { return; }
+                this._isStreaming = value;
+                this.TriggerPropertyChanged(nameof(this.IsStreaming));
             }
         }
+
+        public RoomConfig RoomConfig { get; }
 
         private RecordEndData recordEndData;
         public event EventHandler<RecordEndData> RecordEnded;
@@ -90,16 +91,15 @@ namespace BililiveRecorder.Core
         private IFlvStreamProcessor _processor;
         public IFlvStreamProcessor Processor
         {
-            get => _processor;
+            get => this._processor;
             private set
             {
-                if (value == _processor) { return; }
-                _processor = value;
-                TriggerPropertyChanged(nameof(Processor));
+                if (value == this._processor) { return; }
+                this._processor = value;
+                this.TriggerPropertyChanged(nameof(this.Processor));
             }
         }
 
-        private ConfigV1 _config { get; }
         private BililiveAPI BililiveAPI { get; }
         public IStreamMonitor StreamMonitor { get; }
 
@@ -118,41 +118,57 @@ namespace BililiveRecorder.Core
         public DateTime LastUpdateDateTime { get; private set; } = DateTime.Now;
         public double DownloadSpeedPersentage
         {
-            get { return _DownloadSpeedPersentage; }
-            private set { if (value != _DownloadSpeedPersentage) { _DownloadSpeedPersentage = value; TriggerPropertyChanged(nameof(DownloadSpeedPersentage)); } }
+            get { return this._DownloadSpeedPersentage; }
+            private set { if (value != this._DownloadSpeedPersentage) { this._DownloadSpeedPersentage = value; this.TriggerPropertyChanged(nameof(this.DownloadSpeedPersentage)); } }
         }
         public double DownloadSpeedMegaBitps
         {
-            get { return _DownloadSpeedMegaBitps; }
-            private set { if (value != _DownloadSpeedMegaBitps) { _DownloadSpeedMegaBitps = value; TriggerPropertyChanged(nameof(DownloadSpeedMegaBitps)); } }
+            get { return this._DownloadSpeedMegaBitps; }
+            private set { if (value != this._DownloadSpeedMegaBitps) { this._DownloadSpeedMegaBitps = value; this.TriggerPropertyChanged(nameof(this.DownloadSpeedMegaBitps)); } }
         }
 
         public Guid Guid { get; } = Guid.NewGuid();
 
-        public RecordedRoom(ConfigV1 config,
-            IBasicDanmakuWriter basicDanmakuWriter,
-            Func<int, IStreamMonitor> newIStreamMonitor,
+        // TODO: 重构 DI
+        public RecordedRoom(Func<RoomConfig, IBasicDanmakuWriter> newBasicDanmakuWriter,
+            Func<RoomConfig, IStreamMonitor> newIStreamMonitor,
             Func<IFlvStreamProcessor> newIFlvStreamProcessor,
             BililiveAPI bililiveAPI,
-            int roomid)
+            RoomConfig roomConfig)
         {
+            this.RoomConfig = roomConfig;
+            this.StreamerName = "获取中...";
+
+            this.BililiveAPI = bililiveAPI;
+
             this.newIFlvStreamProcessor = newIFlvStreamProcessor;
 
-            _config = config;
-            BililiveAPI = bililiveAPI;
+            this.basicDanmakuWriter = newBasicDanmakuWriter(this.RoomConfig);
 
-            this.basicDanmakuWriter = basicDanmakuWriter;
+            this.StreamMonitor = newIStreamMonitor(this.RoomConfig);
+            this.StreamMonitor.RoomInfoUpdated += this.StreamMonitor_RoomInfoUpdated;
+            this.StreamMonitor.StreamStarted += this.StreamMonitor_StreamStarted;
+            this.StreamMonitor.ReceivedDanmaku += this.StreamMonitor_ReceivedDanmaku;
+            this.StreamMonitor.PropertyChanged += this.StreamMonitor_PropertyChanged;
 
-            RoomId = roomid;
-            StreamerName = "获取中...";
+            this.PropertyChanged += this.RecordedRoom_PropertyChanged;
 
-            StreamMonitor = newIStreamMonitor(RoomId);
-            StreamMonitor.RoomInfoUpdated += StreamMonitor_RoomInfoUpdated;
-            StreamMonitor.StreamStarted += StreamMonitor_StreamStarted;
-            StreamMonitor.ReceivedDanmaku += StreamMonitor_ReceivedDanmaku;
-            StreamMonitor.PropertyChanged += StreamMonitor_PropertyChanged;
+            this.StreamMonitor.FetchRoomInfoAsync();
 
-            StreamMonitor.FetchRoomInfoAsync();
+            if (this.RoomConfig.AutoRecord)
+                this.Start();
+        }
+
+        private void RecordedRoom_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            switch (e.PropertyName)
+            {
+                case nameof(this.IsMonitoring):
+                    this.RoomConfig.AutoRecord = this.IsMonitoring;
+                    break;
+                default:
+                    break;
+            }
         }
 
         private void StreamMonitor_PropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -160,7 +176,7 @@ namespace BililiveRecorder.Core
             switch (e.PropertyName)
             {
                 case nameof(IStreamMonitor.IsDanmakuConnected):
-                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(IsDanmakuConnected)));
+                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(this.IsDanmakuConnected)));
                     break;
                 default:
                     break;
@@ -172,115 +188,116 @@ namespace BililiveRecorder.Core
             switch (e.Danmaku.MsgType)
             {
                 case MsgTypeEnum.LiveStart:
-                    IsStreaming = true;
+                    this.IsStreaming = true;
                     break;
                 case MsgTypeEnum.LiveEnd:
-                    IsStreaming = false;
-                    break;
-                case MsgTypeEnum.RoomChange:
-                    Title = e.Danmaku.Title;
+                    this.IsStreaming = false;
                     break;
                 default:
                     break;
             }
-            basicDanmakuWriter.Write(e.Danmaku);
+            this.basicDanmakuWriter.Write(e.Danmaku);
         }
 
         private void StreamMonitor_RoomInfoUpdated(object sender, RoomInfoUpdatedArgs e)
         {
-            RoomId = e.RoomInfo.RoomId;
-            ShortRoomId = e.RoomInfo.ShortRoomId;
-            StreamerName = e.RoomInfo.UserName;
-            Title = e.RoomInfo.Title;
-            IsStreaming = e.RoomInfo.IsStreaming;
+            // TODO: StreamMonitor 里的 RoomInfoUpdated Handler 也会设置一次 RoomId
+            // 暂时保持不变，此处的 RoomId 需要触发 PropertyChanged 事件
+            this.RoomId = e.RoomInfo.RoomId;
+            this.ShortRoomId = e.RoomInfo.ShortRoomId;
+            this.StreamerName = e.RoomInfo.UserName;
+            this.Title = e.RoomInfo.Title;
+            this.IsStreaming = e.RoomInfo.IsStreaming;
         }
 
         public bool Start()
         {
-            if (disposedValue) throw new ObjectDisposedException(nameof(RecordedRoom));
+            // TODO: 重构: 删除 Start() Stop() 通过 RoomConfig.AutoRecord 控制监控状态和逻辑
+            if (this.disposedValue) throw new ObjectDisposedException(nameof(RecordedRoom));
 
-            var r = StreamMonitor.Start();
-            TriggerPropertyChanged(nameof(IsMonitoring));
+            var r = this.StreamMonitor.Start();
+            this.TriggerPropertyChanged(nameof(this.IsMonitoring));
             return r;
         }
 
         public void Stop()
         {
-            if (disposedValue) throw new ObjectDisposedException(nameof(RecordedRoom));
+            // TODO: 见 Start()
+            if (this.disposedValue) throw new ObjectDisposedException(nameof(RecordedRoom));
 
-            StreamMonitor.Stop();
-            TriggerPropertyChanged(nameof(IsMonitoring));
+            this.StreamMonitor.Stop();
+            this.TriggerPropertyChanged(nameof(this.IsMonitoring));
         }
 
         public void RefreshRoomInfo()
         {
-            if (disposedValue) throw new ObjectDisposedException(nameof(RecordedRoom));
-            StreamMonitor.FetchRoomInfoAsync();
+            if (this.disposedValue) throw new ObjectDisposedException(nameof(RecordedRoom));
+            this.StreamMonitor.FetchRoomInfoAsync();
         }
 
         private void StreamMonitor_StreamStarted(object sender, StreamStartedArgs e)
         {
-            lock (StartupTaskLock)
-                if (!IsRecording && (StartupTask?.IsCompleted ?? true))
-                    StartupTask = _StartRecordAsync();
+            lock (this.StartupTaskLock)
+                if (!this.IsRecording && (this.StartupTask?.IsCompleted ?? true))
+                    this.StartupTask = this._StartRecordAsync();
         }
 
         public void StartRecord()
         {
-            if (disposedValue) throw new ObjectDisposedException(nameof(RecordedRoom));
-            StreamMonitor.Check(TriggerType.Manual);
+            if (this.disposedValue) throw new ObjectDisposedException(nameof(RecordedRoom));
+            this.StreamMonitor.Check(TriggerType.Manual);
         }
 
         public void StopRecord()
         {
-            if (disposedValue) throw new ObjectDisposedException(nameof(RecordedRoom));
+            if (this.disposedValue) throw new ObjectDisposedException(nameof(RecordedRoom));
 
-            _retry = false;
+            this._retry = false;
             try
             {
-                if (cancellationTokenSource != null)
+                if (this.cancellationTokenSource != null)
                 {
-                    cancellationTokenSource.Cancel();
-                    if (!(StreamDownloadTask?.Wait(TimeSpan.FromSeconds(2)) ?? true))
+                    this.cancellationTokenSource.Cancel();
+                    if (!(this.StreamDownloadTask?.Wait(TimeSpan.FromSeconds(2)) ?? true))
                     {
-                        logger.Log(RoomId, LogLevel.Warn, "停止录制超时，尝试强制关闭连接，请检查网络连接是否稳定");
+                        logger.Log(this.RoomId, LogLevel.Warn, "停止录制超时，尝试强制关闭连接，请检查网络连接是否稳定");
 
-                        _stream?.Close();
-                        _stream?.Dispose();
-                        _response?.Dispose();
-                        StreamDownloadTask?.Wait();
+                        this._stream?.Close();
+                        this._stream?.Dispose();
+                        this._response?.Dispose();
+                        this.StreamDownloadTask?.Wait();
                     }
                 }
             }
             catch (Exception ex)
             {
-                logger.Log(RoomId, LogLevel.Warn, "在尝试停止录制时发生错误，请检查网络连接是否稳定", ex);
+                logger.Log(this.RoomId, LogLevel.Warn, "在尝试停止录制时发生错误，请检查网络连接是否稳定", ex);
             }
             finally
             {
-                _retry = true;
+                this._retry = true;
             }
         }
 
         private async Task _StartRecordAsync()
         {
-            if (IsRecording)
+            if (this.IsRecording)
             {
                 // TODO: 这里逻辑可能有问题，StartupTask 会变成当前这个已经结束的
-                logger.Log(RoomId, LogLevel.Warn, "已经在录制中了");
+                logger.Log(this.RoomId, LogLevel.Warn, "已经在录制中了");
                 return;
             }
 
-            cancellationTokenSource = new CancellationTokenSource();
-            var token = cancellationTokenSource.Token;
+            this.cancellationTokenSource = new CancellationTokenSource();
+            var token = this.cancellationTokenSource.Token;
             try
             {
-                var flv_path = await BililiveAPI.GetPlayUrlAsync(RoomId);
+                var flv_path = await this.BililiveAPI.GetPlayUrlAsync(this.RoomId);
                 if (string.IsNullOrWhiteSpace(flv_path))
                 {
-                    if (_retry)
+                    if (this._retry)
                     {
-                        StreamMonitor.Check(TriggerType.HttpApiRecheck, (int)_config.TimingStreamRetry);
+                        this.StreamMonitor.Check(TriggerType.HttpApiRecheck, (int)this.RoomConfig.TimingStreamRetry);
                     }
                     return;
                 }
@@ -294,7 +311,7 @@ namespace BililiveRecorder.Core
                 }))
                 {
 
-                    client.Timeout = TimeSpan.FromMilliseconds(_config.TimingStreamConnect);
+                    client.Timeout = TimeSpan.FromMilliseconds(this.RoomConfig.TimingStreamConnect);
                     client.DefaultRequestHeaders.Accept.Clear();
                     client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("*/*"));
                     client.DefaultRequestHeaders.UserAgent.Clear();
@@ -303,46 +320,46 @@ namespace BililiveRecorder.Core
                     client.DefaultRequestHeaders.Add("Origin", "https://live.bilibili.com");
 
 
-                    logger.Log(RoomId, LogLevel.Info, "连接直播服务器 " + new Uri(flv_path).Host);
-                    logger.Log(RoomId, LogLevel.Debug, "直播流地址: " + flv_path);
+                    logger.Log(this.RoomId, LogLevel.Info, "连接直播服务器 " + new Uri(flv_path).Host);
+                    logger.Log(this.RoomId, LogLevel.Debug, "直播流地址: " + flv_path);
 
-                    _response = await client.GetAsync(flv_path, HttpCompletionOption.ResponseHeadersRead);
+                    this._response = await client.GetAsync(flv_path, HttpCompletionOption.ResponseHeadersRead);
                 }
 
-                if (_response.StatusCode == HttpStatusCode.Redirect || _response.StatusCode == HttpStatusCode.Moved)
+                if (this._response.StatusCode == HttpStatusCode.Redirect || this._response.StatusCode == HttpStatusCode.Moved)
                 {
                     // workaround for missing Referrer
-                    flv_path = _response.Headers.Location.OriginalString;
-                    _response.Dispose();
+                    flv_path = this._response.Headers.Location.OriginalString;
+                    this._response.Dispose();
                     goto unwrap_redir;
                 }
-                else if (_response.StatusCode != HttpStatusCode.OK)
+                else if (this._response.StatusCode != HttpStatusCode.OK)
                 {
-                    logger.Log(RoomId, LogLevel.Info, string.Format("尝试下载直播流时服务器返回了 ({0}){1}", _response.StatusCode, _response.ReasonPhrase));
+                    logger.Log(this.RoomId, LogLevel.Info, string.Format("尝试下载直播流时服务器返回了 ({0}){1}", this._response.StatusCode, this._response.ReasonPhrase));
 
-                    StreamMonitor.Check(TriggerType.HttpApiRecheck, (int)_config.TimingStreamRetry);
+                    this.StreamMonitor.Check(TriggerType.HttpApiRecheck, (int)this.RoomConfig.TimingStreamRetry);
 
                     _CleanupFlvRequest();
                     return;
                 }
                 else
                 {
-                    Processor = newIFlvStreamProcessor().Initialize(GetStreamFilePath, GetClipFilePath, _config.EnabledFeature, _config.CuttingMode);
-                    Processor.ClipLengthFuture = _config.ClipLengthFuture;
-                    Processor.ClipLengthPast = _config.ClipLengthPast;
-                    Processor.CuttingNumber = _config.CuttingNumber;
-                    Processor.StreamFinalized += (sender, e) => { basicDanmakuWriter.Disable(); };
-                    Processor.FileFinalized += (sender, size) =>
+                    this.Processor = this.newIFlvStreamProcessor().Initialize(this.GetStreamFilePath, this.GetClipFilePath, this.RoomConfig.EnabledFeature, this.RoomConfig.CuttingMode);
+                    this.Processor.ClipLengthFuture = this.RoomConfig.ClipLengthFuture;
+                    this.Processor.ClipLengthPast = this.RoomConfig.ClipLengthPast;
+                    this.Processor.CuttingNumber = this.RoomConfig.CuttingNumber;
+                    this.Processor.StreamFinalized += (sender, e) => { this.basicDanmakuWriter.Disable(); };
+                    this.Processor.FileFinalized += (sender, size) =>
                     {
-                        if (recordEndData is null) return;
-                        var data = recordEndData;
-                        recordEndData = null;
+                        if (this.recordEndData is null) return;
+                        var data = this.recordEndData;
+                        this.recordEndData = null;
 
                         data.EndRecordTime = DateTimeOffset.Now;
                         data.FileSize = size;
                         RecordEnded?.Invoke(this, data);
                     };
-                    Processor.OnMetaData += (sender, e) =>
+                    this.Processor.OnMetaData += (sender, e) =>
                     {
                         e.Metadata["BililiveRecorder"] = new Dictionary<string, object>()
                         {
@@ -356,26 +373,26 @@ namespace BililiveRecorder.Core
                             },
                             {
                                 "roomid",
-                                RoomId.ToString()
+                                this.RoomId.ToString()
                             },
                             {
                                 "streamername",
-                                StreamerName
+                                this.StreamerName
                             },
                         };
                     };
 
-                    _stream = await _response.Content.ReadAsStreamAsync();
+                    this._stream = await this._response.Content.ReadAsStreamAsync();
 
                     try
                     {
-                        if (_response.Headers.ConnectionClose == false || (_response.Headers.ConnectionClose is null && _response.Version != VERSION_1_0))
-                            _stream.ReadTimeout = 3 * 1000;
+                        if (this._response.Headers.ConnectionClose == false || (this._response.Headers.ConnectionClose is null && this._response.Version != VERSION_1_0))
+                            this._stream.ReadTimeout = 3 * 1000;
                     }
                     catch (InvalidOperationException) { }
 
-                    StreamDownloadTask = Task.Run(_ReadStreamLoop);
-                    TriggerPropertyChanged(nameof(IsRecording));
+                    this.StreamDownloadTask = Task.Run(_ReadStreamLoop);
+                    this.TriggerPropertyChanged(nameof(this.IsRecording));
                 }
             }
             catch (TaskCanceledException)
@@ -384,16 +401,16 @@ namespace BililiveRecorder.Core
                 // useless exception message :/
 
                 _CleanupFlvRequest();
-                logger.Log(RoomId, LogLevel.Warn, "连接直播服务器超时。");
-                StreamMonitor.Check(TriggerType.HttpApiRecheck, (int)_config.TimingStreamRetry);
+                logger.Log(this.RoomId, LogLevel.Warn, "连接直播服务器超时。");
+                this.StreamMonitor.Check(TriggerType.HttpApiRecheck, (int)this.RoomConfig.TimingStreamRetry);
             }
             catch (Exception ex)
             {
                 _CleanupFlvRequest();
-                logger.Log(RoomId, LogLevel.Error, "启动直播流下载出错。" + (_retry ? "将重试启动。" : ""), ex);
-                if (_retry)
+                logger.Log(this.RoomId, LogLevel.Error, "启动直播流下载出错。" + (this._retry ? "将重试启动。" : ""), ex);
+                if (this._retry)
                 {
-                    StreamMonitor.Check(TriggerType.HttpApiRecheck, (int)_config.TimingStreamRetry);
+                    this.StreamMonitor.Check(TriggerType.HttpApiRecheck, (int)this.RoomConfig.TimingStreamRetry);
                 }
             }
             return;
@@ -406,17 +423,17 @@ namespace BililiveRecorder.Core
                     byte[] buffer = new byte[BUF_SIZE];
                     while (!token.IsCancellationRequested)
                     {
-                        int bytesRead = await _stream.ReadAsync(buffer, 0, BUF_SIZE, token);
+                        int bytesRead = await this._stream.ReadAsync(buffer, 0, BUF_SIZE, token);
                         _UpdateDownloadSpeed(bytesRead);
                         if (bytesRead != 0)
                         {
                             if (bytesRead != BUF_SIZE)
                             {
-                                Processor.AddBytes(buffer.Take(bytesRead).ToArray());
+                                this.Processor.AddBytes(buffer.Take(bytesRead).ToArray());
                             }
                             else
                             {
-                                Processor.AddBytes(buffer);
+                                this.Processor.AddBytes(buffer);
                             }
                         }
                         else
@@ -425,19 +442,19 @@ namespace BililiveRecorder.Core
                         }
                     }
 
-                    logger.Log(RoomId, LogLevel.Info,
+                    logger.Log(this.RoomId, LogLevel.Info,
                         (token.IsCancellationRequested ? "本地操作结束当前录制。" : "服务器关闭直播流，可能是直播已结束。")
-                        + (_retry ? "将重试启动。" : ""));
-                    if (_retry)
+                        + (this._retry ? "将重试启动。" : ""));
+                    if (this._retry)
                     {
-                        StreamMonitor.Check(TriggerType.HttpApiRecheck, (int)_config.TimingStreamRetry);
+                        this.StreamMonitor.Check(TriggerType.HttpApiRecheck, (int)this.RoomConfig.TimingStreamRetry);
                     }
                 }
                 catch (Exception e)
                 {
                     if (e is ObjectDisposedException && token.IsCancellationRequested) { return; }
 
-                    logger.Log(RoomId, LogLevel.Warn, "录播发生错误", e);
+                    logger.Log(this.RoomId, LogLevel.Warn, "录播发生错误", e);
                 }
                 finally
                 {
@@ -446,55 +463,55 @@ namespace BililiveRecorder.Core
             }
             void _CleanupFlvRequest()
             {
-                if (Processor != null)
+                if (this.Processor != null)
                 {
-                    Processor.FinallizeFile();
-                    Processor.Dispose();
-                    Processor = null;
+                    this.Processor.FinallizeFile();
+                    this.Processor.Dispose();
+                    this.Processor = null;
                 }
-                _stream?.Dispose();
-                _stream = null;
-                _response?.Dispose();
-                _response = null;
+                this._stream?.Dispose();
+                this._stream = null;
+                this._response?.Dispose();
+                this._response = null;
 
-                _lastUpdateTimestamp = 0;
-                DownloadSpeedMegaBitps = 0d;
-                DownloadSpeedPersentage = 0d;
-                TriggerPropertyChanged(nameof(IsRecording));
+                this._lastUpdateTimestamp = 0;
+                this.DownloadSpeedMegaBitps = 0d;
+                this.DownloadSpeedPersentage = 0d;
+                this.TriggerPropertyChanged(nameof(this.IsRecording));
             }
             void _UpdateDownloadSpeed(int bytesRead)
             {
                 DateTime now = DateTime.Now;
-                double passedSeconds = (now - LastUpdateDateTime).TotalSeconds;
-                _lastUpdateSize += bytesRead;
+                double passedSeconds = (now - this.LastUpdateDateTime).TotalSeconds;
+                this._lastUpdateSize += bytesRead;
                 if (passedSeconds > 1.5)
                 {
-                    DownloadSpeedMegaBitps = _lastUpdateSize / passedSeconds * 8d / 1_000_000d; // mega bit per second
-                    DownloadSpeedPersentage = (DownloadSpeedPersentage / 2) + ((Processor.TotalMaxTimestamp - _lastUpdateTimestamp) / passedSeconds / 1000 / 2); // ((RecordedTime/1000) / RealTime)%
-                    _lastUpdateTimestamp = Processor.TotalMaxTimestamp;
-                    _lastUpdateSize = 0;
-                    LastUpdateDateTime = now;
+                    this.DownloadSpeedMegaBitps = this._lastUpdateSize / passedSeconds * 8d / 1_000_000d; // mega bit per second
+                    this.DownloadSpeedPersentage = (this.DownloadSpeedPersentage / 2) + ((this.Processor.TotalMaxTimestamp - this._lastUpdateTimestamp) / passedSeconds / 1000 / 2); // ((RecordedTime/1000) / RealTime)%
+                    this._lastUpdateTimestamp = this.Processor.TotalMaxTimestamp;
+                    this._lastUpdateSize = 0;
+                    this.LastUpdateDateTime = now;
                 }
             }
         }
 
         // Called by API or GUI
-        public void Clip() => Processor?.Clip();
+        public void Clip() => this.Processor?.Clip();
 
-        public void Shutdown() => Dispose(true);
+        public void Shutdown() => this.Dispose(true);
 
         private (string fullPath, string relativePath) GetStreamFilePath()
         {
-            var path = FormatFilename(_config.RecordFilenameFormat);
+            var path = this.FormatFilename(this.RoomConfig.RecordFilenameFormat);
 
             // 有点脏的写法，不过凑合吧
-            if (_config.RecordDanmaku)
+            if (this.RoomConfig.RecordDanmaku)
             {
                 var xmlpath = Path.ChangeExtension(path.fullPath, "xml");
-                basicDanmakuWriter.EnableWithPath(xmlpath, this);
+                this.basicDanmakuWriter.EnableWithPath(xmlpath, this);
             }
 
-            recordEndData = new RecordEndData
+            this.recordEndData = new RecordEndData
             {
                 RoomId = RoomId,
                 Title = Title,
@@ -506,7 +523,7 @@ namespace BililiveRecorder.Core
             return path;
         }
 
-        private string GetClipFilePath() => FormatFilename(_config.ClipFilenameFormat).fullPath;
+        private string GetClipFilePath() => this.FormatFilename(this.RoomConfig.ClipFilenameFormat).fullPath;
 
         private (string fullPath, string relativePath) FormatFilename(string formatString)
         {
@@ -519,29 +536,30 @@ namespace BililiveRecorder.Core
                 .Replace(@"{date}", date)
                 .Replace(@"{time}", time)
                 .Replace(@"{random}", randomStr)
-                .Replace(@"{roomid}", RoomId.ToString())
-                .Replace(@"{title}", Title.RemoveInvalidFileName())
-                .Replace(@"{name}", StreamerName.RemoveInvalidFileName());
+                .Replace(@"{roomid}", this.RoomId.ToString())
+                .Replace(@"{title}", this.Title.RemoveInvalidFileName())
+                .Replace(@"{name}", this.StreamerName.RemoveInvalidFileName());
 
             if (!relativePath.EndsWith(".flv", StringComparison.OrdinalIgnoreCase))
                 relativePath += ".flv";
 
             relativePath = relativePath.RemoveInvalidFileName(ignore_slash: true);
-            var fullPath = Path.Combine(_config.WorkDirectory, relativePath);
+            var workDirectory = this.RoomConfig.WorkDirectory;
+            var fullPath = Path.Combine(workDirectory, relativePath);
             fullPath = Path.GetFullPath(fullPath);
 
-            if (!CheckPath(_config.WorkDirectory, Path.GetDirectoryName(fullPath)))
+            if (!CheckPath(workDirectory, Path.GetDirectoryName(fullPath)))
             {
-                logger.Log(RoomId, LogLevel.Warn, "录制文件位置超出允许范围，请检查设置。将写入到默认路径。");
-                relativePath = Path.Combine(RoomId.ToString(), $"{RoomId}-{date}-{time}-{randomStr}.flv");
-                fullPath = Path.Combine(_config.WorkDirectory, relativePath);
+                logger.Log(this.RoomId, LogLevel.Warn, "录制文件位置超出允许范围，请检查设置。将写入到默认路径。");
+                relativePath = Path.Combine(this.RoomId.ToString(), $"{this.RoomId}-{date}-{time}-{randomStr}.flv");
+                fullPath = Path.Combine(workDirectory, relativePath);
             }
 
             if (new FileInfo(relativePath).Exists)
             {
-                logger.Log(RoomId, LogLevel.Warn, "录制文件名冲突，请检查设置。将写入到默认路径。");
-                relativePath = Path.Combine(RoomId.ToString(), $"{RoomId}-{date}-{time}-{randomStr}.flv");
-                fullPath = Path.Combine(_config.WorkDirectory, relativePath);
+                logger.Log(this.RoomId, LogLevel.Warn, "录制文件名冲突，请检查设置。将写入到默认路径。");
+                relativePath = Path.Combine(this.RoomId.ToString(), $"{this.RoomId}-{date}-{time}-{randomStr}.flv");
+                fullPath = Path.Combine(workDirectory, relativePath);
             }
 
             return (fullPath, relativePath);
@@ -578,34 +596,34 @@ namespace BililiveRecorder.Core
 
         protected virtual void Dispose(bool disposing)
         {
-            if (!disposedValue)
+            if (!this.disposedValue)
             {
                 if (disposing)
                 {
-                    Stop();
-                    StopRecord();
-                    Processor?.FinallizeFile();
-                    Processor?.Dispose();
-                    StreamMonitor?.Dispose();
-                    _response?.Dispose();
-                    _stream?.Dispose();
-                    cancellationTokenSource?.Dispose();
-                    basicDanmakuWriter?.Dispose();
+                    this.Stop();
+                    this.StopRecord();
+                    this.Processor?.FinallizeFile();
+                    this.Processor?.Dispose();
+                    this.StreamMonitor?.Dispose();
+                    this._response?.Dispose();
+                    this._stream?.Dispose();
+                    this.cancellationTokenSource?.Dispose();
+                    this.basicDanmakuWriter?.Dispose();
                 }
 
-                Processor = null;
-                _response = null;
-                _stream = null;
-                cancellationTokenSource = null;
+                this.Processor = null;
+                this._response = null;
+                this._stream = null;
+                this.cancellationTokenSource = null;
 
-                disposedValue = true;
+                this.disposedValue = true;
             }
         }
 
         public void Dispose()
         {
             // 请勿更改此代码。将清理代码放入以上 Dispose(bool disposing) 中。
-            Dispose(true);
+            this.Dispose(true);
         }
         #endregion
     }

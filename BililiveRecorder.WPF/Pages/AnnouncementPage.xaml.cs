@@ -28,20 +28,20 @@ namespace BililiveRecorder.WPF.Pages
 
         public AnnouncementPage()
         {
-            InitializeComponent();
-            Dispatcher.BeginInvoke(DispatcherPriority.Normal, new Action(async () => await LoadAnnouncementAsync(ignore_cache: false, show_error: false)));
+            this.InitializeComponent();
+            this.Dispatcher.BeginInvoke(DispatcherPriority.Normal, new Action(async () => await this.LoadAnnouncementAsync(ignore_cache: false, show_error: false)));
         }
 
-        private async void Button_Click(object sender, RoutedEventArgs e) => await LoadAnnouncementAsync(ignore_cache: true, show_error: Keyboard.Modifiers.HasFlag(ModifierKeys.Control));
+        private async void Button_Click(object sender, RoutedEventArgs e) => await this.LoadAnnouncementAsync(ignore_cache: true, show_error: Keyboard.Modifiers.HasFlag(ModifierKeys.Control));
 
         private async Task LoadAnnouncementAsync(bool ignore_cache, bool show_error)
         {
             MemoryStream data;
             bool success;
 
-            Container.Child = null;
-            Error.Visibility = Visibility.Collapsed;
-            Loading.Visibility = Visibility.Visible;
+            this.Container.Child = null;
+            this.Error.Visibility = Visibility.Collapsed;
+            this.Loading.Visibility = Visibility.Visible;
 
             if (AnnouncementCache is not null && !ignore_cache)
             {
@@ -83,7 +83,7 @@ namespace BililiveRecorder.WPF.Pages
                     using var reader = new XamlXmlReader(stream, System.Windows.Markup.XamlReader.GetWpfSchemaContext());
                     var obj = System.Windows.Markup.XamlReader.Load(reader);
                     if (obj is UIElement elem)
-                        Container.Child = elem;
+                        this.Container.Child = elem;
                 }
                 catch (Exception ex)
                 {
@@ -93,16 +93,16 @@ namespace BililiveRecorder.WPF.Pages
                 }
             }
 
-            Loading.Visibility = Visibility.Collapsed;
+            this.Loading.Visibility = Visibility.Collapsed;
             if (success)
             {
-                RefreshButton.ToolTip = "当前公告获取时间: " + AnnouncementCacheTime.ToString("F");
+                this.RefreshButton.ToolTip = "当前公告获取时间: " + AnnouncementCacheTime.ToString("F");
                 AnnouncementCache = data;
             }
             else
             {
-                RefreshButton.ToolTip = null;
-                Error.Visibility = Visibility.Visible;
+                this.RefreshButton.ToolTip = null;
+                this.Error.Visibility = Visibility.Visible;
             }
         }
 
@@ -135,7 +135,7 @@ namespace BililiveRecorder.WPF.Pages
                 {
                     MessageBox.Show(ex.ToString(), "加载发生错误");
                 }
-                await LoadAnnouncementAsync(ignore_cache: false, show_error: true);
+                await this.LoadAnnouncementAsync(ignore_cache: false, show_error: true);
             }
         }
     }

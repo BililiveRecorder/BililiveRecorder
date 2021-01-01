@@ -7,7 +7,7 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using BililiveRecorder.Core.Config;
+using BililiveRecorder.Core.Config.V2;
 using Newtonsoft.Json;
 using NLog;
 using Timer = System.Timers.Timer;
@@ -31,7 +31,7 @@ namespace BililiveRecorder.Core
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
 
         private readonly Func<TcpClient> funcTcpClient;
-        private readonly ConfigV1 config;
+        private readonly RoomConfig roomConfig;
         private readonly BililiveAPI bililiveAPI;
 
         private Exception dmError = null;
@@ -42,73 +42,74 @@ namespace BililiveRecorder.Core
         private bool dmConnectionTriggered = false;
         private readonly Timer httpTimer;
 
-        public int Roomid { get; private set; } = 0;
+        private int RoomId { get => this.roomConfig.RoomId; set => this.roomConfig.RoomId = value; }
+
         public bool IsMonitoring { get; private set; } = false;
-        public bool IsDanmakuConnected => dmClient?.Connected ?? false;
+        public bool IsDanmakuConnected => this.dmClient?.Connected ?? false;
         public event RoomInfoUpdatedEvent RoomInfoUpdated;
         public event StreamStartedEvent StreamStarted;
         public event ReceivedDanmakuEvt ReceivedDanmaku;
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public StreamMonitor(int roomid, Func<TcpClient> funcTcpClient, ConfigV1 config, BililiveAPI bililiveAPI)
+        public StreamMonitor(RoomConfig roomConfig, Func<TcpClient> funcTcpClient, BililiveAPI bililiveAPI)
         {
             this.funcTcpClient = funcTcpClient;
-            this.config = config;
+            this.roomConfig = roomConfig;
             this.bililiveAPI = bililiveAPI;
 
-            Roomid = roomid;
+            ReceivedDanmaku += this.Receiver_ReceivedDanmaku;
+            RoomInfoUpdated += this.StreamMonitor_RoomInfoUpdated;
 
-            ReceivedDanmaku += Receiver_ReceivedDanmaku;
-            RoomInfoUpdated += StreamMonitor_RoomInfoUpdated;
-
-            dmTokenSource = new CancellationTokenSource();
+            this.dmTokenSource = new CancellationTokenSource();
             Repeat.Interval(TimeSpan.FromSeconds(30), () =>
             {
-                if (dmNetStream != null && dmNetStream.CanWrite)
+                if (this.dmNetStream != null && this.dmNetStream.CanWrite)
                 {
                     try
                     {
-                        SendSocketData(2);
+                        this.SendSocketData(2);
                     }
                     catch (Exception) { }
                 }
-            }, dmTokenSource.Token);
+            }, this.dmTokenSource.Token);
 
-            httpTimer = new Timer(config.TimingCheckInterval * 1000)
+            this.httpTimer = new Timer(roomConfig.TimingCheckInterval * 1000)
             {
                 Enabled = false,
                 AutoReset = true,
                 SynchronizingObject = null,
                 Site = null
             };
-            httpTimer.Elapsed += (sender, e) =>
+            this.httpTimer.Elapsed += (sender, e) =>
             {
                 try
                 {
-                    Check(TriggerType.HttpApi);
+                    this.Check(TriggerType.HttpApi);
                 }
                 catch (Exception ex)
                 {
-                    logger.Log(Roomid, LogLevel.Warn, "获取直播间开播状态出错", ex);
+                    logger.Log(this.RoomId, LogLevel.Warn, "获取直播间开播状态出错", ex);
                 }
             };
 
-            config.PropertyChanged += (sender, e) =>
+            roomConfig.PropertyChanged += (sender, e) =>
             {
-                if (e.PropertyName.Equals(nameof(config.TimingCheckInterval)))
+                if (e.PropertyName.Equals(nameof(roomConfig.TimingCheckInterval)))
                 {
-                    httpTimer.Interval = config.TimingCheckInterval * 1000;
+                    this.httpTimer.Interval = roomConfig.TimingCheckInterval * 1000;
                 }
             };
         }
 
         private void StreamMonitor_RoomInfoUpdated(object sender, RoomInfoUpdatedArgs e)
         {
-            Roomid = e.RoomInfo.RoomId;
-            if (!dmConnectionTriggered)
+            this.RoomId = e.RoomInfo.RoomId;
+            // TODO: RecordedRoom 里的 RoomInfoUpdated Handler 也会设置一次 RoomId
+            // 暂时保持不变，此处需要使用请求返回的房间号连接弹幕服务器
+            if (!this.dmConnectionTriggered)
             {
-                dmConnectionTriggered = true;
-                Task.Run(() => ConnectWithRetryAsync());
+                this.dmConnectionTriggered = true;
+                Task.Run(() => this.ConnectWithRetryAsync());
             }
         }
 
@@ -117,7 +118,7 @@ namespace BililiveRecorder.Core
             switch (e.Danmaku.MsgType)
             {
                 case MsgTypeEnum.LiveStart:
-                    if (IsMonitoring)
+                    if (this.IsMonitoring)
                     {
                         Task.Run(() => StreamStarted?.Invoke(this, new StreamStartedArgs() { type = TriggerType.Danmaku }));
                     }
@@ -133,31 +134,31 @@ namespace BililiveRecorder.Core
 
         public bool Start()
         {
-            if (disposedValue)
+            if (this.disposedValue)
             {
                 throw new ObjectDisposedException(nameof(StreamMonitor));
             }
 
-            IsMonitoring = true;
-            httpTimer.Start();
-            Check(TriggerType.HttpApi);
+            this.IsMonitoring = true;
+            this.httpTimer.Start();
+            this.Check(TriggerType.HttpApi);
             return true;
         }
 
         public void Stop()
         {
-            if (disposedValue)
+            if (this.disposedValue)
             {
                 throw new ObjectDisposedException(nameof(StreamMonitor));
             }
 
-            IsMonitoring = false;
-            httpTimer.Stop();
+            this.IsMonitoring = false;
+            this.httpTimer.Stop();
         }
 
         public void Check(TriggerType type, int millisecondsDelay = 0)
         {
-            if (disposedValue)
+            if (this.disposedValue)
             {
                 throw new ObjectDisposedException(nameof(StreamMonitor));
             }
@@ -170,7 +171,7 @@ namespace BililiveRecorder.Core
             Task.Run(async () =>
             {
                 await Task.Delay(millisecondsDelay).ConfigureAwait(false);
-                if ((await FetchRoomInfoAsync().ConfigureAwait(false)).IsStreaming)
+                if ((await this.FetchRoomInfoAsync().ConfigureAwait(false)).IsStreaming)
                 {
                     StreamStarted?.Invoke(this, new StreamStartedArgs() { type = type });
                 }
@@ -179,7 +180,7 @@ namespace BililiveRecorder.Core
 
         public async Task<RoomInfo> FetchRoomInfoAsync()
         {
-            RoomInfo roomInfo = await bililiveAPI.GetRoomInfoAsync(Roomid).ConfigureAwait(false);
+            RoomInfo roomInfo = await this.bililiveAPI.GetRoomInfoAsync(this.RoomId).ConfigureAwait(false);
             if (roomInfo != null)
                 RoomInfoUpdated?.Invoke(this, new RoomInfoUpdatedArgs { RoomInfo = roomInfo });
             return roomInfo;
@@ -191,46 +192,46 @@ namespace BililiveRecorder.Core
         private async Task ConnectWithRetryAsync()
         {
             bool connect_result = false;
-            while (!IsDanmakuConnected && !dmTokenSource.Token.IsCancellationRequested)
+            while (!this.IsDanmakuConnected && !this.dmTokenSource.Token.IsCancellationRequested)
             {
-                logger.Log(Roomid, LogLevel.Info, "连接弹幕服务器...");
-                connect_result = await ConnectAsync().ConfigureAwait(false);
+                logger.Log(this.RoomId, LogLevel.Info, "连接弹幕服务器...");
+                connect_result = await this.ConnectAsync().ConfigureAwait(false);
                 if (!connect_result)
-                    await Task.Delay((int)Math.Max(config.TimingDanmakuRetry, 0));
+                    await Task.Delay((int)Math.Max(this.roomConfig.TimingDanmakuRetry, 0));
             }
 
             if (connect_result)
             {
-                logger.Log(Roomid, LogLevel.Info, "弹幕服务器连接成功");
+                logger.Log(this.RoomId, LogLevel.Info, "弹幕服务器连接成功");
             }
         }
 
         private async Task<bool> ConnectAsync()
         {
-            if (IsDanmakuConnected) { return true; }
+            if (this.IsDanmakuConnected) { return true; }
 
             try
             {
-                var (token, host, port) = await bililiveAPI.GetDanmuConf(Roomid);
+                var (token, host, port) = await this.bililiveAPI.GetDanmuConf(this.RoomId);
 
-                logger.Log(Roomid, LogLevel.Debug, $"连接弹幕服务器 {host}:{port} {(string.IsNullOrWhiteSpace(token) ? "无" : "有")} token");
+                logger.Log(this.RoomId, LogLevel.Debug, $"连接弹幕服务器 {host}:{port} {(string.IsNullOrWhiteSpace(token) ? "无" : "有")} token");
 
-                dmClient = funcTcpClient();
-                await dmClient.ConnectAsync(host, port).ConfigureAwait(false);
-                dmNetStream = dmClient.GetStream();
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(IsDanmakuConnected)));
+                this.dmClient = this.funcTcpClient();
+                await this.dmClient.ConnectAsync(host, port).ConfigureAwait(false);
+                this.dmNetStream = this.dmClient.GetStream();
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(this.IsDanmakuConnected)));
 
-                dmReceiveMessageLoopThread = new Thread(ReceiveMessageLoop)
+                this.dmReceiveMessageLoopThread = new Thread(this.ReceiveMessageLoop)
                 {
-                    Name = "ReceiveMessageLoop " + Roomid,
+                    Name = "ReceiveMessageLoop " + this.RoomId,
                     IsBackground = true
                 };
-                dmReceiveMessageLoopThread.Start();
+                this.dmReceiveMessageLoopThread.Start();
 
                 var hello = JsonConvert.SerializeObject(new
                 {
                     uid = 0,
-                    roomid = Roomid,
+                    roomid = this.RoomId,
                     protover = 2,
                     platform = "web",
                     clientver = "1.11.0",
@@ -238,30 +239,30 @@ namespace BililiveRecorder.Core
                     key = token,
 
                 }, Formatting.None);
-                SendSocketData(7, hello);
-                SendSocketData(2);
+                this.SendSocketData(7, hello);
+                this.SendSocketData(2);
 
                 return true;
             }
             catch (Exception ex)
             {
-                dmError = ex;
-                logger.Log(Roomid, LogLevel.Warn, "连接弹幕服务器错误", ex);
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(IsDanmakuConnected)));
+                this.dmError = ex;
+                logger.Log(this.RoomId, LogLevel.Warn, "连接弹幕服务器错误", ex);
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(this.IsDanmakuConnected)));
                 return false;
             }
         }
 
         private void ReceiveMessageLoop()
         {
-            logger.Log(Roomid, LogLevel.Trace, "ReceiveMessageLoop Started");
+            logger.Log(this.RoomId, LogLevel.Trace, "ReceiveMessageLoop Started");
             try
             {
                 var stableBuffer = new byte[16];
                 var buffer = new byte[4096];
-                while (IsDanmakuConnected)
+                while (this.IsDanmakuConnected)
                 {
-                    dmNetStream.ReadB(stableBuffer, 0, 16);
+                    this.dmNetStream.ReadB(stableBuffer, 0, 16);
                     Parse2Protocol(stableBuffer, out DanmakuProtocol protocol);
 
                     if (protocol.PacketLength < 16)
@@ -280,7 +281,7 @@ namespace BililiveRecorder.Core
                         buffer = new byte[payloadlength];
                     }
 
-                    dmNetStream.ReadB(buffer, 0, payloadlength);
+                    this.dmNetStream.ReadB(buffer, 0, payloadlength);
 
                     if (protocol.Version == 2 && protocol.Action == 5) // 处理deflate消息
                     {
@@ -324,7 +325,7 @@ namespace BililiveRecorder.Core
                                 }
                                 catch (Exception ex)
                                 {
-                                    logger.Log(Roomid, LogLevel.Warn, "", ex);
+                                    logger.Log(this.RoomId, LogLevel.Warn, "", ex);
                                 }
                                 break;
                             default:
@@ -335,25 +336,25 @@ namespace BililiveRecorder.Core
             }
             catch (Exception ex)
             {
-                dmError = ex;
+                this.dmError = ex;
                 // logger.Error(ex);
 
-                logger.Log(Roomid, LogLevel.Debug, "Disconnected");
-                dmClient?.Close();
-                dmNetStream = null;
-                if (!(dmTokenSource?.IsCancellationRequested ?? true))
+                logger.Log(this.RoomId, LogLevel.Debug, "Disconnected");
+                this.dmClient?.Close();
+                this.dmNetStream = null;
+                if (!(this.dmTokenSource?.IsCancellationRequested ?? true))
                 {
-                    logger.Log(Roomid, LogLevel.Warn, "弹幕连接被断开，将尝试重连", ex);
+                    logger.Log(this.RoomId, LogLevel.Warn, "弹幕连接被断开，将尝试重连", ex);
                     Task.Run(async () =>
                     {
-                        await Task.Delay((int)Math.Max(config.TimingDanmakuRetry, 0));
-                        await ConnectWithRetryAsync();
+                        await Task.Delay((int)Math.Max(this.roomConfig.TimingDanmakuRetry, 0));
+                        await this.ConnectWithRetryAsync();
                     });
                 }
             }
             finally
             {
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(IsDanmakuConnected)));
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(this.IsDanmakuConnected)));
             }
         }
 
@@ -382,8 +383,8 @@ namespace BililiveRecorder.Core
                 {
                     ms.Write(playload, 0, playload.Length);
                 }
-                dmNetStream.Write(buffer, 0, buffer.Length);
-                dmNetStream.Flush();
+                this.dmNetStream.Write(buffer, 0, buffer.Length);
+                this.dmNetStream.Flush();
             }
         }
 
@@ -423,11 +424,11 @@ namespace BililiveRecorder.Core
             /// </summary>
             public void ChangeEndian()
             {
-                PacketLength = IPAddress.HostToNetworkOrder(PacketLength);
-                HeaderLength = IPAddress.HostToNetworkOrder(HeaderLength);
-                Version = IPAddress.HostToNetworkOrder(Version);
-                Action = IPAddress.HostToNetworkOrder(Action);
-                Parameter = IPAddress.HostToNetworkOrder(Parameter);
+                this.PacketLength = IPAddress.HostToNetworkOrder(this.PacketLength);
+                this.HeaderLength = IPAddress.HostToNetworkOrder(this.HeaderLength);
+                this.Version = IPAddress.HostToNetworkOrder(this.Version);
+                this.Action = IPAddress.HostToNetworkOrder(this.Action);
+                this.Parameter = IPAddress.HostToNetworkOrder(this.Parameter);
             }
         }
 
@@ -439,25 +440,25 @@ namespace BililiveRecorder.Core
 
         protected virtual void Dispose(bool disposing)
         {
-            if (!disposedValue)
+            if (!this.disposedValue)
             {
                 if (disposing)
                 {
-                    dmTokenSource?.Cancel();
-                    dmTokenSource?.Dispose();
-                    httpTimer?.Dispose();
-                    dmClient?.Close();
+                    this.dmTokenSource?.Cancel();
+                    this.dmTokenSource?.Dispose();
+                    this.httpTimer?.Dispose();
+                    this.dmClient?.Close();
                 }
 
-                dmNetStream = null;
-                disposedValue = true;
+                this.dmNetStream = null;
+                this.disposedValue = true;
             }
         }
 
         public void Dispose()
         {
             // 请勿更改此代码。将清理代码放入以上 Dispose(bool disposing) 中。
-            Dispose(true);
+            this.Dispose(true);
         }
         #endregion
     }

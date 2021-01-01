@@ -14,26 +14,26 @@ namespace BililiveRecorder.WPF.Controls
 
         public AddRoomCard()
         {
-            InitializeComponent();
+            this.InitializeComponent();
         }
 
         private void AddRoom()
         {
-            AddRoomRequested?.Invoke(this, InputTextBox.Text);
-            InputTextBox.Text = string.Empty;
-            InputTextBox.Focus();
+            AddRoomRequested?.Invoke(this, this.InputTextBox.Text);
+            this.InputTextBox.Text = string.Empty;
+            this.InputTextBox.Focus();
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            AddRoom();
+            this.AddRoom();
         }
 
         private void InputTextBox_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Enter)
             {
-                AddRoom();
+                this.AddRoom();
             }
         }
     }

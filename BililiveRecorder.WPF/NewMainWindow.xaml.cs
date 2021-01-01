@@ -14,14 +14,14 @@ namespace BililiveRecorder.WPF
     {
         public NewMainWindow()
         {
-            InitializeComponent();
+            this.InitializeComponent();
 
-            Title = "B站录播姬 " + BuildInfo.Version + " " + BuildInfo.HeadShaShort;
+            this.Title = "B站录播姬 " + BuildInfo.Version + " " + BuildInfo.HeadShaShort;
 
-            SingleInstance.NotificationReceived += SingleInstance_NotificationReceived;
+            SingleInstance.NotificationReceived += this.SingleInstance_NotificationReceived;
         }
 
-        private void SingleInstance_NotificationReceived(object sender, EventArgs e) => SuperActivateAction();
+        private void SingleInstance_NotificationReceived(object sender, EventArgs e) => this.SuperActivateAction();
 
         public event EventHandler NativeBeforeWindowClose;
 
@@ -29,20 +29,20 @@ namespace BililiveRecorder.WPF
 
         internal void CloseWithoutConfirmAction()
         {
-            CloseConfirmed = true;
-            Close();
+            this.CloseConfirmed = true;
+            this.Close();
         }
 
         internal void SuperActivateAction()
         {
             try
             {
-                Show();
-                WindowState = WindowState.Normal;
-                Topmost = true;
-                Activate();
-                Topmost = false;
-                Focus();
+                this.Show();
+                this.WindowState = WindowState.Normal;
+                this.Topmost = true;
+                this.Activate();
+                this.Topmost = false;
+                this.Focus();
             }
             catch (Exception)
             { }
@@ -50,10 +50,10 @@ namespace BililiveRecorder.WPF
 
         private void Window_StateChanged(object sender, EventArgs e)
         {
-            if (WindowState == WindowState.Minimized)
+            if (this.WindowState == WindowState.Minimized)
             {
-                Hide();
-                ShowBalloonTipCallback?.Invoke("B站录播姬", "录播姬已最小化到托盘，左键单击图标恢复界面", BalloonIcon.Info);
+                this.Hide();
+                this.ShowBalloonTipCallback?.Invoke("B站录播姬", "录播姬已最小化到托盘，左键单击图标恢复界面", BalloonIcon.Info);
             }
         }
 
@@ -67,28 +67,28 @@ namespace BililiveRecorder.WPF
 
         private async void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            if (PromptCloseConfirm && !CloseConfirmed)
+            if (this.PromptCloseConfirm && !this.CloseConfirmed)
             {
                 e.Cancel = true;
-                if (CloseWindowSemaphoreSlim.Wait(0))
+                if (this.CloseWindowSemaphoreSlim.Wait(0))
                 {
                     try
                     {
                         if (await new CloseWindowConfirmDialog().ShowAsync() == ContentDialogResult.Primary)
                         {
-                            CloseConfirmed = true;
-                            CloseWindowSemaphoreSlim.Release();
-                            Close();
+                            this.CloseConfirmed = true;
+                            this.CloseWindowSemaphoreSlim.Release();
+                            this.Close();
                             return;
                         }
                     }
                     catch (Exception) { }
-                    CloseWindowSemaphoreSlim.Release();
+                    this.CloseWindowSemaphoreSlim.Release();
                 }
             }
             else
             {
-                SingleInstance.NotificationReceived -= SingleInstance_NotificationReceived;
+                SingleInstance.NotificationReceived -= this.SingleInstance_NotificationReceived;
                 NativeBeforeWindowClose?.Invoke(this, EventArgs.Empty);
                 return;
             }

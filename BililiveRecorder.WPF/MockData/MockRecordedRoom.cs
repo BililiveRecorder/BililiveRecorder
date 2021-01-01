@@ -2,6 +2,7 @@ using System;
 using System.ComponentModel;
 using BililiveRecorder.Core;
 using BililiveRecorder.Core.Callback;
+using BililiveRecorder.Core.Config.V2;
 using BililiveRecorder.FlvProcessor;
 
 #nullable enable
@@ -14,14 +15,14 @@ namespace BililiveRecorder.WPF.MockData
 
         public MockRecordedRoom()
         {
-            RoomId = 123456789;
-            ShortRoomId = 1234;
-            StreamerName = "Mock主播名Mock主播名Mock主播名Mock主播名";
-            IsMonitoring = false;
-            IsRecording = true;
-            IsStreaming = true;
-            DownloadSpeedPersentage = 100d;
-            DownloadSpeedMegaBitps = 2.45d;
+            this.RoomId = 123456789;
+            this.ShortRoomId = 1234;
+            this.StreamerName = "Mock主播名Mock主播名Mock主播名Mock主播名";
+            this.IsMonitoring = false;
+            this.IsRecording = true;
+            this.IsStreaming = true;
+            this.DownloadSpeedPersentage = 100d;
+            this.DownloadSpeedMegaBitps = 2.45d;
         }
 
         public int ShortRoomId { get; set; }
@@ -52,6 +53,8 @@ namespace BililiveRecorder.WPF.MockData
 
         public Guid Guid { get; } = Guid.NewGuid();
 
+        public RoomConfig RoomConfig => new RoomConfig();
+
         public event PropertyChangedEventHandler? PropertyChanged;
 
         public event EventHandler<RecordEndData>? RecordEnded;
@@ -70,32 +73,32 @@ namespace BililiveRecorder.WPF.MockData
 
         public bool Start()
         {
-            IsMonitoring = true;
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(IsMonitoring)));
+            this.IsMonitoring = true;
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(this.IsMonitoring)));
             return true;
         }
 
         public void StartRecord()
         {
-            IsRecording = true;
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(IsRecording)));
+            this.IsRecording = true;
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(this.IsRecording)));
         }
 
         public void Stop()
         {
-            IsMonitoring = false;
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(IsMonitoring)));
+            this.IsMonitoring = false;
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(this.IsMonitoring)));
         }
 
         public void StopRecord()
         {
-            IsRecording = false;
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(IsRecording)));
+            this.IsRecording = false;
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(this.IsRecording)));
         }
 
         protected virtual void Dispose(bool disposing)
         {
-            if (!disposedValue)
+            if (!this.disposedValue)
             {
                 if (disposing)
                 {
@@ -104,7 +107,7 @@ namespace BililiveRecorder.WPF.MockData
 
                 // TODO: free unmanaged resources (unmanaged objects) and override finalizer
                 // TODO: set large fields to null
-                disposedValue = true;
+                this.disposedValue = true;
             }
         }
 
@@ -118,7 +121,7 @@ namespace BililiveRecorder.WPF.MockData
         public void Dispose()
         {
             // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
-            Dispose(disposing: true);
+            this.Dispose(disposing: true);
             GC.SuppressFinalize(this);
         }
     }

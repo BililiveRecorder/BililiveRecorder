@@ -32,12 +32,12 @@ namespace BililiveRecorder.WPF.Models
 
         #region ICommand Members
 
-        public void Execute(object parameter) => ExecuteDelegate?.Invoke(parameter);
+        public void Execute(object parameter) => this.ExecuteDelegate?.Invoke(parameter);
 
-        public bool CanExecute(object parameter) => CanExecuteDelegate switch
+        public bool CanExecute(object parameter) => this.CanExecuteDelegate switch
         {
             null => true,
-            _ => CanExecuteDelegate(parameter),
+            _ => this.CanExecuteDelegate(parameter),
         };
 
         public event EventHandler CanExecuteChanged

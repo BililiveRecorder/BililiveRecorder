@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace BililiveRecorder.Core
+﻿namespace BililiveRecorder.Core
 {
     public enum TriggerType
     {
