@@ -7,7 +7,7 @@
     xmlns:ui="http://schemas.modernwpf.com/2019"
     xmlns:local="clr-namespace:BililiveRecorder.WPF.Pages"
     xmlns:mock="clr-namespace:BililiveRecorder.WPF.MockData"
-    xmlns:controls="clr-namespace:BililiveRecorder.WPF.Controls"
+    xmlns:c="clr-namespace:BililiveRecorder.WPF.Controls"
     xmlns:converters="clr-namespace:BililiveRecorder.WPF.Converters"
     mc:Ignorable="d" 
     d:DesignHeight="1000" d:DesignWidth="960"
@@ -17,12 +17,12 @@
     <ui:Page.Resources>
         <DataTemplate x:Key="NormalRoomCardTemplate">
             <ui:ThemeShadowChrome IsShadowEnabled="True" Depth="10">
-                <controls:RoomCard DeleteRequested="RoomCard_DeleteRequested" />
+                <c:RoomCard DeleteRequested="RoomCard_DeleteRequested" ShowSettingsRequested="RoomCard_ShowSettingsRequested" />
             </ui:ThemeShadowChrome>
         </DataTemplate>
         <DataTemplate x:Key="AddRoomCardTemplate">
             <ui:ThemeShadowChrome IsShadowEnabled="True" Depth="10">
-                <controls:AddRoomCard AddRoomRequested="AddRoomCard_AddRoomRequested"/>
+                <c:AddRoomCard AddRoomRequested="AddRoomCard_AddRoomRequested"/>
             </ui:ThemeShadowChrome>
         </DataTemplate>
         <converters:NullValueTemplateSelector

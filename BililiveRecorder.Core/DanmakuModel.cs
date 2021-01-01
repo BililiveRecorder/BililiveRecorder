@@ -1,5 +1,5 @@
-﻿using Newtonsoft.Json.Linq;
-using System;
+﻿using System;
+using Newtonsoft.Json.Linq;
 
 namespace BililiveRecorder.Core
 {
@@ -68,8 +68,8 @@ namespace BililiveRecorder.Core
         [Obsolete("请使用 UserName")]
         public string CommentUser
         {
-            get { return UserName; }
-            set { UserName = value; }
+            get { return this.UserName; }
+            set { this.UserName = value; }
         }
 
         /// <summary>
@@ -123,8 +123,8 @@ namespace BililiveRecorder.Core
         [Obsolete("请使用 UserName")]
         public string GiftUser
         {
-            get { return UserName; }
-            set { UserName = value; }
+            get { return this.UserName; }
+            set { this.UserName = value; }
         }
 
         /// <summary>
@@ -136,7 +136,7 @@ namespace BililiveRecorder.Core
         /// 禮物數量
         /// </summary>
         [Obsolete("请使用 GiftCount")]
-        public string GiftNum { get { return GiftCount.ToString(); } }
+        public string GiftNum { get { return this.GiftCount.ToString(); } }
 
         /// <summary>
         /// 礼物数量
@@ -198,56 +198,56 @@ namespace BililiveRecorder.Core
 
         public DanmakuModel(string JSON)
         {
-            RawData = JSON;
-            JSON_Version = 2;
+            this.RawData = JSON;
+            this.JSON_Version = 2;
 
             var obj = JObject.Parse(JSON);
-            RawObj = obj;
+            this.RawObj = obj;
             string cmd = obj["cmd"]?.ToObject<string>();
             switch (cmd)
             {
                 case "LIVE":
-                    MsgType = MsgTypeEnum.LiveStart;
-                    RoomID = obj["roomid"].ToObject<string>();
+                    this.MsgType = MsgTypeEnum.LiveStart;
+                    this.RoomID = obj["roomid"].ToObject<string>();
                     break;
                 case "PREPARING":
-                    MsgType = MsgTypeEnum.LiveEnd;
-                    RoomID = obj["roomid"].ToObject<string>();
+                    this.MsgType = MsgTypeEnum.LiveEnd;
+                    this.RoomID = obj["roomid"].ToObject<string>();
                     break;
                 case "DANMU_MSG":
-                    MsgType = MsgTypeEnum.Comment;
-                    CommentText = obj["info"][1].ToObject<string>();
-                    UserID = obj["info"][2][0].ToObject<int>();
-                    UserName = obj["info"][2][1].ToObject<string>();
-                    IsAdmin = obj["info"][2][2].ToObject<string>() == "1";
-                    IsVIP = obj["info"][2][3].ToObject<string>() == "1";
-                    UserGuardLevel = obj["info"][7].ToObject<int>();
+                    this.MsgType = MsgTypeEnum.Comment;
+                    this.CommentText = obj["info"][1].ToObject<string>();
+                    this.UserID = obj["info"][2][0].ToObject<int>();
+                    this.UserName = obj["info"][2][1].ToObject<string>();
+                    this.IsAdmin = obj["info"][2][2].ToObject<string>() == "1";
+                    this.IsVIP = obj["info"][2][3].ToObject<string>() == "1";
+                    this.UserGuardLevel = obj["info"][7].ToObject<int>();
                     break;
                 case "SEND_GIFT":
-                    MsgType = MsgTypeEnum.GiftSend;
-                    GiftName = obj["data"]["giftName"].ToObject<string>();
-                    UserName = obj["data"]["uname"].ToObject<string>();
-                    UserID = obj["data"]["uid"].ToObject<int>();
-                    GiftCount = obj["data"]["num"].ToObject<int>();
+                    this.MsgType = MsgTypeEnum.GiftSend;
+                    this.GiftName = obj["data"]["giftName"].ToObject<string>();
+                    this.UserName = obj["data"]["uname"].ToObject<string>();
+                    this.UserID = obj["data"]["uid"].ToObject<int>();
+                    this.GiftCount = obj["data"]["num"].ToObject<int>();
                     break;
                 case "GUARD_BUY":
                     {
-                        MsgType = MsgTypeEnum.GuardBuy;
-                        UserID = obj["data"]["uid"].ToObject<int>();
-                        UserName = obj["data"]["username"].ToObject<string>();
-                        UserGuardLevel = obj["data"]["guard_level"].ToObject<int>();
-                        GiftName = UserGuardLevel == 3 ? "舰长" : UserGuardLevel == 2 ? "提督" : UserGuardLevel == 1 ? "总督" : "";
-                        GiftCount = obj["data"]["num"].ToObject<int>();
+                        this.MsgType = MsgTypeEnum.GuardBuy;
+                        this.UserID = obj["data"]["uid"].ToObject<int>();
+                        this.UserName = obj["data"]["username"].ToObject<string>();
+                        this.UserGuardLevel = obj["data"]["guard_level"].ToObject<int>();
+                        this.GiftName = this.UserGuardLevel == 3 ? "舰长" : this.UserGuardLevel == 2 ? "提督" : this.UserGuardLevel == 1 ? "总督" : "";
+                        this.GiftCount = obj["data"]["num"].ToObject<int>();
                         break;
                     }
                 case "SUPER_CHAT_MESSAGE":
                     {
-                        MsgType = MsgTypeEnum.SuperChat;
-                        CommentText = obj["data"]["message"]?.ToString();
-                        UserID = obj["data"]["uid"].ToObject<int>();
-                        UserName = obj["data"]["user_info"]["uname"].ToString();
-                        Price = obj["data"]["price"].ToObject<double>();
-                        SCKeepTime = obj["data"]["time"].ToObject<int>();
+                        this.MsgType = MsgTypeEnum.SuperChat;
+                        this.CommentText = obj["data"]["message"]?.ToString();
+                        this.UserID = obj["data"]["uid"].ToObject<int>();
+                        this.UserName = obj["data"]["user_info"]["uname"].ToString();
+                        this.Price = obj["data"]["price"].ToObject<double>();
+                        this.SCKeepTime = obj["data"]["time"].ToObject<int>();
                         break;
                     }
                 /*
@@ -271,7 +271,7 @@ namespace BililiveRecorder.Core
                 */
                 default:
                     {
-                        MsgType = MsgTypeEnum.Unknown;
+                        this.MsgType = MsgTypeEnum.Unknown;
                         break;
                     }
             }

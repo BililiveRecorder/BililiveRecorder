@@ -7,7 +7,7 @@ namespace BililiveRecorder.WPF.Controls
     {
         public AddRoomFailedDialog()
         {
-            InitializeComponent();
+            this.InitializeComponent();
         }
     }
 }

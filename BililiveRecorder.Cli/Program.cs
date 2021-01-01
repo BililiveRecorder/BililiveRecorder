@@ -5,7 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Autofac;
 using BililiveRecorder.Core;
-using BililiveRecorder.Core.Config;
+using BililiveRecorder.Core.Config.V1;
 using BililiveRecorder.FlvProcessor;
 using CommandLine;
 using Newtonsoft.Json;
