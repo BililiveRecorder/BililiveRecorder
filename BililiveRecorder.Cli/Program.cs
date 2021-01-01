@@ -17,8 +17,12 @@ namespace BililiveRecorder.Cli
     {
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
 
-        private static void Main(string[] _)
+        private static int Main(string[] _)
         {
+            Console.WriteLine("本版本的 CLI 版还没实现");
+            return -1;
+
+            /*
             var builder = new ContainerBuilder();
             builder.RegisterModule<FlvProcessorModule>();
             builder.RegisterModule<CoreModule>();
@@ -62,10 +66,11 @@ namespace BililiveRecorder.Cli
                 {
                     Thread.Sleep(TimeSpan.FromSeconds(10));
                 }
-            }
+            }*/
         }
     }
 
+    [Obsolete]
     public partial class CommandConfigV1 : ConfigV1
     {
         [Option('i', "id", HelpText = "room id", Required = true)]
