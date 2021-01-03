@@ -59,7 +59,10 @@ namespace BililiveRecorder.WPF.Pages
             InitializeComponent();
             AdvancedSettingsPageItem.Visibility = Visibility.Hidden;
 
-            (Application.Current.MainWindow as NewMainWindow).NativeBeforeWindowClose += RootPage_NativeBeforeWindowClose;
+            var mw = Application.Current.MainWindow as NewMainWindow;
+            if (mw is not null)
+                mw.NativeBeforeWindowClose += this.RootPage_NativeBeforeWindowClose;
+
             Loaded += RootPage_Loaded;
         }
 
@@ -124,7 +127,7 @@ namespace BililiveRecorder.WPF.Pages
                             Error = error,
                             Path = lastdir
                         };
-                        
+
                         if (await dialog.ShowAsync() != ContentDialogResult.Primary)
                         {
                             (Application.Current.MainWindow as NewMainWindow).CloseWithoutConfirmAction();

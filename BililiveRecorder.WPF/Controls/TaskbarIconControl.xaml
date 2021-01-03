@@ -9,7 +9,7 @@
     xmlns:local="clr-namespace:BililiveRecorder.WPF.Controls"
     mc:Ignorable="d">
     <tb:TaskbarIcon 
-        x:Name="TaskbarIcon" IconSource="/ico.ico" TrayLeftMouseUp="TaskbarIcon_TrayLeftMouseUp"
+        x:Name="TaskbarIcon" TrayLeftMouseUp="TaskbarIcon_TrayLeftMouseUp"
         Visibility="{Binding Recorder, Converter={StaticResource IsNullToVisibilityCollapsedConverter}}"
         ToolTipText="B站录播姬" MenuActivation="RightClick"
         >

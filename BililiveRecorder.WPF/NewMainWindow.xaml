@@ -4,22 +4,31 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:ui="http://schemas.modernwpf.com/2019"
+        xmlns:l="https://github.com/XAMLMarkupExtensions/WPFLocalizationExtension"
+        l:LocalizeDictionary.DesignCulture=""
+        l:ResxLocalizationProvider.DefaultAssembly="BililiveRecorder.WPF"
+        l:ResxLocalizationProvider.DefaultDictionary="Strings"
         xmlns:local="clr-namespace:BililiveRecorder.WPF"
         xmlns:pages="clr-namespace:BililiveRecorder.WPF.Pages"
         mc:Ignorable="d"
-        WindowStartupLocation="CenterScreen"
         Background="{DynamicResource SystemControlPageBackgroundAltHighBrush}"
         Foreground="{DynamicResource SystemControlPageTextBaseHighBrush}"
         ui:ThemeManager.IsThemeAware="True"
+        ui:ThemeManager.RequestedTheme="Default"
         ui:WindowHelper.UseModernWindowStyle="True"
         ui:TitleBar.IsBackEnabled="False"
         ui:TitleBar.IsBackButtonVisible="False"
         ui:TitleBar.IsIconVisible="True"
-        Width="960" Height="650"
-        MinHeight="400" MinWidth="340"
-        Closing="Window_Closing"
-        StateChanged="Window_StateChanged" 
-        ui:ThemeManager.RequestedTheme="Default"
-        Title="录播姬">
+        Width="960" Height="650" MinHeight="400" MinWidth="340"
+        WindowStartupLocation="CenterScreen"
+        FontFamily="Microsoft YaHei"
+        Closing="Window_Closing" StateChanged="Window_StateChanged" 
+        >
+    <Window.Title>
+        <MultiBinding Converter="{l:StringFormatConverter}">
+            <l:BLoc Key="Window_Title"/>
+            <Binding Path="SoftwareVersion" RelativeSource="{RelativeSource Mode=Self}" />
+        </MultiBinding>
+    </Window.Title>
     <pages:RootPage x:Name="RootPage"/>
 </Window>
