@@ -1,104 +1,84 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
-    Microsoft ResX Schema 
-    
-    Version 2.0
-    
-    The primary goals of this format is to allow a simple XML format 
-    that is mostly human readable. The generation and parsing of the 
-    various data types are done through the TypeConverter classes 
-    associated with the data types.
-    
-    Example:
-    
-    ... ado.net/XML headers & schema ...
-    <resheader name="resmimetype">text/microsoft-resx</resheader>
-    <resheader name="version">2.0</resheader>
-    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
-    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
-    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
-    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
-    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
-        <value>[base64 mime encoded serialized .NET Framework object]</value>
-    </data>
-    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
-        <comment>This is a comment</comment>
-    </data>
-                
-    There are any number of "resheader" rows that contain simple 
-    name/value pairs.
-    
-    Each data row contains a name, and value. The row also contains a 
-    type or mimetype. Type corresponds to a .NET class that support 
-    text/value conversion through the TypeConverter architecture. 
-    Classes that don't support this are serialized and stored with the 
-    mimetype set.
-    
-    The mimetype is used for serialized objects, and tells the 
-    ResXResourceReader how to depersist the object. This is currently not 
-    extensible. For a given mimetype the value must be set accordingly:
-    
-    Note - application/x-microsoft.net.object.binary.base64 is the format 
-    that the ResXResourceWriter will generate, however the reader can 
-    read any of the formats listed below.
-    
-    mimetype: application/x-microsoft.net.object.binary.base64
-    value   : The object must be serialized with 
-            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
-            : and then encoded with base64 encoding.
-    
-    mimetype: application/x-microsoft.net.object.soap.base64
-    value   : The object must be serialized with 
-            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
-            : and then encoded with base64 encoding.
+		Microsoft ResX Schema
 
-    mimetype: application/x-microsoft.net.object.bytearray.base64
-    value   : The object must be serialized into a byte array 
-            : using a System.ComponentModel.TypeConverter
-            : and then encoded with base64 encoding.
-    -->
-  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
-    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+		Version 1.3
+
+		The primary goals of this format is to allow a simple XML format 
+		that is mostly human readable. The generation and parsing of the 
+		various data types are done through the TypeConverter classes 
+		associated with the data types.
+
+		Example:
+
+		... ado.net/XML headers & schema ...
+		<resheader name="resmimetype">text/microsoft-resx</resheader>
+		<resheader name="version">1.3</resheader>
+		<resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+		<resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+		<data name="Name1">this is my long string</data>
+		<data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+		<data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+			[base64 mime encoded serialized .NET Framework object]
+		</data>
+		<data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+			[base64 mime encoded string representing a byte array form of the .NET Framework object]
+		</data>
+
+		There are any number of "resheader" rows that contain simple 
+		name/value pairs.
+
+		Each data row contains a name, and value. The row also contains a 
+		type or mimetype. Type corresponds to a .NET class that support 
+		text/value conversion through the TypeConverter architecture. 
+		Classes that don't support this are serialized and stored with the 
+		mimetype set.
+
+		The mimetype is used for serialized objects, and tells the 
+		ResXResourceReader how to depersist the object. This is currently not 
+		extensible. For a given mimetype the value must be set accordingly:
+
+		Note - application/x-microsoft.net.object.binary.base64 is the format 
+		that the ResXResourceWriter will generate, however the reader can 
+		read any of the formats listed below.
+
+		mimetype: application/x-microsoft.net.object.binary.base64
+		value   : The object must be serialized with 
+			: System.Serialization.Formatters.Binary.BinaryFormatter
+			: and then encoded with base64 encoding.
+
+		mimetype: application/x-microsoft.net.object.soap.base64
+		value   : The object must be serialized with 
+			: System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+			: and then encoded with base64 encoding.
+
+		mimetype: application/x-microsoft.net.object.bytearray.base64
+		value   : The object must be serialized into a byte array 
+			: using a System.ComponentModel.TypeConverter
+			: and then encoded with base64 encoding.
+	-->
+  <xsd:schema xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root">
     <xsd:element name="root" msdata:IsDataSet="true">
       <xsd:complexType>
         <xsd:choice maxOccurs="unbounded">
-          <xsd:element name="metadata">
-            <xsd:complexType>
-              <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" />
-              </xsd:sequence>
-              <xsd:attribute name="name" use="required" type="xsd:string" />
-              <xsd:attribute name="type" type="xsd:string" />
-              <xsd:attribute name="mimetype" type="xsd:string" />
-              <xsd:attribute ref="xml:space" />
-            </xsd:complexType>
-          </xsd:element>
-          <xsd:element name="assembly">
-            <xsd:complexType>
-              <xsd:attribute name="alias" type="xsd:string" />
-              <xsd:attribute name="name" type="xsd:string" />
-            </xsd:complexType>
-          </xsd:element>
           <xsd:element name="data">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
-                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2"/>
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
-              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
-              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
-              <xsd:attribute ref="xml:space" />
+              <xsd:attribute name="name" type="xsd:string" msdata:Ordinal="1"/>
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3"/>
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4"/>
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="resheader">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required" />
+              <xsd:attribute name="name" type="xsd:string" use="required"/>
             </xsd:complexType>
           </xsd:element>
         </xsd:choice>
@@ -109,13 +89,13 @@
     <value>text/microsoft-resx</value>
   </resheader>
   <resheader name="version">
-    <value>2.0</value>
+    <value>1.3</value>
   </resheader>
   <resheader name="reader">
-    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.3500.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <resheader name="writer">
-    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.3500.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="Global_Confirm" xml:space="preserve">
     <value>Confirm</value>
@@ -131,5 +111,96 @@
   </data>
   <data name="Window_Title" xml:space="preserve">
     <value>BililiveRecorder {0}</value>
+    
+  </data>
+  <data name="Global_Cancel" xml:space="preserve">
+    <value>取消</value>
+  </data>
+  <data name="RoomListPage_Menu_File" xml:space="preserve">
+    <value>文件</value>
+  </data>
+  <data name="RoomListPage_Menu_AutoRecord" xml:space="preserve">
+    <value>监控</value>
+  </data>
+  <data name="RoomListPage_Menu_Sort" xml:space="preserve">
+    <value>排序</value>
+  </data>
+  <data name="RoomListPage_Menu_Log" xml:space="preserve">
+    <value>日志</value>
+  </data>
+  <data name="RoomListPage_Menu_AutoRecord_EnableAll" xml:space="preserve">
+    <value>自动录制全部房间</value>
+  </data>
+  <data name="RoomListPage_Menu_AutoRecord_DisableAll" xml:space="preserve">
+    <value>取消自动录制全部房间</value>
+  </data>
+  <data name="RoomListPage_Menu_Sort_Default" xml:space="preserve">
+    <value>不排序</value>
+  </data>
+  <data name="RoomListPage_Menu_Sort_RoomId" xml:space="preserve">
+    <value>房间号</value>
+  </data>
+  <data name="RoomListPage_Menu_Sort_Status" xml:space="preserve">
+    <value>录制状态</value>
+  </data>
+  <data name="RoomListPage_Menu_Log_Show" xml:space="preserve">
+    <value>在本页显示日志</value>
+  </data>
+  <data name="RoomListPage_Menu_Log_Hide" xml:space="preserve">
+    <value>不在本页显示日志</value>
+  </data>
+  <data name="LogPage_RightClickCopyToolTip" xml:space="preserve">
+    <value>右键点击可以复制单行日志</value>
+  </data>
+  <data name="RoomListPage_Menu_File_OpenWorkDirectory" xml:space="preserve">
+    <value>打开工作目录</value>
+  </data>
+  <data name="RootPage_NavigationViewItem_AnnouncementPage" xml:space="preserve">
+    <value>公告</value>
+  </data>
+  <data name="RootPage_NavigationViewItem_RoomListPage" xml:space="preserve">
+    <value>房间列表</value>
+  </data>
+  <data name="RootPage_NavigationViewItem_AdvancedSettingsPage" xml:space="preserve">
+    <value>高级设置</value>
+  </data>
+  <data name="RootPage_NavigationViewItem_LogPage" xml:space="preserve">
+    <value>日志</value>
+  </data>
+  <data name="RootPage_NavigationViewItem_SettingsPage" xml:space="preserve">
+    <value>设置</value>
+  </data>
+  <data name="AnnouncementPage_RefreshButton" xml:space="preserve">
+    <value>刷新公告内容</value>
+  </data>
+  <data name="AnnouncementPage_FetchFailed" xml:space="preserve">
+    <value>公告获取失败</value>
+  </data>
+  <data name="Global_Copy" xml:space="preserve">
+    <value>复制</value>
+  </data>
+  <data name="RoomCard_Menu_Tooltip" xml:space="preserve">
+    <value>操作</value>
+  </data>
+  <data name="RoomCard_Menu_StartRecording" xml:space="preserve">
+    <value>开始录制</value>
+  </data>
+  <data name="RoomCard_Menu_StopRecording" xml:space="preserve">
+    <value>停止录制</value>
+  </data>
+  <data name="RoomCard_Menu_RefreshInfo" xml:space="preserve">
+    <value>刷新直播间信息</value>
+  </data>
+  <data name="RoomCard_Menu_OpenInBrowser" xml:space="preserve">
+    <value>打开直播间页面</value>
+  </data>
+  <data name="RoomCard_Menu_EnableAutoRecord" xml:space="preserve">
+    <value>自动录制</value>
+  </data>
+  <data name="RoomCard_Menu_DisableAutoRecord" xml:space="preserve">
+    <value>不自动录制</value>
+  </data>
+  <data name="RoomCard_Menu_Delete" xml:space="preserve">
+    <value>删除房间</value>
   </data>
 </root>
