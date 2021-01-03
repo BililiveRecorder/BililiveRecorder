@@ -61,6 +61,33 @@ namespace BililiveRecorder.WPF.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to 公告获取失败.
+        /// </summary>
+        public static string AnnouncementPage_FetchFailed {
+            get {
+                return ResourceManager.GetString("AnnouncementPage_FetchFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 刷新公告内容.
+        /// </summary>
+        public static string AnnouncementPage_RefreshButton {
+            get {
+                return ResourceManager.GetString("AnnouncementPage_RefreshButton", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 取消.
+        /// </summary>
+        public static string Global_Cancel {
+            get {
+                return ResourceManager.GetString("Global_Cancel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to 确定.
         /// </summary>
         public static string Global_Confirm {
@@ -70,11 +97,254 @@ namespace BililiveRecorder.WPF.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to 复制.
+        /// </summary>
+        public static string Global_Copy {
+            get {
+                return ResourceManager.GetString("Global_Copy", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to 退出.
         /// </summary>
         public static string Global_Quit {
             get {
                 return ResourceManager.GetString("Global_Quit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 右键点击可以复制单行日志.
+        /// </summary>
+        public static string LogPage_RightClickCopyToolTip {
+            get {
+                return ResourceManager.GetString("LogPage_RightClickCopyToolTip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 删除房间.
+        /// </summary>
+        public static string RoomCard_Menu_Delete {
+            get {
+                return ResourceManager.GetString("RoomCard_Menu_Delete", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 不自动录制.
+        /// </summary>
+        public static string RoomCard_Menu_DisableAutoRecord {
+            get {
+                return ResourceManager.GetString("RoomCard_Menu_DisableAutoRecord", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 自动录制.
+        /// </summary>
+        public static string RoomCard_Menu_EnableAutoRecord {
+            get {
+                return ResourceManager.GetString("RoomCard_Menu_EnableAutoRecord", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 打开直播间页面.
+        /// </summary>
+        public static string RoomCard_Menu_OpenInBrowser {
+            get {
+                return ResourceManager.GetString("RoomCard_Menu_OpenInBrowser", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 刷新直播间信息.
+        /// </summary>
+        public static string RoomCard_Menu_RefreshInfo {
+            get {
+                return ResourceManager.GetString("RoomCard_Menu_RefreshInfo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 开始录制.
+        /// </summary>
+        public static string RoomCard_Menu_StartRecording {
+            get {
+                return ResourceManager.GetString("RoomCard_Menu_StartRecording", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 停止录制.
+        /// </summary>
+        public static string RoomCard_Menu_StopRecording {
+            get {
+                return ResourceManager.GetString("RoomCard_Menu_StopRecording", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 操作.
+        /// </summary>
+        public static string RoomCard_Menu_Tooltip {
+            get {
+                return ResourceManager.GetString("RoomCard_Menu_Tooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 监控.
+        /// </summary>
+        public static string RoomListPage_Menu_AutoRecord {
+            get {
+                return ResourceManager.GetString("RoomListPage_Menu_AutoRecord", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 取消自动录制全部房间.
+        /// </summary>
+        public static string RoomListPage_Menu_AutoRecord_DisableAll {
+            get {
+                return ResourceManager.GetString("RoomListPage_Menu_AutoRecord_DisableAll", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 自动录制全部房间.
+        /// </summary>
+        public static string RoomListPage_Menu_AutoRecord_EnableAll {
+            get {
+                return ResourceManager.GetString("RoomListPage_Menu_AutoRecord_EnableAll", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 文件.
+        /// </summary>
+        public static string RoomListPage_Menu_File {
+            get {
+                return ResourceManager.GetString("RoomListPage_Menu_File", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 打开工作目录.
+        /// </summary>
+        public static string RoomListPage_Menu_File_OpenWorkDirectory {
+            get {
+                return ResourceManager.GetString("RoomListPage_Menu_File_OpenWorkDirectory", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 日志.
+        /// </summary>
+        public static string RoomListPage_Menu_Log {
+            get {
+                return ResourceManager.GetString("RoomListPage_Menu_Log", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 不在本页显示日志.
+        /// </summary>
+        public static string RoomListPage_Menu_Log_Hide {
+            get {
+                return ResourceManager.GetString("RoomListPage_Menu_Log_Hide", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 在本页显示日志.
+        /// </summary>
+        public static string RoomListPage_Menu_Log_Show {
+            get {
+                return ResourceManager.GetString("RoomListPage_Menu_Log_Show", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 排序.
+        /// </summary>
+        public static string RoomListPage_Menu_Sort {
+            get {
+                return ResourceManager.GetString("RoomListPage_Menu_Sort", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 不排序.
+        /// </summary>
+        public static string RoomListPage_Menu_Sort_Default {
+            get {
+                return ResourceManager.GetString("RoomListPage_Menu_Sort_Default", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 房间号.
+        /// </summary>
+        public static string RoomListPage_Menu_Sort_RoomId {
+            get {
+                return ResourceManager.GetString("RoomListPage_Menu_Sort_RoomId", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 录制状态.
+        /// </summary>
+        public static string RoomListPage_Menu_Sort_Status {
+            get {
+                return ResourceManager.GetString("RoomListPage_Menu_Sort_Status", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 高级设置.
+        /// </summary>
+        public static string RootPage_NavigationViewItem_AdvancedSettingsPage {
+            get {
+                return ResourceManager.GetString("RootPage_NavigationViewItem_AdvancedSettingsPage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 公告.
+        /// </summary>
+        public static string RootPage_NavigationViewItem_AnnouncementPage {
+            get {
+                return ResourceManager.GetString("RootPage_NavigationViewItem_AnnouncementPage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 日志.
+        /// </summary>
+        public static string RootPage_NavigationViewItem_LogPage {
+            get {
+                return ResourceManager.GetString("RootPage_NavigationViewItem_LogPage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 房间列表.
+        /// </summary>
+        public static string RootPage_NavigationViewItem_RoomListPage {
+            get {
+                return ResourceManager.GetString("RootPage_NavigationViewItem_RoomListPage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 设置.
+        /// </summary>
+        public static string RootPage_NavigationViewItem_SettingsPage {
+            get {
+                return ResourceManager.GetString("RootPage_NavigationViewItem_SettingsPage", resourceCulture);
             }
         }
         

@@ -5,6 +5,10 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
     xmlns:ui="http://schemas.modernwpf.com/2019"
+    xmlns:l="https://github.com/XAMLMarkupExtensions/WPFLocalizationExtension"
+    l:LocalizeDictionary.DesignCulture=""
+    l:ResxLocalizationProvider.DefaultAssembly="BililiveRecorder.WPF"
+    l:ResxLocalizationProvider.DefaultDictionary="Strings"
     xmlns:local="clr-namespace:BililiveRecorder.WPF.Controls"
     xmlns:mock="clr-namespace:BililiveRecorder.WPF.MockData"
     xmlns:m="clr-namespace:BililiveRecorder.WPF.Models"
@@ -14,7 +18,7 @@
     mc:Ignorable="d">
     <UserControl.Resources>
         <ContextMenu x:Key="CopyTextContextMenu" DataContext="{Binding RelativeSource={RelativeSource Mode=Self},Path=PlacementTarget}">
-            <MenuItem Header="复制" Command="{x:Static m:Commands.Copy}" CommandParameter="{Binding Text}"/>
+            <MenuItem Header="{l:Loc Global_Copy}" Command="{x:Static m:Commands.Copy}" CommandParameter="{Binding Text}"/>
         </ContextMenu>
     </UserControl.Resources>
     <Border Background="{DynamicResource SystemControlBackgroundAltHighBrush}"
@@ -38,39 +42,39 @@
                        FontFamily="Microsoft Yahei" ContextMenu="{StaticResource CopyTextContextMenu}"
                        Text="{Binding StreamerName,Mode=OneWay}" ToolTip="{Binding StreamerName,Mode=OneWay}"/>
             <Menu Grid.Row="1" Grid.Column="3" VerticalAlignment="Center" HorizontalAlignment="Right">
-                <MenuItem ToolTip="操作">
+                <MenuItem ToolTip="{l:Loc RoomCard_Menu_Tooltip}">
                     <MenuItem.Header>
                         <ui:PathIcon Height="20" Width="20" Style="{StaticResource PathIconDataDotsVertical}"/>
                     </MenuItem.Header>
-                    <MenuItem Header="开始录制" Click="MenuItem_StartRecording_Click">
+                    <MenuItem Header="{l:Loc RoomCard_Menu_StartRecording}" Click="MenuItem_StartRecording_Click">
                         <MenuItem.Icon>
                             <ui:PathIcon Style="{StaticResource PathIconDataPlayCircleOutline}"/>
                         </MenuItem.Icon>
                     </MenuItem>
-                    <MenuItem Header="停止录制" Click="MenuItem_StopRecording_Click">
+                    <MenuItem Header="{l:Loc RoomCard_Menu_StopRecording}" Click="MenuItem_StopRecording_Click">
                         <MenuItem.Icon>
                             <ui:PathIcon Style="{StaticResource PathIconDataStopCircleOutline}"/>
                         </MenuItem.Icon>
                     </MenuItem>
-                    <MenuItem Header="刷新直播间信息" Click="MenuItem_RefreshInfo_Click">
+                    <MenuItem Header="{l:Loc RoomCard_Menu_RefreshInfo}" Click="MenuItem_RefreshInfo_Click">
                         <MenuItem.Icon>
                             <ui:PathIcon Style="{StaticResource PathIconDataRefresh}"/>
                         </MenuItem.Icon>
                     </MenuItem>
-                    <MenuItem Header="打开直播间页面" Click="MenuItem_OpenInBrowser_Click">
+                    <MenuItem Header="{l:Loc RoomCard_Menu_OpenInBrowser}" Click="MenuItem_OpenInBrowser_Click">
                         <MenuItem.Icon>
                             <ui:PathIcon Style="{StaticResource PathIconDataOpenInNew}"/>
                         </MenuItem.Icon>
                     </MenuItem>
                     <Separator/>
-                    <ui:RadioMenuItem Header="自动录制" GroupName="自动录制" IsChecked="{Binding IsMonitoring,Mode=OneWay}" Click="MenuItem_StartMonitor_Click">
+                    <ui:RadioMenuItem Header="{l:Loc RoomCard_Menu_EnableAutoRecord}" GroupName="自动录制" IsChecked="{Binding IsMonitoring,Mode=OneWay}" Click="MenuItem_StartMonitor_Click">
                         <ui:RadioMenuItem.Icon>
                             <ui:PathIcon Foreground="Orange" Style="{StaticResource PathIconDataCctv}"/>
                         </ui:RadioMenuItem.Icon>
                     </ui:RadioMenuItem>
-                    <ui:RadioMenuItem Header="不自动录制" GroupName="自动录制" IsChecked="{Binding IsMonitoring,Mode=OneWay,Converter={StaticResource BooleanInverterConverter}}" Click="MenuItem_StopMonitor_Click"/>
+                    <ui:RadioMenuItem Header="{l:Loc RoomCard_Menu_DisableAutoRecord}" GroupName="自动录制" IsChecked="{Binding IsMonitoring,Mode=OneWay,Converter={StaticResource BooleanInverterConverter}}" Click="MenuItem_StopMonitor_Click"/>
                     <Separator/>
-                    <MenuItem Header="删除房间" Click="MenuItem_DeleteRoom_Click">
+                    <MenuItem Header="{l:Loc RoomCard_Menu_Delete}" Click="MenuItem_DeleteRoom_Click">
                         <MenuItem.Icon>
                             <ui:PathIcon Foreground="DarkRed" Style="{StaticResource PathIconDataDelete}"/>
                         </MenuItem.Icon>
