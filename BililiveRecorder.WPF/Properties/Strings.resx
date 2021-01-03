@@ -97,6 +97,18 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.3500.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="Global_Confirm" xml:space="preserve">
+    <value>确定</value>
+  </data>
+  <data name="Global_Quit" xml:space="preserve">
+    <value>退出</value>
+  </data>
+  <data name="WorkDirectorySelector_Title" xml:space="preserve">
+    <value>选择工作目录</value>
+  </data>
+  <data name="WorkDirectorySelector_Browse" xml:space="preserve">
+    <value>浏览...</value>
+  </data>
   <data name="Window_Title" xml:space="preserve">
     <value>B站录播姬 {0}</value>
     

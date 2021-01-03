@@ -117,6 +117,18 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="Global_Confirm" xml:space="preserve">
+    <value>決定する</value>
+  </data>
+  <data name="Global_Quit" xml:space="preserve">
+    <value>終了</value>
+  </data>
+  <data name="WorkDirectorySelector_Title" xml:space="preserve">
+    <value>フォルダーを選択</value>
+  </data>
+  <data name="WorkDirectorySelector_Browse" xml:space="preserve">
+    <value>ブラウズ...</value>
+  </data>
   <data name="Window_Title" xml:space="preserve">
     <value>ビリビリ録画機 {0}</value>
   </data>

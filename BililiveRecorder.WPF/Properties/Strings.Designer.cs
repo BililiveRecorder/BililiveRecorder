@@ -61,11 +61,47 @@ namespace BililiveRecorder.WPF.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to 确定.
+        /// </summary>
+        public static string Global_Confirm {
+            get {
+                return ResourceManager.GetString("Global_Confirm", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 退出.
+        /// </summary>
+        public static string Global_Quit {
+            get {
+                return ResourceManager.GetString("Global_Quit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to B站录播姬 {0}.
         /// </summary>
         public static string Window_Title {
             get {
                 return ResourceManager.GetString("Window_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 浏览....
+        /// </summary>
+        public static string WorkDirectorySelector_Browse {
+            get {
+                return ResourceManager.GetString("WorkDirectorySelector_Browse", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 选择工作目录.
+        /// </summary>
+        public static string WorkDirectorySelector_Title {
+            get {
+                return ResourceManager.GetString("WorkDirectorySelector_Title", resourceCulture);
             }
         }
     }

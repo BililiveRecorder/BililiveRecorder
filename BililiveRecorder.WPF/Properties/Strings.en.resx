@@ -117,6 +117,18 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="Global_Confirm" xml:space="preserve">
+    <value>Confirm</value>
+  </data>
+  <data name="Global_Quit" xml:space="preserve">
+    <value>Quit</value>
+  </data>
+  <data name="WorkDirectorySelector_Title" xml:space="preserve">
+    <value>Select Directory</value>
+  </data>
+  <data name="WorkDirectorySelector_Browse" xml:space="preserve">
+    <value>Browse...</value>
+  </data>
   <data name="Window_Title" xml:space="preserve">
     <value>BililiveRecorder {0}</value>
   </data>
