@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Linq;
 using System.Text;
 using Newtonsoft.Json;
 using NLog;
@@ -84,7 +85,7 @@ namespace BililiveRecorder.Core.Config
                 var filepath = Path.Combine(directory, CONFIG_FILE_NAME);
 
                 if (json is not null)
-                    File.WriteAllText(filepath, json, Encoding.UTF8);
+                    WriteAllTextWithBackup(filepath, json);
 
                 return true;
             }
@@ -108,5 +109,31 @@ namespace BililiveRecorder.Core.Config
                 return null;
             }
         }
+
+        // https://stackoverflow.com/q/25366534 with modification
+        private static void WriteAllTextWithBackup(string path, string contents)
+        {
+            var ext = Path.GetExtension(path);
+
+            var tempPath = Path.Combine(Path.GetDirectoryName(path), Path.ChangeExtension(path, RandomString(6) + ext));
+            var backupPath = Path.ChangeExtension(path, "backup" + ext);
+
+            // delete any existing backups
+            if (File.Exists(backupPath))
+                File.Delete(backupPath);
+
+            // get the bytes
+            var data = Encoding.UTF8.GetBytes(contents);
+
+            // write the data to a temp file
+            using (var tempFile = File.Create(tempPath, 4096, FileOptions.WriteThrough))
+                tempFile.Write(data, 0, data.Length);
+
+            // replace the contents
+            File.Replace(tempPath, path, backupPath);
+        }
+        private static readonly Random random = new Random();
+        private static string RandomString(int length) => new string(Enumerable.Repeat("ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789", length).Select(s => s[random.Next(s.Length)]).ToArray());
+
     }
 }
