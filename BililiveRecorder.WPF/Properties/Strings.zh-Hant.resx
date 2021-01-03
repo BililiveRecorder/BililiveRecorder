@@ -117,28 +117,28 @@
     <value>取消</value>
   </data>
   <data name="RoomListPage_Menu_File" xml:space="preserve">
-    <value>文件</value>
+    <value>文檔</value>
   </data>
   <data name="RoomListPage_Menu_AutoRecord" xml:space="preserve">
-    <value>监控</value>
+    <value>監控</value>
   </data>
   <data name="RoomListPage_Menu_Sort" xml:space="preserve">
     <value>排序</value>
   </data>
   <data name="RoomListPage_Menu_Log" xml:space="preserve">
-    <value>日志</value>
+    <value>日誌</value>
   </data>
   <data name="RoomListPage_Menu_AutoRecord_EnableAll" xml:space="preserve">
-    <value>自动录制全部房间</value>
+    <value>自動錄製全部房間</value>
   </data>
   <data name="RoomListPage_Menu_AutoRecord_DisableAll" xml:space="preserve">
-    <value>取消自动录制全部房间</value>
+    <value>取消自動錄製全部房間</value>
   </data>
   <data name="RoomListPage_Menu_Sort_Default" xml:space="preserve">
     <value>不排序</value>
   </data>
   <data name="RoomListPage_Menu_Sort_RoomId" xml:space="preserve">
-    <value>房间号</value>
+    <value>房間號</value>
   </data>
   <data name="RoomListPage_Menu_Sort_Status" xml:space="preserve">
     <value>录制状态</value>
