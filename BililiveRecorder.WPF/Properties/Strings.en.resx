@@ -104,7 +104,7 @@
     <value>Quit</value>
   </data>
   <data name="WorkDirectorySelector_Title" xml:space="preserve">
-    <value>Select Directory</value>
+    <value>Select Working Directory</value>
   </data>
   <data name="WorkDirectorySelector_Browse" xml:space="preserve">
     <value>Browse...</value>
@@ -120,87 +120,87 @@
     <value>Files</value>
   </data>
   <data name="RoomListPage_Menu_AutoRecord" xml:space="preserve">
-    <value>Auto Record</value>
+    <value>Control</value>
   </data>
   <data name="RoomListPage_Menu_Sort" xml:space="preserve">
-    <value>Sort</value>
+    <value>Sort As</value>
   </data>
   <data name="RoomListPage_Menu_Log" xml:space="preserve">
-    <value>Log</value>
+    <value>Logs</value>
   </data>
   <data name="RoomListPage_Menu_AutoRecord_EnableAll" xml:space="preserve">
-    <value>Record All Rooms Automatically</value>
+    <value>Automatically Record All Rooms</value>
   </data>
   <data name="RoomListPage_Menu_AutoRecord_DisableAll" xml:space="preserve">
-    <value>取消自动录制全部房间</value>
+    <value>Do Not Automatically Record All Rooms</value>
   </data>
   <data name="RoomListPage_Menu_Sort_Default" xml:space="preserve">
-    <value>不排序</value>
+    <value>Not Sorted</value>
   </data>
   <data name="RoomListPage_Menu_Sort_RoomId" xml:space="preserve">
-    <value>房间号</value>
+    <value>Room Ids</value>
   </data>
   <data name="RoomListPage_Menu_Sort_Status" xml:space="preserve">
-    <value>录制状态</value>
+    <value>Record Status</value>
   </data>
   <data name="RoomListPage_Menu_Log_Show" xml:space="preserve">
-    <value>在本页显示日志</value>
+    <value>Show Logs in This Page</value>
   </data>
   <data name="RoomListPage_Menu_Log_Hide" xml:space="preserve">
-    <value>不在本页显示日志</value>
+    <value>Not Show Logs in This Page</value>
   </data>
   <data name="LogPage_RightClickCopyToolTip" xml:space="preserve">
-    <value>右键点击可以复制单行日志</value>
+    <value>Right click to copy this line</value>
   </data>
   <data name="RoomListPage_Menu_File_OpenWorkDirectory" xml:space="preserve">
-    <value>打开工作目录</value>
+    <value>Open Working Directory</value>
   </data>
   <data name="RootPage_NavigationViewItem_AnnouncementPage" xml:space="preserve">
-    <value>公告</value>
+    <value>Announcements</value>
   </data>
   <data name="RootPage_NavigationViewItem_RoomListPage" xml:space="preserve">
-    <value>房间列表</value>
+    <value>Room List</value>
   </data>
   <data name="RootPage_NavigationViewItem_AdvancedSettingsPage" xml:space="preserve">
-    <value>高级设置</value>
+    <value>Advanced Settings</value>
   </data>
   <data name="RootPage_NavigationViewItem_LogPage" xml:space="preserve">
-    <value>日志</value>
+    <value>Logs</value>
   </data>
   <data name="RootPage_NavigationViewItem_SettingsPage" xml:space="preserve">
-    <value>设置</value>
+    <value>Settings</value>
   </data>
   <data name="AnnouncementPage_RefreshButton" xml:space="preserve">
-    <value>刷新公告内容</value>
+    <value>Refresh Announcements</value>
   </data>
   <data name="AnnouncementPage_FetchFailed" xml:space="preserve">
-    <value>公告获取失败</value>
+    <value>Fetch Announcements Failed</value>
   </data>
   <data name="Global_Copy" xml:space="preserve">
-    <value>复制</value>
+    <value>Copy</value>
   </data>
   <data name="RoomCard_Menu_Tooltip" xml:space="preserve">
-    <value>操作</value>
+    <value>Actions</value>
   </data>
   <data name="RoomCard_Menu_StartRecording" xml:space="preserve">
-    <value>开始录制</value>
+    <value>Start Recording</value>
   </data>
   <data name="RoomCard_Menu_StopRecording" xml:space="preserve">
-    <value>停止录制</value>
+    <value>Stop Recording</value>
   </data>
   <data name="RoomCard_Menu_RefreshInfo" xml:space="preserve">
-    <value>刷新直播间信息</value>
+    <value>Refresh Live Channel</value>
   </data>
   <data name="RoomCard_Menu_OpenInBrowser" xml:space="preserve">
-    <value>打开直播间页面</value>
+    <value>Open Live Channel</value>
   </data>
   <data name="RoomCard_Menu_EnableAutoRecord" xml:space="preserve">
-    <value>自动录制</value>
+    <value>Auto Record</value>
   </data>
   <data name="RoomCard_Menu_DisableAutoRecord" xml:space="preserve">
-    <value>不自动录制</value>
+    <value>Manual Record</value>
   </data>
   <data name="RoomCard_Menu_Delete" xml:space="preserve">
-    <value>删除房间</value>
+    <value>Delete Room</value>
   </data>
 </root>
