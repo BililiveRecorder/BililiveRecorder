@@ -147,7 +147,7 @@
     <value>Show Logs in This Page</value>
   </data>
   <data name="RoomListPage_Menu_Log_Hide" xml:space="preserve">
-    <value>Not Show Logs in This Page</value>
+    <value>Do Not Show Logs in This Page</value>
   </data>
   <data name="LogPage_RightClickCopyToolTip" xml:space="preserve">
     <value>Right click to copy this line</value>
