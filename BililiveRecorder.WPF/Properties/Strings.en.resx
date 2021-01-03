@@ -114,22 +114,22 @@
     
   </data>
   <data name="Global_Cancel" xml:space="preserve">
-    <value>取消</value>
+    <value>Cancel</value>
   </data>
   <data name="RoomListPage_Menu_File" xml:space="preserve">
-    <value>文件</value>
+    <value>Files</value>
   </data>
   <data name="RoomListPage_Menu_AutoRecord" xml:space="preserve">
-    <value>监控</value>
+    <value>Auto Record</value>
   </data>
   <data name="RoomListPage_Menu_Sort" xml:space="preserve">
-    <value>排序</value>
+    <value>Sort</value>
   </data>
   <data name="RoomListPage_Menu_Log" xml:space="preserve">
-    <value>日志</value>
+    <value>Log</value>
   </data>
   <data name="RoomListPage_Menu_AutoRecord_EnableAll" xml:space="preserve">
-    <value>自动录制全部房间</value>
+    <value>Record All Rooms Automatically</value>
   </data>
   <data name="RoomListPage_Menu_AutoRecord_DisableAll" xml:space="preserve">
     <value>取消自动录制全部房间</value>
