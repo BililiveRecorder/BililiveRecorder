@@ -97,110 +97,60 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.3500.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Global_Confirm" xml:space="preserve">
-    <value>Confirm</value>
-  </data>
-  <data name="Global_Quit" xml:space="preserve">
-    <value>Quit</value>
-  </data>
-  <data name="WorkDirectorySelector_Title" xml:space="preserve">
-    <value>Select Working Directory</value>
-  </data>
-  <data name="WorkDirectorySelector_Browse" xml:space="preserve">
-    <value>Browse...</value>
-  </data>
-  <data name="Window_Title" xml:space="preserve">
-    <value>BililiveRecorder {0}</value>
-    
-  </data>
-  <data name="Global_Cancel" xml:space="preserve">
-    <value>Cancel</value>
-  </data>
-  <data name="RoomListPage_Menu_File" xml:space="preserve">
-    <value>Files</value>
-  </data>
-  <data name="RoomListPage_Menu_AutoRecord" xml:space="preserve">
-    <value>Control</value>
-  </data>
-  <data name="RoomListPage_Menu_Sort" xml:space="preserve">
-    <value>Sort As</value>
-  </data>
-  <data name="RoomListPage_Menu_Log" xml:space="preserve">
-    <value>Logs</value>
-  </data>
-  <data name="RoomListPage_Menu_AutoRecord_EnableAll" xml:space="preserve">
-    <value>Automatically Record All Rooms</value>
-  </data>
-  <data name="RoomListPage_Menu_AutoRecord_DisableAll" xml:space="preserve">
-    <value>Do Not Automatically Record All Rooms</value>
-  </data>
-  <data name="RoomListPage_Menu_Sort_Default" xml:space="preserve">
-    <value>Not Sorted</value>
-  </data>
-  <data name="RoomListPage_Menu_Sort_RoomId" xml:space="preserve">
-    <value>Room Ids</value>
-  </data>
-  <data name="RoomListPage_Menu_Sort_Status" xml:space="preserve">
-    <value>Record Status</value>
-  </data>
-  <data name="RoomListPage_Menu_Log_Show" xml:space="preserve">
-    <value>Show Logs in This Page</value>
-  </data>
-  <data name="RoomListPage_Menu_Log_Hide" xml:space="preserve">
-    <value>Do Not Show Logs in This Page</value>
-  </data>
-  <data name="LogPage_RightClickCopyToolTip" xml:space="preserve">
-    <value>Right click to copy this line</value>
-  </data>
-  <data name="RoomListPage_Menu_File_OpenWorkDirectory" xml:space="preserve">
-    <value>Open Working Directory</value>
-  </data>
-  <data name="RootPage_NavigationViewItem_AnnouncementPage" xml:space="preserve">
-    <value>Announcements</value>
-  </data>
-  <data name="RootPage_NavigationViewItem_RoomListPage" xml:space="preserve">
-    <value>Room List</value>
-  </data>
-  <data name="RootPage_NavigationViewItem_AdvancedSettingsPage" xml:space="preserve">
-    <value>Advanced Settings</value>
-  </data>
-  <data name="RootPage_NavigationViewItem_LogPage" xml:space="preserve">
-    <value>Logs</value>
-  </data>
-  <data name="RootPage_NavigationViewItem_SettingsPage" xml:space="preserve">
-    <value>Settings</value>
-  </data>
-  <data name="AnnouncementPage_RefreshButton" xml:space="preserve">
-    <value>Refresh Announcements</value>
-  </data>
-  <data name="AnnouncementPage_FetchFailed" xml:space="preserve">
-    <value>Fetch Announcements Failed</value>
-  </data>
-  <data name="Global_Copy" xml:space="preserve">
-    <value>Copy</value>
-  </data>
-  <data name="RoomCard_Menu_Tooltip" xml:space="preserve">
-    <value>Actions</value>
-  </data>
-  <data name="RoomCard_Menu_StartRecording" xml:space="preserve">
-    <value>Start Recording</value>
-  </data>
-  <data name="RoomCard_Menu_StopRecording" xml:space="preserve">
-    <value>Stop Recording</value>
-  </data>
-  <data name="RoomCard_Menu_RefreshInfo" xml:space="preserve">
-    <value>Refresh Live Channel</value>
-  </data>
-  <data name="RoomCard_Menu_OpenInBrowser" xml:space="preserve">
-    <value>Open Live Channel</value>
-  </data>
-  <data name="RoomCard_Menu_EnableAutoRecord" xml:space="preserve">
-    <value>Auto Record</value>
-  </data>
-  <data name="RoomCard_Menu_DisableAutoRecord" xml:space="preserve">
-    <value>Manual Record</value>
-  </data>
-  <data name="RoomCard_Menu_Delete" xml:space="preserve">
-    <value>Delete Room</value>
-  </data>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
 </root>
