@@ -76,6 +76,12 @@ namespace BililiveRecorder.Core.Config
 
         public static bool SaveTo(string directory, V2.ConfigV2 config)
         {
+            if (config.DisableConfigSave)
+            {
+                logger.Debug("Skipping write config because DisableConfigSave is true.");
+                return true;
+            }
+
             var json = SaveJson(config);
             try
             {

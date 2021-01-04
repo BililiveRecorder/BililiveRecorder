@@ -1,122 +1,122 @@
 using System;
-using System.IO;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
-using System.Threading.Tasks;
 using Autofac;
 using BililiveRecorder.Core;
-using BililiveRecorder.Core.Config.V1;
+using BililiveRecorder.Core.Config.V2;
 using BililiveRecorder.FlvProcessor;
 using CommandLine;
-using Newtonsoft.Json;
-using NLog;
 
 namespace BililiveRecorder.Cli
 {
     internal class Program
     {
-        private static readonly Logger logger = LogManager.GetCurrentClassLogger();
+        private static int Main()
+            => Parser.Default
+            .ParseArguments<CmdVerbConfigMode, CmdVerbPortableMode>(Environment.GetCommandLineArgs())
+            .MapResult<CmdVerbConfigMode, CmdVerbPortableMode, int>(RunConfigMode, RunPortableMode, err => 1);
 
-        private static int Main(string[] _)
+        private static int RunConfigMode(CmdVerbConfigMode opts)
         {
-            Console.WriteLine("本版本的 CLI 版还没实现");
-            return -1;
+            var container = CreateBuilder().Build();
+            var rootScope = container.BeginLifetimeScope("recorder_root");
+            var semaphore = new SemaphoreSlim(0, 1);
+            var recorder = rootScope.Resolve<IRecorder>();
 
-            /*
+            ConsoleCancelEventHandler p = null!;
+            p = (sender, e) =>
+            {
+                Console.CancelKeyPress -= p;
+                e.Cancel = true;
+                recorder.Dispose();
+                semaphore.Release();
+            };
+            Console.CancelKeyPress += p;
+
+            if (!recorder.Initialize(opts.WorkDirectory))
+            {
+                Console.WriteLine("Initialize Error");
+                return -1;
+            }
+
+            semaphore.Wait();
+            return 0;
+        }
+
+        private static int RunPortableMode(CmdVerbPortableMode opts)
+        {
+            var container = CreateBuilder().Build();
+            var rootScope = container.BeginLifetimeScope("recorder_root");
+            var semaphore = new SemaphoreSlim(0, 1);
+            var recorder = rootScope.Resolve<IRecorder>();
+            var config = new ConfigV2()
+            {
+                DisableConfigSave = true,
+            };
+
+            if (!string.IsNullOrWhiteSpace(opts.Cookie))
+                config.Global.Cookie = opts.Cookie;
+            if (!string.IsNullOrWhiteSpace(opts.LiveApiHost))
+                config.Global.LiveApiHost = opts.LiveApiHost;
+            if (!string.IsNullOrWhiteSpace(opts.RecordFilenameFormat))
+                config.Global.RecordFilenameFormat = opts.RecordFilenameFormat;
+
+            config.Global.WorkDirectory = opts.OutputDirectory;
+            config.Rooms = opts.RoomIds.Select(x => new RoomConfig { RoomId = x, AutoRecord = true }).ToList();
+
+            ConsoleCancelEventHandler p = null!;
+            p = (sender, e) =>
+            {
+                Console.CancelKeyPress -= p;
+                e.Cancel = true;
+                recorder.Dispose();
+                semaphore.Release();
+            };
+            Console.CancelKeyPress += p;
+
+            if (!((Recorder)recorder).InitializeWithConfig(config))
+            {
+                Console.WriteLine("Initialize Error");
+                return -1;
+            }
+
+            semaphore.Wait();
+            return 0;
+        }
+
+        private static ContainerBuilder CreateBuilder()
+        {
             var builder = new ContainerBuilder();
             builder.RegisterModule<FlvProcessorModule>();
             builder.RegisterModule<CoreModule>();
-            builder.RegisterType<CommandConfigV1>().As<ConfigV1>().InstancePerMatchingLifetimeScope("recorder_root");
-            var Container = builder.Build();
-            var RootScope = Container.BeginLifetimeScope("recorder_root");
-
-            var Recorder = RootScope.Resolve<IRecorder>();
-            if (!Recorder.Initialize(Directory.GetCurrentDirectory()))
-            {
-                Console.WriteLine("Initialize Error");
-                return;
-            }
-
-            Parser.Default
-                .ParseArguments(() => (CommandConfigV1)Recorder.Config, Environment.GetCommandLineArgs())
-                .WithParsed(Run);
-
-            return;
-            void Run(ConfigV1 option)
-            {
-                option.EnabledFeature = EnabledFeature.RecordOnly;
-                foreach (var room in option.RoomList)
-                {
-                    if (Recorder.Where(r => r.RoomId == room.Roomid).Count() == 0)
-                    {
-                        Recorder.AddRoom(room.Roomid);
-                    }
-                }
-
-                logger.Info("Using workDir: " + option.WorkDirectory + "\n\tconfig: " + JsonConvert.SerializeObject(option, Formatting.Indented));
-
-                logger.Info("开始录播");
-                Task.WhenAll(Recorder.Select(x => Task.Run(() => x.Start()))).Wait();
-                Console.CancelKeyPress += (sender, e) =>
-                {
-                    Task.WhenAll(Recorder.Select(x => Task.Run(() => x.StopRecord()))).Wait();
-                    logger.Info("停止录播");
-                };
-                while (true)
-                {
-                    Thread.Sleep(TimeSpan.FromSeconds(10));
-                }
-            }*/
+            return builder;
         }
     }
 
-    [Obsolete]
-    public partial class CommandConfigV1 : ConfigV1
+    [Verb("portable", HelpText = "Run recorder. Ignore config file in output directory")]
+    public class CmdVerbPortableMode
     {
-        [Option('i', "id", HelpText = "room id", Required = true)]
-        public string _RoomList
-        {
-            set
-            {
-                var roomids = value.Split(',');
-                this.RoomList.Clear();
-
-                foreach (var roomid in roomids)
-                {
-                    var room = new RoomV1();
-                    room.Roomid = int.Parse(roomid);
-                    room.Enabled = false;
-                    this.RoomList.Add(room);
-                }
-            }
-        }
-
         [Option('o', "dir", Default = ".", HelpText = "Output directory", Required = false)]
-        public new string WorkDirectory
-        {
-            get => base.WorkDirectory;
-            set => base.WorkDirectory = value;
-        }
+        public string OutputDirectory { get; set; } = ".";
 
         [Option("cookie", HelpText = "Provide custom cookies", Required = false)]
-        public new string Cookie
-        {
-            get => base.Cookie;
-            set => base.Cookie = value;
-        }
+        public string? Cookie { get; set; }
 
         [Option("live_api_host", HelpText = "Use custom api host", Required = false)]
-        public new string LiveApiHost
-        {
-            get => base.LiveApiHost;
-            set => base.LiveApiHost = value;
-        }
+        public string? LiveApiHost { get; set; }
 
         [Option("record_filename_format", HelpText = "Recording name format", Required = false)]
-        public new string RecordFilenameFormat
-        {
-            get => base.RecordFilenameFormat;
-            set => base.RecordFilenameFormat = value;
-        }
+        public string? RecordFilenameFormat { get; set; }
+
+        [Value(0, Min = 1, Required = true, HelpText = "List of room id")]
+        public IEnumerable<int> RoomIds { get; set; } = Enumerable.Empty<int>();
+    }
+
+    [Verb("run", HelpText = "Run recorder with config file")]
+    public class CmdVerbConfigMode
+    {
+        [Value(0, HelpText = "Target directory", Required = true)]
+        public string WorkDirectory { get; set; } = string.Empty;
     }
 }

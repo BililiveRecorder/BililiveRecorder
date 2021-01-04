@@ -51,6 +51,8 @@ namespace BililiveRecorder.Core
 
         public bool Initialize(string workdir)
         {
+            if (this._valid)
+                throw new InvalidOperationException("Recorder is in valid state");
             logger.Debug("Initialize: " + workdir);
             var config = ConfigParser.LoadFrom(directory: workdir);
             if (config is not null)
@@ -67,6 +69,23 @@ namespace BililiveRecorder.Core
             {
                 return false;
             }
+        }
+
+        public bool InitializeWithConfig(ConfigV2 config)
+        {
+            // 脏写法 but it works
+            if (this._valid)
+                throw new InvalidOperationException("Recorder is in valid state");
+
+            if (config is null)
+                throw new ArgumentNullException(nameof(config));
+
+            logger.Debug("Initialize With Config.");
+            this.Config = config;
+            this.Webhook = new BasicWebhook(this.Config);
+            this._valid = true;
+            this.Config.Rooms.ForEach(r => this.AddRoom(r));
+            return true;
         }
 
         /// <summary>
