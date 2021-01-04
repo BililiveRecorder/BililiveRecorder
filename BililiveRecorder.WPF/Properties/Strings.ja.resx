@@ -123,13 +123,16 @@
   <data name="Global_Quit" xml:space="preserve">
     <value>終了</value>
   </data>
-  <data name="WorkDirectorySelector_Title" xml:space="preserve">
-    <value>フォルダーを選択</value>
+  <data name="RoomCard_Status_SpeedIndicator_SpeedInMbps" xml:space="preserve">
+    <value>{0:F2} Mbps</value>
+  </data>
+  <data name="Window_Title" xml:space="preserve">
+    <value>ビリビリ録画機 {0}</value>
   </data>
   <data name="WorkDirectorySelector_Browse" xml:space="preserve">
     <value>ブラウズ...</value>
   </data>
-  <data name="Window_Title" xml:space="preserve">
-    <value>ビリビリ録画機 {0}</value>
+  <data name="WorkDirectorySelector_Title" xml:space="preserve">
+    <value>フォルダーを選択</value>
   </data>
 </root>

@@ -123,13 +123,16 @@
   <data name="Global_Quit" xml:space="preserve">
     <value>退出</value>
   </data>
-  <data name="WorkDirectorySelector_Title" xml:space="preserve">
-    <value>選擇工作目錄</value>
+  <data name="RoomCard_Status_SpeedIndicator_SpeedInMbps" xml:space="preserve">
+    <value>{0:F2} Mbps</value>
+  </data>
+  <data name="Window_Title" xml:space="preserve">
+    <value>B站錄播姬 {0}</value>
   </data>
   <data name="WorkDirectorySelector_Browse" xml:space="preserve">
     <value>瀏覽...</value>
   </data>
-  <data name="Window_Title" xml:space="preserve">
-    <value>B站錄播姬 {0}</value>
+  <data name="WorkDirectorySelector_Title" xml:space="preserve">
+    <value>選擇工作目錄</value>
   </data>
 </root>

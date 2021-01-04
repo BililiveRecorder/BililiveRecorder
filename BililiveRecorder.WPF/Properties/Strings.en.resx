@@ -117,19 +117,37 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="AddRoomCard_ConfirmButton" xml:space="preserve">
+    <value>Add</value>
+  </data>
+  <data name="AddRoomFailedDialog_CloseButtonText" xml:space="preserve">
+    <value>OK</value>
+  </data>
+  <data name="AddRoomFailedDialog_Title" xml:space="preserve">
+    <value>Failed to add room</value>
+  </data>
   <data name="Global_Confirm" xml:space="preserve">
     <value>Confirm</value>
   </data>
   <data name="Global_Quit" xml:space="preserve">
     <value>Quit</value>
   </data>
-  <data name="WorkDirectorySelector_Title" xml:space="preserve">
-    <value>Select Directory</value>
+  <data name="RoomCard_Status_Monitoring" xml:space="preserve">
+    <value>Monitoring</value>
+  </data>
+  <data name="RoomCard_Status_Recording" xml:space="preserve">
+    <value>Recording</value>
+  </data>
+  <data name="RoomCard_Status_SpeedIndicator_SpeedInMbps" xml:space="preserve">
+    <value>{0:F2} Mbps</value>
+  </data>
+  <data name="Window_Title" xml:space="preserve">
+    <value>BililiveRecorder {0}</value>
   </data>
   <data name="WorkDirectorySelector_Browse" xml:space="preserve">
     <value>Browse...</value>
   </data>
-  <data name="Window_Title" xml:space="preserve">
-    <value>BililiveRecorder {0}</value>
+  <data name="WorkDirectorySelector_Title" xml:space="preserve">
+    <value>Select Directory</value>
   </data>
 </root>

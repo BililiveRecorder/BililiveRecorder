@@ -91,25 +91,25 @@ namespace BililiveRecorder.WPF.Pages
                 }
                 else
                 {
-                    await new AddRoomFailedDialog { DataContext = "请输入B站直播房间号或直播间链接" }.ShowAsync();
+                    await new AddRoomFailedDialog { DataContext = AddRoomFailedDialog.AddRoomFailedErrorText.InvalidInput }.ShowAsync();
                     return;
                 }
             }
 
             if (roomid < 0)
             {
-                await new AddRoomFailedDialog { DataContext = "房间号不能是负数" }.ShowAsync();
+                await new AddRoomFailedDialog { DataContext = AddRoomFailedDialog.AddRoomFailedErrorText.RoomIdNegative }.ShowAsync();
                 return;
             }
             else if (roomid == 0)
             {
-                await new AddRoomFailedDialog { DataContext = "房间号不能是 0" }.ShowAsync();
+                await new AddRoomFailedDialog { DataContext = AddRoomFailedDialog.AddRoomFailedErrorText.RoomIdZero }.ShowAsync();
                 return;
             }
 
             if (rec.Any(x => x.RoomId == roomid || x.ShortRoomId == roomid))
             {
-                await new AddRoomFailedDialog { DataContext = "这个直播间已经被添加过了" }.ShowAsync();
+                await new AddRoomFailedDialog { DataContext = AddRoomFailedDialog.AddRoomFailedErrorText.Duplicate }.ShowAsync();
                 return;
             }
 

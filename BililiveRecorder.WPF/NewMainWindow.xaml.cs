@@ -5,6 +5,7 @@ using BililiveRecorder.WPF.Controls;
 using Hardcodet.Wpf.TaskbarNotification;
 using ModernWpf.Controls;
 using WPFLocalizeExtension.Engine;
+using WPFLocalizeExtension.Extensions;
 
 namespace BililiveRecorder.WPF
 {
@@ -18,20 +19,17 @@ namespace BililiveRecorder.WPF
         public NewMainWindow()
         {
             this.SoftwareVersion = BuildInfo.Version + " " + BuildInfo.HeadShaShort;
-                       
+
+#if DEBUG
             LocalizeDictionary.Instance.OutputMissingKeys = true;
-            LocalizeDictionary.Instance.MissingKeyEvent += this.Instance_MissingKeyEvent;
+            LocalizeDictionary.Instance.MissingKeyEvent += (object sender, MissingKeyEventArgs e) => MessageBox.Show("Missing: " + e.Key);
+#endif
 
             this.InitializeComponent();
 
             // this.Title = "B站录播姬 " + BuildInfo.Version + " " + BuildInfo.HeadShaShort;
 
             SingleInstance.NotificationReceived += this.SingleInstance_NotificationReceived;
-        }
-
-        private void Instance_MissingKeyEvent(object sender, MissingKeyEventArgs e)
-        {
-            MessageBox.Show("Missing: " + e.Key);
         }
 
         private void SingleInstance_NotificationReceived(object sender, EventArgs e) => this.SuperActivateAction();
@@ -66,7 +64,9 @@ namespace BililiveRecorder.WPF
             if (this.WindowState == WindowState.Minimized)
             {
                 this.Hide();
-                this.ShowBalloonTipCallback?.Invoke("B站录播姬", "录播姬已最小化到托盘，左键单击图标恢复界面", BalloonIcon.Info);
+                var title = LocExtension.GetLocalizedValue<string>("BililiveRecorder.WPF:Strings:TaskbarIconControl_Title");
+                var body = LocExtension.GetLocalizedValue<string>("BililiveRecorder.WPF:Strings:TaskbarIconControl_MinimizedNotification");
+                this.ShowBalloonTipCallback?.Invoke(title, body, BalloonIcon.Info);
             }
         }
 

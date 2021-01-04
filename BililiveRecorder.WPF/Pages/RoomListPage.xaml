@@ -17,7 +17,7 @@
     d:DesignHeight="1000" d:DesignWidth="960"
     d:DataContext="{d:DesignInstance mock:MockRecorder,IsDesignTimeCreatable=True}"
     DataContext="{Binding RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=local:RootPage},Path=DataContext.Recorder,Mode=OneWay}"
-    Title="房间列表">
+    >
     <ui:Page.Resources>
         <DataTemplate x:Key="NormalRoomCardTemplate">
             <ui:ThemeShadowChrome IsShadowEnabled="True" Depth="10">

@@ -5,10 +5,14 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:ui="http://schemas.modernwpf.com/2019"
+    xmlns:l="https://github.com/XAMLMarkupExtensions/WPFLocalizationExtension"
+    l:LocalizeDictionary.DesignCulture=""
+    l:ResxLocalizationProvider.DefaultAssembly="BililiveRecorder.WPF"
+    l:ResxLocalizationProvider.DefaultDictionary="Strings"
     xmlns:local="clr-namespace:BililiveRecorder.WPF.Controls"
-    PrimaryButtonText="退出"
-    CloseButtonText="取消"
+    PrimaryButtonText="{l:Loc Global_Quit}"
+    CloseButtonText="{l:Loc Global_Cancel}"
     DefaultButton="Close"
     mc:Ignorable="d">
-    <TextBlock Text="确定要退出吗？" TextAlignment="Center" VerticalAlignment="Center" FontSize="26"/>
+    <TextBlock Text="{l:Loc CloseWindowConfirmDialog_Title}" TextAlignment="Center" VerticalAlignment="Center" FontSize="26"/>
 </ui:ContentDialog>

@@ -61,6 +61,87 @@ namespace BililiveRecorder.WPF.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to 确定.
+        /// </summary>
+        public static string AddRoomCard_ConfirmButton {
+            get {
+                return ResourceManager.GetString("AddRoomCard_ConfirmButton", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 房间号或房间链接.
+        /// </summary>
+        public static string AddRoomCard_PlaceholderText {
+            get {
+                return ResourceManager.GetString("AddRoomCard_PlaceholderText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 添加房间.
+        /// </summary>
+        public static string AddRoomCard_Title {
+            get {
+                return ResourceManager.GetString("AddRoomCard_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 知道了.
+        /// </summary>
+        public static string AddRoomFailedDialog_CloseButtonText {
+            get {
+                return ResourceManager.GetString("AddRoomFailedDialog_CloseButtonText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 这个直播间已经被添加过了.
+        /// </summary>
+        public static string AddRoomFailedDialog_ErrorText_Duplicate {
+            get {
+                return ResourceManager.GetString("AddRoomFailedDialog_ErrorText_Duplicate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 请输入B站直播房间号或直播间链接.
+        /// </summary>
+        public static string AddRoomFailedDialog_ErrorText_InvalidInput {
+            get {
+                return ResourceManager.GetString("AddRoomFailedDialog_ErrorText_InvalidInput", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 房间号不能是负数.
+        /// </summary>
+        public static string AddRoomFailedDialog_ErrorText_RoomIdNegative {
+            get {
+                return ResourceManager.GetString("AddRoomFailedDialog_ErrorText_RoomIdNegative", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 房间号不能是 0.
+        /// </summary>
+        public static string AddRoomFailedDialog_ErrorText_RoomIdZero {
+            get {
+                return ResourceManager.GetString("AddRoomFailedDialog_ErrorText_RoomIdZero", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 添加房间失败.
+        /// </summary>
+        public static string AddRoomFailedDialog_Title {
+            get {
+                return ResourceManager.GetString("AddRoomFailedDialog_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to 公告获取失败.
         /// </summary>
         public static string AnnouncementPage_FetchFailed {
@@ -75,6 +156,24 @@ namespace BililiveRecorder.WPF.Properties {
         public static string AnnouncementPage_RefreshButton {
             get {
                 return ResourceManager.GetString("AnnouncementPage_RefreshButton", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 确定要退出吗？.
+        /// </summary>
+        public static string CloseWindowConfirmDialog_Title {
+            get {
+                return ResourceManager.GetString("CloseWindowConfirmDialog_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 确定要删除这个直播间吗？.
+        /// </summary>
+        public static string DeleteRoomConfirmDialog_Title {
+            get {
+                return ResourceManager.GetString("DeleteRoomConfirmDialog_Title", resourceCulture);
             }
         }
         
@@ -106,6 +205,15 @@ namespace BililiveRecorder.WPF.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to 删除.
+        /// </summary>
+        public static string Global_Delete {
+            get {
+                return ResourceManager.GetString("Global_Delete", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to 退出.
         /// </summary>
         public static string Global_Quit {
@@ -120,6 +228,15 @@ namespace BililiveRecorder.WPF.Properties {
         public static string LogPage_RightClickCopyToolTip {
             get {
                 return ResourceManager.GetString("LogPage_RightClickCopyToolTip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 回放剪辑（正在处理中的数量）.
+        /// </summary>
+        public static string RoomCard_ClipButton_Tooltip {
+            get {
+                return ResourceManager.GetString("RoomCard_ClipButton_Tooltip", resourceCulture);
             }
         }
         
@@ -192,6 +309,52 @@ namespace BililiveRecorder.WPF.Properties {
         public static string RoomCard_Menu_Tooltip {
             get {
                 return ResourceManager.GetString("RoomCard_Menu_Tooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 监控中.
+        /// </summary>
+        public static string RoomCard_Status_Monitoring {
+            get {
+                return ResourceManager.GetString("RoomCard_Status_Monitoring", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 录制中.
+        /// </summary>
+        public static string RoomCard_Status_Recording {
+            get {
+                return ResourceManager.GetString("RoomCard_Status_Recording", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 这里显示的是录制的速度与主播直播速度的比
+        ///正常应为接近 100% 颜色显示为绿色.
+        /// </summary>
+        public static string RoomCard_Status_SpeedIndicator_Description {
+            get {
+                return ResourceManager.GetString("RoomCard_Status_SpeedIndicator_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0:F2} Mbps.
+        /// </summary>
+        public static string RoomCard_Status_SpeedIndicator_SpeedInMbps {
+            get {
+                return ResourceManager.GetString("RoomCard_Status_SpeedIndicator_SpeedInMbps", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 当前速度比： {0:P2}.
+        /// </summary>
+        public static string RoomCard_Status_SpeedIndicator_SpeedInPercentage {
+            get {
+                return ResourceManager.GetString("RoomCard_Status_SpeedIndicator_SpeedInPercentage", resourceCulture);
             }
         }
         
@@ -345,6 +508,33 @@ namespace BililiveRecorder.WPF.Properties {
         public static string RootPage_NavigationViewItem_SettingsPage {
             get {
                 return ResourceManager.GetString("RootPage_NavigationViewItem_SettingsPage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 打开主界面.
+        /// </summary>
+        public static string TaskbarIconControl_MenuItem_OpenMainWindow {
+            get {
+                return ResourceManager.GetString("TaskbarIconControl_MenuItem_OpenMainWindow", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 录播姬已最小化到托盘，左键单击图标恢复界面.
+        /// </summary>
+        public static string TaskbarIconControl_MinimizedNotification {
+            get {
+                return ResourceManager.GetString("TaskbarIconControl_MinimizedNotification", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to B站录播姬.
+        /// </summary>
+        public static string TaskbarIconControl_Title {
+            get {
+                return ResourceManager.GetString("TaskbarIconControl_Title", resourceCulture);
             }
         }
         
