@@ -97,110 +97,60 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.3500.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Global_Confirm" xml:space="preserve">
-    <value>确定</value>
-  </data>
-  <data name="Global_Quit" xml:space="preserve">
-    <value>退出</value>
-  </data>
-  <data name="WorkDirectorySelector_Title" xml:space="preserve">
-    <value>选择工作目录</value>
-  </data>
-  <data name="WorkDirectorySelector_Browse" xml:space="preserve">
-    <value>浏览...</value>
-  </data>
-  <data name="Window_Title" xml:space="preserve">
-    <value>B站录播姬 {0}</value>
-    
-  </data>
-  <data name="Global_Cancel" xml:space="preserve">
-    <value>取消</value>
-  </data>
-  <data name="RoomListPage_Menu_File" xml:space="preserve">
-    <value>文件</value>
-  </data>
-  <data name="RoomListPage_Menu_AutoRecord" xml:space="preserve">
-    <value>监控</value>
-  </data>
-  <data name="RoomListPage_Menu_Sort" xml:space="preserve">
-    <value>排序</value>
-  </data>
-  <data name="RoomListPage_Menu_Log" xml:space="preserve">
-    <value>日志</value>
-  </data>
-  <data name="RoomListPage_Menu_AutoRecord_EnableAll" xml:space="preserve">
-    <value>自动录制全部房间</value>
-  </data>
-  <data name="RoomListPage_Menu_AutoRecord_DisableAll" xml:space="preserve">
-    <value>取消自动录制全部房间</value>
-  </data>
-  <data name="RoomListPage_Menu_Sort_Default" xml:space="preserve">
-    <value>不排序</value>
-  </data>
-  <data name="RoomListPage_Menu_Sort_RoomId" xml:space="preserve">
-    <value>房间号</value>
-  </data>
-  <data name="RoomListPage_Menu_Sort_Status" xml:space="preserve">
-    <value>录制状态</value>
-  </data>
-  <data name="RoomListPage_Menu_Log_Show" xml:space="preserve">
-    <value>在本页显示日志</value>
-  </data>
-  <data name="RoomListPage_Menu_Log_Hide" xml:space="preserve">
-    <value>不在本页显示日志</value>
-  </data>
-  <data name="LogPage_RightClickCopyToolTip" xml:space="preserve">
-    <value>右键点击可以复制单行日志</value>
-  </data>
-  <data name="RoomListPage_Menu_File_OpenWorkDirectory" xml:space="preserve">
-    <value>打开工作目录</value>
-  </data>
-  <data name="RootPage_NavigationViewItem_AnnouncementPage" xml:space="preserve">
-    <value>公告</value>
-  </data>
-  <data name="RootPage_NavigationViewItem_RoomListPage" xml:space="preserve">
-    <value>房间列表</value>
-  </data>
-  <data name="RootPage_NavigationViewItem_AdvancedSettingsPage" xml:space="preserve">
-    <value>高级设置</value>
-  </data>
-  <data name="RootPage_NavigationViewItem_LogPage" xml:space="preserve">
-    <value>日志</value>
-  </data>
-  <data name="RootPage_NavigationViewItem_SettingsPage" xml:space="preserve">
-    <value>设置</value>
-  </data>
-  <data name="AnnouncementPage_RefreshButton" xml:space="preserve">
-    <value>刷新公告内容</value>
-  </data>
-  <data name="AnnouncementPage_FetchFailed" xml:space="preserve">
-    <value>公告获取失败</value>
-  </data>
-  <data name="Global_Copy" xml:space="preserve">
-    <value>复制</value>
-  </data>
-  <data name="RoomCard_Menu_Tooltip" xml:space="preserve">
-    <value>操作</value>
-  </data>
-  <data name="RoomCard_Menu_StartRecording" xml:space="preserve">
-    <value>开始录制</value>
-  </data>
-  <data name="RoomCard_Menu_StopRecording" xml:space="preserve">
-    <value>停止录制</value>
-  </data>
-  <data name="RoomCard_Menu_RefreshInfo" xml:space="preserve">
-    <value>刷新直播间信息</value>
-  </data>
-  <data name="RoomCard_Menu_OpenInBrowser" xml:space="preserve">
-    <value>打开直播间页面</value>
-  </data>
-  <data name="RoomCard_Menu_EnableAutoRecord" xml:space="preserve">
-    <value>自动录制</value>
-  </data>
-  <data name="RoomCard_Menu_DisableAutoRecord" xml:space="preserve">
-    <value>不自动录制</value>
-  </data>
-  <data name="RoomCard_Menu_Delete" xml:space="preserve">
-    <value>删除房间</value>
-  </data>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
 </root>
