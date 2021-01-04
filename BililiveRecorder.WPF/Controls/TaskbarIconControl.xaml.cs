@@ -1,6 +1,5 @@
 using System.Windows;
 using System.Windows.Controls;
-using Hardcodet.Wpf.TaskbarNotification;
 
 namespace BililiveRecorder.WPF.Controls
 {
@@ -11,14 +10,14 @@ namespace BililiveRecorder.WPF.Controls
     {
         public TaskbarIconControl()
         {
-            InitializeComponent();
+            this.InitializeComponent();
 
             // AddHandler(NewMainWindow.ShowBalloonTipEvent, (RoutedEventHandler)UserControl_ShowBalloonTip);
             if (Application.Current.MainWindow is NewMainWindow nmw)
             {
                 nmw.ShowBalloonTipCallback = (title, msg, sym) =>
                 {
-                    TaskbarIcon.ShowBalloonTip(title, msg, sym);
+                    this.TaskbarIcon.ShowBalloonTip(title, msg, sym);
                 };
             }
         }

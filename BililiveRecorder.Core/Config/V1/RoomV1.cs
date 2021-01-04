@@ -1,6 +1,6 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 
-namespace BililiveRecorder.Core.Config
+namespace BililiveRecorder.Core.Config.V1
 {
     [JsonObject(MemberSerialization = MemberSerialization.OptIn)]
     public class RoomV1

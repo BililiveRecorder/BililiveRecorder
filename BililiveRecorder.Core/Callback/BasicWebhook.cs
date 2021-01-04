@@ -3,7 +3,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
-using BililiveRecorder.Core.Config;
+using BililiveRecorder.Core.Config.V2;
 using Newtonsoft.Json;
 using NLog;
 
@@ -15,7 +15,7 @@ namespace BililiveRecorder.Core.Callback
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
         private static readonly HttpClient client;
 
-        private readonly ConfigV1 Config;
+        private readonly ConfigV2 Config;
 
         static BasicWebhook()
         {
@@ -23,21 +23,21 @@ namespace BililiveRecorder.Core.Callback
             client.DefaultRequestHeaders.Add("User-Agent", $"BililiveRecorder/{typeof(BasicWebhook).Assembly.GetName().Version}-{BuildInfo.HeadShaShort}");
         }
 
-        public BasicWebhook(ConfigV1 config)
+        public BasicWebhook(ConfigV2 config)
         {
             this.Config = config ?? throw new ArgumentNullException(nameof(config));
         }
 
         public async void Send(RecordEndData data)
         {
-            var urls = this.Config.WebHookUrls;
+            var urls = this.Config.Global.WebHookUrls;
             if (string.IsNullOrWhiteSpace(urls)) return;
 
             var dataStr = JsonConvert.SerializeObject(data, Formatting.None);
             using var body = new ByteArrayContent(Encoding.UTF8.GetBytes(dataStr));
             body.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/json");
 
-            var tasks = urls
+            var tasks = urls!
                 .Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries)
                 .Select(x => x.Trim())
                 .Where(x => !string.IsNullOrWhiteSpace(x))

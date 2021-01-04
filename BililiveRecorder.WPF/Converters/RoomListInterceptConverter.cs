@@ -4,7 +4,6 @@ using System.Collections.Specialized;
 using System.Globalization;
 using System.Windows.Data;
 using BililiveRecorder.Core;
-using BililiveRecorder.Core.Config;
 
 namespace BililiveRecorder.WPF.Converters
 {
@@ -27,7 +26,7 @@ namespace BililiveRecorder.WPF.Converters
             public RecorderWrapper(IRecorder recorder) : base(recorder)
             {
                 this.recorder = recorder;
-                Add(null);
+                this.Add(null);
 
                 recorder.CollectionChanged += (sender, e) =>
                 {
@@ -35,19 +34,19 @@ namespace BililiveRecorder.WPF.Converters
                     {
                         case NotifyCollectionChangedAction.Add:
                             if (e.NewItems.Count != 1) throw new NotImplementedException("Wrapper Add Item Count != 1");
-                            InsertItem(e.NewStartingIndex, e.NewItems[0] as IRecordedRoom);
+                            this.InsertItem(e.NewStartingIndex, e.NewItems[0] as IRecordedRoom);
                             break;
                         case NotifyCollectionChangedAction.Remove:
                             if (e.OldItems.Count != 1) throw new NotImplementedException("Wrapper Remove Item Count != 1");
-                            if (!Remove(e.OldItems[0] as IRecordedRoom)) throw new NotImplementedException("Wrapper Remove Item Sync Fail");
+                            if (!this.Remove(e.OldItems[0] as IRecordedRoom)) throw new NotImplementedException("Wrapper Remove Item Sync Fail");
                             break;
                         case NotifyCollectionChangedAction.Replace:
                             throw new NotImplementedException("Wrapper Replace Item");
                         case NotifyCollectionChangedAction.Move:
                             throw new NotImplementedException("Wrapper Move Item");
                         case NotifyCollectionChangedAction.Reset:
-                            ClearItems();
-                            Add(null);
+                            this.ClearItems();
+                            this.Add(null);
                             break;
                         default:
                             break;

@@ -15,10 +15,10 @@ namespace BililiveRecorder.FlvProcessor
         public int Profile { get; private set; } = -1;
         public int Level { get; private set; } = -1;
 
-        public byte[] Data { get => _data; set { _data = value; ParseInfo(); } }
+        public byte[] Data { get => this._data; set { this._data = value; this.ParseInfo(); } }
         private byte[] _data = null;
 
-        public void SetTimeStamp(int timestamp) => TimeStamp = timestamp;
+        public void SetTimeStamp(int timestamp) => this.TimeStamp = timestamp;
 
         private void ParseInfo()
         {
@@ -46,42 +46,42 @@ namespace BililiveRecorder.FlvProcessor
              *     AVCLevelIndication
              * */
 
-            IsVideoKeyframe = false;
-            Profile = -1;
-            Level = -1;
+            this.IsVideoKeyframe = false;
+            this.Profile = -1;
+            this.Level = -1;
 
-            if (TagType != TagType.VIDEO) { return; }
-            if (Data.Length < 9) { return; }
+            if (this.TagType != TagType.VIDEO) { return; }
+            if (this.Data.Length < 9) { return; }
 
             // Not AVC Keyframe
-            if (Data[0] != 0x17) { return; }
+            if (this.Data[0] != 0x17) { return; }
 
-            IsVideoKeyframe = true;
+            this.IsVideoKeyframe = true;
 
             // Isn't AVCDecoderConfigurationRecord
-            if (Data[1] != 0x00) { return; }
+            if (this.Data[1] != 0x00) { return; }
             // version is not 1
-            if (Data[5] != 0x01) { return; }
+            if (this.Data[5] != 0x01) { return; }
 
-            Profile = Data[6];
-            Level = Data[8];
+            this.Profile = this.Data[6];
+            this.Level = this.Data[8];
 #if DEBUG
-            Debug.WriteLine("Video Profile: " + Profile + ", Level: " + Level);
+            Debug.WriteLine("Video Profile: " + this.Profile + ", Level: " + this.Level);
 #endif
         }
 
         public byte[] ToBytes(bool useDataSize, int offset = 0)
         {
             var tag = new byte[11];
-            tag[0] = (byte)TagType;
-            var size = BitConverter.GetBytes(useDataSize ? Data.Length : TagSize).ToBE();
+            tag[0] = (byte)this.TagType;
+            var size = BitConverter.GetBytes(useDataSize ? this.Data.Length : this.TagSize).ToBE();
             Buffer.BlockCopy(size, 1, tag, 1, 3);
 
-            byte[] timing = BitConverter.GetBytes(TimeStamp - offset).ToBE();
+            byte[] timing = BitConverter.GetBytes(this.TimeStamp - offset).ToBE();
             Buffer.BlockCopy(timing, 1, tag, 4, 3);
             Buffer.BlockCopy(timing, 0, tag, 7, 1);
 
-            Buffer.BlockCopy(StreamId, 0, tag, 8, 3);
+            Buffer.BlockCopy(this.StreamId, 0, tag, 8, 3);
 
             return tag;
         }
@@ -90,22 +90,22 @@ namespace BililiveRecorder.FlvProcessor
         {
             if (stream != null)
             {
-                var vs = ToBytes(true, offset);
+                var vs = this.ToBytes(true, offset);
                 stream.Write(vs, 0, vs.Length);
-                stream.Write(Data, 0, Data.Length);
-                stream.Write(BitConverter.GetBytes(Data.Length + vs.Length).ToBE(), 0, 4);
+                stream.Write(this.Data, 0, this.Data.Length);
+                stream.Write(BitConverter.GetBytes(this.Data.Length + vs.Length).ToBE(), 0, 4);
             }
         }
 
         private int _ParseIsVideoKeyframe()
         {
-            if (TagType != TagType.VIDEO) { return 0; }
-            if (Data.Length < 1) { return -1; }
+            if (this.TagType != TagType.VIDEO) { return 0; }
+            if (this.Data.Length < 1) { return -1; }
 
             const byte mask = 0b00001111;
             const byte compare = 0b00011111;
 
-            return (Data[0] | mask) == compare ? 1 : 0;
+            return (this.Data[0] | mask) == compare ? 1 : 0;
         }
     }
 }

@@ -7,7 +7,7 @@ namespace BililiveRecorder.WPF.Controls
     {
         public CloseWindowConfirmDialog()
         {
-            InitializeComponent();
+            this.InitializeComponent();
         }
     }
 }

@@ -63,6 +63,12 @@
                         </MenuItem.Icon>
                     </MenuItem>
                     <Separator/>
+                    <MenuItem Header="房间设置" Click="MenuItem_ShowSettings_Click">
+                        <MenuItem.Icon>
+                            <ui:PathIcon Style="{StaticResource PathIconDataCogOutline}"/>
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <Separator/>
                     <ui:RadioMenuItem Header="自动录制" GroupName="自动录制" IsChecked="{Binding IsMonitoring,Mode=OneWay}" Click="MenuItem_StartMonitor_Click">
                         <ui:RadioMenuItem.Icon>
                             <ui:PathIcon Foreground="Orange" Style="{StaticResource PathIconDataCctv}"/>
@@ -123,7 +129,7 @@
                     <MultiBinding Converter="{StaticResource MultiBoolToVisibilityCollapsedConverter}" Mode="OneWay">
                         <Binding Path="IsRecording" Mode="OneWay"/>
                         <Binding RelativeSource="{RelativeSource Mode=FindAncestor,AncestorType=pages:RootPage}" 
-                             Path="DataContext.Recorder.Config.EnabledFeature" Mode="OneWay"
+                             Path="DataContext.Recorder.Config.Global.EnabledFeature" Mode="OneWay"
                              Converter="{StaticResource ClipEnabledToBooleanConverter}"/>
                     </MultiBinding>
                 </Button.Visibility>

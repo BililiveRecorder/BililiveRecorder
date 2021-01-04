@@ -1,0 +1,87 @@
+<ui:ContentDialog
+    x:Class="BililiveRecorder.WPF.Controls.PerRoomSettingsDialog"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:ui="http://schemas.modernwpf.com/2019"
+    xmlns:local="clr-namespace:BililiveRecorder.WPF.Controls"
+    xmlns:mock="clr-namespace:BililiveRecorder.WPF.MockData"
+    xmlns:flv="clr-namespace:BililiveRecorder.FlvProcessor;assembly=BililiveRecorder.FlvProcessor"
+    DefaultButton="Close"
+    CloseButtonText="关闭"
+    d:DataContext="{d:DesignInstance Type=mock:MockRecordedRoom,IsDesignTimeCreatable=True}"
+    mc:Ignorable="d" 
+    d:DesignHeight="1000" d:DesignWidth="500">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <StackPanel>
+            <TextBlock VerticalAlignment="Center" Style="{DynamicResource SubtitleTextBlockStyle}" FontFamily="Microsoft Yahei" TextWrapping="NoWrap" HorizontalAlignment="Center"
+                   TextAlignment="Center" TextTrimming="CharacterEllipsis" Text="{Binding StreamerName,Mode=OneWay}" ToolTip="{Binding StreamerName,Mode=OneWay}"/>
+            <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Orientation="Horizontal" Grid.Row="1" Grid.ColumnSpan="2" Margin="5,0,0,0">
+                <ui:PathIcon Height="10" Style="{StaticResource PathIconDataUpperCaseIdentifier}" />
+                <TextBlock Text="{Binding RoomId, StringFormat=\{0\},Mode=OneWay}" Margin="4,0"/>
+                <ui:PathIcon Height="10" Style="{StaticResource PathIconDataLowerCaseIdentifier}" Margin="3,0"
+                             Visibility="{Binding ShortRoomId,Converter={StaticResource ShortRoomIdToVisibilityConverter}}"/>
+                <TextBlock Text="{Binding ShortRoomId, StringFormat=\{0\},Mode=OneWay}" 
+                           Visibility="{Binding ShortRoomId,Converter={StaticResource ShortRoomIdToVisibilityConverter}}"/>
+            </StackPanel>
+            <Separator/>
+        </StackPanel>
+        <ScrollViewer Grid.Row="1">
+            <ui:SimpleStackPanel Orientation="Vertical" Spacing="5" DataContext="{Binding RoomConfig}">
+                <GroupBox Header="弹幕录制">
+                    <StackPanel>
+                        <local:SettingWithDefault IsSettingNotUsingDefault="{Binding HasRecordDanmaku}">
+                            <ui:ToggleSwitch IsOn="{Binding RecordDanmaku}" 
+                                         OnContent="保存弹幕&#160;&#160;（当前为保存）" OffContent="不保存弹幕（当前为不保存）"/>
+                        </local:SettingWithDefault>
+                        <local:SettingWithDefault IsSettingNotUsingDefault="{Binding HasRecordDanmakuSuperChat}">
+                            <ui:ToggleSwitch IsOn="{Binding RecordDanmakuSuperChat}"
+                                         OnContent="同时保存 SuperChat" OffContent="不保存 SuperChat"/>
+                        </local:SettingWithDefault>
+                        <local:SettingWithDefault IsSettingNotUsingDefault="{Binding HasRecordDanmakuGuard}">
+                            <ui:ToggleSwitch IsOn="{Binding RecordDanmakuGuard}"
+                                         OnContent="同时保存 舰长购买" OffContent="不保存 舰长购买"/>
+                        </local:SettingWithDefault>
+                        <local:SettingWithDefault IsSettingNotUsingDefault="{Binding HasRecordDanmakuGift}">
+                            <ui:ToggleSwitch IsOn="{Binding RecordDanmakuGift}"
+                                         OnContent="同时保存 送礼信息" OffContent="不保存 送礼信息"/>
+                        </local:SettingWithDefault>
+                        <local:SettingWithDefault IsSettingNotUsingDefault="{Binding HasRecordDanmakuRaw}">
+                            <ui:ToggleSwitch IsOn="{Binding RecordDanmakuRaw}"
+                                         OnContent="同时保存 弹幕原始数据" OffContent="不保存 弹幕原始数据"/>
+                        </local:SettingWithDefault>
+                    </StackPanel>
+                </GroupBox>
+                <GroupBox Header="自动分段">
+                    <StackPanel>
+                        <local:SettingWithDefault IsSettingNotUsingDefault="{Binding HasCuttingMode}">
+                            <StackPanel>
+                                <RadioButton GroupName="自动分段" Content="不自动分段"
+                                 IsChecked="{Binding Path=CuttingMode, Converter={StaticResource EnumToBooleanConverter},
+                        ConverterParameter={x:Static flv:AutoCuttingMode.Disabled}}" />
+                                <RadioButton GroupName="自动分段" Content="根据文件大小自动分段"
+                                 IsChecked="{Binding Path=CuttingMode, Converter={StaticResource EnumToBooleanConverter},
+                        ConverterParameter={x:Static flv:AutoCuttingMode.BySize}}" />
+                                <RadioButton GroupName="自动分段" Content="根据视频时间自动分段"
+                                 IsChecked="{Binding Path=CuttingMode, Converter={StaticResource EnumToBooleanConverter},
+                        ConverterParameter={x:Static flv:AutoCuttingMode.ByTime}}" />
+                            </StackPanel>
+                        </local:SettingWithDefault>
+                        <local:SettingWithDefault IsSettingNotUsingDefault="{Binding HasCuttingNumber}">
+                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="0,5,0,0">
+                                <TextBlock VerticalAlignment="Center" Text="每"/>
+                                <TextBox Margin="5,0" Width="100" Text="{Binding CuttingNumber}" ui:TextBoxHelper.IsDeleteButtonVisible="False"/>
+                                <TextBlock VerticalAlignment="Center" Text="MiB/分 保存为一个文件"/>
+                            </StackPanel>
+                        </local:SettingWithDefault>
+                    </StackPanel>
+                </GroupBox>
+            </ui:SimpleStackPanel>
+        </ScrollViewer>
+    </Grid>
+</ui:ContentDialog>
