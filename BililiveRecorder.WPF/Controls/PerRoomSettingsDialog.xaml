@@ -11,8 +11,7 @@
     DefaultButton="Close"
     CloseButtonText="关闭"
     d:DataContext="{d:DesignInstance Type=mock:MockRecordedRoom,IsDesignTimeCreatable=True}"
-    mc:Ignorable="d" 
-    d:DesignHeight="1000" d:DesignWidth="500">
+    mc:Ignorable="d">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
