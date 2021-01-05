@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using Microsoft.WindowsAPICodePack.Dialogs;
+using WPFLocalizeExtension.Extensions;
 
 namespace BililiveRecorder.WPF.Controls
 {
@@ -10,10 +11,10 @@ namespace BililiveRecorder.WPF.Controls
     /// </summary>
     public partial class WorkDirectorySelectorDialog : INotifyPropertyChanged
     {
-        private string error = string.Empty;
+        private WorkDirectorySelectorDialogError error = WorkDirectorySelectorDialogError.None;
         private string path = string.Empty;
 
-        public string Error { get => this.error; set => this.SetField(ref this.error, value); }
+        public WorkDirectorySelectorDialogError Error { get => this.error; set => this.SetField(ref this.error, value); }
 
         public string Path { get => this.path; set => this.SetField(ref this.path, value); }
 
@@ -21,6 +22,16 @@ namespace BililiveRecorder.WPF.Controls
         {
             this.DataContext = this;
             this.InitializeComponent();
+        }
+
+        public enum WorkDirectorySelectorDialogError
+        {
+            None,
+            UnknownError,
+            PathNotSupported,
+            PathDoesNotExist,
+            PathContainsFiles,
+            FailedToLoadConfig,
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -33,11 +44,12 @@ namespace BililiveRecorder.WPF.Controls
 
         private void Button_Click(object sender, System.Windows.RoutedEventArgs e)
         {
+            var title = LocExtension.GetLocalizedValue<string>("BililiveRecorder.WPF:Strings:WorkDirectorySelector_Title");
             var fileDialog = new CommonOpenFileDialog()
             {
                 IsFolderPicker = true,
                 Multiselect = false,
-                Title = "选择录播姬工作目录路径",
+                Title = title,
                 AddToMostRecentlyUsedList = false,
                 EnsurePathExists = true,
                 NavigateToShortcut = true,

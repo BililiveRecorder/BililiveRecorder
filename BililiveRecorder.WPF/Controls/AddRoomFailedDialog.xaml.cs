@@ -9,5 +9,13 @@ namespace BililiveRecorder.WPF.Controls
         {
             this.InitializeComponent();
         }
+
+        public enum AddRoomFailedErrorText
+        {
+            InvalidInput,
+            Duplicate,
+            RoomIdZero,
+            RoomIdNegative,
+        }
     }
 }

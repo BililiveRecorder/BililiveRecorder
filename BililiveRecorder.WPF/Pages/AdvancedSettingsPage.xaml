@@ -5,6 +5,10 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
     xmlns:ui="http://schemas.modernwpf.com/2019"
+    xmlns:l="https://github.com/XAMLMarkupExtensions/WPFLocalizationExtension"
+    l:LocalizeDictionary.DesignCulture=""
+    l:ResxLocalizationProvider.DefaultAssembly="BililiveRecorder.WPF"
+    l:ResxLocalizationProvider.DefaultDictionary="Strings"
     xmlns:c="clr-namespace:BililiveRecorder.WPF.Controls"
     xmlns:local="clr-namespace:BililiveRecorder.WPF.Pages"
     xmlns:config="clr-namespace:BililiveRecorder.Core.Config.V2;assembly=BililiveRecorder.Core"
@@ -28,16 +32,16 @@
     </ui:Page.Resources>
     <ScrollViewer d:DataContext="{d:DesignInstance Type=config:GlobalConfig}">
         <ui:SimpleStackPanel Orientation="Vertical" Spacing="5" Margin="20">
-            <TextBlock Text="高级设置" Style="{StaticResource TitleTextBlockStyle}" FontFamily="Microsoft YaHei" Margin="0,10"/>
+            <TextBlock Text="{l:Loc Settings_AdvancedPage_Title}" Style="{StaticResource TitleTextBlockStyle}" FontFamily="Microsoft YaHei" Margin="0,10"/>
+            <TextBlock Text="{l:Loc Settings_AdvancedPage_Warning}"/>
             <GroupBox Header="Cookie">
-                <c:SettingWithDefault IsSettingNotUsingDefault="{Binding HasCookie}" Header="请求API时使用此 Cookie">
+                <c:SettingWithDefault IsSettingNotUsingDefault="{Binding HasCookie}">
                     <TextBox Text="{Binding Cookie,UpdateSourceTrigger=PropertyChanged,Delay=1000}" Width="220" HorizontalAlignment="Left"/>
                 </c:SettingWithDefault>
             </GroupBox>
-            <GroupBox Header="弹幕录制">
-                <c:SettingWithDefault IsSettingNotUsingDefault="{Binding HasRecordDanmakuFlushInterval}" Header="触发写硬盘所需弹幕个数">
-                    <ui:NumberBox Minimum="0"  Description="单位: 个" SmallChange="1"
-                              Text="{Binding RecordDanmakuFlushInterval,UpdateSourceTrigger=PropertyChanged}"/>
+            <GroupBox Header="{l:Loc Settings_Danmaku_Title}">
+                <c:SettingWithDefault IsSettingNotUsingDefault="{Binding HasRecordDanmakuFlushInterval}" Header="{l:Loc Settings_Danmaku_FlushInterval}">
+                    <ui:NumberBox Minimum="0" SmallChange="1" Text="{Binding RecordDanmakuFlushInterval,UpdateSourceTrigger=PropertyChanged}"/>
                 </c:SettingWithDefault>
             </GroupBox>
             <GroupBox Header="Timing">

@@ -1,6 +1,9 @@
-<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:c="clr-namespace:BililiveRecorder.WPF.Converters">
+<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:c="clr-namespace:BililiveRecorder.WPF.Converters"
+    xmlns:l="https://github.com/XAMLMarkupExtensions/WPFLocalizationExtension"
+    >
 
     <c:MultiBoolToValueConverter x:Key="MultiBoolToVisibilityCollapsedConverter" TrueValue="{x:Static Visibility.Visible}" FalseValue="{x:Static Visibility.Collapsed}"/>
 
@@ -15,7 +18,14 @@
             <SolidColorBrush Color="Red"/>
         </c:BoolToValueConverter.TrueValue>
     </c:BoolToValueConverter>
-    <c:BoolToValueConverter x:Key="BooleanToLiveStatusTooltipConverter" TrueValue="直播中" FalseValue="未开播"/>
+    <c:BoolToValueConverter x:Key="BooleanToLiveStatusTooltipConverter">
+        <c:BoolToValueConverter.TrueValue>
+            <TextBlock Text="{l:Loc RoomCard_Status_LiveStatusTooltip_True}" l:ResxLocalizationProvider.DefaultDictionary="Strings"/>
+        </c:BoolToValueConverter.TrueValue>
+        <c:BoolToValueConverter.FalseValue>
+            <TextBlock Text="{l:Loc RoomCard_Status_LiveStatusTooltip_False}" l:ResxLocalizationProvider.DefaultDictionary="Strings"/>
+        </c:BoolToValueConverter.FalseValue>
+    </c:BoolToValueConverter>
     <c:BoolToValueConverter x:Key="BooleanToDanmakuConnectedStyleConverter" TrueValue="{StaticResource PathIconDataCloudCheckOutline}" FalseValue="{StaticResource PathIconDataCloudAlert}"/>
     <c:BoolToValueConverter x:Key="BooleanToDanmakuConnectedColorBrushConverter">
         <c:BoolToValueConverter.FalseValue>
@@ -25,7 +35,14 @@
             <SolidColorBrush Color="#8BC34A"/>
         </c:BoolToValueConverter.TrueValue>
     </c:BoolToValueConverter>
-    <c:BoolToValueConverter x:Key="BooleanToDanmakuConnectedTooltipConverter" TrueValue="已连接 实时接收房间数据中" FalseValue="连接被断开"/>
+    <c:BoolToValueConverter x:Key="BooleanToDanmakuConnectedTooltipConverter">
+        <c:BoolToValueConverter.TrueValue>
+            <TextBlock Text="{l:Loc RoomCard_Status_DanmakuConnectionTooltip_True}" l:ResxLocalizationProvider.DefaultDictionary="Strings"/>
+        </c:BoolToValueConverter.TrueValue>
+        <c:BoolToValueConverter.FalseValue>
+            <TextBlock Text="{l:Loc RoomCard_Status_DanmakuConnectionTooltip_False}" l:ResxLocalizationProvider.DefaultDictionary="Strings"/>
+        </c:BoolToValueConverter.FalseValue>
+    </c:BoolToValueConverter>
     <c:BooleanInverterConverter x:Key="BooleanInverterConverter"/>
     <c:ClipEnabledToBooleanConverter x:Key="ClipEnabledToBooleanConverter"/>
     <c:EnumToBooleanConverter x:Key="EnumToBooleanConverter"/>

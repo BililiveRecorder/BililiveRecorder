@@ -1,3 +1,4 @@
+using System;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -11,6 +12,9 @@ namespace BililiveRecorder.WPF.Controls
         public TaskbarIconControl()
         {
             this.InitializeComponent();
+
+            using var iconStream = Application.GetResourceStream(new Uri("pack://application:,,,/BililiveRecorder.WPF;component/ico.ico")).Stream;
+            this.TaskbarIcon.Icon = new System.Drawing.Icon(iconStream);
 
             // AddHandler(NewMainWindow.ShowBalloonTipEvent, (RoutedEventHandler)UserControl_ShowBalloonTip);
             if (Application.Current.MainWindow is NewMainWindow nmw)

@@ -135,6 +135,11 @@
     <Compile Include="CommandLineOption.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="SingleInstance.cs" />
+    <Compile Include="Properties\Strings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Strings.resx</DependentUpon>
+    </Compile>
     <Page Include="Controls\AddRoomCard.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -246,6 +251,13 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Strings.en.resx" />
+    <EmbeddedResource Include="Properties\Strings.ja.resx" />
+    <EmbeddedResource Include="Properties\Strings.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Strings.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Strings.zh-Hant.resx" />
     <None Include="Properties\app.manifest" />
     <Resource Include="ico.ico" />
     <Content Include="NLog.config">
@@ -308,6 +320,9 @@
     </PackageReference>
     <PackageReference Include="WindowsAPICodePack-Shell">
       <Version>1.1.1</Version>
+    </PackageReference>
+    <PackageReference Include="WpfLocalizeExtension">
+      <Version>3.8.0</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup />

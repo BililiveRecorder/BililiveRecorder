@@ -6,6 +6,10 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
     xmlns:ui="http://schemas.modernwpf.com/2019"
+    xmlns:l="https://github.com/XAMLMarkupExtensions/WPFLocalizationExtension"
+    l:LocalizeDictionary.DesignCulture=""
+    l:ResxLocalizationProvider.DefaultAssembly="BililiveRecorder.WPF"
+    l:ResxLocalizationProvider.DefaultDictionary="Strings"
     xmlns:local="clr-namespace:BililiveRecorder.WPF.Controls"
     mc:Ignorable="d" 
     d:DesignHeight="50" d:DesignWidth="200">
@@ -22,7 +26,7 @@
         <ContentPresenter Grid.Row="1"
             Content="{Binding InnerContent,ElementName=SettingWithDefaultUserControl}"
             IsEnabled="{Binding IsSettingNotUsingDefault,ElementName=SettingWithDefaultUserControl}"/>
-        <CheckBox Content="默认" Margin="10,0,0,0" Grid.Row="1" Grid.Column="1" VerticalAlignment="Top" HorizontalAlignment="Left"
+        <CheckBox Content="{l:Loc SettingWithDefault_Default}" Margin="10,0,0,0" Grid.Row="1" Grid.Column="1" VerticalAlignment="Top" HorizontalAlignment="Left"
                   IsChecked="{Binding IsSettingNotUsingDefault,ElementName=SettingWithDefaultUserControl,Converter={StaticResource BooleanInverterConverter}}"/>
     </Grid>
 </UserControl>

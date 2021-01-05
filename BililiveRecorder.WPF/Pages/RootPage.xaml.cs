@@ -59,8 +59,11 @@ namespace BililiveRecorder.WPF.Pages
             this.InitializeComponent();
             this.AdvancedSettingsPageItem.Visibility = Visibility.Hidden;
 
-            (Application.Current.MainWindow as NewMainWindow).NativeBeforeWindowClose += this.RootPage_NativeBeforeWindowClose;
-            Loaded += this.RootPage_Loaded;
+            var mw = Application.Current.MainWindow as NewMainWindow;
+            if (mw is not null)
+                mw.NativeBeforeWindowClose += this.RootPage_NativeBeforeWindowClose;
+
+            Loaded += RootPage_Loaded;
         }
 
         private void RootPage_NativeBeforeWindowClose(object sender, EventArgs e)
@@ -73,7 +76,7 @@ namespace BililiveRecorder.WPF.Pages
         {
             var recorder = this.RootScope.Resolve<IRecorder>();
             var first_time = true;
-            var error = string.Empty;
+            var error = WorkDirectorySelectorDialog.WorkDirectorySelectorDialogError.None;
             string path;
             while (true)
             {
@@ -124,7 +127,7 @@ namespace BililiveRecorder.WPF.Pages
                             Error = error,
                             Path = lastdir
                         };
-                        
+
                         if (await dialog.ShowAsync() != ContentDialogResult.Primary)
                         {
                             (Application.Current.MainWindow as NewMainWindow).CloseWithoutConfirmAction();
@@ -135,7 +138,7 @@ namespace BililiveRecorder.WPF.Pages
                         { path = Path.GetFullPath(dialog.Path); }
                         catch (Exception)
                         {
-                            error = "不支持该路径";
+                            error = WorkDirectorySelectorDialog.WorkDirectorySelectorDialogError.PathNotSupported;
                             continue;
                         }
                     }
@@ -144,7 +147,7 @@ namespace BililiveRecorder.WPF.Pages
 
                     if (!Directory.Exists(path))
                     {
-                        error = "目录不存在";
+                        error = WorkDirectorySelectorDialog.WorkDirectorySelectorDialogError.PathDoesNotExist;
                         continue;
                     }
                     else if (!Directory.EnumerateFiles(path).Any())
@@ -153,7 +156,7 @@ namespace BililiveRecorder.WPF.Pages
                     }
                     else if (!File.Exists(config))
                     {
-                        error = "目录已有其他文件";
+                        error = WorkDirectorySelectorDialog.WorkDirectorySelectorDialogError.PathContainsFiles;
                         continue;
                     }
 
@@ -184,7 +187,7 @@ namespace BililiveRecorder.WPF.Pages
                         }
                         else
                         {
-                            error = "配置文件加载失败";
+                            error = WorkDirectorySelectorDialog.WorkDirectorySelectorDialogError.FailedToLoadConfig;
                             continue;
                         }
                     }
@@ -197,7 +200,7 @@ namespace BililiveRecorder.WPF.Pages
                 }
                 catch (Exception ex)
                 {
-                    error = "发生了未知错误";
+                    error = WorkDirectorySelectorDialog.WorkDirectorySelectorDialogError.UnknownError;
                     logger.Warn(ex, "选择工作目录时发生了未知错误");
                     continue;
                 }

@@ -5,6 +5,10 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
     xmlns:ui="http://schemas.modernwpf.com/2019"
+    xmlns:l="https://github.com/XAMLMarkupExtensions/WPFLocalizationExtension"
+    l:LocalizeDictionary.DesignCulture=""
+    l:ResxLocalizationProvider.DefaultAssembly="BililiveRecorder.WPF"
+    l:ResxLocalizationProvider.DefaultDictionary="Strings"
     xmlns:local="clr-namespace:BililiveRecorder.WPF.Controls"
     xmlns:mock="clr-namespace:BililiveRecorder.WPF.MockData"
     xmlns:m="clr-namespace:BililiveRecorder.WPF.Models"
@@ -13,8 +17,9 @@
     d:DataContext="{d:DesignInstance Type=mock:MockRecordedRoom,IsDesignTimeCreatable=True}"
     mc:Ignorable="d">
     <UserControl.Resources>
-        <ContextMenu x:Key="CopyTextContextMenu" DataContext="{Binding RelativeSource={RelativeSource Mode=Self},Path=PlacementTarget}">
-            <MenuItem Header="复制" Command="{x:Static m:Commands.Copy}" CommandParameter="{Binding Text}"/>
+        <ContextMenu x:Key="CopyTextContextMenu" DataContext="{Binding RelativeSource={RelativeSource Mode=Self},Path=PlacementTarget}"
+                     l:ResxLocalizationProvider.DefaultDictionary="Strings">
+            <MenuItem Header="{l:Loc Global_Copy}" Command="{x:Static m:Commands.Copy}" CommandParameter="{Binding Text}"/>
         </ContextMenu>
     </UserControl.Resources>
     <Border Background="{DynamicResource SystemControlBackgroundAltHighBrush}"
@@ -27,117 +32,142 @@
                 <RowDefinition Height="2*"/>
                 <RowDefinition Height="2*"/>
             </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="0.8*"/>
-                <ColumnDefinition Width="1.1*"/>
-                <ColumnDefinition Width="0.6*"/>
-            </Grid.ColumnDefinitions>
-            <TextBlock Grid.ColumnSpan="3" VerticalAlignment="Center" Margin="5,0,0,0"
-                       Style="{DynamicResource SubtitleTextBlockStyle}" 
-                       TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" 
-                       FontFamily="Microsoft Yahei" ContextMenu="{StaticResource CopyTextContextMenu}"
-                       Text="{Binding StreamerName,Mode=OneWay}" ToolTip="{Binding StreamerName,Mode=OneWay}"/>
-            <Menu Grid.Row="1" Grid.Column="3" VerticalAlignment="Center" HorizontalAlignment="Right">
-                <MenuItem ToolTip="操作">
-                    <MenuItem.Header>
-                        <ui:PathIcon Height="20" Width="20" Style="{StaticResource PathIconDataDotsVertical}"/>
-                    </MenuItem.Header>
-                    <MenuItem Header="开始录制" Click="MenuItem_StartRecording_Click">
-                        <MenuItem.Icon>
-                            <ui:PathIcon Style="{StaticResource PathIconDataPlayCircleOutline}"/>
-                        </MenuItem.Icon>
-                    </MenuItem>
-                    <MenuItem Header="停止录制" Click="MenuItem_StopRecording_Click">
-                        <MenuItem.Icon>
-                            <ui:PathIcon Style="{StaticResource PathIconDataStopCircleOutline}"/>
-                        </MenuItem.Icon>
-                    </MenuItem>
-                    <MenuItem Header="刷新直播间信息" Click="MenuItem_RefreshInfo_Click">
-                        <MenuItem.Icon>
-                            <ui:PathIcon Style="{StaticResource PathIconDataRefresh}"/>
-                        </MenuItem.Icon>
-                    </MenuItem>
-                    <MenuItem Header="打开直播间页面" Click="MenuItem_OpenInBrowser_Click">
-                        <MenuItem.Icon>
-                            <ui:PathIcon Style="{StaticResource PathIconDataOpenInNew}"/>
-                        </MenuItem.Icon>
-                    </MenuItem>
-                    <Separator/>
-                    <MenuItem Header="房间设置" Click="MenuItem_ShowSettings_Click">
-                        <MenuItem.Icon>
-                            <ui:PathIcon Style="{StaticResource PathIconDataCogOutline}"/>
-                        </MenuItem.Icon>
-                    </MenuItem>
-                    <Separator/>
-                    <ui:RadioMenuItem Header="自动录制" GroupName="自动录制" IsChecked="{Binding IsMonitoring,Mode=OneWay}" Click="MenuItem_StartMonitor_Click">
-                        <ui:RadioMenuItem.Icon>
-                            <ui:PathIcon Foreground="Orange" Style="{StaticResource PathIconDataCctv}"/>
-                        </ui:RadioMenuItem.Icon>
-                    </ui:RadioMenuItem>
-                    <ui:RadioMenuItem Header="不自动录制" GroupName="自动录制" IsChecked="{Binding IsMonitoring,Mode=OneWay,Converter={StaticResource BooleanInverterConverter}}" Click="MenuItem_StopMonitor_Click"/>
-                    <Separator/>
-                    <MenuItem Header="删除房间" Click="MenuItem_DeleteRoom_Click">
-                        <MenuItem.Icon>
-                            <ui:PathIcon Foreground="DarkRed" Style="{StaticResource PathIconDataDelete}"/>
-                        </MenuItem.Icon>
-                    </MenuItem>
-                </MenuItem>
-            </Menu>
-            <StackPanel VerticalAlignment="Center" Orientation="Horizontal" Grid.Row="1" Grid.ColumnSpan="2" Margin="5,0,0,0">
-                <ui:PathIcon Height="10" Margin="0,0,2,0" Style="{Binding IsDanmakuConnected,Converter={StaticResource BooleanToDanmakuConnectedStyleConverter}}"
+            <TextBlock VerticalAlignment="Center" Margin="5,0,0,0" Style="{DynamicResource SubtitleTextBlockStyle}" 
+                       TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" FontFamily="Microsoft Yahei" 
+                       Text="{Binding StreamerName,Mode=OneWay}" ToolTip="{Binding StreamerName,Mode=OneWay}"
+                       ContextMenu="{StaticResource CopyTextContextMenu}"/>
+
+            <Grid Grid.Row="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <StackPanel VerticalAlignment="Center" HorizontalAlignment="Stretch" Orientation="Horizontal" Margin="5,0,0,0">
+                    <ui:PathIcon Height="10" Margin="0,0,2,0" Style="{Binding IsDanmakuConnected,Converter={StaticResource BooleanToDanmakuConnectedStyleConverter}}"
                              Foreground="{Binding IsDanmakuConnected,Converter={StaticResource BooleanToDanmakuConnectedColorBrushConverter}}"
                              ToolTip="{Binding IsDanmakuConnected,Converter={StaticResource BooleanToDanmakuConnectedTooltipConverter}}"/>
-                <ui:PathIcon Height="10" Margin="0,0,3,0" Style="{StaticResource PathIconDataAccessPoint}"
+                    <ui:PathIcon Height="10" Margin="0,0,3,0" Style="{StaticResource PathIconDataAccessPoint}"
                              Foreground="{Binding IsStreaming,Converter={StaticResource BooleanToLiveStatusColorBrushConverter}}"
                              ToolTip="{Binding IsStreaming,Converter={StaticResource BooleanToLiveStatusTooltipConverter}}"/>
-                <ui:PathIcon Height="10" Style="{StaticResource PathIconDataUpperCaseIdentifier}" />
-                <TextBlock Text="{Binding RoomId, StringFormat=\{0\},Mode=OneWay}" ContextMenu="{StaticResource CopyTextContextMenu}" Margin="4,0" FontSize="11"/>
-                <ui:PathIcon Height="10" Style="{StaticResource PathIconDataLowerCaseIdentifier}" Margin="3,0"
+                    <ui:PathIcon Height="10" Style="{StaticResource PathIconDataUpperCaseIdentifier}" />
+                    <TextBlock Text="{Binding RoomId, StringFormat=\{0\},Mode=OneWay}" ContextMenu="{StaticResource CopyTextContextMenu}" Margin="4,0" FontSize="11"/>
+                    <ui:PathIcon Height="10" Style="{StaticResource PathIconDataLowerCaseIdentifier}" Margin="3,0"
                              Visibility="{Binding ShortRoomId,Converter={StaticResource ShortRoomIdToVisibilityConverter}}"/>
-                <TextBlock Text="{Binding ShortRoomId, StringFormat=\{0\},Mode=OneWay}" ContextMenu="{StaticResource CopyTextContextMenu}" FontSize="11"
+                    <TextBlock Text="{Binding ShortRoomId, StringFormat=\{0\},Mode=OneWay}" ContextMenu="{StaticResource CopyTextContextMenu}" FontSize="11"
                            Visibility="{Binding ShortRoomId,Converter={StaticResource ShortRoomIdToVisibilityConverter}}"/>
-            </StackPanel>
-            <Border Grid.Row="2" Grid.Column="1" VerticalAlignment="Center" Visibility="{Binding Visibility, ElementName=RecordingIcon}"
+                </StackPanel>
+                <Menu Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Right">
+                    <MenuItem ToolTip="{l:Loc RoomCard_Menu_Tooltip}">
+                        <MenuItem.Header>
+                            <ui:PathIcon Height="20" Width="20" Style="{StaticResource PathIconDataDotsVertical}"/>
+                        </MenuItem.Header>
+                        <MenuItem Header="{l:Loc RoomCard_Menu_StartRecording}" Click="MenuItem_StartRecording_Click">
+                            <MenuItem.Icon>
+                                <ui:PathIcon Style="{StaticResource PathIconDataPlayCircleOutline}"/>
+                            </MenuItem.Icon>
+                        </MenuItem>
+                        <MenuItem Header="{l:Loc RoomCard_Menu_StopRecording}" Click="MenuItem_StopRecording_Click">
+                            <MenuItem.Icon>
+                                <ui:PathIcon Style="{StaticResource PathIconDataStopCircleOutline}"/>
+                            </MenuItem.Icon>
+                        </MenuItem>
+                        <MenuItem Header="{l:Loc RoomCard_Menu_RefreshInfo}" Click="MenuItem_RefreshInfo_Click">
+                            <MenuItem.Icon>
+                                <ui:PathIcon Style="{StaticResource PathIconDataRefresh}"/>
+                            </MenuItem.Icon>
+                        </MenuItem>
+                        <MenuItem Header="{l:Loc RoomCard_Menu_OpenInBrowser}" Click="MenuItem_OpenInBrowser_Click">
+                            <MenuItem.Icon>
+                                <ui:PathIcon Style="{StaticResource PathIconDataOpenInNew}"/>
+                            </MenuItem.Icon>
+                        </MenuItem>
+                        <Separator/>
+                        <MenuItem Header="{l:Loc RoomCard_Menu_Settings}" Click="MenuItem_ShowSettings_Click">
+                            <MenuItem.Icon>
+                                <ui:PathIcon Style="{StaticResource PathIconDataCogOutline}"/>
+                            </MenuItem.Icon>
+                        </MenuItem>
+                        <Separator/>
+                        <ui:RadioMenuItem Header="{l:Loc RoomCard_Menu_EnableAutoRecord}" GroupName="AutoRecord" IsChecked="{Binding IsMonitoring,Mode=OneWay}" Click="MenuItem_StartMonitor_Click">
+                            <ui:RadioMenuItem.Icon>
+                                <ui:PathIcon Foreground="Orange" Style="{StaticResource PathIconDataCctv}"/>
+                            </ui:RadioMenuItem.Icon>
+                        </ui:RadioMenuItem>
+                        <ui:RadioMenuItem Header="{l:Loc RoomCard_Menu_DisableAutoRecord}" GroupName="AutoRecord" IsChecked="{Binding IsMonitoring,Mode=OneWay,Converter={StaticResource BooleanInverterConverter}}" Click="MenuItem_StopMonitor_Click"/>
+                        <Separator/>
+                        <MenuItem Header="{l:Loc RoomCard_Menu_Delete}" Click="MenuItem_DeleteRoom_Click">
+                            <MenuItem.Icon>
+                                <ui:PathIcon Foreground="DarkRed" Style="{StaticResource PathIconDataDelete}"/>
+                            </MenuItem.Icon>
+                        </MenuItem>
+                    </MenuItem>
+                </Menu>
+            </Grid>
+
+            <Grid Grid.Row="2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Orientation="Horizontal">
+                    <StackPanel.Visibility>
+                        <MultiBinding Converter="{StaticResource MultiBoolToVisibilityCollapsedConverter}" Mode="OneWay">
+                            <Binding Path="IsRecording" Converter="{StaticResource BooleanInverterConverter}" Mode="OneWay"/>
+                            <Binding Path="IsMonitoring" Mode="OneWay"/>
+                        </MultiBinding>
+                    </StackPanel.Visibility>
+                    <ui:PathIcon Style="{StaticResource PathIconDataCctv}" Foreground="DarkOrange" Width="15"/>
+                    <TextBlock Foreground="DarkOrange" Margin="3,0,0,0" Text="{l:Loc RoomCard_Status_Monitoring}"/>
+                </StackPanel>
+                <StackPanel Name="RecordingIcon" VerticalAlignment="Center" HorizontalAlignment="Center" Orientation="Horizontal"
+                            Visibility="{Binding IsRecording, Converter={StaticResource BooleanToVisibilityCollapsedConverter},Mode=OneWay}">
+                    <ui:PathIcon Style="{StaticResource PathIconDataRecordRec}" Foreground="Red" Width="15"/>
+                    <TextBlock Foreground="Red" Margin="3,0,0,0" Text="{l:Loc RoomCard_Status_Recording}"/>
+                </StackPanel>
+
+                <Border Grid.Column="1" VerticalAlignment="Center" Visibility="{Binding Visibility, ElementName=RecordingIcon}"
                     Background="{Binding DownloadSpeedPersentage, Converter={StaticResource PercentageToColorBrushConverter},Mode=OneWay}"
                     BorderThickness="1" BorderBrush="{DynamicResource SystemControlBackgroundChromeBlackMediumBrush}" Margin="2,0" CornerRadius="5">
-                <Border.ToolTip>
-                    <StackPanel>
-                        <TextBlock Margin="0,0,0,5" Text="{Binding DownloadSpeedPersentage,StringFormat=当前速度比： 0.## %,Mode=OneWay}"/>
-                        <TextBlock Text="录制的速度与质量"/>
-                        <TextBlock Text="绿色为良好，红色为差"/>
-                    </StackPanel>
-                </Border.ToolTip>
-                <TextBlock HorizontalAlignment="Center" Foreground="Black" Text="{Binding DownloadSpeedMegaBitps, StringFormat=0.## Mbps,Mode=OneWay}"/>
-            </Border>
-            <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Orientation="Horizontal" Grid.Row="2" Grid.Column="0">
-                <StackPanel.Visibility>
-                    <MultiBinding Converter="{StaticResource MultiBoolToVisibilityCollapsedConverter}" Mode="OneWay">
-                        <Binding Path="IsRecording" Converter="{StaticResource BooleanInverterConverter}" Mode="OneWay"/>
-                        <Binding Path="IsMonitoring" Mode="OneWay"/>
-                    </MultiBinding>
-                </StackPanel.Visibility>
-                <ui:PathIcon Style="{StaticResource PathIconDataCctv}" Foreground="DarkOrange" Width="15"/>
-                <TextBlock Foreground="DarkOrange" Margin="3,0,0,0" Text="监控中"/>
-            </StackPanel>
-            <StackPanel x:Name="RecordingIcon" Visibility="{Binding IsRecording, Converter={StaticResource BooleanToVisibilityCollapsedConverter},Mode=OneWay}"
-                VerticalAlignment="Center" HorizontalAlignment="Center" Orientation="Horizontal" Grid.Row="2" Grid.Column="0">
-                <ui:PathIcon Style="{StaticResource PathIconDataRecordRec}" Foreground="Red" Width="15"/>
-                <TextBlock Foreground="Red" Margin="3,0,0,0" Text="录制中"/>
-            </StackPanel>
-            <Button Grid.Column="2" Grid.Row="2" Padding="3,1" HorizontalAlignment="Right" Margin="5,0" ToolTip="回放剪辑（正在处理中的数量）" Click="Button_Clip_Click">
-                <Button.Visibility>
-                    <MultiBinding Converter="{StaticResource MultiBoolToVisibilityCollapsedConverter}" Mode="OneWay">
-                        <Binding Path="IsRecording" Mode="OneWay"/>
-                        <Binding RelativeSource="{RelativeSource Mode=FindAncestor,AncestorType=pages:RootPage}" 
+                    <Border.ToolTip>
+                        <StackPanel l:ResxLocalizationProvider.DefaultDictionary="Strings">
+                            <TextBlock Margin="0,0,0,5" >
+                                <TextBlock.Text>
+                                    <MultiBinding Converter="{l:StringFormatConverter}">
+                                        <l:BLoc Key="RoomCard_Status_SpeedIndicator_SpeedInPercentage"/>
+                                        <Binding Path="DownloadSpeedPersentage" Mode="OneWay"/>
+                                    </MultiBinding>
+                                </TextBlock.Text>
+                            </TextBlock>
+                            <TextBlock Text="{l:Loc RoomCard_Status_SpeedIndicator_Description}"/>
+                        </StackPanel>
+                    </Border.ToolTip>
+                    <TextBlock HorizontalAlignment="Center" Foreground="Black">
+                        <TextBlock.Text>
+                            <MultiBinding Converter="{l:StringFormatConverter}">
+                                <l:BLoc Key="RoomCard_Status_SpeedIndicator_SpeedInMbps"/>
+                                <Binding Path="DownloadSpeedMegaBitps" Mode="OneWay"/>
+                            </MultiBinding>
+                        </TextBlock.Text>
+                    </TextBlock>
+                </Border>
+
+                <Button Grid.Column="2" Padding="3,1" HorizontalAlignment="Right" Margin="5,0" ToolTip="{l:Loc RoomCard_ClipButton_Tooltip}" Click="Button_Clip_Click">
+                    <Button.Visibility>
+                        <MultiBinding Converter="{StaticResource MultiBoolToVisibilityCollapsedConverter}" Mode="OneWay">
+                            <Binding Path="IsRecording" Mode="OneWay"/>
+                            <Binding RelativeSource="{RelativeSource Mode=FindAncestor,AncestorType=pages:RootPage}" 
                              Path="DataContext.Recorder.Config.Global.EnabledFeature" Mode="OneWay"
                              Converter="{StaticResource ClipEnabledToBooleanConverter}"/>
-                    </MultiBinding>
-                </Button.Visibility>
-                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                    <ui:PathIcon Width="10" Style="{StaticResource PathIconDataContentCut}"/>
-                    <TextBlock VerticalAlignment="Center" Margin="2,0,0,2" Text="{Binding Processor.Clips.Count,FallbackValue=(-),StringFormat=({0}),Mode=OneWay}"/>
-                </StackPanel>
-            </Button>
+                        </MultiBinding>
+                    </Button.Visibility>
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                        <ui:PathIcon Width="10" Style="{StaticResource PathIconDataContentCut}"/>
+                        <TextBlock VerticalAlignment="Center" Margin="2,0,0,2" Text="{Binding Processor.Clips.Count,FallbackValue=(-),StringFormat=({0}),Mode=OneWay}"/>
+                    </StackPanel>
+                </Button>
+            </Grid>
         </Grid>
     </Border>
 </UserControl>

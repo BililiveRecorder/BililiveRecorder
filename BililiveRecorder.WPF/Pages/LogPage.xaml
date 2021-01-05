@@ -5,6 +5,10 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
     xmlns:ui="http://schemas.modernwpf.com/2019"
+    xmlns:l="https://github.com/XAMLMarkupExtensions/WPFLocalizationExtension"
+    l:LocalizeDictionary.DesignCulture=""
+    l:ResxLocalizationProvider.DefaultAssembly="BililiveRecorder.WPF"
+    l:ResxLocalizationProvider.DefaultDictionary="Strings"
     xmlns:wpf="clr-namespace:BililiveRecorder.WPF"
     xmlns:local="clr-namespace:BililiveRecorder.WPF.Pages"
     xmlns:models="clr-namespace:BililiveRecorder.WPF.Models"
@@ -12,7 +16,7 @@
     d:DesignHeight="450" d:DesignWidth="800"
     d:DataContext="{d:DesignInstance Type=models:LogModel}"
     DataContext="{Binding RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=local:RootPage},Path=DataContext.Logs,Mode=OneWay}"
-    Title="LogPage">
+    >
     <Grid Margin="5">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -39,18 +43,17 @@
                         </Style>
                     </StackPanel.Resources>
                     <StackPanel>
-                        <TextBlock Text="B站录播姬 "/>
+                        <TextBlock Text="{l:Loc About_Name}"/>
                         <TextBlock x:Name="VersionTextBlock"/>
                     </StackPanel>
                     <StackPanel>
-                        <TextBlock Text="官网: "/>
+                        <TextBlock Text="{l:Loc About_Website}"/>
                         <ui:HyperlinkButton Content="https://rec.danmuji.org" NavigateUri="https://rec.danmuji.org"/>
                     </StackPanel>
                     <StackPanel>
-                        <TextBlock Text="联系方式/问题反馈: "/>
+                        <TextBlock Text="{l:Loc About_Contact}"/>
                         <ui:HyperlinkButton Content="rec@danmuji.org" NavigateUri="mailto:rec@danmuji.org"/>
                     </StackPanel>
-                    <TextBlock Text="QQ群: 689636812"/>
                 </StackPanel>
             </Border>
         </ui:ThemeShadowChrome>
@@ -58,7 +61,7 @@
             <Border Background="{DynamicResource SystemControlBackgroundAltHighBrush}"
                     BorderBrush="{DynamicResource SystemControlBackgroundAccentBrush}"
                     BorderThickness="1" CornerRadius="5">
-                <ItemsControl x:Name="Log" ItemsSource="{Binding Mode=OneWay}" Margin="5" ToolTip="右键点击可以复制单行日志">
+                <ItemsControl x:Name="Log" ItemsSource="{Binding Mode=OneWay}" Margin="5" ToolTip="{l:Loc LogPage_RightClickCopyToolTip}">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
                             <Border BorderThickness="0,0,0,1" BorderBrush="#FFCCCCCC">

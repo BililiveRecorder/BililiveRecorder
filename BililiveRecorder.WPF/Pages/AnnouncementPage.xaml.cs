@@ -68,7 +68,7 @@ namespace BililiveRecorder.WPF.Pages
                 {
                     data = null;
                     success = false;
-                    if (show_error) MessageBox.Show(ex.ToString(), "加载发生错误");
+                    if (show_error) MessageBox.Show(ex.ToString(), "Loading Error");
                 }
             }
 
@@ -89,14 +89,14 @@ namespace BililiveRecorder.WPF.Pages
                 {
                     data = null;
                     success = false;
-                    if (show_error) MessageBox.Show(ex.ToString(), "加载发生错误");
+                    if (show_error) MessageBox.Show(ex.ToString(), "Loading Error");
                 }
             }
 
             this.Loading.Visibility = Visibility.Collapsed;
             if (success)
             {
-                this.RefreshButton.ToolTip = "当前公告获取时间: " + AnnouncementCacheTime.ToString("F");
+                this.RefreshButton.ToolTip = "Load Time: " + AnnouncementCacheTime.ToString("F");
                 AnnouncementCache = data;
             }
             else
@@ -133,7 +133,7 @@ namespace BililiveRecorder.WPF.Pages
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show(ex.ToString(), "加载发生错误");
+                    MessageBox.Show(ex.ToString(), "Loading Error");
                 }
                 await this.LoadAnnouncementAsync(ignore_cache: false, show_error: true);
             }
