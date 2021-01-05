@@ -35,7 +35,7 @@
                 <MenuItem Header="日本語" CommandParameter="ja" Command="{Binding Source={x:Static l:LocalizeDictionary.Instance}, Path=SetCultureCommand}" />
             </MenuItem>
         </Menu>
-        <TextBlock Grid.Row="1" Text="{Binding Error}" Margin="0,5" TextAlignment="Center" FontSize="16" Foreground="#FFFF2828"/>
+        <TextBlock Grid.Row="1" Text="{l:Loc {Binding Error,StringFormat=WorkDirectorySelector_Error_{0}}}" Margin="0,5" TextAlignment="Center" FontSize="16" Foreground="#FFFF2828"/>
         <Grid Grid.Row="2">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>

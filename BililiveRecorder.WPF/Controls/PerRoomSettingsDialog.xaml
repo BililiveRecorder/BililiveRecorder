@@ -5,11 +5,15 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:ui="http://schemas.modernwpf.com/2019"
+    xmlns:l="https://github.com/XAMLMarkupExtensions/WPFLocalizationExtension"
+    l:LocalizeDictionary.DesignCulture=""
+    l:ResxLocalizationProvider.DefaultAssembly="BililiveRecorder.WPF"
+    l:ResxLocalizationProvider.DefaultDictionary="Strings"
     xmlns:local="clr-namespace:BililiveRecorder.WPF.Controls"
     xmlns:mock="clr-namespace:BililiveRecorder.WPF.MockData"
     xmlns:flv="clr-namespace:BililiveRecorder.FlvProcessor;assembly=BililiveRecorder.FlvProcessor"
     DefaultButton="Close"
-    CloseButtonText="关闭"
+    CloseButtonText="{l:Loc Global_Close}"
     d:DataContext="{d:DesignInstance Type=mock:MockRecordedRoom,IsDesignTimeCreatable=True}"
     mc:Ignorable="d">
     <Grid>
@@ -32,50 +36,49 @@
         </StackPanel>
         <ScrollViewer Grid.Row="1">
             <ui:SimpleStackPanel Orientation="Vertical" Spacing="5" DataContext="{Binding RoomConfig}">
-                <GroupBox Header="弹幕录制">
+                <GroupBox Header="{l:Loc Settings_Danmaku_Title}">
                     <StackPanel>
                         <local:SettingWithDefault IsSettingNotUsingDefault="{Binding HasRecordDanmaku}">
-                            <ui:ToggleSwitch IsOn="{Binding RecordDanmaku}" 
-                                         OnContent="保存弹幕&#160;&#160;（当前为保存）" OffContent="不保存弹幕（当前为不保存）"/>
+                            <ui:ToggleSwitch IsOn="{Binding RecordDanmaku}" OnContent="{l:Loc Settings_Danmaku_ToggleSwitch_Enabled}" OffContent="{l:Loc Settings_Danmaku_ToggleSwitch_Enabled}"/>
                         </local:SettingWithDefault>
                         <local:SettingWithDefault IsSettingNotUsingDefault="{Binding HasRecordDanmakuSuperChat}">
-                            <ui:ToggleSwitch IsOn="{Binding RecordDanmakuSuperChat}"
-                                         OnContent="同时保存 SuperChat" OffContent="不保存 SuperChat"/>
+                            <ui:ToggleSwitch IsOn="{Binding RecordDanmakuSuperChat}" OnContent="{l:Loc Settings_Danmaku_ToggleSwitch_SuperChat}" OffContent="{l:Loc Settings_Danmaku_ToggleSwitch_SuperChat}"/>
                         </local:SettingWithDefault>
                         <local:SettingWithDefault IsSettingNotUsingDefault="{Binding HasRecordDanmakuGuard}">
-                            <ui:ToggleSwitch IsOn="{Binding RecordDanmakuGuard}"
-                                         OnContent="同时保存 舰长购买" OffContent="不保存 舰长购买"/>
+                            <ui:ToggleSwitch IsOn="{Binding RecordDanmakuGuard}" OnContent="{l:Loc Settings_Danmaku_ToggleSwitch_Guard}" OffContent="{l:Loc Settings_Danmaku_ToggleSwitch_Guard}"/>
                         </local:SettingWithDefault>
                         <local:SettingWithDefault IsSettingNotUsingDefault="{Binding HasRecordDanmakuGift}">
-                            <ui:ToggleSwitch IsOn="{Binding RecordDanmakuGift}"
-                                         OnContent="同时保存 送礼信息" OffContent="不保存 送礼信息"/>
+                            <ui:ToggleSwitch IsOn="{Binding RecordDanmakuGift}" OnContent="{l:Loc Settings_Danmaku_ToggleSwitch_Gift}" OffContent="{l:Loc Settings_Danmaku_ToggleSwitch_Gift}"/>
                         </local:SettingWithDefault>
                         <local:SettingWithDefault IsSettingNotUsingDefault="{Binding HasRecordDanmakuRaw}">
-                            <ui:ToggleSwitch IsOn="{Binding RecordDanmakuRaw}"
-                                         OnContent="同时保存 弹幕原始数据" OffContent="不保存 弹幕原始数据"/>
+                            <ui:ToggleSwitch IsOn="{Binding RecordDanmakuRaw}" OnContent="{l:Loc Settings_Danmaku_ToggleSwitch_Raw}" OffContent="{l:Loc Settings_Danmaku_ToggleSwitch_Raw}"/>
                         </local:SettingWithDefault>
                     </StackPanel>
                 </GroupBox>
-                <GroupBox Header="自动分段">
+                <GroupBox Header="{l:Loc Settings_Splitting_Title}">
                     <StackPanel>
                         <local:SettingWithDefault IsSettingNotUsingDefault="{Binding HasCuttingMode}">
                             <StackPanel>
-                                <RadioButton GroupName="自动分段" Content="不自动分段"
+                                <RadioButton GroupName="Splitting" Content="{l:Loc Settings_Splitting_RadioButton_Disabled}"
                                  IsChecked="{Binding Path=CuttingMode, Converter={StaticResource EnumToBooleanConverter},
                         ConverterParameter={x:Static flv:AutoCuttingMode.Disabled}}" />
-                                <RadioButton GroupName="自动分段" Content="根据文件大小自动分段"
+                                <RadioButton GroupName="Splitting" Content="{l:Loc Settings_Splitting_RadioButton_BySize}"
                                  IsChecked="{Binding Path=CuttingMode, Converter={StaticResource EnumToBooleanConverter},
                         ConverterParameter={x:Static flv:AutoCuttingMode.BySize}}" />
-                                <RadioButton GroupName="自动分段" Content="根据视频时间自动分段"
+                                <RadioButton GroupName="Splitting" Content="{l:Loc Settings_Splitting_RadioButton_ByTime}"
                                  IsChecked="{Binding Path=CuttingMode, Converter={StaticResource EnumToBooleanConverter},
                         ConverterParameter={x:Static flv:AutoCuttingMode.ByTime}}" />
                             </StackPanel>
                         </local:SettingWithDefault>
                         <local:SettingWithDefault IsSettingNotUsingDefault="{Binding HasCuttingNumber}">
                             <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="0,5,0,0">
-                                <TextBlock VerticalAlignment="Center" Text="每"/>
+                                <TextBlock VerticalAlignment="Center" Text="{l:Loc Settings_Splitting_TextBox_Left}"/>
                                 <TextBox Margin="5,0" Width="100" Text="{Binding CuttingNumber}" ui:TextBoxHelper.IsDeleteButtonVisible="False"/>
-                                <TextBlock VerticalAlignment="Center" Text="MiB/分 保存为一个文件"/>
+                                <TextBlock VerticalAlignment="Center" Text="{l:Loc Settings_Splitting_TextBox_TimeUnit}"/>
+                                <TextBlock VerticalAlignment="Center" Text="/"/>
+                                <TextBlock VerticalAlignment="Center" Text="{l:Loc Settings_Splitting_TextBox_SizeUnit}"/>
+                                <TextBlock VerticalAlignment="Center" Text=" "/>
+                                <TextBlock VerticalAlignment="Center" Text="{l:Loc Settings_Splitting_TextBox_Right}"/>
                             </StackPanel>
                         </local:SettingWithDefault>
                     </StackPanel>

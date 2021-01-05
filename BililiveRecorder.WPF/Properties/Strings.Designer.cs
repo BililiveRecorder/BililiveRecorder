@@ -214,6 +214,15 @@ namespace BililiveRecorder.WPF.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to 关闭.
+        /// </summary>
+        public static string Global_Close {
+            get {
+                return ResourceManager.GetString("Global_Close", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to 确定.
         /// </summary>
         public static string Global_Confirm {
@@ -668,6 +677,15 @@ namespace BililiveRecorder.WPF.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to 剪辑文件名格式.
+        /// </summary>
+        public static string Settings_FileName_Clip {
+            get {
+                return ResourceManager.GetString("Settings_FileName_Clip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to 说明.
         /// </summary>
         public static string Settings_FileName_Description_Text {
@@ -692,6 +710,15 @@ namespace BililiveRecorder.WPF.Properties {
         public static string Settings_FileName_Description_ToolTip {
             get {
                 return ResourceManager.GetString("Settings_FileName_Description_ToolTip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 录制文件名格式.
+        /// </summary>
+        public static string Settings_FileName_Record {
+            get {
+                return ResourceManager.GetString("Settings_FileName_Record", resourceCulture);
             }
         }
         
@@ -851,6 +878,24 @@ namespace BililiveRecorder.WPF.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Webhook 地址，一行一个.
+        /// </summary>
+        public static string Settings_Webhook_Address {
+            get {
+                return ResourceManager.GetString("Settings_Webhook_Address", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Webhook.
+        /// </summary>
+        public static string Settings_Webhook_Title {
+            get {
+                return ResourceManager.GetString("Settings_Webhook_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to 默认.
         /// </summary>
         public static string SettingWithDefault_Default {
@@ -901,6 +946,60 @@ namespace BililiveRecorder.WPF.Properties {
         public static string WorkDirectorySelector_Browse {
             get {
                 return ResourceManager.GetString("WorkDirectorySelector_Browse", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 配置文件加载失败.
+        /// </summary>
+        public static string WorkDirectorySelector_Error_FailedToLoadConfig {
+            get {
+                return ResourceManager.GetString("WorkDirectorySelector_Error_FailedToLoadConfig", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to  .
+        /// </summary>
+        public static string WorkDirectorySelector_Error_None {
+            get {
+                return ResourceManager.GetString("WorkDirectorySelector_Error_None", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 目录已有其他文件.
+        /// </summary>
+        public static string WorkDirectorySelector_Error_PathContainsFiles {
+            get {
+                return ResourceManager.GetString("WorkDirectorySelector_Error_PathContainsFiles", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 目录不存在.
+        /// </summary>
+        public static string WorkDirectorySelector_Error_PathDoesNotExist {
+            get {
+                return ResourceManager.GetString("WorkDirectorySelector_Error_PathDoesNotExist", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 不支持该路径.
+        /// </summary>
+        public static string WorkDirectorySelector_Error_PathNotSupported {
+            get {
+                return ResourceManager.GetString("WorkDirectorySelector_Error_PathNotSupported", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 发生了未知错误.
+        /// </summary>
+        public static string WorkDirectorySelector_Error_UnknownError {
+            get {
+                return ResourceManager.GetString("WorkDirectorySelector_Error_UnknownError", resourceCulture);
             }
         }
         

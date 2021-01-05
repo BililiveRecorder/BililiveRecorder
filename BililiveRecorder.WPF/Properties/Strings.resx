@@ -153,6 +153,9 @@
   <data name="Global_Cancel" xml:space="preserve">
     <value>取消</value>
   </data>
+  <data name="Global_Close" xml:space="preserve">
+    <value>关闭</value>
+  </data>
   <data name="Global_Confirm" xml:space="preserve">
     <value>确定</value>
   </data>
@@ -314,6 +317,9 @@
   <data name="Settings_Danmaku_ToggleSwitch_SuperChat" xml:space="preserve">
     <value>保存 SuperChat</value>
   </data>
+  <data name="Settings_FileName_Clip" xml:space="preserve">
+    <value>剪辑文件名格式</value>
+  </data>
   <data name="Settings_FileName_Description_Text" xml:space="preserve">
     <value>说明</value>
   </data>
@@ -329,6 +335,9 @@
 
 所有 { } 大括号均为英文半角括号
 只支持 flv 格式</value>
+  </data>
+  <data name="Settings_FileName_Record" xml:space="preserve">
+    <value>录制文件名格式</value>
   </data>
   <data name="Settings_RecordMode_Clip_DurationUnit" xml:space="preserve">
     <value>秒</value>
@@ -383,6 +392,12 @@
   <data name="Settings_Splitting_Title" xml:space="preserve">
     <value>自动分段</value>
   </data>
+  <data name="Settings_Webhook_Address" xml:space="preserve">
+    <value>Webhook 地址，一行一个</value>
+  </data>
+  <data name="Settings_Webhook_Title" xml:space="preserve">
+    <value>Webhook</value>
+  </data>
   <data name="SettingWithDefault_Default" xml:space="preserve">
     <value>默认</value>
     <comment>Text of the checkbox in the reuseable control for setting items.
@@ -403,6 +418,25 @@ Will use default setting and disable user input when checked.</comment>
   </data>
   <data name="WorkDirectorySelector_Browse" xml:space="preserve">
     <value>浏览...</value>
+  </data>
+  <data name="WorkDirectorySelector_Error_FailedToLoadConfig" xml:space="preserve">
+    <value>配置文件加载失败</value>
+  </data>
+  <data name="WorkDirectorySelector_Error_None" xml:space="preserve">
+    <value> </value>
+    <comment>Empty string</comment>
+  </data>
+  <data name="WorkDirectorySelector_Error_PathContainsFiles" xml:space="preserve">
+    <value>目录已有其他文件</value>
+  </data>
+  <data name="WorkDirectorySelector_Error_PathDoesNotExist" xml:space="preserve">
+    <value>目录不存在</value>
+  </data>
+  <data name="WorkDirectorySelector_Error_PathNotSupported" xml:space="preserve">
+    <value>不支持该路径</value>
+  </data>
+  <data name="WorkDirectorySelector_Error_UnknownError" xml:space="preserve">
+    <value>发生了未知错误</value>
   </data>
   <data name="WorkDirectorySelector_Title" xml:space="preserve">
     <value>选择工作目录</value>

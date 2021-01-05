@@ -132,6 +132,9 @@
   <data name="WorkDirectorySelector_Browse" xml:space="preserve">
     <value>ブラウズ...</value>
   </data>
+  <data name="WorkDirectorySelector_Error_None" xml:space="preserve">
+    <value> </value>
+  </data>
   <data name="WorkDirectorySelector_Title" xml:space="preserve">
     <value>フォルダーを選択</value>
   </data>

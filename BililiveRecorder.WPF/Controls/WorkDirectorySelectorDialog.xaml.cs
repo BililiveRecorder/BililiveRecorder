@@ -11,10 +11,10 @@ namespace BililiveRecorder.WPF.Controls
     /// </summary>
     public partial class WorkDirectorySelectorDialog : INotifyPropertyChanged
     {
-        private string error = string.Empty;
+        private WorkDirectorySelectorDialogError error = WorkDirectorySelectorDialogError.None;
         private string path = string.Empty;
 
-        public string Error { get => this.error; set => this.SetField(ref this.error, value); }
+        public WorkDirectorySelectorDialogError Error { get => this.error; set => this.SetField(ref this.error, value); }
 
         public string Path { get => this.path; set => this.SetField(ref this.path, value); }
 
@@ -22,6 +22,16 @@ namespace BililiveRecorder.WPF.Controls
         {
             this.DataContext = this;
             this.InitializeComponent();
+        }
+
+        public enum WorkDirectorySelectorDialogError
+        {
+            None,
+            UnknownError,
+            PathNotSupported,
+            PathDoesNotExist,
+            PathContainsFiles,
+            FailedToLoadConfig,
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
