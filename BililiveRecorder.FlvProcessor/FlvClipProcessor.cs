@@ -1,7 +1,7 @@
-using NLog;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using NLog;
 
 namespace BililiveRecorder.FlvProcessor
 {
@@ -25,22 +25,22 @@ namespace BililiveRecorder.FlvProcessor
         public IFlvClipProcessor Initialize(string path, IFlvMetadata metadata, List<IFlvTag> head, List<IFlvTag> data, uint seconds)
         {
             this.path = path;
-            Header = metadata; // TODO: Copy a copy, do not share
-            HTags = head;
-            Tags = data;
-            target = Tags[Tags.Count - 1].TimeStamp + (int)(seconds * FlvStreamProcessor.SEC_TO_MS);
+            this.Header = metadata; // TODO: Copy a copy, do not share
+            this.HTags = head;
+            this.Tags = data;
+            this.target = this.Tags[this.Tags.Count - 1].TimeStamp + (int)(seconds * FlvStreamProcessor.SEC_TO_MS);
             logger.Debug("Clip 创建 Tags.Count={0} Tags[0].TimeStamp={1} Tags[Tags.Count-1].TimeStamp={2} Tags里秒数={3}",
-                Tags.Count, Tags[0].TimeStamp, Tags[Tags.Count - 1].TimeStamp, (Tags[Tags.Count - 1].TimeStamp - Tags[0].TimeStamp) / 1000d);
+                this.Tags.Count, this.Tags[0].TimeStamp, this.Tags[this.Tags.Count - 1].TimeStamp, (this.Tags[this.Tags.Count - 1].TimeStamp - this.Tags[0].TimeStamp) / 1000d);
 
             return this;
         }
 
         public void AddTag(IFlvTag tag)
         {
-            Tags.Add(tag);
-            if (tag.TimeStamp >= target)
+            this.Tags.Add(tag);
+            if (tag.TimeStamp >= this.target)
             {
-                FinallizeFile();
+                this.FinallizeFile();
             }
         }
 
@@ -48,40 +48,40 @@ namespace BililiveRecorder.FlvProcessor
         {
             try
             {
-                if (!Directory.Exists(Path.GetDirectoryName(path)))
+                if (!Directory.Exists(Path.GetDirectoryName(this.path)))
                 {
-                    Directory.CreateDirectory(Path.GetDirectoryName(path));
+                    Directory.CreateDirectory(Path.GetDirectoryName(this.path));
                 }
-                using (var fs = new FileStream(path, FileMode.CreateNew, FileAccess.ReadWrite))
+                using (var fs = new FileStream(this.path, FileMode.CreateNew, FileAccess.ReadWrite))
                 {
                     fs.Write(FlvStreamProcessor.FLV_HEADER_BYTES, 0, FlvStreamProcessor.FLV_HEADER_BYTES.Length);
                     fs.Write(new byte[] { 0, 0, 0, 0, }, 0, 4);
 
-                    double clipDuration = (Tags[Tags.Count - 1].TimeStamp - Tags[0].TimeStamp) / 1000d;
-                    Header["duration"] = clipDuration;
-                    Header["lasttimestamp"] = (double)(Tags[Tags.Count - 1].TimeStamp - Tags[0].TimeStamp);
+                    double clipDuration = (this.Tags[this.Tags.Count - 1].TimeStamp - this.Tags[0].TimeStamp) / 1000d;
+                    this.Header["duration"] = clipDuration;
+                    this.Header["lasttimestamp"] = (double)(this.Tags[this.Tags.Count - 1].TimeStamp - this.Tags[0].TimeStamp);
 
-                    var t = funcFlvTag();
+                    var t = this.funcFlvTag();
                     t.TagType = TagType.DATA;
 
-                    if (Header.ContainsKey("BililiveRecorder"))
+                    if (this.Header.ContainsKey("BililiveRecorder"))
                     {
                         // TODO: 更好的写法
-                        (Header["BililiveRecorder"] as Dictionary<string, object>)["starttime"] = DateTime.UtcNow - TimeSpan.FromSeconds(clipDuration);
+                        (this.Header["BililiveRecorder"] as Dictionary<string, object>)["starttime"] = DateTime.UtcNow - TimeSpan.FromSeconds(clipDuration);
                     }
-                    t.Data = Header.ToBytes();
+                    t.Data = this.Header.ToBytes();
                     t.WriteTo(fs);
 
-                    int offset = Tags[0].TimeStamp;
+                    int offset = this.Tags[0].TimeStamp;
 
-                    HTags.ForEach(tag => tag.WriteTo(fs));
-                    Tags.ForEach(tag => tag.WriteTo(fs, offset));
+                    this.HTags.ForEach(tag => tag.WriteTo(fs));
+                    this.Tags.ForEach(tag => tag.WriteTo(fs, offset));
 
-                    logger.Info("剪辑已保存：{0}", Path.GetFileName(path));
+                    logger.Info("剪辑已保存：{0}", Path.GetFileName(this.path));
 
                     fs.Close();
                 }
-                Tags.Clear();
+                this.Tags.Clear();
             }
             catch (IOException ex)
             {

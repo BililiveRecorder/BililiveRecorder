@@ -6,18 +6,19 @@ using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
 using System.Threading;
-using System.Threading.Tasks;
 using BililiveRecorder.Core.Callback;
 using BililiveRecorder.Core.Config;
+using BililiveRecorder.Core.Config.V2;
 using NLog;
 
+#nullable enable
 namespace BililiveRecorder.Core
 {
     public class Recorder : IRecorder
     {
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
 
-        private readonly Func<int, IRecordedRoom> newIRecordedRoom;
+        private readonly Func<RoomConfig, IRecordedRoom> newIRecordedRoom;
         private readonly CancellationTokenSource tokenSource;
 
         private bool _valid = false;
@@ -25,24 +26,22 @@ namespace BililiveRecorder.Core
 
         private ObservableCollection<IRecordedRoom> Rooms { get; } = new ObservableCollection<IRecordedRoom>();
 
-        public ConfigV1 Config { get; }
+        public ConfigV2? Config { get; private set; }
 
-        private BasicWebhook Webhook { get; }
+        private BasicWebhook? Webhook { get; set; }
 
-        public int Count => Rooms.Count;
+        public int Count => this.Rooms.Count;
         public bool IsReadOnly => true;
-        public IRecordedRoom this[int index] => Rooms[index];
+        public IRecordedRoom this[int index] => this.Rooms[index];
 
-        public Recorder(ConfigV1 config, BasicWebhook webhook, Func<int, IRecordedRoom> iRecordedRoom)
+        public Recorder(Func<RoomConfig, IRecordedRoom> iRecordedRoom)
         {
-            newIRecordedRoom = iRecordedRoom ?? throw new ArgumentNullException(nameof(iRecordedRoom));
-            Config = config ?? throw new ArgumentNullException(nameof(config));
-            Webhook = webhook ?? throw new ArgumentNullException(nameof(webhook));
+            this.newIRecordedRoom = iRecordedRoom ?? throw new ArgumentNullException(nameof(iRecordedRoom));
 
-            tokenSource = new CancellationTokenSource();
-            Repeat.Interval(TimeSpan.FromSeconds(3), DownloadWatchdog, tokenSource.Token);
+            this.tokenSource = new CancellationTokenSource();
+            Repeat.Interval(TimeSpan.FromSeconds(3), this.DownloadWatchdog, this.tokenSource.Token);
 
-            Rooms.CollectionChanged += (sender, e) =>
+            this.Rooms.CollectionChanged += (sender, e) =>
             {
                 logger.Trace($"Rooms.CollectionChanged;{e.Action};" +
                     $"O:{e.OldItems?.Cast<IRecordedRoom>()?.Select(rr => rr.RoomId.ToString())?.Aggregate((current, next) => current + "," + next)};" +
@@ -52,16 +51,18 @@ namespace BililiveRecorder.Core
 
         public bool Initialize(string workdir)
         {
+            if (this._valid)
+                throw new InvalidOperationException("Recorder is in valid state");
             logger.Debug("Initialize: " + workdir);
-            if (ConfigParser.Load(directory: workdir, config: Config))
+            var config = ConfigParser.LoadFrom(directory: workdir);
+            if (config is not null)
             {
-                _valid = true;
-                Config.WorkDirectory = workdir;
-                if ((Config.RoomList?.Count ?? 0) > 0)
-                {
-                    Config.RoomList.ForEach((r) => AddRoom(r.Roomid, r.Enabled));
-                }
-                ConfigParser.Save(Config.WorkDirectory, Config);
+                this.Config = config;
+                this.Config.Global.WorkDirectory = workdir;
+                this.Webhook = new BasicWebhook(this.Config);
+                this._valid = true;
+                this.Config.Rooms.ForEach(r => this.AddRoom(r));
+                ConfigParser.SaveTo(this.Config.Global.WorkDirectory, this.Config);
                 return true;
             }
             else
@@ -70,12 +71,29 @@ namespace BililiveRecorder.Core
             }
         }
 
+        public bool InitializeWithConfig(ConfigV2 config)
+        {
+            // 脏写法 but it works
+            if (this._valid)
+                throw new InvalidOperationException("Recorder is in valid state");
+
+            if (config is null)
+                throw new ArgumentNullException(nameof(config));
+
+            logger.Debug("Initialize With Config.");
+            this.Config = config;
+            this.Webhook = new BasicWebhook(this.Config);
+            this._valid = true;
+            this.Config.Rooms.ForEach(r => this.AddRoom(r));
+            return true;
+        }
+
         /// <summary>
         /// 添加直播间到录播姬
         /// </summary>
         /// <param name="roomid">房间号（支持短号）</param>
         /// <exception cref="ArgumentOutOfRangeException"/>
-        public void AddRoom(int roomid) => AddRoom(roomid, true);
+        public void AddRoom(int roomid) => this.AddRoom(roomid, true);
 
         /// <summary>
         /// 添加直播间到录播姬
@@ -87,25 +105,46 @@ namespace BililiveRecorder.Core
         {
             try
             {
-                if (!_valid) { throw new InvalidOperationException("Not Initialized"); }
+                if (!this._valid) { throw new InvalidOperationException("Not Initialized"); }
                 if (roomid <= 0)
                 {
                     throw new ArgumentOutOfRangeException(nameof(roomid), "房间号需要大于0");
                 }
 
-                var rr = newIRecordedRoom(roomid);
-                if (enabled)
+                var config = new RoomConfig
                 {
-                    Task.Run(() => rr.Start());
-                }
+                    RoomId = roomid,
+                    AutoRecord = enabled,
+                };
 
-                logger.Debug("AddRoom 添加了 {roomid} 直播间 ", rr.RoomId);
-                rr.RecordEnded += this.RecordedRoom_RecordEnded;
-                Rooms.Add(rr);
+                this.AddRoom(config);
             }
             catch (Exception ex)
             {
                 logger.Debug(ex, "AddRoom 添加 {roomid} 直播间错误 ", roomid);
+            }
+        }
+
+        /// <summary>
+        /// 添加直播间到录播姬
+        /// </summary>
+        /// <param name="roomConfig">房间设置</param>
+        public void AddRoom(RoomConfig roomConfig)
+        {
+            try
+            {
+                if (!this._valid) { throw new InvalidOperationException("Not Initialized"); }
+
+                roomConfig.SetParent(this.Config?.Global);
+                var rr = this.newIRecordedRoom(roomConfig);
+
+                logger.Debug("AddRoom 添加了 {roomid} 直播间 ", rr.RoomId);
+                rr.RecordEnded += this.RecordedRoom_RecordEnded;
+                this.Rooms.Add(rr);
+            }
+            catch (Exception ex)
+            {
+                logger.Debug(ex, "AddRoom 添加 {roomid} 直播间错误 ", roomConfig.RoomId);
             }
         }
 
@@ -116,56 +155,49 @@ namespace BililiveRecorder.Core
         public void RemoveRoom(IRecordedRoom rr)
         {
             if (rr is null) return;
-            if (!_valid) { throw new InvalidOperationException("Not Initialized"); }
+            if (!this._valid) { throw new InvalidOperationException("Not Initialized"); }
             rr.Shutdown();
-            rr.RecordEnded -= RecordedRoom_RecordEnded;
+            rr.RecordEnded -= this.RecordedRoom_RecordEnded;
             logger.Debug("RemoveRoom 移除了直播间 {roomid}", rr.RoomId);
-            Rooms.Remove(rr);
+            this.Rooms.Remove(rr);
         }
 
         private void Shutdown()
         {
-            if (!_valid) { return; }
+            if (!this._valid) { return; }
             logger.Debug("Shutdown called.");
-            tokenSource.Cancel();
+            this.tokenSource.Cancel();
 
-            SaveConfigToFile();
+            this.SaveConfigToFile();
 
-            Rooms.ToList().ForEach(rr =>
+            this.Rooms.ToList().ForEach(rr =>
             {
                 rr.Shutdown();
             });
 
-            Rooms.Clear();
+            this.Rooms.Clear();
         }
 
-        private void RecordedRoom_RecordEnded(object sender, RecordEndData e) => Webhook.Send(e);
+        private void RecordedRoom_RecordEnded(object sender, RecordEndData e) => this.Webhook?.Send(e);
 
         public void SaveConfigToFile()
         {
-            Config.RoomList = new List<RoomV1>();
-            Rooms.ToList().ForEach(rr =>
-            {
-                Config.RoomList.Add(new RoomV1()
-                {
-                    Roomid = rr.RoomId,
-                    Enabled = rr.IsMonitoring,
-                });
-            });
+            if (this.Config is null) return;
 
-            ConfigParser.Save(Config.WorkDirectory, Config);
+            this.Config.Rooms = this.Rooms.Select(x => x.RoomConfig).ToList();
+            ConfigParser.SaveTo(this.Config.Global.WorkDirectory!, this.Config);
         }
 
         private void DownloadWatchdog()
         {
-            if (!_valid) { return; }
+            if (!this._valid) { return; }
             try
             {
-                Rooms.ToList().ForEach(room =>
+                this.Rooms.ToList().ForEach(room =>
                 {
                     if (room.IsRecording)
                     {
-                        if (DateTime.Now - room.LastUpdateDateTime > TimeSpan.FromMilliseconds(Config.TimingWatchdogTimeout))
+                        if (DateTime.Now - room.LastUpdateDateTime > TimeSpan.FromMilliseconds(this.Config!.Global.TimingWatchdogTimeout))
                         {
                             logger.Warn("服务器未断开连接但停止提供 [{roomid}] 直播间的直播数据，通常是录制侧网络不稳定导致，将会断开重连", room.RoomId);
                             room.StopRecord();
@@ -183,37 +215,37 @@ namespace BililiveRecorder.Core
         void ICollection<IRecordedRoom>.Add(IRecordedRoom item) => throw new NotSupportedException("Collection is readonly");
         void ICollection<IRecordedRoom>.Clear() => throw new NotSupportedException("Collection is readonly");
         bool ICollection<IRecordedRoom>.Remove(IRecordedRoom item) => throw new NotSupportedException("Collection is readonly");
-        bool ICollection<IRecordedRoom>.Contains(IRecordedRoom item) => Rooms.Contains(item);
-        void ICollection<IRecordedRoom>.CopyTo(IRecordedRoom[] array, int arrayIndex) => Rooms.CopyTo(array, arrayIndex);
-        public IEnumerator<IRecordedRoom> GetEnumerator() => Rooms.GetEnumerator();
-        IEnumerator<IRecordedRoom> IEnumerable<IRecordedRoom>.GetEnumerator() => Rooms.GetEnumerator();
-        IEnumerator IEnumerable.GetEnumerator() => Rooms.GetEnumerator();
+        bool ICollection<IRecordedRoom>.Contains(IRecordedRoom item) => this.Rooms.Contains(item);
+        void ICollection<IRecordedRoom>.CopyTo(IRecordedRoom[] array, int arrayIndex) => this.Rooms.CopyTo(array, arrayIndex);
+        public IEnumerator<IRecordedRoom> GetEnumerator() => this.Rooms.GetEnumerator();
+        IEnumerator<IRecordedRoom> IEnumerable<IRecordedRoom>.GetEnumerator() => this.Rooms.GetEnumerator();
+        IEnumerator IEnumerable.GetEnumerator() => this.Rooms.GetEnumerator();
 
         public event PropertyChangedEventHandler PropertyChanged
         {
-            add => (Rooms as INotifyPropertyChanged).PropertyChanged += value;
-            remove => (Rooms as INotifyPropertyChanged).PropertyChanged -= value;
+            add => (this.Rooms as INotifyPropertyChanged).PropertyChanged += value;
+            remove => (this.Rooms as INotifyPropertyChanged).PropertyChanged -= value;
         }
 
         public event NotifyCollectionChangedEventHandler CollectionChanged
         {
-            add => (Rooms as INotifyCollectionChanged).CollectionChanged += value;
-            remove => (Rooms as INotifyCollectionChanged).CollectionChanged -= value;
+            add => (this.Rooms as INotifyCollectionChanged).CollectionChanged += value;
+            remove => (this.Rooms as INotifyCollectionChanged).CollectionChanged -= value;
         }
 
         protected virtual void Dispose(bool disposing)
         {
-            if (!disposedValue)
+            if (!this.disposedValue)
             {
                 if (disposing)
                 {
                     // dispose managed state (managed objects)
-                    Shutdown();
+                    this.Shutdown();
                 }
 
                 // free unmanaged resources (unmanaged objects) and override finalizer
                 // set large fields to null
-                disposedValue = true;
+                this.disposedValue = true;
             }
         }
 
@@ -227,7 +259,7 @@ namespace BililiveRecorder.Core
         public void Dispose()
         {
             // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
-            Dispose(disposing: true);
+            this.Dispose(disposing: true);
             GC.SuppressFinalize(this);
         }
     }

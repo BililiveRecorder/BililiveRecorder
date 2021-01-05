@@ -15,10 +15,10 @@ namespace BililiveRecorder.WPF.Converters
             {
                 if ((value is bool boolean) && boolean == false)
                 {
-                    return FalseValue;
+                    return this.FalseValue;
                 }
             }
-            return TrueValue;
+            return this.TrueValue;
         }
 
         public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)

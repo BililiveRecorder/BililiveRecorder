@@ -39,7 +39,7 @@
                     </Grid.RowDefinitions>
                     <StackPanel Margin="10">
                         <TextBlock Style="{DynamicResource SubtitleTextBlockStyle}" Text="{l:Loc TaskbarIconControl_Title}" FontFamily="Microsoft Yahei"/>
-                        <TextBlock Text="{Binding Recorder.Config.WorkDirectory,Mode=OneWay}" TextWrapping="NoWrap" FontFamily="Microsoft Yahei"/>
+                        <TextBlock Text="{Binding Recorder.Config.Global.WorkDirectory,Mode=OneWay}" TextWrapping="NoWrap" FontFamily="Microsoft Yahei"/>
                     </StackPanel>
                     <Separator Grid.Row="1" Grid.ColumnSpan="2" />
                     <ItemsControl Grid.Row="2" Grid.ColumnSpan="2" Margin="10,0,10,10" ItemsSource="{Binding Recorder, Mode=OneWay}">

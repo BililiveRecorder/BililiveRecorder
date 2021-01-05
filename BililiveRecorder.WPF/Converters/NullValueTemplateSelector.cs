@@ -8,6 +8,6 @@ namespace BililiveRecorder.WPF.Converters
         public DataTemplate Normal { get; set; }
         public DataTemplate Null { get; set; }
 
-        public override DataTemplate SelectTemplate(object item, DependencyObject container) => item is null ? Null : Normal;
+        public override DataTemplate SelectTemplate(object item, DependencyObject container) => item is null ? this.Null : this.Normal;
     }
 }

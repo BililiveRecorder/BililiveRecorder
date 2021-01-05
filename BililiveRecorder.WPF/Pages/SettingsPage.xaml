@@ -5,12 +5,13 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
     xmlns:ui="http://schemas.modernwpf.com/2019"
+    xmlns:c="clr-namespace:BililiveRecorder.WPF.Controls"
     xmlns:local="clr-namespace:BililiveRecorder.WPF.Pages"
-    xmlns:config="clr-namespace:BililiveRecorder.Core.Config;assembly=BililiveRecorder.Core"
+    xmlns:config="clr-namespace:BililiveRecorder.Core.Config.V2;assembly=BililiveRecorder.Core"
     xmlns:flv="clr-namespace:BililiveRecorder.FlvProcessor;assembly=BililiveRecorder.FlvProcessor"
     mc:Ignorable="d" 
     d:DesignHeight="1500" d:DesignWidth="500"
-    DataContext="{Binding RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=local:RootPage},Path=DataContext.Recorder.Config}"
+    DataContext="{Binding RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=local:RootPage},Path=DataContext.Recorder.Config.Global}"
     Title="SettingsPage">
     <ui:Page.Resources>
         <Style TargetType="TextBlock">
@@ -18,7 +19,7 @@
             <Setter Property="VerticalAlignment" Value="Center"/>
         </Style>
     </ui:Page.Resources>
-    <ScrollViewer d:DataContext="{d:DesignInstance Type=config:ConfigV1}">
+    <ScrollViewer d:DataContext="{d:DesignInstance Type=config:GlobalConfig}">
         <ui:SimpleStackPanel Orientation="Vertical" Spacing="5" Margin="20">
             <TextBlock Text="设置" Style="{StaticResource TitleTextBlockStyle}" FontFamily="Microsoft Yahei" Margin="0,10"/>
             <GroupBox Header="弹幕录制">
@@ -86,7 +87,7 @@
                 </StackPanel>
             </GroupBox>
             <GroupBox Header="文件名">
-                <StackPanel MaxWidth="400" HorizontalAlignment="Left">
+                <StackPanel MaxWidth="500" HorizontalAlignment="Left">
                     <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
                         <StackPanel.ToolTip>
                             <TextBlock FontSize="13">
@@ -106,11 +107,13 @@
                         <TextBlock Text="说明"/>
                         <ui:PathIcon Margin="2,0" VerticalAlignment="Center" Height="15" Style="{StaticResource PathIconDataInformationOutline}"/>
                     </StackPanel>
-                    <TextBlock Text="录制文件名格式"/>
-                    <TextBox Text="{Binding RecordFilenameFormat,Delay=500}" ui:TextBoxHelper.IsDeleteButtonVisible="False"/>
-                    <TextBlock Text="剪辑文件名格式" Margin="0,5,0,0" Visibility="{Binding ElementName=EnabledFeatureRecordOnlyRadioButton,Path=IsChecked,Converter={StaticResource InvertBooleanToVisibilityCollapsedConverter}}"/>
-                    <TextBox Text="{Binding ClipFilenameFormat,Delay=500}" ui:TextBoxHelper.IsDeleteButtonVisible="False"
-                             Visibility="{Binding ElementName=EnabledFeatureRecordOnlyRadioButton,Path=IsChecked,Converter={StaticResource InvertBooleanToVisibilityCollapsedConverter}}"/>
+                    <c:SettingWithDefault IsSettingNotUsingDefault="{Binding HasRecordFilenameFormat}" Header="录制文件名格式">
+                        <TextBox Text="{Binding RecordFilenameFormat,Delay=500}" ui:TextBoxHelper.IsDeleteButtonVisible="False"/>
+                    </c:SettingWithDefault>
+                    <c:SettingWithDefault IsSettingNotUsingDefault="{Binding HasClipFilenameFormat}" Header="剪辑文件名格式" Margin="0,5,0,0" 
+                                          Visibility="{Binding ElementName=EnabledFeatureRecordOnlyRadioButton,Path=IsChecked,Converter={StaticResource InvertBooleanToVisibilityCollapsedConverter}}">
+                        <TextBox Text="{Binding ClipFilenameFormat,Delay=500}" ui:TextBoxHelper.IsDeleteButtonVisible="False"/>
+                    </c:SettingWithDefault>
                 </StackPanel>
             </GroupBox>
             <GroupBox Header="Webhook">

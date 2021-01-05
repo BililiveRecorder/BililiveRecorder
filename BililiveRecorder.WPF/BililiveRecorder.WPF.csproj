@@ -96,8 +96,14 @@
     <Compile Include="Controls\DeleteRoomConfirmDialog.xaml.cs">
       <DependentUpon>DeleteRoomConfirmDialog.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\PerRoomSettingsDialog.xaml.cs">
+      <DependentUpon>PerRoomSettingsDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\RoomCard.xaml.cs">
       <DependentUpon>RoomCard.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\SettingWithDefault.xaml.cs">
+      <DependentUpon>SettingWithDefault.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\TaskbarIconControl.xaml.cs">
       <DependentUpon>TaskbarIconControl.xaml</DependentUpon>
@@ -150,7 +156,15 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Controls\PerRoomSettingsDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\RoomCard.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\SettingWithDefault.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
