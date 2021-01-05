@@ -141,8 +141,11 @@
   <data name="RoomCard_Status_SpeedIndicator_SpeedInMbps" xml:space="preserve">
     <value>{0:F2} Mbps</value>
   </data>
+  <data name="Settings_Splitting_Title" xml:space="preserve">
+    <value>Recording Splitting</value>
+  </data>
   <data name="Window_Title" xml:space="preserve">
-    <value>BililiveRecorder {0}</value>
+    <value>BililiveRecorder (B站录播姬) {0}</value>
   </data>
   <data name="WorkDirectorySelector_Browse" xml:space="preserve">
     <value>Browse...</value>

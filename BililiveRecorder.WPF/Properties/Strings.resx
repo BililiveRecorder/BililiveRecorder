@@ -97,6 +97,18 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.3500.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="About_Contact" xml:space="preserve">
+    <value>联系方式/问题反馈: </value>
+    <comment>Add a space after colon ":"</comment>
+  </data>
+  <data name="About_Name" xml:space="preserve">
+    <value>B站录播姬</value>
+    <comment>Add "(B站录播姬)" after translation</comment>
+  </data>
+  <data name="About_Website" xml:space="preserve">
+    <value>官网: </value>
+    <comment>Add a space after colon ":"</comment>
+  </data>
   <data name="AddRoomCard_ConfirmButton" xml:space="preserve">
     <value>确定</value>
     <comment>Translate as "confirm" or "add"</comment>
@@ -175,6 +187,10 @@
   <data name="RoomCard_Menu_RefreshInfo" xml:space="preserve">
     <value>刷新直播间信息</value>
   </data>
+  <data name="RoomCard_Menu_Settings" xml:space="preserve">
+    <value>房间设置</value>
+    <comment>This settings is different per room</comment>
+  </data>
   <data name="RoomCard_Menu_StartRecording" xml:space="preserve">
     <value>开始录制</value>
   </data>
@@ -183,6 +199,20 @@
   </data>
   <data name="RoomCard_Menu_Tooltip" xml:space="preserve">
     <value>操作</value>
+  </data>
+  <data name="RoomCard_Status_DanmakuConnectionTooltip_False" xml:space="preserve">
+    <value>弹幕连接被断开
+录播姬通过弹幕服务器接收开播状态推送</value>
+  </data>
+  <data name="RoomCard_Status_DanmakuConnectionTooltip_True" xml:space="preserve">
+    <value>已连接弹幕服务器
+实时接收开播状态和其他数据</value>
+  </data>
+  <data name="RoomCard_Status_LiveStatusTooltip_False" xml:space="preserve">
+    <value>未开播</value>
+  </data>
+  <data name="RoomCard_Status_LiveStatusTooltip_True" xml:space="preserve">
+    <value>直播中</value>
   </data>
   <data name="RoomCard_Status_Monitoring" xml:space="preserve">
     <value>监控中</value>
@@ -255,6 +285,108 @@
   </data>
   <data name="RootPage_NavigationViewItem_SettingsPage" xml:space="preserve">
     <value>设置</value>
+  </data>
+  <data name="Settings_AdvancedPage_Title" xml:space="preserve">
+    <value>高级设置</value>
+  </data>
+  <data name="Settings_AdvancedPage_Warning" xml:space="preserve">
+    <value>注：一般用户通常不需要也不应该修改这里的设置项。
+对 Timing 的修改可能会导致被B站服务器屏蔽、不能及时开始录制等问题。</value>
+  </data>
+  <data name="Settings_Danmaku_FlushInterval" xml:space="preserve">
+    <value>触发写硬盘所需弹幕个数</value>
+  </data>
+  <data name="Settings_Danmaku_Title" xml:space="preserve">
+    <value>弹幕录制</value>
+  </data>
+  <data name="Settings_Danmaku_ToggleSwitch_Enabled" xml:space="preserve">
+    <value>保存弹幕</value>
+  </data>
+  <data name="Settings_Danmaku_ToggleSwitch_Gift" xml:space="preserve">
+    <value>保存 送礼信息</value>
+  </data>
+  <data name="Settings_Danmaku_ToggleSwitch_Guard" xml:space="preserve">
+    <value>保存 舰长购买</value>
+  </data>
+  <data name="Settings_Danmaku_ToggleSwitch_Raw" xml:space="preserve">
+    <value>保存 弹幕原始数据</value>
+  </data>
+  <data name="Settings_Danmaku_ToggleSwitch_SuperChat" xml:space="preserve">
+    <value>保存 SuperChat</value>
+  </data>
+  <data name="Settings_FileName_Description_Text" xml:space="preserve">
+    <value>说明</value>
+  </data>
+  <data name="Settings_FileName_Description_ToolTip" xml:space="preserve">
+    <value>文件名变量说明
+
+日期: {date}
+时间: {time}
+房间号: {roomid}
+标题: {title}
+主播名: {name}
+随机数字: {random}
+
+所有 { } 大括号均为英文半角括号
+只支持 flv 格式</value>
+  </data>
+  <data name="Settings_RecordMode_Clip_DurationUnit" xml:space="preserve">
+    <value>秒</value>
+  </data>
+  <data name="Settings_RecordMode_Clip_FutureDuration" xml:space="preserve">
+    <value>剪辑将来时长</value>
+  </data>
+  <data name="Settings_RecordMode_Clip_PastDuration" xml:space="preserve">
+    <value>剪辑过去时长</value>
+  </data>
+  <data name="Settings_RecordMode_Description" xml:space="preserve">
+    <value>推荐使用 只启用录制功能
+即时剪辑功能会在之后的版本删除
+启用剪辑功能有小概率会遇到内存泄漏的问题</value>
+  </data>
+  <data name="Settings_RecordMode_RadioButton_Both" xml:space="preserve">
+    <value>同时启用两个功能</value>
+  </data>
+  <data name="Settings_RecordMode_RadioButton_ClipOnly" xml:space="preserve">
+    <value>只启用即时剪辑功能</value>
+  </data>
+  <data name="Settings_RecordMode_RadioButton_RecordOnly" xml:space="preserve">
+    <value>只启用录制功能</value>
+  </data>
+  <data name="Settings_RecordMode_Title" xml:space="preserve">
+    <value>录制模式</value>
+  </data>
+  <data name="Settings_SettingsPage_Title" xml:space="preserve">
+    <value>设置</value>
+  </data>
+  <data name="Settings_Splitting_RadioButton_BySize" xml:space="preserve">
+    <value>根据文件大小自动分段</value>
+  </data>
+  <data name="Settings_Splitting_RadioButton_ByTime" xml:space="preserve">
+    <value>根据视频时间自动分段</value>
+  </data>
+  <data name="Settings_Splitting_RadioButton_Disabled" xml:space="preserve">
+    <value>不自动分段</value>
+  </data>
+  <data name="Settings_Splitting_TextBox_Left" xml:space="preserve">
+    <value>每</value>
+  </data>
+  <data name="Settings_Splitting_TextBox_Right" xml:space="preserve">
+    <value>保存为一个文件</value>
+  </data>
+  <data name="Settings_Splitting_TextBox_SizeUnit" xml:space="preserve">
+    <value>MiB</value>
+  </data>
+  <data name="Settings_Splitting_TextBox_TimeUnit" xml:space="preserve">
+    <value>分</value>
+  </data>
+  <data name="Settings_Splitting_Title" xml:space="preserve">
+    <value>自动分段</value>
+  </data>
+  <data name="SettingWithDefault_Default" xml:space="preserve">
+    <value>默认</value>
+    <comment>Text of the checkbox in the reuseable control for setting items.
+Will use default setting and disable user input when checked.</comment>
   </data>
   <data name="TaskbarIconControl_MenuItem_OpenMainWindow" xml:space="preserve">
     <value>打开主界面</value>

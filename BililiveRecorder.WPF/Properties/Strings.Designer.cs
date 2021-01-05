@@ -61,6 +61,33 @@ namespace BililiveRecorder.WPF.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to 联系方式/问题反馈: .
+        /// </summary>
+        public static string About_Contact {
+            get {
+                return ResourceManager.GetString("About_Contact", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to B站录播姬.
+        /// </summary>
+        public static string About_Name {
+            get {
+                return ResourceManager.GetString("About_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 官网: .
+        /// </summary>
+        public static string About_Website {
+            get {
+                return ResourceManager.GetString("About_Website", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to 确定.
         /// </summary>
         public static string AddRoomCard_ConfirmButton {
@@ -286,6 +313,15 @@ namespace BililiveRecorder.WPF.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to 房间设置.
+        /// </summary>
+        public static string RoomCard_Menu_Settings {
+            get {
+                return ResourceManager.GetString("RoomCard_Menu_Settings", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to 开始录制.
         /// </summary>
         public static string RoomCard_Menu_StartRecording {
@@ -309,6 +345,44 @@ namespace BililiveRecorder.WPF.Properties {
         public static string RoomCard_Menu_Tooltip {
             get {
                 return ResourceManager.GetString("RoomCard_Menu_Tooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 弹幕连接被断开
+        ///录播姬通过弹幕服务器接收开播状态推送.
+        /// </summary>
+        public static string RoomCard_Status_DanmakuConnectionTooltip_False {
+            get {
+                return ResourceManager.GetString("RoomCard_Status_DanmakuConnectionTooltip_False", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 已连接弹幕服务器
+        ///实时接收开播状态和其他数据.
+        /// </summary>
+        public static string RoomCard_Status_DanmakuConnectionTooltip_True {
+            get {
+                return ResourceManager.GetString("RoomCard_Status_DanmakuConnectionTooltip_True", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 未开播.
+        /// </summary>
+        public static string RoomCard_Status_LiveStatusTooltip_False {
+            get {
+                return ResourceManager.GetString("RoomCard_Status_LiveStatusTooltip_False", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 直播中.
+        /// </summary>
+        public static string RoomCard_Status_LiveStatusTooltip_True {
+            get {
+                return ResourceManager.GetString("RoomCard_Status_LiveStatusTooltip_True", resourceCulture);
             }
         }
         
@@ -508,6 +582,280 @@ namespace BililiveRecorder.WPF.Properties {
         public static string RootPage_NavigationViewItem_SettingsPage {
             get {
                 return ResourceManager.GetString("RootPage_NavigationViewItem_SettingsPage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 高级设置.
+        /// </summary>
+        public static string Settings_AdvancedPage_Title {
+            get {
+                return ResourceManager.GetString("Settings_AdvancedPage_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 注：一般用户通常不需要也不应该修改这里的设置项。
+        ///对 Timing 的修改可能会导致被B站服务器屏蔽、不能及时开始录制等问题。.
+        /// </summary>
+        public static string Settings_AdvancedPage_Warning {
+            get {
+                return ResourceManager.GetString("Settings_AdvancedPage_Warning", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 触发写硬盘所需弹幕个数.
+        /// </summary>
+        public static string Settings_Danmaku_FlushInterval {
+            get {
+                return ResourceManager.GetString("Settings_Danmaku_FlushInterval", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 弹幕录制.
+        /// </summary>
+        public static string Settings_Danmaku_Title {
+            get {
+                return ResourceManager.GetString("Settings_Danmaku_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 保存弹幕.
+        /// </summary>
+        public static string Settings_Danmaku_ToggleSwitch_Enabled {
+            get {
+                return ResourceManager.GetString("Settings_Danmaku_ToggleSwitch_Enabled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 保存 送礼信息.
+        /// </summary>
+        public static string Settings_Danmaku_ToggleSwitch_Gift {
+            get {
+                return ResourceManager.GetString("Settings_Danmaku_ToggleSwitch_Gift", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 保存 舰长购买.
+        /// </summary>
+        public static string Settings_Danmaku_ToggleSwitch_Guard {
+            get {
+                return ResourceManager.GetString("Settings_Danmaku_ToggleSwitch_Guard", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 保存 弹幕原始数据.
+        /// </summary>
+        public static string Settings_Danmaku_ToggleSwitch_Raw {
+            get {
+                return ResourceManager.GetString("Settings_Danmaku_ToggleSwitch_Raw", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 保存 SuperChat.
+        /// </summary>
+        public static string Settings_Danmaku_ToggleSwitch_SuperChat {
+            get {
+                return ResourceManager.GetString("Settings_Danmaku_ToggleSwitch_SuperChat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 说明.
+        /// </summary>
+        public static string Settings_FileName_Description_Text {
+            get {
+                return ResourceManager.GetString("Settings_FileName_Description_Text", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 文件名变量说明
+        ///
+        ///日期: {date}
+        ///时间: {time}
+        ///房间号: {roomid}
+        ///标题: {title}
+        ///主播名: {name}
+        ///随机数字: {random}
+        ///
+        ///所有 { } 大括号均为英文半角括号
+        ///只支持 flv 格式.
+        /// </summary>
+        public static string Settings_FileName_Description_ToolTip {
+            get {
+                return ResourceManager.GetString("Settings_FileName_Description_ToolTip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 秒.
+        /// </summary>
+        public static string Settings_RecordMode_Clip_DurationUnit {
+            get {
+                return ResourceManager.GetString("Settings_RecordMode_Clip_DurationUnit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 剪辑将来时长.
+        /// </summary>
+        public static string Settings_RecordMode_Clip_FutureDuration {
+            get {
+                return ResourceManager.GetString("Settings_RecordMode_Clip_FutureDuration", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 剪辑过去时长.
+        /// </summary>
+        public static string Settings_RecordMode_Clip_PastDuration {
+            get {
+                return ResourceManager.GetString("Settings_RecordMode_Clip_PastDuration", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 推荐使用 只启用录制功能
+        ///即时剪辑功能会在之后的版本删除
+        ///启用剪辑功能有小概率会遇到内存泄漏的问题.
+        /// </summary>
+        public static string Settings_RecordMode_Description {
+            get {
+                return ResourceManager.GetString("Settings_RecordMode_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 同时启用两个功能.
+        /// </summary>
+        public static string Settings_RecordMode_RadioButton_Both {
+            get {
+                return ResourceManager.GetString("Settings_RecordMode_RadioButton_Both", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 只启用即时剪辑功能.
+        /// </summary>
+        public static string Settings_RecordMode_RadioButton_ClipOnly {
+            get {
+                return ResourceManager.GetString("Settings_RecordMode_RadioButton_ClipOnly", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 只启用录制功能.
+        /// </summary>
+        public static string Settings_RecordMode_RadioButton_RecordOnly {
+            get {
+                return ResourceManager.GetString("Settings_RecordMode_RadioButton_RecordOnly", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 录制模式.
+        /// </summary>
+        public static string Settings_RecordMode_Title {
+            get {
+                return ResourceManager.GetString("Settings_RecordMode_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 设置.
+        /// </summary>
+        public static string Settings_SettingsPage_Title {
+            get {
+                return ResourceManager.GetString("Settings_SettingsPage_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 根据文件大小自动分段.
+        /// </summary>
+        public static string Settings_Splitting_RadioButton_BySize {
+            get {
+                return ResourceManager.GetString("Settings_Splitting_RadioButton_BySize", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 根据视频时间自动分段.
+        /// </summary>
+        public static string Settings_Splitting_RadioButton_ByTime {
+            get {
+                return ResourceManager.GetString("Settings_Splitting_RadioButton_ByTime", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 不自动分段.
+        /// </summary>
+        public static string Settings_Splitting_RadioButton_Disabled {
+            get {
+                return ResourceManager.GetString("Settings_Splitting_RadioButton_Disabled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 每.
+        /// </summary>
+        public static string Settings_Splitting_TextBox_Left {
+            get {
+                return ResourceManager.GetString("Settings_Splitting_TextBox_Left", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 保存为一个文件.
+        /// </summary>
+        public static string Settings_Splitting_TextBox_Right {
+            get {
+                return ResourceManager.GetString("Settings_Splitting_TextBox_Right", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to MiB.
+        /// </summary>
+        public static string Settings_Splitting_TextBox_SizeUnit {
+            get {
+                return ResourceManager.GetString("Settings_Splitting_TextBox_SizeUnit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 分.
+        /// </summary>
+        public static string Settings_Splitting_TextBox_TimeUnit {
+            get {
+                return ResourceManager.GetString("Settings_Splitting_TextBox_TimeUnit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 自动分段.
+        /// </summary>
+        public static string Settings_Splitting_Title {
+            get {
+                return ResourceManager.GetString("Settings_Splitting_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 默认.
+        /// </summary>
+        public static string SettingWithDefault_Default {
+            get {
+                return ResourceManager.GetString("SettingWithDefault_Default", resourceCulture);
             }
         }
         

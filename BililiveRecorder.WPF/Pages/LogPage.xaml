@@ -16,7 +16,7 @@
     d:DesignHeight="450" d:DesignWidth="800"
     d:DataContext="{d:DesignInstance Type=models:LogModel}"
     DataContext="{Binding RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=local:RootPage},Path=DataContext.Logs,Mode=OneWay}"
-    Title="LogPage">
+    >
     <Grid Margin="5">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -43,18 +43,17 @@
                         </Style>
                     </StackPanel.Resources>
                     <StackPanel>
-                        <TextBlock Text="B站录播姬 "/>
+                        <TextBlock Text="{l:Loc About_Name}"/>
                         <TextBlock x:Name="VersionTextBlock"/>
                     </StackPanel>
                     <StackPanel>
-                        <TextBlock Text="官网: "/>
+                        <TextBlock Text="{l:Loc About_Website}"/>
                         <ui:HyperlinkButton Content="https://rec.danmuji.org" NavigateUri="https://rec.danmuji.org"/>
                     </StackPanel>
                     <StackPanel>
-                        <TextBlock Text="联系方式/问题反馈: "/>
+                        <TextBlock Text="{l:Loc About_Contact}"/>
                         <ui:HyperlinkButton Content="rec@danmuji.org" NavigateUri="mailto:rec@danmuji.org"/>
                     </StackPanel>
-                    <TextBlock Text="QQ群: 689636812"/>
                 </StackPanel>
             </Border>
         </ui:ThemeShadowChrome>

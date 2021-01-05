@@ -13,7 +13,7 @@ namespace BililiveRecorder.WPF.Pages
         public LogPage()
         {
             this.InitializeComponent();
-            this.VersionTextBlock.Text = BuildInfo.Version + " " + BuildInfo.HeadShaShort;
+            this.VersionTextBlock.Text = " " + BuildInfo.Version + " " + BuildInfo.HeadShaShort;
         }
 
         private void TextBlock_MouseRightButtonUp(object sender, MouseButtonEventArgs e)

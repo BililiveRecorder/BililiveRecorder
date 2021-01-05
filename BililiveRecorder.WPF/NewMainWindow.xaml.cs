@@ -27,8 +27,6 @@ namespace BililiveRecorder.WPF
 
             this.InitializeComponent();
 
-            // this.Title = "B站录播姬 " + BuildInfo.Version + " " + BuildInfo.HeadShaShort;
-
             SingleInstance.NotificationReceived += this.SingleInstance_NotificationReceived;
         }
 

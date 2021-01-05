@@ -82,7 +82,7 @@
                             </MenuItem.Icon>
                         </MenuItem>
                         <Separator/>
-                        <MenuItem Header="房间设置" Click="MenuItem_ShowSettings_Click">
+                        <MenuItem Header="{l:Loc RoomCard_Menu_Settings}" Click="MenuItem_ShowSettings_Click">
                             <MenuItem.Icon>
                                 <ui:PathIcon Style="{StaticResource PathIconDataCogOutline}"/>
                             </MenuItem.Icon>

@@ -5,6 +5,10 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
     xmlns:ui="http://schemas.modernwpf.com/2019"
+    xmlns:l="https://github.com/XAMLMarkupExtensions/WPFLocalizationExtension"
+    l:LocalizeDictionary.DesignCulture=""
+    l:ResxLocalizationProvider.DefaultAssembly="BililiveRecorder.WPF"
+    l:ResxLocalizationProvider.DefaultDictionary="Strings"
     xmlns:c="clr-namespace:BililiveRecorder.WPF.Controls"
     xmlns:local="clr-namespace:BililiveRecorder.WPF.Pages"
     xmlns:config="clr-namespace:BililiveRecorder.Core.Config.V2;assembly=BililiveRecorder.Core"
@@ -21,90 +25,51 @@
     </ui:Page.Resources>
     <ScrollViewer d:DataContext="{d:DesignInstance Type=config:GlobalConfig}">
         <ui:SimpleStackPanel Orientation="Vertical" Spacing="5" Margin="20">
-            <TextBlock Text="设置" Style="{StaticResource TitleTextBlockStyle}" FontFamily="Microsoft Yahei" Margin="0,10"/>
-            <GroupBox Header="弹幕录制">
+            <TextBlock Text="{l:Loc Settings_SettingsPage_Title}" Style="{StaticResource TitleTextBlockStyle}" FontFamily="Microsoft Yahei" Margin="0,10"/>
+            <GroupBox Header="{l:Loc Settings_Danmaku_Title}">
                 <StackPanel>
-                    <ui:ToggleSwitch IsOn="{Binding RecordDanmaku}" Name="RecordDanmakuCheckbox" OnContent="保存弹幕&#160;&#160;（当前为保存）" OffContent="不保存弹幕（当前为不保存）"/>
+                    <ui:ToggleSwitch IsOn="{Binding RecordDanmaku}" Name="RecordDanmakuCheckbox" OnContent="{l:Loc Settings_Danmaku_ToggleSwitch_Enabled}" OffContent="{l:Loc Settings_Danmaku_ToggleSwitch_Enabled}"/>
                     <StackPanel Margin="0,7,0,0" Visibility="{Binding ElementName=RecordDanmakuCheckbox,Path=IsOn,Converter={StaticResource BooleanToVisibilityCollapsedConverter}}">
                         <ui:ToggleSwitch IsEnabled="{Binding RecordDanmaku}" IsOn="{Binding RecordDanmakuSuperChat}"
-                                         OnContent="同时保存 SuperChat" OffContent="不保存 SuperChat"/>
+                                         OnContent="{l:Loc Settings_Danmaku_ToggleSwitch_SuperChat}" OffContent="{l:Loc Settings_Danmaku_ToggleSwitch_SuperChat}"/>
                         <ui:ToggleSwitch IsEnabled="{Binding RecordDanmaku}" IsOn="{Binding RecordDanmakuGuard}"
-                                         OnContent="同时保存 舰长购买" OffContent="不保存 舰长购买"/>
+                                         OnContent="{l:Loc Settings_Danmaku_ToggleSwitch_Guard}" OffContent="{l:Loc Settings_Danmaku_ToggleSwitch_Guard}"/>
                         <ui:ToggleSwitch IsEnabled="{Binding RecordDanmaku}" IsOn="{Binding RecordDanmakuGift}"
-                                         OnContent="同时保存 送礼信息" OffContent="不保存 送礼信息"/>
+                                         OnContent="{l:Loc Settings_Danmaku_ToggleSwitch_Gift}" OffContent="{l:Loc Settings_Danmaku_ToggleSwitch_Gift}"/>
                         <ui:ToggleSwitch IsEnabled="{Binding RecordDanmaku}" IsOn="{Binding RecordDanmakuRaw}"
-                                         OnContent="同时保存 弹幕原始数据" OffContent="不保存 弹幕原始数据"/>
+                                         OnContent="{l:Loc Settings_Danmaku_ToggleSwitch_Raw}" OffContent="{l:Loc Settings_Danmaku_ToggleSwitch_Raw}"/>
                     </StackPanel>
                 </StackPanel>
             </GroupBox>
-            <GroupBox Header="自动分段">
+            <GroupBox Header="{l:Loc Settings_Splitting_Title}">
                 <StackPanel>
-                    <RadioButton GroupName="自动分段" Name="CutDisabledRadioButton" Content="不自动分段"
+                    <RadioButton GroupName="Splitting" Name="CutDisabledRadioButton" Content="{l:Loc Settings_Splitting_RadioButton_Disabled}"
                                  IsChecked="{Binding Path=CuttingMode, Converter={StaticResource EnumToBooleanConverter},
                         ConverterParameter={x:Static flv:AutoCuttingMode.Disabled}}" />
-                    <RadioButton GroupName="自动分段" Name="CutBySizeRadioButton" Content="根据文件大小自动分段"
+                    <RadioButton GroupName="Splitting" Name="CutBySizeRadioButton" Content="{l:Loc Settings_Splitting_RadioButton_BySize}"
                                  IsChecked="{Binding Path=CuttingMode, Converter={StaticResource EnumToBooleanConverter},
                         ConverterParameter={x:Static flv:AutoCuttingMode.BySize}}" />
-                    <RadioButton GroupName="自动分段" Name="CutByTimeRadioButton" Content="根据视频时间自动分段"
+                    <RadioButton GroupName="Splitting" Name="CutByTimeRadioButton" Content="{l:Loc Settings_Splitting_RadioButton_ByTime}"
                                  IsChecked="{Binding Path=CuttingMode, Converter={StaticResource EnumToBooleanConverter},
                         ConverterParameter={x:Static flv:AutoCuttingMode.ByTime}}" />
 
                     <StackPanel Orientation="Horizontal" Margin="0,5,0,0" 
                                 Visibility="{Binding ElementName=CutDisabledRadioButton,Path=IsChecked,Converter={StaticResource InvertBooleanToVisibilityCollapsedConverter}}">
-                        <TextBlock Text="每"/>
+                        <TextBlock Text="{l:Loc Settings_Splitting_TextBox_Left}"/>
                         <TextBox Margin="5,0" Width="100" Text="{Binding CuttingNumber,Delay=500}" ui:TextBoxHelper.IsDeleteButtonVisible="False"/>
-                        <TextBlock Text="MiB 保存为一个文件"
-                                       Visibility="{Binding ElementName=CutBySizeRadioButton,Path=IsChecked,Converter={StaticResource BooleanToVisibilityCollapsedConverter}}"/>
-                        <TextBlock Text="分 保存为一个文件"
-                                       Visibility="{Binding ElementName=CutByTimeRadioButton,Path=IsChecked,Converter={StaticResource BooleanToVisibilityCollapsedConverter}}"/>
+                        <TextBlock Text="{l:Loc Settings_Splitting_TextBox_SizeUnit}" Visibility="{Binding ElementName=CutBySizeRadioButton,Path=IsChecked,Converter={StaticResource BooleanToVisibilityCollapsedConverter}}"/>
+                        <TextBlock Text="{l:Loc Settings_Splitting_TextBox_TimeUnit}" Visibility="{Binding ElementName=CutByTimeRadioButton,Path=IsChecked,Converter={StaticResource BooleanToVisibilityCollapsedConverter}}"/>
+                        <TextBlock Text="{l:Loc Settings_Splitting_TextBox_Right}"/>
                     </StackPanel>
                 </StackPanel>
             </GroupBox>
-            <GroupBox Header="录制功能">
-                <StackPanel>
-                    <RadioButton GroupName="录制功能" Name="EnabledFeatureRecordOnlyRadioButton" Content="只启用录制功能" ToolTip="（默认）占内存更少，但不能使用即时剪辑"
-                                 IsChecked="{Binding Path=EnabledFeature, Converter={StaticResource EnumToBooleanConverter},
-                        ConverterParameter={x:Static flv:EnabledFeature.RecordOnly}}" />
-                    <RadioButton GroupName="录制功能" Content="只启用即时剪辑功能" ToolTip="不保存所有直播数据"
-                                 IsChecked="{Binding Path=EnabledFeature, Converter={StaticResource EnumToBooleanConverter},
-                        ConverterParameter={x:Static flv:EnabledFeature.ClipOnly}}" />
-                    <RadioButton GroupName="录制功能" Content="同时启用两个功能"
-                                 IsChecked="{Binding Path=EnabledFeature, Converter={StaticResource EnumToBooleanConverter},
-                        ConverterParameter={x:Static flv:EnabledFeature.Both}}" />
-
-                    <StackPanel Margin="0,5,0,0" Visibility="{Binding ElementName=EnabledFeatureRecordOnlyRadioButton,Path=IsChecked,Converter={StaticResource InvertBooleanToVisibilityCollapsedConverter}}">
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="剪辑过去时长"/>
-                            <TextBox Margin="5,0" Width="80" Text="{Binding ClipLengthPast,Delay=500}" ui:TextBoxHelper.IsDeleteButtonVisible="False"/>
-                            <TextBlock Text="秒"/>
-                        </StackPanel>
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="剪辑将来时长"/>
-                            <TextBox Margin="5,0" Width="80" Text="{Binding ClipLengthFuture,Delay=500}" ui:TextBoxHelper.IsDeleteButtonVisible="False"/>
-                            <TextBlock Text="秒"/>
-                        </StackPanel>
-                    </StackPanel>
-                </StackPanel>
-            </GroupBox>
-            <GroupBox Header="文件名">
+            <GroupBox Header="{l:Loc Settings_FileName_Title}">
                 <StackPanel MaxWidth="500" HorizontalAlignment="Left">
                     <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
                         <StackPanel.ToolTip>
-                            <TextBlock FontSize="13">
-                                文件名变量说明<LineBreak/>
-                                <LineBreak/>
-                                日期: {date} <LineBreak/>
-                                时间: {time} <LineBreak/>
-                                房间号: {roomid} <LineBreak/>
-                                标题: {title} <LineBreak/>
-                                主播名: {name} <LineBreak/>
-                                随机数字: {random} <LineBreak/>
-                                <LineBreak/>
-                                所有 { } 大括号均为英文半角括号 <LineBreak/>
-                                只支持 flv 格式
-                            </TextBlock>
+                            <TextBlock FontSize="13" Text="{l:Loc Settings_FileName_Description_ToolTip}"/>
                         </StackPanel.ToolTip>
-                        <TextBlock Text="说明"/>
+                        <TextBlock Text="{l:Loc Settings_FileName_Description_Text}"/>
                         <ui:PathIcon Margin="2,0" VerticalAlignment="Center" Height="15" Style="{StaticResource PathIconDataInformationOutline}"/>
                     </StackPanel>
                     <c:SettingWithDefault IsSettingNotUsingDefault="{Binding HasRecordFilenameFormat}" Header="录制文件名格式">
@@ -114,6 +79,33 @@
                                           Visibility="{Binding ElementName=EnabledFeatureRecordOnlyRadioButton,Path=IsChecked,Converter={StaticResource InvertBooleanToVisibilityCollapsedConverter}}">
                         <TextBox Text="{Binding ClipFilenameFormat,Delay=500}" ui:TextBoxHelper.IsDeleteButtonVisible="False"/>
                     </c:SettingWithDefault>
+                </StackPanel>
+            </GroupBox>
+            <GroupBox Header="{l:Loc Settings_RecordMode_Title}">
+                <StackPanel>
+                    <TextBlock Text="{l:Loc Settings_RecordMode_Description}"/>
+                    <RadioButton GroupName="RecordMode" Name="EnabledFeatureRecordOnlyRadioButton" Content="{l:Loc Settings_RecordMode_RadioButton_RecordOnly}"
+                                 IsChecked="{Binding Path=EnabledFeature, Converter={StaticResource EnumToBooleanConverter},
+                        ConverterParameter={x:Static flv:EnabledFeature.RecordOnly}}" />
+                    <RadioButton GroupName="RecordMode" Content="{l:Loc Settings_RecordMode_RadioButton_ClipOnly}"
+                                 IsChecked="{Binding Path=EnabledFeature, Converter={StaticResource EnumToBooleanConverter},
+                        ConverterParameter={x:Static flv:EnabledFeature.ClipOnly}}" />
+                    <RadioButton GroupName="RecordMode" Content="{l:Loc Settings_RecordMode_RadioButton_Both}"
+                                 IsChecked="{Binding Path=EnabledFeature, Converter={StaticResource EnumToBooleanConverter},
+                        ConverterParameter={x:Static flv:EnabledFeature.Both}}" />
+
+                    <StackPanel Margin="0,5,0,0" Visibility="{Binding ElementName=EnabledFeatureRecordOnlyRadioButton,Path=IsChecked,Converter={StaticResource InvertBooleanToVisibilityCollapsedConverter}}">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="{l:Loc Settings_RecordMode_Clip_PastDuration}"/>
+                            <TextBox Margin="5,0" Width="80" Text="{Binding ClipLengthPast,Delay=500}" ui:TextBoxHelper.IsDeleteButtonVisible="False"/>
+                            <TextBlock Text="{l:Loc Settings_RecordMode_Clip_DurationUnit}"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="{l:Loc Settings_RecordMode_Clip_FutureDuration}"/>
+                            <TextBox Margin="5,0" Width="80" Text="{Binding ClipLengthFuture,Delay=500}" ui:TextBoxHelper.IsDeleteButtonVisible="False"/>
+                            <TextBlock Text="{l:Loc Settings_RecordMode_Clip_DurationUnit}"/>
+                        </StackPanel>
+                    </StackPanel>
                 </StackPanel>
             </GroupBox>
             <GroupBox Header="Webhook">

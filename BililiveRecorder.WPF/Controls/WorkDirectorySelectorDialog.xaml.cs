@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using Microsoft.WindowsAPICodePack.Dialogs;
+using WPFLocalizeExtension.Extensions;
 
 namespace BililiveRecorder.WPF.Controls
 {
@@ -33,11 +34,12 @@ namespace BililiveRecorder.WPF.Controls
 
         private void Button_Click(object sender, System.Windows.RoutedEventArgs e)
         {
+            var title = LocExtension.GetLocalizedValue<string>("BililiveRecorder.WPF:Strings:WorkDirectorySelector_Title");
             var fileDialog = new CommonOpenFileDialog()
             {
                 IsFolderPicker = true,
                 Multiselect = false,
-                Title = "选择录播姬工作目录路径",
+                Title = title,
                 AddToMostRecentlyUsedList = false,
                 EnsurePathExists = true,
                 NavigateToShortcut = true,
