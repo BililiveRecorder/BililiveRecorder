@@ -119,6 +119,12 @@ namespace BililiveRecorder.Core.Config
         // https://stackoverflow.com/q/25366534 with modification
         private static void WriteAllTextWithBackup(string path, string contents)
         {
+            if (!File.Exists(path))
+            {
+                File.WriteAllText(path, contents);
+                return;
+            }
+
             var ext = Path.GetExtension(path);
 
             var tempPath = Path.Combine(Path.GetDirectoryName(path), Path.ChangeExtension(path, RandomString(6) + ext));

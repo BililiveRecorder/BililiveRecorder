@@ -723,6 +723,15 @@ namespace BililiveRecorder.WPF.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to 文件名.
+        /// </summary>
+        public static string Settings_FileName_Title {
+            get {
+                return ResourceManager.GetString("Settings_FileName_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to 秒.
         /// </summary>
         public static string Settings_RecordMode_Clip_DurationUnit {
