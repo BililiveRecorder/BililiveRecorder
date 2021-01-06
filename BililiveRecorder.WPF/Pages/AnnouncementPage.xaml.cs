@@ -1,4 +1,5 @@
 using System;
+using System.Globalization;
 using System.IO;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -19,6 +20,7 @@ namespace BililiveRecorder.WPF.Pages
 
         private static MemoryStream AnnouncementCache = null;
         private static DateTimeOffset AnnouncementCacheTime = DateTimeOffset.MinValue;
+        internal static CultureInfo CultureInfo = CultureInfo.CurrentUICulture;
 
         static AnnouncementPage()
         {
@@ -53,10 +55,11 @@ namespace BililiveRecorder.WPF.Pages
                 try
                 {
 #if DEBUG
-                    var resp = await client.GetAsync("http://rec.127-0-0-1.nip.io/wpf/announcement.php");
+                    var uri = $"http://rec.127-0-0-1.nip.io/wpf/announcement.php?c={CultureInfo.Name}";
 #else
-                    var resp = await client.GetAsync("https://rec.danmuji.org/wpf/announcement.xml");
+                    var uri = $"https://rec.danmuji.org/wpf/announcement.xml?c={CultureInfo.Name}";
 #endif
+                    var resp = await client.GetAsync(uri);
                     var stream = await resp.EnsureSuccessStatusCode().Content.ReadAsStreamAsync();
                     var mstream = new MemoryStream();
                     await stream.CopyToAsync(mstream);

@@ -1,4 +1,5 @@
 using System;
+using System.Globalization;
 using System.Threading;
 using System.Windows;
 using BililiveRecorder.WPF.Controls;
@@ -20,6 +21,8 @@ namespace BililiveRecorder.WPF
         {
             this.SoftwareVersion = BuildInfo.Version + " " + BuildInfo.HeadShaShort;
 
+            Pages.AnnouncementPage.CultureInfo = CultureInfo.CurrentUICulture;
+            LocalizeDictionary.Instance.Culture = CultureInfo.CurrentUICulture;
 #if DEBUG
             LocalizeDictionary.Instance.OutputMissingKeys = true;
             LocalizeDictionary.Instance.MissingKeyEvent += (object sender, MissingKeyEventArgs e) => MessageBox.Show("Missing: " + e.Key);
