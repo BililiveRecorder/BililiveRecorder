@@ -98,7 +98,7 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.3500.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="About_Contact" xml:space="preserve">
-    <value>連絡先・お問合せ</value>
+    <value>連絡先・お問い合わせ: </value>
     <comment>Add a space after colon ":"</comment>
   </data>
   <data name="About_Name" xml:space="preserve">
@@ -114,41 +114,41 @@
     <comment>Translate as "confirm" or "add"</comment>
   </data>
   <data name="AddRoomCard_PlaceholderText" xml:space="preserve">
-    <value>放送ルーム番号または URL リンク</value>
+    <value>配信ルームの番号、もしくはリンク</value>
     <comment>id or link</comment>
   </data>
   <data name="AddRoomCard_Title" xml:space="preserve">
     <value>チャンネル追加</value>
   </data>
   <data name="AddRoomFailedDialog_CloseButtonText" xml:space="preserve">
-    <value>はい</value>
+    <value>わかった</value>
   </data>
   <data name="AddRoomFailedDialog_ErrorText_Duplicate" xml:space="preserve">
-    <value>この配信チャンネル既に追加されました</value>
+    <value>この配信チャンネルはすでに追加されています。</value>
   </data>
   <data name="AddRoomFailedDialog_ErrorText_InvalidInput" xml:space="preserve">
-    <value>配信のルーム番号またはURLリンク追加してください</value>
+    <value>配信ルームの番号、もしくはリンクを入力してください。</value>
   </data>
   <data name="AddRoomFailedDialog_ErrorText_RoomIdNegative" xml:space="preserve">
-    <value>ルーム番号をマイナスにすることはできません</value>
+    <value>ルーム番号は負の数の入力はできません。</value>
   </data>
   <data name="AddRoomFailedDialog_ErrorText_RoomIdZero" xml:space="preserve">
-    <value>ルーム番号を０にすることはできません</value>
+    <value>ルーム番号はゼロ値の入力はできません。</value>
   </data>
   <data name="AddRoomFailedDialog_Title" xml:space="preserve">
-    <value>チャンネル追加失敗しました</value>
+    <value>ルームを追加できませんでした</value>
   </data>
   <data name="AnnouncementPage_FetchFailed" xml:space="preserve">
-    <value>お知らせデータの取得に失敗しました</value>
+    <value>お知らせ情報の取得に失敗しました</value>
   </data>
   <data name="AnnouncementPage_RefreshButton" xml:space="preserve">
     <value>お知らせ情報更新</value>
   </data>
   <data name="CloseWindowConfirmDialog_Title" xml:space="preserve">
-    <value>リコーダーを終了してもよろしいですか</value>
+    <value>リコーダーを終了してもよろしいですか？</value>
   </data>
   <data name="DeleteRoomConfirmDialog_Title" xml:space="preserve">
-    <value>このチャンネル登録を解除しますか？</value>
+    <value>このルームの登録を解除してもよろしいですか？</value>
   </data>
   <data name="Global_Cancel" xml:space="preserve">
     <value>キャンセル</value>
@@ -157,7 +157,7 @@
     <value>閉じる</value>
   </data>
   <data name="Global_Confirm" xml:space="preserve">
-    <value>決定する</value>
+    <value>OK</value>
   </data>
   <data name="Global_Copy" xml:space="preserve">
     <value>コピー</value>
@@ -169,10 +169,10 @@
     <value>終了</value>
   </data>
   <data name="LogPage_RightClickCopyToolTip" xml:space="preserve">
-    <value>右クリックしてこの行のログをコピーする</value>
+    <value>右クリックしたらこの行をコピーできるですよ</value>
   </data>
   <data name="RoomCard_ClipButton_Tooltip" xml:space="preserve">
-    <value>プレーバッククリップ（処理途中のファイル数）</value>
+    <value>録画を編集する（編集している数）</value>
     <comment>This feature is off by default, and will be removed in the future.</comment>
   </data>
   <data name="RoomCard_Menu_Delete" xml:space="preserve">
@@ -182,10 +182,10 @@
     <value>自動録画しない</value>
   </data>
   <data name="RoomCard_Menu_EnableAutoRecord" xml:space="preserve">
-    <value>自動録画</value>
+    <value>自動録画する</value>
   </data>
   <data name="RoomCard_Menu_OpenInBrowser" xml:space="preserve">
-    <value>ライブチャンネルを開く</value>
+    <value>配信ページを開く</value>
   </data>
   <data name="RoomCard_Menu_RefreshInfo" xml:space="preserve">
     <value>情報更新</value>
@@ -204,12 +204,12 @@
     <value>設定</value>
   </data>
   <data name="RoomCard_Status_DanmakuConnectionTooltip_False" xml:space="preserve">
-    <value>配信コメントの接続状態は失われました
-リコーダーはコメントをサーバーから放送状況データを受信する</value>
+    <value>配信コメントサーバーへの接続が失敗しました
+リコーダーはコメントサーバーから配信状況データを受信する</value>
   </data>
   <data name="RoomCard_Status_DanmakuConnectionTooltip_True" xml:space="preserve">
-    <value>配信コメントの接続は成功しました
-リアルタイムで放送状況やその他のデータを受信する</value>
+    <value>配信コメントサーバーとの接続に成功しました
+配信状況やその他のデータをリアルタイムに受信してる</value>
   </data>
   <data name="RoomCard_Status_LiveStatusTooltip_False" xml:space="preserve">
     <value>オフライン</value>
@@ -242,16 +242,16 @@
     <value>監視</value>
   </data>
   <data name="RoomListPage_Menu_AutoRecord_DisableAll" xml:space="preserve">
-    <value>すべてのチャンネルを自動録画停止する</value>
+    <value>すべての配信ルームの自動録画機能をキャンセル</value>
   </data>
   <data name="RoomListPage_Menu_AutoRecord_EnableAll" xml:space="preserve">
-    <value>すべてのチャンネルを自動録画する</value>
+    <value>すべての配信ルームの自動録画機能を起動</value>
   </data>
   <data name="RoomListPage_Menu_File" xml:space="preserve">
     <value>ファイル</value>
   </data>
   <data name="RoomListPage_Menu_File_OpenWorkDirectory" xml:space="preserve">
-    <value>Finder で表示</value>
+    <value>ダウンロード先を開く</value>
   </data>
   <data name="RoomListPage_Menu_Log" xml:space="preserve">
     <value>ログ</value>
@@ -293,12 +293,14 @@
     <value>詳細設定</value>
   </data>
   <data name="Settings_AdvancedPage_Warning" xml:space="preserve">
-    <value>tips：必要のないであれば一般ユーザーそのまま変更しないでください
-もし間違いの「Timing」 に変更したら、ビリビリからブロックまたは録画できなくの可能性はあります</value>
+    <value>tips：一般ユーザーには、ここの設定を変更する必要がありません。
+「Timing」 の変更間違いによって、ビリビリサーバーにブロックされ、録画できなくなる可能性があります。</value>
   </data>
-  
+  <data name="Settings_Danmaku_FlushInterval" xml:space="preserve">
+    <value>ドライブに書き込みを始めるに必要なコメント数</value>
+  </data>
   <data name="Settings_Danmaku_Title" xml:space="preserve">
-    <value>ログ記録</value>
+    <value>コメントを記録</value>
   </data>
   <data name="Settings_Danmaku_ToggleSwitch_Enabled" xml:space="preserve">
     <value>配信コメント</value>
@@ -315,7 +317,9 @@
   <data name="Settings_Danmaku_ToggleSwitch_SuperChat" xml:space="preserve">
     <value>スーパーチャット</value>
   </data>
-  
+  <data name="Settings_FileName_Clip" xml:space="preserve">
+    <value>編集した映像のファイル名テンプレート</value>
+  </data>
   <data name="Settings_FileName_Description_Text" xml:space="preserve">
     <value>ヒント</value>
   </data>
@@ -324,52 +328,72 @@
 
 日付： {date}
 時間：{time}
-部屋番号：{roomid}
+ルーム番号：{roomid}
 タイトル：{title}
 ユーザー名：{name}
 ランダム数字：{random}
 
-すべての{}は半角英数です
-.flvサポートのみ</value>
+約物及び変数名はすべて半角文字を使ってください。
+flvフォーマットのみサポートされています。</value>
   </data>
-  
+  <data name="Settings_FileName_Record" xml:space="preserve">
+    <value>録画のファイル名テンプレート</value>
+  </data>
   <data name="Settings_FileName_Title" xml:space="preserve">
     <value>ファイル名</value>
   </data>
   <data name="Settings_RecordMode_Clip_DurationUnit" xml:space="preserve">
-    <value>Sec</value>
+    <value>秒後までカットする</value>
   </data>
   
   
-  
-  
-  
-  
+  <data name="Settings_RecordMode_Description" xml:space="preserve">
+    <value>録画のみ　をおすすめします。
+即時編集機能は未来のバージョンから削除予定です。
+即時編集機能はまれにメモリリークの問題を引き起こします。</value>
+  </data>
+  <data name="Settings_RecordMode_RadioButton_Both" xml:space="preserve">
+    <value>両方とも</value>
+  </data>
+  <data name="Settings_RecordMode_RadioButton_ClipOnly" xml:space="preserve">
+    <value>即時編集のみ</value>
+  </data>
+  <data name="Settings_RecordMode_RadioButton_RecordOnly" xml:space="preserve">
+    <value>録画のみ</value>
+  </data>
   <data name="Settings_RecordMode_Title" xml:space="preserve">
     <value>録画モード</value>
   </data>
   <data name="Settings_SettingsPage_Title" xml:space="preserve">
     <value>セッチング</value>
   </data>
-  
-  
-  <data name="Settings_Splitting_RadioButton_Disabled" xml:space="preserve">
-    <value>自動カットしない</value>
+  <data name="Settings_Splitting_RadioButton_BySize" xml:space="preserve">
+    <value>ファイルサイズによって分割する</value>
   </data>
-  
+  <data name="Settings_Splitting_RadioButton_ByTime" xml:space="preserve">
+    <value>録画の長さによって分割する</value>
+  </data>
+  <data name="Settings_Splitting_RadioButton_Disabled" xml:space="preserve">
+    <value>自動分割しない</value>
+  </data>
+  <data name="Settings_Splitting_TextBox_Left" xml:space="preserve">
+    <value>各々</value>
+  </data>
   <data name="Settings_Splitting_TextBox_Right" xml:space="preserve">
-    <value>1ファイルで保存</value>
+    <value>ごとにファイルを分割する</value>
   </data>
   <data name="Settings_Splitting_TextBox_SizeUnit" xml:space="preserve">
     <value>MiB</value>
   </data>
   <data name="Settings_Splitting_TextBox_TimeUnit" xml:space="preserve">
-    <value>Minute(s)</value>
+    <value>分</value>
   </data>
   <data name="Settings_Splitting_Title" xml:space="preserve">
-    <value>自動録画カット</value>
+    <value>自動分割</value>
   </data>
-  
+  <data name="Settings_Webhook_Address" xml:space="preserve">
+    <value>Webhookアドレス、１行に１つずつ</value>
+  </data>
   <data name="Settings_Webhook_Title" xml:space="preserve">
     <value>Webhook</value>
   </data>
@@ -381,7 +405,9 @@ Will use default setting and disable user input when checked.</comment>
   <data name="TaskbarIconControl_MenuItem_OpenMainWindow" xml:space="preserve">
     <value>メインインターフェイスを開く</value>
   </data>
-  
+  <data name="TaskbarIconControl_MinimizedNotification" xml:space="preserve">
+    <value>レコーダーはもうタスクトレイに格納されました、アイコンをクリックすると元に戻れるですよ</value>
+  </data>
   <data name="TaskbarIconControl_Title" xml:space="preserve">
     <value>ビリビリ生配信リコーダー</value>
   </data>
@@ -390,7 +416,7 @@ Will use default setting and disable user input when checked.</comment>
     
   </data>
   <data name="WorkDirectorySelector_Browse" xml:space="preserve">
-    <value>ブラウズ...</value>
+    <value>参照...</value>
   </data>
   <data name="WorkDirectorySelector_Error_FailedToLoadConfig" xml:space="preserve">
     <value>構成ファイルのロードに失敗しました</value>
@@ -401,15 +427,15 @@ Will use default setting and disable user input when checked.</comment>
 空のフォルダを設定してください</value>
   </data>
   <data name="WorkDirectorySelector_Error_PathDoesNotExist" xml:space="preserve">
-    <value>この場所が存在しない</value>
+    <value>指定されたパスが存在しません</value>
   </data>
   <data name="WorkDirectorySelector_Error_PathNotSupported" xml:space="preserve">
-    <value>この場所は指定できません</value>
+    <value>指定されたパスは指定できません</value>
   </data>
   <data name="WorkDirectorySelector_Error_UnknownError" xml:space="preserve">
     <value>不明なエラーが発生しました</value>
   </data>
   <data name="WorkDirectorySelector_Title" xml:space="preserve">
-    <value>保存場所を選択</value>
+    <value>ディレクトリーを設定</value>
   </data>
 </root>
