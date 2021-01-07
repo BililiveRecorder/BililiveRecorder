@@ -114,7 +114,7 @@
     <comment>Translate as "confirm" or "add"</comment>
   </data>
   <data name="AddRoomCard_PlaceholderText" xml:space="preserve">
-    <value>Channel id or Channel link</value>
+    <value>Channel Id or Link</value>
     <comment>id or link</comment>
   </data>
   <data name="AddRoomCard_Title" xml:space="preserve">
@@ -136,7 +136,7 @@
     <value>Channel id must be a non-zero number</value>
   </data>
   <data name="AddRoomFailedDialog_Title" xml:space="preserve">
-    <value>Failed to add room</value>
+    <value>Failed to add channel</value>
   </data>
   <data name="AnnouncementPage_FetchFailed" xml:space="preserve">
     <value>Fetch Announcements Failed</value>
@@ -145,10 +145,10 @@
     <value>Refresh Announcements</value>
   </data>
   <data name="CloseWindowConfirmDialog_Title" xml:space="preserve">
-    <value>Are you sure you want to exit?</value>
+    <value>Are you sure you want to quit?</value>
   </data>
   <data name="DeleteRoomConfirmDialog_Title" xml:space="preserve">
-    <value>Delete this channel, confirm?</value>
+    <value>Delete this channel?</value>
   </data>
   <data name="Global_Cancel" xml:space="preserve">
     <value>Cancel</value>
@@ -172,23 +172,23 @@
     <value>Right click to copy this line</value>
   </data>
   <data name="RoomCard_ClipButton_Tooltip" xml:space="preserve">
-    <value>Playback clips (numbers in process)</value>
+    <value>Clip (Processing)</value>
     <comment>This feature is off by default, and will be removed in the future.</comment>
   </data>
   <data name="RoomCard_Menu_Delete" xml:space="preserve">
-    <value>Delete live channel</value>
+    <value>Delete</value>
   </data>
   <data name="RoomCard_Menu_DisableAutoRecord" xml:space="preserve">
-    <value>Manual Record</value>
+    <value>Disable Auto Record</value>
   </data>
   <data name="RoomCard_Menu_EnableAutoRecord" xml:space="preserve">
-    <value>Auto Record</value>
+    <value>Enable Auto Record</value>
   </data>
   <data name="RoomCard_Menu_OpenInBrowser" xml:space="preserve">
-    <value>Open Live Channel</value>
+    <value>Open Channel In Web Browser</value>
   </data>
   <data name="RoomCard_Menu_RefreshInfo" xml:space="preserve">
-    <value>Refresh Live Channel</value>
+    <value>Refresh Channel Info</value>
   </data>
   <data name="RoomCard_Menu_Settings" xml:space="preserve">
     <value>Settings</value>
@@ -204,15 +204,15 @@
     <value>Actions</value>
   </data>
   <data name="RoomCard_Status_DanmakuConnectionTooltip_False" xml:space="preserve">
-    <value>Connect to chat server failed
-The recorder receives live status info from the chat server</value>
+    <value>Chat Server Disconnected
+BiliRec receive live notifications from the chat server</value>
   </data>
   <data name="RoomCard_Status_DanmakuConnectionTooltip_True" xml:space="preserve">
-    <value>Connect to chat server success
-Getting live status and other information</value>
+    <value>Chat Server Connected
+Receiving live notification and other data</value>
   </data>
   <data name="RoomCard_Status_LiveStatusTooltip_False" xml:space="preserve">
-    <value>Idle</value>
+    <value>Offline</value>
   </data>
   <data name="RoomCard_Status_LiveStatusTooltip_True" xml:space="preserve">
     <value>Live</value>
@@ -226,8 +226,8 @@ Getting live status and other information</value>
     <comment>Short status text</comment>
   </data>
   <data name="RoomCard_Status_SpeedIndicator_Description" xml:space="preserve">
-    <value>Here is the ratio of the recording speed to the live broadcast speed of the anchor
-Normaly it should be close to 100% and the color should be green</value>
+    <value>The recording speed relative to the upload speed of the streamer
+It should be close to 100% and the color will be green</value>
     <comment>Shown in tooltip</comment>
   </data>
   <data name="RoomCard_Status_SpeedIndicator_SpeedInMbps" xml:space="preserve">
@@ -235,20 +235,20 @@ Normaly it should be close to 100% and the color should be green</value>
     <comment>Should not translate</comment>
   </data>
   <data name="RoomCard_Status_SpeedIndicator_SpeedInPercentage" xml:space="preserve">
-    <value>Current speed ratio:{0:P2}</value>
+    <value>Current speed ratio: {0:P2}</value>
     <comment>Speed percentage relative to upload speed of the streamer</comment>
   </data>
   <data name="RoomListPage_Menu_AutoRecord" xml:space="preserve">
-    <value>Monitor</value>
+    <value>Auto Record</value>
   </data>
   <data name="RoomListPage_Menu_AutoRecord_DisableAll" xml:space="preserve">
-    <value>Stop all channel's Automatically Record</value>
+    <value>Disable for all channels</value>
   </data>
   <data name="RoomListPage_Menu_AutoRecord_EnableAll" xml:space="preserve">
-    <value>Start all channel's Automatically Record</value>
+    <value>Enable for all channels</value>
   </data>
   <data name="RoomListPage_Menu_File" xml:space="preserve">
-    <value>Files</value>
+    <value>File</value>
   </data>
   <data name="RoomListPage_Menu_File_OpenWorkDirectory" xml:space="preserve">
     <value>Open Working Directory</value>
@@ -263,22 +263,22 @@ Normaly it should be close to 100% and the color should be green</value>
     <value>Show logs on this page</value>
   </data>
   <data name="RoomListPage_Menu_Sort" xml:space="preserve">
-    <value>Sort As</value>
+    <value>Sorting</value>
   </data>
   <data name="RoomListPage_Menu_Sort_Default" xml:space="preserve">
     <value>Not Sorted</value>
   </data>
   <data name="RoomListPage_Menu_Sort_RoomId" xml:space="preserve">
-    <value>Room Ids</value>
+    <value>Channel Id</value>
   </data>
   <data name="RoomListPage_Menu_Sort_Status" xml:space="preserve">
-    <value>Record Status</value>
+    <value>Recording Status</value>
   </data>
   <data name="RootPage_NavigationViewItem_AdvancedSettingsPage" xml:space="preserve">
     <value>Advanced Settings</value>
   </data>
   <data name="RootPage_NavigationViewItem_AnnouncementPage" xml:space="preserve">
-    <value>Announcements</value>
+    <value>Announcement</value>
   </data>
   <data name="RootPage_NavigationViewItem_LogPage" xml:space="preserve">
     <value>Logs</value>
@@ -293,110 +293,110 @@ Normaly it should be close to 100% and the color should be green</value>
     <value>Advanced Settings</value>
   </data>
   <data name="Settings_AdvancedPage_Warning" xml:space="preserve">
-    <value>Note: general users usually do not need and should not modify the settings here.
-The modification of Timing may lead to problems such as being blocked by the server of Bibili and unable to start recording in time.</value>
+    <value>Note: General users usually don't need to nor should modify settings shown below.
+Modification of Timing might get you IP blocked, and/or unable to start recording in time.
+(Also those settings are not translated because those are hard to translate and I'm lazy)</value>
   </data>
   <data name="Settings_Danmaku_FlushInterval" xml:space="preserve">
-    <value>Number of chats required to trigger hard disk writing</value>
+    <value>Number of messages needed to trigger disk flush</value>
   </data>
   <data name="Settings_Danmaku_Title" xml:space="preserve">
-    <value>Record chat</value>
+    <value>Chat Recording</value>
   </data>
   <data name="Settings_Danmaku_ToggleSwitch_Enabled" xml:space="preserve">
-    <value>Save chat</value>
+    <value>Save Live Chat</value>
   </data>
   <data name="Settings_Danmaku_ToggleSwitch_Gift" xml:space="preserve">
-    <value>Save gift send info</value>
+    <value>Save Gifts</value>
   </data>
   <data name="Settings_Danmaku_ToggleSwitch_Guard" xml:space="preserve">
-    <value>Save new guard info</value>
+    <value>Save New Member</value>
   </data>
   <data name="Settings_Danmaku_ToggleSwitch_Raw" xml:space="preserve">
-    <value>Save raw chat info</value>
+    <value>Save Raw Data</value>
   </data>
   <data name="Settings_Danmaku_ToggleSwitch_SuperChat" xml:space="preserve">
-    <value>Save superChat</value>
+    <value>Save Super Chat</value>
   </data>
   <data name="Settings_FileName_Clip" xml:space="preserve">
-    <value>Clip file name template</value>
+    <value>Clip File Name Formatting</value>
   </data>
   <data name="Settings_FileName_Description_Text" xml:space="preserve">
-    <value>Explain</value>
+    <value>Hint</value>
   </data>
   <data name="Settings_FileName_Description_ToolTip" xml:space="preserve">
-    <value>Filename variable description
+    <value>File name variables
 
-Date:{date}
-Time:{time}
-Channel id:{roomid}
-Title:{title}
-Name:{name}
-Random numbers:{random}
+Date: {date}
+Time: {time}
+Channel Id: {roomid}
+Stream Title: {title}
+Streamer Name: {name}
+Random Number: {random}
 
-Note: All {} braces are English half brackets
-File format only supports Flv</value>
+Only FLV is supported</value>
   </data>
   <data name="Settings_FileName_Record" xml:space="preserve">
-    <value>Videorecord file name template</value>
+    <value>Recording File Name Formatting</value>
   </data>
   <data name="Settings_FileName_Title" xml:space="preserve">
-    <value>Filename</value>
+    <value>File Name</value>
   </data>
   <data name="Settings_RecordMode_Clip_DurationUnit" xml:space="preserve">
-    <value>Sec</value>
+    <value>seconds</value>
   </data>
   <data name="Settings_RecordMode_Clip_FutureDuration" xml:space="preserve">
-    <value>After</value>
+    <value>Duration after trigger</value>
   </data>
   <data name="Settings_RecordMode_Clip_PastDuration" xml:space="preserve">
-    <value>Before</value>
+    <value>Duration before trigger</value>
   </data>
   <data name="Settings_RecordMode_Description" xml:space="preserve">
     <value>Recording only is recommended
-Instant editing will be removed in later versions
-There is a small probability that you will encounter a memory leak if you enable the clip function</value>
+Clipping will be removed in the future
+Memory leak might occur when clipping is enabled</value>
   </data>
   <data name="Settings_RecordMode_RadioButton_Both" xml:space="preserve">
-    <value>Enable both functions</value>
+    <value>Both</value>
   </data>
   <data name="Settings_RecordMode_RadioButton_ClipOnly" xml:space="preserve">
-    <value>Enable instant editing only</value>
+    <value>Clipping only</value>
   </data>
   <data name="Settings_RecordMode_RadioButton_RecordOnly" xml:space="preserve">
-    <value>Enable recording only</value>
+    <value>Recording only</value>
   </data>
   <data name="Settings_RecordMode_Title" xml:space="preserve">
-    <value>Record mode</value>
+    <value>Record Mode</value>
   </data>
   <data name="Settings_SettingsPage_Title" xml:space="preserve">
     <value>Settings</value>
   </data>
   <data name="Settings_Splitting_RadioButton_BySize" xml:space="preserve">
-    <value>Automatic segmentation based on file size</value>
+    <value>Split recording by file size</value>
   </data>
   <data name="Settings_Splitting_RadioButton_ByTime" xml:space="preserve">
-    <value>Automatic segmentation according to video time</value>
+    <value>Split recording by video time</value>
   </data>
   <data name="Settings_Splitting_RadioButton_Disabled" xml:space="preserve">
-    <value>No automatic segmentation</value>
+    <value>Disable</value>
   </data>
   <data name="Settings_Splitting_TextBox_Left" xml:space="preserve">
-    <value>Every</value>
+    <value>Split recording every</value>
   </data>
   <data name="Settings_Splitting_TextBox_Right" xml:space="preserve">
-    <value>Save as a file</value>
+    <value> </value>
   </data>
   <data name="Settings_Splitting_TextBox_SizeUnit" xml:space="preserve">
     <value>MiB</value>
   </data>
   <data name="Settings_Splitting_TextBox_TimeUnit" xml:space="preserve">
-    <value>Minute(s)</value>
+    <value>minutes</value>
   </data>
   <data name="Settings_Splitting_Title" xml:space="preserve">
     <value>Recording Splitting</value>
   </data>
   <data name="Settings_Webhook_Address" xml:space="preserve">
-    <value>Webhook address, Enter one rule on a line</value>
+    <value>Webhook address, one per line</value>
   </data>
   <data name="Settings_Webhook_Title" xml:space="preserve">
     <value>Webhook</value>
@@ -407,10 +407,10 @@ There is a small probability that you will encounter a memory leak if you enable
 Will use default setting and disable user input when checked.</comment>
   </data>
   <data name="TaskbarIconControl_MenuItem_OpenMainWindow" xml:space="preserve">
-    <value>Open the main interface</value>
+    <value>Open BiliRec</value>
   </data>
   <data name="TaskbarIconControl_MinimizedNotification" xml:space="preserve">
-    <value>The program has been minimized to the tray, left-click the icon to restore the interface</value>
+    <value>BiliRec has been minimized to the system tray, left click the tray icon to unhide.</value>
   </data>
   <data name="TaskbarIconControl_Title" xml:space="preserve">
     <value>BiliRec (B站录播姬)</value>
@@ -423,11 +423,11 @@ Will use default setting and disable user input when checked.</comment>
     <value>Browse...</value>
   </data>
   <data name="WorkDirectorySelector_Error_FailedToLoadConfig" xml:space="preserve">
-    <value>Configuration file failed to load</value>
+    <value>Failed to load config</value>
   </data>
   
   <data name="WorkDirectorySelector_Error_PathContainsFiles" xml:space="preserve">
-    <value>The path already has other files</value>
+    <value>The path contains other files</value>
   </data>
   <data name="WorkDirectorySelector_Error_PathDoesNotExist" xml:space="preserve">
     <value>The path does not exist</value>
