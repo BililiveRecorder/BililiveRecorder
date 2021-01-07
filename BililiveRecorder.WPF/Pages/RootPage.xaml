@@ -50,10 +50,9 @@
     <Grid>
         <controls:TaskbarIconControl DataContext="{Binding}" d:IsHidden="True"/>
         <ui:NavigationView IsBackEnabled="False" IsBackButtonVisible="Collapsed" 
-                       IsPaneOpen="False" OpenPaneLength="150"
-                       IsSettingsVisible="False"
-                       SelectionChanged="NavigationView_SelectionChanged"
-                       >
+                           IsSettingsVisible="False" ExpandedModeThresholdWidth="1115"
+                           IsPaneOpen="False" OpenPaneLength="200" 
+                           SelectionChanged="NavigationView_SelectionChanged">
             <ui:NavigationView.PaneCustomContent>
                 <Menu>
                     <MenuItem>
