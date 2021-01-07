@@ -345,8 +345,12 @@ flvフォーマットのみサポートされています。</value>
   <data name="Settings_RecordMode_Clip_DurationUnit" xml:space="preserve">
     <value>秒後までカットする</value>
   </data>
-  
-  
+  <data name="Settings_RecordMode_Clip_FutureDuration" xml:space="preserve">
+    <value>クリックする</value>
+  </data>
+  <data name="Settings_RecordMode_Clip_PastDuration" xml:space="preserve">
+    <value>クリックする</value>
+  </data>
   <data name="Settings_RecordMode_Description" xml:space="preserve">
     <value>録画のみ　をおすすめします。
 即時編集機能は未来のバージョンから削除予定です。
@@ -377,7 +381,7 @@ flvフォーマットのみサポートされています。</value>
     <value>自動分割しない</value>
   </data>
   <data name="Settings_Splitting_TextBox_Left" xml:space="preserve">
-    <value>各々</value>
+    <value> </value>
   </data>
   <data name="Settings_Splitting_TextBox_Right" xml:space="preserve">
     <value>ごとにファイルを分割する</value>
