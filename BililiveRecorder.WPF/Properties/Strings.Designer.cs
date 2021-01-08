@@ -725,29 +725,38 @@ namespace BililiveRecorder.WPF.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 秒.
+        ///   Looks up a localized string similar to 剪辑将来时长.
         /// </summary>
-        public static string Settings_RecordMode_Clip_DurationUnit {
+        public static string Settings_RecordMode_Clip_FutureDuration_Left {
             get {
-                return ResourceManager.GetString("Settings_RecordMode_Clip_DurationUnit", resourceCulture);
+                return ResourceManager.GetString("Settings_RecordMode_Clip_FutureDuration_Left", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 剪辑将来时长.
+        ///   Looks up a localized string similar to 秒.
         /// </summary>
-        public static string Settings_RecordMode_Clip_FutureDuration {
+        public static string Settings_RecordMode_Clip_FutureDuration_Right {
             get {
-                return ResourceManager.GetString("Settings_RecordMode_Clip_FutureDuration", resourceCulture);
+                return ResourceManager.GetString("Settings_RecordMode_Clip_FutureDuration_Right", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to 剪辑过去时长.
         /// </summary>
-        public static string Settings_RecordMode_Clip_PastDuration {
+        public static string Settings_RecordMode_Clip_PastDuration_Left {
             get {
-                return ResourceManager.GetString("Settings_RecordMode_Clip_PastDuration", resourceCulture);
+                return ResourceManager.GetString("Settings_RecordMode_Clip_PastDuration_Left", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 秒.
+        /// </summary>
+        public static string Settings_RecordMode_Clip_PastDuration_Right {
+            get {
+                return ResourceManager.GetString("Settings_RecordMode_Clip_PastDuration_Right", resourceCulture);
             }
         }
         

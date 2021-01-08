@@ -341,14 +341,17 @@
   <data name="Settings_FileName_Title" xml:space="preserve">
     <value>文件名</value>
   </data>
-  <data name="Settings_RecordMode_Clip_DurationUnit" xml:space="preserve">
-    <value>秒</value>
-  </data>
-  <data name="Settings_RecordMode_Clip_FutureDuration" xml:space="preserve">
+  <data name="Settings_RecordMode_Clip_FutureDuration_Left" xml:space="preserve">
     <value>剪辑将来时长</value>
   </data>
-  <data name="Settings_RecordMode_Clip_PastDuration" xml:space="preserve">
+  <data name="Settings_RecordMode_Clip_FutureDuration_Right" xml:space="preserve">
+    <value>秒</value>
+  </data>
+  <data name="Settings_RecordMode_Clip_PastDuration_Left" xml:space="preserve">
     <value>剪辑过去时长</value>
+  </data>
+  <data name="Settings_RecordMode_Clip_PastDuration_Right" xml:space="preserve">
+    <value>秒</value>
   </data>
   <data name="Settings_RecordMode_Description" xml:space="preserve">
     <value>推荐使用 只启用录制功能
