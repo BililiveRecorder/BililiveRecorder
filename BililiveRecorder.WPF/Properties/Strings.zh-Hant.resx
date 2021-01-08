@@ -253,26 +253,23 @@
   <data name="RoomListPage_Menu_File_OpenWorkDirectory" xml:space="preserve">
     <value>開啟工作目錄</value>
   </data>
-  <data name="RoomListPage_Menu_Log" xml:space="preserve">
-    <value>日誌</value>
-  </data>
-  <data name="RoomListPage_Menu_Log_Hide" xml:space="preserve">
-    <value>在此頁面隱藏日誌</value>
-  </data>
-  <data name="RoomListPage_Menu_Log_Show" xml:space="preserve">
-    <value>在此頁面顯示日誌</value>
-  </data>
-  <data name="RoomListPage_Menu_Sort" xml:space="preserve">
-    <value>排序</value>
-  </data>
   <data name="RoomListPage_Menu_Sort_Default" xml:space="preserve">
     <value>不排序</value>
   </data>
   <data name="RoomListPage_Menu_Sort_RoomId" xml:space="preserve">
-    <value>房間號</value>
+    <value>按房間號排序</value>
   </data>
   <data name="RoomListPage_Menu_Sort_Status" xml:space="preserve">
-    <value>錄製狀態</value>
+    <value>按錄製狀態排序</value>
+  </data>
+  <data name="RoomListPage_Menu_View" xml:space="preserve">
+    <value>視圖</value>
+  </data>
+  <data name="RoomListPage_Menu_View_ShowLogCheckBox" xml:space="preserve">
+    <value>顯示日誌</value>
+  </data>
+  <data name="RoomListPage_Menu_View_ShowTitleAndAreaCheckBox" xml:space="preserve">
+    <value>顯示直播間標題和分區</value>
   </data>
   <data name="RootPage_NavigationViewItem_AdvancedSettingsPage" xml:space="preserve">
     <value>進階設定</value>
@@ -331,10 +328,12 @@
 房間號: {roomid}
 標題: {title}
 主播名: {name}
-隨機數字: {random}
+大分區: {parea}
+子分區: {area}
+隨機數字: {random} 
 
-所有 { } 大括號均為英文半形括號
-只支援 flv 格式</value>
+所有大括號均為英文半形括號
+只支援 FLV 格式</value>
   </data>
   <data name="Settings_FileName_Record" xml:space="preserve">
     <value>錄製文件檔名格式設定</value>
@@ -342,14 +341,17 @@
   <data name="Settings_FileName_Title" xml:space="preserve">
     <value>檔案名稱設定</value>
   </data>
-  <data name="Settings_RecordMode_Clip_DurationUnit" xml:space="preserve">
-    <value>秒</value>
-  </data>
-  <data name="Settings_RecordMode_Clip_FutureDuration" xml:space="preserve">
+  <data name="Settings_RecordMode_Clip_FutureDuration_Left" xml:space="preserve">
     <value>剪輯未來時長</value>
   </data>
-  <data name="Settings_RecordMode_Clip_PastDuration" xml:space="preserve">
+  <data name="Settings_RecordMode_Clip_FutureDuration_Right" xml:space="preserve">
+    <value>秒</value>
+  </data>
+  <data name="Settings_RecordMode_Clip_PastDuration_Left" xml:space="preserve">
     <value>剪輯過去時長</value>
+  </data>
+  <data name="Settings_RecordMode_Clip_PastDuration_Right" xml:space="preserve">
+    <value>秒</value>
   </data>
   <data name="Settings_RecordMode_Description" xml:space="preserve">
     <value>推薦使用 只啟用錄製功能
