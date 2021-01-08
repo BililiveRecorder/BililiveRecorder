@@ -253,26 +253,23 @@ It should be close to 100% and the color will be green</value>
   <data name="RoomListPage_Menu_File_OpenWorkDirectory" xml:space="preserve">
     <value>Open Working Directory</value>
   </data>
-  <data name="RoomListPage_Menu_Log" xml:space="preserve">
-    <value>Logs</value>
-  </data>
-  <data name="RoomListPage_Menu_Log_Hide" xml:space="preserve">
-    <value>Hide logs on this page</value>
-  </data>
-  <data name="RoomListPage_Menu_Log_Show" xml:space="preserve">
-    <value>Show logs on this page</value>
-  </data>
-  <data name="RoomListPage_Menu_Sort" xml:space="preserve">
-    <value>Sorting</value>
-  </data>
   <data name="RoomListPage_Menu_Sort_Default" xml:space="preserve">
     <value>Not Sorted</value>
   </data>
   <data name="RoomListPage_Menu_Sort_RoomId" xml:space="preserve">
-    <value>Channel Id</value>
+    <value>Sort by Channel Id</value>
   </data>
   <data name="RoomListPage_Menu_Sort_Status" xml:space="preserve">
-    <value>Recording Status</value>
+    <value>Sort by Recording Status</value>
+  </data>
+  <data name="RoomListPage_Menu_View" xml:space="preserve">
+    <value>View</value>
+  </data>
+  <data name="RoomListPage_Menu_View_ShowLogCheckBox" xml:space="preserve">
+    <value>Show Logs</value>
+  </data>
+  <data name="RoomListPage_Menu_View_ShowTitleAndAreaCheckBox" xml:space="preserve">
+    <value>Show Stream Title And Category</value>
   </data>
   <data name="RootPage_NavigationViewItem_AdvancedSettingsPage" xml:space="preserve">
     <value>Advanced Settings</value>
@@ -332,6 +329,8 @@ Time: {time}
 Channel Id: {roomid}
 Stream Title: {title}
 Streamer Name: {name}
+Category: {parea}
+Subcategory: {area}
 Random Number: {random}
 
 Only FLV is supported</value>
@@ -342,14 +341,17 @@ Only FLV is supported</value>
   <data name="Settings_FileName_Title" xml:space="preserve">
     <value>File Name</value>
   </data>
-  <data name="Settings_RecordMode_Clip_DurationUnit" xml:space="preserve">
-    <value>seconds</value>
-  </data>
-  <data name="Settings_RecordMode_Clip_FutureDuration" xml:space="preserve">
+  <data name="Settings_RecordMode_Clip_FutureDuration_Left" xml:space="preserve">
     <value>Duration after trigger</value>
   </data>
-  <data name="Settings_RecordMode_Clip_PastDuration" xml:space="preserve">
+  <data name="Settings_RecordMode_Clip_FutureDuration_Right" xml:space="preserve">
+    <value>seconds</value>
+  </data>
+  <data name="Settings_RecordMode_Clip_PastDuration_Left" xml:space="preserve">
     <value>Duration before trigger</value>
+  </data>
+  <data name="Settings_RecordMode_Clip_PastDuration_Right" xml:space="preserve">
+    <value>seconds</value>
   </data>
   <data name="Settings_RecordMode_Description" xml:space="preserve">
     <value>Recording only is recommended
