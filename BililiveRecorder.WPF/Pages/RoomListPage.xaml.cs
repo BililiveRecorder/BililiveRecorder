@@ -35,10 +35,7 @@ namespace BililiveRecorder.WPF.Pages
             DataContextChanged += this.RoomListPage_DataContextChanged;
         }
 
-        private void RoomListPage_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
-        {
-            (this.SortedRoomList as SortedItemsSourceView).Data = e.NewValue as ICollection<IRecordedRoom>;
-        }
+        private void RoomListPage_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e) => (this.SortedRoomList as SortedItemsSourceView).Data = e.NewValue as ICollection<IRecordedRoom>;
 
         public static readonly DependencyProperty SortedRoomListProperty =
            DependencyProperty.Register(
@@ -128,7 +125,7 @@ namespace BililiveRecorder.WPF.Pages
 
         private async void MenuItem_EnableAutoRecAll_Click(object sender, RoutedEventArgs e)
         {
-            if (!(this.DataContext is IRecorder rec)) return;
+            if (this.DataContext is not IRecorder rec) return;
 
             await Task.WhenAll(rec.ToList().Select(rr => Task.Run(() => rr.Start())));
             rec.SaveConfigToFile();
@@ -136,16 +133,13 @@ namespace BililiveRecorder.WPF.Pages
 
         private async void MenuItem_DisableAutoRecAll_Click(object sender, RoutedEventArgs e)
         {
-            if (!(this.DataContext is IRecorder rec)) return;
+            if (this.DataContext is not IRecorder rec) return;
 
             await Task.WhenAll(rec.ToList().Select(rr => Task.Run(() => rr.Stop())));
             rec.SaveConfigToFile();
         }
 
-        private void MenuItem_SortBy_Click(object sender, RoutedEventArgs e)
-        {
-            (this.SortedRoomList as SortedItemsSourceView).SortedBy = (SortedBy)((MenuItem)sender).Tag;
-        }
+        private void MenuItem_SortBy_Click(object sender, RoutedEventArgs e) => (this.SortedRoomList as SortedItemsSourceView).SortedBy = (SortedBy)((MenuItem)sender).Tag;
 
         private void MenuItem_ShowLog_Click(object sender, RoutedEventArgs e)
         {
@@ -163,10 +157,7 @@ namespace BililiveRecorder.WPF.Pages
             this.LogRowDefinition.Height = new GridLength(0);
         }
 
-        private void Log_ScrollViewer_Loaded(object sender, RoutedEventArgs e)
-        {
-            (sender as ScrollViewer)?.ScrollToEnd();
-        }
+        private void Log_ScrollViewer_Loaded(object sender, RoutedEventArgs e) => (sender as ScrollViewer)?.ScrollToEnd();
 
         private void TextBlock_Copy_MouseRightButtonUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
@@ -251,10 +242,10 @@ namespace BililiveRecorder.WPF.Pages
         private int sortSeboucneCount = int.MinValue;
         private readonly SemaphoreSlim sortSemaphoreSlim = new SemaphoreSlim(1, 1);
 
-        private async void Sort()
+        private async void Sort(bool retry = true)
         {
             // debounce && lock
-            logger.Debug("Sort called.");
+            logger.Debug("Sort called. retry = " + retry);
             var callCount = Interlocked.Increment(ref this.sortSeboucneCount);
             await Task.Delay(200);
             if (this.sortSeboucneCount != callCount)
@@ -264,8 +255,20 @@ namespace BililiveRecorder.WPF.Pages
             }
 
             await this.sortSemaphoreSlim.WaitAsync();
-            try { this.SortImpl(); }
-            finally { this.sortSemaphoreSlim.Release(); }
+            try
+            {
+                this.SortImpl();
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex, "Error sorting. retry = " + retry);
+                if (retry)
+                    this.Sort(false);
+            }
+            finally
+            {
+                this.sortSemaphoreSlim.Release();
+            }
         }
 
         private void SortImpl()
@@ -387,45 +390,21 @@ namespace BililiveRecorder.WPF.Pages
             return key.ToString();
         }
 
-        public int Add(object value)
-        {
-            return ((IList)this.Sorted).Add(value);
-        }
+        public int Add(object value) => ((IList)this.Sorted).Add(value);
 
-        public bool Contains(object value)
-        {
-            return ((IList)this.Sorted).Contains(value);
-        }
+        public bool Contains(object value) => ((IList)this.Sorted).Contains(value);
 
-        public void Clear()
-        {
-            ((IList)this.Sorted).Clear();
-        }
+        public void Clear() => ((IList)this.Sorted).Clear();
 
-        public int IndexOf(object value)
-        {
-            return ((IList)this.Sorted).IndexOf(value);
-        }
+        public int IndexOf(object value) => ((IList)this.Sorted).IndexOf(value);
 
-        public void Insert(int index, object value)
-        {
-            ((IList)this.Sorted).Insert(index, value);
-        }
+        public void Insert(int index, object value) => ((IList)this.Sorted).Insert(index, value);
 
-        public void Remove(object value)
-        {
-            ((IList)this.Sorted).Remove(value);
-        }
+        public void Remove(object value) => ((IList)this.Sorted).Remove(value);
 
-        public void RemoveAt(int index)
-        {
-            ((IList)this.Sorted).RemoveAt(index);
-        }
+        public void RemoveAt(int index) => ((IList)this.Sorted).RemoveAt(index);
 
-        public void CopyTo(Array array, int index)
-        {
-            ((ICollection)this.Sorted).CopyTo(array, index);
-        }
+        public void CopyTo(Array array, int index) => ((ICollection)this.Sorted).CopyTo(array, index);
 
         #endregion
 
