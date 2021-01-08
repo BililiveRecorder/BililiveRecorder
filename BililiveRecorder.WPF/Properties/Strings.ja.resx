@@ -253,27 +253,16 @@
   <data name="RoomListPage_Menu_File_OpenWorkDirectory" xml:space="preserve">
     <value>ダウンロード先を開く</value>
   </data>
-  <data name="RoomListPage_Menu_Log" xml:space="preserve">
-    <value>ログ</value>
-  </data>
-  <data name="RoomListPage_Menu_Log_Hide" xml:space="preserve">
-    <value>このページにログを表示しない</value>
-  </data>
-  <data name="RoomListPage_Menu_Log_Show" xml:space="preserve">
-    <value>このページにログを表示</value>
-  </data>
-  <data name="RoomListPage_Menu_Sort" xml:space="preserve">
-    <value>並べて表示</value>
-  </data>
   <data name="RoomListPage_Menu_Sort_Default" xml:space="preserve">
     <value>並べて表示しない</value>
   </data>
-  <data name="RoomListPage_Menu_Sort_RoomId" xml:space="preserve">
-    <value>ルーム番号</value>
+  
+  
+  
+  <data name="RoomListPage_Menu_View_ShowLogCheckBox" xml:space="preserve">
+    <value>ログを表示</value>
   </data>
-  <data name="RoomListPage_Menu_Sort_Status" xml:space="preserve">
-    <value>録画状態</value>
-  </data>
+  
   <data name="RootPage_NavigationViewItem_AdvancedSettingsPage" xml:space="preserve">
     <value>詳細設定</value>
   </data>
@@ -331,6 +320,8 @@
 ルーム番号：{roomid}
 タイトル：{title}
 ユーザー名：{name}
+大分区: {parea}
+子分区: {area}
 ランダム数字：{random}
 
 約物及び変数名はすべて半角文字を使ってください。
@@ -342,14 +333,17 @@ flvフォーマットのみサポートされています。</value>
   <data name="Settings_FileName_Title" xml:space="preserve">
     <value>ファイル名</value>
   </data>
-  <data name="Settings_RecordMode_Clip_DurationUnit" xml:space="preserve">
+  <data name="Settings_RecordMode_Clip_FutureDuration_Left" xml:space="preserve">
+    <value>クリックする</value>
+  </data>
+  <data name="Settings_RecordMode_Clip_FutureDuration_Right" xml:space="preserve">
     <value>秒後までカットする</value>
   </data>
-  <data name="Settings_RecordMode_Clip_FutureDuration" xml:space="preserve">
+  <data name="Settings_RecordMode_Clip_PastDuration_Left" xml:space="preserve">
     <value>クリックする</value>
   </data>
-  <data name="Settings_RecordMode_Clip_PastDuration" xml:space="preserve">
-    <value>クリックする</value>
+  <data name="Settings_RecordMode_Clip_PastDuration_Right" xml:space="preserve">
+    <value>秒前からカットする</value>
   </data>
   <data name="Settings_RecordMode_Description" xml:space="preserve">
     <value>録画のみ　をおすすめします。
