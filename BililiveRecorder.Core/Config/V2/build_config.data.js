@@ -74,7 +74,12 @@ module.exports = {
         "desc": "剪辑文件名模板",
         "default": "@\"{roomid}-{name}/剪辑片段-{roomid}-{date}-{time}-{title}.flv\"",
         "nullable": true
-    }, ],
+    }, {
+        "name": "WpfShowTitleAndArea",
+        "type": "bool",
+        "desc": "是否显示直播间标题和分区",
+        "default": "false",
+    },],
     "room": [{
         "name": "RoomId",
         "type": "int",
@@ -122,5 +127,5 @@ module.exports = {
         "type": "bool",
         "desc": "是否同时录制 上船",
         "default": "true"
-    }, ]
+    },]
 }

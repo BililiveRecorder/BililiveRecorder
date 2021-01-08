@@ -20,45 +20,21 @@ namespace BililiveRecorder.WPF.Controls
 
         public event EventHandler ShowSettingsRequested;
 
-        private void MenuItem_StartRecording_Click(object sender, RoutedEventArgs e)
-        {
-            (this.DataContext as IRecordedRoom)?.StartRecord();
-        }
+        private void MenuItem_StartRecording_Click(object sender, RoutedEventArgs e) => (this.DataContext as IRecordedRoom)?.StartRecord();
 
-        private void MenuItem_StopRecording_Click(object sender, RoutedEventArgs e)
-        {
-            (this.DataContext as IRecordedRoom)?.StopRecord();
-        }
+        private void MenuItem_StopRecording_Click(object sender, RoutedEventArgs e) => (this.DataContext as IRecordedRoom)?.StopRecord();
 
-        private void MenuItem_RefreshInfo_Click(object sender, RoutedEventArgs e)
-        {
-            (this.DataContext as IRecordedRoom)?.RefreshRoomInfo();
-        }
+        private void MenuItem_RefreshInfo_Click(object sender, RoutedEventArgs e) => (this.DataContext as IRecordedRoom)?.RefreshRoomInfo();
 
-        private void MenuItem_StartMonitor_Click(object sender, RoutedEventArgs e)
-        {
-            (this.DataContext as IRecordedRoom)?.Start();
-        }
+        private void MenuItem_StartMonitor_Click(object sender, RoutedEventArgs e) => (this.DataContext as IRecordedRoom)?.Start();
 
-        private void MenuItem_StopMonitor_Click(object sender, RoutedEventArgs e)
-        {
-            (this.DataContext as IRecordedRoom)?.Stop();
-        }
+        private void MenuItem_StopMonitor_Click(object sender, RoutedEventArgs e) => (this.DataContext as IRecordedRoom)?.Stop();
 
-        private void MenuItem_DeleteRoom_Click(object sender, RoutedEventArgs e)
-        {
-            DeleteRequested?.Invoke(this.DataContext, EventArgs.Empty);
-        }
+        private void MenuItem_DeleteRoom_Click(object sender, RoutedEventArgs e) => DeleteRequested?.Invoke(this.DataContext, EventArgs.Empty);
 
-        private void MenuItem_ShowSettings_Click(object sender, RoutedEventArgs e)
-        {
-            ShowSettingsRequested?.Invoke(this.DataContext, EventArgs.Empty);
-        }
+        private void MenuItem_ShowSettings_Click(object sender, RoutedEventArgs e) => ShowSettingsRequested?.Invoke(this.DataContext, EventArgs.Empty);
 
-        private void Button_Clip_Click(object sender, RoutedEventArgs e)
-        {
-            (this.DataContext as IRecordedRoom)?.Clip();
-        }
+        private void Button_Clip_Click(object sender, RoutedEventArgs e) => (this.DataContext as IRecordedRoom)?.Clip();
 
         private void MenuItem_OpenInBrowser_Click(object sender, RoutedEventArgs e)
         {

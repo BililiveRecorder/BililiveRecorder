@@ -253,26 +253,23 @@
   <data name="RoomListPage_Menu_File_OpenWorkDirectory" xml:space="preserve">
     <value>打开工作目录</value>
   </data>
-  <data name="RoomListPage_Menu_Log" xml:space="preserve">
-    <value>日志</value>
-  </data>
-  <data name="RoomListPage_Menu_Log_Hide" xml:space="preserve">
-    <value>不在本页显示日志</value>
-  </data>
-  <data name="RoomListPage_Menu_Log_Show" xml:space="preserve">
-    <value>在本页显示日志</value>
-  </data>
-  <data name="RoomListPage_Menu_Sort" xml:space="preserve">
-    <value>排序</value>
-  </data>
   <data name="RoomListPage_Menu_Sort_Default" xml:space="preserve">
     <value>不排序</value>
   </data>
   <data name="RoomListPage_Menu_Sort_RoomId" xml:space="preserve">
-    <value>房间号</value>
+    <value>按房间号排序</value>
   </data>
   <data name="RoomListPage_Menu_Sort_Status" xml:space="preserve">
-    <value>录制状态</value>
+    <value>按录制状态排序</value>
+  </data>
+  <data name="RoomListPage_Menu_View" xml:space="preserve">
+    <value>视图</value>
+  </data>
+  <data name="RoomListPage_Menu_View_ShowLogCheckBox" xml:space="preserve">
+    <value>显示日志</value>
+  </data>
+  <data name="RoomListPage_Menu_View_ShowTitleAndAreaCheckBox" xml:space="preserve">
+    <value>显示直播间标题和分区</value>
   </data>
   <data name="RootPage_NavigationViewItem_AdvancedSettingsPage" xml:space="preserve">
     <value>高级设置</value>
@@ -331,10 +328,12 @@
 房间号: {roomid}
 标题: {title}
 主播名: {name}
+大分区: {parea}
+子分区: {area}
 随机数字: {random}
 
-所有 { } 大括号均为英文半角括号
-只支持 flv 格式</value>
+所有大括号均为英文半角括号
+只支持 FLV 格式</value>
   </data>
   <data name="Settings_FileName_Record" xml:space="preserve">
     <value>录制文件名格式</value>

@@ -1,6 +1,6 @@
-using System;
 using Newtonsoft.Json.Linq;
 
+#nullable enable
 namespace BililiveRecorder.Core
 {
     public enum MsgTypeEnum
@@ -57,7 +57,17 @@ namespace BililiveRecorder.Core
         /// <summary>
         /// 房间标题
         /// </summary>
-        public string Title { get; set; }
+        public string? Title { get; set; }
+
+        /// <summary>
+        /// 大分区
+        /// </summary>
+        public string? ParentAreaName { get; set; }
+
+        /// <summary>
+        /// 子分区
+        /// </summary>
+        public string? AreaName { get; set; }
 
         /// <summary>
         /// 彈幕內容
@@ -65,17 +75,7 @@ namespace BililiveRecorder.Core
         /// <item><see cref="MsgTypeEnum.Comment"/></item>
         /// </list></para>
         /// </summary>
-        public string CommentText { get; set; }
-
-        /// <summary>
-        /// 彈幕用戶
-        /// </summary>
-        [Obsolete("请使用 UserName")]
-        public string CommentUser
-        {
-            get { return this.UserName; }
-            set { this.UserName = value; }
-        }
+        public string? CommentText { get; set; }
 
         /// <summary>
         /// 消息触发者用户名
@@ -87,7 +87,7 @@ namespace BililiveRecorder.Core
         /// <item><see cref="MsgTypeEnum.GuardBuy"/></item>
         /// </list></para>
         /// </summary>
-        public string UserName { get; set; }
+        public string? UserName { get; set; }
 
         /// <summary>
         /// SC 价格
@@ -123,25 +123,9 @@ namespace BililiveRecorder.Core
         public int UserGuardLevel { get; set; }
 
         /// <summary>
-        /// 禮物用戶
-        /// </summary>
-        [Obsolete("请使用 UserName")]
-        public string GiftUser
-        {
-            get { return this.UserName; }
-            set { this.UserName = value; }
-        }
-
-        /// <summary>
         /// 禮物名稱
         /// </summary>
-        public string GiftName { get; set; }
-
-        /// <summary>
-        /// 禮物數量
-        /// </summary>
-        [Obsolete("请使用 GiftCount")]
-        public string GiftNum { get { return this.GiftCount.ToString(); } }
+        public string? GiftName { get; set; }
 
         /// <summary>
         /// 礼物数量
@@ -152,13 +136,6 @@ namespace BililiveRecorder.Core
         /// <para>此字段也用于标识上船 <see cref="MsgTypeEnum.GuardBuy"/> 的数量（月数）</para>
         /// </summary>
         public int GiftCount { get; set; }
-
-        /// <summary>
-        /// 当前房间的礼物积分（Room Cost）
-        /// 因以前出现过不传递rcost的礼物，并且用处不大，所以弃用
-        /// </summary>
-        [Obsolete("如有需要请自行解析RawData", true)]
-        public string Giftrcost { get { return "0"; } set { } }
 
         /// <summary>
         /// 该用户是否为房管（包括主播）
@@ -181,17 +158,17 @@ namespace BililiveRecorder.Core
         /// <summary>
         /// <see cref="MsgTypeEnum.LiveStart"/>,<see cref="MsgTypeEnum.LiveEnd"/> 事件对应的房间号
         /// </summary>
-        public string RoomID { get; set; }
+        public string? RoomID { get; set; }
 
         /// <summary>
         /// 原始数据, 高级开发用
         /// </summary>
-        public string RawData { get; set; }
+        public string? RawData { get; set; }
 
         /// <summary>
         /// 原始数据, 高级开发用
         /// </summary>
-        public JObject RawObj { get; set; }
+        public JObject? RawObj { get; set; }
 
         /// <summary>
         /// 内部用, JSON数据版本号 通常应该是2
@@ -208,7 +185,7 @@ namespace BililiveRecorder.Core
 
             var obj = JObject.Parse(JSON);
             this.RawObj = obj;
-            string cmd = obj["cmd"]?.ToObject<string>();
+            var cmd = obj["cmd"]?.ToObject<string>();
             switch (cmd)
             {
                 case "LIVE":
@@ -259,6 +236,8 @@ namespace BililiveRecorder.Core
                     {
                         this.MsgType = MsgTypeEnum.RoomChange;
                         this.Title = obj["data"]?["title"]?.ToObject<string>();
+                        this.AreaName = obj["data"]?["area_name"]?.ToObject<string>();
+                        this.ParentAreaName = obj["data"]?["parent_area_name"]?.ToObject<string>();
                         break;
                     }
                 /*

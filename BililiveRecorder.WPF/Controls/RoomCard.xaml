@@ -26,23 +26,39 @@
             BorderBrush="{DynamicResource SystemControlBackgroundAccentBrush}" 
             BorderThickness="1"
             CornerRadius="5">
-        <Grid Margin="5">
+        <Grid Margin="8,5">
             <Grid.RowDefinitions>
-                <RowDefinition Height="2*"/>
-                <RowDefinition Height="2*"/>
-                <RowDefinition Height="2*"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="25"/>
             </Grid.RowDefinitions>
-            <TextBlock VerticalAlignment="Center" Margin="5,0,0,0" Style="{DynamicResource SubtitleTextBlockStyle}" 
+            <TextBlock VerticalAlignment="Center" Style="{DynamicResource SubtitleTextBlockStyle}" 
                        TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" FontFamily="Microsoft Yahei" 
                        Text="{Binding StreamerName,Mode=OneWay}" ToolTip="{Binding StreamerName,Mode=OneWay}"
                        ContextMenu="{StaticResource CopyTextContextMenu}"/>
 
             <Grid Grid.Row="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
-                <StackPanel VerticalAlignment="Center" HorizontalAlignment="Stretch" Orientation="Horizontal" Margin="5,0,0,0">
+                <TextBlock Grid.Row="0" Text="{Binding Title}" ToolTip="{Binding Title}"
+                           Visibility="{Binding RoomConfig.WpfShowTitleAndArea,Converter={StaticResource BooleanToVisibilityCollapsedConverter}}"
+                           TextTrimming="CharacterEllipsis" ContextMenu="{StaticResource CopyTextContextMenu}"/>
+                <StackPanel Grid.Row="1" Orientation="Horizontal"
+                            Visibility="{Binding RoomConfig.WpfShowTitleAndArea,Converter={StaticResource BooleanToVisibilityCollapsedConverter}}">
+                    <TextBlock Text="{Binding ParentAreaName}"
+                               ContextMenu="{StaticResource CopyTextContextMenu}"/>
+                    <TextBlock Text=" · "/>
+                    <TextBlock Text="{Binding AreaName}"
+                               ContextMenu="{StaticResource CopyTextContextMenu}"/>
+                </StackPanel>
+                <StackPanel Grid.Row="3" VerticalAlignment="Center" HorizontalAlignment="Stretch" Orientation="Horizontal">
                     <ui:PathIcon Height="10" Margin="0,0,2,0" Style="{Binding IsDanmakuConnected,Converter={StaticResource BooleanToDanmakuConnectedStyleConverter}}"
                              Foreground="{Binding IsDanmakuConnected,Converter={StaticResource BooleanToDanmakuConnectedColorBrushConverter}}"
                              ToolTip="{Binding IsDanmakuConnected,Converter={StaticResource BooleanToDanmakuConnectedTooltipConverter}}"/>
@@ -56,7 +72,7 @@
                     <TextBlock Text="{Binding ShortRoomId, StringFormat=\{0\},Mode=OneWay}" ContextMenu="{StaticResource CopyTextContextMenu}" FontSize="11"
                            Visibility="{Binding ShortRoomId,Converter={StaticResource ShortRoomIdToVisibilityConverter}}"/>
                 </StackPanel>
-                <Menu Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Right">
+                <Menu Grid.Column="1" Grid.RowSpan="3" VerticalAlignment="Center" HorizontalAlignment="Right">
                     <MenuItem ToolTip="{l:Loc RoomCard_Menu_Tooltip}">
                         <MenuItem.Header>
                             <ui:PathIcon Height="20" Width="20" Style="{StaticResource PathIconDataDotsVertical}"/>

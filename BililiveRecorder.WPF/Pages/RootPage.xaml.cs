@@ -238,7 +238,7 @@ namespace BililiveRecorder.WPF.Pages
 
         private void NavigationViewItem_MouseRightButtonUp(object sender, MouseButtonEventArgs e)
         {
-            if (++this.SettingsClickCount > 3)
+            if (++this.SettingsClickCount > 1)
             {
                 this.SettingsClickCount = 0;
                 this.AdvancedSettingsPageItem.Visibility = this.AdvancedSettingsPageItem.Visibility != Visibility.Visible ? Visibility.Visible : Visibility.Hidden;

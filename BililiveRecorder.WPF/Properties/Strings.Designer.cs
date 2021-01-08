@@ -487,42 +487,6 @@ namespace BililiveRecorder.WPF.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 日志.
-        /// </summary>
-        public static string RoomListPage_Menu_Log {
-            get {
-                return ResourceManager.GetString("RoomListPage_Menu_Log", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to 不在本页显示日志.
-        /// </summary>
-        public static string RoomListPage_Menu_Log_Hide {
-            get {
-                return ResourceManager.GetString("RoomListPage_Menu_Log_Hide", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to 在本页显示日志.
-        /// </summary>
-        public static string RoomListPage_Menu_Log_Show {
-            get {
-                return ResourceManager.GetString("RoomListPage_Menu_Log_Show", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to 排序.
-        /// </summary>
-        public static string RoomListPage_Menu_Sort {
-            get {
-                return ResourceManager.GetString("RoomListPage_Menu_Sort", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to 不排序.
         /// </summary>
         public static string RoomListPage_Menu_Sort_Default {
@@ -532,7 +496,7 @@ namespace BililiveRecorder.WPF.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 房间号.
+        ///   Looks up a localized string similar to 按房间号排序.
         /// </summary>
         public static string RoomListPage_Menu_Sort_RoomId {
             get {
@@ -541,11 +505,38 @@ namespace BililiveRecorder.WPF.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 录制状态.
+        ///   Looks up a localized string similar to 按录制状态排序.
         /// </summary>
         public static string RoomListPage_Menu_Sort_Status {
             get {
                 return ResourceManager.GetString("RoomListPage_Menu_Sort_Status", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 视图.
+        /// </summary>
+        public static string RoomListPage_Menu_View {
+            get {
+                return ResourceManager.GetString("RoomListPage_Menu_View", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 显示日志.
+        /// </summary>
+        public static string RoomListPage_Menu_View_ShowLogCheckBox {
+            get {
+                return ResourceManager.GetString("RoomListPage_Menu_View_ShowLogCheckBox", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 显示直播间标题和分区.
+        /// </summary>
+        public static string RoomListPage_Menu_View_ShowTitleAndAreaCheckBox {
+            get {
+                return ResourceManager.GetString("RoomListPage_Menu_View_ShowTitleAndAreaCheckBox", resourceCulture);
             }
         }
         
@@ -702,10 +693,12 @@ namespace BililiveRecorder.WPF.Properties {
         ///房间号: {roomid}
         ///标题: {title}
         ///主播名: {name}
+        ///大分区: {parea}
+        ///子分区: {area}
         ///随机数字: {random}
         ///
-        ///所有 { } 大括号均为英文半角括号
-        ///只支持 flv 格式.
+        ///所有大括号均为英文半角括号
+        ///只支持 FLV 格式.
         /// </summary>
         public static string Settings_FileName_Description_ToolTip {
             get {

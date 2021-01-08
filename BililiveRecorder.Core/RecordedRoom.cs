@@ -21,9 +21,13 @@ namespace BililiveRecorder.Core
         private static readonly Random random = new Random();
         private static readonly Version VERSION_1_0 = new Version(1, 0);
 
+#nullable enable
+
         private int _shortRoomid;
         private string _streamerName;
         private string _title;
+        private string _parentAreaName = string.Empty;
+        private string _areaName = string.Empty;
         private bool _isStreaming;
 
         public int ShortRoomId
@@ -66,6 +70,26 @@ namespace BililiveRecorder.Core
                 this.TriggerPropertyChanged(nameof(this.Title));
             }
         }
+        public string ParentAreaName
+        {
+            get => this._parentAreaName;
+            private set
+            {
+                if (value == this._parentAreaName) { return; }
+                this._parentAreaName = value;
+                this.TriggerPropertyChanged(nameof(this.ParentAreaName));
+            }
+        }
+        public string AreaName
+        {
+            get => this._areaName;
+            private set
+            {
+                if (value == this._areaName) { return; }
+                this._areaName = value;
+                this.TriggerPropertyChanged(nameof(this.AreaName));
+            }
+        }
 
         public bool IsMonitoring => this.StreamMonitor.IsMonitoring;
         public bool IsRecording => !(this.StreamDownloadTask?.IsCompleted ?? true);
@@ -82,6 +106,8 @@ namespace BililiveRecorder.Core
         }
 
         public RoomConfig RoomConfig { get; }
+
+#nullable restore
 
         private RecordEndData recordEndData;
         public event EventHandler<RecordEndData> RecordEnded;
@@ -193,6 +219,11 @@ namespace BililiveRecorder.Core
                 case MsgTypeEnum.LiveEnd:
                     this.IsStreaming = false;
                     break;
+                case MsgTypeEnum.RoomChange:
+                    this.Title = e.Danmaku.Title ?? string.Empty;
+                    this.ParentAreaName = e.Danmaku.ParentAreaName ?? string.Empty;
+                    this.AreaName = e.Danmaku.AreaName ?? string.Empty;
+                    break;
                 default:
                     break;
             }
@@ -205,9 +236,11 @@ namespace BililiveRecorder.Core
             // 暂时保持不变，此处的 RoomId 需要触发 PropertyChanged 事件
             this.RoomId = e.RoomInfo.RoomId;
             this.ShortRoomId = e.RoomInfo.ShortRoomId;
+            this.IsStreaming = e.RoomInfo.IsStreaming;
             this.StreamerName = e.RoomInfo.UserName;
             this.Title = e.RoomInfo.Title;
-            this.IsStreaming = e.RoomInfo.IsStreaming;
+            this.ParentAreaName = e.RoomInfo.ParentAreaName;
+            this.AreaName = e.RoomInfo.AreaName;
         }
 
         public bool Start()
@@ -527,10 +560,10 @@ namespace BililiveRecorder.Core
 
         private (string fullPath, string relativePath) FormatFilename(string formatString)
         {
-            DateTime now = DateTime.Now;
-            string date = now.ToString("yyyyMMdd");
-            string time = now.ToString("HHmmss");
-            string randomStr = random.Next(100, 999).ToString();
+            var now = DateTime.Now;
+            var date = now.ToString("yyyyMMdd");
+            var time = now.ToString("HHmmss");
+            var randomStr = random.Next(100, 999).ToString();
 
             var relativePath = formatString
                 .Replace(@"{date}", date)
@@ -538,7 +571,10 @@ namespace BililiveRecorder.Core
                 .Replace(@"{random}", randomStr)
                 .Replace(@"{roomid}", this.RoomId.ToString())
                 .Replace(@"{title}", this.Title.RemoveInvalidFileName())
-                .Replace(@"{name}", this.StreamerName.RemoveInvalidFileName());
+                .Replace(@"{name}", this.StreamerName.RemoveInvalidFileName())
+                .Replace(@"{parea}", this.ParentAreaName.RemoveInvalidFileName())
+                .Replace(@"{area}", this.AreaName.RemoveInvalidFileName())
+                ;
 
             if (!relativePath.EndsWith(".flv", StringComparison.OrdinalIgnoreCase))
                 relativePath += ".flv";

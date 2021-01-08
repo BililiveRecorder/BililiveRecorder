@@ -155,6 +155,11 @@ namespace BililiveRecorder.Core.Config.V2
         /// </summary>
         public string? ClipFilenameFormat => this.GetPropertyValue<string>();
 
+        /// <summary>
+        /// 是否显示直播间标题和分区
+        /// </summary>
+        public bool WpfShowTitleAndArea => this.GetPropertyValue<bool>();
+
     }
 
     [JsonObject(MemberSerialization.OptIn)]
@@ -273,6 +278,14 @@ namespace BililiveRecorder.Core.Config.V2
         public Optional<string?> OptionalClipFilenameFormat { get => this.GetPropertyValueOptional<string>(nameof(this.ClipFilenameFormat)); set => this.SetPropertyValueOptional(value, nameof(this.ClipFilenameFormat)); }
 
         /// <summary>
+        /// 是否显示直播间标题和分区
+        /// </summary>
+        public bool WpfShowTitleAndArea { get => this.GetPropertyValue<bool>(); set => this.SetPropertyValue(value); }
+        public bool HasWpfShowTitleAndArea { get => this.GetPropertyHasValue(nameof(this.WpfShowTitleAndArea)); set => this.SetPropertyHasValue<bool>(value, nameof(this.WpfShowTitleAndArea)); }
+        [JsonProperty(nameof(WpfShowTitleAndArea)), EditorBrowsable(EditorBrowsableState.Never)]
+        public Optional<bool> OptionalWpfShowTitleAndArea { get => this.GetPropertyValueOptional<bool>(nameof(this.WpfShowTitleAndArea)); set => this.SetPropertyValueOptional(value, nameof(this.WpfShowTitleAndArea)); }
+
+        /// <summary>
         /// 录制文件自动切割模式
         /// </summary>
         public AutoCuttingMode CuttingMode { get => this.GetPropertyValue<AutoCuttingMode>(); set => this.SetPropertyValue(value); }
@@ -362,6 +375,8 @@ namespace BililiveRecorder.Core.Config.V2
         public string RecordFilenameFormat => @"{roomid}-{name}/录制-{roomid}-{date}-{time}-{title}.flv";
 
         public string ClipFilenameFormat => @"{roomid}-{name}/剪辑片段-{roomid}-{date}-{time}-{title}.flv";
+
+        public bool WpfShowTitleAndArea => false;
 
         public AutoCuttingMode CuttingMode => AutoCuttingMode.Disabled;
 

@@ -184,6 +184,12 @@ namespace BililiveRecorder.WPF.Pages
             {
             }
         }
+
+        private void MenuItem_ShowHideTitleArea_Click(object sender, RoutedEventArgs e)
+        {
+            if (((MenuItem)sender).Tag is bool b && this.DataContext is IRecorder rec)
+                rec.Config.Global.WpfShowTitleAndArea = b;
+        }
     }
 
     internal enum SortedBy
@@ -285,7 +291,10 @@ namespace BililiveRecorder.WPF.Pages
                 IEnumerable<IRecordedRoom> orderedData = this.SortedBy switch
                 {
                     SortedBy.RoomId => this.Data.OrderBy(x => x.ShortRoomId == 0 ? x.RoomId : x.ShortRoomId),
-                    SortedBy.Status => this.Data.OrderByDescending(x => x.IsRecording).ThenByDescending(x => x.IsMonitoring),
+                    SortedBy.Status => this.Data
+                        .OrderByDescending(x => x.IsRecording)
+                        .ThenByDescending(x => x.IsMonitoring)
+                        .ThenByDescending(x => x.IsStreaming),
                     _ => this.Data,
                 };
                 var result = orderedData.Concat(this.NullRoom).ToList();

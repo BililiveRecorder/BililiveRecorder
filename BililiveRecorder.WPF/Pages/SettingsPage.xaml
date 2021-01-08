@@ -67,7 +67,8 @@
                 <StackPanel MaxWidth="500" HorizontalAlignment="Left">
                     <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
                         <StackPanel.ToolTip>
-                            <TextBlock FontSize="13" Text="{l:Loc Settings_FileName_Description_ToolTip}"/>
+                            <TextBlock FontSize="13" Text="{l:Loc Settings_FileName_Description_ToolTip}"
+                                       l:ResxLocalizationProvider.DefaultDictionary="Strings"/>
                         </StackPanel.ToolTip>
                         <TextBlock Text="{l:Loc Settings_FileName_Description_Text}"/>
                         <ui:PathIcon Margin="2,0" VerticalAlignment="Center" Height="15" Style="{StaticResource PathIconDataInformationOutline}"/>

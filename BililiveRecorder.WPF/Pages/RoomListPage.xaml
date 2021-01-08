@@ -14,6 +14,7 @@
     xmlns:c="clr-namespace:BililiveRecorder.WPF.Controls"
     xmlns:converters="clr-namespace:BililiveRecorder.WPF.Converters"
     mc:Ignorable="d" 
+    x:Name="TheRoomListPage"
     d:DesignHeight="1000" d:DesignWidth="960"
     d:DataContext="{d:DesignInstance mock:MockRecorder,IsDesignTimeCreatable=True}"
     DataContext="{Binding RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=local:RootPage},Path=DataContext.Recorder,Mode=OneWay}"
@@ -33,13 +34,16 @@
             x:Key="SelectorTemplate"                                               
             Normal="{StaticResource NormalRoomCardTemplate}"
             Null="{StaticResource AddRoomCardTemplate}"/>
-        <ui:UniformGridLayout
-            x:Key="UniformGridLayout"
-            MinItemWidth="220"
-            MinItemHeight="100"
-            ItemsStretch="None"
-            MinRowSpacing="7"
-            MinColumnSpacing="5" />
+        <converters:BoolToValueConverter x:Key="BooleanToUniformGridLayoutConverter">
+            <converters:BoolToValueConverter.TrueValue>
+                <ui:UniformGridLayout MinItemWidth="220" MinItemHeight="125"
+                    ItemsStretch="None" MinRowSpacing="7" MinColumnSpacing="5"/>
+            </converters:BoolToValueConverter.TrueValue>
+            <converters:BoolToValueConverter.FalseValue>
+                <ui:UniformGridLayout MinItemWidth="220" MinItemHeight="100"
+                    ItemsStretch="None" MinRowSpacing="7" MinColumnSpacing="5"/>
+            </converters:BoolToValueConverter.FalseValue>
+        </converters:BoolToValueConverter>
     </ui:Page.Resources>
     <Grid>
         <Grid.RowDefinitions>
@@ -54,18 +58,17 @@
                 <MenuItem Header="{l:Loc RoomListPage_Menu_File}">
                     <MenuItem Header="{l:Loc RoomListPage_Menu_File_OpenWorkDirectory}" Click="MenuItem_OpenWorkDirectory_Click"/>
                 </MenuItem>
-                <MenuItem Header="{l:Loc RoomListPage_Menu_AutoRecord}">
-                    <MenuItem Header="{l:Loc RoomListPage_Menu_AutoRecord_EnableAll}" Click="MenuItem_EnableAutoRecAll_Click"/>
-                    <MenuItem Header="{l:Loc RoomListPage_Menu_AutoRecord_DisableAll}" Click="MenuItem_DisableAutoRecAll_Click"/>
-                </MenuItem>
-                <MenuItem Header="{l:Loc RoomListPage_Menu_Sort}">
+                <MenuItem Header="{l:Loc RoomListPage_Menu_View}">
                     <MenuItem Header="{l:Loc RoomListPage_Menu_Sort_Default}" Tag="{x:Static local:SortedBy.None}" Click="MenuItem_SortBy_Click"/>
                     <MenuItem Header="{l:Loc RoomListPage_Menu_Sort_RoomId}" Tag="{x:Static local:SortedBy.RoomId}" Click="MenuItem_SortBy_Click"/>
                     <MenuItem Header="{l:Loc RoomListPage_Menu_Sort_Status}" Tag="{x:Static local:SortedBy.Status}" Click="MenuItem_SortBy_Click"/>
+                    <Separator/>
+                    <MenuItem Header="{l:Loc RoomListPage_Menu_View_ShowTitleAndAreaCheckBox}" IsCheckable="True" IsChecked="{Binding Config.Global.WpfShowTitleAndArea}"/>
+                    <MenuItem Header="{l:Loc RoomListPage_Menu_View_ShowLogCheckBox}" IsCheckable="True" Checked="MenuItem_ShowLog_Click" Unchecked="MenuItem_HideLog_Click"/>
                 </MenuItem>
-                <MenuItem Header="{l:Loc RoomListPage_Menu_Log}">
-                    <MenuItem Header="{l:Loc RoomListPage_Menu_Log_Show}" Click="MenuItem_ShowLog_Click"/>
-                    <MenuItem Header="{l:Loc RoomListPage_Menu_Log_Hide}" Click="MenuItem_HideLog_Click"/>
+                <MenuItem Header="{l:Loc RoomListPage_Menu_AutoRecord}">
+                    <MenuItem Header="{l:Loc RoomListPage_Menu_AutoRecord_EnableAll}" Click="MenuItem_EnableAutoRecAll_Click"/>
+                    <MenuItem Header="{l:Loc RoomListPage_Menu_AutoRecord_DisableAll}" Click="MenuItem_DisableAutoRecAll_Click"/>
                 </MenuItem>
             </Menu>
             <Separator/>
@@ -74,7 +77,7 @@
             <ScrollViewer>
                 <ui:ItemsRepeater
                 HorizontalAlignment="Stretch" Margin="8"
-                Layout="{StaticResource UniformGridLayout}"
+                Layout="{Binding Config.Global.WpfShowTitleAndArea,Mode=OneWay,Converter={StaticResource BooleanToUniformGridLayoutConverter}}"
                 ItemsSource="{Binding SortedRoomList, RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=ui:Page}}"
                 ItemTemplate="{StaticResource SelectorTemplate}" />
             </ScrollViewer>
