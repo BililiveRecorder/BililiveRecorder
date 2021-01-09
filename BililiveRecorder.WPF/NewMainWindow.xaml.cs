@@ -60,14 +60,20 @@ namespace BililiveRecorder.WPF
             { }
         }
 
+        private bool notification_showed = false;
+
         private void Window_StateChanged(object sender, EventArgs e)
         {
             if (this.WindowState == WindowState.Minimized)
             {
                 this.Hide();
-                var title = LocExtension.GetLocalizedValue<string>("BililiveRecorder.WPF:Strings:TaskbarIconControl_Title");
-                var body = LocExtension.GetLocalizedValue<string>("BililiveRecorder.WPF:Strings:TaskbarIconControl_MinimizedNotification");
-                this.ShowBalloonTipCallback?.Invoke(title, body, BalloonIcon.Info);
+                if (!this.notification_showed)
+                {
+                    this.notification_showed = true;
+                    var title = LocExtension.GetLocalizedValue<string>("BililiveRecorder.WPF:Strings:TaskbarIconControl_Title");
+                    var body = LocExtension.GetLocalizedValue<string>("BililiveRecorder.WPF:Strings:TaskbarIconControl_MinimizedNotification");
+                    this.ShowBalloonTipCallback?.Invoke(title, body, BalloonIcon.Info);
+                }
             }
         }
 
