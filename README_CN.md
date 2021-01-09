@@ -6,6 +6,7 @@
 [![Pull Request Welcome](https://img.shields.io/badge/Pull%20request-欢迎-brightgreen.svg)](#)
 [![开源协议](https://img.shields.io/github/license/Bililive/BililiveRecorder.svg?label=开源协议)](#)
 [![QQ群 689636812](https://img.shields.io/badge/QQ%E7%BE%A4-689636812-success)](https://jq.qq.com/?_wv=1027&k=5zVwEyf)
+[![Crowdin](https://badges.crowdin.net/bililiverecorder/localized.svg)](https://crowdin.com/project/bililiverecorder)
 
 ## 安装 & 使用
 

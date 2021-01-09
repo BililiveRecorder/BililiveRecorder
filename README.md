@@ -8,9 +8,16 @@
 
 [简体中文 | Simplified Chinese](README_CN.md)
 
-## Apology
+GitHub is a global platform, and theoretically, everyone should use English. But since this project is mostly meant for Chinese user and rely on a Chinese website [BiliBili](https://live.bilibili.com) ([_wikipedia_](https://en.wikipedia.org/wiki/Bilibili)), all code comments are in Chinese. This README file will always use English so people like _you_ can understand what is this, and perhaps make some use out of it.
 
-GitHub is a global platform, and theoretically, everyone should use English. But since this project is only meant for Chinese user and rely on a Chinese website [BiliBili](https://live.bilibili.com) (_[wikipedia](https://en.wikipedia.org/wiki/Bilibili)_), all code comments are in Chinese. This README file will always use English so people like _you_ can understand what is this, and perhaps make some use out of it.
+[![Crowdin](https://badges.crowdin.net/bililiverecorder/localized.svg)](https://crowdin.com/project/bililiverecorder)
+
+Software UI is available in
+
+- 简体中文 (Source and default)
+- 繁体中文
+- 日本語
+- English
 
 ## Install & Use
 
