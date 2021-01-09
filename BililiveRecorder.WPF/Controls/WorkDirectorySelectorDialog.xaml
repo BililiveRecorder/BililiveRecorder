@@ -31,9 +31,8 @@
                 </MenuItem.Header>
                 <MenuItem Header="简体中文" CommandParameter="" Command="{Binding Source={x:Static l:LocalizeDictionary.Instance}, Path=SetCultureCommand}"/>
                 <MenuItem Header="繁體中文" CommandParameter="zh-Hant" Command="{Binding Source={x:Static l:LocalizeDictionary.Instance}, Path=SetCultureCommand}"/>
-                <MenuItem Header="English" CommandParameter="en" Command="{Binding Source={x:Static l:LocalizeDictionary.Instance}, Path=SetCultureCommand}"/>
                 <MenuItem Header="日本語" CommandParameter="ja" Command="{Binding Source={x:Static l:LocalizeDictionary.Instance}, Path=SetCultureCommand}"/>
-                <MenuItem Header="한국어" CommandParameter="ko" Command="{Binding Source={x:Static l:LocalizeDictionary.Instance}, Path=SetCultureCommand}"/>
+                <MenuItem Header="English" CommandParameter="en" Command="{Binding Source={x:Static l:LocalizeDictionary.Instance}, Path=SetCultureCommand}"/>
             </MenuItem>
         </Menu>
         <TextBlock Grid.Row="1" Text="{l:Loc {Binding Error,StringFormat=WorkDirectorySelector_Error_{0}}}" Margin="0,5" TextAlignment="Center" FontSize="16" Foreground="#FFFF2828"/>
