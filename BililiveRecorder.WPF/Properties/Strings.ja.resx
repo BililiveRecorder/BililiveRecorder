@@ -114,7 +114,7 @@
     <comment>Translate as "confirm" or "add"</comment>
   </data>
   <data name="AddRoomCard_PlaceholderText" xml:space="preserve">
-    <value>配信ルームの番号、もしくはリンク</value>
+    <value>ルーム番号/URLリンク</value>
     <comment>id or link</comment>
   </data>
   <data name="AddRoomCard_Title" xml:space="preserve">
@@ -256,13 +256,21 @@
   <data name="RoomListPage_Menu_Sort_Default" xml:space="preserve">
     <value>並べて表示しない</value>
   </data>
-  
-  
-  
+  <data name="RoomListPage_Menu_Sort_RoomId" xml:space="preserve">
+    <value>チャネルIDで並べ替え</value>
+  </data>
+  <data name="RoomListPage_Menu_Sort_Status" xml:space="preserve">
+    <value>録画状態で並べ替え</value>
+  </data>
+  <data name="RoomListPage_Menu_View" xml:space="preserve">
+    <value>ビュー</value>
+  </data>
   <data name="RoomListPage_Menu_View_ShowLogCheckBox" xml:space="preserve">
     <value>ログを表示</value>
   </data>
-  
+  <data name="RoomListPage_Menu_View_ShowTitleAndAreaCheckBox" xml:space="preserve">
+    <value>タイトルと配信カテゴリを表示する</value>
+  </data>
   <data name="RootPage_NavigationViewItem_AdvancedSettingsPage" xml:space="preserve">
     <value>詳細設定</value>
   </data>
