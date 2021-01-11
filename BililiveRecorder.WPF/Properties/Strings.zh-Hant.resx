@@ -1,104 +1,84 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
-    Microsoft ResX Schema 
-    
-    Version 2.0
-    
-    The primary goals of this format is to allow a simple XML format 
-    that is mostly human readable. The generation and parsing of the 
-    various data types are done through the TypeConverter classes 
-    associated with the data types.
-    
-    Example:
-    
-    ... ado.net/XML headers & schema ...
-    <resheader name="resmimetype">text/microsoft-resx</resheader>
-    <resheader name="version">2.0</resheader>
-    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
-    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
-    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
-    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
-    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
-        <value>[base64 mime encoded serialized .NET Framework object]</value>
-    </data>
-    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
-        <comment>This is a comment</comment>
-    </data>
-                
-    There are any number of "resheader" rows that contain simple 
-    name/value pairs.
-    
-    Each data row contains a name, and value. The row also contains a 
-    type or mimetype. Type corresponds to a .NET class that support 
-    text/value conversion through the TypeConverter architecture. 
-    Classes that don't support this are serialized and stored with the 
-    mimetype set.
-    
-    The mimetype is used for serialized objects, and tells the 
-    ResXResourceReader how to depersist the object. This is currently not 
-    extensible. For a given mimetype the value must be set accordingly:
-    
-    Note - application/x-microsoft.net.object.binary.base64 is the format 
-    that the ResXResourceWriter will generate, however the reader can 
-    read any of the formats listed below.
-    
-    mimetype: application/x-microsoft.net.object.binary.base64
-    value   : The object must be serialized with 
-            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
-            : and then encoded with base64 encoding.
-    
-    mimetype: application/x-microsoft.net.object.soap.base64
-    value   : The object must be serialized with 
-            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
-            : and then encoded with base64 encoding.
+		Microsoft ResX Schema
 
-    mimetype: application/x-microsoft.net.object.bytearray.base64
-    value   : The object must be serialized into a byte array 
-            : using a System.ComponentModel.TypeConverter
-            : and then encoded with base64 encoding.
-    -->
-  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
-    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+		Version 1.3
+
+		The primary goals of this format is to allow a simple XML format 
+		that is mostly human readable. The generation and parsing of the 
+		various data types are done through the TypeConverter classes 
+		associated with the data types.
+
+		Example:
+
+		... ado.net/XML headers & schema ...
+		<resheader name="resmimetype">text/microsoft-resx</resheader>
+		<resheader name="version">1.3</resheader>
+		<resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+		<resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+		<data name="Name1">this is my long string</data>
+		<data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+		<data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+			[base64 mime encoded serialized .NET Framework object]
+		</data>
+		<data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+			[base64 mime encoded string representing a byte array form of the .NET Framework object]
+		</data>
+
+		There are any number of "resheader" rows that contain simple 
+		name/value pairs.
+
+		Each data row contains a name, and value. The row also contains a 
+		type or mimetype. Type corresponds to a .NET class that support 
+		text/value conversion through the TypeConverter architecture. 
+		Classes that don't support this are serialized and stored with the 
+		mimetype set.
+
+		The mimetype is used for serialized objects, and tells the 
+		ResXResourceReader how to depersist the object. This is currently not 
+		extensible. For a given mimetype the value must be set accordingly:
+
+		Note - application/x-microsoft.net.object.binary.base64 is the format 
+		that the ResXResourceWriter will generate, however the reader can 
+		read any of the formats listed below.
+
+		mimetype: application/x-microsoft.net.object.binary.base64
+		value   : The object must be serialized with 
+			: System.Serialization.Formatters.Binary.BinaryFormatter
+			: and then encoded with base64 encoding.
+
+		mimetype: application/x-microsoft.net.object.soap.base64
+		value   : The object must be serialized with 
+			: System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+			: and then encoded with base64 encoding.
+
+		mimetype: application/x-microsoft.net.object.bytearray.base64
+		value   : The object must be serialized into a byte array 
+			: using a System.ComponentModel.TypeConverter
+			: and then encoded with base64 encoding.
+	-->
+  <xsd:schema xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root">
     <xsd:element name="root" msdata:IsDataSet="true">
       <xsd:complexType>
         <xsd:choice maxOccurs="unbounded">
-          <xsd:element name="metadata">
-            <xsd:complexType>
-              <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" />
-              </xsd:sequence>
-              <xsd:attribute name="name" use="required" type="xsd:string" />
-              <xsd:attribute name="type" type="xsd:string" />
-              <xsd:attribute name="mimetype" type="xsd:string" />
-              <xsd:attribute ref="xml:space" />
-            </xsd:complexType>
-          </xsd:element>
-          <xsd:element name="assembly">
-            <xsd:complexType>
-              <xsd:attribute name="alias" type="xsd:string" />
-              <xsd:attribute name="name" type="xsd:string" />
-            </xsd:complexType>
-          </xsd:element>
           <xsd:element name="data">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
-                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2"/>
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
-              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
-              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
-              <xsd:attribute ref="xml:space" />
+              <xsd:attribute name="name" type="xsd:string" msdata:Ordinal="1"/>
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3"/>
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4"/>
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="resheader">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required" />
+              <xsd:attribute name="name" type="xsd:string" use="required"/>
             </xsd:complexType>
           </xsd:element>
         </xsd:choice>
@@ -109,34 +89,357 @@
     <value>text/microsoft-resx</value>
   </resheader>
   <resheader name="version">
-    <value>2.0</value>
+    <value>1.3</value>
   </resheader>
   <resheader name="reader">
-    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.3500.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <resheader name="writer">
-    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.3500.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="AddRoomCard_PlaceholderText_FontSize" xml:space="preserve">
-    <value>14</value>
+  <data name="About_Contact" xml:space="preserve">
+    <value>聯絡方式/回報問題: </value>
+    <comment>Add a space after colon ":"</comment>
+  </data>
+  <data name="About_Name" xml:space="preserve">
+    <value>B站錄播姬</value>
+    <comment>Add "(B站录播姬)" after translation</comment>
+  </data>
+  <data name="About_Website" xml:space="preserve">
+    <value>官網: </value>
+    <comment>Add a space after colon ":"</comment>
+  </data>
+  <data name="AddRoomCard_ConfirmButton" xml:space="preserve">
+    <value>確定</value>
+    <comment>Translate as "confirm" or "add"</comment>
+  </data>
+  <data name="AddRoomCard_PlaceholderText" xml:space="preserve">
+    <value>房間號或房間連結</value>
+    <comment>id or link</comment>
+  </data>
+  
+  <data name="AddRoomCard_Title" xml:space="preserve">
+    <value>新增錄製房間</value>
+  </data>
+  <data name="AddRoomFailedDialog_CloseButtonText" xml:space="preserve">
+    <value>知道了</value>
+  </data>
+  <data name="AddRoomFailedDialog_ErrorText_Duplicate" xml:space="preserve">
+    <value>這個直播間已經被添加過了</value>
+  </data>
+  <data name="AddRoomFailedDialog_ErrorText_InvalidInput" xml:space="preserve">
+    <value>請輸入B站直播間房間號或直播間連結</value>
+  </data>
+  <data name="AddRoomFailedDialog_ErrorText_RoomIdNegative" xml:space="preserve">
+    <value>房間號不能是負數</value>
+  </data>
+  <data name="AddRoomFailedDialog_ErrorText_RoomIdZero" xml:space="preserve">
+    <value>房間號必須大於零</value>
+  </data>
+  <data name="AddRoomFailedDialog_Title" xml:space="preserve">
+    <value>添加房間失敗</value>
+  </data>
+  <data name="AnnouncementPage_FetchFailed" xml:space="preserve">
+    <value>公告獲取失敗</value>
+  </data>
+  <data name="AnnouncementPage_RefreshButton" xml:space="preserve">
+    <value>重整公告內容</value>
+  </data>
+  <data name="CloseWindowConfirmDialog_Title" xml:space="preserve">
+    <value>程式即將退出，確定嗎？</value>
+  </data>
+  <data name="DeleteRoomConfirmDialog_Title" xml:space="preserve">
+    <value>確定要删除這個直播間嗎？</value>
+  </data>
+  <data name="Global_Cancel" xml:space="preserve">
+    <value>取消</value>
+  </data>
+  <data name="Global_Close" xml:space="preserve">
+    <value>關閉</value>
   </data>
   <data name="Global_Confirm" xml:space="preserve">
     <value>確定</value>
   </data>
+  <data name="Global_Copy" xml:space="preserve">
+    <value>複製</value>
+  </data>
+  <data name="Global_Delete" xml:space="preserve">
+    <value>删除</value>
+  </data>
   <data name="Global_Quit" xml:space="preserve">
     <value>退出</value>
   </data>
+  <data name="LogPage_RightClickCopyToolTip" xml:space="preserve">
+    <value>點擊右鍵複製此行日誌</value>
+  </data>
+  <data name="RoomCard_ClipButton_Tooltip" xml:space="preserve">
+    <value>重播剪輯（正在處理中的數量）</value>
+    <comment>This feature is off by default, and will be removed in the future.</comment>
+  </data>
+  <data name="RoomCard_Menu_Delete" xml:space="preserve">
+    <value>删除此房間</value>
+  </data>
+  <data name="RoomCard_Menu_DisableAutoRecord" xml:space="preserve">
+    <value>不自動錄製</value>
+  </data>
+  <data name="RoomCard_Menu_EnableAutoRecord" xml:space="preserve">
+    <value>自動錄製</value>
+  </data>
+  <data name="RoomCard_Menu_OpenInBrowser" xml:space="preserve">
+    <value>開啟直播間頁面</value>
+  </data>
+  <data name="RoomCard_Menu_RefreshInfo" xml:space="preserve">
+    <value>重整直播間資訊</value>
+  </data>
+  <data name="RoomCard_Menu_Settings" xml:space="preserve">
+    <value>房間設定</value>
+    <comment>This settings is different per room</comment>
+  </data>
+  <data name="RoomCard_Menu_StartRecording" xml:space="preserve">
+    <value>開始錄製</value>
+  </data>
+  <data name="RoomCard_Menu_StopRecording" xml:space="preserve">
+    <value>停止錄製</value>
+  </data>
+  <data name="RoomCard_Menu_Tooltip" xml:space="preserve">
+    <value>操作</value>
+  </data>
+  <data name="RoomCard_Status_DanmakuConnectionTooltip_False" xml:space="preserve">
+    <value>彈幕連結被中斷
+錄播姬通過彈幕伺服器接收開播狀態推送</value>
+  </data>
+  <data name="RoomCard_Status_DanmakuConnectionTooltip_True" xml:space="preserve">
+    <value>已連接彈幕伺服器
+即時接收開播狀態和其他資訊</value>
+  </data>
+  <data name="RoomCard_Status_LiveStatusTooltip_False" xml:space="preserve">
+    <value>未開播</value>
+  </data>
+  <data name="RoomCard_Status_LiveStatusTooltip_True" xml:space="preserve">
+    <value>直撥中</value>
+  </data>
+  <data name="RoomCard_Status_Monitoring" xml:space="preserve">
+    <value>監控中</value>
+    <comment>Short status text</comment>
+  </data>
+  <data name="RoomCard_Status_Recording" xml:space="preserve">
+    <value>錄製中</value>
+    <comment>Short status text</comment>
+  </data>
+  <data name="RoomCard_Status_SpeedIndicator_Description" xml:space="preserve">
+    <value>這裡顯示的是錄製的速度與主播直播速度的比值
+正常應為接近 100% 並且顏色顯示為綠色</value>
+    <comment>Shown in tooltip</comment>
+  </data>
   <data name="RoomCard_Status_SpeedIndicator_SpeedInMbps" xml:space="preserve">
     <value>{0:F2} Mbps</value>
+    <comment>Should not translate</comment>
+  </data>
+  <data name="RoomCard_Status_SpeedIndicator_SpeedInPercentage" xml:space="preserve">
+    <value>當前速度比值：{0:P2}</value>
+    <comment>Speed percentage relative to upload speed of the streamer</comment>
+  </data>
+  <data name="RoomListPage_Menu_AutoRecord" xml:space="preserve">
+    <value>監控</value>
+  </data>
+  <data name="RoomListPage_Menu_AutoRecord_DisableAll" xml:space="preserve">
+    <value>取消自動錄製全部房間</value>
+  </data>
+  <data name="RoomListPage_Menu_AutoRecord_EnableAll" xml:space="preserve">
+    <value>自動錄製全部房間</value>
+  </data>
+  <data name="RoomListPage_Menu_File" xml:space="preserve">
+    <value>檔案</value>
+  </data>
+  <data name="RoomListPage_Menu_File_OpenWorkDirectory" xml:space="preserve">
+    <value>開啟工作目錄</value>
+  </data>
+  <data name="RoomListPage_Menu_Sort_Default" xml:space="preserve">
+    <value>不排序</value>
+  </data>
+  <data name="RoomListPage_Menu_Sort_RoomId" xml:space="preserve">
+    <value>按房間號排序</value>
+  </data>
+  <data name="RoomListPage_Menu_Sort_Status" xml:space="preserve">
+    <value>按錄製狀態排序</value>
+  </data>
+  <data name="RoomListPage_Menu_View" xml:space="preserve">
+    <value>視圖</value>
+  </data>
+  <data name="RoomListPage_Menu_View_ShowLogCheckBox" xml:space="preserve">
+    <value>顯示日誌</value>
+  </data>
+  <data name="RoomListPage_Menu_View_ShowTitleAndAreaCheckBox" xml:space="preserve">
+    <value>顯示直播間標題和分區</value>
+  </data>
+  <data name="RootPage_NavigationViewItem_AdvancedSettingsPage" xml:space="preserve">
+    <value>進階設定</value>
+  </data>
+  <data name="RootPage_NavigationViewItem_AnnouncementPage" xml:space="preserve">
+    <value>公告</value>
+  </data>
+  <data name="RootPage_NavigationViewItem_LogPage" xml:space="preserve">
+    <value>日誌</value>
+  </data>
+  <data name="RootPage_NavigationViewItem_RoomListPage" xml:space="preserve">
+    <value>房間列表</value>
+  </data>
+  <data name="RootPage_NavigationViewItem_SettingsPage" xml:space="preserve">
+    <value>設定</value>
+  </data>
+  <data name="Settings_AdvancedPage_Title" xml:space="preserve">
+    <value>進階設定</value>
+  </data>
+  <data name="Settings_AdvancedPage_Warning" xml:space="preserve">
+    <value>注：一般用戶通常不需要也不應該修改此處的設定。
+對 Timing 的修改可能會導致被B站伺服器封鎖、不能及時開始錄製等問題。</value>
+  </data>
+  <data name="Settings_Danmaku_FlushInterval" xml:space="preserve">
+    <value>觸發寫入硬碟所需彈幕數量</value>
+  </data>
+  <data name="Settings_Danmaku_Title" xml:space="preserve">
+    <value>彈幕錄製</value>
+  </data>
+  <data name="Settings_Danmaku_ToggleSwitch_Enabled" xml:space="preserve">
+    <value>保存彈幕</value>
+  </data>
+  <data name="Settings_Danmaku_ToggleSwitch_Gift" xml:space="preserve">
+    <value>保存 送禮信息</value>
+  </data>
+  <data name="Settings_Danmaku_ToggleSwitch_Guard" xml:space="preserve">
+    <value>保存 艦長購買</value>
+  </data>
+  <data name="Settings_Danmaku_ToggleSwitch_Raw" xml:space="preserve">
+    <value>保存 彈幕原始數據</value>
+  </data>
+  <data name="Settings_Danmaku_ToggleSwitch_SuperChat" xml:space="preserve">
+    <value>保存 SuperChat (醒目留言)</value>
+  </data>
+  <data name="Settings_FileName_Clip" xml:space="preserve">
+    <value>剪輯文件名格式</value>
+  </data>
+  <data name="Settings_FileName_Description_Text" xml:space="preserve">
+    <value>說明</value>
+  </data>
+  <data name="Settings_FileName_Description_ToolTip" xml:space="preserve">
+    <value>文件名稱變數說明
+
+日期: {date}
+時間: {time}
+房間號: {roomid}
+標題: {title}
+主播名: {name}
+大分區: {parea}
+子分區: {area}
+隨機數字: {random} 
+
+所有大括號均為英文半形括號
+只支援 FLV 格式</value>
+  </data>
+  <data name="Settings_FileName_Record" xml:space="preserve">
+    <value>錄製文件檔名格式設定</value>
+  </data>
+  <data name="Settings_FileName_Title" xml:space="preserve">
+    <value>檔案名稱設定</value>
+  </data>
+  <data name="Settings_RecordMode_Clip_FutureDuration_Left" xml:space="preserve">
+    <value>剪輯未來時長</value>
+  </data>
+  <data name="Settings_RecordMode_Clip_FutureDuration_Right" xml:space="preserve">
+    <value>秒</value>
+  </data>
+  <data name="Settings_RecordMode_Clip_PastDuration_Left" xml:space="preserve">
+    <value>剪輯過去時長</value>
+  </data>
+  <data name="Settings_RecordMode_Clip_PastDuration_Right" xml:space="preserve">
+    <value>秒</value>
+  </data>
+  <data name="Settings_RecordMode_Description" xml:space="preserve">
+    <value>推薦使用 只啟用錄製功能
+即時剪輯功能將會在往後版本中刪除
+開啟剪輯功能有可能會遇到記憶體洩漏的問題</value>
+  </data>
+  <data name="Settings_RecordMode_RadioButton_Both" xml:space="preserve">
+    <value>同時開啟兩個功能</value>
+  </data>
+  <data name="Settings_RecordMode_RadioButton_ClipOnly" xml:space="preserve">
+    <value>只啟用即時剪輯功能</value>
+  </data>
+  <data name="Settings_RecordMode_RadioButton_RecordOnly" xml:space="preserve">
+    <value>只啟用錄製功能</value>
+  </data>
+  <data name="Settings_RecordMode_Title" xml:space="preserve">
+    <value>錄製模式</value>
+  </data>
+  <data name="Settings_SettingsPage_Title" xml:space="preserve">
+    <value>設定</value>
+  </data>
+  <data name="Settings_Splitting_RadioButton_BySize" xml:space="preserve">
+    <value>依照文件大小自動分段</value>
+  </data>
+  <data name="Settings_Splitting_RadioButton_ByTime" xml:space="preserve">
+    <value>依照影片錄製時間自動分段</value>
+  </data>
+  <data name="Settings_Splitting_RadioButton_Disabled" xml:space="preserve">
+    <value>不自動分段</value>
+  </data>
+  <data name="Settings_Splitting_TextBox_Left" xml:space="preserve">
+    <value>每</value>
+  </data>
+  <data name="Settings_Splitting_TextBox_Right" xml:space="preserve">
+    <value>儲存成一個檔案</value>
+  </data>
+  <data name="Settings_Splitting_TextBox_SizeUnit" xml:space="preserve">
+    <value>MiB</value>
+  </data>
+  <data name="Settings_Splitting_TextBox_TimeUnit" xml:space="preserve">
+    <value>分</value>
+  </data>
+  <data name="Settings_Splitting_Title" xml:space="preserve">
+    <value>自動分段</value>
+  </data>
+  <data name="Settings_Webhook_Address" xml:space="preserve">
+    <value>Webhook 網址，一行一個</value>
+  </data>
+  <data name="Settings_Webhook_Title" xml:space="preserve">
+    <value>Webhook</value>
+  </data>
+  <data name="SettingWithDefault_Default" xml:space="preserve">
+    <value>預設</value>
+    <comment>Text of the checkbox in the reuseable control for setting items.
+Will use default setting and disable user input when checked.</comment>
+  </data>
+  <data name="TaskbarIconControl_MenuItem_OpenMainWindow" xml:space="preserve">
+    <value>開啟主界面</value>
+  </data>
+  <data name="TaskbarIconControl_MinimizedNotification" xml:space="preserve">
+    <value>錄播姬已最小化到系統列，左鍵點選圖標即可恢復介面</value>
+  </data>
+  <data name="TaskbarIconControl_Title" xml:space="preserve">
+    <value>B站錄播姬</value>
   </data>
   <data name="Window_Title" xml:space="preserve">
     <value>B站錄播姬 {0}</value>
+    
   </data>
   <data name="WorkDirectorySelector_Browse" xml:space="preserve">
     <value>瀏覽...</value>
   </data>
-  <data name="WorkDirectorySelector_Error_None" xml:space="preserve">
-    <value> </value>
+  <data name="WorkDirectorySelector_Error_FailedToLoadConfig" xml:space="preserve">
+    <value>設定文件載入失敗</value>
+  </data>
+  
+  <data name="WorkDirectorySelector_Error_PathContainsFiles" xml:space="preserve">
+    <value>目錄已有其他文件</value>
+  </data>
+  <data name="WorkDirectorySelector_Error_PathDoesNotExist" xml:space="preserve">
+    <value>目錄不存在</value>
+  </data>
+  <data name="WorkDirectorySelector_Error_PathNotSupported" xml:space="preserve">
+    <value>不支援此路徑</value>
+  </data>
+  <data name="WorkDirectorySelector_Error_UnknownError" xml:space="preserve">
+    <value>發生了未知錯誤</value>
   </data>
   <data name="WorkDirectorySelector_Title" xml:space="preserve">
     <value>選擇工作目錄</value>
