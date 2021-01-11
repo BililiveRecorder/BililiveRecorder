@@ -5,78 +5,91 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
     xmlns:ui="http://schemas.modernwpf.com/2019"
+    xmlns:l="https://github.com/XAMLMarkupExtensions/WPFLocalizationExtension"
+    l:LocalizeDictionary.DesignCulture=""
+    l:ResxLocalizationProvider.DefaultAssembly="BililiveRecorder.WPF"
+    l:ResxLocalizationProvider.DefaultDictionary="Strings"
+    xmlns:c="clr-namespace:BililiveRecorder.WPF.Controls"
     xmlns:local="clr-namespace:BililiveRecorder.WPF.Pages"
-    xmlns:config="clr-namespace:BililiveRecorder.Core.Config;assembly=BililiveRecorder.Core"
+    xmlns:config="clr-namespace:BililiveRecorder.Core.Config.V2;assembly=BililiveRecorder.Core"
     mc:Ignorable="d" 
     d:DesignHeight="1500" d:DesignWidth="500"
-    DataContext="{Binding RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=local:RootPage},Path=DataContext.Recorder.Config}"
+    DataContext="{Binding RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=local:RootPage},Path=DataContext.Recorder.Config.Global}"
     Title="SettingsPage">
     <ui:Page.Resources>
         <Style TargetType="TextBlock">
             <Setter Property="FontSize" Value="14"/>
             <Setter Property="VerticalAlignment" Value="Center"/>
         </Style>
-        <Style TargetType="ui:NumberBox">
-            <Setter Property="Width" Value="250"/>
+        <Style TargetType="c:SettingWithDefault">
             <Setter Property="HorizontalAlignment" Value="Left"/>
+        </Style>
+        <Style TargetType="ui:NumberBox">
+            <Setter Property="Width" Value="220"/>
             <Setter Property="ValidationMode" Value="InvalidInputOverwritten"/>
             <Setter Property="SpinButtonPlacementMode" Value="Inline"/>
         </Style>
     </ui:Page.Resources>
-    <ScrollViewer d:DataContext="{d:DesignInstance Type=config:ConfigV1}">
+    <ScrollViewer d:DataContext="{d:DesignInstance Type=config:GlobalConfig}">
         <ui:SimpleStackPanel Orientation="Vertical" Spacing="5" Margin="20">
-            <TextBlock Text="高级设置" Style="{StaticResource TitleTextBlockStyle}" Margin="0,10"/>
+            <TextBlock Text="{l:Loc Settings_AdvancedPage_Title}" Style="{StaticResource TitleTextBlockStyle}" FontFamily="Microsoft YaHei" Margin="0,10"/>
+            <TextBlock Text="{l:Loc Settings_AdvancedPage_Warning}"/>
             <GroupBox Header="Cookie">
-                <StackPanel>
-                    <TextBlock Text="请求API时使用此 Cookie"/>
-                    <TextBox Text="{Binding Cookie,UpdateSourceTrigger=PropertyChanged,Delay=1000}" Width="250" HorizontalAlignment="Left"/>
-                </StackPanel>
+                <c:SettingWithDefault IsSettingNotUsingDefault="{Binding HasCookie}">
+                    <TextBox Text="{Binding Cookie,UpdateSourceTrigger=PropertyChanged,Delay=1000}" Width="220" HorizontalAlignment="Left"/>
+                </c:SettingWithDefault>
             </GroupBox>
-            <GroupBox Header="弹幕录制">
-                <ui:NumberBox Minimum="0" Header="触发写硬盘所需弹幕个数" Description="单位: 个" SmallChange="1"
-                              Text="{Binding RecordDanmakuFlushInterval,UpdateSourceTrigger=PropertyChanged}"/>
+            <GroupBox Header="{l:Loc Settings_Danmaku_Title}">
+                <c:SettingWithDefault IsSettingNotUsingDefault="{Binding HasRecordDanmakuFlushInterval}" Header="{l:Loc Settings_Danmaku_FlushInterval}">
+                    <ui:NumberBox Minimum="0" SmallChange="1" Text="{Binding RecordDanmakuFlushInterval,UpdateSourceTrigger=PropertyChanged}"/>
+                </c:SettingWithDefault>
             </GroupBox>
             <GroupBox Header="Timing">
                 <ui:SimpleStackPanel Spacing="10">
-                    <ui:NumberBox Minimum="1000" Header="录制重试间隔" Description="单位: 毫秒" SmallChange="100" Text="{Binding TimingStreamRetry,Delay=500}">
-                        <ui:NumberBox.ToolTip>
+                    <c:SettingWithDefault IsSettingNotUsingDefault="{Binding HasTimingStreamRetry}" Header="录制重试间隔">
+                        <c:SettingWithDefault.ToolTip>
                             <TextBlock>录制断开后等待多长时间再尝试开始录制</TextBlock>
-                        </ui:NumberBox.ToolTip>
-                    </ui:NumberBox>
-                    <ui:NumberBox Minimum="1000" Header="录制连接超时" Description="单位: 毫秒" SmallChange="100" Text="{Binding TimingStreamConnect,Delay=500}">
-                        <ui:NumberBox.ToolTip>
+                        </c:SettingWithDefault.ToolTip>
+                        <ui:NumberBox Minimum="1000" Description="单位: 毫秒" SmallChange="100" Text="{Binding TimingStreamRetry,Delay=500}"/>
+                    </c:SettingWithDefault>
+                    <c:SettingWithDefault IsSettingNotUsingDefault="{Binding HasTimingStreamConnect}" Header="录制连接超时">
+                        <c:SettingWithDefault.ToolTip>
                             <TextBlock>
                                 发出连接直播服务器的请求后等待多长时间<LineBreak/>
                                 防止直播服务器长时间不返回数据导致卡住
                             </TextBlock>
-                        </ui:NumberBox.ToolTip>
-                    </ui:NumberBox>
-                    <ui:NumberBox Minimum="1000" Header="弹幕重连间隔" Description="单位: 毫秒" SmallChange="100" Text="{Binding TimingDanmakuRetry,Delay=500}">
-                        <ui:NumberBox.ToolTip>
+                        </c:SettingWithDefault.ToolTip>
+                        <ui:NumberBox Minimum="1000" Description="单位: 毫秒" SmallChange="100" Text="{Binding TimingStreamConnect,Delay=500}"/>
+                    </c:SettingWithDefault>
+                    <c:SettingWithDefault IsSettingNotUsingDefault="{Binding HasTimingDanmakuRetry}" Header="弹幕重连间隔">
+                        <c:SettingWithDefault.ToolTip>
                             <TextBlock>
                                 弹幕服务器被断开后等待多长时间再尝试连接<LineBreak/>
                                 监控开播的主要途径是通过弹幕服务器发送的信息
                             </TextBlock>
-                        </ui:NumberBox.ToolTip>
-                    </ui:NumberBox>
-                    <ui:NumberBox Minimum="1000" Header="接收数据超时" Description="单位: 毫秒" SmallChange="100" Text="{Binding TimingWatchdogTimeout,Delay=500}">
-                        <ui:NumberBox.ToolTip>
+                        </c:SettingWithDefault.ToolTip>
+                        <ui:NumberBox Minimum="1000" Description="单位: 毫秒" SmallChange="100" Text="{Binding TimingDanmakuRetry,Delay=500}"/>
+                    </c:SettingWithDefault>
+                    <c:SettingWithDefault IsSettingNotUsingDefault="{Binding HasTimingWatchdogTimeout}" Header="接收数据超时">
+                        <c:SettingWithDefault.ToolTip>
                             <TextBlock>
                                 在一定时间没有收到直播服务器发送的数据后断开重连<LineBreak/>
                                 用于防止因为玄学网络问题导致卡住
                             </TextBlock>
-                        </ui:NumberBox.ToolTip>
-                    </ui:NumberBox>
-                    <ui:NumberBox Minimum="60" Header="开播检查间隔" Description="单位: 秒" SmallChange="10" Text="{Binding TimingCheckInterval,Delay=500}">
-                        <ui:NumberBox.ToolTip>
+                        </c:SettingWithDefault.ToolTip>
+                        <ui:NumberBox Minimum="1000" Description="单位: 毫秒" SmallChange="100" Text="{Binding TimingWatchdogTimeout,Delay=500}"/>
+                    </c:SettingWithDefault>
+                    <c:SettingWithDefault IsSettingNotUsingDefault="{Binding HasTimingCheckInterval}" Header="开播检查间隔">
+                        <c:SettingWithDefault.ToolTip>
                             <TextBlock>
                                 此项影响的时间间隔是定时请求HTTP接口的间隔，
                                 主要目的是防止没有从弹幕服务器收到开播消息，
                                 所以此项不需要设置太短。<LineBreak/>
                                 时间间隔设置太短会被B站服务器屏蔽，导致无法录制。
                             </TextBlock>
-                        </ui:NumberBox.ToolTip>
-                    </ui:NumberBox>
+                        </c:SettingWithDefault.ToolTip>
+                        <ui:NumberBox Minimum="60" Description="单位: 秒" SmallChange="10" Text="{Binding TimingCheckInterval,Delay=500}"/>
+                    </c:SettingWithDefault>
                 </ui:SimpleStackPanel>
             </GroupBox>
             <GroupBox Header="手动崩溃">

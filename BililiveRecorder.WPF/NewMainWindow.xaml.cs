@@ -1,9 +1,12 @@
 using System;
+using System.Globalization;
 using System.Threading;
 using System.Windows;
 using BililiveRecorder.WPF.Controls;
 using Hardcodet.Wpf.TaskbarNotification;
 using ModernWpf.Controls;
+using WPFLocalizeExtension.Engine;
+using WPFLocalizeExtension.Extensions;
 
 namespace BililiveRecorder.WPF
 {
@@ -12,16 +15,25 @@ namespace BililiveRecorder.WPF
     /// </summary>
     public partial class NewMainWindow : Window
     {
+        public string SoftwareVersion { get; }
+
         public NewMainWindow()
         {
-            InitializeComponent();
+            this.SoftwareVersion = BuildInfo.Version + " " + BuildInfo.HeadShaShort;
 
-            Title = "B站录播姬 " + BuildInfo.Version + " " + BuildInfo.HeadShaShort;
+            Pages.AnnouncementPage.CultureInfo = CultureInfo.CurrentUICulture;
+            LocalizeDictionary.Instance.Culture = CultureInfo.CurrentUICulture;
+#if DEBUG
+            LocalizeDictionary.Instance.OutputMissingKeys = true;
+            LocalizeDictionary.Instance.MissingKeyEvent += (object sender, MissingKeyEventArgs e) => MessageBox.Show("Missing: " + e.Key);
+#endif
 
-            SingleInstance.NotificationReceived += SingleInstance_NotificationReceived;
+            this.InitializeComponent();
+
+            SingleInstance.NotificationReceived += this.SingleInstance_NotificationReceived;
         }
 
-        private void SingleInstance_NotificationReceived(object sender, EventArgs e) => SuperActivateAction();
+        private void SingleInstance_NotificationReceived(object sender, EventArgs e) => this.SuperActivateAction();
 
         public event EventHandler NativeBeforeWindowClose;
 
@@ -29,31 +41,39 @@ namespace BililiveRecorder.WPF
 
         internal void CloseWithoutConfirmAction()
         {
-            CloseConfirmed = true;
-            Close();
+            this.CloseConfirmed = true;
+            this.Close();
         }
 
         internal void SuperActivateAction()
         {
             try
             {
-                Show();
-                WindowState = WindowState.Normal;
-                Topmost = true;
-                Activate();
-                Topmost = false;
-                Focus();
+                this.Show();
+                this.WindowState = WindowState.Normal;
+                this.Topmost = true;
+                this.Activate();
+                this.Topmost = false;
+                this.Focus();
             }
             catch (Exception)
             { }
         }
 
+        private bool notification_showed = false;
+
         private void Window_StateChanged(object sender, EventArgs e)
         {
-            if (WindowState == WindowState.Minimized)
+            if (this.WindowState == WindowState.Minimized)
             {
-                Hide();
-                ShowBalloonTipCallback?.Invoke("B站录播姬", "录播姬已最小化到托盘，左键单击图标恢复界面", BalloonIcon.Info);
+                this.Hide();
+                if (!this.notification_showed)
+                {
+                    this.notification_showed = true;
+                    var title = LocExtension.GetLocalizedValue<string>("BililiveRecorder.WPF:Strings:TaskbarIconControl_Title");
+                    var body = LocExtension.GetLocalizedValue<string>("BililiveRecorder.WPF:Strings:TaskbarIconControl_MinimizedNotification");
+                    this.ShowBalloonTipCallback?.Invoke(title, body, BalloonIcon.Info);
+                }
             }
         }
 
@@ -67,28 +87,28 @@ namespace BililiveRecorder.WPF
 
         private async void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            if (PromptCloseConfirm && !CloseConfirmed)
+            if (this.PromptCloseConfirm && !this.CloseConfirmed)
             {
                 e.Cancel = true;
-                if (CloseWindowSemaphoreSlim.Wait(0))
+                if (this.CloseWindowSemaphoreSlim.Wait(0))
                 {
                     try
                     {
                         if (await new CloseWindowConfirmDialog().ShowAsync() == ContentDialogResult.Primary)
                         {
-                            CloseConfirmed = true;
-                            CloseWindowSemaphoreSlim.Release();
-                            Close();
+                            this.CloseConfirmed = true;
+                            this.CloseWindowSemaphoreSlim.Release();
+                            this.Close();
                             return;
                         }
                     }
                     catch (Exception) { }
-                    CloseWindowSemaphoreSlim.Release();
+                    this.CloseWindowSemaphoreSlim.Release();
                 }
             }
             else
             {
-                SingleInstance.NotificationReceived -= SingleInstance_NotificationReceived;
+                SingleInstance.NotificationReceived -= this.SingleInstance_NotificationReceived;
                 NativeBeforeWindowClose?.Invoke(this, EventArgs.Empty);
                 return;
             }

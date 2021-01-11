@@ -11,20 +11,20 @@ namespace BililiveRecorder.FlvProcessor
     {
         private IDictionary<string, object> Meta { get; set; } = new Dictionary<string, object>();
 
-        public ICollection<string> Keys => Meta.Keys;
+        public ICollection<string> Keys => this.Meta.Keys;
 
-        public ICollection<object> Values => Meta.Values;
+        public ICollection<object> Values => this.Meta.Values;
 
-        public int Count => Meta.Count;
+        public int Count => this.Meta.Count;
 
         public bool IsReadOnly => false;
 
-        public object this[string key] { get => Meta[key]; set => Meta[key] = value; }
+        public object this[string key] { get => this.Meta[key]; set => this.Meta[key] = value; }
 
         public FlvMetadata()
         {
-            Meta["duration"] = 0.0;
-            Meta["lasttimestamp"] = 0.0;
+            this.Meta["duration"] = 0.0;
+            this.Meta["lasttimestamp"] = 0.0;
         }
 
         public FlvMetadata(byte[] data)
@@ -37,24 +37,24 @@ namespace BililiveRecorder.FlvProcessor
             {
                 throw new Exception("Isn't onMetadata");
             }
-            Meta = DecodeScriptDataValue(data, ref readHead) as Dictionary<string, object>;
+            this.Meta = DecodeScriptDataValue(data, ref readHead) as Dictionary<string, object>;
 
-            if (!Meta.ContainsKey("duration"))
+            if (!this.Meta.ContainsKey("duration"))
             {
-                Meta["duration"] = 0d;
+                this.Meta["duration"] = 0d;
             }
 
-            if (!Meta.ContainsKey("lasttimestamp"))
+            if (!this.Meta.ContainsKey("lasttimestamp"))
             {
-                Meta["lasttimestamp"] = 0d;
+                this.Meta["lasttimestamp"] = 0d;
             }
 
-            Meta.Remove("");
-            foreach (var item in Meta.ToArray())
+            this.Meta.Remove("");
+            foreach (var item in this.Meta.ToArray())
             {
                 if (item.Value is string text)
                 {
-                    Meta[item.Key] = text.Replace("\0", "");
+                    this.Meta[item.Key] = text.Replace("\0", "");
                 }
             }
         }
@@ -64,7 +64,7 @@ namespace BililiveRecorder.FlvProcessor
             using (var ms = new MemoryStream())
             {
                 EncodeScriptDataValue(ms, "onMetaData");
-                EncodeScriptDataValue(ms, Meta);
+                EncodeScriptDataValue(ms, this.Meta);
                 return ms.ToArray();
             }
         }
@@ -278,57 +278,57 @@ namespace BililiveRecorder.FlvProcessor
 
         public void Add(string key, object value)
         {
-            Meta.Add(key, value);
+            this.Meta.Add(key, value);
         }
 
         public bool ContainsKey(string key)
         {
-            return Meta.ContainsKey(key);
+            return this.Meta.ContainsKey(key);
         }
 
         public bool Remove(string key)
         {
-            return Meta.Remove(key);
+            return this.Meta.Remove(key);
         }
 
         public bool TryGetValue(string key, out object value)
         {
-            return Meta.TryGetValue(key, out value);
+            return this.Meta.TryGetValue(key, out value);
         }
 
         public void Add(KeyValuePair<string, object> item)
         {
-            Meta.Add(item);
+            this.Meta.Add(item);
         }
 
         public void Clear()
         {
-            Meta.Clear();
+            this.Meta.Clear();
         }
 
         public bool Contains(KeyValuePair<string, object> item)
         {
-            return Meta.Contains(item);
+            return this.Meta.Contains(item);
         }
 
         public void CopyTo(KeyValuePair<string, object>[] array, int arrayIndex)
         {
-            Meta.CopyTo(array, arrayIndex);
+            this.Meta.CopyTo(array, arrayIndex);
         }
 
         public bool Remove(KeyValuePair<string, object> item)
         {
-            return Meta.Remove(item);
+            return this.Meta.Remove(item);
         }
 
         public IEnumerator<KeyValuePair<string, object>> GetEnumerator()
         {
-            return Meta.GetEnumerator();
+            return this.Meta.GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator()
         {
-            return Meta.GetEnumerator();
+            return this.Meta.GetEnumerator();
         }
 
 

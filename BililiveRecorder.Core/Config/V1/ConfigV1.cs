@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
@@ -5,8 +6,9 @@ using BililiveRecorder.FlvProcessor;
 using Newtonsoft.Json;
 using NLog;
 
-namespace BililiveRecorder.Core.Config
+namespace BililiveRecorder.Core.Config.V1
 {
+    [Obsolete]
     [JsonObject(memberSerialization: MemberSerialization.OptIn)]
     public class ConfigV1 : INotifyPropertyChanged
     {
@@ -17,7 +19,7 @@ namespace BililiveRecorder.Core.Config
         /// </summary>
         [JsonIgnore]
         [Utils.DoNotCopyProperty]
-        public string WorkDirectory { get => _workDirectory; set => SetField(ref _workDirectory, value); }
+        public string WorkDirectory { get => this._workDirectory; set => this.SetField(ref this._workDirectory, value); }
 
 
         /// <summary>
@@ -30,122 +32,122 @@ namespace BililiveRecorder.Core.Config
         /// 启用的功能
         /// </summary>
         [JsonProperty("feature")]
-        public EnabledFeature EnabledFeature { get => _enabledFeature; set => SetField(ref _enabledFeature, value); }
+        public EnabledFeature EnabledFeature { get => this._enabledFeature; set => this.SetField(ref this._enabledFeature, value); }
 
         /// <summary>
         /// 剪辑-过去的时长(秒)
         /// </summary>
         [JsonProperty("clip_length_future")]
-        public uint ClipLengthFuture { get => _clipLengthFuture; set => SetField(ref _clipLengthFuture, value); }
+        public uint ClipLengthFuture { get => this._clipLengthFuture; set => this.SetField(ref this._clipLengthFuture, value); }
 
         /// <summary>
         /// 剪辑-将来的时长(秒)
         /// </summary>
         [JsonProperty("clip_length_past")]
-        public uint ClipLengthPast { get => _clipLengthPast; set => SetField(ref _clipLengthPast, value); }
+        public uint ClipLengthPast { get => this._clipLengthPast; set => this.SetField(ref this._clipLengthPast, value); }
 
         /// <summary>
         /// 自动切割模式
         /// </summary>
         [JsonProperty("cutting_mode")]
-        public AutoCuttingMode CuttingMode { get => _cuttingMode; set => SetField(ref _cuttingMode, value); }
+        public AutoCuttingMode CuttingMode { get => this._cuttingMode; set => this.SetField(ref this._cuttingMode, value); }
 
         /// <summary>
         /// 自动切割数值（分钟/MiB）
         /// </summary>
         [JsonProperty("cutting_number")]
-        public uint CuttingNumber { get => _cuttingNumber; set => SetField(ref _cuttingNumber, value); }
+        public uint CuttingNumber { get => this._cuttingNumber; set => this.SetField(ref this._cuttingNumber, value); }
 
         /// <summary>
         /// 录制断开重连时间间隔 毫秒
         /// </summary>
         [JsonProperty("timing_stream_retry")]
-        public uint TimingStreamRetry { get => _timingStreamRetry; set => SetField(ref _timingStreamRetry, value); }
+        public uint TimingStreamRetry { get => this._timingStreamRetry; set => this.SetField(ref this._timingStreamRetry, value); }
 
         /// <summary>
         /// 连接直播服务器超时时间 毫秒
         /// </summary>
         [JsonProperty("timing_stream_connect")]
-        public uint TimingStreamConnect { get => _timingStreamConnect; set => SetField(ref _timingStreamConnect, value); }
+        public uint TimingStreamConnect { get => this._timingStreamConnect; set => this.SetField(ref this._timingStreamConnect, value); }
 
         /// <summary>
         /// 弹幕服务器重连时间间隔 毫秒
         /// </summary>
         [JsonProperty("timing_danmaku_retry")]
-        public uint TimingDanmakuRetry { get => _timingDanmakuRetry; set => SetField(ref _timingDanmakuRetry, value); }
+        public uint TimingDanmakuRetry { get => this._timingDanmakuRetry; set => this.SetField(ref this._timingDanmakuRetry, value); }
 
         /// <summary>
         /// HTTP API 检查时间间隔 秒
         /// </summary>
         [JsonProperty("timing_check_interval")]
-        public uint TimingCheckInterval { get => _timingCheckInterval; set => SetField(ref _timingCheckInterval, value); }
+        public uint TimingCheckInterval { get => this._timingCheckInterval; set => this.SetField(ref this._timingCheckInterval, value); }
 
         /// <summary>
         /// 最大未收到新直播数据时间 毫秒
         /// </summary>
         [JsonProperty("timing_watchdog_timeout")]
-        public uint TimingWatchdogTimeout { get => _timingWatchdogTimeout; set => SetField(ref _timingWatchdogTimeout, value); }
+        public uint TimingWatchdogTimeout { get => this._timingWatchdogTimeout; set => this.SetField(ref this._timingWatchdogTimeout, value); }
 
         /// <summary>
         /// 请求 API 时使用的 Cookie
         /// </summary>
         [JsonProperty("cookie")]
-        public string Cookie { get => _cookie; set => SetField(ref _cookie, value); }
+        public string Cookie { get => this._cookie; set => this.SetField(ref this._cookie, value); }
 
         /// <summary>
         /// 是否同时录制弹幕
         /// </summary>
         [JsonProperty("record_danmaku")]
-        public bool RecordDanmaku { get => _recordDanmaku; set => SetField(ref _recordDanmaku, value); }
+        public bool RecordDanmaku { get => this._recordDanmaku; set => this.SetField(ref this._recordDanmaku, value); }
 
         /// <summary>
         /// 是否记录弹幕原始数据
         /// </summary>
         [JsonProperty("record_danmaku_raw")]
-        public bool RecordDanmakuRaw { get => _recordDanmakuRaw; set => SetField(ref _recordDanmakuRaw, value); }
+        public bool RecordDanmakuRaw { get => this._recordDanmakuRaw; set => this.SetField(ref this._recordDanmakuRaw, value); }
 
         /// <summary>
         /// 是否同时录制 SuperChat
         /// </summary>
         [JsonProperty("record_danmaku_sc")]
-        public bool RecordDanmakuSuperChat { get => _recordDanmakuSuperChat; set => SetField(ref _recordDanmakuSuperChat, value); }
+        public bool RecordDanmakuSuperChat { get => this._recordDanmakuSuperChat; set => this.SetField(ref this._recordDanmakuSuperChat, value); }
 
         /// <summary>
         /// 是否同时录制 礼物
         /// </summary>
         [JsonProperty("record_danmaku_gift")]
-        public bool RecordDanmakuGift { get => _recordDanmakuGift; set => SetField(ref _recordDanmakuGift, value); }
+        public bool RecordDanmakuGift { get => this._recordDanmakuGift; set => this.SetField(ref this._recordDanmakuGift, value); }
 
         /// <summary>
         /// 是否同时录制 上船
         /// </summary>
         [JsonProperty("record_danmaku_guard")]
-        public bool RecordDanmakuGuard { get => _recordDanmakuGuard; set => SetField(ref _recordDanmakuGuard, value); }
+        public bool RecordDanmakuGuard { get => this._recordDanmakuGuard; set => this.SetField(ref this._recordDanmakuGuard, value); }
 
         /// <summary>
         /// 触发 <see cref="System.Xml.XmlWriter.Flush"/> 的弹幕个数
         /// </summary>
         [JsonProperty("record_danmaku_flush_interval")]
-        public uint RecordDanmakuFlushInterval { get => _recordDanmakuFlushInterval; set => SetField(ref _recordDanmakuFlushInterval, value); }
+        public uint RecordDanmakuFlushInterval { get => this._recordDanmakuFlushInterval; set => this.SetField(ref this._recordDanmakuFlushInterval, value); }
 
         /// <summary>
         /// 替换api.live.bilibili.com服务器为其他反代，可以支持在云服务器上录制
         /// </summary>
         [JsonProperty("live_api_host")]
-        public string LiveApiHost { get => _liveApiHost; set => SetField(ref _liveApiHost, value); }
+        public string LiveApiHost { get => this._liveApiHost; set => this.SetField(ref this._liveApiHost, value); }
 
         [JsonProperty("record_filename_format")]
         public string RecordFilenameFormat
         {
-            get => _record_filename_format;
-            set => SetField(ref _record_filename_format, value);
+            get => this._record_filename_format;
+            set => this.SetField(ref this._record_filename_format, value);
         }
 
         [JsonProperty("clip_filename_format")]
         public string ClipFilenameFormat
         {
-            get => _clip_filename_format;
-            set => SetField(ref _clip_filename_format, value);
+            get => this._clip_filename_format;
+            set => this.SetField(ref this._clip_filename_format, value);
         }
 
         /// <summary>
@@ -154,8 +156,8 @@ namespace BililiveRecorder.Core.Config
         [JsonProperty("webhook_urls")]
         public string WebHookUrls
         {
-            get => _webhook_urls;
-            set => SetField(ref _webhook_urls, value);
+            get => this._webhook_urls;
+            set => this.SetField(ref this._webhook_urls, value);
         }
 
         #region INotifyPropertyChanged
@@ -163,9 +165,8 @@ namespace BililiveRecorder.Core.Config
         protected virtual void OnPropertyChanged(string propertyName) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         protected bool SetField<T>(ref T field, T value, [CallerMemberName] string propertyName = "")
         {
-            if (EqualityComparer<T>.Default.Equals(field, value)) { return false; }
-            logger.Trace("设置 [{0}] 的值已从 [{1}] 修改到 [{2}]", propertyName, field, value);
-            field = value; OnPropertyChanged(propertyName); return true;
+            if (EqualityComparer<T>.Default.Equals(field, value)) return false; logger.Trace("设置 [{0}] 的值已从 [{1}] 修改到 [{2}]", propertyName, field, value);
+            field = value; this.OnPropertyChanged(propertyName); return true;
         }
         #endregion
 

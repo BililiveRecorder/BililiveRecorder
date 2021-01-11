@@ -12,16 +12,17 @@
     <SelfContained Condition=" '$(SelfContained)' == '' ">true</SelfContained>
   </PropertyGroup>
   <ItemGroup>
-    <None Remove="config.json" />
+    <Compile Remove="publish\**" />
+    <EmbeddedResource Remove="publish\**" />
+    <None Remove="publish\**" />
+  </ItemGroup>
+  <ItemGroup>
     <None Remove="NLog.config" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\TempBuildInfo\BuildInfo.Cli.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="config.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Content Include="NLog.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

@@ -5,6 +5,10 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
     xmlns:ui="http://schemas.modernwpf.com/2019"
+    xmlns:l="https://github.com/XAMLMarkupExtensions/WPFLocalizationExtension"
+    l:LocalizeDictionary.DesignCulture=""
+    l:ResxLocalizationProvider.DefaultAssembly="BililiveRecorder.WPF"
+    l:ResxLocalizationProvider.DefaultDictionary="Strings"
     xmlns:local="clr-namespace:BililiveRecorder.WPF.Pages"
     mc:Ignorable="d" 
     d:DesignHeight="600" d:DesignWidth="900">
@@ -16,7 +20,7 @@
         <Button HorizontalAlignment="Right" Margin="5,0" x:Name="RefreshButton" Click="Button_Click" MouseRightButtonUp="Button_MouseRightButtonUp">
             <StackPanel Orientation="Horizontal">
                 <ui:PathIcon Style="{StaticResource PathIconDataRefresh}" VerticalAlignment="Center"/>
-                <TextBlock Text="刷新公告内容" Margin="5,0,0,0"/>
+                <TextBlock Text="{l:Loc AnnouncementPage_RefreshButton}" Margin="5,0,0,0"/>
             </StackPanel>
         </Button>
         <Decorator Margin="5" Grid.Row="1" x:Name="Container"/>
@@ -24,7 +28,7 @@
             <ui:ProgressRing IsActive="True" Width="80" Height="80" Margin="5"/>
             <TextBlock TextAlignment="Center" FontSize="18" Text="Loading……"/>
         </StackPanel>
-        <TextBlock x:Name="Error" Grid.Row="1" FontSize="20" Text="公告获取失败"
+        <TextBlock x:Name="Error" Grid.Row="1" FontSize="20" Text="{l:Loc AnnouncementPage_FetchFailed}"
                    HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="Collapsed"
                    Foreground="{DynamicResource SystemControlErrorTextForegroundBrush}"/>
     </Grid>

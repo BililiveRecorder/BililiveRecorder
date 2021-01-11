@@ -5,6 +5,10 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:ui="http://schemas.modernwpf.com/2019"
+    xmlns:l="https://github.com/XAMLMarkupExtensions/WPFLocalizationExtension"
+    l:LocalizeDictionary.DesignCulture=""
+    l:ResxLocalizationProvider.DefaultAssembly="BililiveRecorder.WPF"
+    l:ResxLocalizationProvider.DefaultDictionary="Strings"
     xmlns:local="clr-namespace:BililiveRecorder.WPF.Controls"
     mc:Ignorable="d" 
     d:DesignHeight="110" d:DesignWidth="210">
@@ -23,11 +27,13 @@
             </Grid.ColumnDefinitions>
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Grid.ColumnSpan="2">
                 <ui:PathIcon Margin="5" Style="{StaticResource PathIconDataPlus}"/>
-                <TextBlock FontSize="20" VerticalAlignment="Center" Text="添加房间"/>
+                <TextBlock FontSize="20" VerticalAlignment="Center" Text="{l:Loc AddRoomCard_Title}"/>
             </StackPanel>
             <TextBox Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Center" x:Name="InputTextBox"
-                     KeyDown="InputTextBox_KeyDown" ui:ControlHelper.PlaceholderText="房间号或房间链接"/>
-            <Button Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" Content="确定" Click="Button_Click" />
+                     ui:TextBoxHelper.IsDeleteButtonVisible="False" FontSize="{l:Loc AddRoomCard_PlaceholderText_FontSize}"
+                     ui:ControlHelper.PlaceholderText="{l:Loc AddRoomCard_PlaceholderText}"
+                     KeyDown="InputTextBox_KeyDown"/>
+            <Button Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" Content="{l:Loc AddRoomCard_ConfirmButton}" Click="Button_Click" />
         </Grid>
     </Border>
 </UserControl>

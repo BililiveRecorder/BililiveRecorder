@@ -5,8 +5,12 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
     xmlns:ui="http://schemas.modernwpf.com/2019"
+    xmlns:l="https://github.com/XAMLMarkupExtensions/WPFLocalizationExtension"
+    l:LocalizeDictionary.DesignCulture=""
+    l:ResxLocalizationProvider.DefaultAssembly="BililiveRecorder.WPF"
+    l:ResxLocalizationProvider.DefaultDictionary="Strings"
     xmlns:local="clr-namespace:BililiveRecorder.WPF.Controls"
-    CloseButtonText="知道了"
+    CloseButtonText="{l:Loc AddRoomFailedDialog_CloseButtonText}"
     DefaultButton="Close"
     mc:Ignorable="d">
     <Grid>
@@ -14,7 +18,7 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
-        <TextBlock Text="添加房间失败" TextAlignment="Center" FontSize="20"/>
-        <TextBlock Grid.Row="1" Text="{Binding}" VerticalAlignment="Center" TextAlignment="Center" FontSize="16"/>
+        <TextBlock Text="{l:Loc AddRoomFailedDialog_CloseButtonText}" TextAlignment="Center" FontSize="20"/>
+        <TextBlock Grid.Row="1" Text="{l:Loc {Binding StringFormat=AddRoomFailedDialog_ErrorText_{0}}}" VerticalAlignment="Center" TextAlignment="Center" FontSize="16"/>
     </Grid>
 </ui:ContentDialog>

@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using Microsoft.WindowsAPICodePack.Dialogs;
+using WPFLocalizeExtension.Extensions;
 
 namespace BililiveRecorder.WPF.Controls
 {
@@ -10,17 +11,27 @@ namespace BililiveRecorder.WPF.Controls
     /// </summary>
     public partial class WorkDirectorySelectorDialog : INotifyPropertyChanged
     {
-        private string error = string.Empty;
+        private WorkDirectorySelectorDialogError error = WorkDirectorySelectorDialogError.None;
         private string path = string.Empty;
 
-        public string Error { get => error; set => SetField(ref error, value); }
+        public WorkDirectorySelectorDialogError Error { get => this.error; set => this.SetField(ref this.error, value); }
 
-        public string Path { get => path; set => SetField(ref path, value); }
+        public string Path { get => this.path; set => this.SetField(ref this.path, value); }
 
         public WorkDirectorySelectorDialog()
         {
-            DataContext = this;
-            InitializeComponent();
+            this.DataContext = this;
+            this.InitializeComponent();
+        }
+
+        public enum WorkDirectorySelectorDialogError
+        {
+            None,
+            UnknownError,
+            PathNotSupported,
+            PathDoesNotExist,
+            PathContainsFiles,
+            FailedToLoadConfig,
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -28,16 +39,17 @@ namespace BililiveRecorder.WPF.Controls
         protected bool SetField<T>(ref T field, T value, [CallerMemberName] string propertyName = "")
         {
             if (EqualityComparer<T>.Default.Equals(field, value)) { return false; }
-            field = value; OnPropertyChanged(propertyName); return true;
+            field = value; this.OnPropertyChanged(propertyName); return true;
         }
 
         private void Button_Click(object sender, System.Windows.RoutedEventArgs e)
         {
+            var title = LocExtension.GetLocalizedValue<string>("BililiveRecorder.WPF:Strings:WorkDirectorySelector_Title");
             var fileDialog = new CommonOpenFileDialog()
             {
                 IsFolderPicker = true,
                 Multiselect = false,
-                Title = "选择录播姬工作目录路径",
+                Title = title,
                 AddToMostRecentlyUsedList = false,
                 EnsurePathExists = true,
                 NavigateToShortcut = true,
@@ -45,7 +57,7 @@ namespace BililiveRecorder.WPF.Controls
             };
             if (fileDialog.ShowDialog() == CommonFileDialogResult.Ok)
             {
-                Path = fileDialog.FileName;
+                this.Path = fileDialog.FileName;
             }
         }
     }

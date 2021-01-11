@@ -82,7 +82,7 @@ namespace BililiveRecorder.WPF
                 logger.Warn(ex, "检查更新时出错，如持续出错请联系开发者 rec@danmuji.org");
             }
 
-            _ = Task.Run(async () => { await Task.Delay(TimeSpan.FromDays(1)); await RunCheckUpdate(); });
+            _ = Task.Run(async () => { await Task.Delay(TimeSpan.FromDays(1)); await this.RunCheckUpdate(); });
         }
 
         private void Application_SessionEnding(object sender, SessionEndingCancelEventArgs e)

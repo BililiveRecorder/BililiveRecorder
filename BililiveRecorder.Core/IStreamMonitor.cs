@@ -6,7 +6,6 @@ namespace BililiveRecorder.Core
 {
     public interface IStreamMonitor : IDisposable, INotifyPropertyChanged
     {
-        int Roomid { get; }
         bool IsMonitoring { get; }
         bool IsDanmakuConnected { get; }
         event RoomInfoUpdatedEvent RoomInfoUpdated;

@@ -4,10 +4,11 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
-using BililiveRecorder.Core.Config;
+using BililiveRecorder.Core.Config.V2;
 using Newtonsoft.Json.Linq;
 using NLog;
 
+#nullable enable
 namespace BililiveRecorder.Core
 {
     public class BililiveAPI
@@ -20,29 +21,27 @@ namespace BililiveRecorder.Core
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
         private static readonly Random random = new Random();
 
-        private readonly ConfigV1 Config;
+        private readonly GlobalConfig globalConfig;
         private readonly HttpClient danmakuhttpclient;
         private HttpClient httpclient;
 
-        public BililiveAPI(ConfigV1 config)
+        public BililiveAPI(GlobalConfig globalConfig)
         {
-            Config = config;
-            Config.PropertyChanged += (sender, e) =>
+            this.globalConfig = globalConfig;
+            this.globalConfig.PropertyChanged += (sender, e) =>
             {
-                if (e.PropertyName == nameof(Config.Cookie))
-                {
-                    ApplyCookieSettings(Config.Cookie);
-                }
+                if (e.PropertyName == nameof(this.globalConfig.Cookie))
+                    this.ApplyCookieSettings(this.globalConfig.Cookie);
             };
-            ApplyCookieSettings(Config.Cookie);
+            this.ApplyCookieSettings(this.globalConfig.Cookie);
 
-            danmakuhttpclient = new HttpClient { Timeout = TimeSpan.FromSeconds(10) };
-            danmakuhttpclient.DefaultRequestHeaders.Add("Accept", HTTP_HEADER_ACCEPT);
-            danmakuhttpclient.DefaultRequestHeaders.Add("Referer", HTTP_HEADER_REFERER);
-            danmakuhttpclient.DefaultRequestHeaders.Add("User-Agent", Utils.UserAgent);
+            this.danmakuhttpclient = new HttpClient { Timeout = TimeSpan.FromSeconds(10) };
+            this.danmakuhttpclient.DefaultRequestHeaders.Add("Accept", HTTP_HEADER_ACCEPT);
+            this.danmakuhttpclient.DefaultRequestHeaders.Add("Referer", HTTP_HEADER_REFERER);
+            this.danmakuhttpclient.DefaultRequestHeaders.Add("User-Agent", Utils.UserAgent);
         }
 
-        public void ApplyCookieSettings(string cookie_string)
+        public void ApplyCookieSettings(string? cookie_string)
         {
             try
             {
@@ -61,7 +60,7 @@ namespace BililiveRecorder.Core
                     pclient.DefaultRequestHeaders.Add("Referer", HTTP_HEADER_REFERER);
                     pclient.DefaultRequestHeaders.Add("User-Agent", Utils.UserAgent);
                     pclient.DefaultRequestHeaders.Add("Cookie", cookie_string);
-                    httpclient = pclient;
+                    this.httpclient = pclient;
                 }
                 else
                 {
@@ -69,7 +68,7 @@ namespace BililiveRecorder.Core
                     cleanclient.DefaultRequestHeaders.Add("Accept", HTTP_HEADER_ACCEPT);
                     cleanclient.DefaultRequestHeaders.Add("Referer", HTTP_HEADER_REFERER);
                     cleanclient.DefaultRequestHeaders.Add("User-Agent", Utils.UserAgent);
-                    httpclient = cleanclient;
+                    this.httpclient = cleanclient;
                 }
                 logger.Debug("设置 Cookie 成功");
             }
@@ -86,7 +85,7 @@ namespace BililiveRecorder.Core
         /// <returns>数据</returns>
         /// <exception cref="ArgumentNullException"/>
         /// <exception cref="WebException"/>
-        private async Task<JObject> HttpGetJsonAsync(HttpClient client, string url)
+        private async Task<JObject?> HttpGetJsonAsync(HttpClient client, string url)
         {
             try
             {
@@ -107,11 +106,11 @@ namespace BililiveRecorder.Core
         /// <returns>FLV播放地址</returns>
         /// <exception cref="WebException"/>
         /// <exception cref="Exception"/>
-        public async Task<string> GetPlayUrlAsync(int roomid)
+        public async Task<string?> GetPlayUrlAsync(int roomid)
         {
-            var url = $@"{Config.LiveApiHost}/room/v1/Room/playUrl?cid={roomid}&quality=4&platform=web";
+            var url = $@"{this.globalConfig.LiveApiHost}/room/v1/Room/playUrl?cid={roomid}&quality=4&platform=web";
             // 随机选择一个 url
-            if ((await HttpGetJsonAsync(httpclient, url))?["data"]?["durl"] is JArray array)
+            if ((await this.HttpGetJsonAsync(this.httpclient, url))?["data"]?["durl"] is JArray array)
             {
                 var urls = array.Select(t => t?["url"]?.ToObject<string>());
                 var distinct = urls.Distinct().ToArray();
@@ -130,21 +129,21 @@ namespace BililiveRecorder.Core
         /// <returns>直播间信息</returns>
         /// <exception cref="WebException"/>
         /// <exception cref="Exception"/>
-        public async Task<RoomInfo> GetRoomInfoAsync(int roomid)
+        public async Task<RoomInfo?> GetRoomInfoAsync(int roomid)
         {
             try
             {
-                var room = await HttpGetJsonAsync(httpclient, $@"https://api.live.bilibili.com/room/v1/Room/get_info?id={roomid}");
+                var room = await this.HttpGetJsonAsync(this.httpclient, $@"https://api.live.bilibili.com/room/v1/Room/get_info?id={roomid}");
                 if (room?["code"]?.ToObject<int>() != 0)
                 {
-                    logger.Warn("不能获取 {roomid} 的信息1: {errormsg}", roomid, room?["message"]?.ToObject<string>() ?? "网络超时");
+                    logger.Warn("不能获取 {roomid} 的信息1: {errormsg}", roomid, room?["message"]?.ToObject<string>() ?? "请求超时");
                     return null;
                 }
 
-                var user = await HttpGetJsonAsync(httpclient, $@"https://api.live.bilibili.com/live_user/v1/UserInfo/get_anchor_in_room?roomid={roomid}");
+                var user = await this.HttpGetJsonAsync(this.httpclient, $@"https://api.live.bilibili.com/live_user/v1/UserInfo/get_anchor_in_room?roomid={roomid}");
                 if (user?["code"]?.ToObject<int>() != 0)
                 {
-                    logger.Warn("不能获取 {roomid} 的信息2: {errormsg}", roomid, user?["message"]?.ToObject<string>() ?? "网络超时");
+                    logger.Warn("不能获取 {roomid} 的信息2: {errormsg}", roomid, user?["message"]?.ToObject<string>() ?? "请求超时");
                     return null;
                 }
 
@@ -154,7 +153,9 @@ namespace BililiveRecorder.Core
                     RoomId = room?["data"]?["room_id"]?.ToObject<int>() ?? throw new Exception("未获取到直播间信息"),
                     IsStreaming = 1 == (room?["data"]?["live_status"]?.ToObject<int>() ?? throw new Exception("未获取到直播间信息")),
                     UserName = user?["data"]?["info"]?["uname"]?.ToObject<string>() ?? throw new Exception("未获取到直播间信息"),
-                    Title = room?["data"]?["title"]?.ToObject<string>() ?? throw new Exception("未获取到直播间信息")
+                    Title = room?["data"]?["title"]?.ToObject<string>() ?? throw new Exception("未获取到直播间信息"),
+                    ParentAreaName = room?["data"]?["parent_area_name"]?.ToObject<string>() ?? throw new Exception("未获取到直播间信息"),
+                    AreaName = room?["data"]?["area_name"]?.ToObject<string>() ?? throw new Exception("未获取到直播间信息"),
                 };
                 return i;
             }
@@ -174,13 +175,13 @@ namespace BililiveRecorder.Core
         {
             try
             {
-                var result = await HttpGetJsonAsync(danmakuhttpclient, $@"https://api.live.bilibili.com/room/v1/Danmu/getConf?room_id={roomid}&platform=pc&player=web");
+                var result = await this.HttpGetJsonAsync(this.danmakuhttpclient, $@"https://api.live.bilibili.com/room/v1/Danmu/getConf?room_id={roomid}&platform=pc&player=web");
 
                 if (result?["code"]?.ToObject<int>() == 0)
                 {
                     var token = result?["data"]?["token"]?.ToObject<string>() ?? string.Empty;
 
-                    List<(string host, int port)> servers = new List<(string host, int port)>();
+                    var servers = new List<(string? host, int port)>();
 
                     if (result?["data"]?["host_server_list"] is JArray host_server_list)
                     {
@@ -201,7 +202,7 @@ namespace BililiveRecorder.Core
                     if (servers.Count > 0)
                     {
                         var (host, port) = servers[random.Next(servers.Count)];
-                        return (token, host, port);
+                        return (token, host!, port);
                     }
                     else
                     {

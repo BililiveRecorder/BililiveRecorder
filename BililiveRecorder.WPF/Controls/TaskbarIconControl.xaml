@@ -5,19 +5,23 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:ui="http://schemas.modernwpf.com/2019"
+    xmlns:l="https://github.com/XAMLMarkupExtensions/WPFLocalizationExtension"
+    l:LocalizeDictionary.DesignCulture=""
+    l:ResxLocalizationProvider.DefaultAssembly="BililiveRecorder.WPF"
+    l:ResxLocalizationProvider.DefaultDictionary="Strings"
     xmlns:tb="http://www.hardcodet.net/taskbar"
     xmlns:local="clr-namespace:BililiveRecorder.WPF.Controls"
     mc:Ignorable="d">
     <tb:TaskbarIcon 
-        x:Name="TaskbarIcon" IconSource="/ico.ico" TrayLeftMouseUp="TaskbarIcon_TrayLeftMouseUp"
+        x:Name="TaskbarIcon" TrayLeftMouseUp="TaskbarIcon_TrayLeftMouseUp"
         Visibility="{Binding Recorder, Converter={StaticResource IsNullToVisibilityCollapsedConverter}}"
-        ToolTipText="B站录播姬" MenuActivation="RightClick"
+        ToolTipText="{l:Loc TaskbarIconControl_Title}" MenuActivation="RightClick"
         >
         <tb:TaskbarIcon.ContextMenu>
-            <ContextMenu>
-                <MenuItem Header="打开主界面" Click="MenuItem_OpenMainWindow_Click"/>
+            <ContextMenu l:ResxLocalizationProvider.DefaultDictionary="Strings">
+                <MenuItem Header="{l:Loc TaskbarIconControl_MenuItem_OpenMainWindow}" Click="MenuItem_OpenMainWindow_Click"/>
                 <Separator/>
-                <MenuItem Header="退出" Click="MenuItem_Quit_Click"/>
+                <MenuItem Header="{l:Loc Global_Quit}" Click="MenuItem_Quit_Click"/>
             </ContextMenu>
         </tb:TaskbarIcon.ContextMenu>
         <tb:TaskbarIcon.TrayToolTip>
@@ -34,8 +38,8 @@
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
                     <StackPanel Margin="10">
-                        <TextBlock Style="{DynamicResource SubtitleTextBlockStyle}" Text="B站录播姬" FontFamily="Microsoft Yahei"/>
-                        <TextBlock Text="{Binding Recorder.Config.WorkDirectory,Mode=OneWay}" TextWrapping="NoWrap" FontFamily="Microsoft Yahei"/>
+                        <TextBlock Style="{DynamicResource SubtitleTextBlockStyle}" Text="{l:Loc TaskbarIconControl_Title}" FontFamily="Microsoft Yahei"/>
+                        <TextBlock Text="{Binding Recorder.Config.Global.WorkDirectory,Mode=OneWay}" TextWrapping="NoWrap" FontFamily="Microsoft Yahei"/>
                     </StackPanel>
                     <Separator Grid.Row="1" Grid.ColumnSpan="2" />
                     <ItemsControl Grid.Row="2" Grid.ColumnSpan="2" Margin="10,0,10,10" ItemsSource="{Binding Recorder, Mode=OneWay}">
@@ -44,18 +48,24 @@
                                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="0,5,0,0">
                                     <ui:PathIcon 
                                         Visibility="{Binding IsMonitoring,Converter={StaticResource BooleanToVisibilityHiddenConverter}}"
-                                        Style="{StaticResource PathIconDataCctv}" Foreground="DarkOrange" Width="15" ToolTip="监控中"/>
+                                        Style="{StaticResource PathIconDataCctv}" Foreground="DarkOrange" Width="15"/>
                                     <ui:PathIcon 
                                         Visibility="{Binding IsRecording,Converter={StaticResource BooleanToVisibilityHiddenConverter}}"
-                                        Style="{StaticResource PathIconDataRecordRec}" Foreground="Red" Width="15" ToolTip="录制中" Margin="3,0"/>
+                                        Style="{StaticResource PathIconDataRecordRec}" Foreground="Red" Width="15" Margin="3,0"/>
                                     <TextBlock Text="{Binding StreamerName, Mode=OneWay}" TextWrapping="NoWrap"
                                                FontFamily="Microsoft Yahei" TextTrimming="CharacterEllipsis"/>
                                     <Border VerticalAlignment="Center" MinWidth="80"
                                             Visibility="{Binding IsRecording,Converter={StaticResource BooleanToVisibilityHiddenConverter}}"
                                             Background="{Binding DownloadSpeedPersentage, Converter={StaticResource PercentageToColorBrushConverter},Mode=OneWay}"                    
                                             BorderThickness="1" BorderBrush="{DynamicResource SystemControlBackgroundChromeBlackMediumBrush}" Margin="2,0" CornerRadius="5">
-                                        <TextBlock HorizontalAlignment="Center" Foreground="Black" FontFamily="Microsoft Yahei"
-                                                   Text="{Binding DownloadSpeedMegaBitps, StringFormat=0.## Mbps,Mode=OneWay}"/>
+                                        <TextBlock HorizontalAlignment="Center" Foreground="Black" FontFamily="Microsoft Yahei">
+                                            <TextBlock.Text>
+                                                <MultiBinding Converter="{l:StringFormatConverter}">
+                                                    <l:BLoc Key="RoomCard_Status_SpeedIndicator_SpeedInMbps"/>
+                                                    <Binding Path="DownloadSpeedMegaBitps" Mode="OneWay"/>
+                                                </MultiBinding>
+                                            </TextBlock.Text>
+                                        </TextBlock>
                                     </Border>
                                 </StackPanel>
                             </DataTemplate>

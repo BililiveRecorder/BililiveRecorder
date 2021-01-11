@@ -11,7 +11,7 @@ namespace BililiveRecorder.WPF.Pages
     {
         public AdvancedSettingsPage()
         {
-            InitializeComponent();
+            this.InitializeComponent();
         }
 
         private void Crash_Click(object sender, RoutedEventArgs e)

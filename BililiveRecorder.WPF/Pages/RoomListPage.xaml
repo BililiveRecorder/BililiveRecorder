@@ -5,37 +5,45 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
     xmlns:ui="http://schemas.modernwpf.com/2019"
+    xmlns:l="https://github.com/XAMLMarkupExtensions/WPFLocalizationExtension"
+    l:LocalizeDictionary.DesignCulture=""
+    l:ResxLocalizationProvider.DefaultAssembly="BililiveRecorder.WPF"
+    l:ResxLocalizationProvider.DefaultDictionary="Strings"
     xmlns:local="clr-namespace:BililiveRecorder.WPF.Pages"
     xmlns:mock="clr-namespace:BililiveRecorder.WPF.MockData"
-    xmlns:controls="clr-namespace:BililiveRecorder.WPF.Controls"
+    xmlns:c="clr-namespace:BililiveRecorder.WPF.Controls"
     xmlns:converters="clr-namespace:BililiveRecorder.WPF.Converters"
     mc:Ignorable="d" 
+    x:Name="TheRoomListPage"
     d:DesignHeight="1000" d:DesignWidth="960"
     d:DataContext="{d:DesignInstance mock:MockRecorder,IsDesignTimeCreatable=True}"
     DataContext="{Binding RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=local:RootPage},Path=DataContext.Recorder,Mode=OneWay}"
-    Title="房间列表">
+    >
     <ui:Page.Resources>
         <DataTemplate x:Key="NormalRoomCardTemplate">
             <ui:ThemeShadowChrome IsShadowEnabled="True" Depth="10">
-                <controls:RoomCard DeleteRequested="RoomCard_DeleteRequested" />
+                <c:RoomCard DeleteRequested="RoomCard_DeleteRequested" ShowSettingsRequested="RoomCard_ShowSettingsRequested" />
             </ui:ThemeShadowChrome>
         </DataTemplate>
         <DataTemplate x:Key="AddRoomCardTemplate">
             <ui:ThemeShadowChrome IsShadowEnabled="True" Depth="10">
-                <controls:AddRoomCard AddRoomRequested="AddRoomCard_AddRoomRequested"/>
+                <c:AddRoomCard AddRoomRequested="AddRoomCard_AddRoomRequested"/>
             </ui:ThemeShadowChrome>
         </DataTemplate>
         <converters:NullValueTemplateSelector
             x:Key="SelectorTemplate"                                               
             Normal="{StaticResource NormalRoomCardTemplate}"
             Null="{StaticResource AddRoomCardTemplate}"/>
-        <ui:UniformGridLayout
-            x:Key="UniformGridLayout"
-            MinItemWidth="220"
-            MinItemHeight="100"
-            ItemsStretch="None"
-            MinRowSpacing="7"
-            MinColumnSpacing="5" />
+        <converters:BoolToValueConverter x:Key="BooleanToUniformGridLayoutConverter">
+            <converters:BoolToValueConverter.TrueValue>
+                <ui:UniformGridLayout MinItemWidth="220" MinItemHeight="125"
+                    ItemsStretch="None" MinRowSpacing="7" MinColumnSpacing="5"/>
+            </converters:BoolToValueConverter.TrueValue>
+            <converters:BoolToValueConverter.FalseValue>
+                <ui:UniformGridLayout MinItemWidth="220" MinItemHeight="100"
+                    ItemsStretch="None" MinRowSpacing="7" MinColumnSpacing="5"/>
+            </converters:BoolToValueConverter.FalseValue>
+        </converters:BoolToValueConverter>
     </ui:Page.Resources>
     <Grid>
         <Grid.RowDefinitions>
@@ -44,30 +52,32 @@
             <RowDefinition Height="3"/>
             <RowDefinition x:Name="LogRowDefinition" Height="0"/>
         </Grid.RowDefinitions>
-        <Menu>
+        <StackPanel>
+            <Menu>
+                <Separator/>
+                <MenuItem Header="{l:Loc RoomListPage_Menu_File}">
+                    <MenuItem Header="{l:Loc RoomListPage_Menu_File_OpenWorkDirectory}" Click="MenuItem_OpenWorkDirectory_Click"/>
+                </MenuItem>
+                <MenuItem Header="{l:Loc RoomListPage_Menu_View}">
+                    <MenuItem Header="{l:Loc RoomListPage_Menu_Sort_Default}" Tag="{x:Static local:SortedBy.None}" Click="MenuItem_SortBy_Click"/>
+                    <MenuItem Header="{l:Loc RoomListPage_Menu_Sort_RoomId}" Tag="{x:Static local:SortedBy.RoomId}" Click="MenuItem_SortBy_Click"/>
+                    <MenuItem Header="{l:Loc RoomListPage_Menu_Sort_Status}" Tag="{x:Static local:SortedBy.Status}" Click="MenuItem_SortBy_Click"/>
+                    <Separator/>
+                    <MenuItem Header="{l:Loc RoomListPage_Menu_View_ShowTitleAndAreaCheckBox}" IsCheckable="True" IsChecked="{Binding Config.Global.WpfShowTitleAndArea}"/>
+                    <MenuItem Header="{l:Loc RoomListPage_Menu_View_ShowLogCheckBox}" IsCheckable="True" Checked="MenuItem_ShowLog_Click" Unchecked="MenuItem_HideLog_Click"/>
+                </MenuItem>
+                <MenuItem Header="{l:Loc RoomListPage_Menu_AutoRecord}">
+                    <MenuItem Header="{l:Loc RoomListPage_Menu_AutoRecord_EnableAll}" Click="MenuItem_EnableAutoRecAll_Click"/>
+                    <MenuItem Header="{l:Loc RoomListPage_Menu_AutoRecord_DisableAll}" Click="MenuItem_DisableAutoRecAll_Click"/>
+                </MenuItem>
+            </Menu>
             <Separator/>
-            <MenuItem Header="文件">
-                <MenuItem Header="打开工作目录" Click="MenuItem_OpenWorkDirectory_Click"/>
-            </MenuItem>
-            <MenuItem Header="监控">
-                <MenuItem Header="自动录制全部房间" Click="MenuItem_EnableAutoRecAll_Click"/>
-                <MenuItem Header="取消自动录制全部房间" Click="MenuItem_DisableAutoRecAll_Click"/>
-            </MenuItem>
-            <MenuItem Header="排序">
-                <MenuItem Header="不排序" Tag="{x:Static local:SortedBy.None}" Click="MenuItem_SortBy_Click"/>
-                <MenuItem Header="房间号" Tag="{x:Static local:SortedBy.RoomId}" Click="MenuItem_SortBy_Click"/>
-                <MenuItem Header="录制状态" Tag="{x:Static local:SortedBy.Status}" Click="MenuItem_SortBy_Click"/>
-            </MenuItem>
-            <MenuItem Header="日志">
-                <MenuItem Header="在本页显示日志" Click="MenuItem_ShowLog_Click"/>
-                <MenuItem Header="不在本页显示日志" Click="MenuItem_HideLog_Click"/>
-            </MenuItem>
-        </Menu>
+        </StackPanel>
         <ui:ItemsRepeaterScrollHost Grid.Row="1">
             <ScrollViewer>
                 <ui:ItemsRepeater
                 HorizontalAlignment="Stretch" Margin="8"
-                Layout="{StaticResource UniformGridLayout}"
+                Layout="{Binding Config.Global.WpfShowTitleAndArea,Mode=OneWay,Converter={StaticResource BooleanToUniformGridLayoutConverter}}"
                 ItemsSource="{Binding SortedRoomList, RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=ui:Page}}"
                 ItemTemplate="{StaticResource SelectorTemplate}" />
             </ScrollViewer>
@@ -79,7 +89,7 @@
             <Border Background="{DynamicResource SystemControlBackgroundAltHighBrush}"
                     BorderBrush="{DynamicResource SystemControlBackgroundAccentBrush}"
                     BorderThickness="1" CornerRadius="5">
-                <ItemsControl ItemsSource="{Binding Mode=OneWay}" Margin="5" ToolTip="右键点击可以复制单行日志">
+                <ItemsControl ItemsSource="{Binding Mode=OneWay}" Margin="5" ToolTip="{l:Loc LogPage_RightClickCopyToolTip}">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
                             <Border BorderThickness="0,0,0,1" BorderBrush="#FFCCCCCC">

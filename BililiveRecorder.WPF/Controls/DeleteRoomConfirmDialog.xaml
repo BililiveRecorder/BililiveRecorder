@@ -5,15 +5,19 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
     xmlns:ui="http://schemas.modernwpf.com/2019"
+    xmlns:l="https://github.com/XAMLMarkupExtensions/WPFLocalizationExtension"
+    l:LocalizeDictionary.DesignCulture=""
+    l:ResxLocalizationProvider.DefaultAssembly="BililiveRecorder.WPF"
+    l:ResxLocalizationProvider.DefaultDictionary="Strings"
     xmlns:local="clr-namespace:BililiveRecorder.WPF.Controls"
     xmlns:mock="clr-namespace:BililiveRecorder.WPF.MockData"
     DefaultButton="Close"
-    PrimaryButtonText="删除"
-    CloseButtonText="取消"
+    PrimaryButtonText="{l:Loc Global_Delete}"
+    CloseButtonText="{l:Loc Global_Cancel}"
     d:DataContext="{d:DesignInstance Type=mock:MockRecordedRoom,IsDesignTimeCreatable=True}"
-    mc:Ignorable="d" >
+    mc:Ignorable="d">
     <StackPanel>
-        <TextBlock TextAlignment="Center" FontSize="18" Text="确定要删除这个直播间吗？" Margin="0,0,0,5"/>
+        <TextBlock TextAlignment="Center" FontSize="18" Text="{l:Loc DeleteRoomConfirmDialog_Title}" Margin="0,0,0,5"/>
         <TextBlock VerticalAlignment="Center" Style="{DynamicResource SubtitleTextBlockStyle}" FontFamily="Microsoft Yahei" TextWrapping="NoWrap" HorizontalAlignment="Center"
                    TextAlignment="Center" TextTrimming="CharacterEllipsis" Text="{Binding StreamerName,Mode=OneWay}" ToolTip="{Binding StreamerName,Mode=OneWay}"/>
         <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Orientation="Horizontal" Grid.Row="1" Grid.ColumnSpan="2" Margin="5,0,0,0">

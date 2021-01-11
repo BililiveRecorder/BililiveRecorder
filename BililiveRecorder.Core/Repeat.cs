@@ -30,7 +30,7 @@ namespace BililiveRecorder.Core
         }
     }
 
-    static class CancellationTokenExtensions
+    internal static class CancellationTokenExtensions
     {
         public static bool WaitCancellationRequested(
             this CancellationToken token,

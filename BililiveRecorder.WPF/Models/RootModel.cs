@@ -15,7 +15,7 @@ namespace BililiveRecorder.WPF.Models
 
         public LogModel Logs { get; } = new LogModel();
 
-        public IRecorder Recorder { get => recorder; internal set => SetField(ref recorder, value); }
+        public IRecorder Recorder { get => this.recorder; internal set => this.SetField(ref this.recorder, value); }
 
         public RootModel()
         {
@@ -26,23 +26,23 @@ namespace BililiveRecorder.WPF.Models
         protected bool SetField<T>(ref T field, T value, [CallerMemberName] string propertyName = "")
         {
             if (EqualityComparer<T>.Default.Equals(field, value)) { return false; }
-            field = value; OnPropertyChanged(propertyName); return true;
+            field = value; this.OnPropertyChanged(propertyName); return true;
         }
 
         protected virtual void Dispose(bool disposing)
         {
-            if (!disposedValue)
+            if (!this.disposedValue)
             {
                 if (disposing)
                 {
                     // dispose managed state (managed objects)
-                    Recorder?.Dispose();
-                    Logs.Dispose();
+                    this.Recorder?.Dispose();
+                    this.Logs.Dispose();
                 }
 
                 // free unmanaged resources (unmanaged objects) and override finalizer
                 // set large fields to null
-                disposedValue = true;
+                this.disposedValue = true;
             }
         }
 
@@ -56,7 +56,7 @@ namespace BililiveRecorder.WPF.Models
         public void Dispose()
         {
             // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
-            Dispose(disposing: true);
+            this.Dispose(disposing: true);
             GC.SuppressFinalize(this);
         }
     }

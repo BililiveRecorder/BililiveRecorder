@@ -40,40 +40,43 @@ namespace BililiveRecorder.WPF.Pages
 
         public RootPage()
         {
-            void AddType(Type t) => PageMap.Add(t.Name, t);
+            void AddType(Type t) => this.PageMap.Add(t.Name, t);
             AddType(typeof(RoomListPage));
             AddType(typeof(LogPage));
             AddType(typeof(SettingsPage));
             AddType(typeof(AdvancedSettingsPage));
             AddType(typeof(AnnouncementPage));
 
-            Model = new RootModel();
-            DataContext = Model;
+            this.Model = new RootModel();
+            this.DataContext = this.Model;
 
             var builder = new ContainerBuilder();
             builder.RegisterModule<FlvProcessorModule>();
             builder.RegisterModule<CoreModule>();
-            Container = builder.Build();
-            RootScope = Container.BeginLifetimeScope("recorder_root");
+            this.Container = builder.Build();
+            this.RootScope = this.Container.BeginLifetimeScope("recorder_root");
 
-            InitializeComponent();
-            AdvancedSettingsPageItem.Visibility = Visibility.Hidden;
+            this.InitializeComponent();
+            this.AdvancedSettingsPageItem.Visibility = Visibility.Hidden;
 
-            (Application.Current.MainWindow as NewMainWindow).NativeBeforeWindowClose += RootPage_NativeBeforeWindowClose;
+            var mw = Application.Current.MainWindow as NewMainWindow;
+            if (mw is not null)
+                mw.NativeBeforeWindowClose += this.RootPage_NativeBeforeWindowClose;
+
             Loaded += RootPage_Loaded;
         }
 
         private void RootPage_NativeBeforeWindowClose(object sender, EventArgs e)
         {
-            Model.Dispose();
+            this.Model.Dispose();
             SingleInstance.Cleanup();
         }
 
         private async void RootPage_Loaded(object sender, RoutedEventArgs e)
         {
-            var recorder = RootScope.Resolve<IRecorder>();
+            var recorder = this.RootScope.Resolve<IRecorder>();
             var first_time = true;
-            var error = string.Empty;
+            var error = WorkDirectorySelectorDialog.WorkDirectorySelectorDialogError.None;
             string path;
             while (true)
             {
@@ -113,8 +116,8 @@ namespace BililiveRecorder.WPF.Pages
                         var lastdir = string.Empty;
                         try
                         {
-                            if (File.Exists(lastdir_path))
-                                lastdir = File.ReadAllText(lastdir_path).Replace("\r", "").Replace("\n", "").Trim();
+                            if (File.Exists(this.lastdir_path))
+                                lastdir = File.ReadAllText(this.lastdir_path).Replace("\r", "").Replace("\n", "").Trim();
                         }
                         catch (Exception) { }
 
@@ -124,7 +127,7 @@ namespace BililiveRecorder.WPF.Pages
                             Error = error,
                             Path = lastdir
                         };
-                        
+
                         if (await dialog.ShowAsync() != ContentDialogResult.Primary)
                         {
                             (Application.Current.MainWindow as NewMainWindow).CloseWithoutConfirmAction();
@@ -135,7 +138,7 @@ namespace BililiveRecorder.WPF.Pages
                         { path = Path.GetFullPath(dialog.Path); }
                         catch (Exception)
                         {
-                            error = "不支持该路径";
+                            error = WorkDirectorySelectorDialog.WorkDirectorySelectorDialogError.PathNotSupported;
                             continue;
                         }
                     }
@@ -144,7 +147,7 @@ namespace BililiveRecorder.WPF.Pages
 
                     if (!Directory.Exists(path))
                     {
-                        error = "目录不存在";
+                        error = WorkDirectorySelectorDialog.WorkDirectorySelectorDialogError.PathDoesNotExist;
                         continue;
                     }
                     else if (!Directory.EnumerateFiles(path).Any())
@@ -153,7 +156,7 @@ namespace BililiveRecorder.WPF.Pages
                     }
                     else if (!File.Exists(config))
                     {
-                        error = "目录已有其他文件";
+                        error = WorkDirectorySelectorDialog.WorkDirectorySelectorDialogError.PathContainsFiles;
                         continue;
                     }
 
@@ -161,7 +164,7 @@ namespace BililiveRecorder.WPF.Pages
 
                     // 如果不是从命令行参数传入的路径，写入 lastdir_path 记录
                     try
-                    { if (string.IsNullOrWhiteSpace(commandLineOption?.WorkDirectory)) File.WriteAllText(lastdir_path, path); }
+                    { if (string.IsNullOrWhiteSpace(commandLineOption?.WorkDirectory)) File.WriteAllText(this.lastdir_path, path); }
                     catch (Exception) { }
 
                     // 检查已经在同目录运行的其他进程
@@ -170,21 +173,21 @@ namespace BililiveRecorder.WPF.Pages
                         // 无已经在同目录运行的进程
                         if (recorder.Initialize(path))
                         {
-                            Model.Recorder = recorder;
+                            this.Model.Recorder = recorder;
 
                             _ = Task.Run(async () =>
                             {
                                 await Task.Delay(100);
-                                _ = Dispatcher.BeginInvoke(DispatcherPriority.Normal, method: new Action(() =>
+                                _ = this.Dispatcher.BeginInvoke(DispatcherPriority.Normal, method: new Action(() =>
                                 {
-                                    RoomListPageNavigationViewItem.IsSelected = true;
+                                    this.RoomListPageNavigationViewItem.IsSelected = true;
                                 }));
                             });
                             break;
                         }
                         else
                         {
-                            error = "配置文件加载失败";
+                            error = WorkDirectorySelectorDialog.WorkDirectorySelectorDialogError.FailedToLoadConfig;
                             continue;
                         }
                     }
@@ -197,7 +200,7 @@ namespace BililiveRecorder.WPF.Pages
                 }
                 catch (Exception ex)
                 {
-                    error = "发生了未知错误";
+                    error = WorkDirectorySelectorDialog.WorkDirectorySelectorDialogError.UnknownError;
                     logger.Warn(ex, "选择工作目录时发生了未知错误");
                     continue;
                 }
@@ -206,10 +209,10 @@ namespace BililiveRecorder.WPF.Pages
 
         private void NavigationView_SelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)
         {
-            SettingsClickCount = 0;
+            this.SettingsClickCount = 0;
             if (args.IsSettingsSelected)
             {
-                MainFrame.Navigate(typeof(SettingsPage), null, transitionInfo);
+                this.MainFrame.Navigate(typeof(SettingsPage), null, this.transitionInfo);
             }
             else
             {
@@ -219,26 +222,26 @@ namespace BililiveRecorder.WPF.Pages
                 {
                     try
                     {
-                        MainFrame.Navigate(new Uri(selectedItemTag), null, transitionInfo);
+                        this.MainFrame.Navigate(new Uri(selectedItemTag), null, this.transitionInfo);
                     }
                     catch (Exception)
                     {
                     }
                 }
-                else if (PageMap.ContainsKey(selectedItemTag))
+                else if (this.PageMap.ContainsKey(selectedItemTag))
                 {
-                    var pageType = PageMap[selectedItemTag];
-                    MainFrame.Navigate(pageType, null, transitionInfo);
+                    var pageType = this.PageMap[selectedItemTag];
+                    this.MainFrame.Navigate(pageType, null, this.transitionInfo);
                 }
             }
         }
 
         private void NavigationViewItem_MouseRightButtonUp(object sender, MouseButtonEventArgs e)
         {
-            if (++SettingsClickCount > 3)
+            if (++this.SettingsClickCount > 1)
             {
-                SettingsClickCount = 0;
-                AdvancedSettingsPageItem.Visibility = AdvancedSettingsPageItem.Visibility != Visibility.Visible ? Visibility.Visible : Visibility.Hidden;
+                this.SettingsClickCount = 0;
+                this.AdvancedSettingsPageItem.Visibility = this.AdvancedSettingsPageItem.Visibility != Visibility.Visible ? Visibility.Visible : Visibility.Hidden;
             }
         }
 
