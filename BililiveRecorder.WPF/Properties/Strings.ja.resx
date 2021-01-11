@@ -114,7 +114,7 @@
     <comment>Translate as "confirm" or "add"</comment>
   </data>
   <data name="AddRoomCard_PlaceholderText" xml:space="preserve">
-    <value>ルーム番号/URLリンク</value>
+    <value>ルーム番号/URL</value>
     <comment>id or link</comment>
   </data>
   <data name="AddRoomCard_Title" xml:space="preserve">
@@ -328,12 +328,12 @@
 ルーム番号：{roomid}
 タイトル：{title}
 ユーザー名：{name}
-大分区: {parea}
-子分区: {area}
+親カテゴリー: {parea}
+子カテゴリー: {area}
 ランダム数字：{random}
 
 約物及び変数名はすべて半角文字を使ってください。
-flvフォーマットのみサポートされています。</value>
+FLV フォーマットのみサポートされています。</value>
   </data>
   <data name="Settings_FileName_Record" xml:space="preserve">
     <value>録画のファイル名テンプレート</value>
