@@ -30,7 +30,7 @@
                 <TextBlock FontSize="20" VerticalAlignment="Center" Text="{l:Loc AddRoomCard_Title}"/>
             </StackPanel>
             <TextBox Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Center" x:Name="InputTextBox"
-                     ui:TextBoxHelper.IsDeleteButtonVisible="False"
+                     ui:TextBoxHelper.IsDeleteButtonVisible="False" FontSize="{l:Loc AddRoomCard_PlaceholderText_FontSize}"
                      ui:ControlHelper.PlaceholderText="{l:Loc AddRoomCard_PlaceholderText}"
                      KeyDown="InputTextBox_KeyDown"/>
             <Button Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" Content="{l:Loc AddRoomCard_ConfirmButton}" Click="Button_Click" />

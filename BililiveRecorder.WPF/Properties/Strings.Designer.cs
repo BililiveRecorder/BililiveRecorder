@@ -106,6 +106,15 @@ namespace BililiveRecorder.WPF.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to 14.
+        /// </summary>
+        public static string AddRoomCard_PlaceholderText_FontSize {
+            get {
+                return ResourceManager.GetString("AddRoomCard_PlaceholderText_FontSize", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to 添加房间.
         /// </summary>
         public static string AddRoomCard_Title {

@@ -120,6 +120,9 @@
   <data name="AddRoomCard_ConfirmButton" xml:space="preserve">
     <value>Add</value>
   </data>
+  <data name="AddRoomCard_PlaceholderText_FontSize" xml:space="preserve">
+    <value>14</value>
+  </data>
   <data name="AddRoomFailedDialog_CloseButtonText" xml:space="preserve">
     <value>OK</value>
   </data>
