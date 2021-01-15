@@ -4,10 +4,7 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Diagnostics;
 using System.Linq;
-using System.Runtime.Serialization;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -23,36 +20,96 @@ namespace BililiveRecorder.WPF.Pages
     /// </summary>
     public partial class RoomListPage
     {
+        private static readonly Logger logger = LogManager.GetCurrentClassLogger();
         private static readonly Regex RoomIdRegex
             = new Regex(@"^(?:https?:\/\/)?live\.bilibili\.com\/(?:blanc\/|h5\/)?(\d*)(?:\?.*)?$",
                 RegexOptions.IgnoreCase | RegexOptions.Singleline | RegexOptions.Compiled);
 
+        private readonly IRecordedRoom[] NullRoom = new IRecordedRoom[] { null };
+
+        private readonly KeyIndexMappingReadOnlyList NullRoomWithMapping;
+
         public RoomListPage()
         {
+            this.NullRoomWithMapping = new KeyIndexMappingReadOnlyList(this.NullRoom);
+
+            this.DataContextChanged += this.RoomListPage_DataContextChanged;
+
             this.InitializeComponent();
-
-            this.SortedRoomList = new SortedItemsSourceView(this.DataContext);
-            DataContextChanged += this.RoomListPage_DataContextChanged;
         }
 
-        private void RoomListPage_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e) => (this.SortedRoomList as SortedItemsSourceView).Data = e.NewValue as ICollection<IRecordedRoom>;
-
-        public static readonly DependencyProperty SortedRoomListProperty =
-           DependencyProperty.Register(
-               nameof(SortedRoomList),
-               typeof(object),
-               typeof(RoomListPage),
-               new PropertyMetadata(OnPropertyChanged));
-
-        public object SortedRoomList
+        private void RoomListPage_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
-            get => this.GetValue(SortedRoomListProperty);
-            set => this.SetValue(SortedRoomListProperty, value);
+            if (e.OldValue is INotifyCollectionChanged data_old) data_old.CollectionChanged -= this.DataSource_CollectionChanged;
+            if (e.NewValue is INotifyCollectionChanged data_new) data_new.CollectionChanged += this.DataSource_CollectionChanged;
+            this.ApplySort();
         }
 
-        private static void OnPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
+        public static readonly DependencyProperty RoomListProperty =
+         DependencyProperty.Register(
+             nameof(RoomList),
+             typeof(object),
+             typeof(RoomListPage),
+             new PropertyMetadata(OnPropertyChanged));
 
+        public object RoomList
+        {
+            get => this.GetValue(RoomListProperty);
+            set => this.SetValue(RoomListProperty, value);
+        }
+
+        public static readonly DependencyProperty SortByProperty =
+              DependencyProperty.Register(
+                  nameof(SortBy),
+                  typeof(SortedBy),
+                  typeof(RoomListPage),
+                  new PropertyMetadata(OnPropertyChanged));
+
+        public SortedBy SortBy
+        {
+            get => (SortedBy)this.GetValue(SortByProperty);
+            set => this.SetValue(SortByProperty, value);
+        }
+
+        private static void OnPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) => ((RoomListPage)d).PrivateOnPropertyChanged(e);
+
+        private void PrivateOnPropertyChanged(DependencyPropertyChangedEventArgs e)
+        {
+            if (e.Property == SortByProperty)
+            {
+                this.ApplySort();
+            }
+        }
+
+        private void DataSource_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e) => this.ApplySort();
+
+        private void ApplySort()
+        {
+            try
+            {
+                if (this.DataContext is not ICollection<IRecordedRoom> data)
+                {
+                    this.RoomList = this.NullRoomWithMapping;
+                }
+                else
+                {
+                    IEnumerable<IRecordedRoom> orderedData = this.SortBy switch
+                    {
+                        SortedBy.RoomId => data.OrderBy(x => x.ShortRoomId == 0 ? x.RoomId : x.ShortRoomId),
+                        SortedBy.Status => data
+                            .OrderByDescending(x => x.IsRecording)
+                            .ThenByDescending(x => x.IsMonitoring)
+                            .ThenByDescending(x => x.IsStreaming),
+                        _ => data,
+                    };
+                    var result = new KeyIndexMappingReadOnlyList(orderedData.Concat(this.NullRoom).ToArray());
+                    this.RoomList = result;
+                }
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex, "Error Sorting");
+            }
         }
 
         private async void RoomCard_DeleteRequested(object sender, EventArgs e)
@@ -66,7 +123,7 @@ namespace BililiveRecorder.WPF.Pages
 
                 var result = await dialog.ShowAsync();
 
-                if (result == ModernWpf.Controls.ContentDialogResult.Primary)
+                if (result == ContentDialogResult.Primary)
                 {
                     rec.RemoveRoom(room);
                     rec.SaveConfigToFile();
@@ -139,7 +196,7 @@ namespace BililiveRecorder.WPF.Pages
             rec.SaveConfigToFile();
         }
 
-        private void MenuItem_SortBy_Click(object sender, RoutedEventArgs e) => (this.SortedRoomList as SortedItemsSourceView).SortedBy = (SortedBy)((MenuItem)sender).Tag;
+        private void MenuItem_SortBy_Click(object sender, RoutedEventArgs e) => this.SortBy = (SortedBy)((MenuItem)sender).Tag;
 
         private void MenuItem_ShowLog_Click(object sender, RoutedEventArgs e)
         {
@@ -192,169 +249,28 @@ namespace BililiveRecorder.WPF.Pages
         }
     }
 
-    internal enum SortedBy
+    public enum SortedBy
     {
         None = 0,
         RoomId,
         Status,
     }
 
-    internal class SortedItemsSourceView : IList, IReadOnlyList<IRecordedRoom>, IKeyIndexMapping, INotifyCollectionChanged
+    internal class KeyIndexMappingReadOnlyList : IReadOnlyList<IRecordedRoom>, IKeyIndexMapping
     {
-        private static readonly Logger logger = LogManager.GetCurrentClassLogger();
+        private readonly IReadOnlyList<IRecordedRoom> data;
 
-        private ICollection<IRecordedRoom> _data;
-        private SortedBy sortedBy;
-
-        private readonly IRecordedRoom[] NullRoom = new IRecordedRoom[] { null };
-
-        public event NotifyCollectionChangedEventHandler CollectionChanged;
-
-        public SortedItemsSourceView(object data)
+        public KeyIndexMappingReadOnlyList(IReadOnlyList<IRecordedRoom> data)
         {
-            if (data is not null)
-            {
-                if (data is IList<IRecordedRoom> list)
-                {
-                    if (list is INotifyCollectionChanged n) n.CollectionChanged += this.Data_CollectionChanged;
-                    this._data = list;
-                }
-                else
-                {
-                    throw new ArgumentException("Type not supported.", nameof(data));
-                }
-            }
-            this.Sort();
+            this.data = data;
         }
 
-        private void Data_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e) => this.Sort();
+        public IRecordedRoom this[int index] => this.data[index];
 
-        public ICollection<IRecordedRoom> Data
-        {
-            get => this._data;
-            set
-            {
-                if (this._data is INotifyCollectionChanged n1) n1.CollectionChanged -= this.Data_CollectionChanged;
-                if (value is INotifyCollectionChanged n2) n2.CollectionChanged += this.Data_CollectionChanged;
-                this._data = value;
-                this.Sort();
-            }
-        }
+        public int Count => this.data.Count;
 
-        public SortedBy SortedBy { get => this.sortedBy; set { this.sortedBy = value; this.Sort(); } }
-
-        public List<IRecordedRoom> Sorted { get; private set; }
-
-        private int sortSeboucneCount = int.MinValue;
-        private readonly SemaphoreSlim sortSemaphoreSlim = new SemaphoreSlim(1, 1);
-
-        private async void Sort(bool retry = true)
-        {
-            // debounce && lock
-            logger.Debug("Sort called. retry = " + retry);
-            var callCount = Interlocked.Increment(ref this.sortSeboucneCount);
-            await Task.Delay(200);
-            if (this.sortSeboucneCount != callCount)
-            {
-                logger.Debug("Sort cancelled by debounce.");
-                return;
-            }
-
-            await this.sortSemaphoreSlim.WaitAsync();
-            try
-            {
-                this.SortImpl();
-            }
-            catch (Exception ex)
-            {
-                logger.Error(ex, "Error sorting. retry = " + retry);
-                if (retry)
-                    this.Sort(false);
-            }
-            finally
-            {
-                this.sortSemaphoreSlim.Release();
-            }
-        }
-
-        private void SortImpl()
-        {
-            logger.Debug("SortImpl called with {sortedBy} and {count} rooms.", this.SortedBy, this.Data?.Count ?? -1);
-
-            if (this.Data is null)
-            {
-                this.Sorted = this.NullRoom.ToList();
-                logger.Debug("SortImpl returned NullRoom.");
-            }
-            else
-            {
-                IEnumerable<IRecordedRoom> orderedData = this.SortedBy switch
-                {
-                    SortedBy.RoomId => this.Data.OrderBy(x => x.ShortRoomId == 0 ? x.RoomId : x.ShortRoomId),
-                    SortedBy.Status => this.Data
-                        .OrderByDescending(x => x.IsRecording)
-                        .ThenByDescending(x => x.IsMonitoring)
-                        .ThenByDescending(x => x.IsStreaming),
-                    _ => this.Data,
-                };
-                var result = orderedData.Concat(this.NullRoom).ToList();
-                logger.Debug("SortImpl sorted with {count} items.", result.Count);
-
-                { // 崩溃问题信息收集。。虽然不觉得是这里的问题
-                    var dup = result.GroupBy(x => x?.Guid ?? Guid.Empty).Where(x => x.Count() != 1);
-                    if (dup.Any())
-                    {
-                        var sb = new StringBuilder("排序调试信息\n重复:\n");
-                        foreach (var item in dup)
-                        {
-                            sb.Append("-Guid: ");
-                            sb.AppendLine(item.Key.ToString());
-                            foreach (var room in item)
-                            {
-                                sb.Append("RoomId: ");
-                                sb.AppendLine(room?.RoomId.ToString());
-                            }
-                        }
-                        sb.Append("原始:");
-                        foreach (var room in result)
-                        {
-                            sb.Append("-Guid: ");
-                            sb.AppendLine((room?.Guid ?? Guid.Empty).ToString());
-                            sb.Append("RoomId: ");
-                            sb.AppendLine(room?.RoomId.ToString());
-                        }
-                        logger.Debug(sb.ToString());
-
-                        // trigger sentry
-                        logger.Error(new SortedItemsSourceViewException(), "排序房间时发生了错误");
-                        return;
-                    }
-                }
-
-                this.Sorted = result;
-            }
-
-            // Instead of tossing out existing elements and re-creating them,
-            // ItemsRepeater will reuse the existing elements and match them up
-            // with the data again.
-            CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
-        }
-
-        public IRecordedRoom this[int index] => this.Sorted != null ? this.Sorted[index] : throw new IndexOutOfRangeException();
-        public int Count => this.Sorted != null ? this.Sorted.Count : 0;
-
-        public bool IsReadOnly => ((IList)this.Sorted).IsReadOnly;
-
-        public bool IsFixedSize => ((IList)this.Sorted).IsFixedSize;
-
-        public object SyncRoot => ((ICollection)this.Sorted).SyncRoot;
-
-        public bool IsSynchronized => ((ICollection)this.Sorted).IsSynchronized;
-
-        object IList.this[int index] { get => ((IList)this.Sorted)[index]; set => ((IList)this.Sorted)[index] = value; }
-
-        public IEnumerator<IRecordedRoom> GetEnumerator() => this.Sorted.GetEnumerator();
-        IEnumerator IEnumerable.GetEnumerator() => this.GetEnumerator();
+        public IEnumerator<IRecordedRoom> GetEnumerator() => this.data.GetEnumerator();
+        IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)this.data).GetEnumerator();
 
         #region IKeyIndexMapping
 
@@ -399,30 +315,6 @@ namespace BililiveRecorder.WPF.Pages
             return key.ToString();
         }
 
-        public int Add(object value) => ((IList)this.Sorted).Add(value);
-
-        public bool Contains(object value) => ((IList)this.Sorted).Contains(value);
-
-        public void Clear() => ((IList)this.Sorted).Clear();
-
-        public int IndexOf(object value) => ((IList)this.Sorted).IndexOf(value);
-
-        public void Insert(int index, object value) => ((IList)this.Sorted).Insert(index, value);
-
-        public void Remove(object value) => ((IList)this.Sorted).Remove(value);
-
-        public void RemoveAt(int index) => ((IList)this.Sorted).RemoveAt(index);
-
-        public void CopyTo(Array array, int index) => ((ICollection)this.Sorted).CopyTo(array, index);
-
         #endregion
-
-        public class SortedItemsSourceViewException : Exception
-        {
-            public SortedItemsSourceViewException() { }
-            public SortedItemsSourceViewException(string message) : base(message) { }
-            public SortedItemsSourceViewException(string message, Exception innerException) : base(message, innerException) { }
-            protected SortedItemsSourceViewException(SerializationInfo info, StreamingContext context) : base(info, context) { }
-        }
     }
 }
