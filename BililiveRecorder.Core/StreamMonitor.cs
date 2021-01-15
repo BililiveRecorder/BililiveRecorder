@@ -171,7 +171,7 @@ namespace BililiveRecorder.Core
             Task.Run(async () =>
             {
                 await Task.Delay(millisecondsDelay).ConfigureAwait(false);
-                if ((await this.FetchRoomInfoAsync().ConfigureAwait(false)).IsStreaming)
+                if ((await this.FetchRoomInfoAsync().ConfigureAwait(false))?.IsStreaming ?? false)
                 {
                     StreamStarted?.Invoke(this, new StreamStartedArgs() { type = type });
                 }

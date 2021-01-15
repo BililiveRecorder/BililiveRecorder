@@ -23,7 +23,7 @@ namespace BililiveRecorder.Core
 
         private readonly GlobalConfig globalConfig;
         private readonly HttpClient danmakuhttpclient;
-        private HttpClient httpclient;
+        private HttpClient httpclient = null!;
 
         public BililiveAPI(GlobalConfig globalConfig)
         {

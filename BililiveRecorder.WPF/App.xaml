@@ -3,6 +3,8 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="clr-namespace:BililiveRecorder.WPF"
     xmlns:ui="http://schemas.modernwpf.com/2019"
+    xmlns:l="https://github.com/XAMLMarkupExtensions/WPFLocalizationExtension"
+    xmlns:m="clr-namespace:BililiveRecorder.WPF.Models"
     x:Class="BililiveRecorder.WPF.App"
     Startup="CheckUpdate"
     SessionEnding="Application_SessionEnding"
@@ -18,6 +20,10 @@
             </ResourceDictionary.MergedDictionaries>
             <!-- Other app resources here -->
             <FontFamily x:Key="ContentControlThemeFontFamily">Microsoft YaHei</FontFamily>
+            <ContextMenu x:Key="CopyTextContextMenu" DataContext="{Binding RelativeSource={RelativeSource Mode=Self},Path=PlacementTarget}"
+                     l:ResxLocalizationProvider.DefaultDictionary="Strings">
+                <MenuItem Header="{l:Loc Global_Copy}" Command="{x:Static m:Commands.Copy}" CommandParameter="{Binding Text}"/>
+            </ContextMenu>
         </ResourceDictionary>
     </Application.Resources>
 </Application>
