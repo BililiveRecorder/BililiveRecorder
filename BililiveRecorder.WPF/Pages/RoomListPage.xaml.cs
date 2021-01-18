@@ -68,18 +68,16 @@ namespace BililiveRecorder.WPF.Pages
         public SortedBy SortBy
         {
             get => (SortedBy)this.GetValue(SortByProperty);
-            set => this.SetValue(SortByProperty, value);
+            set
+            {
+                this.SetValue(SortByProperty, value);
+                this.ApplySort();
+            }
         }
 
         private static void OnPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) => ((RoomListPage)d).PrivateOnPropertyChanged(e);
 
-        private void PrivateOnPropertyChanged(DependencyPropertyChangedEventArgs e)
-        {
-            if (e.Property == SortByProperty)
-            {
-                this.ApplySort();
-            }
-        }
+        private void PrivateOnPropertyChanged(DependencyPropertyChangedEventArgs e) { }
 
         private void DataSource_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e) => this.ApplySort();
 
@@ -96,10 +94,7 @@ namespace BililiveRecorder.WPF.Pages
                     IEnumerable<IRecordedRoom> orderedData = this.SortBy switch
                     {
                         SortedBy.RoomId => data.OrderBy(x => x.ShortRoomId == 0 ? x.RoomId : x.ShortRoomId),
-                        SortedBy.Status => data
-                            .OrderByDescending(x => x.IsRecording)
-                            .ThenByDescending(x => x.IsMonitoring)
-                            .ThenByDescending(x => x.IsStreaming),
+                        SortedBy.Status => from x in data orderby x.IsRecording descending, x.IsMonitoring descending, x.IsStreaming descending select x,
                         _ => data,
                     };
                     var result = new KeyIndexMappingReadOnlyList(orderedData.Concat(this.NullRoom).ToArray());
