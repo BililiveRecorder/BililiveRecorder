@@ -128,7 +128,7 @@
     <value>この配信チャンネルはすでに追加されています。</value>
   </data>
   <data name="AddRoomFailedDialog_ErrorText_InvalidInput" xml:space="preserve">
-    <value>配信ルームの番号、もしくはリンクを入力してください。</value>
+    <value>配信のルーム番号またはURLリンク追加してください</value>
   </data>
   <data name="AddRoomFailedDialog_ErrorText_RoomIdNegative" xml:space="preserve">
     <value>ルーム番号は負の数の入力はできません。</value>
@@ -170,10 +170,10 @@
     <value>終了</value>
   </data>
   <data name="LogPage_RightClickCopyToolTip" xml:space="preserve">
-    <value>右クリックしたらこの行をコピーできるですよ</value>
+    <value>右クリックでこの行がコピーできる</value>
   </data>
   <data name="RoomCard_ClipButton_Tooltip" xml:space="preserve">
-    <value>録画を編集する（編集している数）</value>
+    <value>プレーバッククリップ（処理途中のファイル数）</value>
     <comment>This feature is off by default, and will be removed in the future.</comment>
   </data>
   <data name="RoomCard_Menu_Delete" xml:space="preserve">
@@ -205,7 +205,7 @@
     <value>設定</value>
   </data>
   <data name="RoomCard_Status_DanmakuConnectionTooltip_False" xml:space="preserve">
-    <value>配信コメントサーバーへの接続が失敗しました
+    <value>配信コメントの接続状態は失われました
 リコーダーはコメントサーバーから配信状況データを受信する</value>
   </data>
   <data name="RoomCard_Status_DanmakuConnectionTooltip_True" xml:space="preserve">
@@ -243,7 +243,7 @@
     <value>監視</value>
   </data>
   <data name="RoomListPage_Menu_AutoRecord_DisableAll" xml:space="preserve">
-    <value>すべての配信ルームの自動録画機能をキャンセル</value>
+    <value>すべてのチャンネルの自動録画を停止する</value>
   </data>
   <data name="RoomListPage_Menu_AutoRecord_EnableAll" xml:space="preserve">
     <value>すべての配信ルームの自動録画機能を起動</value>
@@ -285,7 +285,7 @@
     <value>チャンネルリスト</value>
   </data>
   <data name="RootPage_NavigationViewItem_SettingsPage" xml:space="preserve">
-    <value>セッチング</value>
+    <value>設定</value>
   </data>
   <data name="Settings_AdvancedPage_Title" xml:space="preserve">
     <value>詳細設定</value>
@@ -372,7 +372,7 @@ FLV フォーマットのみサポートされています。</value>
     <value>録画モード</value>
   </data>
   <data name="Settings_SettingsPage_Title" xml:space="preserve">
-    <value>セッチング</value>
+    <value>設定</value>
   </data>
   <data name="Settings_Splitting_RadioButton_BySize" xml:space="preserve">
     <value>ファイルサイズによって分割する</value>
