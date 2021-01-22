@@ -78,7 +78,7 @@
                 <ui:ItemsRepeater
                 HorizontalAlignment="Stretch" Margin="8"
                 Layout="{Binding Config.Global.WpfShowTitleAndArea,Mode=OneWay,Converter={StaticResource BooleanToUniformGridLayoutConverter}}"
-                ItemsSource="{Binding SortedRoomList, RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=ui:Page}}"
+                ItemsSource="{Binding RoomList, RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=ui:Page}}"
                 ItemTemplate="{StaticResource SelectorTemplate}" />
             </ScrollViewer>
         </ui:ItemsRepeaterScrollHost>

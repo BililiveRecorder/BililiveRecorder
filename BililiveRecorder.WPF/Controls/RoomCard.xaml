@@ -11,17 +11,9 @@
     l:ResxLocalizationProvider.DefaultDictionary="Strings"
     xmlns:local="clr-namespace:BililiveRecorder.WPF.Controls"
     xmlns:mock="clr-namespace:BililiveRecorder.WPF.MockData"
-    xmlns:m="clr-namespace:BililiveRecorder.WPF.Models"
-    xmlns:pages="clr-namespace:BililiveRecorder.WPF.Pages"
     d:DesignWidth="220" d:DesignHeight="110"
     d:DataContext="{d:DesignInstance Type=mock:MockRecordedRoom,IsDesignTimeCreatable=True}"
     mc:Ignorable="d">
-    <UserControl.Resources>
-        <ContextMenu x:Key="CopyTextContextMenu" DataContext="{Binding RelativeSource={RelativeSource Mode=Self},Path=PlacementTarget}"
-                     l:ResxLocalizationProvider.DefaultDictionary="Strings">
-            <MenuItem Header="{l:Loc Global_Copy}" Command="{x:Static m:Commands.Copy}" CommandParameter="{Binding Text}"/>
-        </ContextMenu>
-    </UserControl.Resources>
     <Border Background="{DynamicResource SystemControlBackgroundAltHighBrush}"
             BorderBrush="{DynamicResource SystemControlBackgroundAccentBrush}" 
             BorderThickness="1"
@@ -173,9 +165,7 @@
                     <Button.Visibility>
                         <MultiBinding Converter="{StaticResource MultiBoolToVisibilityCollapsedConverter}" Mode="OneWay">
                             <Binding Path="IsRecording" Mode="OneWay"/>
-                            <Binding RelativeSource="{RelativeSource Mode=FindAncestor,AncestorType=pages:RootPage}" 
-                             Path="DataContext.Recorder.Config.Global.EnabledFeature" Mode="OneWay"
-                             Converter="{StaticResource ClipEnabledToBooleanConverter}"/>
+                            <Binding Path="RoomConfig.EnabledFeature" Mode="OneWay" Converter="{StaticResource ClipEnabledToBooleanConverter}"/>
                         </MultiBinding>
                     </Button.Visibility>
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
