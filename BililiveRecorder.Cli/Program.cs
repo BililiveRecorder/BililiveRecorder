@@ -12,9 +12,9 @@ namespace BililiveRecorder.Cli
 {
     internal class Program
     {
-        private static int Main()
+        private static int Main(string[] args)
             => Parser.Default
-            .ParseArguments<CmdVerbConfigMode, CmdVerbPortableMode>(Environment.GetCommandLineArgs())
+            .ParseArguments<CmdVerbConfigMode, CmdVerbPortableMode>(args)
             .MapResult<CmdVerbConfigMode, CmdVerbPortableMode, int>(RunConfigMode, RunPortableMode, err => 1);
 
         private static int RunConfigMode(CmdVerbConfigMode opts)
