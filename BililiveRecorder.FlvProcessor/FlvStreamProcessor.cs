@@ -12,8 +12,6 @@ namespace BililiveRecorder.FlvProcessor
     {
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
 
-        private readonly Guid UniqueId = Guid.NewGuid();
-
         internal const uint SEC_TO_MS = 1000; // 1 second = 1000 ms
         internal const int MIN_BUFFER_SIZE = 1024 * 2;
         internal static readonly byte[] FLV_HEADER_BYTES = new byte[]
@@ -232,7 +230,6 @@ namespace BililiveRecorder.FlvProcessor
 
         private void TagCreated(IFlvTag tag)
         {
-            logger.Trace($"{this.UniqueId}: TagCreated {tag.TagType},{tag.TagSize},{tag.TimeStamp},{tag.IsVideoKeyframe}");
             if (this.Metadata == null)
             {
                 ParseMetadata();
