@@ -12,6 +12,8 @@ namespace BililiveRecorder.FlvProcessor
     {
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
 
+        private readonly Guid UniqueId = Guid.NewGuid();
+
         internal const uint SEC_TO_MS = 1000; // 1 second = 1000 ms
         internal const int MIN_BUFFER_SIZE = 1024 * 2;
         internal static readonly byte[] FLV_HEADER_BYTES = new byte[]
@@ -230,6 +232,7 @@ namespace BililiveRecorder.FlvProcessor
 
         private void TagCreated(IFlvTag tag)
         {
+            logger.Trace($"{this.UniqueId}: TagCreated {tag.TagType},{tag.TagSize},{tag.TimeStamp},{tag.IsVideoKeyframe}");
             if (this.Metadata == null)
             {
                 ParseMetadata();
@@ -260,7 +263,7 @@ namespace BililiveRecorder.FlvProcessor
                 if (this.CuttingMode != AutoCuttingMode.Disabled && tag.IsVideoKeyframe)
                 {
                     bool byTime = (this.CuttingMode == AutoCuttingMode.ByTime) && (this.CurrentMaxTimestamp / 1000 >= this.CuttingNumber * 60);
-                    bool bySize = (this.CuttingMode == AutoCuttingMode.BySize) && ((this._targetFile.Length / 1024 / 1024) >= this.CuttingNumber);
+                    bool bySize = (this.CuttingMode == AutoCuttingMode.BySize) && (((this._targetFile?.Length ?? 0) / 1024 / 1024) >= this.CuttingNumber);
                     if (byTime || bySize)
                     {
                         this.FinallizeCurrentFile();
