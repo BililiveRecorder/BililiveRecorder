@@ -260,7 +260,7 @@ namespace BililiveRecorder.FlvProcessor
                 if (this.CuttingMode != AutoCuttingMode.Disabled && tag.IsVideoKeyframe)
                 {
                     bool byTime = (this.CuttingMode == AutoCuttingMode.ByTime) && (this.CurrentMaxTimestamp / 1000 >= this.CuttingNumber * 60);
-                    bool bySize = (this.CuttingMode == AutoCuttingMode.BySize) && ((this._targetFile.Length / 1024 / 1024) >= this.CuttingNumber);
+                    bool bySize = (this.CuttingMode == AutoCuttingMode.BySize) && (((this._targetFile?.Length ?? 0) / 1024 / 1024) >= this.CuttingNumber);
                     if (byTime || bySize)
                     {
                         this.FinallizeCurrentFile();

@@ -111,18 +111,22 @@ namespace BililiveRecorder.WPF.Pages
         {
             if (this.DataContext is IRecorder rec && sender is IRecordedRoom room)
             {
-                var dialog = new DeleteRoomConfirmDialog
+                try
                 {
-                    DataContext = room
-                };
+                    var dialog = new DeleteRoomConfirmDialog
+                    {
+                        DataContext = room
+                    };
 
-                var result = await dialog.ShowAsync();
+                    var result = await dialog.ShowAsync();
 
-                if (result == ContentDialogResult.Primary)
-                {
-                    rec.RemoveRoom(room);
-                    rec.SaveConfigToFile();
+                    if (result == ContentDialogResult.Primary)
+                    {
+                        rec.RemoveRoom(room);
+                        rec.SaveConfigToFile();
+                    }
                 }
+                catch (Exception) { }
             }
         }
 
@@ -149,25 +153,41 @@ namespace BililiveRecorder.WPF.Pages
                 }
                 else
                 {
-                    await new AddRoomFailedDialog { DataContext = AddRoomFailedDialog.AddRoomFailedErrorText.InvalidInput }.ShowAsync();
+                    try
+                    {
+                        await new AddRoomFailedDialog { DataContext = AddRoomFailedDialog.AddRoomFailedErrorText.InvalidInput }.ShowAsync();
+                    }
+                    catch (Exception) { }
                     return;
                 }
             }
 
             if (roomid < 0)
             {
-                await new AddRoomFailedDialog { DataContext = AddRoomFailedDialog.AddRoomFailedErrorText.RoomIdNegative }.ShowAsync();
+                try
+                {
+                    await new AddRoomFailedDialog { DataContext = AddRoomFailedDialog.AddRoomFailedErrorText.RoomIdNegative }.ShowAsync();
+                }
+                catch (Exception) { }
                 return;
             }
             else if (roomid == 0)
             {
-                await new AddRoomFailedDialog { DataContext = AddRoomFailedDialog.AddRoomFailedErrorText.RoomIdZero }.ShowAsync();
+                try
+                {
+                    await new AddRoomFailedDialog { DataContext = AddRoomFailedDialog.AddRoomFailedErrorText.RoomIdZero }.ShowAsync();
+                }
+                catch (Exception) { }
                 return;
             }
 
             if (rec.Any(x => x.RoomId == roomid || x.ShortRoomId == roomid))
             {
-                await new AddRoomFailedDialog { DataContext = AddRoomFailedDialog.AddRoomFailedErrorText.Duplicate }.ShowAsync();
+                try
+                {
+                    await new AddRoomFailedDialog { DataContext = AddRoomFailedDialog.AddRoomFailedErrorText.Duplicate }.ShowAsync();
+                }
+                catch (Exception) { }
                 return;
             }
 
