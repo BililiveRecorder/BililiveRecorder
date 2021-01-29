@@ -243,7 +243,7 @@
     <value>監視</value>
   </data>
   <data name="RoomListPage_Menu_AutoRecord_DisableAll" xml:space="preserve">
-    <value>すべてのチャンネルの自動録画を停止する</value>
+    <value>すべての配信ルームの自動録画機能をキャンセル</value>
   </data>
   <data name="RoomListPage_Menu_AutoRecord_EnableAll" xml:space="preserve">
     <value>すべての配信ルームの自動録画機能を起動</value>
