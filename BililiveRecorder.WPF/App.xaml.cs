@@ -87,8 +87,9 @@ namespace BililiveRecorder.WPF
 
         private void Application_SessionEnding(object sender, SessionEndingCancelEventArgs e)
         {
-            e.Cancel = true;
-            (Current.MainWindow as NewMainWindow).CloseWithoutConfirmAction();
+            if (e != null)
+                e.Cancel = true;
+            (Current.MainWindow as NewMainWindow)?.CloseWithoutConfirmAction();
         }
     }
 }
