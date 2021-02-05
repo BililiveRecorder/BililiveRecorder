@@ -29,7 +29,6 @@
     <ProjectReference Include="..\BililiveRecorder.FlvProcessor\BililiveRecorder.FlvProcessor.csproj" />
   </ItemGroup>
   <PropertyGroup>
-    <PreBuildEvent>cd $(SolutionDir)
-powershell -ExecutionPolicy Bypass -File .\CI\patch_buildinfo.ps1 Core</PreBuildEvent>
+    <PreBuildEvent>cd $(SolutionDir);powershell -ExecutionPolicy Bypass -File ./CI/patch_buildinfo.ps1 Core</PreBuildEvent>
   </PropertyGroup>
 </Project>

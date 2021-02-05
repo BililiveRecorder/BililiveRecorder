@@ -38,6 +38,6 @@
     <ProjectReference Include="..\BililiveRecorder.FlvProcessor\BililiveRecorder.FlvProcessor.csproj" />
   </ItemGroup>
   <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
-    <Exec Command="cd $(SolutionDir)&#xD;&#xA;powershell -ExecutionPolicy Bypass -File .\CI\patch_buildinfo.ps1 Cli" />
+    <Exec Command="cd $(SolutionDir);powershell -ExecutionPolicy Bypass -File ./CI/patch_buildinfo.ps1 Cli" />
   </Target>
 </Project>

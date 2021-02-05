@@ -26,7 +26,6 @@
     <PackageReference Include="NLog" Version="4.7.6" />
   </ItemGroup>
   <PropertyGroup>
-    <PreBuildEvent>cd $(SolutionDir)
-powershell -ExecutionPolicy Bypass -File .\CI\patch_buildinfo.ps1 FlvProcessor</PreBuildEvent>
+    <PreBuildEvent>cd $(SolutionDir);powershell -ExecutionPolicy Bypass -File ./CI/patch_buildinfo.ps1 FlvProcessor</PreBuildEvent>
   </PropertyGroup>
 </Project>
