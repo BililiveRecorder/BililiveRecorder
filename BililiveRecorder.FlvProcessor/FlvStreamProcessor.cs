@@ -51,8 +51,8 @@ namespace BililiveRecorder.FlvProcessor
         public int TotalMaxTimestamp { get; private set; } = 0;
         public int CurrentMaxTimestamp { get => this.TotalMaxTimestamp - this._writeTimeStamp; }
 
-        private readonly Func<IFlvClipProcessor> funcFlvClipProcessor;
-        private readonly Func<byte[], IFlvMetadata> funcFlvMetadata;
+        private readonly IProcessorFactory processorFactory;
+        private readonly IFlvMetadataFactory flvMetadataFactory;
         private readonly Func<IFlvTag> funcFlvTag;
 
         private Func<(string fullPath, string relativePath)> GetStreamFileName;
@@ -72,13 +72,11 @@ namespace BililiveRecorder.FlvProcessor
         public IFlvMetadata Metadata { get; set; } = null;
         public ObservableCollection<IFlvClipProcessor> Clips { get; } = new ObservableCollection<IFlvClipProcessor>();
 
-        public FlvStreamProcessor(Func<IFlvClipProcessor> funcFlvClipProcessor, Func<byte[], IFlvMetadata> funcFlvMetadata, Func<IFlvTag> funcFlvTag)
+        public FlvStreamProcessor(IProcessorFactory processorFactory, IFlvMetadataFactory flvMetadataFactory, Func<IFlvTag> funcFlvTag)
         {
-            this.funcFlvClipProcessor = funcFlvClipProcessor;
-            this.funcFlvMetadata = funcFlvMetadata;
+            this.processorFactory = processorFactory;
+            this.flvMetadataFactory = flvMetadataFactory;
             this.funcFlvTag = funcFlvTag;
-
-
         }
 
         public IFlvStreamProcessor Initialize(Func<(string fullPath, string relativePath)> getStreamFileName, Func<string> getClipFileName, EnabledFeature enabledFeature, AutoCuttingMode autoCuttingMode)
@@ -335,7 +333,7 @@ namespace BililiveRecorder.FlvProcessor
                     this._targetFile?.Write(FLV_HEADER_BYTES, 0, FLV_HEADER_BYTES.Length);
                     this._targetFile?.Write(new byte[] { 0, 0, 0, 0, }, 0, 4);
 
-                    this.Metadata = this.funcFlvMetadata(tag.Data);
+                    this.Metadata = this.flvMetadataFactory.CreateFlvMetadata(tag.Data);
 
                     OnMetaData?.Invoke(this, new FlvMetadataArgs() { Metadata = Metadata });
 
@@ -361,7 +359,7 @@ namespace BililiveRecorder.FlvProcessor
                 }
 
                 logger.Info("剪辑处理中，将会保存过去 {0} 秒和将来 {1} 秒的直播流", (this._tags[this._tags.Count - 1].TimeStamp - this._tags[0].TimeStamp) / 1000d, this.ClipLengthFuture);
-                IFlvClipProcessor clip = this.funcFlvClipProcessor().Initialize(this.GetClipFileName(), this.Metadata, this._headerTags, new List<IFlvTag>(this._tags.ToArray()), this.ClipLengthFuture);
+                IFlvClipProcessor clip = this.processorFactory.CreateClipProcessor().Initialize(this.GetClipFileName(), this.Metadata, this._headerTags, new List<IFlvTag>(this._tags.ToArray()), this.ClipLengthFuture);
                 clip.ClipFinalized += (sender, e) => { this.Clips.Remove(e.ClipProcessor); };
                 this.Clips.Add(clip);
                 return clip;

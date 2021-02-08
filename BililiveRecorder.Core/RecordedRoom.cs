@@ -113,7 +113,7 @@ namespace BililiveRecorder.Core
         public event EventHandler<RecordEndData> RecordEnded;
 
         private readonly IBasicDanmakuWriter basicDanmakuWriter;
-        private readonly Func<IFlvStreamProcessor> newIFlvStreamProcessor;
+        private readonly IProcessorFactory  processorFactory;
         private IFlvStreamProcessor _processor;
         public IFlvStreamProcessor Processor
         {
@@ -156,9 +156,9 @@ namespace BililiveRecorder.Core
         public Guid Guid { get; } = Guid.NewGuid();
 
         // TODO: 重构 DI
-        public RecordedRoom(Func<RoomConfig, IBasicDanmakuWriter> newBasicDanmakuWriter,
-            Func<RoomConfig, IStreamMonitor> newIStreamMonitor,
-            Func<IFlvStreamProcessor> newIFlvStreamProcessor,
+        public RecordedRoom(IBasicDanmakuWriter basicDanmakuWriter,
+            IStreamMonitor streamMonitor,
+            IProcessorFactory processorFactory,
             BililiveAPI bililiveAPI,
             RoomConfig roomConfig)
         {
@@ -167,11 +167,11 @@ namespace BililiveRecorder.Core
 
             this.BililiveAPI = bililiveAPI;
 
-            this.newIFlvStreamProcessor = newIFlvStreamProcessor;
+            this.processorFactory = processorFactory;
 
-            this.basicDanmakuWriter = newBasicDanmakuWriter(this.RoomConfig);
+            this.basicDanmakuWriter = basicDanmakuWriter;
 
-            this.StreamMonitor = newIStreamMonitor(this.RoomConfig);
+            this.StreamMonitor = streamMonitor;
             this.StreamMonitor.RoomInfoUpdated += this.StreamMonitor_RoomInfoUpdated;
             this.StreamMonitor.StreamStarted += this.StreamMonitor_StreamStarted;
             this.StreamMonitor.ReceivedDanmaku += this.StreamMonitor_ReceivedDanmaku;
@@ -377,7 +377,7 @@ namespace BililiveRecorder.Core
                 }
                 else
                 {
-                    this.Processor = this.newIFlvStreamProcessor().Initialize(this.GetStreamFilePath, this.GetClipFilePath, this.RoomConfig.EnabledFeature, this.RoomConfig.CuttingMode);
+                    this.Processor = this.processorFactory.CreateStreamProcessor().Initialize(this.GetStreamFilePath, this.GetClipFilePath, this.RoomConfig.EnabledFeature, this.RoomConfig.CuttingMode);
                     this.Processor.ClipLengthFuture = this.RoomConfig.ClipLengthFuture;
                     this.Processor.ClipLengthPast = this.RoomConfig.ClipLengthPast;
                     this.Processor.CuttingNumber = this.RoomConfig.CuttingNumber;

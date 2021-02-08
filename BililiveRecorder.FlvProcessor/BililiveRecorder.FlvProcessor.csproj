@@ -22,7 +22,7 @@
     <Compile Include="..\TempBuildInfo\BuildInfo.FlvProcessor.cs" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Autofac" Version="4.9.4" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="5.0.0" />
     <PackageReference Include="NLog" Version="4.7.6" />
   </ItemGroup>
   <PropertyGroup>

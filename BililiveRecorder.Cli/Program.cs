@@ -2,11 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
-using Autofac;
 using BililiveRecorder.Core;
 using BililiveRecorder.Core.Config.V2;
-using BililiveRecorder.FlvProcessor;
+using BililiveRecorder.DependencyInjection;
 using CommandLine;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace BililiveRecorder.Cli
 {
@@ -19,10 +19,10 @@ namespace BililiveRecorder.Cli
 
         private static int RunConfigMode(CmdVerbConfigMode opts)
         {
-            var container = CreateBuilder().Build();
-            var rootScope = container.BeginLifetimeScope("recorder_root");
             var semaphore = new SemaphoreSlim(0, 1);
-            var recorder = rootScope.Resolve<IRecorder>();
+
+            var serviceProvider = BuildServiceProvider();
+            var recorder = serviceProvider.GetRequiredService<IRecorder>();
 
             ConsoleCancelEventHandler p = null!;
             p = (sender, e) =>
@@ -46,10 +46,11 @@ namespace BililiveRecorder.Cli
 
         private static int RunPortableMode(CmdVerbPortableMode opts)
         {
-            var container = CreateBuilder().Build();
-            var rootScope = container.BeginLifetimeScope("recorder_root");
             var semaphore = new SemaphoreSlim(0, 1);
-            var recorder = rootScope.Resolve<IRecorder>();
+
+            var serviceProvider = BuildServiceProvider();
+            var recorder = serviceProvider.GetRequiredService<IRecorder>();
+
             var config = new ConfigV2()
             {
                 DisableConfigSave = true,
@@ -85,12 +86,12 @@ namespace BililiveRecorder.Cli
             return 0;
         }
 
-        private static ContainerBuilder CreateBuilder()
+        private static IServiceProvider BuildServiceProvider()
         {
-            var builder = new ContainerBuilder();
-            builder.RegisterModule<FlvProcessorModule>();
-            builder.RegisterModule<CoreModule>();
-            return builder;
+            var services = new ServiceCollection();
+            services.AddFlvProcessor();
+            services.AddCore();
+            return services.BuildServiceProvider();
         }
     }
 

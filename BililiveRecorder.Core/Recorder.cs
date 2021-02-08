@@ -9,6 +9,7 @@ using System.Threading;
 using BililiveRecorder.Core.Callback;
 using BililiveRecorder.Core.Config;
 using BililiveRecorder.Core.Config.V2;
+using Microsoft.Extensions.DependencyInjection;
 using NLog;
 
 #nullable enable
@@ -18,9 +19,9 @@ namespace BililiveRecorder.Core
     {
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
 
-        private readonly Func<RoomConfig, IRecordedRoom> newIRecordedRoom;
         private readonly CancellationTokenSource tokenSource;
-
+        private readonly IServiceProvider serviceProvider;
+        private IRecordedRoomFactory? recordedRoomFactory;
         private bool _valid = false;
         private bool disposedValue;
 
@@ -34,10 +35,9 @@ namespace BililiveRecorder.Core
         public bool IsReadOnly => true;
         public IRecordedRoom this[int index] => this.Rooms[index];
 
-        public Recorder(Func<RoomConfig, IRecordedRoom> iRecordedRoom)
+        public Recorder(IServiceProvider serviceProvider)
         {
-            this.newIRecordedRoom = iRecordedRoom ?? throw new ArgumentNullException(nameof(iRecordedRoom));
-
+            this.serviceProvider = serviceProvider;
             this.tokenSource = new CancellationTokenSource();
             Repeat.Interval(TimeSpan.FromSeconds(3), this.DownloadWatchdog, this.tokenSource.Token);
 
@@ -60,6 +60,7 @@ namespace BililiveRecorder.Core
                 this.Config = config;
                 this.Config.Global.WorkDirectory = workdir;
                 this.Webhook = new BasicWebhook(this.Config);
+                this.recordedRoomFactory = this.serviceProvider.GetRequiredService<IRecordedRoomFactory>();
                 this._valid = true;
                 this.Config.Rooms.ForEach(r => this.AddRoom(r));
                 ConfigParser.SaveTo(this.Config.Global.WorkDirectory, this.Config);
@@ -83,6 +84,7 @@ namespace BililiveRecorder.Core
             logger.Debug("Initialize With Config.");
             this.Config = config;
             this.Webhook = new BasicWebhook(this.Config);
+            this.recordedRoomFactory = this.serviceProvider.GetRequiredService<IRecordedRoomFactory>();
             this._valid = true;
             this.Config.Rooms.ForEach(r => this.AddRoom(r));
             return true;
@@ -136,7 +138,7 @@ namespace BililiveRecorder.Core
                 if (!this._valid) { throw new InvalidOperationException("Not Initialized"); }
 
                 roomConfig.SetParent(this.Config?.Global);
-                var rr = this.newIRecordedRoom(roomConfig);
+                var rr = this.recordedRoomFactory!.CreateRecordedRoom(roomConfig);
 
                 logger.Debug("AddRoom 添加了 {roomid} 直播间 ", rr.RoomId);
                 rr.RecordEnded += this.RecordedRoom_RecordEnded;

@@ -7,12 +7,12 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Threading;
-using Autofac;
 using BililiveRecorder.Core;
-using BililiveRecorder.FlvProcessor;
+using BililiveRecorder.DependencyInjection;
 using BililiveRecorder.WPF.Controls;
 using BililiveRecorder.WPF.Models;
 using CommandLine;
+using Microsoft.Extensions.DependencyInjection;
 using ModernWpf.Controls;
 using ModernWpf.Media.Animation;
 using NLog;
@@ -31,8 +31,7 @@ namespace BililiveRecorder.WPF.Pages
         private readonly string lastdir_path = Path.Combine(Path.GetDirectoryName(typeof(RootPage).Assembly.Location), "lastdir.txt");
         private readonly NavigationTransitionInfo transitionInfo = new DrillInNavigationTransitionInfo();
 
-        private IContainer Container { get; set; }
-        private ILifetimeScope RootScope { get; set; }
+        private ServiceProvider ServiceProvider { get; }
 
         private int SettingsClickCount = 0;
 
@@ -50,11 +49,12 @@ namespace BililiveRecorder.WPF.Pages
             this.Model = new RootModel();
             this.DataContext = this.Model;
 
-            var builder = new ContainerBuilder();
-            builder.RegisterModule<FlvProcessorModule>();
-            builder.RegisterModule<CoreModule>();
-            this.Container = builder.Build();
-            this.RootScope = this.Container.BeginLifetimeScope("recorder_root");
+            {
+                var services = new ServiceCollection();
+                services.AddFlvProcessor();
+                services.AddCore();
+                this.ServiceProvider = services.BuildServiceProvider();
+            }
 
             this.InitializeComponent();
             this.AdvancedSettingsPageItem.Visibility = Visibility.Hidden;
@@ -63,7 +63,7 @@ namespace BililiveRecorder.WPF.Pages
             if (mw is not null)
                 mw.NativeBeforeWindowClose += this.RootPage_NativeBeforeWindowClose;
 
-            Loaded += RootPage_Loaded;
+            Loaded += this.RootPage_Loaded;
         }
 
         private void RootPage_NativeBeforeWindowClose(object sender, EventArgs e)
@@ -74,7 +74,7 @@ namespace BililiveRecorder.WPF.Pages
 
         private async void RootPage_Loaded(object sender, RoutedEventArgs e)
         {
-            var recorder = this.RootScope.Resolve<IRecorder>();
+            var recorder = this.ServiceProvider.GetRequiredService<IRecorder>();
             var first_time = true;
             var error = WorkDirectorySelectorDialog.WorkDirectorySelectorDialogError.None;
             string path;

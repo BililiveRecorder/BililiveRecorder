@@ -19,10 +19,10 @@
     <Compile Include="..\TempBuildInfo\BuildInfo.Core.cs" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Autofac" Version="4.9.4" />
     <PackageReference Include="JsonSubTypes" Version="1.8.0" />
     <PackageReference Include="HierarchicalPropertyDefault" Version="0.1.1-beta-g721d36b97c" />
-    <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="5.0.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
     <PackageReference Include="NLog" Version="4.7.6" />
   </ItemGroup>
   <ItemGroup>

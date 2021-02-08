@@ -30,7 +30,6 @@ namespace BililiveRecorder.Core
     {
         private static readonly Logger logger = LogManager.GetCurrentClassLogger();
 
-        private readonly Func<TcpClient> funcTcpClient;
         private readonly RoomConfig roomConfig;
         private readonly BililiveAPI bililiveAPI;
 
@@ -51,9 +50,8 @@ namespace BililiveRecorder.Core
         public event ReceivedDanmakuEvt ReceivedDanmaku;
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public StreamMonitor(RoomConfig roomConfig, Func<TcpClient> funcTcpClient, BililiveAPI bililiveAPI)
+        public StreamMonitor(RoomConfig roomConfig, BililiveAPI bililiveAPI)
         {
-            this.funcTcpClient = funcTcpClient;
             this.roomConfig = roomConfig;
             this.bililiveAPI = bililiveAPI;
 
@@ -216,7 +214,7 @@ namespace BililiveRecorder.Core
 
                 logger.Log(this.RoomId, LogLevel.Debug, $"连接弹幕服务器 {host}:{port} {(string.IsNullOrWhiteSpace(token) ? "无" : "有")} token");
 
-                this.dmClient = this.funcTcpClient();
+                this.dmClient = new TcpClient();
                 await this.dmClient.ConnectAsync(host, port).ConfigureAwait(false);
                 this.dmNetStream = this.dmClient.GetStream();
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(this.IsDanmakuConnected)));
