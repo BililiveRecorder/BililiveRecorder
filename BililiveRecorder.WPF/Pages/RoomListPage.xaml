@@ -10,13 +10,11 @@
     l:ResxLocalizationProvider.DefaultAssembly="BililiveRecorder.WPF"
     l:ResxLocalizationProvider.DefaultDictionary="Strings"
     xmlns:local="clr-namespace:BililiveRecorder.WPF.Pages"
-    xmlns:mock="clr-namespace:BililiveRecorder.WPF.MockData"
     xmlns:c="clr-namespace:BililiveRecorder.WPF.Controls"
     xmlns:converters="clr-namespace:BililiveRecorder.WPF.Converters"
     mc:Ignorable="d" 
     x:Name="TheRoomListPage"
     d:DesignHeight="1000" d:DesignWidth="960"
-    d:DataContext="{d:DesignInstance mock:MockRecorder,IsDesignTimeCreatable=True}"
     DataContext="{Binding RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=local:RootPage},Path=DataContext.Recorder,Mode=OneWay}"
     >
     <ui:Page.Resources>
@@ -84,32 +82,11 @@
         </ui:ItemsRepeaterScrollHost>
         <GridSplitter Grid.Row="2" x:Name="Splitter" ResizeDirection="Rows"  Visibility="Collapsed"
                       HorizontalAlignment="Stretch" VerticalAlignment="Stretch" ShowsPreview="True"/>
-        <ui:ThemeShadowChrome Grid.Row="3" x:Name="LogElement" IsShadowEnabled="True" Depth="10" Margin="5" Visibility="Collapsed"
-                              DataContext="{Binding RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=local:RootPage},Path=DataContext.Logs,Mode=OneWay}">
+        <ui:ThemeShadowChrome Grid.Row="3" x:Name="LogElement" IsShadowEnabled="True" Depth="10" Margin="5" Visibility="Collapsed">
             <Border Background="{DynamicResource SystemControlBackgroundAltHighBrush}"
                     BorderBrush="{DynamicResource SystemControlBackgroundAccentBrush}"
                     BorderThickness="1" CornerRadius="5">
-                <ItemsControl ItemsSource="{Binding Mode=OneWay}" Margin="5" ToolTip="{l:Loc LogPage_RightClickCopyToolTip}">
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate>
-                            <Border BorderThickness="0,0,0,1" BorderBrush="#FFCCCCCC">
-                                <TextBlock Text="{Binding Mode=OneWay}" TextWrapping="Wrap" MouseRightButtonUp="TextBlock_Copy_MouseRightButtonUp"/>
-                            </Border>
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                    <ItemsControl.Template>
-                        <ControlTemplate>
-                            <ScrollViewer Loaded="Log_ScrollViewer_Loaded" CanContentScroll="True">
-                                <ItemsPresenter/>
-                            </ScrollViewer>
-                        </ControlTemplate>
-                    </ItemsControl.Template>
-                    <ItemsControl.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <VirtualizingStackPanel IsItemsHost="True"/>
-                        </ItemsPanelTemplate>
-                    </ItemsControl.ItemsPanel>
-                </ItemsControl>
+                <c:LogPanel/>
             </Border>
         </ui:ThemeShadowChrome>
     </Grid>

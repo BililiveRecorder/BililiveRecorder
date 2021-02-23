@@ -3,15 +3,20 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using Newtonsoft.Json;
-using NLog;
+using Serilog;
 
 #nullable enable
 namespace BililiveRecorder.Core.Config
 {
-    public static class ConfigParser
+    public class ConfigParser
     {
         private const string CONFIG_FILE_NAME = "config.json";
-        private static readonly Logger logger = LogManager.GetCurrentClassLogger();
+        private static readonly ILogger logger = Log.ForContext<ConfigParser>();
+        private static readonly JsonSerializerSettings settings = new JsonSerializerSettings()
+        {
+            DefaultValueHandling = DefaultValueHandling.Ignore,
+            NullValueHandling = NullValueHandling.Ignore
+        };
 
         public static V2.ConfigV2? LoadFrom(string directory)
         {
@@ -24,11 +29,11 @@ namespace BililiveRecorder.Core.Config
 
                 if (!File.Exists(filepath))
                 {
-                    logger.Debug("Config file does not exist. \"{path}\"", filepath);
+                    logger.Debug("Config file does not exist {Path}", filepath);
                     return new V2.ConfigV2();
                 }
 
-                logger.Debug("Loading config from path \"{path}\".", filepath);
+                logger.Debug("Loading config from {Path}", filepath);
                 var json = File.ReadAllText(filepath, Encoding.UTF8);
                 return LoadJson(json);
 
@@ -44,7 +49,7 @@ namespace BililiveRecorder.Core.Config
         {
             try
             {
-                logger.Debug("Config json: {config}", json);
+                logger.Debug("Config json: {Json}", json);
 
                 var configBase = JsonConvert.DeserializeObject<ConfigBase>(json);
                 switch (configBase)
@@ -53,7 +58,7 @@ namespace BililiveRecorder.Core.Config
                         {
                             logger.Debug("读取到 config v1");
 #pragma warning disable CS0612
-                            var v1Data = JsonConvert.DeserializeObject<V1.ConfigV1>(v1.Data);
+                            var v1Data = JsonConvert.DeserializeObject<V1.ConfigV1>(v1.Data ?? string.Empty);
 #pragma warning restore CS0612
                             var newConfig = ConfigMapper.Map1To2(v1Data);
 
@@ -106,7 +111,7 @@ namespace BililiveRecorder.Core.Config
         {
             try
             {
-                var json = JsonConvert.SerializeObject(config);
+                var json = JsonConvert.SerializeObject(config, Formatting.None, settings);
                 return json;
             }
             catch (Exception ex)
@@ -146,6 +151,5 @@ namespace BililiveRecorder.Core.Config
         }
         private static readonly Random random = new Random();
         private static string RandomString(int length) => new string(Enumerable.Repeat("ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789", length).Select(s => s[random.Next(s.Length)]).ToArray());
-
     }
 }

@@ -10,11 +10,11 @@
     l:ResxLocalizationProvider.DefaultAssembly="BililiveRecorder.WPF"
     l:ResxLocalizationProvider.DefaultDictionary="Strings"
     xmlns:local="clr-namespace:BililiveRecorder.WPF.Controls"
-    xmlns:mock="clr-namespace:BililiveRecorder.WPF.MockData"
+    
     DefaultButton="Close"
     PrimaryButtonText="{l:Loc Global_Delete}"
     CloseButtonText="{l:Loc Global_Cancel}"
-    d:DataContext="{d:DesignInstance Type=mock:MockRecordedRoom,IsDesignTimeCreatable=True}"
+    
     mc:Ignorable="d">
     <StackPanel>
         <TextBlock TextAlignment="Center" FontSize="18" Text="{l:Loc DeleteRoomConfirmDialog_Title}" Margin="0,0,0,5"/>

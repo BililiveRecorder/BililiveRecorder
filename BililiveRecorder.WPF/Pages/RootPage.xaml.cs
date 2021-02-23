@@ -8,16 +8,17 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Threading;
 using BililiveRecorder.Core;
+using BililiveRecorder.Core.Config;
 using BililiveRecorder.DependencyInjection;
 using BililiveRecorder.WPF.Controls;
 using BililiveRecorder.WPF.Models;
-using CommandLine;
 using Microsoft.Extensions.DependencyInjection;
 using ModernWpf.Controls;
 using ModernWpf.Media.Animation;
-using NLog;
+using Serilog;
 using Path = System.IO.Path;
 
+#nullable enable
 namespace BililiveRecorder.WPF.Pages
 {
     /// <summary>
@@ -25,16 +26,18 @@ namespace BililiveRecorder.WPF.Pages
     /// </summary>
     public partial class RootPage : UserControl
     {
-        private static readonly Logger logger = LogManager.GetCurrentClassLogger();
+        private static readonly ILogger logger = Log.ForContext<RootPage>();
+
+        internal static string? CommandArgumentRecorderPath = null;
+        internal static bool CommandArgumentFirstRun = false; // TODO
 
         private readonly Dictionary<string, Type> PageMap = new Dictionary<string, Type>();
         private readonly string lastdir_path = Path.Combine(Path.GetDirectoryName(typeof(RootPage).Assembly.Location), "lastdir.txt");
         private readonly NavigationTransitionInfo transitionInfo = new DrillInNavigationTransitionInfo();
 
-        private ServiceProvider ServiceProvider { get; }
-
         private int SettingsClickCount = 0;
 
+        private ServiceProvider serviceProvider;
         internal RootModel Model { get; private set; }
 
         public RootPage()
@@ -45,15 +48,19 @@ namespace BililiveRecorder.WPF.Pages
             AddType(typeof(SettingsPage));
             AddType(typeof(AdvancedSettingsPage));
             AddType(typeof(AnnouncementPage));
+            AddType(typeof(ToolboxAutoFixPage));
 
             this.Model = new RootModel();
             this.DataContext = this.Model;
 
             {
                 var services = new ServiceCollection();
-                services.AddFlvProcessor();
-                services.AddCore();
-                this.ServiceProvider = services.BuildServiceProvider();
+                services
+                    .AddFlv()
+                    .AddRecorder()
+                    ;
+
+                this.serviceProvider = services.BuildServiceProvider();
             }
 
             this.InitializeComponent();
@@ -74,29 +81,27 @@ namespace BililiveRecorder.WPF.Pages
 
         private async void RootPage_Loaded(object sender, RoutedEventArgs e)
         {
-            var recorder = this.ServiceProvider.GetRequiredService<IRecorder>();
             var first_time = true;
+            var from_argument = false;
             var error = WorkDirectorySelectorDialog.WorkDirectorySelectorDialogError.None;
             string path;
+
             while (true)
             {
                 try
                 {
-                    CommandLineOption commandLineOption = null;
                     if (first_time)
                     {
                         // while 循环第一次运行时检查命令行参数
                         try
                         {
                             first_time = false;
-                            Parser.Default
-                                .ParseArguments<CommandLineOption>(Environment.GetCommandLineArgs())
-                                .WithParsed(x => commandLineOption = x);
 
-                            if (!string.IsNullOrWhiteSpace(commandLineOption?.WorkDirectory))
+                            if (!string.IsNullOrWhiteSpace(CommandArgumentRecorderPath))
                             {
                                 // 如果有参数直接跳到检查路径
-                                path = Path.GetFullPath(commandLineOption.WorkDirectory);
+                                path = Path.GetFullPath(CommandArgumentRecorderPath);
+                                from_argument = true;
                             }
                             else
                             {
@@ -127,11 +132,17 @@ namespace BililiveRecorder.WPF.Pages
                             Error = error,
                             Path = lastdir
                         };
-
-                        if (await dialog.ShowAsync() != ContentDialogResult.Primary)
+                        var dialogResult = await dialog.ShowAsync();
+                        switch (dialogResult)
                         {
-                            (Application.Current.MainWindow as NewMainWindow).CloseWithoutConfirmAction();
-                            return;
+                            case ContentDialogResult.Primary:
+                                break;
+                            case ContentDialogResult.Secondary:
+                                return;
+                            case ContentDialogResult.None:
+                            default:
+                                (Application.Current.MainWindow as NewMainWindow)!.CloseWithoutConfirmAction();
+                                return;
                         }
 
                         try
@@ -143,7 +154,7 @@ namespace BililiveRecorder.WPF.Pages
                         }
                     }
 
-                    var config = Path.Combine(path, "config.json");
+                    var configFilePath = Path.Combine(path, "config.json");
 
                     if (!Directory.Exists(path))
                     {
@@ -154,7 +165,7 @@ namespace BililiveRecorder.WPF.Pages
                     {
                         // 可用的空文件夹
                     }
-                    else if (!File.Exists(config))
+                    else if (!File.Exists(configFilePath))
                     {
                         error = WorkDirectorySelectorDialog.WorkDirectorySelectorDialogError.PathContainsFiles;
                         continue;
@@ -164,48 +175,63 @@ namespace BililiveRecorder.WPF.Pages
 
                     // 如果不是从命令行参数传入的路径，写入 lastdir_path 记录
                     try
-                    { if (string.IsNullOrWhiteSpace(commandLineOption?.WorkDirectory)) File.WriteAllText(this.lastdir_path, path); }
+                    {
+                        if (!from_argument)
+                            File.WriteAllText(this.lastdir_path, path);
+                    }
                     catch (Exception) { }
 
-                    // 检查已经在同目录运行的其他进程
-                    if (SingleInstance.CheckMutex(path))
+                    // 加载配置文件
+                    var config = ConfigParser.LoadFrom(path);
+                    if (config is null)
                     {
-                        // 无已经在同目录运行的进程
-                        if (recorder.Initialize(path))
-                        {
-                            this.Model.Recorder = recorder;
-
-                            _ = Task.Run(async () =>
-                            {
-                                await Task.Delay(100);
-                                _ = this.Dispatcher.BeginInvoke(DispatcherPriority.Normal, method: new Action(() =>
-                                {
-                                    this.RoomListPageNavigationViewItem.IsSelected = true;
-                                }));
-                            });
-                            break;
-                        }
-                        else
-                        {
-                            error = WorkDirectorySelectorDialog.WorkDirectorySelectorDialogError.FailedToLoadConfig;
-                            continue;
-                        }
+                        error = WorkDirectorySelectorDialog.WorkDirectorySelectorDialogError.FailedToLoadConfig;
+                        continue;
                     }
-                    else
+                    config.Global.WorkDirectory = path;
+
+                    // 检查已经在同目录运行的其他进程
+                    if (!SingleInstance.CheckMutex(path))
                     {
                         // 有已经在其他目录运行的进程，已经通知该进程，本进程退出
-                        (Application.Current.MainWindow as NewMainWindow).CloseWithoutConfirmAction();
+                        (Application.Current.MainWindow as NewMainWindow)!.CloseWithoutConfirmAction();
                         return;
                     }
+
+                    // 无已经在同目录运行的进程
+                    this.serviceProvider = this.BuildServiceProvider(config, logger);
+                    var recorder = this.serviceProvider.GetRequiredService<IRecorder>();
+
+                    this.Model.Recorder = recorder;
+                    this.RoomListPageNavigationViewItem.IsEnabled = true;
+                    this.SettingsPageNavigationViewItem.IsEnabled = true;
+
+                    _ = Task.Run(async () =>
+                    {
+                        await Task.Delay(100);
+                        _ = this.Dispatcher.BeginInvoke(DispatcherPriority.Normal, method: new Action(() =>
+                        {
+                            this.RoomListPageNavigationViewItem.IsSelected = true;
+                        }));
+                    });
+
+                    break;
                 }
                 catch (Exception ex)
                 {
                     error = WorkDirectorySelectorDialog.WorkDirectorySelectorDialogError.UnknownError;
-                    logger.Warn(ex, "选择工作目录时发生了未知错误");
+                    logger.Warning(ex, "选择工作目录时发生了未知错误");
                     continue;
                 }
             }
         }
+
+        private ServiceProvider BuildServiceProvider(Core.Config.V2.ConfigV2 config, ILogger logger) => new ServiceCollection()
+            .AddSingleton(logger)
+            .AddRecorderConfig(config)
+            .AddFlv()
+            .AddRecorder()
+            .BuildServiceProvider();
 
         private void NavigationView_SelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)
         {

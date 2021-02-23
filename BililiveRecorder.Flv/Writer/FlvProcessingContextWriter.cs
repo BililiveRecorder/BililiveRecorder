@@ -3,10 +3,12 @@ using System.Buffers;
 using System.Buffers.Binary;
 using System.Diagnostics;
 using System.IO;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using BililiveRecorder.Flv.Amf;
 using BililiveRecorder.Flv.Pipeline;
+using Serilog;
 
 namespace BililiveRecorder.Flv.Writer
 {
@@ -17,10 +19,12 @@ namespace BililiveRecorder.Flv.Writer
         private readonly SemaphoreSlim semaphoreSlim = new SemaphoreSlim(1, 1);
         private readonly IFlvWriterTargetProvider targetProvider;
         private readonly IMemoryStreamProvider memoryStreamProvider;
-
+        private readonly ILogger? logger;
+        private bool disposedValue;
         private WriterState state = WriterState.EmptyFileOrNotOpen;
 
         private Stream? stream = null;
+        private object? streamState = null;
 
         private Tag? nextScriptTag = null;
         private Tag? nextAudioHeaderTag = null;
@@ -28,14 +32,18 @@ namespace BililiveRecorder.Flv.Writer
 
         private ScriptTagBody? lastScriptBody = null;
         private uint lastScriptBodyLength = 0;
+        private double lastDuration;
+
+        public event EventHandler<FileClosedEventArgs>? FileClosed;
 
         public Action<ScriptTagBody>? BeforeScriptTagWrite { get; set; }
         public Action<ScriptTagBody>? BeforeScriptTagRewrite { get; set; }
 
-        public FlvProcessingContextWriter(IFlvWriterTargetProvider targetProvider, IMemoryStreamProvider memoryStreamProvider)
+        public FlvProcessingContextWriter(IFlvWriterTargetProvider targetProvider, IMemoryStreamProvider memoryStreamProvider, ILogger? logger)
         {
             this.targetProvider = targetProvider ?? throw new ArgumentNullException(nameof(targetProvider));
             this.memoryStreamProvider = memoryStreamProvider ?? throw new ArgumentNullException(nameof(memoryStreamProvider));
+            this.logger = logger?.ForContext<FlvProcessingContextWriter>();
         }
 
         public async Task WriteAsync(FlvProcessingContext context)
@@ -51,7 +59,6 @@ namespace BililiveRecorder.Flv.Writer
             //}
 
             await this.semaphoreSlim.WaitAsync().ConfigureAwait(false);
-
             try
             {
                 foreach (var item in context.Output)
@@ -71,6 +78,12 @@ namespace BililiveRecorder.Flv.Writer
             {
                 this.semaphoreSlim.Release();
             }
+
+            // Dispose tags
+            foreach (var action in context.Output)
+                if (action is PipelineDataAction dataAction)
+                    foreach (var tag in dataAction.Tags)
+                        tag.BinaryData?.Dispose();
         }
 
         #region Flv Writer Implementation
@@ -85,16 +98,29 @@ namespace BililiveRecorder.Flv.Writer
             _ => Task.CompletedTask,
         };
 
-        private Task WriteAlternativeHeader(PipelineLogAlternativeHeaderAction logAlternativeHeaderAction)
+        private async Task WriteAlternativeHeader(PipelineLogAlternativeHeaderAction logAlternativeHeaderAction)
         {
-            throw new NotImplementedException();
+            using var writer = new StreamWriter(this.targetProvider.CreateAlternativeHeaderStream(), Encoding.UTF8);
+            await writer.WriteLineAsync("----- Group Start -----").ConfigureAwait(false);
+            await writer.WriteLineAsync("连续遇到了多个不同的音视频Header，如果录制的文件不能正常播放可以尝试用这里的数据进行修复").ConfigureAwait(false);
+            await writer.WriteLineAsync(DateTimeOffset.Now.ToString("O")).ConfigureAwait(false);
+
+            foreach (var tag in logAlternativeHeaderAction.Tags)
+            {
+                await writer.WriteLineAsync().ConfigureAwait(false);
+                await writer.WriteLineAsync(tag.ToString()).ConfigureAwait(false);
+                await writer.WriteLineAsync(tag.BinaryDataForSerializationUseOnly).ConfigureAwait(false);
+            }
+
+            await writer.WriteLineAsync("----- Group End -----").ConfigureAwait(false);
         }
 
-        private async Task OpenNewFile()
+        private Task OpenNewFile()
         {
-            await this.CloseCurrentFileImpl().ConfigureAwait(false);
+            this.CloseCurrentFileImpl();
             // delay open until write
             this.state = WriterState.EmptyFileOrNotOpen;
+            return Task.CompletedTask;
         }
 
         private Task WriteScriptTag(PipelineScriptAction scriptAction)
@@ -118,25 +144,38 @@ namespace BililiveRecorder.Flv.Writer
             return Task.CompletedTask;
         }
 
-        private async Task CloseCurrentFileImpl()
+        private void CloseCurrentFileImpl()
         {
             if (this.stream is null)
                 return;
 
-            await this.RewriteScriptTagImpl(0).ConfigureAwait(false);
-            await this.stream.FlushAsync().ConfigureAwait(false);
+            //await this.RewriteScriptTagImpl(0).ConfigureAwait(false);
+            //await this.stream.FlushAsync().ConfigureAwait(false);
+
+            var eventArgs = new FileClosedEventArgs
+            {
+                FileSize = this.stream.Length,
+                Duration = this.lastDuration,
+                State = this.streamState,
+            };
+
             this.stream.Close();
             this.stream.Dispose();
             this.stream = null;
+
+            this.streamState = null;
+            this.lastDuration = 0d;
+
+            FileClosed?.Invoke(this, eventArgs);
         }
 
         private async Task OpenNewFileImpl()
         {
-            await this.CloseCurrentFileImpl().ConfigureAwait(false);
+            this.CloseCurrentFileImpl();
 
-            Debug.Assert(this.stream is null, "stream is null");
+            Debug.Assert(this.stream is null, "stream is not null");
 
-            this.stream = this.targetProvider.CreateOutputStream();
+            (this.stream, this.streamState) = this.targetProvider.CreateOutputStream();
             await this.stream.WriteAsync(FLV_FILE_HEADER, 0, FLV_FILE_HEADER.Length).ConfigureAwait(false);
 
             this.state = WriterState.BeforeScript;
@@ -147,7 +186,10 @@ namespace BililiveRecorder.Flv.Writer
             if (this.stream is null || this.lastScriptBody is null)
                 return;
 
-            this.lastScriptBody.Value["duration"] = (ScriptDataNumber)duration;
+            var value = this.lastScriptBody.GetMetadataValue();
+            if (!(value is null))
+                value["duration"] = (ScriptDataNumber)duration;
+
             this.BeforeScriptTagRewrite?.Invoke(this.lastScriptBody);
 
             this.stream.Seek(9 + 4 + 11, SeekOrigin.Begin);
@@ -163,7 +205,7 @@ namespace BililiveRecorder.Flv.Writer
                 }
                 else
                 {
-                    // TODO logging
+                    this.logger?.Warning("因 Script tag 输出长度不一致跳过修改");
                 }
             }
 
@@ -183,7 +225,10 @@ namespace BililiveRecorder.Flv.Writer
 
             this.lastScriptBody = this.nextScriptTag.ScriptData;
 
-            this.lastScriptBody.Value["duration"] = (ScriptDataNumber)0;
+            var value = this.lastScriptBody.GetMetadataValue();
+            if (!(value is null))
+                value["duration"] = (ScriptDataNumber)0;
+
             this.BeforeScriptTagWrite?.Invoke(this.lastScriptBody);
 
             var bytes = ArrayPool<byte>.Shared.Rent(11);
@@ -254,6 +299,15 @@ namespace BililiveRecorder.Flv.Writer
                     await this.WriteHeaderTagsImpl().ConfigureAwait(false);
                     break;
                 case WriterState.Writing:
+                    if (this.stream is null)
+                        throw new Exception("stream is null");
+
+                    if (this.targetProvider.ShouldCreateNewFile(this.stream, dataAction.Tags))
+                    {
+                        await this.OpenNewFileImpl().ConfigureAwait(false);
+                        await this.WriteScriptTagImpl().ConfigureAwait(false);
+                        await this.WriteHeaderTagsImpl().ConfigureAwait(false);
+                    }
                     break;
                 default:
                     throw new InvalidOperationException($"Can't write data tag with current state ({this.state})");
@@ -266,6 +320,7 @@ namespace BililiveRecorder.Flv.Writer
                 await tag.WriteTo(this.stream, tag.Timestamp, this.memoryStreamProvider).ConfigureAwait(false);
 
             var duration = dataAction.Tags[dataAction.Tags.Count - 1].Timestamp / 1000d;
+            this.lastDuration = duration;
             await this.RewriteScriptTagImpl(duration).ConfigureAwait(false);
         }
 
@@ -273,24 +328,23 @@ namespace BililiveRecorder.Flv.Writer
 
         #region IDisposable
 
-        private bool disposedValue;
-
         protected virtual void Dispose(bool disposing)
         {
             if (!this.disposedValue)
             {
                 if (disposing)
                 {
-                    // TODO: dispose managed state (managed objects)
+                    // dispose managed state (managed objects)
+                    this.CloseCurrentFileImpl();
                 }
 
-                // TODO: free unmanaged resources (unmanaged objects) and override finalizer
-                // TODO: set large fields to null
+                // free unmanaged resources (unmanaged objects) and override finalizer
+                // set large fields to null
                 this.disposedValue = true;
             }
         }
 
-        // // TODO: override finalizer only if 'Dispose(bool disposing)' has code to free unmanaged resources
+        // override finalizer only if 'Dispose(bool disposing)' has code to free unmanaged resources
         // ~FlvProcessingContextWriter()
         // {
         //     // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method

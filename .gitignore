@@ -263,3 +263,4 @@ __pycache__/
 
 TempBuildInfo/*.cs
 BililiveRecorder.WPF/Nlog.config
+BililiveRecorder.Cli/Properties/launchSettings.json

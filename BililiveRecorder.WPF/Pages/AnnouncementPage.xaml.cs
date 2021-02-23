@@ -9,6 +9,7 @@ using System.Windows.Threading;
 using System.Xaml;
 using Microsoft.WindowsAPICodePack.Dialogs;
 
+#nullable enable
 namespace BililiveRecorder.WPF.Pages
 {
     /// <summary>
@@ -18,7 +19,7 @@ namespace BililiveRecorder.WPF.Pages
     {
         private static readonly HttpClient client;
 
-        private static MemoryStream AnnouncementCache = null;
+        private static MemoryStream? AnnouncementCache = null;
         private static DateTimeOffset AnnouncementCacheTime = DateTimeOffset.MinValue;
         internal static CultureInfo CultureInfo = CultureInfo.CurrentUICulture;
 
@@ -31,14 +32,14 @@ namespace BililiveRecorder.WPF.Pages
         public AnnouncementPage()
         {
             this.InitializeComponent();
-            this.Dispatcher.BeginInvoke(DispatcherPriority.Normal, new Action(async () => await this.LoadAnnouncementAsync(ignore_cache: false, show_error: false)));
+            _ = this.Dispatcher.BeginInvoke(DispatcherPriority.Normal, (Func<Task>)(async () => await this.LoadAnnouncementAsync(ignore_cache: false, show_error: false)));
         }
 
         private async void Button_Click(object sender, RoutedEventArgs e) => await this.LoadAnnouncementAsync(ignore_cache: true, show_error: Keyboard.Modifiers.HasFlag(ModifierKeys.Control));
 
         private async Task LoadAnnouncementAsync(bool ignore_cache, bool show_error)
         {
-            MemoryStream data;
+            MemoryStream? data;
             bool success;
 
             this.Container.Child = null;
@@ -75,7 +76,7 @@ namespace BililiveRecorder.WPF.Pages
                 }
             }
 
-            if (success)
+            if (success && data is not null)
             {
                 try
                 {

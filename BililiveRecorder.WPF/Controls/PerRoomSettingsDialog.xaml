@@ -10,11 +10,9 @@
     l:ResxLocalizationProvider.DefaultAssembly="BililiveRecorder.WPF"
     l:ResxLocalizationProvider.DefaultDictionary="Strings"
     xmlns:local="clr-namespace:BililiveRecorder.WPF.Controls"
-    xmlns:mock="clr-namespace:BililiveRecorder.WPF.MockData"
-    xmlns:flv="clr-namespace:BililiveRecorder.FlvProcessor;assembly=BililiveRecorder.FlvProcessor"
+    xmlns:confiv2="clr-namespace:BililiveRecorder.Core.Config.V2;assembly=BililiveRecorder.Core"
     DefaultButton="Close"
     CloseButtonText="{l:Loc Global_Close}"
-    d:DataContext="{d:DesignInstance Type=mock:MockRecordedRoom,IsDesignTimeCreatable=True}"
     mc:Ignorable="d">
     <Grid>
         <Grid.RowDefinitions>
@@ -61,13 +59,13 @@
                             <StackPanel>
                                 <RadioButton GroupName="Splitting" Content="{l:Loc Settings_Splitting_RadioButton_Disabled}"
                                  IsChecked="{Binding Path=CuttingMode, Converter={StaticResource EnumToBooleanConverter},
-                        ConverterParameter={x:Static flv:AutoCuttingMode.Disabled}}" />
+                        ConverterParameter={x:Static confiv2:CuttingMode.Disabled}}" />
                                 <RadioButton GroupName="Splitting" Content="{l:Loc Settings_Splitting_RadioButton_BySize}"
                                  IsChecked="{Binding Path=CuttingMode, Converter={StaticResource EnumToBooleanConverter},
-                        ConverterParameter={x:Static flv:AutoCuttingMode.BySize}}" />
+                        ConverterParameter={x:Static confiv2:CuttingMode.BySize}}" />
                                 <RadioButton GroupName="Splitting" Content="{l:Loc Settings_Splitting_RadioButton_ByTime}"
                                  IsChecked="{Binding Path=CuttingMode, Converter={StaticResource EnumToBooleanConverter},
-                        ConverterParameter={x:Static flv:AutoCuttingMode.ByTime}}" />
+                        ConverterParameter={x:Static confiv2:CuttingMode.ByTime}}" />
                             </StackPanel>
                         </local:SettingWithDefault>
                         <local:SettingWithDefault IsSettingNotUsingDefault="{Binding HasCuttingNumber}">

@@ -1,26 +1,27 @@
 using System;
-using System.Collections.Generic;
-using System.Collections.Specialized;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using BililiveRecorder.Core.Config.V2;
+using BililiveRecorder.Core.Event;
 
-#nullable enable
 namespace BililiveRecorder.Core
 {
-    public interface IRecorder : INotifyPropertyChanged, INotifyCollectionChanged, IEnumerable<IRecordedRoom>, ICollection<IRecordedRoom>, IDisposable
+    public interface IRecorder : INotifyPropertyChanged, IDisposable
     {
-        ConfigV2? Config { get; }
+        ConfigV2 Config { get; }
+        ReadOnlyObservableCollection<IRoom> Rooms { get; }
 
-        bool Initialize(string workdir);
+        event EventHandler<AggregatedRoomEventArgs<RecordSessionStartedEventArgs>>? RecordSessionStarted;
+        event EventHandler<AggregatedRoomEventArgs<RecordSessionEndedEventArgs>>? RecordSessionEnded;
+        event EventHandler<AggregatedRoomEventArgs<RecordFileOpeningEventArgs>>? RecordFileOpening;
+        event EventHandler<AggregatedRoomEventArgs<RecordFileClosedEventArgs>>? RecordFileClosed;
+        event EventHandler<AggregatedRoomEventArgs<NetworkingStatsEventArgs>>? NetworkingStats;
+        event EventHandler<AggregatedRoomEventArgs<RecordingStatsEventArgs>>? RecordingStats;
 
         void AddRoom(int roomid);
-
         void AddRoom(int roomid, bool enabled);
+        void RemoveRoom(IRoom room);
 
-        void RemoveRoom(IRecordedRoom rr);
-
-        void SaveConfigToFile();
-
-        // void Shutdown();
+        void SaveConfig();
     }
 }

@@ -2,25 +2,16 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using BililiveRecorder.FlvProcessor;
 using Newtonsoft.Json;
-using NLog;
 
+#nullable disable
 namespace BililiveRecorder.Core.Config.V1
 {
     [Obsolete]
     [JsonObject(memberSerialization: MemberSerialization.OptIn)]
     public class ConfigV1 : INotifyPropertyChanged
     {
-        private static readonly Logger logger = LogManager.GetCurrentClassLogger();
-
-        /// <summary>
-        /// 当前工作目录
-        /// </summary>
-        [JsonIgnore]
-        [Utils.DoNotCopyProperty]
-        public string WorkDirectory { get => this._workDirectory; set => this.SetField(ref this._workDirectory, value); }
-
+        //private static readonly Logger logger = LogManager.GetCurrentClassLogger();
 
         /// <summary>
         /// 房间号列表
@@ -31,8 +22,8 @@ namespace BililiveRecorder.Core.Config.V1
         /// <summary>
         /// 启用的功能
         /// </summary>
-        [JsonProperty("feature")]
-        public EnabledFeature EnabledFeature { get => this._enabledFeature; set => this.SetField(ref this._enabledFeature, value); }
+        //[JsonProperty("feature")]
+        //public EnabledFeature EnabledFeature { get => this._enabledFeature; set => this.SetField(ref this._enabledFeature, value); }
 
         /// <summary>
         /// 剪辑-过去的时长(秒)
@@ -50,7 +41,7 @@ namespace BililiveRecorder.Core.Config.V1
         /// 自动切割模式
         /// </summary>
         [JsonProperty("cutting_mode")]
-        public AutoCuttingMode CuttingMode { get => this._cuttingMode; set => this.SetField(ref this._cuttingMode, value); }
+        public V2.CuttingMode CuttingMode { get => this._cuttingMode; set => this.SetField(ref this._cuttingMode, value); }
 
         /// <summary>
         /// 自动切割数值（分钟/MiB）
@@ -165,18 +156,17 @@ namespace BililiveRecorder.Core.Config.V1
         protected virtual void OnPropertyChanged(string propertyName) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         protected bool SetField<T>(ref T field, T value, [CallerMemberName] string propertyName = "")
         {
-            if (EqualityComparer<T>.Default.Equals(field, value)) return false; logger.Trace("设置 [{0}] 的值已从 [{1}] 修改到 [{2}]", propertyName, field, value);
+            if (EqualityComparer<T>.Default.Equals(field, value)) return false;
+            // logger.Trace("设置 [{0}] 的值已从 [{1}] 修改到 [{2}]", propertyName, field, value);
             field = value; this.OnPropertyChanged(propertyName); return true;
         }
         #endregion
 
-        private string _workDirectory;
-
         private uint _clipLengthPast = 20;
         private uint _clipLengthFuture = 10;
         private uint _cuttingNumber = 10;
-        private EnabledFeature _enabledFeature = EnabledFeature.RecordOnly;
-        private AutoCuttingMode _cuttingMode = AutoCuttingMode.Disabled;
+        //private EnabledFeature _enabledFeature = EnabledFeature.RecordOnly;
+        private V2.CuttingMode _cuttingMode = V2.CuttingMode.Disabled;
 
         private uint _timingWatchdogTimeout = 10 * 1000;
         private uint _timingStreamRetry = 6 * 1000;

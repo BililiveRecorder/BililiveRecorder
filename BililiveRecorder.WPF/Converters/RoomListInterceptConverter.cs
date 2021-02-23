@@ -19,39 +19,40 @@ namespace BililiveRecorder.WPF.Converters
             return value;
         }
 
-        private class RecorderWrapper : ObservableCollection<IRecordedRoom>
+        private class RecorderWrapper : ObservableCollection<IRoom>
         {
             private readonly IRecorder recorder;
 
-            public RecorderWrapper(IRecorder recorder) : base(recorder)
+            public RecorderWrapper(IRecorder recorder) : base(recorder.Rooms)
             {
                 this.recorder = recorder;
                 this.Add(null);
 
-                recorder.CollectionChanged += (sender, e) =>
-                {
-                    switch (e.Action)
-                    {
-                        case NotifyCollectionChangedAction.Add:
-                            if (e.NewItems.Count != 1) throw new NotImplementedException("Wrapper Add Item Count != 1");
-                            this.InsertItem(e.NewStartingIndex, e.NewItems[0] as IRecordedRoom);
-                            break;
-                        case NotifyCollectionChangedAction.Remove:
-                            if (e.OldItems.Count != 1) throw new NotImplementedException("Wrapper Remove Item Count != 1");
-                            if (!this.Remove(e.OldItems[0] as IRecordedRoom)) throw new NotImplementedException("Wrapper Remove Item Sync Fail");
-                            break;
-                        case NotifyCollectionChangedAction.Replace:
-                            throw new NotImplementedException("Wrapper Replace Item");
-                        case NotifyCollectionChangedAction.Move:
-                            throw new NotImplementedException("Wrapper Move Item");
-                        case NotifyCollectionChangedAction.Reset:
-                            this.ClearItems();
-                            this.Add(null);
-                            break;
-                        default:
-                            break;
-                    }
-                };
+                // TODO fix me
+                //recorder.Rooms.CollectionChanged += (sender, e) =>
+                //{
+                //    switch (e.Action)
+                //    {
+                //        case NotifyCollectionChangedAction.Add:
+                //            if (e.NewItems.Count != 1) throw new NotImplementedException("Wrapper Add Item Count != 1");
+                //            this.InsertItem(e.NewStartingIndex, e.NewItems[0] as IRecordedRoom);
+                //            break;
+                //        case NotifyCollectionChangedAction.Remove:
+                //            if (e.OldItems.Count != 1) throw new NotImplementedException("Wrapper Remove Item Count != 1");
+                //            if (!this.Remove(e.OldItems[0] as IRecordedRoom)) throw new NotImplementedException("Wrapper Remove Item Sync Fail");
+                //            break;
+                //        case NotifyCollectionChangedAction.Replace:
+                //            throw new NotImplementedException("Wrapper Replace Item");
+                //        case NotifyCollectionChangedAction.Move:
+                //            throw new NotImplementedException("Wrapper Move Item");
+                //        case NotifyCollectionChangedAction.Reset:
+                //            this.ClearItems();
+                //            this.Add(null);
+                //            break;
+                //        default:
+                //            break;
+                //    }
+                //};
             }
         }
     }

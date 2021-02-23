@@ -1,20 +1,5 @@
 module.exports = {
     "global": [{
-        "name": "EnabledFeature",
-        "type": "EnabledFeature",
-        "desc": "启用的功能",
-        "default": "EnabledFeature.RecordOnly"
-    }, {
-        "name": "ClipLengthPast",
-        "type": "uint",
-        "desc": "剪辑-过去的时长(秒)",
-        "default": "20"
-    }, {
-        "name": "ClipLengthFuture",
-        "type": "uint",
-        "desc": "剪辑-将来的时长(秒)",
-        "default": "10"
-    }, {
         "name": "TimingStreamRetry",
         "type": "uint",
         "desc": "录制断开重连时间间隔 毫秒",
@@ -57,6 +42,12 @@ module.exports = {
         "default": "string.Empty",
         "nullable": true
     }, {
+        "name": "WebHookUrlsV2",
+        "type": "string",
+        "desc": "Webhook v2 地址 每行一个",
+        "default": "string.Empty",
+        "nullable": true
+    }, {
         "name": "LiveApiHost",
         "type": "string",
         "desc": "替换 api.live.bilibili.com 服务器为其他反代，可以支持在云服务器上录制",
@@ -69,16 +60,10 @@ module.exports = {
         "default": "@\"{roomid}-{name}/录制-{roomid}-{date}-{time}-{title}.flv\"",
         "nullable": true
     }, {
-        "name": "ClipFilenameFormat",
-        "type": "string",
-        "desc": "剪辑文件名模板",
-        "default": "@\"{roomid}-{name}/剪辑片段-{roomid}-{date}-{time}-{title}.flv\"",
-        "nullable": true
-    }, {
         "name": "WpfShowTitleAndArea",
         "type": "bool",
         "desc": "是否显示直播间标题和分区",
-        "default": "false",
+        "default": "true",
     },],
     "room": [{
         "name": "RoomId",
@@ -94,9 +79,9 @@ module.exports = {
         "without_global": true
     }, {
         "name": "CuttingMode",
-        "type": "AutoCuttingMode",
+        "type": "CuttingMode",
         "desc": "录制文件自动切割模式",
-        "default": "AutoCuttingMode.Disabled"
+        "default": "CuttingMode.Disabled"
     }, {
         "name": "CuttingNumber",
         "type": "uint",

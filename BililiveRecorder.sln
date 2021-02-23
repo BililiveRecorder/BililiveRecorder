@@ -17,6 +17,7 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BililiveRecorder.Core", "BililiveRecorder.Core\BililiveRecorder.Core.csproj", "{CB9F2D58-181D-49F7-9560-D35A9B9C1D8C}"
 	ProjectSection(ProjectDependencies) = postProject
 		{51748048-1949-4218-8DED-94014ABE7633} = {51748048-1949-4218-8DED-94014ABE7633}
+		{7610E19C-D3AB-4CBC-983E-6FDA36F4D4B3} = {7610E19C-D3AB-4CBC-983E-6FDA36F4D4B3}
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BililiveRecorder.FlvProcessor", "BililiveRecorder.FlvProcessor\BililiveRecorder.FlvProcessor.csproj", "{51748048-1949-4218-8DED-94014ABE7633}"
@@ -25,7 +26,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BililiveRecorder.Cli", "Bil
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BililiveRecorder.Flv", "BililiveRecorder.Flv\BililiveRecorder.Flv.csproj", "{7610E19C-D3AB-4CBC-983E-6FDA36F4D4B3}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BililiveRecorder.UnitTest.Core", "test\BililiveRecorder.UnitTest.Core\BililiveRecorder.UnitTest.Core.csproj", "{521EC763-5694-45A8-B87F-6E6B7F2A3BD4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BililiveRecorder.Core.UnitTests", "test\BililiveRecorder.Core.UnitTests\BililiveRecorder.Core.UnitTests.csproj", "{521EC763-5694-45A8-B87F-6E6B7F2A3BD4}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BililiveRecorder.Flv.UnitTests", "test\BililiveRecorder.Flv.UnitTests\BililiveRecorder.Flv.UnitTests.csproj", "{560E8483-9293-410E-81E9-AB36B49F8A7C}"
 EndProject

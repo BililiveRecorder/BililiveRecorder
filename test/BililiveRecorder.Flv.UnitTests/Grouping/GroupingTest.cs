@@ -20,7 +20,8 @@ namespace BililiveRecorder.Flv.UnitTests.Grouping
         public class TestOutputProvider : IFlvWriterTargetProvider
         {
             public Stream CreateAlternativeHeaderStream() => throw new NotImplementedException();
-            public Stream CreateOutputStream() => File.Open(Path.Combine(TEST_OUTPUT_PATH, DateTimeOffset.Now.ToString("s").Replace(':', '-') + ".flv"), FileMode.CreateNew, FileAccess.ReadWrite, FileShare.None);
+            public (Stream, object) CreateOutputStream() => (File.Open(Path.Combine(TEST_OUTPUT_PATH, DateTimeOffset.Now.ToString("s").Replace(':', '-') + ".flv"), FileMode.CreateNew, FileAccess.ReadWrite, FileShare.None), null);
+            public bool ShouldCreateNewFile(Stream outputStream, IList<Tag> tags) => false;
         }
 
         [Fact(Skip = "Not ready")]
@@ -30,7 +31,7 @@ namespace BililiveRecorder.Flv.UnitTests.Grouping
 
             var results = new List<PipelineAction>();
 
-            var grouping = new TagGroupReader(new FlvTagPipeReader(PipeReader.Create(File.OpenRead(path)), new TestRecyclableMemoryStreamProvider(), skipData: true));
+            var grouping = new TagGroupReader(new FlvTagPipeReader(PipeReader.Create(File.OpenRead(path)), new TestRecyclableMemoryStreamProvider(), skipData: true, logger: null));
 
             var context = new FlvProcessingContext();
             var session = new Dictionary<object, object>();
@@ -40,7 +41,7 @@ namespace BililiveRecorder.Flv.UnitTests.Grouping
 
             while (true)
             {
-                var g = await grouping.ReadGroupAsync().ConfigureAwait(false);
+                var g = await grouping.ReadGroupAsync(default).ConfigureAwait(false);
 
                 if (g is null)
                     break;
@@ -70,7 +71,7 @@ namespace BililiveRecorder.Flv.UnitTests.Grouping
         {
             const string PATH = @"";
 
-            using var grouping = new TagGroupReader(new FlvTagPipeReader(PipeReader.Create(File.OpenRead(PATH)), new TestRecyclableMemoryStreamProvider(), skipData: false));
+            using var grouping = new TagGroupReader(new FlvTagPipeReader(PipeReader.Create(File.OpenRead(PATH)), new TestRecyclableMemoryStreamProvider(), skipData: false, logger: null));
 
             var comments = new List<string>();
 
@@ -80,18 +81,18 @@ namespace BililiveRecorder.Flv.UnitTests.Grouping
             var sp = new ServiceCollection().BuildServiceProvider();
             var pipeline = new ProcessingPipelineBuilder(sp).AddDefault().AddRemoveFillerData().Build();
 
-            using var writer = new FlvProcessingContextWriter(new TestOutputProvider(), new TestRecyclableMemoryStreamProvider());
+            using var writer = new FlvProcessingContextWriter(new TestOutputProvider(), new TestRecyclableMemoryStreamProvider(), null);
 
             while (true)
             {
-                var g = await grouping.ReadGroupAsync().ConfigureAwait(false);
+                var g = await grouping.ReadGroupAsync(default).ConfigureAwait(false);
 
                 if (g is null)
                     break;
 
                 context.Reset(g, session);
 
-                await pipeline(context);
+                await pipeline(context).ConfigureAwait(false);
 
                 comments.AddRange(context.Comments);
                 await writer.WriteAsync(context).ConfigureAwait(false);

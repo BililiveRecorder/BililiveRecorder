@@ -13,8 +13,6 @@ namespace BililiveRecorder.WPF.Models
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public LogModel Logs { get; } = new LogModel();
-
         public IRecorder Recorder { get => this.recorder; internal set => this.SetField(ref this.recorder, value); }
 
         public RootModel()
@@ -37,7 +35,6 @@ namespace BililiveRecorder.WPF.Models
                 {
                     // dispose managed state (managed objects)
                     this.Recorder?.Dispose();
-                    this.Logs.Dispose();
                 }
 
                 // free unmanaged resources (unmanaged objects) and override finalizer

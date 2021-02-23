@@ -5,14 +5,14 @@ using System.Collections.Specialized;
 using System.Diagnostics;
 using System.Linq;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using BililiveRecorder.Core;
 using BililiveRecorder.WPF.Controls;
 using ModernWpf.Controls;
-using NLog;
+using Serilog;
 
+#nullable enable
 namespace BililiveRecorder.WPF.Pages
 {
     /// <summary>
@@ -20,12 +20,12 @@ namespace BililiveRecorder.WPF.Pages
     /// </summary>
     public partial class RoomListPage
     {
-        private static readonly Logger logger = LogManager.GetCurrentClassLogger();
+        private static readonly ILogger logger = Log.ForContext<RoomListPage>();
         private static readonly Regex RoomIdRegex
             = new Regex(@"^(?:https?:\/\/)?live\.bilibili\.com\/(?:blanc\/|h5\/)?(\d*)(?:\?.*)?$",
                 RegexOptions.IgnoreCase | RegexOptions.Singleline | RegexOptions.Compiled);
 
-        private readonly IRecordedRoom[] NullRoom = new IRecordedRoom[] { null };
+        private readonly IRoom?[] NullRoom = new IRoom?[] { null };
 
         private readonly KeyIndexMappingReadOnlyList NullRoomWithMapping;
 
@@ -40,8 +40,8 @@ namespace BililiveRecorder.WPF.Pages
 
         private void RoomListPage_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
-            if (e.OldValue is INotifyCollectionChanged data_old) data_old.CollectionChanged -= this.DataSource_CollectionChanged;
-            if (e.NewValue is INotifyCollectionChanged data_new) data_new.CollectionChanged += this.DataSource_CollectionChanged;
+            if (e.OldValue is IRecorder data_old) ((INotifyCollectionChanged)data_old.Rooms).CollectionChanged -= this.DataSource_CollectionChanged;
+            if (e.NewValue is IRecorder data_new) ((INotifyCollectionChanged)data_new.Rooms).CollectionChanged += this.DataSource_CollectionChanged;
             this.ApplySort();
         }
 
@@ -85,16 +85,17 @@ namespace BililiveRecorder.WPF.Pages
         {
             try
             {
-                if (this.DataContext is not ICollection<IRecordedRoom> data)
+                if (this.DataContext is not IRecorder recorder || recorder.Rooms.Count == 0)
                 {
                     this.RoomList = this.NullRoomWithMapping;
                 }
                 else
                 {
-                    IEnumerable<IRecordedRoom> orderedData = this.SortBy switch
+                    var data = recorder.Rooms;
+                    IEnumerable<IRoom> orderedData = this.SortBy switch
                     {
-                        SortedBy.RoomId => data.OrderBy(x => x.ShortRoomId == 0 ? x.RoomId : x.ShortRoomId),
-                        SortedBy.Status => from x in data orderby x.IsRecording descending, x.IsMonitoring descending, x.IsStreaming descending select x,
+                        SortedBy.RoomId => data.OrderBy(x => x.ShortId == 0 ? x.RoomConfig.RoomId : x.ShortId),
+                        SortedBy.Status => from x in data orderby x.Recording descending, x.RoomConfig.AutoRecord descending, x.Streaming descending select x,
                         _ => data,
                     };
                     var result = new KeyIndexMappingReadOnlyList(orderedData.Concat(this.NullRoom).ToArray());
@@ -107,9 +108,11 @@ namespace BililiveRecorder.WPF.Pages
             }
         }
 
+#pragma warning disable VSTHRD100 // Avoid async void methods
         private async void RoomCard_DeleteRequested(object sender, EventArgs e)
+#pragma warning restore VSTHRD100 // Avoid async void methods
         {
-            if (this.DataContext is IRecorder rec && sender is IRecordedRoom room)
+            if (this.DataContext is IRecorder rec && sender is IRoom room)
             {
                 try
                 {
@@ -123,14 +126,16 @@ namespace BililiveRecorder.WPF.Pages
                     if (result == ContentDialogResult.Primary)
                     {
                         rec.RemoveRoom(room);
-                        rec.SaveConfigToFile();
+                        rec.SaveConfig();
                     }
                 }
                 catch (Exception) { }
             }
         }
 
+#pragma warning disable VSTHRD100 // Avoid async void methods
         private async void RoomCard_ShowSettingsRequested(object sender, EventArgs e)
+#pragma warning restore VSTHRD100 // Avoid async void methods
         {
             try
             {
@@ -139,7 +144,9 @@ namespace BililiveRecorder.WPF.Pages
             catch (Exception) { }
         }
 
+#pragma warning disable VSTHRD100 // Avoid async void methods
         private async void AddRoomCard_AddRoomRequested(object sender, string e)
+#pragma warning restore VSTHRD100 // Avoid async void methods
         {
             var input = e.Trim();
             if (string.IsNullOrWhiteSpace(input) || this.DataContext is not IRecorder rec) return;
@@ -181,7 +188,7 @@ namespace BililiveRecorder.WPF.Pages
                 return;
             }
 
-            if (rec.Any(x => x.RoomId == roomid || x.ShortRoomId == roomid))
+            if (rec.Rooms.Any(x => x.RoomConfig.RoomId == roomid || x.ShortId == roomid))
             {
                 try
                 {
@@ -192,23 +199,27 @@ namespace BililiveRecorder.WPF.Pages
             }
 
             rec.AddRoom(roomid);
-            rec.SaveConfigToFile();
+            rec.SaveConfig();
         }
 
-        private async void MenuItem_EnableAutoRecAll_Click(object sender, RoutedEventArgs e)
+        private void MenuItem_EnableAutoRecAll_Click(object sender, RoutedEventArgs e)
         {
             if (this.DataContext is not IRecorder rec) return;
 
-            await Task.WhenAll(rec.ToList().Select(rr => Task.Run(() => rr.Start())));
-            rec.SaveConfigToFile();
+            foreach (var room in rec.Rooms)
+                room.RoomConfig.AutoRecord = true;
+
+            rec.SaveConfig();
         }
 
-        private async void MenuItem_DisableAutoRecAll_Click(object sender, RoutedEventArgs e)
+        private void MenuItem_DisableAutoRecAll_Click(object sender, RoutedEventArgs e)
         {
             if (this.DataContext is not IRecorder rec) return;
 
-            await Task.WhenAll(rec.ToList().Select(rr => Task.Run(() => rr.Stop())));
-            rec.SaveConfigToFile();
+            foreach (var room in rec.Rooms)
+                room.RoomConfig.AutoRecord = false;
+
+            rec.SaveConfig();
         }
 
         private void MenuItem_SortBy_Click(object sender, RoutedEventArgs e) => this.SortBy = (SortedBy)((MenuItem)sender).Tag;
@@ -271,20 +282,20 @@ namespace BililiveRecorder.WPF.Pages
         Status,
     }
 
-    internal class KeyIndexMappingReadOnlyList : IReadOnlyList<IRecordedRoom>, IKeyIndexMapping
+    internal class KeyIndexMappingReadOnlyList : IReadOnlyList<IRoom?>, IKeyIndexMapping
     {
-        private readonly IReadOnlyList<IRecordedRoom> data;
+        private readonly IReadOnlyList<IRoom?> data;
 
-        public KeyIndexMappingReadOnlyList(IReadOnlyList<IRecordedRoom> data)
+        public KeyIndexMappingReadOnlyList(IReadOnlyList<IRoom?> data)
         {
             this.data = data;
         }
 
-        public IRecordedRoom this[int index] => this.data[index];
+        public IRoom? this[int index] => this.data[index];
 
         public int Count => this.data.Count;
 
-        public IEnumerator<IRecordedRoom> GetEnumerator() => this.data.GetEnumerator();
+        public IEnumerator<IRoom?> GetEnumerator() => this.data.GetEnumerator();
         IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)this.data).GetEnumerator();
 
         #region IKeyIndexMapping
@@ -308,7 +319,7 @@ namespace BililiveRecorder.WPF.Pages
             var start = this.lastRequestedIndex;
             for (var i = start; i < this.Count; i++)
             {
-                if ((this[i]?.Guid ?? Guid.Empty).Equals(uniqueId))
+                if ((this[i]?.ObjectId ?? Guid.Empty).Equals(uniqueId))
                     return i;
             }
 
@@ -316,7 +327,7 @@ namespace BililiveRecorder.WPF.Pages
             start = Math.Min(this.Count - 1, this.lastRequestedIndex);
             for (var i = start; i >= 0; i--)
             {
-                if ((this[i]?.Guid ?? Guid.Empty).Equals(uniqueId))
+                if ((this[i]?.ObjectId ?? Guid.Empty).Equals(uniqueId))
                     return i;
             }
 
@@ -325,7 +336,7 @@ namespace BililiveRecorder.WPF.Pages
 
         public string KeyFromIndex(int index)
         {
-            var key = this[index]?.Guid ?? Guid.Empty;
+            var key = this[index]?.ObjectId ?? Guid.Empty;
             this.lastRequestedIndex = index;
             return key.ToString();
         }

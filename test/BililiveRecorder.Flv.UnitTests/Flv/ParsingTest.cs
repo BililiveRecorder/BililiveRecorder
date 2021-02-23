@@ -28,11 +28,11 @@ namespace BililiveRecorder.Flv.UnitTests.Flv
 
             var tags = new List<Tag>();
 
-            var reader = new FlvTagPipeReader(PipeReader.Create(File.OpenRead(path)), new TestRecyclableMemoryStreamProvider(), skipData: true);
+            var reader = new FlvTagPipeReader(PipeReader.Create(File.OpenRead(path)), new TestRecyclableMemoryStreamProvider(), skipData: true, logger: null);
 
             while (true)
             {
-                var tag = await reader.ReadTagAsync().ConfigureAwait(false);
+                var tag = await reader.ReadTagAsync(default).ConfigureAwait(false);
 
                 if (tag is null)
                     break;

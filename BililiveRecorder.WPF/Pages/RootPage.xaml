@@ -72,10 +72,22 @@
                         <ui:PathIcon Style="{StaticResource PathIconDataBullhornOutline}"/>
                     </ui:NavigationViewItem.Icon>
                 </ui:NavigationViewItem>
-                <ui:NavigationViewItem Content="{l:Loc RootPage_NavigationViewItem_RoomListPage}" Tag="RoomListPage" x:Name="RoomListPageNavigationViewItem">
+                <ui:NavigationViewItem Content="{l:Loc RootPage_NavigationViewItem_RoomListPage}" Tag="RoomListPage" IsEnabled="False" x:Name="RoomListPageNavigationViewItem">
                     <ui:NavigationViewItem.Icon>
                         <ui:PathIcon Style="{StaticResource PathIconDataHomeOutline}"/>
                     </ui:NavigationViewItem.Icon>
+                </ui:NavigationViewItem>
+                <ui:NavigationViewItem Content="工具箱" SelectsOnInvoked="False">
+                    <ui:NavigationViewItem.Icon>
+                        <ui:PathIcon Style="{StaticResource PathIconDataToolboxOutline}"/>
+                    </ui:NavigationViewItem.Icon>
+                    <ui:NavigationViewItem.MenuItems>
+                        <ui:NavigationViewItem Content="录播修复" Tag="ToolboxAutoFixPage">
+                            <ui:NavigationViewItem.Icon>
+                                <ui:PathIcon Style="{StaticResource PathIconDataAutoFix}"/>
+                            </ui:NavigationViewItem.Icon>
+                        </ui:NavigationViewItem>
+                    </ui:NavigationViewItem.MenuItems>
                 </ui:NavigationViewItem>
             </ui:NavigationView.MenuItems>
             <ui:NavigationView.FooterMenuItems>
@@ -89,7 +101,10 @@
                         <ui:PathIcon Style="{StaticResource PathIconDataPaperRollOutline}"/>
                     </ui:NavigationViewItem.Icon>
                 </ui:NavigationViewItem>
-                <ui:NavigationViewItem Content="{l:Loc RootPage_NavigationViewItem_SettingsPage}" Tag="SettingsPage" MouseRightButtonUp="NavigationViewItem_MouseRightButtonUp">
+                <ui:NavigationViewItem Content="{l:Loc RootPage_NavigationViewItem_SettingsPage}" Tag="SettingsPage"
+                                       IsEnabled="False"
+                                       x:Name="SettingsPageNavigationViewItem"
+                                       MouseRightButtonUp="NavigationViewItem_MouseRightButtonUp">
                     <ui:NavigationViewItem.Icon>
                         <ui:PathIcon Style="{StaticResource PathIconDataCogOutline}"/>
                     </ui:NavigationViewItem.Icon>

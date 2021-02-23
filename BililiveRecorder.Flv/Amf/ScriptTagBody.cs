@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Xml;
@@ -17,13 +19,23 @@ namespace BililiveRecorder.Flv.Amf
             DateTimeZoneHandling = DateTimeZoneHandling.RoundtripKind,
         };
 
-        public ScriptDataString Name { get; set; } = string.Empty;
+        public ScriptTagBody()
+        {
+            this.Values = new List<IScriptDataValue>();
+        }
 
-        public ScriptDataObject Value { get; set; } = new ScriptDataObject();
+        public ScriptTagBody(List<IScriptDataValue> values)
+        {
+            this.Values = values ?? throw new ArgumentNullException(nameof(values));
+        }
 
-        public static ScriptTagBody Parse(string json) => JsonConvert.DeserializeObject<ScriptTagBody>(json, jsonSerializerSettings)!;
+        public List<IScriptDataValue> Values { get; set; }
 
-        public string ToJson() => JsonConvert.SerializeObject(this, jsonSerializerSettings);
+        public static ScriptTagBody Parse(string json) =>
+            new ScriptTagBody(JsonConvert.DeserializeObject<List<IScriptDataValue>>(json, jsonSerializerSettings)
+                ?? throw new Exception("JsonConvert.DeserializeObject returned null"));
+
+        public string ToJson() => JsonConvert.SerializeObject(this.Values, jsonSerializerSettings);
 
         public static ScriptTagBody Parse(byte[] bytes)
         {
@@ -31,26 +43,16 @@ namespace BililiveRecorder.Flv.Amf
             return Parse(ms);
         }
 
-        public static ScriptTagBody Parse(Stream stream)
-        {
-            return Parse(new BigEndianBinaryReader(stream, Encoding.UTF8, true));
-        }
+        public static ScriptTagBody Parse(Stream stream) => Parse(new BigEndianBinaryReader(stream, Encoding.UTF8, true));
 
         public static ScriptTagBody Parse(BigEndianBinaryReader binaryReader)
         {
-            if (ParseValue(binaryReader) is ScriptDataString stringName)
-                return new ScriptTagBody
-                {
-                    Name = stringName,
-                    Value = ((ParseValue(binaryReader)) switch
-                    {
-                        ScriptDataEcmaArray value => value,
-                        ScriptDataObject value => value,
-                        _ => throw new AmfException("type of ScriptTagBody.Value is not supported"),
-                    })
-                };
-            else
-                throw new AmfException("ScriptTagBody.Name is not String");
+            var list = new List<IScriptDataValue>();
+
+            while (binaryReader.BaseStream.Position < binaryReader.BaseStream.Length)
+                list.Add(ParseValue(binaryReader));
+
+            return new ScriptTagBody(list);
         }
 
         public byte[] ToBytes()
@@ -62,8 +64,10 @@ namespace BililiveRecorder.Flv.Amf
 
         public void WriteTo(Stream stream)
         {
-            this.Name.WriteTo(stream);
-            this.Value.WriteTo(stream);
+            foreach (var value in this.Values)
+            {
+                value.WriteTo(stream);
+            }
         }
 
         public static IScriptDataValue ParseValue(BigEndianBinaryReader binaryReader)
@@ -144,6 +148,7 @@ namespace BililiveRecorder.Flv.Amf
                         {
                             var bytes = binaryReader.ReadBytes((int)length);
                             var str = Encoding.UTF8.GetString(bytes);
+                            str = str.Replace("\0", "");
                             return (ScriptDataLongString)str;
                         }
                     }
@@ -160,7 +165,7 @@ namespace BililiveRecorder.Flv.Amf
                         throw new AmfException("ObjectEndMarker not matched.");
                     return null;
                 }
-                return Encoding.UTF8.GetString(binaryReader.ReadBytes(length));
+                return Encoding.UTF8.GetString(binaryReader.ReadBytes(length)).Replace("\0", ""); ;
             }
         }
 
@@ -169,8 +174,7 @@ namespace BililiveRecorder.Flv.Amf
         {
             var str = reader.ReadElementContentAsString();
             var obj = Parse(str);
-            this.Name = obj.Name;
-            this.Value = obj.Value;
+            this.Values = obj.Values;
         }
         void IXmlSerializable.WriteXml(XmlWriter writer) => writer.WriteString(this.ToJson());
     }

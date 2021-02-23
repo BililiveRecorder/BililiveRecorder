@@ -20,9 +20,9 @@ namespace BililiveRecorder.Flv.Xml
             this.tags = tags ?? throw new ArgumentNullException(nameof(tags));
         }
 
-        public Task<Tag?> PeekTagAsync() => Task.FromResult(this.index < this.tags.Count ? this.tags[this.index] : null)!;
+        public Task<Tag?> PeekTagAsync(System.Threading.CancellationToken token) => Task.FromResult(this.index < this.tags.Count ? this.tags[this.index] : null)!;
 
-        public Task<Tag?> ReadTagAsync() => Task.FromResult(this.index < this.tags.Count ? this.tags[this.index++] : null);
+        public Task<Tag?> ReadTagAsync(System.Threading.CancellationToken token) => Task.FromResult(this.index < this.tags.Count ? this.tags[this.index++] : null);
 
         public void Dispose() { }
     }

@@ -8,6 +8,7 @@ using ModernWpf.Controls;
 using WPFLocalizeExtension.Engine;
 using WPFLocalizeExtension.Extensions;
 
+#nullable enable
 namespace BililiveRecorder.WPF
 {
     /// <summary>
@@ -35,9 +36,9 @@ namespace BililiveRecorder.WPF
 
         private void SingleInstance_NotificationReceived(object sender, EventArgs e) => this.SuperActivateAction();
 
-        public event EventHandler NativeBeforeWindowClose;
+        public event EventHandler? NativeBeforeWindowClose;
 
-        internal Action<string, string, BalloonIcon> ShowBalloonTipCallback { get; set; }
+        internal Action<string, string, BalloonIcon>? ShowBalloonTipCallback { get; set; }
 
         internal void CloseWithoutConfirmAction()
         {

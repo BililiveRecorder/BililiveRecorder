@@ -4,6 +4,7 @@ using System.Runtime.CompilerServices;
 using Microsoft.WindowsAPICodePack.Dialogs;
 using WPFLocalizeExtension.Extensions;
 
+#nullable enable
 namespace BililiveRecorder.WPF.Controls
 {
     /// <summary>
@@ -34,7 +35,7 @@ namespace BililiveRecorder.WPF.Controls
             FailedToLoadConfig,
         }
 
-        public event PropertyChangedEventHandler PropertyChanged;
+        public event PropertyChangedEventHandler? PropertyChanged;
         protected virtual void OnPropertyChanged(string propertyName) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         protected bool SetField<T>(ref T field, T value, [CallerMemberName] string propertyName = "")
         {

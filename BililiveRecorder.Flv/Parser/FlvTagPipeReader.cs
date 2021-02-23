@@ -7,6 +7,7 @@ using System.IO;
 using System.IO.Pipelines;
 using System.Threading;
 using System.Threading.Tasks;
+using Serilog;
 
 namespace BililiveRecorder.Flv.Parser
 {
@@ -16,7 +17,7 @@ namespace BililiveRecorder.Flv.Parser
     public class FlvTagPipeReader : IFlvTagReader, IDisposable
     {
         private static int memoryCreateCounter = 0;
-
+        private readonly ILogger? logger;
         private readonly IMemoryStreamProvider memoryStreamProvider;
         private readonly bool skipData;
         private readonly bool leaveOpen;
@@ -29,12 +30,13 @@ namespace BililiveRecorder.Flv.Parser
 
         public PipeReader Reader { get; }
 
-        public FlvTagPipeReader(PipeReader reader, IMemoryStreamProvider memoryStreamProvider) : this(reader, memoryStreamProvider, false) { }
+        public FlvTagPipeReader(PipeReader reader, IMemoryStreamProvider memoryStreamProvider, ILogger? logger = null) : this(reader, memoryStreamProvider, false, logger) { }
 
-        public FlvTagPipeReader(PipeReader reader, IMemoryStreamProvider memoryStreamProvider, bool skipData = false) : this(reader, memoryStreamProvider, skipData, false) { }
+        public FlvTagPipeReader(PipeReader reader, IMemoryStreamProvider memoryStreamProvider, bool skipData = false, ILogger? logger = null) : this(reader, memoryStreamProvider, skipData, false, logger) { }
 
-        public FlvTagPipeReader(PipeReader reader, IMemoryStreamProvider memoryStreamProvider, bool skipData = false, bool leaveOpen = false)
+        public FlvTagPipeReader(PipeReader reader, IMemoryStreamProvider memoryStreamProvider, bool skipData = false, bool leaveOpen = false, ILogger? logger = null)
         {
+            this.logger = logger?.ForContext<FlvTagPipeReader>();
             this.Reader = reader ?? throw new ArgumentNullException(nameof(reader));
 
             this.memoryStreamProvider = memoryStreamProvider ?? throw new ArgumentNullException(nameof(memoryStreamProvider));
@@ -270,7 +272,14 @@ namespace BililiveRecorder.Flv.Parser
 
             if (tag.Type == TagType.Script)
             {
-                tag.ScriptData = Amf.ScriptTagBody.Parse(tagBodyStream);
+                try
+                {
+                    tag.ScriptData = Amf.ScriptTagBody.Parse(tagBodyStream);
+                }
+                catch (Exception ex)
+                {
+                    this.logger?.Debug(ex, "Error parsing script tag body");
+                }
             }
             else if (tag.Type == TagType.Video && !tag.Flag.HasFlag(TagFlag.Header))
             {
@@ -288,7 +297,7 @@ namespace BililiveRecorder.Flv.Parser
         }
 
         /// <inheritdoc/>
-        public async Task<Tag?> PeekTagAsync()
+        public async Task<Tag?> PeekTagAsync(CancellationToken token)
         {
             try
             {
@@ -300,7 +309,7 @@ namespace BililiveRecorder.Flv.Parser
                 }
                 else
                 {
-                    this.peekTag = await this.ReadNextTagAsync();
+                    this.peekTag = await this.ReadNextTagAsync(token);
                     this.peek = true;
                     return this.peekTag;
                 }
@@ -312,7 +321,7 @@ namespace BililiveRecorder.Flv.Parser
         }
 
         /// <inheritdoc/>
-        public async Task<Tag?> ReadTagAsync()
+        public async Task<Tag?> ReadTagAsync(CancellationToken token)
         {
             try
             {
@@ -326,7 +335,7 @@ namespace BililiveRecorder.Flv.Parser
                 }
                 else
                 {
-                    return await this.ReadNextTagAsync();
+                    return await this.ReadNextTagAsync(token);
                 }
             }
             finally

@@ -7,7 +7,7 @@ namespace BililiveRecorder.Flv.Grouping.Rules
     {
         public bool StartWith(Tag tag) => tag.IsHeader();
 
-        public bool AppendWith(Tag tag) => tag.IsHeader();
+        public bool AppendWith(Tag tag, List<Tag> tags) => tag.IsHeader();
 
         public PipelineAction CreatePipelineAction(List<Tag> tags) => new PipelineHeaderAction(tags);
     }

@@ -8,7 +8,6 @@ const CODE_HEADER =
 //  RUN FORMATTER AFTER GENERATE
 // ******************************
 using System.ComponentModel;
-using BililiveRecorder.FlvProcessor;
 using HierarchicalPropertyDefault;
 using Newtonsoft.Json;
 
@@ -77,3 +76,5 @@ result += CODE_FOOTER;
 fs.writeFileSync("./Config.gen.cs", result, {
     encoding: "utf8"
 });
+
+console.log("记得 format Config.gen.cs")

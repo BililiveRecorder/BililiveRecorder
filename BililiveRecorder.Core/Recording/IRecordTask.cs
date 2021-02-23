@@ -1,0 +1,21 @@
+using System;
+using System.Threading.Tasks;
+using BililiveRecorder.Core.Event;
+
+namespace BililiveRecorder.Core.Recording
+{
+    public interface IRecordTask
+    {
+        Guid SessionId { get; }
+
+        event EventHandler<NetworkingStatsEventArgs>? NetworkingStats;
+        event EventHandler<RecordingStatsEventArgs>? RecordingStats;
+        event EventHandler<RecordFileOpeningEventArgs>? RecordFileOpening;
+        event EventHandler<RecordFileClosedEventArgs>? RecordFileClosed;
+        event EventHandler? RecordSessionEnded;
+
+        void SplitOutput();
+        Task StartAsync();
+        void RequestStop();
+    }
+}

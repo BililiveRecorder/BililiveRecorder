@@ -12,12 +12,12 @@ namespace BililiveRecorder.Flv
         /// Returns the next available Flv Tag but does not consume it.
         /// </summary>
         /// <returns></returns>
-        Task<Tag?> PeekTagAsync();
+        Task<Tag?> PeekTagAsync(System.Threading.CancellationToken token);
 
         /// <summary>
         /// Reads the next Flv Tag.
         /// </summary>
         /// <returns></returns>
-        Task<Tag?> ReadTagAsync();
+        Task<Tag?> ReadTagAsync(System.Threading.CancellationToken token);
     }
 }

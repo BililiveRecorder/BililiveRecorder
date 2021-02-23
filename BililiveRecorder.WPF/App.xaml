@@ -6,7 +6,6 @@
     xmlns:l="https://github.com/XAMLMarkupExtensions/WPFLocalizationExtension"
     xmlns:m="clr-namespace:BililiveRecorder.WPF.Models"
     x:Class="BililiveRecorder.WPF.App"
-    Startup="CheckUpdate"
     SessionEnding="Application_SessionEnding"
     StartupUri="NewMainWindow.xaml">
     <Application.Resources>
@@ -24,6 +23,24 @@
                      l:ResxLocalizationProvider.DefaultDictionary="Strings">
                 <MenuItem Header="{l:Loc Global_Copy}" Command="{x:Static m:Commands.Copy}" CommandParameter="{Binding Text}"/>
             </ContextMenu>
+            <DataTemplate x:Key="RoomCardStatsPopup">
+                <StackPanel l:ResxLocalizationProvider.DefaultDictionary="Strings">
+                    <TextBlock>
+                        <TextBlock.Text>
+                            <MultiBinding Converter="{l:StringFormatConverter}">
+                                <l:BLoc Key="RoomCard_Status_SpeedIndicator_SpeedInPercentage"/>
+                                <Binding Path="Stats.DuraionRatio" Mode="OneWay"/>
+                            </MultiBinding>
+                        </TextBlock.Text>
+                    </TextBlock>
+                    <TextBlock Text="{Binding Stats.FileMaxTimestamp,StringFormat=当前文件时长: {0:g}}"/>
+                    <TextBlock Text="{Binding Stats.SessionMaxTimestamp,StringFormat=所有文件时长: {0:g}}"/>
+                    <TextBlock Text="{Binding Stats.SessionDuration,StringFormat=录制经过时间: {0:g}}"/>
+                    <TextBlock Text="{Binding Stats.TotalInputBytes, Converter={StaticResource ByteUnitsConverter},StringFormat=接收数据量 {0}}"/>
+                    <TextBlock Text="{Binding Stats.TotalOutputBytes, Converter={StaticResource ByteUnitsConverter},StringFormat=写入数据量 {0}}"/>
+                    <TextBlock Margin="0,5,0,0" Text="{l:Loc RoomCard_Status_SpeedIndicator_Description}"/>
+                </StackPanel>
+            </DataTemplate>
         </ResourceDictionary>
     </Application.Resources>
 </Application>

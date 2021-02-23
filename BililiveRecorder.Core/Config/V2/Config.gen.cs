@@ -3,7 +3,6 @@
 //  RUN FORMATTER AFTER GENERATE
 // ******************************
 using System.ComponentModel;
-using BililiveRecorder.FlvProcessor;
 using HierarchicalPropertyDefault;
 using Newtonsoft.Json;
 
@@ -32,10 +31,10 @@ namespace BililiveRecorder.Core.Config.V2
         /// <summary>
         /// 录制文件自动切割模式
         /// </summary>
-        public AutoCuttingMode CuttingMode { get => this.GetPropertyValue<AutoCuttingMode>(); set => this.SetPropertyValue(value); }
-        public bool HasCuttingMode { get => this.GetPropertyHasValue(nameof(this.CuttingMode)); set => this.SetPropertyHasValue<AutoCuttingMode>(value, nameof(this.CuttingMode)); }
+        public CuttingMode CuttingMode { get => this.GetPropertyValue<CuttingMode>(); set => this.SetPropertyValue(value); }
+        public bool HasCuttingMode { get => this.GetPropertyHasValue(nameof(this.CuttingMode)); set => this.SetPropertyHasValue<CuttingMode>(value, nameof(this.CuttingMode)); }
         [JsonProperty(nameof(CuttingMode)), EditorBrowsable(EditorBrowsableState.Never)]
-        public Optional<AutoCuttingMode> OptionalCuttingMode { get => this.GetPropertyValueOptional<AutoCuttingMode>(nameof(this.CuttingMode)); set => this.SetPropertyValueOptional(value, nameof(this.CuttingMode)); }
+        public Optional<CuttingMode> OptionalCuttingMode { get => this.GetPropertyValueOptional<CuttingMode>(nameof(this.CuttingMode)); set => this.SetPropertyValueOptional(value, nameof(this.CuttingMode)); }
 
         /// <summary>
         /// 录制文件自动切割数值（分钟/MiB）
@@ -86,21 +85,6 @@ namespace BililiveRecorder.Core.Config.V2
         public Optional<bool> OptionalRecordDanmakuGuard { get => this.GetPropertyValueOptional<bool>(nameof(this.RecordDanmakuGuard)); set => this.SetPropertyValueOptional(value, nameof(this.RecordDanmakuGuard)); }
 
         /// <summary>
-        /// 启用的功能
-        /// </summary>
-        public EnabledFeature EnabledFeature => this.GetPropertyValue<EnabledFeature>();
-
-        /// <summary>
-        /// 剪辑-过去的时长(秒)
-        /// </summary>
-        public uint ClipLengthPast => this.GetPropertyValue<uint>();
-
-        /// <summary>
-        /// 剪辑-将来的时长(秒)
-        /// </summary>
-        public uint ClipLengthFuture => this.GetPropertyValue<uint>();
-
-        /// <summary>
         /// 录制断开重连时间间隔 毫秒
         /// </summary>
         public uint TimingStreamRetry => this.GetPropertyValue<uint>();
@@ -141,6 +125,11 @@ namespace BililiveRecorder.Core.Config.V2
         public string? WebHookUrls => this.GetPropertyValue<string>();
 
         /// <summary>
+        /// Webhook v2 地址 每行一个
+        /// </summary>
+        public string? WebHookUrlsV2 => this.GetPropertyValue<string>();
+
+        /// <summary>
         /// 替换 api.live.bilibili.com 服务器为其他反代，可以支持在云服务器上录制
         /// </summary>
         public string? LiveApiHost => this.GetPropertyValue<string>();
@@ -149,11 +138,6 @@ namespace BililiveRecorder.Core.Config.V2
         /// 录制文件名模板
         /// </summary>
         public string? RecordFilenameFormat => this.GetPropertyValue<string>();
-
-        /// <summary>
-        /// 剪辑文件名模板
-        /// </summary>
-        public string? ClipFilenameFormat => this.GetPropertyValue<string>();
 
         /// <summary>
         /// 是否显示直播间标题和分区
@@ -165,30 +149,6 @@ namespace BililiveRecorder.Core.Config.V2
     [JsonObject(MemberSerialization.OptIn)]
     public sealed partial class GlobalConfig : HierarchicalObject<DefaultConfig, GlobalConfig>
     {
-        /// <summary>
-        /// 启用的功能
-        /// </summary>
-        public EnabledFeature EnabledFeature { get => this.GetPropertyValue<EnabledFeature>(); set => this.SetPropertyValue(value); }
-        public bool HasEnabledFeature { get => this.GetPropertyHasValue(nameof(this.EnabledFeature)); set => this.SetPropertyHasValue<EnabledFeature>(value, nameof(this.EnabledFeature)); }
-        [JsonProperty(nameof(EnabledFeature)), EditorBrowsable(EditorBrowsableState.Never)]
-        public Optional<EnabledFeature> OptionalEnabledFeature { get => this.GetPropertyValueOptional<EnabledFeature>(nameof(this.EnabledFeature)); set => this.SetPropertyValueOptional(value, nameof(this.EnabledFeature)); }
-
-        /// <summary>
-        /// 剪辑-过去的时长(秒)
-        /// </summary>
-        public uint ClipLengthPast { get => this.GetPropertyValue<uint>(); set => this.SetPropertyValue(value); }
-        public bool HasClipLengthPast { get => this.GetPropertyHasValue(nameof(this.ClipLengthPast)); set => this.SetPropertyHasValue<uint>(value, nameof(this.ClipLengthPast)); }
-        [JsonProperty(nameof(ClipLengthPast)), EditorBrowsable(EditorBrowsableState.Never)]
-        public Optional<uint> OptionalClipLengthPast { get => this.GetPropertyValueOptional<uint>(nameof(this.ClipLengthPast)); set => this.SetPropertyValueOptional(value, nameof(this.ClipLengthPast)); }
-
-        /// <summary>
-        /// 剪辑-将来的时长(秒)
-        /// </summary>
-        public uint ClipLengthFuture { get => this.GetPropertyValue<uint>(); set => this.SetPropertyValue(value); }
-        public bool HasClipLengthFuture { get => this.GetPropertyHasValue(nameof(this.ClipLengthFuture)); set => this.SetPropertyHasValue<uint>(value, nameof(this.ClipLengthFuture)); }
-        [JsonProperty(nameof(ClipLengthFuture)), EditorBrowsable(EditorBrowsableState.Never)]
-        public Optional<uint> OptionalClipLengthFuture { get => this.GetPropertyValueOptional<uint>(nameof(this.ClipLengthFuture)); set => this.SetPropertyValueOptional(value, nameof(this.ClipLengthFuture)); }
-
         /// <summary>
         /// 录制断开重连时间间隔 毫秒
         /// </summary>
@@ -254,6 +214,14 @@ namespace BililiveRecorder.Core.Config.V2
         public Optional<string?> OptionalWebHookUrls { get => this.GetPropertyValueOptional<string>(nameof(this.WebHookUrls)); set => this.SetPropertyValueOptional(value, nameof(this.WebHookUrls)); }
 
         /// <summary>
+        /// Webhook v2 地址 每行一个
+        /// </summary>
+        public string? WebHookUrlsV2 { get => this.GetPropertyValue<string>(); set => this.SetPropertyValue(value); }
+        public bool HasWebHookUrlsV2 { get => this.GetPropertyHasValue(nameof(this.WebHookUrlsV2)); set => this.SetPropertyHasValue<string>(value, nameof(this.WebHookUrlsV2)); }
+        [JsonProperty(nameof(WebHookUrlsV2)), EditorBrowsable(EditorBrowsableState.Never)]
+        public Optional<string?> OptionalWebHookUrlsV2 { get => this.GetPropertyValueOptional<string>(nameof(this.WebHookUrlsV2)); set => this.SetPropertyValueOptional(value, nameof(this.WebHookUrlsV2)); }
+
+        /// <summary>
         /// 替换 api.live.bilibili.com 服务器为其他反代，可以支持在云服务器上录制
         /// </summary>
         public string? LiveApiHost { get => this.GetPropertyValue<string>(); set => this.SetPropertyValue(value); }
@@ -270,14 +238,6 @@ namespace BililiveRecorder.Core.Config.V2
         public Optional<string?> OptionalRecordFilenameFormat { get => this.GetPropertyValueOptional<string>(nameof(this.RecordFilenameFormat)); set => this.SetPropertyValueOptional(value, nameof(this.RecordFilenameFormat)); }
 
         /// <summary>
-        /// 剪辑文件名模板
-        /// </summary>
-        public string? ClipFilenameFormat { get => this.GetPropertyValue<string>(); set => this.SetPropertyValue(value); }
-        public bool HasClipFilenameFormat { get => this.GetPropertyHasValue(nameof(this.ClipFilenameFormat)); set => this.SetPropertyHasValue<string>(value, nameof(this.ClipFilenameFormat)); }
-        [JsonProperty(nameof(ClipFilenameFormat)), EditorBrowsable(EditorBrowsableState.Never)]
-        public Optional<string?> OptionalClipFilenameFormat { get => this.GetPropertyValueOptional<string>(nameof(this.ClipFilenameFormat)); set => this.SetPropertyValueOptional(value, nameof(this.ClipFilenameFormat)); }
-
-        /// <summary>
         /// 是否显示直播间标题和分区
         /// </summary>
         public bool WpfShowTitleAndArea { get => this.GetPropertyValue<bool>(); set => this.SetPropertyValue(value); }
@@ -288,10 +248,10 @@ namespace BililiveRecorder.Core.Config.V2
         /// <summary>
         /// 录制文件自动切割模式
         /// </summary>
-        public AutoCuttingMode CuttingMode { get => this.GetPropertyValue<AutoCuttingMode>(); set => this.SetPropertyValue(value); }
-        public bool HasCuttingMode { get => this.GetPropertyHasValue(nameof(this.CuttingMode)); set => this.SetPropertyHasValue<AutoCuttingMode>(value, nameof(this.CuttingMode)); }
+        public CuttingMode CuttingMode { get => this.GetPropertyValue<CuttingMode>(); set => this.SetPropertyValue(value); }
+        public bool HasCuttingMode { get => this.GetPropertyHasValue(nameof(this.CuttingMode)); set => this.SetPropertyHasValue<CuttingMode>(value, nameof(this.CuttingMode)); }
         [JsonProperty(nameof(CuttingMode)), EditorBrowsable(EditorBrowsableState.Never)]
-        public Optional<AutoCuttingMode> OptionalCuttingMode { get => this.GetPropertyValueOptional<AutoCuttingMode>(nameof(this.CuttingMode)); set => this.SetPropertyValueOptional(value, nameof(this.CuttingMode)); }
+        public Optional<CuttingMode> OptionalCuttingMode { get => this.GetPropertyValueOptional<CuttingMode>(nameof(this.CuttingMode)); set => this.SetPropertyValueOptional(value, nameof(this.CuttingMode)); }
 
         /// <summary>
         /// 录制文件自动切割数值（分钟/MiB）
@@ -348,12 +308,6 @@ namespace BililiveRecorder.Core.Config.V2
         internal static readonly DefaultConfig Instance = new DefaultConfig();
         private DefaultConfig() { }
 
-        public EnabledFeature EnabledFeature => EnabledFeature.RecordOnly;
-
-        public uint ClipLengthPast => 20;
-
-        public uint ClipLengthFuture => 10;
-
         public uint TimingStreamRetry => 6 * 1000;
 
         public uint TimingStreamConnect => 5 * 1000;
@@ -370,15 +324,15 @@ namespace BililiveRecorder.Core.Config.V2
 
         public string WebHookUrls => string.Empty;
 
+        public string WebHookUrlsV2 => string.Empty;
+
         public string LiveApiHost => "https://api.live.bilibili.com";
 
         public string RecordFilenameFormat => @"{roomid}-{name}/录制-{roomid}-{date}-{time}-{title}.flv";
 
-        public string ClipFilenameFormat => @"{roomid}-{name}/剪辑片段-{roomid}-{date}-{time}-{title}.flv";
+        public bool WpfShowTitleAndArea => true;
 
-        public bool WpfShowTitleAndArea => false;
-
-        public AutoCuttingMode CuttingMode => AutoCuttingMode.Disabled;
+        public CuttingMode CuttingMode => CuttingMode.Disabled;
 
         public uint CuttingNumber => 100;
 

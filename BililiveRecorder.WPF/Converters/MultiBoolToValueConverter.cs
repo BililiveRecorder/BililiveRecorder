@@ -2,14 +2,15 @@ using System;
 using System.Globalization;
 using System.Windows.Data;
 
+#nullable enable
 namespace BililiveRecorder.WPF.Converters
 {
     public class MultiBoolToValueConverter : IMultiValueConverter
     {
-        public object FalseValue { get; set; }
-        public object TrueValue { get; set; }
+        public object? FalseValue { get; set; }
+        public object? TrueValue { get; set; }
 
-        public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
+        public object? Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
         {
             foreach (var value in values)
             {

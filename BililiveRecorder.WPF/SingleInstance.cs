@@ -9,14 +9,15 @@ using System.Threading;
 using System.Windows;
 using System.Windows.Threading;
 
+#nullable enable
 namespace BililiveRecorder.WPF
 {
     public static class SingleInstance
     {
-        private static Mutex singleInstanceMutex;
-        private static IpcServerChannel channel;
+        private static Mutex? singleInstanceMutex;
+        private static IpcServerChannel? channel;
 
-        public static event EventHandler NotificationReceived;
+        public static event EventHandler? NotificationReceived;
 
         public static bool CheckMutex(string path)
         {
@@ -68,7 +69,7 @@ namespace BililiveRecorder.WPF
         private class IPCRemoteService : MarshalByRefObject
         {
             public void Notify() => Application.Current?.Dispatcher.BeginInvoke(DispatcherPriority.Normal, (Action)ActivateFirstInstanceCallback);
-            public override object InitializeLifetimeService() => null;
+            public override object? InitializeLifetimeService() => null;
         }
     }
 }

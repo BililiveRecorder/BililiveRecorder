@@ -25,28 +25,28 @@ namespace BililiveRecorder.Flv.UnitTests.Xml
                     {
                         Type = TagType.Script,
                         Size=4321,
-                        ScriptData = new ScriptTagBody
+                        ScriptData = new ScriptTagBody(new List<IScriptDataValue>
                         {
-                            Name = "test1",
-                            Value = new ScriptDataObject
+                            (ScriptDataString)"test1",
+                            new ScriptDataObject
                             {
                                 ["key1"] = (ScriptDataNumber)5,
                                 ["key2"] = (ScriptDataString)"testTest"
                             }
-                        }
+                        })
                     },
                     new Tag
                     {
                         Type = TagType.Audio,
-                        ScriptData = new ScriptTagBody
+                        ScriptData = new ScriptTagBody(new List<IScriptDataValue>
                         {
-                            Name = "test2",
-                            Value = new ScriptDataObject
+                            (ScriptDataString)"test2",
+                            new ScriptDataObject
                             {
                                 ["key1"] = (ScriptDataNumber)5,
                                 ["key2"] = (ScriptDataString)"testTest"
                             }
-                        }
+                        })
                     },
                     new Tag
                     {
@@ -99,7 +99,7 @@ namespace BililiveRecorder.Flv.UnitTests.Xml
         {
             var PATH = @"";
 
-            var reader = new FlvTagPipeReader(PipeReader.Create(File.OpenRead(PATH)), new TestRecyclableMemoryStreamProvider(), skipData: true);
+            var reader = new FlvTagPipeReader(PipeReader.Create(File.OpenRead(PATH)), new TestRecyclableMemoryStreamProvider(), skipData: true, logger: null);
 
             var source = new XmlFlvFile
             {
@@ -108,7 +108,7 @@ namespace BililiveRecorder.Flv.UnitTests.Xml
 
             while (true)
             {
-                var tag = await reader.ReadTagAsync().ConfigureAwait(false);
+                var tag = await reader.ReadTagAsync(default).ConfigureAwait(false);
 
                 if (tag is null)
                     break;

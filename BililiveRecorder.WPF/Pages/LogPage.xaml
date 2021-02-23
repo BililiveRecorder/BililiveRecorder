@@ -11,11 +11,9 @@
     l:ResxLocalizationProvider.DefaultDictionary="Strings"
     xmlns:wpf="clr-namespace:BililiveRecorder.WPF"
     xmlns:local="clr-namespace:BililiveRecorder.WPF.Pages"
-    xmlns:models="clr-namespace:BililiveRecorder.WPF.Models"
+    xmlns:control="clr-namespace:BililiveRecorder.WPF.Controls"
     mc:Ignorable="d" 
     d:DesignHeight="450" d:DesignWidth="800"
-    d:DataContext="{d:DesignInstance Type=models:LogModel}"
-    DataContext="{Binding RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=local:RootPage},Path=DataContext.Logs,Mode=OneWay}"
     >
     <Grid Margin="5">
         <Grid.RowDefinitions>
@@ -61,27 +59,7 @@
             <Border Background="{DynamicResource SystemControlBackgroundAltHighBrush}"
                     BorderBrush="{DynamicResource SystemControlBackgroundAccentBrush}"
                     BorderThickness="1" CornerRadius="5">
-                <ItemsControl x:Name="Log" ItemsSource="{Binding Mode=OneWay}" Margin="5" ToolTip="{l:Loc LogPage_RightClickCopyToolTip}">
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate>
-                            <Border BorderThickness="0,0,0,1" BorderBrush="#FFCCCCCC">
-                                <TextBlock Text="{Binding Mode=OneWay}" TextWrapping="Wrap" MouseRightButtonUp="TextBlock_MouseRightButtonUp"/>
-                            </Border>
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                    <ItemsControl.Template>
-                        <ControlTemplate>
-                            <ScrollViewer Loaded="ScrollViewer_Loaded" CanContentScroll="True">
-                                <ItemsPresenter/>
-                            </ScrollViewer>
-                        </ControlTemplate>
-                    </ItemsControl.Template>
-                    <ItemsControl.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <VirtualizingStackPanel IsItemsHost="True"/>
-                        </ItemsPanelTemplate>
-                    </ItemsControl.ItemsPanel>
-                </ItemsControl>
+                <control:LogPanel/>
             </Border>
         </ui:ThemeShadowChrome>
     </Grid>

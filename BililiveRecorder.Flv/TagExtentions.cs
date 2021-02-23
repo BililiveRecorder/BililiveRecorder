@@ -20,7 +20,7 @@ namespace BililiveRecorder.Flv
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsData(this Tag tag)
-            => tag.Type != TagType.Script;
+            => tag.Type != TagType.Script && !tag.Flag.HasFlag(TagFlag.Header);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsNonKeyframeData(this Tag tag)

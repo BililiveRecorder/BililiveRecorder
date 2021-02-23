@@ -8,14 +8,13 @@
     <OutputType>WinExe</OutputType>
     <RootNamespace>BililiveRecorder.WPF</RootNamespace>
     <AssemblyName>BililiveRecorder.WPF</AssemblyName>
-    <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <WarningLevel>4</WarningLevel>
     <LangVersion>9.0</LangVersion>
+    <Nullable>enable</Nullable>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
-    <NuGetPackageImportStamp>
-    </NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -96,6 +95,9 @@
     <Compile Include="Controls\DeleteRoomConfirmDialog.xaml.cs">
       <DependentUpon>DeleteRoomConfirmDialog.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\LogPanel.xaml.cs">
+      <DependentUpon>LogPanel.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\PerRoomSettingsDialog.xaml.cs">
       <DependentUpon>PerRoomSettingsDialog.xaml</DependentUpon>
     </Compile>
@@ -111,9 +113,11 @@
     <Compile Include="Controls\WorkDirectorySelectorDialog.xaml.cs">
       <DependentUpon>WorkDirectorySelectorDialog.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Converters\ByteUnitsConverter.cs" />
     <Compile Include="Converters\ClipEnabledToBooleanConverter.cs" />
     <Compile Include="Converters\EnumToBooleanConverter.cs" />
     <Compile Include="Converters\IsNullToVisibilityConverter.cs" />
+    <Compile Include="Converters\RatioToArrowIconConverter.cs" />
     <Compile Include="Converters\ShortRoomIdToVisibilityConverter.cs" />
     <Compile Include="Converters\ValueConverterGroup.cs" />
     <Compile Include="Models\Commands.cs" />
@@ -130,9 +134,11 @@
     <Compile Include="Converters\BoolToValueConverter.cs" />
     <Compile Include="Converters\MultiBoolToValueConverter.cs" />
     <Compile Include="Converters\NullValueTemplateSelector.cs" />
-    <Compile Include="Converters\PercentageToColorBrushConverter.cs" />
+    <Compile Include="Converters\RatioToColorBrushConverter.cs" />
     <Compile Include="Converters\RoomListInterceptConverter.cs" />
-    <Compile Include="CommandLineOption.cs" />
+    <Compile Include="Pages\ToolboxAutoFixPage.xaml.cs">
+      <DependentUpon>ToolboxAutoFixPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="SingleInstance.cs" />
     <Compile Include="Properties\Strings.Designer.cs">
@@ -140,6 +146,8 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Strings.resx</DependentUpon>
     </Compile>
+    <Compile Include="Update.cs" />
+    <Compile Include="WpfLogEventSink.cs" />
     <Page Include="Controls\AddRoomCard.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -153,6 +161,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\DeleteRoomConfirmDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\LogPanel.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -209,6 +221,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Pages\SettingsPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\ToolboxAutoFixPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -274,15 +290,12 @@
       <Project>{cb9f2d58-181d-49f7-9560-d35a9b9c1d8c}</Project>
       <Name>BililiveRecorder.Core</Name>
     </ProjectReference>
-    <ProjectReference Include="..\BililiveRecorder.FlvProcessor\BililiveRecorder.FlvProcessor.csproj">
-      <Project>{51748048-1949-4218-8ded-94014abe7633}</Project>
-      <Name>BililiveRecorder.FlvProcessor</Name>
+    <ProjectReference Include="..\BililiveRecorder.Flv\BililiveRecorder.Flv.csproj">
+      <Project>{7610e19c-d3ab-4cbc-983e-6fda36f4d4b3}</Project>
+      <Name>BililiveRecorder.Flv</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="CommandLineParser">
-      <Version>2.4.3</Version>
-    </PackageReference>
     <PackageReference Include="Hardcodet.NotifyIcon.Wpf">
       <Version>1.0.8</Version>
     </PackageReference>
@@ -296,13 +309,7 @@
       <Version>0.9.2</Version>
     </PackageReference>
     <PackageReference Include="Newtonsoft.Json">
-      <Version>11.0.2</Version>
-    </PackageReference>
-    <PackageReference Include="NLog">
-      <Version>4.7.6</Version>
-    </PackageReference>
-    <PackageReference Include="NLog.Config">
-      <Version>4.7.6</Version>
+      <Version>12.0.3</Version>
     </PackageReference>
     <PackageReference Include="NuGet.CommandLine">
       <Version>4.7.1</Version>
@@ -310,13 +317,37 @@
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
     <PackageReference Include="Sentry">
-      <Version>2.1.8</Version>
+      <Version>3.0.6</Version>
     </PackageReference>
-    <PackageReference Include="Sentry.NLog">
-      <Version>2.1.8</Version>
+    <PackageReference Include="Sentry.Serilog">
+      <Version>3.0.6</Version>
+    </PackageReference>
+    <PackageReference Include="Serilog.Enrichers.Process">
+      <Version>2.0.1</Version>
+    </PackageReference>
+    <PackageReference Include="Serilog.Enrichers.Thread">
+      <Version>3.1.0</Version>
+    </PackageReference>
+    <PackageReference Include="Serilog.Exceptions">
+      <Version>6.0.0</Version>
+    </PackageReference>
+    <PackageReference Include="Serilog.Formatting.Compact">
+      <Version>1.1.0</Version>
+    </PackageReference>
+    <PackageReference Include="Serilog.Sinks.Console">
+      <Version>3.1.1</Version>
+    </PackageReference>
+    <PackageReference Include="Serilog.Sinks.Debug">
+      <Version>2.0.0</Version>
+    </PackageReference>
+    <PackageReference Include="Serilog.Sinks.File">
+      <Version>4.1.0</Version>
     </PackageReference>
     <PackageReference Include="squirrel.windows">
       <Version>2.0.1</Version>
+    </PackageReference>
+    <PackageReference Include="System.CommandLine">
+      <Version>2.0.0-beta1.20574.7</Version>
     </PackageReference>
     <PackageReference Include="WindowsAPICodePack-Core">
       <Version>1.1.2</Version>

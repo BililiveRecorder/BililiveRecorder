@@ -9,7 +9,7 @@ using BililiveRecorder.Core.Config.V2;
 
 namespace BililiveRecorder.WPF.MockData
 {
-#if DEBUG
+#if false && DEBUG
     internal class MockRecorder : IRecorder
     {
         private bool disposedValue;

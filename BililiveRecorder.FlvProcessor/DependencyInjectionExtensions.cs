@@ -6,11 +6,10 @@ namespace BililiveRecorder.DependencyInjection
 {
     public static class DependencyInjectionExtensions
     {
-        public static void AddFlvProcessor(this IServiceCollection services)
-        {
-            services.AddSingleton<Func<IFlvTag>>(() => new FlvTag());
-            services.AddSingleton<IFlvMetadataFactory, FlvMetadataFactory>();
-            services.AddSingleton<IProcessorFactory, ProcessorFactory>();
-        }
+        public static IServiceCollection AddFlvProcessor(this IServiceCollection services) => services
+            .AddSingleton<Func<IFlvTag>>(() => new FlvTag())
+            .AddSingleton<IFlvMetadataFactory, FlvMetadataFactory>()
+            .AddSingleton<IProcessorFactory, ProcessorFactory>()
+            ;
     }
 }

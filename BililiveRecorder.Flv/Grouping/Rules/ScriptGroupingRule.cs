@@ -8,7 +8,7 @@ namespace BililiveRecorder.Flv.Grouping.Rules
     {
         public bool StartWith(Tag tag) => tag.IsScript();
 
-        public bool AppendWith(Tag tag) => false;
+        public bool AppendWith(Tag tag, List<Tag> tags) => false;
 
         public PipelineAction CreatePipelineAction(List<Tag> tags) => new PipelineScriptAction(tags.First());
     }

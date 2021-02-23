@@ -51,7 +51,8 @@
     <c:ClipEnabledToBooleanConverter x:Key="ClipEnabledToBooleanConverter"/>
     <c:EnumToBooleanConverter x:Key="EnumToBooleanConverter"/>
     <c:IsNullToVisibilityConverter x:Key="IsNullToVisibilityCollapsedConverter"/>
-    <c:PercentageToColorBrushConverter x:Key="PercentageToColorBrushConverter"/>
+    <c:RatioToColorBrushConverter x:Key="RatioToColorBrushConverter"/>
+    <c:RatioToArrowIconConverter x:Key="RatioToArrowIconConverter" UpArrow="{StaticResource PathIconDataArrowUpBold}" DownArrow="{StaticResource PathIconDataArrowDownBold}"/>
     <c:ShortRoomIdToVisibilityConverter x:Key="ShortRoomIdToVisibilityConverter"/>
-
+    <c:ByteUnitsConverter x:Key="ByteUnitsConverter"/>
 </ResourceDictionary>

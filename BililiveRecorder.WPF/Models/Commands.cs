@@ -4,6 +4,7 @@ using System.Windows;
 using System.Windows.Input;
 using ModernWpf.Controls;
 
+#nullable enable
 namespace BililiveRecorder.WPF.Models
 {
     public class Commands : ICommand
@@ -17,7 +18,9 @@ namespace BililiveRecorder.WPF.Models
 
         public static Commands OpenContentDialog { get; } = new Commands
         {
-            ExecuteDelegate = async o => { try { await (o as ContentDialog)?.ShowAsync(); } catch (Exception) { } }
+#pragma warning disable VSTHRD101 // Avoid unsupported async delegates
+            ExecuteDelegate = async o => { try { await (o as ContentDialog)!.ShowAsync(); } catch (Exception) { } }
+#pragma warning restore VSTHRD101 // Avoid unsupported async delegates
         };
 
         public static Commands Copy { get; } = new Commands
@@ -27,8 +30,8 @@ namespace BililiveRecorder.WPF.Models
 
         #endregion
 
-        public Predicate<object> CanExecuteDelegate { get; set; }
-        public Action<object> ExecuteDelegate { get; set; }
+        public Predicate<object>? CanExecuteDelegate { get; set; }
+        public Action<object>? ExecuteDelegate { get; set; }
 
         #region ICommand Members
 

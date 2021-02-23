@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.IO;
 using Microsoft.IO;
 
@@ -11,6 +12,18 @@ namespace BililiveRecorder.Flv.UnitTests
                 MaximumFreeSmallPoolBytes = 64 * 1024 * 1024,
                 MaximumFreeLargePoolBytes = 64 * 1024 * 32,
             };
+
+        static TestRecyclableMemoryStreamProvider()
+        {
+            manager.StreamFinalized += () =>
+            {
+                Debug.WriteLine("TestRecyclableMemoryStreamProvider: Stream Finalized");
+            };
+            manager.StreamDisposed += () =>
+            {
+                // Debug.WriteLine("TestRecyclableMemoryStreamProvider: Stream Disposed");
+            };
+        }
 
         public Stream CreateMemoryStream(string tag) => manager.GetStream(tag);
     }

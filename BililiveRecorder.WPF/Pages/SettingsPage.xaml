@@ -12,7 +12,7 @@
     xmlns:c="clr-namespace:BililiveRecorder.WPF.Controls"
     xmlns:local="clr-namespace:BililiveRecorder.WPF.Pages"
     xmlns:config="clr-namespace:BililiveRecorder.Core.Config.V2;assembly=BililiveRecorder.Core"
-    xmlns:flv="clr-namespace:BililiveRecorder.FlvProcessor;assembly=BililiveRecorder.FlvProcessor"
+    xmlns:confiv2="clr-namespace:BililiveRecorder.Core.Config.V2;assembly=BililiveRecorder.Core"
     mc:Ignorable="d" 
     d:DesignHeight="1500" d:DesignWidth="500"
     DataContext="{Binding RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=local:RootPage},Path=DataContext.Recorder.Config.Global}"
@@ -45,13 +45,13 @@
                 <StackPanel>
                     <RadioButton GroupName="Splitting" Name="CutDisabledRadioButton" Content="{l:Loc Settings_Splitting_RadioButton_Disabled}"
                                  IsChecked="{Binding Path=CuttingMode, Converter={StaticResource EnumToBooleanConverter},
-                        ConverterParameter={x:Static flv:AutoCuttingMode.Disabled}}" />
+                        ConverterParameter={x:Static confiv2:CuttingMode.Disabled}}" />
                     <RadioButton GroupName="Splitting" Name="CutBySizeRadioButton" Content="{l:Loc Settings_Splitting_RadioButton_BySize}"
                                  IsChecked="{Binding Path=CuttingMode, Converter={StaticResource EnumToBooleanConverter},
-                        ConverterParameter={x:Static flv:AutoCuttingMode.BySize}}" />
+                        ConverterParameter={x:Static confiv2:CuttingMode.BySize}}" />
                     <RadioButton GroupName="Splitting" Name="CutByTimeRadioButton" Content="{l:Loc Settings_Splitting_RadioButton_ByTime}"
                                  IsChecked="{Binding Path=CuttingMode, Converter={StaticResource EnumToBooleanConverter},
-                        ConverterParameter={x:Static flv:AutoCuttingMode.ByTime}}" />
+                        ConverterParameter={x:Static confiv2:CuttingMode.ByTime}}" />
 
                     <StackPanel Orientation="Horizontal" Margin="0,5,0,0" 
                                 Visibility="{Binding ElementName=CutDisabledRadioButton,Path=IsChecked,Converter={StaticResource InvertBooleanToVisibilityCollapsedConverter}}">
@@ -84,7 +84,11 @@
             </GroupBox>
             <GroupBox Header="{l:Loc Settings_Webhook_Title}">
                 <StackPanel MaxWidth="400" HorizontalAlignment="Left">
-                    <TextBlock Text="{l:Loc Settings_Webhook_Address}"/>
+                    <TextBlock Text="{l:Loc Settings_Webhook_Address}" Margin="0,0,0,10"/>
+                    <TextBlock Text="Webhook v2"/>
+                    <TextBox AcceptsReturn="True" TextWrapping="Wrap" VerticalScrollBarVisibility="Visible"
+                             Text="{Binding WebHookUrlsV2,UpdateSourceTrigger=PropertyChanged,Delay=1000}" ui:TextBoxHelper.IsDeleteButtonVisible="False"/>
+                    <TextBlock Text="Webhook v1"/>
                     <TextBox AcceptsReturn="True" TextWrapping="Wrap" VerticalScrollBarVisibility="Visible"
                              Text="{Binding WebHookUrls,UpdateSourceTrigger=PropertyChanged,Delay=1000}" ui:TextBoxHelper.IsDeleteButtonVisible="False"/>
                 </StackPanel>
@@ -92,15 +96,6 @@
             <GroupBox Header="{l:Loc Settings_RecordMode_Title}">
                 <StackPanel>
                     <TextBlock Text="{l:Loc Settings_RecordMode_Description}"/>
-                    <RadioButton GroupName="RecordMode" Name="EnabledFeatureRecordOnlyRadioButton" Content="{l:Loc Settings_RecordMode_RadioButton_RecordOnly}"
-                                 IsChecked="{Binding Path=EnabledFeature, Converter={StaticResource EnumToBooleanConverter},
-                        ConverterParameter={x:Static flv:EnabledFeature.RecordOnly}}" />
-                    <RadioButton GroupName="RecordMode" Content="{l:Loc Settings_RecordMode_RadioButton_ClipOnly}"
-                                 IsChecked="{Binding Path=EnabledFeature, Converter={StaticResource EnumToBooleanConverter},
-                        ConverterParameter={x:Static flv:EnabledFeature.ClipOnly}}" />
-                    <RadioButton GroupName="RecordMode" Content="{l:Loc Settings_RecordMode_RadioButton_Both}"
-                                 IsChecked="{Binding Path=EnabledFeature, Converter={StaticResource EnumToBooleanConverter},
-                        ConverterParameter={x:Static flv:EnabledFeature.Both}}" />
 
                     <StackPanel Margin="0,5,0,0" Visibility="{Binding ElementName=EnabledFeatureRecordOnlyRadioButton,Path=IsChecked,Converter={StaticResource InvertBooleanToVisibilityCollapsedConverter}}">
                         <StackPanel Orientation="Horizontal">

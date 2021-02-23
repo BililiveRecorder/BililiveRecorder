@@ -34,7 +34,7 @@ namespace BililiveRecorder.Flv.Grouping
             };
         }
 
-        public async Task<PipelineAction?> ReadGroupAsync()
+        public async Task<PipelineAction?> ReadGroupAsync(CancellationToken token)
         {
             if (!this.semaphoreSlim.Wait(0))
             {
@@ -44,7 +44,7 @@ namespace BililiveRecorder.Flv.Grouping
             {
                 var tags = new List<Tag>();
 
-                var firstTag = await this.TagReader.ReadTagAsync().ConfigureAwait(false);
+                var firstTag = await this.TagReader.ReadTagAsync(token).ConfigureAwait(false);
 
                 // 数据已经全部读完
                 if (firstTag is null)
@@ -57,13 +57,13 @@ namespace BililiveRecorder.Flv.Grouping
 
                 tags.Add(firstTag);
 
-                while (true)
+                while (!token.IsCancellationRequested)
                 {
-                    var tag = await this.TagReader.PeekTagAsync().ConfigureAwait(false);
+                    var tag = await this.TagReader.PeekTagAsync(token).ConfigureAwait(false);
 
-                    if (tag != null && rule.AppendWith(tag))
+                    if (tag != null && rule.AppendWith(tag, tags))
                     {
-                        await this.TagReader.ReadTagAsync().ConfigureAwait(false);
+                        await this.TagReader.ReadTagAsync(token).ConfigureAwait(false);
                         tags.Add(tag);
                     }
                     else
@@ -93,13 +93,13 @@ namespace BililiveRecorder.Flv.Grouping
                         this.TagReader.Dispose();
                 }
 
-                // TODO: free unmanaged resources (unmanaged objects) and override finalizer
-                // TODO: set large fields to null
+                // free unmanaged resources (unmanaged objects) and override finalizer
+                // set large fields to null
                 this.disposedValue = true;
             }
         }
 
-        // // TODO: override finalizer only if 'Dispose(bool disposing)' has code to free unmanaged resources
+        // override finalizer only if 'Dispose(bool disposing)' has code to free unmanaged resources
         // ~TagGroupReader()
         // {
         //     // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method

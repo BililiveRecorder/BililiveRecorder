@@ -8,6 +8,6 @@ namespace BililiveRecorder.Core.Config.V1
         /// Config Data String
         /// </summary>
         [JsonProperty("data")]
-        public string Data { get; set; }
+        public string? Data { get; set; }
     }
 }

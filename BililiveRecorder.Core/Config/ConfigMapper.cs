@@ -3,9 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-using BililiveRecorder.FlvProcessor;
+using BililiveRecorder.Core.Config.V2;
 
-#nullable enable
 #pragma warning disable CS0612 // obsolete
 namespace BililiveRecorder.Core.Config
 {
@@ -15,9 +14,6 @@ namespace BililiveRecorder.Core.Config
         {
             var map = new Dictionary<PropertyInfo, PropertyInfo>();
 
-            AddMap<V1.ConfigV1, V2.GlobalConfig, EnabledFeature>(map, x => x.EnabledFeature, x => x.EnabledFeature);
-            AddMap<V1.ConfigV1, V2.GlobalConfig, uint>(map, x => x.ClipLengthPast, x => x.ClipLengthPast);
-            AddMap<V1.ConfigV1, V2.GlobalConfig, uint>(map, x => x.ClipLengthFuture, x => x.ClipLengthFuture);
             AddMap<V1.ConfigV1, V2.GlobalConfig, uint>(map, x => x.TimingStreamRetry, x => x.TimingStreamRetry);
             AddMap<V1.ConfigV1, V2.GlobalConfig, uint>(map, x => x.TimingStreamConnect, x => x.TimingStreamConnect);
             AddMap<V1.ConfigV1, V2.GlobalConfig, uint>(map, x => x.TimingDanmakuRetry, x => x.TimingDanmakuRetry);
@@ -28,9 +24,8 @@ namespace BililiveRecorder.Core.Config
             AddMap<V1.ConfigV1, V2.GlobalConfig, string?>(map, x => x.WebHookUrls, x => x.WebHookUrls);
             AddMap<V1.ConfigV1, V2.GlobalConfig, string?>(map, x => x.LiveApiHost, x => x.LiveApiHost);
             AddMap<V1.ConfigV1, V2.GlobalConfig, string?>(map, x => x.RecordFilenameFormat, x => x.RecordFilenameFormat);
-            AddMap<V1.ConfigV1, V2.GlobalConfig, string?>(map, x => x.ClipFilenameFormat, x => x.ClipFilenameFormat);
 
-            AddMap<V1.ConfigV1, V2.GlobalConfig, AutoCuttingMode>(map, x => x.CuttingMode, x => x.CuttingMode);
+            AddMap<V1.ConfigV1, V2.GlobalConfig, CuttingMode>(map, x => x.CuttingMode, x => x.CuttingMode);
             AddMap<V1.ConfigV1, V2.GlobalConfig, uint>(map, x => x.CuttingNumber, x => x.CuttingNumber);
             AddMap<V1.ConfigV1, V2.GlobalConfig, bool>(map, x => x.RecordDanmaku, x => x.RecordDanmaku);
             AddMap<V1.ConfigV1, V2.GlobalConfig, bool>(map, x => x.RecordDanmakuRaw, x => x.RecordDanmakuRaw);

@@ -206,6 +206,9 @@
   <data name="RoomCard_Menu_Tooltip" xml:space="preserve">
     <value>操作</value>
   </data>
+  <data name="RoomCard_SplitButton_Tooltip" xml:space="preserve">
+    <value>切割录制输出文件</value>
+  </data>
   <data name="RoomCard_Status_DanmakuConnectionTooltip_False" xml:space="preserve">
     <value>弹幕连接被断开
 录播姬通过弹幕服务器接收开播状态推送</value>

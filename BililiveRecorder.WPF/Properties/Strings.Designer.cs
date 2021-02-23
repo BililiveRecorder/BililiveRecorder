@@ -367,6 +367,15 @@ namespace BililiveRecorder.WPF.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to 切割录制输出文件.
+        /// </summary>
+        public static string RoomCard_SplitButton_Tooltip {
+            get {
+                return ResourceManager.GetString("RoomCard_SplitButton_Tooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to 弹幕连接被断开
         ///录播姬通过弹幕服务器接收开播状态推送.
         /// </summary>

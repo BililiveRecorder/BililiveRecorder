@@ -7,7 +7,8 @@ namespace BililiveRecorder.Flv.Grouping.Rules
     {
         public bool StartWith(Tag tag) => tag.IsData();
 
-        public bool AppendWith(Tag tag) => tag.IsNonKeyframeData();
+        public bool AppendWith(Tag tag, List<Tag> tags) => tag.IsNonKeyframeData()
+            || (tag.Type == TagType.Audio && tag.Flag == TagFlag.Header && tags.TrueForAll(x => x.Type != TagType.Audio));
 
         public PipelineAction CreatePipelineAction(List<Tag> tags) => new PipelineDataAction(tags);
     }
