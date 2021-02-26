@@ -4,13 +4,13 @@ platform: Any CPU
 skip_tags: true
 
 assembly_info:
-  patch: true
+  patch: false
   file: '**\AssemblyInfo.*'
   assembly_version: $(APPVEYOR_BUILD_VERSION)
   assembly_file_version: $(APPVEYOR_BUILD_VERSION)
   assembly_informational_version: $(APPVEYOR_BUILD_VERSION)
 dotnet_csproj:
-  patch: true
+  patch: false
   file: '**\*.csproj'
   version: $(APPVEYOR_BUILD_VERSION)
   package_version: $(APPVEYOR_BUILD_VERSION)
@@ -19,18 +19,14 @@ dotnet_csproj:
   informational_version: $(APPVEYOR_BUILD_VERSION)
 
 environment:
-  github_access_token:
-    secure: 3n2WMbrqWb0nmy2LBmu7w6dJltiHHC4LCoNuIKBh7fKV0xfxCwVGOxbTpunLI2pe
-  codesignaes:
-    secure: 9f78dD9jN5vlVZ0zv15kdD4Mj+/+uacfu29bbGC+cBVFs834aFVf5Ci+n3NP3Bl7
-  codesignpasswd:
-    secure: iKv14aGuHUDEfb5fSIBMuSsu1JnisWXL8wJ7x/2DCNtggWKevjhOFBOrI7c95xBY
+#  github_access_token:
+#    secure: 3n2WMbrqWb0nmy2LBmu7w6dJltiHHC4LCoNuIKBh7fKV0xfxCwVGOxbTpunLI2pe
 
 cache:
   - packages
 
 install:
-  - ps: ./CI/appveyor_install.ps1
+#  - ps: ./CI/appveyor_install.ps1
 
 before_build:
   - nuget restore -Verbosity quiet
@@ -47,21 +43,21 @@ build_script:
   - ps: msbuild /nologo /v:m /t:BililiveRecorder_Cli:Publish /p:Configuration="$env:CONFIGURATION" /p:RuntimeIdentifier="win-x64" /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
 
 for:
--
-  branches:
-    only:
-      - master # including pull requests target at master
-  configuration: Release
-  before_deploy: # wont run on pull request
-    - ps: ./CI/appveyor_deploy.ps1
-  deploy: # wont run on pull request
-    provider: GitHub
-    release: v$(APPVEYOR_BUILD_VERSION)
-    description: '# ◁☆Fill out this before publish☆▷'
-    auth_token:
-      secure: 3n2WMbrqWb0nmy2LBmu7w6dJltiHHC4LCoNuIKBh7fKV0xfxCwVGOxbTpunLI2pe
-    artifact: github
-    draft: true
+#-
+#  branches:
+#    only:
+#      - master # including pull requests target at master
+#  configuration: Release
+#  before_deploy: # wont run on pull request
+#    - ps: ./CI/appveyor_deploy.ps1
+#  deploy: # wont run on pull request
+#    provider: GitHub
+#    release: v$(APPVEYOR_BUILD_VERSION)
+#    description: '# ◁☆Fill out this before publish☆▷'
+#    auth_token:
+#      secure: 3n2WMbrqWb0nmy2LBmu7w6dJltiHHC4LCoNuIKBh7fKV0xfxCwVGOxbTpunLI2pe
+#    artifact: github
+#    draft: true
 -
   configuration: Debug
   artifacts:

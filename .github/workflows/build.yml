@@ -1,0 +1,69 @@
+name: Build and Test
+
+on:
+  push:
+  pull_request:
+
+jobs:
+
+  test:
+    strategy:
+      matrix:
+        os: [windows-latest, ubuntu-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Restore Packages
+        run: dotnet restore -v m
+      - name: Run Tests
+        run: dotnet test -v m
+
+  build_wpf:
+    needs: test
+    strategy:
+      matrix:
+        build_configuration: [Debug, Release]
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Restore Packages
+        run: nuget restore -Verbosity quiet
+      - name: Build WPF
+        run: msbuild /nologo /v:m /p:Configuration="${{ matrix.build_configuration }}"
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: WPF-${{ matrix.build_configuration }}
+          path: BililiveRecorder.WPF/bin/${{ matrix.build_configuration }}
+
+  build_cli:
+    needs: test
+    strategy:
+      matrix:
+        rid: [any, linux-arm, linux-arm64, linux-x64, osx-x64, win-x64]
+        build_configuration: [Debug, Release]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Restore Packages
+        run: dotnet restore -v m
+      - name: Build CLI
+        if: ${{ matrix.rid == 'any' }}
+        run: dotnet publish -c ${{ matrix.build_configuration }} BililiveRecorder.Cli\BililiveRecorder.Cli.csproj
+      - name: Build CLI
+        if: ${{ matrix.rid != 'any' }}
+        run: dotnet publish -c ${{ matrix.build_configuration }} -r ${{ matrix.rid }} BililiveRecorder.Cli\BililiveRecorder.Cli.csproj
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: CLI-${{ matrix.rid }}-${{ matrix.build_configuration }}
+          path: BililiveRecorder.Cli/publish/${{ matrix.build_configuration }}

@@ -181,7 +181,7 @@ namespace BililiveRecorder.Core.Danmaku
             writer.WriteStartDocument();
             writer.WriteProcessingInstruction("xml-stylesheet", "type=\"text/xsl\" href=\"#s\"");
             writer.WriteStartElement("i");
-            writer.WriteComment("\nB站录播姬 " + BuildInfo.Version + " " + BuildInfo.HeadSha1 + "\n本文件的弹幕信息兼容B站主站视频弹幕XML格式\n本XML自带样式可以在浏览器里打开（推荐使用Chrome）\n\nsc 为SuperChat\ngift为礼物\nguard为上船\n\nattribute \"raw\" 为原始数据\n");
+            writer.WriteComment("\nB站录播姬 " + GitVersionInformation.FullSemVer + "\n本文件的弹幕信息兼容B站主站视频弹幕XML格式\n本XML自带样式可以在浏览器里打开（推荐使用Chrome）\n\nsc 为SuperChat\ngift为礼物\nguard为上船\n\nattribute \"raw\" 为原始数据\n");
             writer.WriteElementString("chatserver", "chat.bilibili.com");
             writer.WriteElementString("chatid", "0");
             writer.WriteElementString("mission", "0");
@@ -190,7 +190,7 @@ namespace BililiveRecorder.Core.Danmaku
             writer.WriteElementString("real_name", "0");
             writer.WriteElementString("source", "0");
             writer.WriteStartElement("BililiveRecorder");
-            writer.WriteAttributeString("version", BuildInfo.Version + "-" + BuildInfo.HeadShaShort);
+            writer.WriteAttributeString("version", GitVersionInformation.FullSemVer);
             writer.WriteEndElement();
             writer.WriteStartElement("BililiveRecorderRecordInfo");
             writer.WriteAttributeString("roomid", room.RoomConfig.RoomId.ToString());

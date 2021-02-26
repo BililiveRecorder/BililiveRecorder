@@ -19,7 +19,7 @@ namespace BililiveRecorder.Core.SimpleWebhook
         static BasicWebhookV1()
         {
             client = new HttpClient();
-            client.DefaultRequestHeaders.Add("User-Agent", $"BililiveRecorder/{typeof(BasicWebhookV1).Assembly.GetName().Version}-{BuildInfo.HeadShaShort}");
+            client.DefaultRequestHeaders.Add("User-Agent", $"BililiveRecorder/{GitVersionInformation.FullSemVer}");
         }
 
         public BasicWebhookV1(ConfigV2 config)

@@ -26,7 +26,7 @@ namespace BililiveRecorder.WPF.Pages
         static AnnouncementPage()
         {
             client = new HttpClient();
-            client.DefaultRequestHeaders.Add("User-Agent", $"BililiveRecorder/{typeof(AnnouncementPage).Assembly.GetName().Version}-{BuildInfo.HeadShaShort}");
+            client.DefaultRequestHeaders.Add("User-Agent", $"BililiveRecorder/{GitVersionInformation.FullSemVer}");
         }
 
         public AnnouncementPage()

@@ -22,7 +22,7 @@ namespace BililiveRecorder.Core.SimpleWebhook
             this.config = config ?? throw new ArgumentNullException(nameof(config));
 
             this.client = new HttpClient();
-            this.client.DefaultRequestHeaders.Add("User-Agent", $"BililiveRecorder/{typeof(BasicWebhookV1).Assembly.GetName().Version}-{BuildInfo.HeadShaShort}");
+            this.client.DefaultRequestHeaders.Add("User-Agent", $"BililiveRecorder/{GitVersionInformation.FullSemVer}");
         }
 
         public Task SendSessionStartedAsync(RecordSessionStartedEventArgs args) =>

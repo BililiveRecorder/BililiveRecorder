@@ -261,6 +261,4 @@ paket-files/
 __pycache__/
 *.pyc
 
-TempBuildInfo/*.cs
-BililiveRecorder.WPF/Nlog.config
 BililiveRecorder.Cli/Properties/launchSettings.json

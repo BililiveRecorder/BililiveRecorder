@@ -12,7 +12,7 @@ namespace BililiveRecorder.Core.UnitTests.Danmaku
 {
     public class ManualTests
     {
-        [Fact]
+        [Fact(Skip = "skip")]
         public async Task TestAsync()
         {
             var client = new DanmakuClient(new HttpApiClient(null!), null);

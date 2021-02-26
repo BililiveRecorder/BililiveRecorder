@@ -325,7 +325,7 @@ namespace BililiveRecorder.Core
             this.logger.Verbose("Recording stats: {@stats}", e);
 
             var diff = DateTimeOffset.UtcNow - this.recordTaskStartTime;
-            this.Stats.SessionDuration = diff.Subtract(TimeSpan.FromMilliseconds(diff.Milliseconds));
+            this.Stats.SessionDuration = TimeSpan.FromSeconds(Math.Round(diff.TotalSeconds));
             this.Stats.FileMaxTimestamp = TimeSpan.FromMilliseconds(e.FileMaxTimestamp);
             this.Stats.SessionMaxTimestamp = TimeSpan.FromMilliseconds(e.SessionMaxTimestamp);
             this.Stats.DuraionRatio = e.DuraionRatio;

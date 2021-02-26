@@ -1,0 +1,102 @@
+name: Release
+
+on:
+  release:
+    types: [published]
+
+jobs:
+
+  test:
+    strategy:
+      matrix:
+        os: [windows-latest, ubuntu-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Restore Packages
+        run: dotnet restore -v m
+      - name: Run Tests
+        run: dotnet test -v m
+
+  release_wpf:
+    needs: test
+    strategy:
+      matrix:
+        build_configuration: [Release]
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Restore Packages
+        run: nuget restore -Verbosity quiet
+      - name: Build WPF
+        run: msbuild /nologo /v:m /p:Configuration="${{ matrix.build_configuration }}"
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: WPF-${{ matrix.build_configuration }}
+          path: BililiveRecorder.WPF/bin/${{ matrix.build_configuration }}
+      - name: Pack Release Asset
+        run: 7z a BililiveRecorder-WPF-Portable.zip BililiveRecorder.WPF/bin/${{ matrix.build_configuration }}
+      - name: Upload Release Asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: BililiveRecorder-WPF-Portable.zip
+          asset_name: BililiveRecorder-WPF-Portable.zip
+          asset_content_type: application/zip
+      - name: Upload Release Asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: BililiveRecorder.WPF\bin\SquirrelReleases\Setup.exe
+          asset_name: BililiveRecorder-WPF-Setup.exe
+          asset_content_type: application/vnd.microsoft.portable-executable
+
+  release_cli:
+    needs: test
+    strategy:
+      matrix:
+        rid: [any, linux-arm, linux-arm64, linux-x64, osx-x64, win-x64]
+        build_configuration: [Release]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Restore Packages
+        run: dotnet restore -v m
+      - name: Build CLI
+        if: ${{ matrix.rid == 'any' }}
+        run: dotnet publish -c ${{ matrix.build_configuration }} BililiveRecorder.Cli\BililiveRecorder.Cli.csproj
+      - name: Build CLI
+        if: ${{ matrix.rid != 'any' }}
+        run: dotnet publish -c ${{ matrix.build_configuration }} -r ${{ matrix.rid }} BililiveRecorder.Cli\BililiveRecorder.Cli.csproj
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: CLI-${{ matrix.rid }}-${{ matrix.build_configuration }}
+          path: BililiveRecorder.Cli/publish/${{ matrix.build_configuration }}
+      - name: Pack Release Asset
+        run: |
+          cd BililiveRecorder.Cli/publish
+          zip -r CLI-${{ matrix.rid }}-${{ matrix.build_configuration }}.zip ./${{ matrix.build_configuration }}
+      - name: Upload Release Asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: BililiveRecorder.Cli/publish/CLI-${{ matrix.rid }}-${{ matrix.build_configuration }}.zip
+          asset_name: BililiveRecorder-CLI-${{ matrix.rid }}.zip
+          asset_content_type: application/zip

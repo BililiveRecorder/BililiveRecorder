@@ -13,21 +13,10 @@ namespace BililiveRecorder.WPF.Converters
         public object TrueValue { get => this.GetValue(TrueValueProperty); set => this.SetValue(TrueValueProperty, value); }
         public object FalseValue { get => this.GetValue(FalseValueProperty); set => this.SetValue(FalseValueProperty, value); }
 
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            if (value == null)
-            {
-                return this.FalseValue;
-            }
-            else
-            {
-                return (bool)value ? this.TrueValue : this.FalseValue;
-            }
-        }
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture) =>
+            value == null ? this.FalseValue : (bool)value ? this.TrueValue : this.FalseValue;
 
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            return value != null ? value.Equals(this.TrueValue) : false;
-        }
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) =>
+            value != null && value.Equals(this.TrueValue);
     }
 }

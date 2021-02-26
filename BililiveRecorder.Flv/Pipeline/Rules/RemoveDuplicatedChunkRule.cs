@@ -21,7 +21,7 @@ namespace BililiveRecorder.Flv.Pipeline.Rules
 
         public Task RunAsync(FlvProcessingContext context, Func<Task> next)
         {
-            if (!(context.OriginalInput is PipelineDataAction data))
+            if (context.OriginalInput is not PipelineDataAction data)
                 return next();
             else
             {

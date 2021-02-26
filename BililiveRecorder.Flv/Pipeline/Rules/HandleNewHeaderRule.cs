@@ -20,7 +20,7 @@ namespace BililiveRecorder.Flv.Pipeline.Rules
 
         public Task RunAsync(FlvProcessingContext context, Func<Task> next)
         {
-            if (!(context.OriginalInput is PipelineHeaderAction header))
+            if (context.OriginalInput is not PipelineHeaderAction header)
                 return next();
             else
             {

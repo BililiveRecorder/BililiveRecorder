@@ -1,5 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="15.0"
+  xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -12,8 +13,6 @@
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <WarningLevel>4</WarningLevel>
-    <LangVersion>9.0</LangVersion>
-    <Nullable>enable</Nullable>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -82,7 +81,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="..\TempBuildInfo\BuildInfo.WPF.cs" />
     <Compile Include="Controls\AddRoomCard.xaml.cs">
       <DependentUpon>AddRoomCard.xaml</DependentUpon>
     </Compile>
@@ -238,8 +236,6 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="MockData\MockRecordedRoom.cs" />
-    <Compile Include="MockData\MockRecorder.cs" />
     <Compile Include="NewMainWindow.xaml.cs">
       <DependentUpon>NewMainWindow.xaml</DependentUpon>
     </Compile>
@@ -276,11 +272,6 @@
     <EmbeddedResource Include="Properties\Strings.zh-Hant.resx" />
     <None Include="Properties\app.manifest" />
     <Resource Include="ico.ico" />
-    <Content Include="NLog.config">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <None Include="NLog.Release.config" />
-    <None Include="NLog.Debug.config" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -296,6 +287,10 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="GitVersion.MsBuild" Version="5.6.6">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="Hardcodet.NotifyIcon.Wpf">
       <Version>1.0.8</Version>
     </PackageReference>
@@ -311,16 +306,11 @@
     <PackageReference Include="Newtonsoft.Json">
       <Version>12.0.3</Version>
     </PackageReference>
-    <PackageReference Include="NuGet.CommandLine">
-      <Version>4.7.1</Version>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-      <PrivateAssets>all</PrivateAssets>
-    </PackageReference>
     <PackageReference Include="Sentry">
-      <Version>3.0.6</Version>
+      <Version>3.0.7</Version>
     </PackageReference>
     <PackageReference Include="Sentry.Serilog">
-      <Version>3.0.6</Version>
+      <Version>3.0.7</Version>
     </PackageReference>
     <PackageReference Include="Serilog.Enrichers.Process">
       <Version>2.0.1</Version>
@@ -359,18 +349,16 @@
       <Version>3.8.0</Version>
     </PackageReference>
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <PropertyGroup>
-    <PreBuildEvent>cd $(SolutionDir)
-powershell -ExecutionPolicy Bypass -File .\CI\patch_buildinfo.ps1 WPF
-copy /y .\BililiveRecorder.WPF\NLog.$(ConfigurationName).config .\BililiveRecorder.WPF\NLog.config</PreBuildEvent>
-  </PropertyGroup>
-  <PropertyGroup>
-    <SquirrelBuildTarget Condition=" '$(SquirrelBuildTarget)' == '' ">.\SquirrelRelease</SquirrelBuildTarget>
-  </PropertyGroup>
   <Target Name="AfterBuild" Condition=" '$(Configuration)' == 'Release'">
-    <Exec Command="..\packages\NuGet.CommandLine.4.7.1\tools\NuGet.exe pack BililiveRecorder.nuspec -Version $([System.IO.File]::ReadAllText('../VERSION')) -Properties Configuration=Release -OutputDirectory $(OutDir) -BasePath $(OutDir)" />
-    <Exec Command="..\packages\squirrel.windows.1.9.0\tools\Squirrel.exe --releasify $(OutDir)BililiveRecorder.$([System.IO.File]::ReadAllText('../VERSION')).nupkg -r $(SquirrelBuildTarget) --framework-version net462 --no-msi" />
+    <GetAssemblyIdentity AssemblyFiles="$(TargetPath)">
+      <Output TaskParameter="Assemblies" ItemName="myAssemblyInfo" />
+    </GetAssemblyIdentity>
+    <PropertyGroup>
+      <NupkgReleaseDir>bin\NupkgReleases\</NupkgReleaseDir>
+      <SquirrelReleaseDir>bin\SquirrelReleases\</SquirrelReleaseDir>
+    </PropertyGroup>
+    <Exec Command="nuget pack BililiveRecorder.nuspec -Version %(myAssemblyInfo.Version) -Properties Configuration=Release -OutputDirectory $(NupkgReleaseDir) -BasePath $(OutDir)" />
+    <Exec Command="$(SquirrelToolsPath)\squirrel --releasify $(NupkgReleaseDir)\BililiveRecorder.$([System.Version]::Parse(%(myAssemblyInfo.Version)).ToString(3)).nupkg --releaseDir=$(SquirrelReleaseDir) --framework-version net472 --no-msi" />
   </Target>
 </Project>

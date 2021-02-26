@@ -224,7 +224,6 @@ namespace BililiveRecorder.Core.Recording
             if (scriptTagBody.Values.Count == 2 && scriptTagBody.Values[1] is ScriptDataEcmaArray value)
             {
                 var now = DateTimeOffset.Now;
-                const string version = "TODO-dev-1.3.x";
                 value["Title"] = (ScriptDataString)this.room.Title;
                 value["Artist"] = (ScriptDataString)$"{this.room.Name} ({this.room.RoomConfig.RoomId})";
                 value["Comment"] = (ScriptDataString)
@@ -233,12 +232,13 @@ namespace BililiveRecorder.Core.Recording
                     $"直播标题: {this.room.Title}\n" +
                     $"直播分区: {this.room.AreaNameParent}·{this.room.AreaNameChild}\n" +
                     $"录制时间: {now:O}\n" +
-                    $"\n使用 B站录播姬 录制 https://rec.danmuji.org\n" +
-                    $"录播姬版本: {version}");
+                    $"\n" +
+                    $"使用 B站录播姬 录制 https://rec.danmuji.org\n" +
+                    $"录播姬版本: {GitVersionInformation.FullSemVer}");
                 value["BililiveRecorder"] = new ScriptDataEcmaArray
                 {
                     ["RecordedBy"] = (ScriptDataString)"BililiveRecorder B站录播姬",
-                    ["RecorderVersion"] = (ScriptDataString)version, // TODO fix version
+                    ["RecorderVersion"] = (ScriptDataString)GitVersionInformation.FullSemVer,
                     ["StartTime"] = (ScriptDataDate)now,
                     ["RoomId"] = (ScriptDataString)this.room.RoomConfig.RoomId.ToString(),
                     ["ShortId"] = (ScriptDataString)this.room.ShortId.ToString(),

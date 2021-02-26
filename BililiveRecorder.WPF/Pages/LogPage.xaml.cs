@@ -8,7 +8,8 @@ namespace BililiveRecorder.WPF.Pages
         public LogPage()
         {
             this.InitializeComponent();
-            this.VersionTextBlock.Text = " " + BuildInfo.Version + " " + BuildInfo.HeadShaShort;
+            this.VersionTextBlock.Text = " " + GitVersionInformation.FullSemVer;
+            this.VersionTextBlock.ToolTip = GitVersionInformation.InformationalVersion;
         }
     }
 }

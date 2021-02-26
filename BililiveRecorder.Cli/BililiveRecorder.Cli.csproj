@@ -1,32 +1,23 @@
 <Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
-    <Nullable>enable</Nullable>
-    <LangVersion>9.0</LangVersion>
+    <TargetFramework>net5.0</TargetFramework>
     <StartupObject>BililiveRecorder.Cli.Program</StartupObject>
     <RuntimeIdentifiers>win-x64;osx-x64;osx.10.11-x64;linux-arm64;linux-arm;linux-x64</RuntimeIdentifiers>
+    <RuntimeIdentifier Condition=" '$(RuntimeIdentifier)' == 'any' "></RuntimeIdentifier>
     <PublishDir Condition=" '$(RuntimeIdentifier)' == '' ">publish\any</PublishDir>
     <PublishDir Condition=" '$(RuntimeIdentifier)' != '' ">publish\$(RuntimeIdentifier)</PublishDir>
     <SelfContained Condition=" '$(RuntimeIdentifier)' == '' ">false</SelfContained>
     <SelfContained Condition=" '$(SelfContained)' == '' ">true</SelfContained>
   </PropertyGroup>
+
   <ItemGroup>
     <Compile Remove="publish\**" />
     <EmbeddedResource Remove="publish\**" />
     <None Remove="publish\**" />
   </ItemGroup>
-  <ItemGroup>
-    <None Remove="NLog.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="..\TempBuildInfo\BuildInfo.Cli.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="NLog.config">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
+
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="5.0.1" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="5.0.0" />
@@ -39,10 +30,9 @@
     <PackageReference Include="Serilog.Sinks.File" Version="4.1.0" />
     <PackageReference Include="System.CommandLine" Version="2.0.0-beta1.20574.7" />
   </ItemGroup>
+
   <ItemGroup>
     <ProjectReference Include="..\BililiveRecorder.Core\BililiveRecorder.Core.csproj" />
   </ItemGroup>
-  <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
-    <Exec Command="cd $(SolutionDir)&#xD;&#xA;powershell -ExecutionPolicy Bypass -File .\CI\patch_buildinfo.ps1 Cli" />
-  </Target>
+
 </Project>

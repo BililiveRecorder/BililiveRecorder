@@ -1,0 +1,15 @@
+<Project>
+  <PropertyGroup>
+    <Copyright>Copyright © 2018 - 2021 Genteure</Copyright>
+    <Authors>Genteure</Authors>
+    <Company>$(Authors)</Company>
+    <LangVersion>9.0</LangVersion>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="GitVersion.MsBuild" Version="5.6.6">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+</Project>

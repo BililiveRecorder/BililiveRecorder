@@ -20,7 +20,7 @@ namespace BililiveRecorder.WPF
 
         public NewMainWindow()
         {
-            this.SoftwareVersion = BuildInfo.Version + " " + BuildInfo.HeadShaShort;
+            this.SoftwareVersion = GitVersionInformation.FullSemVer;
 
             Pages.AnnouncementPage.CultureInfo = CultureInfo.CurrentUICulture;
             LocalizeDictionary.Instance.Culture = CultureInfo.CurrentUICulture;
