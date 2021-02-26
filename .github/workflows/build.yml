@@ -68,4 +68,4 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: CLI-${{ matrix.rid }}-${{ matrix.build_configuration }}
-          path: BililiveRecorder.Cli/publish/${{ matrix.build_configuration }}
+          path: BililiveRecorder.Cli/publish/${{ matrix.rid }}
