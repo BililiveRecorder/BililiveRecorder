@@ -18,14 +18,14 @@ dotnet_csproj:
   file_version: $(APPVEYOR_BUILD_VERSION)
   informational_version: $(APPVEYOR_BUILD_VERSION)
 
-environment:
+#environment:
 #  github_access_token:
 #    secure: 3n2WMbrqWb0nmy2LBmu7w6dJltiHHC4LCoNuIKBh7fKV0xfxCwVGOxbTpunLI2pe
 
 cache:
   - packages
 
-install:
+#install:
 #  - ps: ./CI/appveyor_install.ps1
 
 before_build:
