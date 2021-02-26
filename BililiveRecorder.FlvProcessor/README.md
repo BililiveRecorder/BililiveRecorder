@@ -1,3 +1,0 @@
-# BililiveRecorder.FlvProcessor
-
-TODO
