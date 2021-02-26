@@ -78,10 +78,10 @@ jobs:
         run: dotnet restore -v m
       - name: Build CLI
         if: ${{ matrix.rid == 'any' }}
-        run: dotnet publish -c ${{ matrix.build_configuration }} BililiveRecorder.Cli\BililiveRecorder.Cli.csproj
+        run: dotnet publish -c ${{ matrix.build_configuration }} BililiveRecorder.Cli/BililiveRecorder.Cli.csproj
       - name: Build CLI
         if: ${{ matrix.rid != 'any' }}
-        run: dotnet publish -c ${{ matrix.build_configuration }} -r ${{ matrix.rid }} BililiveRecorder.Cli\BililiveRecorder.Cli.csproj
+        run: dotnet publish -c ${{ matrix.build_configuration }} -r ${{ matrix.rid }} BililiveRecorder.Cli/BililiveRecorder.Cli.csproj
       - name: Upload Artifacts
         uses: actions/upload-artifact@v2
         with:

@@ -34,13 +34,13 @@ before_build:
 
 build_script:
   - ps: msbuild /nologo /v:m /p:Configuration="$env:CONFIGURATION" /p:SquirrelBuildTarget="$env:DEPLOY_SITE_GIT\BililiveRecorder" /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
-  - ps: msbuild /nologo /v:m /t:BililiveRecorder_Cli:Publish /p:Configuration="$env:CONFIGURATION" /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
-  - ps: msbuild /nologo /v:m /t:BililiveRecorder_Cli:Publish /p:Configuration="$env:CONFIGURATION" /p:RuntimeIdentifier="linux-arm" /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
-  - ps: msbuild /nologo /v:m /t:BililiveRecorder_Cli:Publish /p:Configuration="$env:CONFIGURATION" /p:RuntimeIdentifier="linux-arm64" /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
-  - ps: msbuild /nologo /v:m /t:BililiveRecorder_Cli:Publish /p:Configuration="$env:CONFIGURATION" /p:RuntimeIdentifier="linux-x64" /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
-  - ps: msbuild /nologo /v:m /t:BililiveRecorder_Cli:Publish /p:Configuration="$env:CONFIGURATION" /p:RuntimeIdentifier="osx.10.11-x64" /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
-  - ps: msbuild /nologo /v:m /t:BililiveRecorder_Cli:Publish /p:Configuration="$env:CONFIGURATION" /p:RuntimeIdentifier="osx-x64" /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
-  - ps: msbuild /nologo /v:m /t:BililiveRecorder_Cli:Publish /p:Configuration="$env:CONFIGURATION" /p:RuntimeIdentifier="win-x64" /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
+  - ps: dotnet publish -c "$env:CONFIGURATION" BililiveRecorder.Cli/BililiveRecorder.Cli.csproj
+  - ps: dotnet publish -c "$env:CONFIGURATION" -r "linux-arm" BililiveRecorder.Cli/BililiveRecorder.Cli.csproj
+  - ps: dotnet publish -c "$env:CONFIGURATION" -r "linux-arm64" BililiveRecorder.Cli/BililiveRecorder.Cli.csproj
+  - ps: dotnet publish -c "$env:CONFIGURATION" -r "linux-x64" BililiveRecorder.Cli/BililiveRecorder.Cli.csproj
+  - ps: dotnet publish -c "$env:CONFIGURATION" -r "osx.10.11-x64" BililiveRecorder.Cli/BililiveRecorder.Cli.csproj
+  - ps: dotnet publish -c "$env:CONFIGURATION" -r "osx-x64" BililiveRecorder.Cli/BililiveRecorder.Cli.csproj
+  - ps: dotnet publish -c "$env:CONFIGURATION" -r "win-x64" BililiveRecorder.Cli/BililiveRecorder.Cli.csproj
 
 for:
 #-
