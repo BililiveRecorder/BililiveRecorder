@@ -269,7 +269,7 @@ namespace BililiveRecorder.Core.Recording
                     await this.pipeline(this.context).ConfigureAwait(false);
 
                     if (this.context.Comments.Count > 0)
-                        this.logger.Debug("修复逻辑输出 {Comments}", string.Join("\n", this.context.Comments));
+                        this.logger.Debug("修复逻辑输出 {@Comments}", this.context.Comments);
 
                     await this.writer.WriteAsync(this.context).ConfigureAwait(false);
 

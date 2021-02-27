@@ -24,7 +24,7 @@ namespace BililiveRecorder.Flv.Pipeline
 
         public IDictionary<object, object?> LocalItems { get; private set; }
 
-        public List<string> Comments { get; private set; }
+        public List<ProcessingComment> Comments { get; private set; }
 
         public void Reset(PipelineAction data, IDictionary<object, object?> sessionItems)
         {
@@ -32,13 +32,13 @@ namespace BililiveRecorder.Flv.Pipeline
             this.SessionItems = sessionItems ?? throw new ArgumentNullException(nameof(sessionItems));
             this.Output = new List<PipelineAction> { this.OriginalInput.Clone() };
             this.LocalItems = new Dictionary<object, object?>();
-            this.Comments = new List<string>();
+            this.Comments = new List<ProcessingComment>();
         }
     }
 
     public static class FlvProcessingContextExtensions
     {
-        public static void AddComment(this FlvProcessingContext context, string comment)
+        public static void AddComment(this FlvProcessingContext context, ProcessingComment comment)
             => context.Comments.Add(comment);
 
         public static void AddNewFileAtStart(this FlvProcessingContext context)

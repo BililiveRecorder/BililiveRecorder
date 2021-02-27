@@ -10,11 +10,14 @@
     l:ResxLocalizationProvider.DefaultAssembly="BililiveRecorder.WPF"
     l:ResxLocalizationProvider.DefaultDictionary="Strings"
     xmlns:local="clr-namespace:BililiveRecorder.WPF.Pages"
-    mc:Ignorable="d" 
+    xmlns:model="clr-namespace:BililiveRecorder.WPF.Models"
+    xmlns:c="clr-namespace:BililiveRecorder.WPF.Converters"    
+    mc:Ignorable="d" DataContext="{x:Null}"
     d:DesignHeight="600" d:DesignWidth="900"
     Title="ToolboxAutoFixPage">
-    <Grid Margin="10">
+    <Grid Margin="20">
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
@@ -54,12 +57,46 @@
             <Button VerticalAlignment="Bottom" DockPanel.Dock="Right" Margin="0,0,5,0" Content="选择..." Click="SelectFile_Button_Click"/>
             <TextBox ui:ControlHelper.PlaceholderText="FLV 文件" ui:TextBoxHelper.IsDeleteButtonVisible="False" x:Name="FileNameTextBox"/>
         </DockPanel>
-        <Border Grid.Row="1" BorderThickness="1" CornerRadius="5"
+        <Border Grid.Row="1" BorderThickness="1" CornerRadius="5" x:Name="analyzeResultDisplayArea" DataContext="{x:Null}"
             Background="{DynamicResource SystemControlBackgroundAltHighBrush}"
             BorderBrush="{DynamicResource SystemControlBackgroundAccentBrush}">
-            <Grid>
-                <TextBlock Text="分 析 还 没 做" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="32"/>
-            </Grid>
+            <Border.Resources>
+                <DataTemplate x:Key="NullAnalyzeResult">
+                    <StackPanel Margin="16">
+                        <TextBlock Text="点击分析按钮开始分析" FontSize="26" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                        <TextBlock Text="注：不分析也可以进行修复操作" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                    </StackPanel>
+                </DataTemplate>
+                <DataTemplate x:Key="NormalAnalyzeResult" DataType="{x:Type model:AnalyzeResultModel}">
+                    <Grid Margin="5">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <TextBox Grid.Row="0" IsReadOnly="True" Text="{Binding File}" ui:ControlHelper.Header="文件："/>
+                        <TextBlock Grid.Row="1" HorizontalAlignment="Center" FontSize="24" Text="无需修复" Foreground="Green"
+                                   Visibility="{Binding NeedFix,Converter={StaticResource InvertBooleanToVisibilityCollapsedConverter}}"/>
+                        <TextBlock Grid.Row="1" HorizontalAlignment="Center" FontSize="24" Text="需要修复" Foreground="Red"
+                                   Visibility="{Binding NeedFix,Converter={StaticResource BooleanToVisibilityCollapsedConverter}}"/>
+                        <StackPanel Grid.Row="2" HorizontalAlignment="Center"
+                                    Visibility="{Binding Unrepairable,Converter={StaticResource BooleanToVisibilityCollapsedConverter}}">
+                            <TextBlock HorizontalAlignment="Center" FontSize="20" Text="文件内存在录播姬无法自动修复的问题" Foreground="Red"/>
+                            <TextBlock HorizontalAlignment="Center" Text="请点击“修复失败？”按钮并反馈本问题"/>
+                        </StackPanel>
+                        <StackPanel Grid.Row="3" HorizontalAlignment="Center" Margin="10">
+                            <TextBlock Text="{Binding IssueTypeTimestampJump,StringFormat=时间戳问题 {0} 处}"/>
+                            <TextBlock Text="{Binding IssueTypeDecodingHeader,StringFormat=分辨率、解码问题 {0} 处}"/>
+                            <TextBlock Text="{Binding IssueTypeRepeatingData,StringFormat=重复片段 {0} 处}"/>
+                            <TextBlock Text="{Binding IssueTypeOther,StringFormat=其他问题 {0} 处}"/>
+                            <TextBlock Text="{Binding IssueTypeUnrepairable,StringFormat=无法修复的问题 {0} 处}"/>
+                        </StackPanel>
+                    </Grid>
+                </DataTemplate>
+                <c:NullValueTemplateSelector x:Key="SelectorTemplate" Normal="{StaticResource NormalAnalyzeResult}" Null="{StaticResource NullAnalyzeResult}"/>
+            </Border.Resources>
+            <ContentControl Content="{Binding}" ContentTemplateSelector="{StaticResource SelectorTemplate}"/>
         </Border>
     </Grid>
 </ui:Page>

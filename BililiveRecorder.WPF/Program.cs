@@ -38,12 +38,14 @@ namespace BililiveRecorder.WPF
             Log.Logger = logger;
             SentrySdk.ConfigureScope(s =>
             {
+                s.Contexts["semver"] = GitVersionInformation.FullSemVer;
                 try
                 {
                     var path = Path.GetFullPath(Path.Combine(Path.GetDirectoryName(typeof(Program).Assembly.Location), "..", "packages", ".betaId"));
                     if (!File.Exists(path)) return;
                     var content = File.ReadAllText(path);
-                    if (Guid.TryParse(content, out var id)) s.User = new User { Id = id.ToString() };
+                    if (Guid.TryParse(content, out var id))
+                        s.User = new User { Id = id.ToString() };
                 }
                 catch (Exception) { }
             });
@@ -158,10 +160,6 @@ namespace BililiveRecorder.WPF
             .WriteTo.Sentry(o =>
             {
                 o.Dsn = "https://efc16b0fd5604608b811c3b358e9d1f1@o210546.ingest.sentry.io/5556540";
-
-                var v = typeof(Program).Assembly.GetName().Version;
-                if (v.Major != 0)
-                    o.Release = "BililiveRecorder@" + v.ToString();
 
                 o.DisableAppDomainUnhandledExceptionCapture();
                 o.AddExceptionFilterForType<System.Net.Http.HttpRequestException>();

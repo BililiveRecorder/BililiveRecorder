@@ -52,13 +52,15 @@ namespace BililiveRecorder.Flv.Pipeline.Rules
             }
         }
 
+        private static readonly ProcessingComment SkippingComment = new ProcessingComment(CommentType.TimestampJump, "未检测到音频数据，跳过时间戳修改", skipCounting: true);
+
         private void SetDataTimestamp(IList<Tag> tags, TimestampStore ts, FlvProcessingContext context)
         {
             // 检查有至少一个音频数据
             // 在 CheckMissingKeyframeRule 已经确认了有视频数据不需要重复检查
             if (!tags.Any(x => x.Type == TagType.Audio))
             {
-                context.AddComment("未检测到音频数据，跳过时间戳修改");
+                context.AddComment(SkippingComment);
                 return;
             }
 
@@ -66,13 +68,13 @@ namespace BililiveRecorder.Flv.Pipeline.Rules
             if (diff < 0)
             {
                 var offsetDiff = this.GetOffsetDiff(tags, ts);
-                context.AddComment("时间戳问题：变小, Offset Diff: " + offsetDiff);
+                context.AddComment(new ProcessingComment(CommentType.TimestampJump, "时间戳问题：变小, Offset Diff: " + offsetDiff));
                 ts.CurrentOffset += offsetDiff;
             }
             else if (diff > JUMP_THRESHOLD)
             {
                 var offsetDiff = this.GetOffsetDiff(tags, ts);
-                context.AddComment("时间戳问题：间隔过大, Offset Diff: " + offsetDiff);
+                context.AddComment(new ProcessingComment(CommentType.TimestampJump, "时间戳问题：间隔过大, Offset Diff: " + offsetDiff));
                 ts.CurrentOffset += offsetDiff;
             }
 

@@ -15,14 +15,16 @@ namespace BililiveRecorder.Flv.Pipeline.Rules
     /// </remarks>
     public class CheckMissingKeyframeRule : ISimpleProcessingRule
     {
+        private static readonly ProcessingComment comment = new ProcessingComment(CommentType.Unrepairable, "Flv Chunk 内缺少关键帧");
+
         public Task RunAsync(FlvProcessingContext context, Func<Task> next)
         {
             if (context.OriginalInput is PipelineDataAction data)
             {
                 var f = data.Tags.FirstOrDefault(x => x.Type == TagType.Video);
-                if (f != null && !f.Flag.HasFlag(TagFlag.Keyframe))
+                if (f == null || !f.Flag.HasFlag(TagFlag.Keyframe))
                 {
-                    context.AddComment("Flv Chunk 内缺少关键帧");
+                    context.AddComment(comment);
                     context.AddDisconnectAtStart();
                     return Task.CompletedTask;
                 }

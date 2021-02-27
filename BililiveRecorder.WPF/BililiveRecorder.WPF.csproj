@@ -120,6 +120,7 @@
     <Compile Include="Converters\RatioToArrowIconConverter.cs" />
     <Compile Include="Converters\ShortRoomIdToVisibilityConverter.cs" />
     <Compile Include="Converters\ValueConverterGroup.cs" />
+    <Compile Include="Models\AnalyzeResultModel.cs" />
     <Compile Include="Models\Commands.cs" />
     <Compile Include="Models\LogModel.cs" />
     <Compile Include="Models\RootModel.cs" />

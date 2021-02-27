@@ -11,6 +11,8 @@ namespace BililiveRecorder.Flv.Pipeline.Rules
     /// </remarks>
     public class HandleDelayedAudioHeaderRule : IFullProcessingRule
     {
+        private static readonly ProcessingComment comment = new ProcessingComment(CommentType.DecodingHeader, "检测到延后收到的音频头");
+
         public Task RunAsync(FlvProcessingContext context, ProcessingDelegate next)
         {
             if (context.OriginalInput is PipelineDataAction dataAction)
@@ -27,7 +29,7 @@ namespace BililiveRecorder.Flv.Pipeline.Rules
         private async Task RunAsyncCore(PipelineDataAction dataAction, FlvProcessingContext context, ProcessingDelegate next)
         {
             context.ClearOutput();
-            context.AddComment("检测到延后收到的音频头");
+            context.AddComment(comment);
 
             var tags = dataAction.Tags;
             var index = tags.IndexOf(tags.Last(x => x.Flag == TagFlag.Header));

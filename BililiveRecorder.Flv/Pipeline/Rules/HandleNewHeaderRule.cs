@@ -18,6 +18,9 @@ namespace BililiveRecorder.Flv.Pipeline.Rules
         private const string VIDEO_HEADER_KEY = "HandleNewHeaderRule_VideoHeader";
         private const string AUDIO_HEADER_KEY = "HandleNewHeaderRule_AudioHeader";
 
+        private static readonly ProcessingComment MultipleHeaderComment = new ProcessingComment(CommentType.DecodingHeader, "收到了连续多个 Header", skipCounting: true);
+        private static readonly ProcessingComment SplitFileComment = new ProcessingComment(CommentType.DecodingHeader, "因为 Header 问题新建文件");
+
         public Task RunAsync(FlvProcessingContext context, Func<Task> next)
         {
             if (context.OriginalInput is not PipelineHeaderAction header)
@@ -82,7 +85,7 @@ namespace BililiveRecorder.Flv.Pipeline.Rules
                 }
 
                 if (multiple_header_present)
-                    context.AddComment("收到了连续多个 Header");
+                    context.AddComment(MultipleHeaderComment);
 
                 if (currentVideoHeader != null)
                     context.SessionItems[VIDEO_HEADER_KEY] = currentVideoHeader.Clone(); // TODO use memory provider
@@ -115,7 +118,7 @@ namespace BililiveRecorder.Flv.Pipeline.Rules
                         split_file = true;
 
                     if (split_file)
-                        context.AddComment("因为 Header 问题新建文件");
+                        context.AddComment(SplitFileComment);
 
                     context.Output.Clear();
 

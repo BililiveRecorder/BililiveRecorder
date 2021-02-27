@@ -19,6 +19,8 @@ namespace BililiveRecorder.Flv.Pipeline.Rules
         private const int MAX_HISTORY = 8;
         private const string QUEUE_KEY = "DeDuplicationQueue";
 
+        private static readonly ProcessingComment comment = new ProcessingComment(CommentType.RepeatingData, "发现了重复的 Flv Chunk");
+
         public Task RunAsync(FlvProcessingContext context, Func<Task> next)
         {
             if (context.OriginalInput is not PipelineDataAction data)
@@ -78,7 +80,7 @@ namespace BililiveRecorder.Flv.Pipeline.Rules
                 if (history.Any(x => x.SequenceEqual(feature)))
                 {
                     context.ClearOutput();
-                    context.AddComment("发现了重复的 Flv Chunk");
+                    context.AddComment(comment);
                     return Task.CompletedTask;
                 }
                 else

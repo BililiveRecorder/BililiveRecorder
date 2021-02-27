@@ -16,6 +16,9 @@ namespace BililiveRecorder.Flv.Pipeline.Rules
     {
         private const int MAX_ALLOWED_DIFF = 1000 * 10; // 10 seconds
 
+        private static readonly ProcessingComment Comment1 = new ProcessingComment(CommentType.Unrepairable, "Flv Chunk 内出现时间戳跳变（变小）");
+        private static readonly ProcessingComment Comment2 = new ProcessingComment(CommentType.Unrepairable, "Flv Chunk 内出现时间戳跳变（间隔过大）");
+
         public Task RunAsync(FlvProcessingContext context, Func<Task> next)
         {
             if (context.OriginalInput is PipelineDataAction data)
@@ -29,14 +32,14 @@ namespace BililiveRecorder.Flv.Pipeline.Rules
                     {
                         context.ClearOutput();
                         context.AddDisconnectAtStart();
-                        context.AddComment("Flv Chunk 内出现时间戳跳变（变小）");
+                        context.AddComment(Comment1);
                         return Task.CompletedTask;
                     }
                     else if ((f2.Timestamp - f1.Timestamp) > MAX_ALLOWED_DIFF)
                     {
                         context.ClearOutput();
                         context.AddDisconnectAtStart();
-                        context.AddComment("Flv Chunk 内出现时间戳跳变（间隔过大）");
+                        context.AddComment(Comment2);
                         return Task.CompletedTask;
                     }
                 }

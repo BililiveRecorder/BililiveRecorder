@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.IO.Pipelines;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using BililiveRecorder.Flv;
@@ -12,6 +13,7 @@ using BililiveRecorder.Flv.Pipeline;
 using BililiveRecorder.Flv.Writer;
 using BililiveRecorder.Flv.Xml;
 using BililiveRecorder.WPF.Controls;
+using BililiveRecorder.WPF.Models;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.WindowsAPICodePack.Dialogs;
 using Serilog;
@@ -111,7 +113,7 @@ namespace BililiveRecorder.WPF.Pages
                         await pipeline(context).ConfigureAwait(false);
 
                         if (context.Comments.Count > 0)
-                            logger.Debug("修复逻辑输出 {Comments}", string.Join("\n", context.Comments));
+                            logger.Debug("修复逻辑输出 {@Comments}", context.Comments);
 
                         await writer.WriteAsync(context).ConfigureAwait(false);
 
@@ -135,8 +137,7 @@ namespace BililiveRecorder.WPF.Pages
             }
             catch (Exception ex)
             {
-                logger.Warning(ex, "修复时发生错误");
-                throw;
+                logger.Error(ex, "修复时发生错误");
             }
             finally
             {
@@ -148,7 +149,7 @@ namespace BililiveRecorder.WPF.Pages
             }
         }
 
-        private void Analyze_Button_Click(object sender, RoutedEventArgs e)
+        private async void Analyze_Button_Click(object sender, RoutedEventArgs e)
         {
             AutoFixProgressDialog? progressDialog = null;
             try
@@ -162,12 +163,67 @@ namespace BililiveRecorder.WPF.Pages
                 progressDialog = new AutoFixProgressDialog();
                 var showTask = progressDialog.ShowAsync();
 
+                using var inputStream = File.OpenRead(inputPath);
+                var memoryStreamProvider = new DefaultMemoryStreamProvider();
+                using var grouping = new TagGroupReader(new FlvTagPipeReader(PipeReader.Create(inputStream), memoryStreamProvider, skipData: false, logger: logger));
+                var comments = new List<ProcessingComment>();
+                var context = new FlvProcessingContext();
+                var session = new Dictionary<object, object?>();
+                var pipeline = new ProcessingPipelineBuilder(new ServiceCollection().BuildServiceProvider()).AddDefault().AddRemoveFillerData().Build();
+                await Task.Run(async () =>
+                {
+                    var count = 0;
+                    while (true)
+                    {
+                        var group = await grouping.ReadGroupAsync(default).ConfigureAwait(false);
+                        if (group is null)
+                            break;
 
+                        context.Reset(group, session);
+                        await pipeline(context).ConfigureAwait(false);
+
+                        if (context.Comments.Count > 0)
+                        {
+                            logger.Debug("分析逻辑输出 {@Comments}", context.Comments);
+                            comments.AddRange(context.Comments);
+                        }
+
+                        foreach (var action in context.Output)
+                            if (action is PipelineDataAction dataAction)
+                                foreach (var tag in dataAction.Tags)
+                                    tag.BinaryData?.Dispose();
+
+                        if (count++ % 5 == 0)
+                        {
+                            await this.Dispatcher.InvokeAsync(() =>
+                            {
+                                progressDialog.Progress = (int)((double)inputStream.Position / inputStream.Length * 98d);
+                            });
+                        }
+                    }
+                }).ConfigureAwait(true);
+
+                var countableComments = comments.Where(x => !x.SkipCounting);
+                var model = new AnalyzeResultModel
+                {
+                    File = inputPath,
+                    NeedFix = comments.Count > 0,
+                    Unrepairable = comments.Any(x => x.CommentType == CommentType.Unrepairable),
+                    IssueTypeOther = countableComments.Count(x => x.CommentType == CommentType.Other),
+                    IssueTypeUnrepairable = countableComments.Count(x => x.CommentType == CommentType.Unrepairable),
+                    IssueTypeTimestampJump = countableComments.Count(x => x.CommentType == CommentType.TimestampJump),
+                    IssueTypeDecodingHeader = countableComments.Count(x => x.CommentType == CommentType.DecodingHeader),
+                    IssueTypeRepeatingData = countableComments.Count(x => x.CommentType == CommentType.RepeatingData)
+                };
+
+                this.analyzeResultDisplayArea.DataContext = model;
+
+                progressDialog.Hide();
+                await showTask.ConfigureAwait(true);
             }
             catch (Exception ex)
             {
-                logger.Warning(ex, "分析时发生错误");
-                throw;
+                logger.Error(ex, "分析时发生错误");
             }
             finally
             {
@@ -251,7 +307,7 @@ namespace BililiveRecorder.WPF.Pages
             }
             catch (Exception ex)
             {
-                logger.Warning(ex, "导出时发生错误");
+                logger.Error(ex, "导出时发生错误");
             }
             finally
             {
