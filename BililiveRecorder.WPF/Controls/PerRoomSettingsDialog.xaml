@@ -11,6 +11,8 @@
     l:ResxLocalizationProvider.DefaultDictionary="Strings"
     xmlns:local="clr-namespace:BililiveRecorder.WPF.Controls"
     xmlns:confiv2="clr-namespace:BililiveRecorder.Core.Config.V2;assembly=BililiveRecorder.Core"
+    xmlns:core="clr-namespace:BililiveRecorder.Core;assembly=BililiveRecorder.Core"
+    d:DataContext="{d:DesignInstance core:Room}"
     DefaultButton="Close"
     CloseButtonText="{l:Loc Global_Close}"
     mc:Ignorable="d">
@@ -20,16 +22,7 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <StackPanel>
-            <TextBlock VerticalAlignment="Center" Style="{DynamicResource SubtitleTextBlockStyle}" FontFamily="Microsoft Yahei" TextWrapping="NoWrap" HorizontalAlignment="Center"
-                   TextAlignment="Center" TextTrimming="CharacterEllipsis" Text="{Binding StreamerName,Mode=OneWay}" ToolTip="{Binding StreamerName,Mode=OneWay}"/>
-            <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Orientation="Horizontal" Grid.Row="1" Grid.ColumnSpan="2" Margin="5,0,0,0">
-                <ui:PathIcon Height="10" Style="{StaticResource PathIconDataUpperCaseIdentifier}" />
-                <TextBlock Text="{Binding RoomId, StringFormat=\{0\},Mode=OneWay}" Margin="4,0"/>
-                <ui:PathIcon Height="10" Style="{StaticResource PathIconDataLowerCaseIdentifier}" Margin="3,0"
-                             Visibility="{Binding ShortRoomId,Converter={StaticResource ShortRoomIdToVisibilityConverter}}"/>
-                <TextBlock Text="{Binding ShortRoomId, StringFormat=\{0\},Mode=OneWay}" 
-                           Visibility="{Binding ShortRoomId,Converter={StaticResource ShortRoomIdToVisibilityConverter}}"/>
-            </StackPanel>
+            <ContentControl Content="{Binding}" ContentTemplate="{StaticResource RoomDialogHeader}"/>
             <Separator/>
         </StackPanel>
         <ScrollViewer Grid.Row="1">

@@ -18,7 +18,7 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
-        <TextBlock Text="{l:Loc AddRoomFailedDialog_CloseButtonText}" TextAlignment="Center" FontSize="20"/>
+        <TextBlock Text="{l:Loc AddRoomFailedDialog_Title}" TextAlignment="Center" FontSize="20"/>
         <TextBlock Grid.Row="1" Text="{l:Loc {Binding StringFormat=AddRoomFailedDialog_ErrorText_{0}}}" VerticalAlignment="Center" TextAlignment="Center" FontSize="16"/>
     </Grid>
 </ui:ContentDialog>

@@ -76,10 +76,6 @@
                     <c:SettingWithDefault IsSettingNotUsingDefault="{Binding HasRecordFilenameFormat}" Header="{l:Loc Settings_FileName_Record}">
                         <TextBox Text="{Binding RecordFilenameFormat,Delay=500}" ui:TextBoxHelper.IsDeleteButtonVisible="False"/>
                     </c:SettingWithDefault>
-                    <c:SettingWithDefault IsSettingNotUsingDefault="{Binding HasClipFilenameFormat}" Header="{l:Loc Settings_FileName_Clip}" Margin="0,5,0,0" 
-                                          Visibility="{Binding ElementName=EnabledFeatureRecordOnlyRadioButton,Path=IsChecked,Converter={StaticResource InvertBooleanToVisibilityCollapsedConverter}}">
-                        <TextBox Text="{Binding ClipFilenameFormat,Delay=500}" ui:TextBoxHelper.IsDeleteButtonVisible="False"/>
-                    </c:SettingWithDefault>
                 </StackPanel>
             </GroupBox>
             <GroupBox Header="{l:Loc Settings_Webhook_Title}">
@@ -91,24 +87,6 @@
                     <TextBlock Text="Webhook v1"/>
                     <TextBox AcceptsReturn="True" TextWrapping="Wrap" VerticalScrollBarVisibility="Visible"
                              Text="{Binding WebHookUrls,UpdateSourceTrigger=PropertyChanged,Delay=1000}" ui:TextBoxHelper.IsDeleteButtonVisible="False"/>
-                </StackPanel>
-            </GroupBox>
-            <GroupBox Header="{l:Loc Settings_RecordMode_Title}">
-                <StackPanel>
-                    <TextBlock Text="{l:Loc Settings_RecordMode_Description}"/>
-
-                    <StackPanel Margin="0,5,0,0" Visibility="{Binding ElementName=EnabledFeatureRecordOnlyRadioButton,Path=IsChecked,Converter={StaticResource InvertBooleanToVisibilityCollapsedConverter}}">
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="{l:Loc Settings_RecordMode_Clip_PastDuration_Left}"/>
-                            <TextBox Margin="5,0" Width="80" Text="{Binding ClipLengthPast,Delay=500}" ui:TextBoxHelper.IsDeleteButtonVisible="False"/>
-                            <TextBlock Text="{l:Loc Settings_RecordMode_Clip_PastDuration_Right}"/>
-                        </StackPanel>
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="{l:Loc Settings_RecordMode_Clip_FutureDuration_Left}"/>
-                            <TextBox Margin="5,0" Width="80" Text="{Binding ClipLengthFuture,Delay=500}" ui:TextBoxHelper.IsDeleteButtonVisible="False"/>
-                            <TextBlock Text="{l:Loc Settings_RecordMode_Clip_FutureDuration_Right}"/>
-                        </StackPanel>
-                    </StackPanel>
                 </StackPanel>
             </GroupBox>
         </ui:SimpleStackPanel>

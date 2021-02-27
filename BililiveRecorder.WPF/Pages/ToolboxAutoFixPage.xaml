@@ -11,10 +11,55 @@
     l:ResxLocalizationProvider.DefaultDictionary="Strings"
     xmlns:local="clr-namespace:BililiveRecorder.WPF.Pages"
     mc:Ignorable="d" 
-    d:DesignHeight="450" d:DesignWidth="800"
+    d:DesignHeight="600" d:DesignWidth="900"
     Title="ToolboxAutoFixPage">
-
-    <Grid>
-        <TextBlock Text="还 没 做" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="32"/>
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <DockPanel Margin="0,0,0,10">
+            <Button VerticalAlignment="Bottom" DockPanel.Dock="Right" Content="修复失败？">
+                <ui:FlyoutService.Flyout>
+                    <ui:Flyout Placement="LeftEdgeAlignedTop">
+                        <StackPanel>
+                            <TextBlock Text="如果修复出错、或在修复后依旧有问题"/>
+                            <TextBlock Text="请发邮件到 rec@danmuji.org 反馈"/>
+                            <TextBlock Text="在邮件内附上此处导出的分析数据"/>
+                            <TextBlock Text="并尽量详细描述视频的问题、所使用的录播姬版本"/>
+                            <TextBlock Text="请分析未经修复的原始文件，而不是录播姬修复后的文件"/>
+                            <TextBlock><Hyperlink NavigateUri=""><Run Text="更多信息请点击这里"/></Hyperlink></TextBlock>
+                            <Button Margin="0,15,0,10" HorizontalAlignment="Center">
+                                <StackPanel Orientation="Horizontal">
+                                    <ui:PathIcon Margin="0,0,5,0" Style="{StaticResource PathIconDataExport}"/>
+                                    <TextBlock Text="导出原始分析数据"/>
+                                </StackPanel>
+                            </Button>
+                        </StackPanel>
+                    </ui:Flyout>
+                </ui:FlyoutService.Flyout>
+            </Button>
+            <Button VerticalAlignment="Bottom" DockPanel.Dock="Right" Margin="5,0">
+                <StackPanel Orientation="Horizontal">
+                    <ui:PathIcon Height="14" Margin="0,0,5,0" Style="{StaticResource PathIconDataAutoFix}"/>
+                    <TextBlock Text="修复"/>
+                </StackPanel>
+            </Button>
+            <Button VerticalAlignment="Bottom" DockPanel.Dock="Right">
+                <StackPanel Orientation="Horizontal">
+                    <ui:PathIcon Height="14" Margin="0,0,5,0" Style="{StaticResource PathIconDataMagnifyScan}"/>
+                    <TextBlock Text="分析"/>
+                </StackPanel>
+            </Button>
+            <Button VerticalAlignment="Bottom" DockPanel.Dock="Right" Content="选择..." Margin="0,0,5,0"/>
+            <TextBox ui:ControlHelper.PlaceholderText="FLV 文件" x:Name="FileNameTextBox"/>
+        </DockPanel>
+        <Border Grid.Row="1" BorderThickness="1" CornerRadius="5"
+            Background="{DynamicResource SystemControlBackgroundAltHighBrush}"
+            BorderBrush="{DynamicResource SystemControlBackgroundAccentBrush}">
+            <Grid>
+                <TextBlock Text="还 没 做" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="32"/>
+            </Grid>
+        </Border>
     </Grid>
 </ui:Page>

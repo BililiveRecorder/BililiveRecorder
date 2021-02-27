@@ -11,8 +11,8 @@
     l:ResxLocalizationProvider.DefaultDictionary="Strings"
     xmlns:local="clr-namespace:BililiveRecorder.WPF.Controls"
     xmlns:core="clr-namespace:BililiveRecorder.Core;assembly=BililiveRecorder.Core"
-    d:DesignWidth="220" d:DesignHeight="110"
     d:DataContext="{d:DesignInstance core:Room}"
+    d:DesignWidth="220" d:DesignHeight="110"
     mc:Ignorable="d">
     <Border Background="{DynamicResource SystemControlBackgroundAltHighBrush}"
             BorderBrush="{DynamicResource SystemControlBackgroundAccentBrush}" 
@@ -144,7 +144,7 @@
                     </Border.ToolTip>
                     <Grid>
                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                            <ui:PathIcon MaxWidth="11" Style="{Binding Stats.DuraionRatio, Converter={StaticResource RatioToArrowIconConverter}}"/>
+                            <ui:PathIcon MaxWidth="11" Foreground="Black" Style="{Binding Stats.DuraionRatio, Converter={StaticResource RatioToArrowIconConverter}}"/>
                             <TextBlock HorizontalAlignment="Center" Foreground="Black">
                                 <TextBlock.Text>
                                     <MultiBinding Converter="{l:StringFormatConverter}">
