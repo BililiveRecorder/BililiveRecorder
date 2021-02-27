@@ -62,10 +62,11 @@ namespace BililiveRecorder.WPF
         }
 
         private bool notification_showed = false;
+        public bool HideToTray { get; set; } = false;
 
         private void Window_StateChanged(object sender, EventArgs e)
         {
-            if (this.WindowState == WindowState.Minimized)
+            if (this.HideToTray && this.WindowState == WindowState.Minimized)
             {
                 this.Hide();
                 if (!this.notification_showed)

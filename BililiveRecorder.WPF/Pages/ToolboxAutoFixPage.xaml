@@ -29,7 +29,7 @@
                             <TextBlock Text="并尽量详细描述视频的问题、所使用的录播姬版本"/>
                             <TextBlock Text="请分析未经修复的原始文件，而不是录播姬修复后的文件"/>
                             <TextBlock><Hyperlink NavigateUri=""><Run Text="更多信息请点击这里"/></Hyperlink></TextBlock>
-                            <Button Margin="0,15,0,10" HorizontalAlignment="Center">
+                            <Button Margin="0,15,0,10" HorizontalAlignment="Center" Click="Export_Button_Click">
                                 <StackPanel Orientation="Horizontal">
                                     <ui:PathIcon Margin="0,0,5,0" Style="{StaticResource PathIconDataExport}"/>
                                     <TextBlock Text="导出原始分析数据"/>
@@ -39,26 +39,26 @@
                     </ui:Flyout>
                 </ui:FlyoutService.Flyout>
             </Button>
-            <Button VerticalAlignment="Bottom" DockPanel.Dock="Right" Margin="5,0">
+            <Button VerticalAlignment="Bottom" DockPanel.Dock="Right" Margin="5,0" Click="Fix_Button_Click">
                 <StackPanel Orientation="Horizontal">
                     <ui:PathIcon Height="14" Margin="0,0,5,0" Style="{StaticResource PathIconDataAutoFix}"/>
                     <TextBlock Text="修复"/>
                 </StackPanel>
             </Button>
-            <Button VerticalAlignment="Bottom" DockPanel.Dock="Right">
+            <Button VerticalAlignment="Bottom" DockPanel.Dock="Right" Click="Analyze_Button_Click">
                 <StackPanel Orientation="Horizontal">
                     <ui:PathIcon Height="14" Margin="0,0,5,0" Style="{StaticResource PathIconDataMagnifyScan}"/>
                     <TextBlock Text="分析"/>
                 </StackPanel>
             </Button>
-            <Button VerticalAlignment="Bottom" DockPanel.Dock="Right" Content="选择..." Margin="0,0,5,0"/>
-            <TextBox ui:ControlHelper.PlaceholderText="FLV 文件" x:Name="FileNameTextBox"/>
+            <Button VerticalAlignment="Bottom" DockPanel.Dock="Right" Margin="0,0,5,0" Content="选择..." Click="SelectFile_Button_Click"/>
+            <TextBox ui:ControlHelper.PlaceholderText="FLV 文件" ui:TextBoxHelper.IsDeleteButtonVisible="False" x:Name="FileNameTextBox"/>
         </DockPanel>
         <Border Grid.Row="1" BorderThickness="1" CornerRadius="5"
             Background="{DynamicResource SystemControlBackgroundAltHighBrush}"
             BorderBrush="{DynamicResource SystemControlBackgroundAccentBrush}">
             <Grid>
-                <TextBlock Text="还 没 做" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="32"/>
+                <TextBlock Text="分 析 还 没 做" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="32"/>
             </Grid>
         </Border>
     </Grid>
