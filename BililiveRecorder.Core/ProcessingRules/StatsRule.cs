@@ -10,23 +10,34 @@ namespace BililiveRecorder.Core.ProcessingRules
 {
     public class StatsRule : ISimpleProcessingRule
     {
+        public const string SkipStatsKey = nameof(SkipStatsKey);
+
         public event EventHandler<RecordingStatsEventArgs>? StatsUpdated;
 
         public long TotalInputVideoByteCount { get; private set; }
         public long TotalInputAudioByteCount { get; private set; }
-        // 两个值相加可得出总数据量
 
         public int TotalOutputVideoFrameCount { get; private set; }
         public int TotalOutputAudioFrameCount { get; private set; }
         public long TotalOutputVideoByteCount { get; private set; }
         public long TotalOutputAudioByteCount { get; private set; }
 
+        public long CurrnetFileSize { get; private set; } = 13;
+
         public int SumOfMaxTimestampOfClosedFiles { get; private set; }
         public int CurrentFileMaxTimestamp { get; private set; }
 
         public DateTimeOffset LastWriteTime { get; private set; }
 
-        public async Task RunAsync(FlvProcessingContext context, Func<Task> next)
+        public Task RunAsync(FlvProcessingContext context, Func<Task> next)
+        {
+            if (context.LocalItems.ContainsKey(SkipStatsKey))
+                return next();
+            else
+                return this.RunCoreAsync(context, next);
+        }
+
+        private async Task RunCoreAsync(FlvProcessingContext context, Func<Task> next)
         {
             var e = new RecordingStatsEventArgs();
 
@@ -60,8 +71,6 @@ namespace BililiveRecorder.Core.ProcessingRules
                 }
             }
 
-            var maxTimestampBeforeCalc = this.CurrentFileMaxTimestamp;
-
             foreach (var item in groups)
             {
                 if (item is null)
@@ -70,7 +79,6 @@ namespace BililiveRecorder.Core.ProcessingRules
                     CalcStats(e, item);
             }
 
-            e.AddedDuration = (this.CurrentFileMaxTimestamp - maxTimestampBeforeCalc) / 1000d;
             var now = DateTimeOffset.UtcNow;
             e.PassedTime = (now - this.LastWriteTime).TotalSeconds;
             this.LastWriteTime = now;
@@ -88,10 +96,17 @@ namespace BililiveRecorder.Core.ProcessingRules
                     e.TotalOutputVideoByteCount = this.TotalOutputVideoByteCount += e.OutputVideoByteCount = dataActions.Sum(x => x.Tags.Where(x => x.Type == TagType.Video).Sum(x => (x.Nalus == null ? x.Size : (5 + x.Nalus.Sum(n => n.FullSize + 4))) + (11 + 4)));
                     e.TotalOutputAudioByteCount = this.TotalOutputAudioByteCount += e.OutputAudioByteCount = dataActions.Sum(x => x.Tags.Where(x => x.Type == TagType.Audio).Sum(x => x.Size + (11 + 4)));
 
-                    var lastTags = dataActions[dataActions.Count - 1].Tags;
-                    if (lastTags.Count > 0)
-                        this.CurrentFileMaxTimestamp = e.FileMaxTimestamp = lastTags[lastTags.Count - 1].Timestamp;
+                    e.CurrnetFileSize = this.CurrnetFileSize += e.OutputVideoByteCount + e.OutputAudioByteCount;
 
+                    foreach (var action in dataActions)
+                    {
+                        var tags = action.Tags;
+                        if (tags.Count > 0)
+                        {
+                            e.AddedDuration += (tags[tags.Count - 1].Timestamp - tags[0].Timestamp) / 1000d;
+                            this.CurrentFileMaxTimestamp = e.FileMaxTimestamp = tags[tags.Count - 1].Timestamp;
+                        }
+                    }
                 }
 
                 e.SessionMaxTimestamp = this.SumOfMaxTimestampOfClosedFiles + this.CurrentFileMaxTimestamp;
@@ -101,6 +116,7 @@ namespace BililiveRecorder.Core.ProcessingRules
             {
                 this.SumOfMaxTimestampOfClosedFiles += this.CurrentFileMaxTimestamp;
                 this.CurrentFileMaxTimestamp = 0;
+                this.CurrnetFileSize = 13;
             }
         }
     }

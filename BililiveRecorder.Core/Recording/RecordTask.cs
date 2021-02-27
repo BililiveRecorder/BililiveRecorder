@@ -79,8 +79,8 @@ namespace BililiveRecorder.Core.Recording
             this.statsRule.StatsUpdated += this.StatsRule_StatsUpdated;
 
             this.pipeline = builder
-                .Add(this.splitFileRule)
                 .Add(this.statsRule)
+                .Add(this.splitFileRule)
                 .AddDefault()
                 .AddRemoveFillerData()
                 .Build();
@@ -111,7 +111,7 @@ namespace BililiveRecorder.Core.Recording
         public event EventHandler<RecordFileClosedEventArgs>? RecordFileClosed;
         public event EventHandler? RecordSessionEnded;
 
-        public void SplitOutput() => this.splitFileRule.SetSplitFlag();
+        public void SplitOutput() => this.splitFileRule.SetSplitBeforeFlag();
 
         public void RequestStop() => this.cts.Cancel();
 
@@ -252,10 +252,11 @@ namespace BililiveRecorder.Core.Recording
 
         private async Task RecordingLoopAsync()
         {
-            if (this.reader is null) return;
-            if (this.writer is null) return;
             try
             {
+                if (this.reader is null) return;
+                if (this.writer is null) return;
+
                 while (!this.ct.IsCancellationRequested)
                 {
                     var group = await this.reader.ReadGroupAsync(this.ct).ConfigureAwait(false);
@@ -383,12 +384,16 @@ namespace BililiveRecorder.Core.Recording
 
         private void StatsRule_StatsUpdated(object sender, RecordingStatsEventArgs e)
         {
-            if (this.room.RoomConfig.CuttingMode == Config.V2.CuttingMode.ByTime)
+            switch (this.room.RoomConfig.CuttingMode)
             {
-                if (e.FileMaxTimestamp > (this.room.RoomConfig.CuttingNumber * (60 * 1000)))
-                {
-                    this.splitFileRule.SetSplitFlag();
-                }
+                case Config.V2.CuttingMode.ByTime:
+                    if (e.FileMaxTimestamp > this.room.RoomConfig.CuttingNumber * (60u * 1000u))
+                        this.splitFileRule.SetSplitBeforeFlag();
+                    break;
+                case Config.V2.CuttingMode.BySize:
+                    if ((e.CurrnetFileSize + (e.OutputVideoByteCount * 1.1) + e.OutputAudioByteCount) / (1024d * 1024d) > this.room.RoomConfig.CuttingNumber)
+                        this.splitFileRule.SetSplitBeforeFlag();
+                    break;
             }
 
             RecordingStats?.Invoke(this, e);
@@ -411,15 +416,7 @@ namespace BililiveRecorder.Core.Recording
                 this.OnNewFile = onNewFile ?? throw new ArgumentNullException(nameof(onNewFile));
             }
 
-            public bool ShouldCreateNewFile(Stream outputStream, IList<Tag> tags)
-            {
-                if (this.room.RoomConfig.CuttingMode == Config.V2.CuttingMode.BySize)
-                {
-                    var pendingSize = tags.Sum(x => (x.Nalus == null ? x.Size : (5 + x.Nalus.Sum(n => n.FullSize + 4))) + (11 + 4));
-                    return (outputStream.Length + pendingSize) > (this.room.RoomConfig.CuttingNumber * (1024 * 1024));
-                }
-                return false;
-            }
+            public bool ShouldCreateNewFile(Stream outputStream, IList<Tag> tags) => false;
 
             public (Stream stream, object state) CreateOutputStream()
             {

@@ -20,6 +20,8 @@ namespace BililiveRecorder.Core.Event
         public long TotalOutputVideoByteCount { get; set; }
         public long TotalOutputAudioByteCount { get; set; }
 
+        public long CurrnetFileSize { get; set; }
+
         public double AddedDuration { get; set; }
         public double PassedTime { get; set; }
         public double DuraionRatio { get; set; }

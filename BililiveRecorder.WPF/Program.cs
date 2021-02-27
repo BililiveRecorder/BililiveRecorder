@@ -1,6 +1,7 @@
 using System;
 using System.CommandLine;
 using System.CommandLine.Invocation;
+using System.Diagnostics;
 using System.IO;
 using System.Runtime.ExceptionServices;
 using System.Security;
@@ -29,6 +30,8 @@ namespace BililiveRecorder.WPF
         static Program()
         {
             levelSwitchGlobal = new LoggingLevelSwitch(Serilog.Events.LogEventLevel.Debug);
+            if (Debugger.IsAttached)
+                levelSwitchGlobal.MinimumLevel = Serilog.Events.LogEventLevel.Verbose;
             levelSwitchConsole = new LoggingLevelSwitch(Serilog.Events.LogEventLevel.Error);
             logger = BuildLogger();
             AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
@@ -144,9 +147,13 @@ namespace BililiveRecorder.WPF
             .Enrich.WithThreadName()
             .Enrich.FromLogContext()
             .Enrich.WithExceptionDetails()
-            .WriteTo.Debug()
             .WriteTo.Console(levelSwitch: levelSwitchConsole)
-            .WriteTo.Sink<WpfLogEventSink>(Serilog.Events.LogEventLevel.Debug) // TODO level
+#if DEBUG
+            .WriteTo.Debug()
+            .WriteTo.Sink<WpfLogEventSink>(Serilog.Events.LogEventLevel.Debug)
+#else
+            .WriteTo.Sink<WpfLogEventSink>(Serilog.Events.LogEventLevel.Information)
+#endif
             .WriteTo.File(new CompactJsonFormatter(), "./logs/bilirec.txt", shared: true, rollingInterval: RollingInterval.Day)
             .WriteTo.Sentry(o =>
             {
