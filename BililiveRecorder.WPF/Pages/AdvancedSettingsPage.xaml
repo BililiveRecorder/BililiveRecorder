@@ -12,6 +12,7 @@
     xmlns:c="clr-namespace:BililiveRecorder.WPF.Controls"
     xmlns:local="clr-namespace:BililiveRecorder.WPF.Pages"
     xmlns:config="clr-namespace:BililiveRecorder.Core.Config.V2;assembly=BililiveRecorder.Core"
+    xmlns:model="clr-namespace:BililiveRecorder.WPF.Models"
     mc:Ignorable="d" 
     d:DesignHeight="1500" d:DesignWidth="500"
     DataContext="{Binding RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=local:RootPage},Path=DataContext.Recorder.Config.Global}"
@@ -91,6 +92,12 @@
                         <ui:NumberBox Minimum="60" Description="单位: 秒" SmallChange="10" Text="{Binding TimingCheckInterval,Delay=500}"/>
                     </c:SettingWithDefault>
                 </ui:SimpleStackPanel>
+            </GroupBox>
+            <GroupBox Header="Reset Request Policies">
+                <GroupBox.DataContext>
+                    <model:PollyPolicyModel/>
+                </GroupBox.DataContext>
+                <Button Content="Reset" Command="{Binding ResetAllPolicy}"/>
             </GroupBox>
             <GroupBox Header="手动崩溃">
                 <Button Content="Crash EVERTHING !!1">

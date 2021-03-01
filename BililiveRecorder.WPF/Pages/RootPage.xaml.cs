@@ -37,6 +37,7 @@ namespace BililiveRecorder.WPF.Pages
 
         private int SettingsClickCount = 0;
 
+        internal static IServiceProvider? ServiceProvider { get; private set; }
         private ServiceProvider serviceProvider;
         internal RootModel Model { get; private set; }
 
@@ -200,6 +201,7 @@ namespace BililiveRecorder.WPF.Pages
 
                     // 无已经在同目录运行的进程
                     this.serviceProvider = this.BuildServiceProvider(config, logger);
+                    ServiceProvider = this.serviceProvider;
                     var recorder = this.serviceProvider.GetRequiredService<IRecorder>();
 
                     this.Model.Recorder = recorder;

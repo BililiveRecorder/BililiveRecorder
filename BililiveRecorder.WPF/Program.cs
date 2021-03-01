@@ -38,7 +38,7 @@ namespace BililiveRecorder.WPF
             Log.Logger = logger;
             SentrySdk.ConfigureScope(s =>
             {
-                s.Contexts["semver"] = GitVersionInformation.FullSemVer;
+                s.SetTag("fullsemver", GitVersionInformation.FullSemVer);
                 try
                 {
                     var path = Path.GetFullPath(Path.Combine(Path.GetDirectoryName(typeof(Program).Assembly.Location), "..", "packages", ".betaId"));
@@ -166,7 +166,6 @@ namespace BililiveRecorder.WPF
 
                 o.MinimumBreadcrumbLevel = Serilog.Events.LogEventLevel.Debug;
                 o.MinimumEventLevel = Serilog.Events.LogEventLevel.Error;
-                // TODO 测试调整 sentry
             })
             .CreateLogger();
 

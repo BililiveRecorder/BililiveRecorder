@@ -30,17 +30,10 @@ namespace BililiveRecorder.DependencyInjection
             .AddScoped<IBasicDanmakuWriter, BasicDanmakuWriter>()
             ;
 
-        private static IServiceCollection AddRecorderPollyPolicy(this IServiceCollection services)
-        {
-            var registry = new PolicyRegistry // TODO
-            {
-                [PolicyNames.PolicyRoomInfoApiRequestAsync] = Policy.NoOpAsync(),
-                [PolicyNames.PolicyDanmakuApiRequestAsync] = Policy.NoOpAsync(),
-                [PolicyNames.PolicyStreamApiRequestAsync] = Policy.NoOpAsync(),
-            };
-
-            return services.AddSingleton<IReadOnlyPolicyRegistry<string>>(registry);
-        }
+        private static IServiceCollection AddRecorderPollyPolicy(this IServiceCollection services) => services
+            .AddSingleton<PollyPolicy>()
+            .AddSingleton<IReadOnlyPolicyRegistry<string>>(sp => sp.GetRequiredService<PollyPolicy>())
+            ;
 
         public static IServiceCollection AddRecorderApiClients(this IServiceCollection services) => services
             .AddSingleton<HttpApiClient>()

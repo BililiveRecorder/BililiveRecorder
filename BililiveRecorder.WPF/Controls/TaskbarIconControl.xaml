@@ -11,6 +11,7 @@
     l:ResxLocalizationProvider.DefaultDictionary="Strings"
     xmlns:tb="http://www.hardcodet.net/taskbar"
     xmlns:local="clr-namespace:BililiveRecorder.WPF.Controls"
+    xmlns:core="clr-namespace:BililiveRecorder.Core;assembly=BililiveRecorder.Core"
     mc:Ignorable="d">
     <tb:TaskbarIcon 
         x:Name="TaskbarIcon" TrayLeftMouseUp="TaskbarIcon_TrayLeftMouseUp"
@@ -28,7 +29,7 @@
             <Border
                 Background="{DynamicResource SystemControlBackgroundAltHighBrush}"
                 BorderBrush="{DynamicResource SystemControlBackgroundAccentBrush}" 
-                MinWidth="250"
+                MinWidth="260"
                 BorderThickness="2"
                 CornerRadius="5">
                 <Grid>
@@ -42,30 +43,33 @@
                         <TextBlock Text="{Binding Recorder.Config.Global.WorkDirectory,Mode=OneWay}" TextWrapping="NoWrap" FontFamily="Microsoft Yahei"/>
                     </StackPanel>
                     <Separator Grid.Row="1" Grid.ColumnSpan="2" />
-                    <ItemsControl Grid.Row="2" Grid.ColumnSpan="2" Margin="10,0,10,10" ItemsSource="{Binding Recorder, Mode=OneWay}">
+                    <ItemsControl Grid.Row="2" Grid.ColumnSpan="2" Margin="10,0,10,10" ItemsSource="{Binding Recorder.Rooms, Mode=OneWay}">
                         <ItemsControl.ItemTemplate>
-                            <DataTemplate>
+                            <DataTemplate DataType="{x:Type core:Room}"> 
                                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="0,5,0,0">
                                     <ui:PathIcon 
-                                        Visibility="{Binding IsMonitoring,Converter={StaticResource BooleanToVisibilityHiddenConverter}}"
+                                        Visibility="{Binding RoomConfig.AutoRecord,Converter={StaticResource BooleanToVisibilityHiddenConverter}}"
                                         Style="{StaticResource PathIconDataCctv}" Foreground="DarkOrange" Width="15"/>
                                     <ui:PathIcon 
-                                        Visibility="{Binding IsRecording,Converter={StaticResource BooleanToVisibilityHiddenConverter}}"
+                                        Visibility="{Binding Recording,Converter={StaticResource BooleanToVisibilityHiddenConverter}}"
                                         Style="{StaticResource PathIconDataRecordRec}" Foreground="Red" Width="15" Margin="3,0"/>
-                                    <TextBlock Text="{Binding StreamerName, Mode=OneWay}" TextWrapping="NoWrap"
+                                    <TextBlock Text="{Binding Name, Mode=OneWay}" TextWrapping="NoWrap"
                                                FontFamily="Microsoft Yahei" TextTrimming="CharacterEllipsis"/>
-                                    <Border VerticalAlignment="Center" MinWidth="80"
-                                            Visibility="{Binding IsRecording,Converter={StaticResource BooleanToVisibilityHiddenConverter}}"
-                                            Background="{Binding DownloadSpeedPersentage, Converter={StaticResource PercentageToColorBrushConverter},Mode=OneWay}"                    
+                                    <Border VerticalAlignment="Center" MinWidth="90"
+                                            Visibility="{Binding Recording,Converter={StaticResource BooleanToVisibilityHiddenConverter}}"
+                                            Background="{Binding Stats.DuraionRatio, Converter={StaticResource RatioToColorBrushConverter},Mode=OneWay}"                    
                                             BorderThickness="1" BorderBrush="{DynamicResource SystemControlBackgroundChromeBlackMediumBrush}" Margin="2,0" CornerRadius="5">
-                                        <TextBlock HorizontalAlignment="Center" Foreground="Black" FontFamily="Microsoft Yahei">
-                                            <TextBlock.Text>
-                                                <MultiBinding Converter="{l:StringFormatConverter}">
-                                                    <l:BLoc Key="RoomCard_Status_SpeedIndicator_SpeedInMbps"/>
-                                                    <Binding Path="DownloadSpeedMegaBitps" Mode="OneWay"/>
-                                                </MultiBinding>
-                                            </TextBlock.Text>
-                                        </TextBlock>
+                                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                            <ui:PathIcon MaxWidth="11" Foreground="Black" Style="{Binding Stats.DuraionRatio, Converter={StaticResource RatioToArrowIconConverter}}"/>
+                                            <TextBlock HorizontalAlignment="Center" Foreground="Black" FontFamily="Microsoft Yahei">
+                                                <TextBlock.Text>
+                                                    <MultiBinding Converter="{l:StringFormatConverter}">
+                                                        <l:BLoc Key="RoomCard_Status_SpeedIndicator_SpeedInMbps"/>
+                                                        <Binding Path="Stats.NetworkMbps" Mode="OneWay"/>
+                                                    </MultiBinding>
+                                                </TextBlock.Text>
+                                            </TextBlock>
+                                        </StackPanel>
                                     </Border>
                                 </StackPanel>
                             </DataTemplate>

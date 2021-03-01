@@ -1,7 +1,7 @@
 using System;
 using System.Runtime.Serialization;
 
-namespace BililiveRecorder.Core.Api.Model
+namespace BililiveRecorder.Core.Api
 {
     public class BilibiliApiResponseCodeNotZeroException : Exception
     {

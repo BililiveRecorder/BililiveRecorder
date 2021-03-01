@@ -254,34 +254,6 @@ namespace BililiveRecorder.Core.Api.Danmaku
             await ReadPipeAsync(reader, callback).ConfigureAwait(false);
         }
 
-        private static async Task FillPipeAsync(Stream stream, PipeWriter writer)
-        {
-            const int minimumBufferSize = 512;
-
-            while (true)
-            {
-                var memory = writer.GetMemory(minimumBufferSize);
-                try
-                {
-                    var bytesRead = await stream.ReadAsync(memory).ConfigureAwait(false);
-                    if (bytesRead == 0)
-                        break;
-                    writer.Advance(bytesRead);
-                }
-                catch (Exception)
-                {
-                    // TODO logger.Log("Debug", ex);
-                    break;
-                }
-
-                var result = await writer.FlushAsync();
-                if (result.IsCompleted)
-                    break;
-            }
-
-            await writer.CompleteAsync();
-        }
-
         private static async Task ReadPipeAsync(PipeReader reader, Action<string> callback)
         {
             while (true)

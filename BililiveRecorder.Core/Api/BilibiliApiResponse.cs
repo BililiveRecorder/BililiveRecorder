@@ -1,6 +1,6 @@
 using Newtonsoft.Json;
 
-namespace BililiveRecorder.Core.Api.Model
+namespace BililiveRecorder.Core.Api
 {
     public class BilibiliApiResponse<T> where T : class
     {

@@ -1,5 +1,6 @@
 using System;
 using System.ComponentModel;
+using System.Net;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
@@ -74,7 +75,15 @@ namespace BililiveRecorder.Core.Api.Http
 
         private static async Task<BilibiliApiResponse<T>> FetchAsync<T>(HttpClient client, string url) where T : class
         {
-            var text = await client.GetStringAsync(url).ConfigureAwait(false);
+            var resp = await client.GetAsync(url).ConfigureAwait(false);
+
+            if (resp.StatusCode == (HttpStatusCode)412)
+                throw new Http412Exception("Got HTTP Status 412 when requesting " + url);
+
+            resp.EnsureSuccessStatusCode();
+
+            var text = await resp.Content.ReadAsStringAsync().ConfigureAwait(false);
+
             var obj = JsonConvert.DeserializeObject<BilibiliApiResponse<T>>(text);
             if (obj.Code != 0)
                 throw new BilibiliApiResponseCodeNotZeroException("Bilibili api code: " + (obj.Code?.ToString() ?? "(null)") + "\n" + text);

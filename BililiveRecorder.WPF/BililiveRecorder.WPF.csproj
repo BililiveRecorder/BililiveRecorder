@@ -123,6 +123,7 @@
     <Compile Include="Models\AnalyzeResultModel.cs" />
     <Compile Include="Models\Commands.cs" />
     <Compile Include="Models\LogModel.cs" />
+    <Compile Include="Models\PollyPolicyModel.cs" />
     <Compile Include="Models\RootModel.cs" />
     <Compile Include="Pages\AnnouncementPage.xaml.cs">
       <DependentUpon>AnnouncementPage.xaml</DependentUpon>
