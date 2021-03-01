@@ -159,13 +159,19 @@ namespace BililiveRecorder.WPF
             .WriteTo.File(new CompactJsonFormatter(), "./logs/bilirec.txt", shared: true, rollingInterval: RollingInterval.Day)
             .WriteTo.Sentry(o =>
             {
-                o.Dsn = "https://efc16b0fd5604608b811c3b358e9d1f1@o210546.ingest.sentry.io/5556540";
+                o.Dsn = "https://7c6c5da3140543809661813aaa836207@o210546.ingest.sentry.io/5556540";
 
                 o.DisableAppDomainUnhandledExceptionCapture();
                 o.AddExceptionFilterForType<System.Net.Http.HttpRequestException>();
 
                 o.MinimumBreadcrumbLevel = Serilog.Events.LogEventLevel.Debug;
                 o.MinimumEventLevel = Serilog.Events.LogEventLevel.Error;
+
+#if DEBUG
+                o.Environment = "debug-build";
+#else
+                o.Environment = "release-build";
+#endif
             })
             .CreateLogger();
 
