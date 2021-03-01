@@ -29,6 +29,7 @@ namespace BililiveRecorder.Flv.Grouping
             this.GroupingRules = new List<IGroupingRule>
             {
                 new ScriptGroupingRule(),
+                new EndGroupingRule(),
                 new HeaderGroupingRule(),
                 new DataGroupingRule()
             };

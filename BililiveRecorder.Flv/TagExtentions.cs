@@ -16,11 +16,15 @@ namespace BililiveRecorder.Flv
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsHeader(this Tag tag)
             => (tag.Type == TagType.Video || tag.Type == TagType.Audio)
-            && tag.Flag.HasFlag(TagFlag.Header);
+            && (0 != (tag.Flag & TagFlag.Header));
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool IsEnd(this Tag tag)
+            => 0 != (tag.Flag & TagFlag.End);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsData(this Tag tag)
-            => tag.Type != TagType.Script && !tag.Flag.HasFlag(TagFlag.Header);
+            => tag.Type != TagType.Script && (0 == (tag.Flag & (TagFlag.Header | TagFlag.End)));
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsNonKeyframeData(this Tag tag)

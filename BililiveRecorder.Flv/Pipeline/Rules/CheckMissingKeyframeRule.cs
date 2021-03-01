@@ -22,7 +22,7 @@ namespace BililiveRecorder.Flv.Pipeline.Rules
             if (context.OriginalInput is PipelineDataAction data)
             {
                 var f = data.Tags.FirstOrDefault(x => x.Type == TagType.Video);
-                if (f == null || !f.Flag.HasFlag(TagFlag.Keyframe))
+                if (f == null || (0 == (f.Flag & TagFlag.Keyframe)))
                 {
                     context.AddComment(comment);
                     context.AddDisconnectAtStart();

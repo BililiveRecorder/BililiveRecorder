@@ -48,11 +48,11 @@ namespace BililiveRecorder.Flv
             }
         }
 
-        public bool ShouldSerializeBinaryDataForSerializationUseOnly() => this.Flag.HasFlag(TagFlag.Header);
+        public bool ShouldSerializeBinaryDataForSerializationUseOnly() => 0 != (this.Flag & TagFlag.Header);
 
         public bool ShouldSerializeScriptData() => this.Type == TagType.Script;
 
-        public bool ShouldSerializeNalus() => this.Type == TagType.Video && !this.Flag.HasFlag(TagFlag.Header);
+        public bool ShouldSerializeNalus() => this.Type == TagType.Video && (0 == (this.Flag & TagFlag.Header));
 
         public override string ToString() => this.DebuggerDisplay;
 

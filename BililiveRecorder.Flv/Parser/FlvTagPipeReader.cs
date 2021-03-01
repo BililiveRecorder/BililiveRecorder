@@ -281,7 +281,7 @@ namespace BililiveRecorder.Flv.Parser
                     this.logger?.Debug(ex, "Error parsing script tag body");
                 }
             }
-            else if (tag.Type == TagType.Video && !tag.Flag.HasFlag(TagFlag.Header))
+            else if (tag.Type == TagType.Video && (0 == (tag.Flag & TagFlag.Header)))
             {
                 if (H264Nalu.TryParseNalu(tagBodyStream, out var nalus))
                     tag.Nalus = nalus;
