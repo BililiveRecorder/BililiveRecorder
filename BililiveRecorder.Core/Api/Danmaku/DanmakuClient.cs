@@ -106,6 +106,7 @@ namespace BililiveRecorder.Core.Api.Danmaku
                     {
                         await ProcessDataAsync(this.danmakuStream, this.ProcessCommand).ConfigureAwait(false);
                     }
+                    catch (ObjectDisposedException) { }
                     catch (Exception ex)
                     {
                         this.logger.Warning(ex, "Error running ProcessDataAsync");

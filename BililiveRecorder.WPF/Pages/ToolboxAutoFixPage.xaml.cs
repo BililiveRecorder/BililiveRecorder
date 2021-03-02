@@ -290,17 +290,20 @@ namespace BililiveRecorder.WPF.Pages
                         {
                             await this.Dispatcher.InvokeAsync(() =>
                             {
-                                progressDialog.Progress = (int)((double)inputStream.Position / inputStream.Length * 98d);
+                                progressDialog.Progress = (int)((double)inputStream.Position / inputStream.Length * 95d);
                             });
                         }
                     }
                 }).ConfigureAwait(true);
 
-                using (var writer = new StreamWriter(new GZipStream(outputStream, CompressionLevel.Optimal)))
+                await Task.Run(() =>
+                {
+                    using var writer = new StreamWriter(new GZipStream(outputStream, CompressionLevel.Optimal));
                     XmlFlvFile.Serializer.Serialize(writer, new XmlFlvFile
                     {
                         Tags = tags
                     });
+                }).ConfigureAwait(true);
 
                 progressDialog.Hide();
                 await showTask.ConfigureAwait(true);
