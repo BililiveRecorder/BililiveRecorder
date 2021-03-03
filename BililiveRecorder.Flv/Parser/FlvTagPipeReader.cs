@@ -17,10 +17,13 @@ namespace BililiveRecorder.Flv.Parser
     public class FlvTagPipeReader : IFlvTagReader, IDisposable
     {
         private static int memoryCreateCounter = 0;
+
         private readonly ILogger? logger;
         private readonly IMemoryStreamProvider memoryStreamProvider;
         private readonly bool skipData;
         private readonly bool leaveOpen;
+
+        private int tagIndex;
 
         private bool peek = false;
         private Tag? peekTag = null;
@@ -263,6 +266,7 @@ namespace BililiveRecorder.Flv.Parser
             {
                 Type = tagType,
                 Flag = tagFlag,
+                Index = Interlocked.Increment(ref this.tagIndex),
                 Size = tagSize,
                 Timestamp = tagTimestamp,
             };

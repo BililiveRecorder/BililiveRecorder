@@ -45,7 +45,7 @@ namespace BililiveRecorder.DependencyInjection
 
         public static IServiceCollection AddRecorderRecording(this IServiceCollection services) => services
             .AddScoped<IRecordTaskFactory, RecordTaskFactory>()
-            .AddScoped<IFlvProcessingContextWriterFactory, FlvProcessingContextWriterFactory>()
+            .AddScoped<IFlvProcessingContextWriterFactory, FlvProcessingContextWriterWithFileWriterFactory>()
             .AddScoped<IFlvTagReaderFactory, FlvTagReaderFactory>()
             .AddScoped<ITagGroupReaderFactory, TagGroupReaderFactory>()
             ;

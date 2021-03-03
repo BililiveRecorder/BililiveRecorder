@@ -416,8 +416,6 @@ namespace BililiveRecorder.Core.Recording
                 this.OnNewFile = onNewFile ?? throw new ArgumentNullException(nameof(onNewFile));
             }
 
-            public bool ShouldCreateNewFile(Stream outputStream, IList<Tag> tags) => false;
-
             public (Stream stream, object state) CreateOutputStream()
             {
                 var paths = this.FormatFilename(this.room.RoomConfig.RecordFilenameFormat!);

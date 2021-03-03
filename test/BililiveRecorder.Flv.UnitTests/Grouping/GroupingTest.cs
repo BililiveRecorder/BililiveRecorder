@@ -21,7 +21,6 @@ namespace BililiveRecorder.Flv.UnitTests.Grouping
         {
             public Stream CreateAlternativeHeaderStream() => throw new NotImplementedException();
             public (Stream, object) CreateOutputStream() => (File.Open(Path.Combine(TEST_OUTPUT_PATH, DateTimeOffset.Now.ToString("s").Replace(':', '-') + ".flv"), FileMode.CreateNew, FileAccess.ReadWrite, FileShare.None), null);
-            public bool ShouldCreateNewFile(Stream outputStream, IList<Tag> tags) => false;
         }
 
         [Fact(Skip = "Not ready")]
@@ -81,7 +80,7 @@ namespace BililiveRecorder.Flv.UnitTests.Grouping
             var sp = new ServiceCollection().BuildServiceProvider();
             var pipeline = new ProcessingPipelineBuilder(sp).AddDefault().AddRemoveFillerData().Build();
 
-            using var writer = new FlvProcessingContextWriter(new TestOutputProvider(), new TestRecyclableMemoryStreamProvider(), null);
+            using var writer = new FlvProcessingContextWriter(new FlvTagFileWriter(new TestOutputProvider(), new TestRecyclableMemoryStreamProvider(), null));
 
             while (true)
             {

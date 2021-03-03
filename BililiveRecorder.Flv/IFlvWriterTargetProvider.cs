@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using System.IO;
 
 namespace BililiveRecorder.Flv
@@ -8,7 +7,5 @@ namespace BililiveRecorder.Flv
         (Stream stream, object state) CreateOutputStream();
 
         Stream CreateAlternativeHeaderStream();
-
-        bool ShouldCreateNewFile(Stream outputStream, IList<Tag> tags);
     }
 }

@@ -27,6 +27,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BililiveRecorder.Core.UnitT
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BililiveRecorder.Flv.UnitTests", "test\BililiveRecorder.Flv.UnitTests\BililiveRecorder.Flv.UnitTests.csproj", "{560E8483-9293-410E-81E9-AB36B49F8A7C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BililiveRecorder.Flv.RuleTests", "test\BililiveRecorder.Flv.RuleTests\BililiveRecorder.Flv.RuleTests.csproj", "{75DA0162-DE06-4FA0-B6F8-C82C11AF65BC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -57,6 +59,10 @@ Global
 		{560E8483-9293-410E-81E9-AB36B49F8A7C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{560E8483-9293-410E-81E9-AB36B49F8A7C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{560E8483-9293-410E-81E9-AB36B49F8A7C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{75DA0162-DE06-4FA0-B6F8-C82C11AF65BC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{75DA0162-DE06-4FA0-B6F8-C82C11AF65BC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{75DA0162-DE06-4FA0-B6F8-C82C11AF65BC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{75DA0162-DE06-4FA0-B6F8-C82C11AF65BC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -68,12 +74,13 @@ Global
 		{7610E19C-D3AB-4CBC-983E-6FDA36F4D4B3} = {2D44A59D-E437-4FEE-8A2E-3FF00D53A64D}
 		{521EC763-5694-45A8-B87F-6E6B7F2A3BD4} = {623A2ACC-DAC6-4E6F-9242-B4B54381AAE1}
 		{560E8483-9293-410E-81E9-AB36B49F8A7C} = {623A2ACC-DAC6-4E6F-9242-B4B54381AAE1}
+		{75DA0162-DE06-4FA0-B6F8-C82C11AF65BC} = {623A2ACC-DAC6-4E6F-9242-B4B54381AAE1}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		RESX_SortFileContentOnSave = True
-		SolutionGuid = {F3CB8B14-077A-458F-BD8E-1747ED0F5170}
-		RESX_NeutralResourcesLanguage = zh-Hans
-		RESX_SaveFilesImmediatelyUponChange = True
 		RESX_ShowErrorsInErrorList = False
+		RESX_SaveFilesImmediatelyUponChange = True
+		RESX_NeutralResourcesLanguage = zh-Hans
+		SolutionGuid = {F3CB8B14-077A-458F-BD8E-1747ED0F5170}
+		RESX_SortFileContentOnSave = True
 	EndGlobalSection
 EndGlobal

@@ -2,7 +2,7 @@ namespace BililiveRecorder.Flv.Pipeline
 {
     public class PipelineEndAction : PipelineAction
     {
-        private Tag Tag { get; set; }
+        public Tag Tag { get; set; }
 
         public PipelineEndAction(Tag tag)
         {

@@ -7,7 +7,7 @@ namespace BililiveRecorder.Flv.Pipeline.Rules
 {
     public class UpdateTimestampRule : ISimpleProcessingRule
     {
-        private const string TS_STORE_KEY = "Timestamp_Store_Key";
+        public const string TS_STORE_KEY = "Timestamp_Store_Key";
 
         private const int JUMP_THRESHOLD = 50;
 
@@ -112,7 +112,7 @@ namespace BililiveRecorder.Flv.Pipeline.Rules
             return sample[0].Timestamp - lastTimestamp - duration;
         }
 
-        private class TimestampStore
+        public class TimestampStore
         {
             public int LastOriginal;
 

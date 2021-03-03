@@ -16,6 +16,9 @@ namespace BililiveRecorder.Flv
         [XmlAttribute]
         public TagFlag Flag { get; set; }
 
+        [XmlIgnore]
+        public long Index { get; set; } = -1;
+
         [XmlAttribute]
         public uint Size { get; set; }
 

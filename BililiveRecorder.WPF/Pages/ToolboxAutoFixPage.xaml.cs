@@ -95,7 +95,7 @@ namespace BililiveRecorder.WPF.Pages
                 using var inputStream = File.OpenRead(inputPath);
                 var memoryStreamProvider = new DefaultMemoryStreamProvider();
                 using var grouping = new TagGroupReader(new FlvTagPipeReader(PipeReader.Create(inputStream), memoryStreamProvider, skipData: false, logger: logger));
-                using var writer = new FlvProcessingContextWriter(targetProvider, memoryStreamProvider, logger);
+                using var writer = new FlvProcessingContextWriter(new FlvTagFileWriter(targetProvider, memoryStreamProvider, logger));
                 var context = new FlvProcessingContext();
                 var session = new Dictionary<object, object?>();
                 var pipeline = new ProcessingPipelineBuilder(new ServiceCollection().BuildServiceProvider()).AddDefault().AddRemoveFillerData().Build();
@@ -345,8 +345,6 @@ namespace BililiveRecorder.WPF.Pages
                 var fileStream = File.Create(path);
                 return (fileStream, null!);
             }
-
-            public bool ShouldCreateNewFile(Stream outputStream, IList<Tag> tags) => false;
         }
     }
 }
