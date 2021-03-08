@@ -58,6 +58,10 @@ namespace BililiveRecorder.Flv.Pipeline.Rules
             await next(localContext).ConfigureAwait(false);
             context.Output.AddRange(localContext.Output);
             context.Comments.AddRange(localContext.Comments);
+
+            // TODO fix me
+            //var oi = context.Output.IndexOf(dataAction);
+            //context.Output.Insert(oi,newHeaderAction);
         }
     }
 }

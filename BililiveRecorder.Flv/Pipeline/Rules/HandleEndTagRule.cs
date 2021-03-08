@@ -1,4 +1,3 @@
-using System;
 using System.Threading.Tasks;
 
 namespace BililiveRecorder.Flv.Pipeline.Rules
@@ -6,22 +5,14 @@ namespace BililiveRecorder.Flv.Pipeline.Rules
     /// <summary>
     /// 处理 end tag
     /// </summary>
-    public class HandleEndTagRule : ISimpleProcessingRule
+    public class HandleEndTagRule : IFullProcessingRule
     {
-        public Task RunAsync(FlvProcessingContext context, Func<Task> next)
+        public Task RunAsync(FlvProcessingContext context, ProcessingDelegate next)
         {
-            if (context.OriginalInput is PipelineEndAction end)
-            {
-                if (context.SessionItems.TryGetValue(UpdateTimestampRule.TS_STORE_KEY, out var obj) && obj is UpdateTimestampRule.TimestampStore store)
-                    end.Tag.Timestamp -= store.CurrentOffset;
-                else
-                    end.Tag.Timestamp = 0;
-
+            if (context.OriginalInput is PipelineEndAction)
                 context.AddNewFileAtEnd();
-                return Task.CompletedTask;
-            }
-            else
-                return next();
+
+            return next(context);
         }
     }
 }

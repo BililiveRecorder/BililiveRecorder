@@ -7,7 +7,7 @@ namespace BililiveRecorder.Flv.Pipeline.Rules
 {
     public class UpdateTimestampRule : ISimpleProcessingRule
     {
-        public const string TS_STORE_KEY = "Timestamp_Store_Key";
+        private const string TS_STORE_KEY = "Timestamp_Store_Key";
 
         private const int JUMP_THRESHOLD = 50;
 
@@ -21,7 +21,7 @@ namespace BililiveRecorder.Flv.Pipeline.Rules
 
         public async Task RunAsync(FlvProcessingContext context, Func<Task> next)
         {
-            await next();
+            await next().ConfigureAwait(false);
 
             var ts = context.SessionItems.ContainsKey(TS_STORE_KEY) ? context.SessionItems[TS_STORE_KEY] as TimestampStore ?? new TimestampStore() : new TimestampStore();
             context.SessionItems[TS_STORE_KEY] = ts;
@@ -31,6 +31,19 @@ namespace BililiveRecorder.Flv.Pipeline.Rules
                 if (action is PipelineDataAction dataAction)
                 {
                     this.SetDataTimestamp(dataAction.Tags, ts, context);
+                }
+                else if (action is PipelineEndAction endAction)
+                {
+                    var tag = endAction.Tag;
+                    var diff = tag.Timestamp - ts.LastOriginal;
+                    if (diff < 0 || diff > JUMP_THRESHOLD)
+                    {
+                        tag.Timestamp = ts.NextTimestampTarget;
+                    }
+                    else
+                    {
+                        tag.Timestamp -= ts.CurrentOffset;
+                    }
                 }
                 else if (action is PipelineNewFileAction)
                 {
@@ -54,79 +67,74 @@ namespace BililiveRecorder.Flv.Pipeline.Rules
 
         private static readonly ProcessingComment SkippingComment = new ProcessingComment(CommentType.TimestampJump, "未检测到音频数据，跳过时间戳修改", skipCounting: true);
 
-        private void SetDataTimestamp(IList<Tag> tags, TimestampStore ts, FlvProcessingContext context)
+        private void SetDataTimestamp(IReadOnlyList<Tag> tags, TimestampStore ts, FlvProcessingContext context)
         {
-            // 检查有至少一个音频数据
-            // 在 CheckMissingKeyframeRule 已经确认了有视频数据不需要重复检查
-            if (!tags.Any(x => x.Type == TagType.Audio))
-            {
-                context.AddComment(SkippingComment);
-                return;
-            }
-
             var diff = tags[0].Timestamp - ts.LastOriginal;
             if (diff < 0)
             {
-                var offsetDiff = this.GetOffsetDiff(tags, ts);
-                context.AddComment(new ProcessingComment(CommentType.TimestampJump, "时间戳问题：变小, Offset Diff: " + offsetDiff));
-                ts.CurrentOffset += offsetDiff;
+                context.AddComment(new ProcessingComment(CommentType.TimestampJump, "时间戳问题：变小, Diff: " + diff));
+                ts.CurrentOffset = tags[0].Timestamp - ts.NextTimestampTarget;
             }
             else if (diff > JUMP_THRESHOLD)
             {
-                var offsetDiff = this.GetOffsetDiff(tags, ts);
-                context.AddComment(new ProcessingComment(CommentType.TimestampJump, "时间戳问题：间隔过大, Offset Diff: " + offsetDiff));
-                ts.CurrentOffset += offsetDiff;
+                context.AddComment(new ProcessingComment(CommentType.TimestampJump, "时间戳问题：间隔过大, Diff: " + diff));
+                ts.CurrentOffset = tags[0].Timestamp - ts.NextTimestampTarget;
             }
 
-            ts.LastVideoOriginal = tags.Last(x => x.Type == TagType.Video).Timestamp;
-            ts.LastAudioOriginal = tags.Last(x => x.Type == TagType.Audio).Timestamp;
-            ts.LastOriginal = Math.Max(ts.LastVideoOriginal, ts.LastAudioOriginal);
+            ts.LastOriginal = tags.Last().Timestamp;
 
             foreach (var tag in tags)
                 tag.Timestamp -= ts.CurrentOffset;
+
+            ts.NextTimestampTarget = this.CalculateNewTarget(tags);
         }
 
-        private int GetOffsetDiff(IList<Tag> tags, TimestampStore ts)
+        private int CalculateNewTarget(IReadOnlyList<Tag> tags)
         {
-            var videoDiff = this.GetAudioOrVideoOffsetDiff(tags.Where(x => x.Type == TagType.Video).Take(2).ToArray(),
-               ts.LastVideoOriginal, t => t >= VIDEO_DURATION_MIN && t <= VIDEO_DURATION_MAX, VIDEO_DURATION_FALLBACK);
+            var video = CalculatePerChannel(tags, VIDEO_DURATION_FALLBACK, VIDEO_DURATION_MAX, VIDEO_DURATION_MIN, TagType.Video);
 
-            var audioDiff = this.GetAudioOrVideoOffsetDiff(tags.Where(x => x.Type == TagType.Audio).Take(2).ToArray(),
-               ts.LastAudioOriginal, t => t >= AUDIO_DURATION_MIN && t <= AUDIO_DURATION_MAX, AUDIO_DURATION_FALLBACK);
+            if (tags.Any(x => x.Type == TagType.Audio))
+            {
+                var audio = CalculatePerChannel(tags, AUDIO_DURATION_FALLBACK, AUDIO_DURATION_MAX, AUDIO_DURATION_MIN, TagType.Audio);
+                return Math.Max(video, audio);
+            }
+            else
+            {
+                return video;
+            }
 
-            return Math.Min(videoDiff, audioDiff);
+            static int CalculatePerChannel(IReadOnlyList<Tag> tags, int fallback, int max, int min, TagType type)
+            {
+                var sample = tags.Where(x => x.Type == type).Take(2).ToArray();
+                int durationPerTag;
+                if (sample.Length != 2)
+                {
+                    durationPerTag = fallback;
+                }
+                else
+                {
+                    durationPerTag = sample[1].Timestamp - sample[0].Timestamp;
+
+                    if (durationPerTag < min || durationPerTag > max)
+                        durationPerTag = fallback;
+                }
+
+                return durationPerTag + tags.Last(x => x.Type == type).Timestamp;
+            }
         }
 
-        private int GetAudioOrVideoOffsetDiff(Tag[] sample, int lastTimestamp, Func<int, bool> validFunc, int fallbackDuration)
+        private class TimestampStore
         {
-            if (sample.Length <= 1)
-                return sample[0].Timestamp - lastTimestamp - fallbackDuration;
+            public int NextTimestampTarget;
 
-            var duration = sample[1].Timestamp - sample[0].Timestamp;
-
-            var valid = validFunc(duration);
-
-            if (!valid)
-                duration = fallbackDuration;
-
-            return sample[0].Timestamp - lastTimestamp - duration;
-        }
-
-        public class TimestampStore
-        {
             public int LastOriginal;
-
-            public int LastVideoOriginal;
-
-            public int LastAudioOriginal;
 
             public int CurrentOffset;
 
             public void Reset()
             {
+                this.NextTimestampTarget = 0;
                 this.LastOriginal = 0;
-                this.LastVideoOriginal = 0;
-                this.LastAudioOriginal = 0;
                 this.CurrentOffset = 0;
             }
         }

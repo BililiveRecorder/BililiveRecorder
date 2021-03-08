@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 
 namespace BililiveRecorder.Flv.Pipeline
 {
@@ -38,18 +39,23 @@ namespace BililiveRecorder.Flv.Pipeline
 
     public static class FlvProcessingContextExtensions
     {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void AddComment(this FlvProcessingContext context, ProcessingComment comment)
             => context.Comments.Add(comment);
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void AddNewFileAtStart(this FlvProcessingContext context)
             => context.Output.Insert(0, PipelineNewFileAction.Instance);
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void AddNewFileAtEnd(this FlvProcessingContext context)
             => context.Output.Add(PipelineNewFileAction.Instance);
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void AddDisconnectAtStart(this FlvProcessingContext context)
             => context.Output.Insert(0, PipelineDisconnectAction.Instance);
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void ClearOutput(this FlvProcessingContext context)
             => context.Output.Clear();
     }

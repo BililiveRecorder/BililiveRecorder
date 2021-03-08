@@ -95,7 +95,7 @@ namespace BililiveRecorder.Flv.Pipeline.Rules
                 if (lastAudioHeader is null && lastVideoHeader is null)
                 {
                     // 本 session 第一次输出 header
-                    context.Output.Clear();
+                    context.ClearOutput();
 
                     var output = new PipelineHeaderAction(Array.Empty<Tag>())
                     {
@@ -120,7 +120,7 @@ namespace BililiveRecorder.Flv.Pipeline.Rules
                     if (split_file)
                         context.AddComment(SplitFileComment);
 
-                    context.Output.Clear();
+                    context.ClearOutput();
 
                     if (split_file)
                     {
