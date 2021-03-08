@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using BililiveRecorder.Core.Event;
 using BililiveRecorder.Flv;
 using BililiveRecorder.Flv.Pipeline;
@@ -29,25 +28,16 @@ namespace BililiveRecorder.Core.ProcessingRules
 
         public DateTimeOffset LastWriteTime { get; private set; }
 
-        public Task RunAsync(FlvProcessingContext context, Func<Task> next)
-        {
-            if (context.LocalItems.ContainsKey(SkipStatsKey))
-                return next();
-            else
-                return this.RunCoreAsync(context, next);
-        }
-
-        private async Task RunCoreAsync(FlvProcessingContext context, Func<Task> next)
+        public void Run(FlvProcessingContext context, Action next)
         {
             var e = new RecordingStatsEventArgs();
 
-            if (context.OriginalInput is PipelineDataAction data)
-            {
-                e.TotalInputVideoByteCount = this.TotalInputVideoByteCount += e.InputVideoByteCount = data.Tags.Where(x => x.Type == TagType.Video).Sum(x => x.Size + (11 + 4));
-                e.TotalInputAudioByteCount = this.TotalInputAudioByteCount += e.InputAudioByteCount = data.Tags.Where(x => x.Type == TagType.Audio).Sum(x => x.Size + (11 + 4));
-            }
+            e.TotalInputVideoByteCount = this.TotalInputVideoByteCount += e.InputVideoByteCount =
+                context.Actions.Where(x => x is PipelineDataAction).Cast<PipelineDataAction>().Sum(data => data.Tags.Where(x => x.Type == TagType.Video).Sum(x => x.Size + (11 + 4)));
+            e.TotalInputAudioByteCount = this.TotalInputAudioByteCount += e.InputAudioByteCount =
+                context.Actions.Where(x => x is PipelineDataAction).Cast<PipelineDataAction>().Sum(data => data.Tags.Where(x => x.Type == TagType.Audio).Sum(x => x.Size + (11 + 4)));
 
-            await next().ConfigureAwait(false);
+            next();
 
             var groups = new List<List<PipelineDataAction>?>();
             {

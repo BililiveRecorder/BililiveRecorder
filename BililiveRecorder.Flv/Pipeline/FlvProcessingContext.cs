@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 using System.Linq;
+using System.Runtime.CompilerServices;
 
 namespace BililiveRecorder.Flv.Pipeline
 {
@@ -17,9 +17,6 @@ namespace BililiveRecorder.Flv.Pipeline
             this.Reset(data, sessionItems);
         }
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
-
-        [Obsolete("obsolete", true)]
-        public PipelineAction OriginalInput { get; private set; }
 
         public List<PipelineAction> Actions { get; set; }
 
@@ -49,22 +46,6 @@ namespace BililiveRecorder.Flv.Pipeline
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void AddComment(this FlvProcessingContext context, ProcessingComment comment)
             => context.Comments.Add(comment);
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void AddNewFileAtStart(this FlvProcessingContext context)
-            => context.Actions.Insert(0, PipelineNewFileAction.Instance);
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void AddNewFileAtEnd(this FlvProcessingContext context)
-            => context.Actions.Add(PipelineNewFileAction.Instance);
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void AddDisconnectAtStart(this FlvProcessingContext context)
-            => context.Actions.Insert(0, PipelineDisconnectAction.Instance);
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void ClearOutput(this FlvProcessingContext context)
-            => context.Actions.Clear();
 
         public static bool PerActionRun(this FlvProcessingContext context, Func<FlvProcessingContext, PipelineAction, IEnumerable<PipelineAction?>> func)
         {
