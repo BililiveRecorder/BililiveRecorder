@@ -1,5 +1,4 @@
 using System;
-using System.Threading.Tasks;
 
 namespace BililiveRecorder.Flv.Pipeline.Rules
 {
@@ -14,13 +13,13 @@ namespace BililiveRecorder.Flv.Pipeline.Rules
     /// </remarks>
     public class RemoveFillerDataRule : ISimpleProcessingRule
     {
-        public async Task RunAsync(FlvProcessingContext context, Func<Task> next)
+        public void Run(FlvProcessingContext context, Action next)
         {
             // 先运行下层规则
-            await next().ConfigureAwait(false);
+            next();
 
             // 处理下层规则返回的数据
-            context.Output.ForEach(action =>
+            context.Actions.ForEach(action =>
             {
                 if (action is PipelineDataAction dataAction)
                     foreach (var tag in dataAction.Tags)

@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace BililiveRecorder.Flv.Pipeline
 {
@@ -23,6 +22,6 @@ namespace BililiveRecorder.Flv.Pipeline
         }
 
         public ProcessingDelegate Build()
-            => this.rules.AsEnumerable().Reverse().Aggregate((ProcessingDelegate)(_ => Task.CompletedTask), (i, o) => o(i));
+            => this.rules.AsEnumerable().Reverse().Aggregate((ProcessingDelegate)(_ => { }), (i, o) => o(i));
     }
 }

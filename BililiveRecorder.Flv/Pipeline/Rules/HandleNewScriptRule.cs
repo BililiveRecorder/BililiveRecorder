@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using BililiveRecorder.Flv.Amf;
 
 namespace BililiveRecorder.Flv.Pipeline.Rules
@@ -15,9 +14,15 @@ namespace BililiveRecorder.Flv.Pipeline.Rules
     {
         private static readonly ProcessingComment comment = new ProcessingComment(CommentType.Other, "收到了非 onMetaData 的 Script Tag");
 
-        public Task RunAsync(FlvProcessingContext context, Func<Task> next)
+        public void Run(FlvProcessingContext context, Action next)
         {
-            if (context.OriginalInput is PipelineScriptAction scriptAction)
+            context.PerActionRun(this.RunPerAction);
+            next();
+        }
+
+        private IEnumerable<PipelineAction?> RunPerAction(FlvProcessingContext context, PipelineAction action)
+        {
+            if (action is PipelineScriptAction scriptAction)
             {
                 var data = scriptAction.Tag.ScriptData;
                 if (!(data is null)
@@ -35,9 +40,8 @@ namespace BililiveRecorder.Flv.Pipeline.Rules
                     if (value is null)
                         value = new ScriptDataEcmaArray();
 
-                    context.ClearOutput();
-                    context.AddNewFileAtStart();
-                    context.Output.Add(new PipelineScriptAction(new Tag
+                    yield return PipelineNewFileAction.Instance;
+                    yield return (new PipelineScriptAction(new Tag
                     {
                         Type = TagType.Script,
                         ScriptData = new ScriptTagBody(new List<IScriptDataValue>
@@ -50,12 +54,10 @@ namespace BililiveRecorder.Flv.Pipeline.Rules
                 else
                 {
                     context.AddComment(comment);
-                    context.ClearOutput();
                 }
-                return Task.CompletedTask;
             }
             else
-                return next();
+                yield return action;
         }
     }
 }

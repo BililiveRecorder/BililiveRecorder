@@ -52,7 +52,7 @@ namespace BililiveRecorder.Core.ProcessingRules
             var groups = new List<List<PipelineDataAction>?>();
             {
                 List<PipelineDataAction>? curr = null;
-                foreach (var action in context.Output)
+                foreach (var action in context.Actions)
                 {
                     if (action is PipelineDataAction dataAction)
                     {

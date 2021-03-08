@@ -1,18 +1,24 @@
-using System.Threading.Tasks;
+using System;
+using System.Collections.Generic;
 
 namespace BililiveRecorder.Flv.Pipeline.Rules
 {
     /// <summary>
     /// 处理 end tag
     /// </summary>
-    public class HandleEndTagRule : IFullProcessingRule
+    public class HandleEndTagRule : ISimpleProcessingRule
     {
-        public Task RunAsync(FlvProcessingContext context, ProcessingDelegate next)
+        public void Run(FlvProcessingContext context, Action next)
         {
-            if (context.OriginalInput is PipelineEndAction)
-                context.AddNewFileAtEnd();
+            context.PerActionRun(this.RunPerAction);
+            next();
+        }
 
-            return next(context);
+        private IEnumerable<PipelineAction?> RunPerAction(FlvProcessingContext context, PipelineAction action)
+        {
+            yield return action;
+            if (action is PipelineEndAction)
+                yield return PipelineNewFileAction.Instance;
         }
     }
 }

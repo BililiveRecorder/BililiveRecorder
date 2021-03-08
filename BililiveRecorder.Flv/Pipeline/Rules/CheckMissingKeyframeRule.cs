@@ -1,6 +1,6 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace BililiveRecorder.Flv.Pipeline.Rules
 {
@@ -17,20 +17,29 @@ namespace BililiveRecorder.Flv.Pipeline.Rules
     {
         private static readonly ProcessingComment comment = new ProcessingComment(CommentType.Unrepairable, "Flv Chunk 内缺少关键帧");
 
-        public Task RunAsync(FlvProcessingContext context, Func<Task> next)
+        public void Run(FlvProcessingContext context, Action next)
         {
-            if (context.OriginalInput is PipelineDataAction data)
+            context.PerActionRun(this.RunPerAction);
+            next();
+        }
+
+        private IEnumerable<PipelineAction?> RunPerAction(FlvProcessingContext context, PipelineAction action)
+        {
+            if (action is PipelineDataAction data)
             {
                 var f = data.Tags.FirstOrDefault(x => x.Type == TagType.Video);
                 if (f == null || (0 == (f.Flag & TagFlag.Keyframe)))
                 {
                     context.AddComment(comment);
-                    context.AddDisconnectAtStart();
-                    return Task.CompletedTask;
+                    yield return PipelineDisconnectAction.Instance;
+                    yield return null;
+                    yield break;
                 }
-                else return next();
+                else
+                    yield return action;
             }
-            else return next();
+            else
+                yield return action;
         }
     }
 }

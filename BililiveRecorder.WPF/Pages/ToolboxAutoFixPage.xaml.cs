@@ -110,14 +110,14 @@ namespace BililiveRecorder.WPF.Pages
                             break;
 
                         context.Reset(group, session);
-                        await pipeline(context).ConfigureAwait(false);
+                        pipeline(context);
 
                         if (context.Comments.Count > 0)
                             logger.Debug("修复逻辑输出 {@Comments}", context.Comments);
 
                         await writer.WriteAsync(context).ConfigureAwait(false);
 
-                        foreach (var action in context.Output)
+                        foreach (var action in context.Actions)
                             if (action is PipelineDataAction dataAction)
                                 foreach (var tag in dataAction.Tags)
                                     tag.BinaryData?.Dispose();
@@ -180,7 +180,7 @@ namespace BililiveRecorder.WPF.Pages
                             break;
 
                         context.Reset(group, session);
-                        await pipeline(context).ConfigureAwait(false);
+                        pipeline(context);
 
                         if (context.Comments.Count > 0)
                         {
@@ -188,7 +188,7 @@ namespace BililiveRecorder.WPF.Pages
                             comments.AddRange(context.Comments);
                         }
 
-                        foreach (var action in context.Output)
+                        foreach (var action in context.Actions)
                             if (action is PipelineDataAction dataAction)
                                 foreach (var tag in dataAction.Tags)
                                     tag.BinaryData?.Dispose();

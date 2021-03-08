@@ -266,14 +266,14 @@ namespace BililiveRecorder.Core.Recording
 
                     this.context.Reset(group, this.session);
 
-                    await this.pipeline(this.context).ConfigureAwait(false);
+                    this.pipeline(this.context);
 
                     if (this.context.Comments.Count > 0)
                         this.logger.Debug("修复逻辑输出 {@Comments}", this.context.Comments);
 
                     await this.writer.WriteAsync(this.context).ConfigureAwait(false);
 
-                    if (this.context.Output.Any(x => x is PipelineDisconnectAction))
+                    if (this.context.Actions.Any(x => x is PipelineDisconnectAction))
                     {
                         this.logger.Information("根据修复逻辑的要求结束录制");
                         break;

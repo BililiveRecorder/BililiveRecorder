@@ -46,7 +46,7 @@ namespace BililiveRecorder.Flv.Writer
             await this.semaphoreSlim.WaitAsync().ConfigureAwait(false);
             try
             {
-                foreach (var item in context.Output)
+                foreach (var item in context.Actions)
                 {
                     try
                     {
@@ -65,7 +65,7 @@ namespace BililiveRecorder.Flv.Writer
             }
 
             // Dispose tags
-            foreach (var action in context.Output)
+            foreach (var action in context.Actions)
                 if (action is PipelineDataAction dataAction)
                     foreach (var tag in dataAction.Tags)
                         tag.BinaryData?.Dispose();

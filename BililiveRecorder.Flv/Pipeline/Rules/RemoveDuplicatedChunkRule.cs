@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using BililiveRecorder.Flv;
 
 namespace BililiveRecorder.Flv.Pipeline.Rules
@@ -21,11 +20,15 @@ namespace BililiveRecorder.Flv.Pipeline.Rules
 
         private static readonly ProcessingComment comment = new ProcessingComment(CommentType.RepeatingData, "发现了重复的 Flv Chunk");
 
-        public Task RunAsync(FlvProcessingContext context, Func<Task> next)
+        public void Run(FlvProcessingContext context, Action next)
         {
-            if (context.OriginalInput is not PipelineDataAction data)
-                return next();
-            else
+            context.PerActionRun(this.RunPerAction);
+            next();
+        }
+
+        private IEnumerable<PipelineAction?> RunPerAction(FlvProcessingContext context, PipelineAction action)
+        {
+            if (action is PipelineDataAction data)
             {
                 var feature = new List<long>(data.Tags.Count * 2 + 1)
                 {
@@ -79,9 +82,7 @@ namespace BililiveRecorder.Flv.Pipeline.Rules
                 // 对比历史特征
                 if (history.Any(x => x.SequenceEqual(feature)))
                 {
-                    context.ClearOutput();
                     context.AddComment(comment);
-                    return Task.CompletedTask;
                 }
                 else
                 {
@@ -90,9 +91,11 @@ namespace BililiveRecorder.Flv.Pipeline.Rules
                     while (history.Count > MAX_HISTORY)
                         history.Dequeue();
 
-                    return next();
+                    yield return action;
                 }
             }
+            else
+                yield return action;
         }
     }
 }

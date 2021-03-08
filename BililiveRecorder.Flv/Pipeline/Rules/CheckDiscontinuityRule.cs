@@ -1,5 +1,5 @@
 using System;
-using System.Threading.Tasks;
+using System.Collections.Generic;
 
 namespace BililiveRecorder.Flv.Pipeline.Rules
 {
@@ -19,9 +19,15 @@ namespace BililiveRecorder.Flv.Pipeline.Rules
         private static readonly ProcessingComment Comment1 = new ProcessingComment(CommentType.Unrepairable, "Flv Chunk 内出现时间戳跳变（变小）");
         private static readonly ProcessingComment Comment2 = new ProcessingComment(CommentType.Unrepairable, "Flv Chunk 内出现时间戳跳变（间隔过大）");
 
-        public Task RunAsync(FlvProcessingContext context, Func<Task> next)
+        public void Run(FlvProcessingContext context, Action next)
         {
-            if (context.OriginalInput is PipelineDataAction data)
+            context.PerActionRun(this.RunPerAction);
+            next();
+        }
+
+        private IEnumerable<PipelineAction?> RunPerAction(FlvProcessingContext context, PipelineAction action)
+        {
+            if (action is PipelineDataAction data)
             {
                 for (var i = 0; i < data.Tags.Count - 1; i++)
                 {
@@ -30,22 +36,24 @@ namespace BililiveRecorder.Flv.Pipeline.Rules
 
                     if (f1.Timestamp > f2.Timestamp)
                     {
-                        context.ClearOutput();
-                        context.AddDisconnectAtStart();
                         context.AddComment(Comment1);
-                        return Task.CompletedTask;
+                        yield return PipelineDisconnectAction.Instance;
+                        yield return null;
+                        yield break;
                     }
                     else if ((f2.Timestamp - f1.Timestamp) > MAX_ALLOWED_DIFF)
                     {
-                        context.ClearOutput();
-                        context.AddDisconnectAtStart();
                         context.AddComment(Comment2);
-                        return Task.CompletedTask;
+                        yield return PipelineDisconnectAction.Instance;
+                        yield return null;
+                        yield break;
                     }
                 }
-                return next();
+
+                yield return data;
             }
-            else return next();
+            else
+                yield return action;
         }
     }
 }

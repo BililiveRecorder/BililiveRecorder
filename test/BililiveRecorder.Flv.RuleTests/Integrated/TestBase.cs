@@ -31,7 +31,7 @@ namespace BililiveRecorder.Flv.RuleTests.Integrated
                     break;
 
                 context.Reset(group, session);
-                await pipeline(context).ConfigureAwait(false);
+                pipeline(context);
 
                 comments.AddRange(context.Comments);
                 await writer.WriteAsync(context).ConfigureAwait(false);

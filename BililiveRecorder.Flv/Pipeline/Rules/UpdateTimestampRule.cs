@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace BililiveRecorder.Flv.Pipeline.Rules
 {
@@ -19,14 +18,14 @@ namespace BililiveRecorder.Flv.Pipeline.Rules
         private const int VIDEO_DURATION_MIN = 15;
         private const int VIDEO_DURATION_MAX = 50;
 
-        public async Task RunAsync(FlvProcessingContext context, Func<Task> next)
+        public void Run(FlvProcessingContext context, Action next)
         {
-            await next().ConfigureAwait(false);
+            next();
 
             var ts = context.SessionItems.ContainsKey(TS_STORE_KEY) ? context.SessionItems[TS_STORE_KEY] as TimestampStore ?? new TimestampStore() : new TimestampStore();
             context.SessionItems[TS_STORE_KEY] = ts;
 
-            foreach (var action in context.Output)
+            foreach (var action in context.Actions)
             {
                 if (action is PipelineDataAction dataAction)
                 {

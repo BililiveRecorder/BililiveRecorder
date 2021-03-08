@@ -1,6 +1,6 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace BililiveRecorder.Flv.Pipeline.Rules
 {
@@ -21,11 +21,15 @@ namespace BililiveRecorder.Flv.Pipeline.Rules
         private static readonly ProcessingComment MultipleHeaderComment = new ProcessingComment(CommentType.DecodingHeader, "收到了连续多个 Header", skipCounting: true);
         private static readonly ProcessingComment SplitFileComment = new ProcessingComment(CommentType.DecodingHeader, "因为 Header 问题新建文件");
 
-        public Task RunAsync(FlvProcessingContext context, Func<Task> next)
+        public void Run(FlvProcessingContext context, Action next)
         {
-            if (context.OriginalInput is not PipelineHeaderAction header)
-                return next();
-            else
+            context.PerActionRun(this.RunPerAction);
+            next();
+        }
+
+        private IEnumerable<PipelineAction?> RunPerAction(FlvProcessingContext context, PipelineAction action)
+        {
+            if (action is PipelineHeaderAction header)
             {
                 Tag? lastVideoHeader, lastAudioHeader;
                 Tag? currentVideoHeader, currentAudioHeader;
@@ -95,15 +99,13 @@ namespace BililiveRecorder.Flv.Pipeline.Rules
                 if (lastAudioHeader is null && lastVideoHeader is null)
                 {
                     // 本 session 第一次输出 header
-                    context.ClearOutput();
-
                     var output = new PipelineHeaderAction(Array.Empty<Tag>())
                     {
                         AudioHeader = currentAudioHeader?.Clone(),
                         VideoHeader = currentVideoHeader?.Clone(),
                     };
 
-                    context.Output.Add(output);
+                    yield return output;
                 }
                 else
                 {
@@ -120,11 +122,11 @@ namespace BililiveRecorder.Flv.Pipeline.Rules
                     if (split_file)
                         context.AddComment(SplitFileComment);
 
-                    context.ClearOutput();
+
 
                     if (split_file)
                     {
-                        context.AddNewFileAtStart();
+                        yield return PipelineNewFileAction.Instance;
 
                         var output = new PipelineHeaderAction(Array.Empty<Tag>())
                         {
@@ -132,16 +134,17 @@ namespace BililiveRecorder.Flv.Pipeline.Rules
                             VideoHeader = currentVideoHeader?.Clone(),
                         };
 
-                        context.Output.Add(output);
+                        yield return output;
 
                         // 输出所有 Header 到一个独立的文件，以防出现无法播放的问题
                         // 如果不能正常播放，后期可以使用这里保存的 Header 配合 FlvInteractiveRebase 工具手动修复
                         if (multiple_header_present)
-                            context.Output.Add(new PipelineLogAlternativeHeaderAction(header.AllTags));
+                            yield return new PipelineLogAlternativeHeaderAction(header.AllTags);
                     }
                 }
-                return Task.CompletedTask;
             }
+            else
+                yield return action;
         }
     }
 }

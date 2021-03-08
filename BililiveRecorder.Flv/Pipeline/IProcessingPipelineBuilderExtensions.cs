@@ -9,16 +9,16 @@ namespace BililiveRecorder.Flv.Pipeline
         public static IProcessingPipelineBuilder Add<T>(this IProcessingPipelineBuilder builder) where T : IProcessingRule =>
             builder.Add(next => (ActivatorUtilities.GetServiceOrCreateInstance<T>(builder.ServiceProvider)) switch
             {
-                ISimpleProcessingRule simple => context => simple.RunAsync(context, () => next(context)),
-                IFullProcessingRule full => context => full.RunAsync(context, next),
+                ISimpleProcessingRule simple => context => simple.Run(context, () => next(context)),
+                IFullProcessingRule full => context => full.Run(context, next),
                 _ => throw new ArgumentException($"Type ({typeof(T).FullName}) does not ISimpleProcessingRule or IFullProcessingRule")
             });
 
         public static IProcessingPipelineBuilder Add<T>(this IProcessingPipelineBuilder builder, T instance) where T : IProcessingRule =>
             instance switch
             {
-                ISimpleProcessingRule simple => builder.Add(next => context => simple.RunAsync(context, () => next(context))),
-                IFullProcessingRule full => builder.Add(next => context => full.RunAsync(context, next)),
+                ISimpleProcessingRule simple => builder.Add(next => context => simple.Run(context, () => next(context))),
+                IFullProcessingRule full => builder.Add(next => context => full.Run(context, next)),
                 _ => throw new ArgumentException($"Type ({typeof(T).FullName}) does not ISimpleProcessingRule or IFullProcessingRule")
             };
 

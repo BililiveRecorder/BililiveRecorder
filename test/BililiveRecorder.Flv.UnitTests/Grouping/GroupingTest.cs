@@ -20,7 +20,7 @@ namespace BililiveRecorder.Flv.UnitTests.Grouping
         public class TestOutputProvider : IFlvWriterTargetProvider
         {
             public Stream CreateAlternativeHeaderStream() => throw new NotImplementedException();
-            public (Stream, object) CreateOutputStream() => (File.Open(Path.Combine(TEST_OUTPUT_PATH, DateTimeOffset.Now.ToString("s").Replace(':', '-') + ".flv"), FileMode.CreateNew, FileAccess.ReadWrite, FileShare.None), null);
+            public (Stream, object) CreateOutputStream() => (File.Open(Path.Combine(TEST_OUTPUT_PATH, DateTimeOffset.Now.ToString("s").Replace(':', '-') + ".flv"), FileMode.CreateNew, FileAccess.ReadWrite, FileShare.None), null!);
         }
 
         [Fact(Skip = "Not ready")]
@@ -33,7 +33,7 @@ namespace BililiveRecorder.Flv.UnitTests.Grouping
             var grouping = new TagGroupReader(new FlvTagPipeReader(PipeReader.Create(File.OpenRead(path)), new TestRecyclableMemoryStreamProvider(), skipData: true, logger: null));
 
             var context = new FlvProcessingContext();
-            var session = new Dictionary<object, object>();
+            var session = new Dictionary<object, object?>();
 
             var sp = new ServiceCollection().BuildServiceProvider();
             var pipeline = new ProcessingPipelineBuilder(sp).AddDefault().AddRemoveFillerData().Build();
@@ -47,9 +47,9 @@ namespace BililiveRecorder.Flv.UnitTests.Grouping
 
                 context.Reset(g, session);
 
-                await pipeline(context);
+                pipeline(context);
 
-                foreach (var item in context.Output)
+                foreach (var item in context.Actions)
                 {
                     results.Add(item);
                 }
@@ -75,7 +75,7 @@ namespace BililiveRecorder.Flv.UnitTests.Grouping
             var comments = new List<string>();
 
             var context = new FlvProcessingContext();
-            var session = new Dictionary<object, object>();
+            var session = new Dictionary<object, object?>();
 
             var sp = new ServiceCollection().BuildServiceProvider();
             var pipeline = new ProcessingPipelineBuilder(sp).AddDefault().AddRemoveFillerData().Build();
@@ -91,12 +91,12 @@ namespace BililiveRecorder.Flv.UnitTests.Grouping
 
                 context.Reset(g, session);
 
-                await pipeline(context).ConfigureAwait(false);
+                pipeline(context);
 
                 comments.AddRange(context.Comments.Select(x => x.Comment));
                 await writer.WriteAsync(context).ConfigureAwait(false);
 
-                foreach (var action in context.Output)
+                foreach (var action in context.Actions)
                 {
                     // TODO action.Dispose();
 
