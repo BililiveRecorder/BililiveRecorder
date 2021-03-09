@@ -4,6 +4,7 @@ namespace BililiveRecorder.Flv.Pipeline
     {
         Other = 0,
         Unrepairable,
+        Insignificant,
         TimestampJump,
         DecodingHeader,
         RepeatingData,

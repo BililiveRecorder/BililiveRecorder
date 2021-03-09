@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using BililiveRecorder.Flv.Pipeline;
@@ -21,27 +22,25 @@ namespace BililiveRecorder.Flv.Grouping.Rules
             else
             {
                 var ts = tag.Timestamp;
-                bool predicate(Tag x) => x.Timestamp > ts;
-                if (tag.IsKeyframeData() && ((tag.Timestamp - tags[tags.Count - 1].Timestamp) <= 50) && tags.Any(predicate))
+                var lastAudio = tags.LastOrDefault(x => x.Type == TagType.Audio);
+                bool predicate(Tag x) => x.Type == TagType.Audio && x.Timestamp >= ts;
+
+                if (tag.IsKeyframeData())
                 {
-                    leftover = new List<Tag>();
-                    leftover.AddRange(tags.Where(predicate));
-                    tags.RemoveAll(predicate);
-                    return false;
+                    if (lastAudio is not null && Math.Abs(tag.Timestamp - lastAudio.Timestamp) <= 50 && tags.Any(predicate))
+                    {
+                        leftover = new List<Tag>();
+                        leftover.AddRange(tags.Where(predicate));
+                        leftover.Add(tag);
+                        tags.RemoveAll(predicate);
+                        return false;
+                    }
                 }
-                else
-                {
-                    // fast path
-                    leftover = new List<Tag> { tag };
-                    return false;
-                }
+
+                leftover = new List<Tag> { tag };
+                return false;
             }
         }
-
-        public bool StartWith(Tag tag) => tag.IsData();
-
-        public bool AppendWith(Tag tag, List<Tag> tags) => tag.IsNonKeyframeData()
-            || (tag.Type == TagType.Audio && tag.Flag == TagFlag.Header && tags.TrueForAll(x => x.Type != TagType.Audio));
 
         public PipelineAction CreatePipelineAction(List<Tag> tags) => new PipelineDataAction(tags);
     }
