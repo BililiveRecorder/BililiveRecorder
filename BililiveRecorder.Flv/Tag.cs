@@ -85,6 +85,7 @@ namespace BililiveRecorder.Flv
                 Type = this.Type,
                 Flag = this.Flag,
                 Size = this.Size,
+                Index = this.Index,
                 Timestamp = this.Timestamp,
                 BinaryData = binaryData,
                 ScriptData = scriptData,

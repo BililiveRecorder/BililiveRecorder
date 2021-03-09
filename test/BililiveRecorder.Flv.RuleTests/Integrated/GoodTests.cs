@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using BililiveRecorder.Flv.Grouping;
 using BililiveRecorder.Flv.Pipeline;
@@ -30,7 +29,9 @@ namespace BililiveRecorder.Flv.RuleTests.Integrated
 
             var file = Assert.Single(output.Files);
             Assert.Equal(original.Count, file.Count);
-            AssertTags(original, file);
+            this.AssertTagsShouldPassBasicChecks(file);
+            this.AssertTagsAlmostEqual(original, file);
+            await this.AssertTagsByRerunPipeline(file).ConfigureAwait(false);
         }
 
         [Theory]
@@ -59,44 +60,9 @@ namespace BililiveRecorder.Flv.RuleTests.Integrated
 
             var file = Assert.Single(output.Files);
             Assert.Equal(original.Count, file.Count);
-            AssertTags(original, file);
-        }
-
-        private static void AssertTags(List<Tag> original, List<Tag> file)
-        {
-            Assert.Single(file.Where(x => x.Type == TagType.Script));
-            Assert.Single(file.Where(x => x.Type == TagType.Audio && x.Flag == TagFlag.Header));
-            Assert.Single(file.Where(x => x.Type == TagType.Video && x.Flag == (TagFlag.Header | TagFlag.Keyframe)));
-
-            for (var i = 0; i < original.Count; i++)
-            {
-                var a = original[i];
-                var b = file[i];
-
-                Assert.NotSame(a, b);
-                Assert.Equal(a.Type, b.Type);
-                Assert.Equal(a.Flag, b.Flag);
-
-                if (a.IsScript())
-                {
-                    Assert.Equal(0, b.Timestamp);
-                }
-                else if (a.IsEnd())
-                {
-                }
-                else if (a.IsHeader())
-                {
-                    Assert.Equal(0, b.Timestamp);
-                    var binaryDataForSerializationUseOnly = a.BinaryDataForSerializationUseOnly;
-                    Assert.False(string.IsNullOrWhiteSpace(binaryDataForSerializationUseOnly));
-                    Assert.Equal(binaryDataForSerializationUseOnly, b.BinaryDataForSerializationUseOnly);
-                }
-                else
-                {
-                    Assert.Equal(a.Timestamp, b.Timestamp);
-                    Assert.Equal(a.Index, b.Index);
-                }
-            }
+            this.AssertTagsShouldPassBasicChecks(file);
+            this.AssertTagsAlmostEqual(original, file);
+            await this.AssertTagsByRerunPipeline(file).ConfigureAwait(false);
         }
 
         //[Theory(Skip = "no data yet")]

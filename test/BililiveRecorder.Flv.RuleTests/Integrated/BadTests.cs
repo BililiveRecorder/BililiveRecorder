@@ -15,7 +15,7 @@ namespace BililiveRecorder.Flv.RuleTests.Integrated
         public void Test(string path)
         {
             var path_input = Path.Combine(path, "input.xml");
-            var path_output = Path.Combine(path, "output.xml");
+            var path_expected = Path.Combine(path, "expected.xml");
 
 
         }
