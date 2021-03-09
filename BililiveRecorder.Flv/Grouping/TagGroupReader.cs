@@ -14,6 +14,8 @@ namespace BililiveRecorder.Flv.Grouping
         private readonly bool leaveOpen;
         private bool disposedValue;
 
+        private List<Tag>? leftover;
+
         public IFlvTagReader TagReader { get; }
         public IList<IGroupingRule> GroupingRules { get; }
 
@@ -43,31 +45,34 @@ namespace BililiveRecorder.Flv.Grouping
             }
             try
             {
-                var tags = new List<Tag>();
+                List<Tag> tags;
 
-                var firstTag = await this.TagReader.ReadTagAsync(token).ConfigureAwait(false);
+                if (this.leftover is not null)
+                {
+                    tags = this.leftover;
+                    this.leftover = null;
+                }
+                else
+                {
+                    var firstTag = await this.TagReader.ReadTagAsync(token).ConfigureAwait(false);
 
-                // 数据已经全部读完
-                if (firstTag is null)
-                    return null;
+                    // 数据已经全部读完
+                    if (firstTag is null)
+                        return null;
 
-                var rule = this.GroupingRules.FirstOrDefault(x => x.StartWith(firstTag));
+                    tags = new List<Tag> { firstTag };
+                }
+
+                var rule = this.GroupingRules.FirstOrDefault(x => x.StartWith(tags));
 
                 if (rule is null)
-                    throw new Exception("No grouping rule accepting the tag:" + firstTag.ToString());
-
-                tags.Add(firstTag);
+                    throw new Exception("No grouping rule accepting tags:\n" + string.Join("\n", tags.Select(x => x.ToString())));
 
                 while (!token.IsCancellationRequested)
                 {
-                    var tag = await this.TagReader.PeekTagAsync(token).ConfigureAwait(false);
+                    var tag = await this.TagReader.ReadTagAsync(token).ConfigureAwait(false);
 
-                    if (tag != null && rule.AppendWith(tag, tags))
-                    {
-                        await this.TagReader.ReadTagAsync(token).ConfigureAwait(false);
-                        tags.Add(tag);
-                    }
-                    else
+                    if (tag == null || !rule.AppendWith(tag, tags, out this.leftover))
                     {
                         break;
                     }
