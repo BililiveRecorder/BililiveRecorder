@@ -10,7 +10,7 @@ namespace BililiveRecorder.Flv.RuleTests.Integrated
     public class GoodTests : TestBase
     {
         [Theory]
-        [SampleFileTestData("samples/good-strict")]
+        [SampleFileTestData("samples/good")]
         public async Task StrictTestsAsync(string path)
         {
             // Arrange
@@ -35,7 +35,7 @@ namespace BililiveRecorder.Flv.RuleTests.Integrated
         }
 
         [Theory]
-        [SampleFileTestData("samples/good-strict")]
+        [SampleFileTestData("samples/good")]
         public async Task StrictWithArtificalOffsetTestsAsync(string path)
         {
             // Arrange
@@ -64,12 +64,5 @@ namespace BililiveRecorder.Flv.RuleTests.Integrated
             this.AssertTagsAlmostEqual(original, file);
             await this.AssertTagsByRerunPipeline(file).ConfigureAwait(false);
         }
-
-        //[Theory(Skip = "no data yet")]
-        //[SampleFileTestData("samples/good-relax")]
-        //public void RelaxTests(string path)
-        //{
-
-        //}
     }
 }

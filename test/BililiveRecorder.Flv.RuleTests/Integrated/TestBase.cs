@@ -84,12 +84,17 @@ namespace BililiveRecorder.Flv.RuleTests.Integrated
             Assert.True(tags.Any2((a, b) => (a.Timestamp <= b.Timestamp) && (b.Timestamp - a.Timestamp < 50)));
 
             Assert.Equal(TagType.Script, tags[0].Type);
+            Assert.Equal(0, tags[0].Timestamp);
 
             Assert.Equal(TagType.Video, tags[1].Type);
+            Assert.Equal(0, tags[1].Timestamp);
             Assert.Equal(TagFlag.Header | TagFlag.Keyframe, tags[1].Flag);
 
             Assert.Equal(TagType.Audio, tags[2].Type);
+            Assert.Equal(0, tags[2].Timestamp);
             Assert.Equal(TagFlag.Header, tags[2].Flag);
+
+            Assert.Equal(0, tags[3].Timestamp);
         }
 
         protected void AssertTagsAlmostEqual(List<Tag> expected, List<Tag> actual)
