@@ -18,7 +18,7 @@ namespace BililiveRecorder.Flv.Pipeline.Rules
         private const string VIDEO_HEADER_KEY = "HandleNewHeaderRule_VideoHeader";
         private const string AUDIO_HEADER_KEY = "HandleNewHeaderRule_AudioHeader";
 
-        private static readonly ProcessingComment MultipleHeaderComment = new ProcessingComment(CommentType.DecodingHeader, "收到了连续多个 Header", skipCounting: true);
+        private static readonly ProcessingComment MultipleHeaderComment = new ProcessingComment(CommentType.DecodingHeader, "收到了连续多个 Header，新建文件");
         private static readonly ProcessingComment SplitFileComment = new ProcessingComment(CommentType.DecodingHeader, "因为 Header 问题新建文件");
 
         public void Run(FlvProcessingContext context, Action next)
@@ -96,52 +96,34 @@ namespace BililiveRecorder.Flv.Pipeline.Rules
                 if (currentAudioHeader != null)
                     context.SessionItems[AUDIO_HEADER_KEY] = currentAudioHeader.Clone();
 
-                if (lastAudioHeader is null && lastVideoHeader is null)
-                {
-                    // 本 session 第一次输出 header
-                    var output = new PipelineHeaderAction(Array.Empty<Tag>())
+                // 是否需要创建新文件
+                // 如果存在多个不同 Header 则必定创建新文件
+                var split_file = multiple_header_present;
+
+                // 如果最终选中的 Header 不等于上次写入的 Header
+                if (currentAudioHeader is not null && lastAudioHeader is not null && !(currentAudioHeader.BinaryData?.SequenceEqual(lastAudioHeader.BinaryData) ?? false))
+                    split_file = true;
+                if (currentVideoHeader is not null && lastVideoHeader is not null && !(currentVideoHeader.BinaryData?.SequenceEqual(lastVideoHeader.BinaryData) ?? false))
+                    split_file = true;
+
+                if (split_file && !multiple_header_present)
+                    context.AddComment(SplitFileComment);
+
+                if (split_file)
+                    yield return PipelineNewFileAction.Instance;
+
+                if (split_file || (lastAudioHeader is null && lastVideoHeader is null))
+                    yield return new PipelineHeaderAction(Array.Empty<Tag>())
                     {
                         AudioHeader = currentAudioHeader?.Clone(),
                         VideoHeader = currentVideoHeader?.Clone(),
                     };
 
-                    yield return output;
-                }
-                else
-                {
-                    // 是否需要创建新文件
-                    // 如果存在多个不同 Header 则必定创建新文件
-                    var split_file = multiple_header_present;
+                // 输出所有 Header 到一个独立的文件，以防出现无法播放的问题
+                // 如果不能正常播放，后期可以使用这里保存的 Header 配合 FlvInteractiveRebase 工具手动修复
+                if (multiple_header_present)
+                    yield return new PipelineLogAlternativeHeaderAction(header.AllTags);
 
-                    // 如果最终选中的 Header 不等于上次写入的 Header
-                    if (lastAudioHeader != null && !(currentAudioHeader?.BinaryData?.SequenceEqual(lastAudioHeader.BinaryData) ?? false))
-                        split_file = true;
-                    if (lastVideoHeader != null && !(currentVideoHeader?.BinaryData?.SequenceEqual(lastVideoHeader.BinaryData) ?? false))
-                        split_file = true;
-
-                    if (split_file)
-                        context.AddComment(SplitFileComment);
-
-
-
-                    if (split_file)
-                    {
-                        yield return PipelineNewFileAction.Instance;
-
-                        var output = new PipelineHeaderAction(Array.Empty<Tag>())
-                        {
-                            AudioHeader = currentAudioHeader?.Clone(),
-                            VideoHeader = currentVideoHeader?.Clone(),
-                        };
-
-                        yield return output;
-
-                        // 输出所有 Header 到一个独立的文件，以防出现无法播放的问题
-                        // 如果不能正常播放，后期可以使用这里保存的 Header 配合 FlvInteractiveRebase 工具手动修复
-                        if (multiple_header_present)
-                            yield return new PipelineLogAlternativeHeaderAction(header.AllTags);
-                    }
-                }
             }
             else
                 yield return action;

@@ -15,7 +15,7 @@ namespace BililiveRecorder.Flv.RuleTests.Integrated
     {
         [Theory]
         [SampleDirectoryTestData("samples/bad")]
-        public async Task TestAsync(string path)
+        public async Task TestBadSamples(string path)
         {
             // Arrange
             var path_info = Path.Combine(path, "info.json");
