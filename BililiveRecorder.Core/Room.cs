@@ -338,7 +338,6 @@ namespace BililiveRecorder.Core
         ///
         private void RecordTask_RecordFileClosed(object sender, RecordFileClosedEventArgs e)
         {
-            this.basicDanmakuWriter.Disable();
             RecordFileClosed?.Invoke(this, e);
         }
 
@@ -347,6 +346,9 @@ namespace BililiveRecorder.Core
         {
             if (this.RoomConfig.RecordDanmaku)
                 this.basicDanmakuWriter.EnableWithPath(Path.ChangeExtension(e.FullPath, "xml"), this);
+            else
+                this.basicDanmakuWriter.Disable();
+
             RecordFileOpening?.Invoke(this, e);
         }
 
@@ -360,6 +362,8 @@ namespace BililiveRecorder.Core
                 this.recordTask = null;
                 _ = Task.Run(async () => await this.TryRestartRecordingAsync(delay: false).ConfigureAwait(false));
             }
+
+            this.basicDanmakuWriter.Disable();
 
             this.OnPropertyChanged(nameof(this.Recording));
             RecordSessionEnded?.Invoke(this, new RecordSessionEndedEventArgs(this)
