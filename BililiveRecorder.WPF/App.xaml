@@ -7,6 +7,8 @@
     xmlns:l="https://github.com/XAMLMarkupExtensions/WPFLocalizationExtension"
     xmlns:m="clr-namespace:BililiveRecorder.WPF.Models"
     x:Class="BililiveRecorder.WPF.App"
+    Startup="Application_Startup"
+    Exit="Application_Exit"
     SessionEnding="Application_SessionEnding"
     StartupUri="NewMainWindow.xaml">
     <Application.Resources>
