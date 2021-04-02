@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Runtime.CompilerServices;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using BililiveRecorder.Core.Api;
@@ -165,7 +166,7 @@ namespace BililiveRecorder.Core
                 this.StartDamakuConnection(delay: false);
             }
             catch (Exception ex)
-            {5
+            {
                 this.logger.Write(ex is ExecutionRejectedException ? LogEventLevel.Debug : LogEventLevel.Warning, ex, "刷新房间信息时出错");
             }
         }
@@ -208,12 +209,17 @@ namespace BililiveRecorder.Core
             {
                 if (this.disposedValue)
                     return;
-
                 if (!this.Streaming)
                     return;
-
                 if (this.recordTask != null)
                     return;
+                if (this.RoomConfig.BlacklistRecordingTitle != null && !this.RoomConfig.BlacklistRecordingTitle.Equals("") && Regex.IsMatch(this.title, this.RoomConfig.BlacklistRecordingTitle))
+                    return;
+                if (this.RoomConfig.BlacklistRecordingFatherArea != null && !this.RoomConfig.BlacklistRecordingFatherArea.Equals("") && Regex.IsMatch(this.areaNameParent, this.RoomConfig.BlacklistRecordingFatherArea))
+                    return;
+                if (this.RoomConfig.BlacklistRecordingChildArea != null && !this.RoomConfig.BlacklistRecordingChildArea.Equals("") && Regex.IsMatch(this.areaNameChild, this.RoomConfig.BlacklistRecordingChildArea))
+                    return;
+
 
                 var task = this.recordTaskFactory.CreateRecordTask(this);
                 task.NetworkingStats += this.RecordTask_NetworkingStats;
@@ -388,6 +394,12 @@ namespace BililiveRecorder.Core
                     this.Title = d.Title ?? this.Title;
                     this.AreaNameParent = d.ParentAreaName ?? this.AreaNameParent;
                     this.AreaNameChild = d.AreaName ?? this.AreaNameChild;
+
+                    //主播更换直播内容    stop 后重新 start
+                    // ? restart 似乎不行
+                    this.StopRecord();
+                    this.CreateAndStartNewRecordTask();
+
                     break;
                 default:
                     break;
@@ -428,6 +440,18 @@ namespace BililiveRecorder.Core
                 case nameof(this.RoomConfig.AutoRecord):
                     if (this.RoomConfig.AutoRecord)
                         this.AutoRecordAllowedForThisSession = true;
+                    break;
+                case nameof(this.RoomConfig.BlacklistRecordingTitle):
+                    this.StopRecord();
+                    this.CreateAndStartNewRecordTask();
+                    break;
+                case nameof(this.RoomConfig.BlacklistRecordingFatherArea):
+                    this.StopRecord();
+                    this.CreateAndStartNewRecordTask();
+                    break;
+                case nameof(this.RoomConfig.BlacklistRecordingChildArea):
+                    this.StopRecord();
+                    this.CreateAndStartNewRecordTask();
                     break;
                 default:
                     break;

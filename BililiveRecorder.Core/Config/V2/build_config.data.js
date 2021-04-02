@@ -112,5 +112,20 @@ module.exports = {
         "type": "bool",
         "desc": "是否同时录制 上船",
         "default": "true"
+    }, {
+        "name": "BlacklistRecordingTitle",
+        "type": "string",
+        "desc": "录播黑名单 标题",
+        "default": ""
+    }, {
+        "name": "BlacklistRecordingFatherArea",
+        "type": "string",
+        "desc": "录播黑名单 父分区",
+        "default": ""
+    }, {
+        "name": "BlacklistRecordingChildArea",
+        "type": "string",
+        "desc": "录播黑名单 子分区",
+        "default": ""
     },]
 }

@@ -85,6 +85,30 @@ namespace BililiveRecorder.Core.Config.V2
         public Optional<bool> OptionalRecordDanmakuGuard { get => this.GetPropertyValueOptional<bool>(nameof(this.RecordDanmakuGuard)); set => this.SetPropertyValueOptional(value, nameof(this.RecordDanmakuGuard)); }
 
         /// <summary>
+        /// 录播黑名单 标题
+        /// </summary>
+        public string BlacklistRecordingTitle { get => this.GetPropertyValue<string>(); set => this.SetPropertyValue(value); }
+        public bool HasBlacklistRecordingTitle { get => this.GetPropertyHasValue(nameof(this.BlacklistRecordingTitle)); set => this.SetPropertyHasValue<string>(value, nameof(this.BlacklistRecordingTitle)); }
+        [JsonProperty(nameof(BlacklistRecordingTitle)), EditorBrowsable(EditorBrowsableState.Never)]
+        public Optional<string> OptionalBlacklistRecordingTitle { get => this.GetPropertyValueOptional<string>(nameof(this.BlacklistRecordingTitle)); set => this.SetPropertyValueOptional(value, nameof(this.BlacklistRecordingTitle)); }
+
+        /// <summary>
+        /// 录播黑名单 父分区
+        /// </summary>
+        public string BlacklistRecordingFatherArea { get => this.GetPropertyValue<string>(); set => this.SetPropertyValue(value); }
+        public bool HasBlacklistRecordingFatherArea { get => this.GetPropertyHasValue(nameof(this.BlacklistRecordingFatherArea)); set => this.SetPropertyHasValue<string>(value, nameof(this.BlacklistRecordingFatherArea)); }
+        [JsonProperty(nameof(BlacklistRecordingFatherArea)), EditorBrowsable(EditorBrowsableState.Never)]
+        public Optional<string> OptionalBlacklistRecordingFatherArea { get => this.GetPropertyValueOptional<string>(nameof(this.BlacklistRecordingFatherArea)); set => this.SetPropertyValueOptional(value, nameof(this.BlacklistRecordingFatherArea)); }
+
+        /// <summary>
+        /// 录播黑名单 子分区
+        /// </summary>
+        public string BlacklistRecordingChildArea { get => this.GetPropertyValue<string>(); set => this.SetPropertyValue(value); }
+        public bool HasBlacklistRecordingChildArea { get => this.GetPropertyHasValue(nameof(this.BlacklistRecordingChildArea)); set => this.SetPropertyHasValue<string>(value, nameof(this.BlacklistRecordingChildArea)); }
+        [JsonProperty(nameof(BlacklistRecordingChildArea)), EditorBrowsable(EditorBrowsableState.Never)]
+        public Optional<string> OptionalBlacklistRecordingChildArea { get => this.GetPropertyValueOptional<string>(nameof(this.BlacklistRecordingChildArea)); set => this.SetPropertyValueOptional(value, nameof(this.BlacklistRecordingChildArea)); }
+
+        /// <summary>
         /// 录制断开重连时间间隔 毫秒
         /// </summary>
         public uint TimingStreamRetry => this.GetPropertyValue<uint>();
@@ -301,6 +325,30 @@ namespace BililiveRecorder.Core.Config.V2
         [JsonProperty(nameof(RecordDanmakuGuard)), EditorBrowsable(EditorBrowsableState.Never)]
         public Optional<bool> OptionalRecordDanmakuGuard { get => this.GetPropertyValueOptional<bool>(nameof(this.RecordDanmakuGuard)); set => this.SetPropertyValueOptional(value, nameof(this.RecordDanmakuGuard)); }
 
+        /// <summary>
+        /// 录播黑名单 标题
+        /// </summary>
+        public string BlacklistRecordingTitle { get => this.GetPropertyValue<string>(); set => this.SetPropertyValue(value); }
+        public bool HasBlacklistRecordingTitle { get => this.GetPropertyHasValue(nameof(this.BlacklistRecordingTitle)); set => this.SetPropertyHasValue<string>(value, nameof(this.BlacklistRecordingTitle)); }
+        [JsonProperty(nameof(BlacklistRecordingTitle)), EditorBrowsable(EditorBrowsableState.Never)]
+        public Optional<string> OptionalBlacklistRecordingTitle { get => this.GetPropertyValueOptional<string>(nameof(this.BlacklistRecordingTitle)); set => this.SetPropertyValueOptional(value, nameof(this.BlacklistRecordingTitle)); }
+
+        /// <summary>
+        /// 录播黑名单 父分区
+        /// </summary>
+        public string BlacklistRecordingFatherArea { get => this.GetPropertyValue<string>(); set => this.SetPropertyValue(value); }
+        public bool HasBlacklistRecordingFatherArea { get => this.GetPropertyHasValue(nameof(this.BlacklistRecordingFatherArea)); set => this.SetPropertyHasValue<string>(value, nameof(this.BlacklistRecordingFatherArea)); }
+        [JsonProperty(nameof(BlacklistRecordingFatherArea)), EditorBrowsable(EditorBrowsableState.Never)]
+        public Optional<string> OptionalBlacklistRecordingFatherArea { get => this.GetPropertyValueOptional<string>(nameof(this.BlacklistRecordingFatherArea)); set => this.SetPropertyValueOptional(value, nameof(this.BlacklistRecordingFatherArea)); }
+
+        /// <summary>
+        /// 录播黑名单 子分区
+        /// </summary>
+        public string BlacklistRecordingChildArea { get => this.GetPropertyValue<string>(); set => this.SetPropertyValue(value); }
+        public bool HasBlacklistRecordingChildArea { get => this.GetPropertyHasValue(nameof(this.BlacklistRecordingChildArea)); set => this.SetPropertyHasValue<string>(value, nameof(this.BlacklistRecordingChildArea)); }
+        [JsonProperty(nameof(BlacklistRecordingChildArea)), EditorBrowsable(EditorBrowsableState.Never)]
+        public Optional<string> OptionalBlacklistRecordingChildArea { get => this.GetPropertyValueOptional<string>(nameof(this.BlacklistRecordingChildArea)); set => this.SetPropertyValueOptional(value, nameof(this.BlacklistRecordingChildArea)); }
+
     }
 
     public sealed partial class DefaultConfig
@@ -345,6 +393,12 @@ namespace BililiveRecorder.Core.Config.V2
         public bool RecordDanmakuGift => false;
 
         public bool RecordDanmakuGuard => true;
+
+        public string BlacklistRecordingTitle => "";
+
+        public string BlacklistRecordingFatherArea => "";
+
+        public string BlacklistRecordingChildArea => "";
 
     }
 
