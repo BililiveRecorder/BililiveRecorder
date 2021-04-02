@@ -164,26 +164,6 @@
   <data name="AnnouncementPage_RefreshButton" xml:space="preserve">
     <value>重整公告內容</value>
   </data>
-  <data name="BlacklistTip" xml:space="preserve">
-    <value>目前僅支持正則表達式</value>
-    <comment>黑名单</comment>
-  </data>
-  <data name="Blacklist_LivestreamArea_Chlid" xml:space="preserve">
-    <value>子分區</value>
-    <comment>黑名单</comment>
-  </data>
-  <data name="Blacklist_LivestreamArea_Father" xml:space="preserve">
-    <value>父分區</value>
-    <comment>黑名单</comment>
-  </data>
-  <data name="Blacklist_Livestream_Title" xml:space="preserve">
-    <value>標題</value>
-    <comment>黑名单</comment>
-  </data>
-  <data name="Blacklist_Recording_Title" xml:space="preserve">
-    <value>錄製黑名單</value>
-    <comment>黑名单</comment>
-  </data>
   <data name="CloseWindowConfirmDialog_Title" xml:space="preserve">
     <value>程式即將退出，確定嗎？</value>
   </data>

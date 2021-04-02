@@ -213,11 +213,11 @@ namespace BililiveRecorder.Core
                     return;
                 if (this.recordTask != null)
                     return;
-                if (this.RoomConfig.BlacklistRecordingTitle != null && !this.RoomConfig.BlacklistRecordingTitle.Equals("") && Regex.IsMatch(this.title, this.RoomConfig.BlacklistRecordingTitle))
+                if(!String.IsNullOrEmpty(this.RoomConfig.BlacklistRecordingTitle) && Regex.IsMatch(this.title, this.RoomConfig.BlacklistRecordingTitle))
                     return;
-                if (this.RoomConfig.BlacklistRecordingFatherArea != null && !this.RoomConfig.BlacklistRecordingFatherArea.Equals("") && Regex.IsMatch(this.areaNameParent, this.RoomConfig.BlacklistRecordingFatherArea))
+                if (!String.IsNullOrEmpty(this.RoomConfig.BlacklistRecordingParentArea) && Regex.IsMatch(this.areaNameParent, this.RoomConfig.BlacklistRecordingParentArea))
                     return;
-                if (this.RoomConfig.BlacklistRecordingChildArea != null && !this.RoomConfig.BlacklistRecordingChildArea.Equals("") && Regex.IsMatch(this.areaNameChild, this.RoomConfig.BlacklistRecordingChildArea))
+                if (!String.IsNullOrEmpty(this.RoomConfig.BlacklistRecordingChildArea) && Regex.IsMatch(this.areaNameChild, this.RoomConfig.BlacklistRecordingChildArea))
                     return;
 
 
@@ -441,17 +441,26 @@ namespace BililiveRecorder.Core
                     if (this.RoomConfig.AutoRecord)
                         this.AutoRecordAllowedForThisSession = true;
                     break;
+
                 case nameof(this.RoomConfig.BlacklistRecordingTitle):
-                    this.StopRecord();
-                    this.CreateAndStartNewRecordTask();
+                    if (!String.IsNullOrEmpty(this.RoomConfig.BlacklistRecordingTitle) && Regex.IsMatch(this.title, this.RoomConfig.BlacklistRecordingTitle))
+                        this.StopRecord();
+                    else if(this.recordTask == null)
+                        this.CreateAndStartNewRecordTask();
                     break;
-                case nameof(this.RoomConfig.BlacklistRecordingFatherArea):
-                    this.StopRecord();
-                    this.CreateAndStartNewRecordTask();
+
+                case nameof(this.RoomConfig.BlacklistRecordingParentArea):
+                    if (!String.IsNullOrEmpty(this.RoomConfig.BlacklistRecordingParentArea) && Regex.IsMatch(this.areaNameParent, this.RoomConfig.BlacklistRecordingParentArea))
+                        this.StopRecord();
+                    else if (this.recordTask == null)
+                        this.CreateAndStartNewRecordTask();
                     break;
+
                 case nameof(this.RoomConfig.BlacklistRecordingChildArea):
-                    this.StopRecord();
-                    this.CreateAndStartNewRecordTask();
+                    if (!String.IsNullOrEmpty(this.RoomConfig.BlacklistRecordingChildArea) && Regex.IsMatch(this.areaNameChild, this.RoomConfig.BlacklistRecordingChildArea))
+                        this.StopRecord();
+                    else if (this.recordTask == null)
+                        this.CreateAndStartNewRecordTask();
                     break;
                 default:
                     break;

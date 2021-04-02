@@ -164,26 +164,6 @@
   <data name="AnnouncementPage_RefreshButton" xml:space="preserve">
     <value>お知らせ情報更新</value>
   </data>
-  <data name="BlacklistTip" xml:space="preserve">
-    <value>現在はRegexだけをサポートしています</value>
-    <comment>黑名单</comment>
-  </data>
-  <data name="Blacklist_LivestreamArea_Chlid" xml:space="preserve">
-    <value>従パーティション</value>
-    <comment>黑名单</comment>
-  </data>
-  <data name="Blacklist_LivestreamArea_Father" xml:space="preserve">
-    <value>主パーティション</value>
-    <comment>黑名单</comment>
-  </data>
-  <data name="Blacklist_Livestream_Title" xml:space="preserve">
-    <value>タイトル</value>
-    <comment>黑名单</comment>
-  </data>
-  <data name="Blacklist_Recording_Title" xml:space="preserve">
-    <value>記録ブラックリスト</value>
-    <comment>黑名单</comment>
-  </data>
   <data name="CloseWindowConfirmDialog_Title" xml:space="preserve">
     <value>リコーダーを終了してもよろしいですか？</value>
   </data>

@@ -74,22 +74,22 @@
                         </local:SettingWithDefault>
                     </StackPanel>
                 </GroupBox>
-                <GroupBox Header="{l:Loc Blacklist_Recording_Title}">
+                <GroupBox Header="{l:Loc Blacklist_Livestream_Title}">
                     <StackPanel MaxWidth="200" HorizontalAlignment="Left">
-                        <TextBlock VerticalAlignment="Center" Text="{l:Loc BlacklistTip}"/>
+                        <TextBlock VerticalAlignment="Center" Text="{l:Loc Blacklist_Livestream_Tip}"/>
 
                         <StackPanel Margin="0,0,-5,10">
-                            <TextBlock VerticalAlignment="Center" Text="{l:Loc Blacklist_Livestream_Title}"/>
+                            <TextBlock VerticalAlignment="Center" Text="{l:Loc Blacklist_Livestream_RoomTitle}"/>
                             <TextBox Margin="0,0" AcceptsReturn="True" TextWrapping="Wrap"  Text="{Binding BlacklistRecordingTitle}" ui:TextBoxHelper.IsDeleteButtonVisible="True"/>
                         </StackPanel>
 
                         <StackPanel Margin="0,0,-5,10">
-                            <TextBlock VerticalAlignment="Center" Text="{l:Loc Blacklist_LivestreamArea_Father}"/>
-                            <TextBox Margin="0,0" AcceptsReturn="True" TextWrapping="Wrap"  Text="{Binding BlacklistRecordingFatherArea}" ui:TextBoxHelper.IsDeleteButtonVisible="True"/>
+                            <TextBlock VerticalAlignment="Center" Text="{l:Loc Blacklist_Livestream_ParentArea}"/>
+                            <TextBox Margin="0,0" AcceptsReturn="True" TextWrapping="Wrap"  Text="{Binding BlacklistRecordingParentArea}" ui:TextBoxHelper.IsDeleteButtonVisible="True"/>
                         </StackPanel>
 
                         <StackPanel Margin="0,0,-5,0">
-                            <TextBlock VerticalAlignment="Center" Text="{l:Loc Blacklist_LivestreamArea_Chlid}"/>
+                            <TextBlock VerticalAlignment="Center" Text="{l:Loc Blacklist_Livestream_ChildArea}"/>
                             <TextBox Margin="0,0" AcceptsReturn="True" TextWrapping="Wrap"  Text="{Binding BlacklistRecordingChildArea}" ui:TextBoxHelper.IsDeleteButtonVisible="True"/>
                         </StackPanel>
                     </StackPanel>

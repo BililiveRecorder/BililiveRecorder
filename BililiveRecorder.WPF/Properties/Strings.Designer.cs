@@ -196,47 +196,47 @@ namespace BililiveRecorder.WPF.Properties {
         }
         
         /// <summary>
-        ///   查找类似 标题 的本地化字符串。
-        /// </summary>
-        public static string Blacklist_Livestream_Title {
-            get {
-                return ResourceManager.GetString("Blacklist_Livestream_Title", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   查找类似 子分区 的本地化字符串。
         /// </summary>
-        public static string Blacklist_LivestreamArea_Chlid {
+        public static string Blacklist_Livestream_ChildArea {
             get {
-                return ResourceManager.GetString("Blacklist_LivestreamArea_Chlid", resourceCulture);
+                return ResourceManager.GetString("Blacklist_Livestream_ChildArea", resourceCulture);
             }
         }
         
         /// <summary>
         ///   查找类似 父分区 的本地化字符串。
         /// </summary>
-        public static string Blacklist_LivestreamArea_Father {
+        public static string Blacklist_Livestream_ParentArea {
             get {
-                return ResourceManager.GetString("Blacklist_LivestreamArea_Father", resourceCulture);
+                return ResourceManager.GetString("Blacklist_Livestream_ParentArea", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   查找类似 录制黑名单 的本地化字符串。
+        ///   查找类似 标题 的本地化字符串。
         /// </summary>
-        public static string Blacklist_Recording_Title {
+        public static string Blacklist_Livestream_RoomTitle {
             get {
-                return ResourceManager.GetString("Blacklist_Recording_Title", resourceCulture);
+                return ResourceManager.GetString("Blacklist_Livestream_RoomTitle", resourceCulture);
             }
         }
         
         /// <summary>
         ///   查找类似 目前仅支持正则表达式 的本地化字符串。
         /// </summary>
-        public static string BlacklistTip {
+        public static string Blacklist_Livestream_Tip {
             get {
-                return ResourceManager.GetString("BlacklistTip", resourceCulture);
+                return ResourceManager.GetString("Blacklist_Livestream_Tip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 录制黑名单 的本地化字符串。
+        /// </summary>
+        public static string Blacklist_Livestream_Title {
+            get {
+                return ResourceManager.GetString("Blacklist_Livestream_Title", resourceCulture);
             }
         }
         

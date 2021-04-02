@@ -167,23 +167,23 @@
   <data name="AnnouncementPage_RefreshButton" xml:space="preserve">
     <value>刷新公告内容</value>
   </data>
-  <data name="BlacklistTip" xml:space="preserve">
-    <value>目前仅支持正则表达式</value>
-    <comment>黑名单</comment>
-  </data>
-  <data name="Blacklist_LivestreamArea_Chlid" xml:space="preserve">
+  <data name="Blacklist_Livestream_ChildArea" xml:space="preserve">
     <value>子分区</value>
     <comment>黑名单</comment>
   </data>
-  <data name="Blacklist_LivestreamArea_Father" xml:space="preserve">
+  <data name="Blacklist_Livestream_ParentArea" xml:space="preserve">
     <value>父分区</value>
     <comment>黑名单</comment>
   </data>
-  <data name="Blacklist_Livestream_Title" xml:space="preserve">
+  <data name="Blacklist_Livestream_RoomTitle" xml:space="preserve">
     <value>标题</value>
     <comment>黑名单</comment>
   </data>
-  <data name="Blacklist_Recording_Title" xml:space="preserve">
+  <data name="Blacklist_Livestream_Tip" xml:space="preserve">
+    <value>目前仅支持正则表达式</value>
+    <comment>黑名单</comment>
+  </data>
+  <data name="Blacklist_Livestream_Title" xml:space="preserve">
     <value>录制黑名单</value>
     <comment>黑名单</comment>
   </data>

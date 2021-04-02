@@ -116,16 +116,16 @@ module.exports = {
         "name": "BlacklistRecordingTitle",
         "type": "string",
         "desc": "录播黑名单 标题",
-        "default": ""
+        "default": null
     }, {
-        "name": "BlacklistRecordingFatherArea",
+        "name": "BlacklistRecordingParentArea",
         "type": "string",
         "desc": "录播黑名单 父分区",
-        "default": ""
+        "default": null
     }, {
         "name": "BlacklistRecordingChildArea",
         "type": "string",
         "desc": "录播黑名单 子分区",
-        "default": ""
+        "default": null
     },]
 }
