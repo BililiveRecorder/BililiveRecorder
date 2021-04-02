@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Xml.Serialization;
@@ -13,7 +14,7 @@ namespace BililiveRecorder.Flv
         [XmlAttribute]
         public TagType Type { get; set; }
 
-        [XmlAttribute]
+        [XmlAttribute, DefaultValue(TagFlag.None)]
         public TagFlag Flag { get; set; }
 
         [XmlIgnore]
