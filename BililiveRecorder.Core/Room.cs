@@ -165,7 +165,7 @@ namespace BililiveRecorder.Core
                 this.StartDamakuConnection(delay: false);
             }
             catch (Exception ex)
-            {
+            {5
                 this.logger.Write(ex is ExecutionRejectedException ? LogEventLevel.Debug : LogEventLevel.Warning, ex, "刷新房间信息时出错");
             }
         }
