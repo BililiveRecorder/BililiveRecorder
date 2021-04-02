@@ -5,23 +5,24 @@ namespace BililiveRecorder.Flv.Grouping.Rules
 {
     public class HeaderGroupingRule : IGroupingRule
     {
-        public bool StartWith(List<Tag> tags) => tags.Count > 0 && tags.TrueForAll(x => x.IsHeader());
+        public bool StartWith(Tag tag) => tag.IsHeader();
 
-        public bool AppendWith(Tag tag, List<Tag> tags, out List<Tag>? leftover)
+        public bool AppendWith(Tag tag, LinkedList<Tag> tags, out LinkedList<Tag>? leftover)
         {
             if (tag.IsHeader())
             {
-                tags.Add(tag);
+                tags.AddLast(tag);
                 leftover = null;
                 return true;
             }
             else
             {
-                leftover = new List<Tag> { tag };
+                leftover = new LinkedList<Tag>();
+                leftover.AddLast(tag);
                 return false;
             }
         }
 
-        public PipelineAction CreatePipelineAction(List<Tag> tags) => new PipelineHeaderAction(tags);
+        public PipelineAction CreatePipelineAction(LinkedList<Tag> tags) => new PipelineHeaderAction(new List<Tag>(tags));
     }
 }

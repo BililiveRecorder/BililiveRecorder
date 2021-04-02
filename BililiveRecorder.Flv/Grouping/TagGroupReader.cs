@@ -14,7 +14,7 @@ namespace BililiveRecorder.Flv.Grouping
         private readonly bool leaveOpen;
         private bool disposedValue;
 
-        private List<Tag>? leftover;
+        private LinkedList<Tag>? leftover;
 
         public IFlvTagReader TagReader { get; }
         public IList<IGroupingRule> GroupingRules { get; }
@@ -45,38 +45,64 @@ namespace BililiveRecorder.Flv.Grouping
             }
             try
             {
-                List<Tag> tags;
+                LinkedList<Tag>? queue = null;
+                Tag? firstTag;
 
-                if (this.leftover is not null)
+                if (this.leftover is not null && this.leftover.Count > 0)
                 {
-                    tags = this.leftover;
+                    queue = this.leftover;
                     this.leftover = null;
+
+                    firstTag = queue.First.Value;
+                    queue.RemoveFirst();
                 }
                 else
                 {
-                    var firstTag = await this.TagReader.ReadTagAsync(token).ConfigureAwait(false);
+                    firstTag = await this.TagReader.ReadTagAsync(token).ConfigureAwait(false);
 
                     // 数据已经全部读完
                     if (firstTag is null)
                         return null;
-
-                    tags = new List<Tag> { firstTag };
                 }
 
-                var rule = this.GroupingRules.FirstOrDefault(x => x.StartWith(tags));
+                var rule = this.GroupingRules.FirstOrDefault(x => x.StartWith(firstTag));
 
                 if (rule is null)
-                    throw new Exception("No grouping rule accepting tags:\n" + string.Join("\n", tags.Select(x => x.ToString())));
+                    throw new Exception("No grouping rule accepting tags: " + firstTag.ToString());
+
+                var tags = new LinkedList<Tag>();
+                tags.AddLast(firstTag);
 
                 while (!token.IsCancellationRequested)
                 {
-                    var tag = await this.TagReader.ReadTagAsync(token).ConfigureAwait(false);
+                    Tag? tag;
+
+                    if (queue is not null && queue.Count > 0)
+                    {
+                        tag = queue.First.Value;
+                        queue.RemoveFirst();
+                    }
+                    else
+                    {
+                        tag = await this.TagReader.ReadTagAsync(token).ConfigureAwait(false);
+                    }
 
                     if (tag == null || !rule.AppendWith(tag, tags, out this.leftover))
                     {
+                        if (queue is not null && queue.Count > 0)
+                        {
+                            if (this.leftover is null)
+                                this.leftover = queue;
+                            else
+                                foreach (var item in queue)
+                                    this.leftover.AddLast(item);
+                        }
                         break;
                     }
                 }
+
+                if (tags.Count == 0)
+                    throw new Exception("TagGroup tag count is 0");
 
                 return rule.CreatePipelineAction(tags);
             }

@@ -10,7 +10,7 @@ namespace BililiveRecorder.Flv
         /// </summary>
         /// <param name="tags">Current Tags</param>
         /// <returns></returns>
-        bool StartWith(List<Tag> tags);
+        bool StartWith(Tag tag);
 
         /// <summary>
         /// 
@@ -19,8 +19,8 @@ namespace BililiveRecorder.Flv
         /// <param name="tags">List of tags</param>
         /// <param name="leftover"></param>
         /// <returns></returns>
-        bool AppendWith(Tag tag, List<Tag> tags, out List<Tag>? leftover);
+        bool AppendWith(Tag tag, LinkedList<Tag> tags, out LinkedList<Tag>? leftover);
 
-        PipelineAction CreatePipelineAction(List<Tag> tags);
+        PipelineAction CreatePipelineAction(LinkedList<Tag> tags);
     }
 }
