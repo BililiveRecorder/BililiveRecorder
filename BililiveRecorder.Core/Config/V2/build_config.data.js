@@ -18,7 +18,7 @@ module.exports = {
         "name": "TimingCheckInterval",
         "type": "uint",
         "desc": "HTTP API 检查时间间隔 秒",
-        "default": "5 * 60"
+        "default": "10 * 60"
     }, {
         "name": "TimingWatchdogTimeout",
         "type": "uint",

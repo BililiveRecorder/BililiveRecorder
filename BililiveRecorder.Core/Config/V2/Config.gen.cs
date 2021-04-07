@@ -314,7 +314,7 @@ namespace BililiveRecorder.Core.Config.V2
 
         public uint TimingDanmakuRetry => 15 * 1000;
 
-        public uint TimingCheckInterval => 5 * 60;
+        public uint TimingCheckInterval => 10 * 60;
 
         public uint TimingWatchdogTimeout => 10 * 1000;
 
