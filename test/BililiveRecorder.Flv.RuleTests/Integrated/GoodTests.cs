@@ -23,6 +23,8 @@ namespace BililiveRecorder.Flv.RuleTests.Integrated
             await this.RunPipeline(reader, output, comments).ConfigureAwait(false);
 
             // Assert
+            comments.RemoveAll(x => x.T == CommentType.Logging);
+
             Assert.Empty(comments);
 
             Assert.Empty(output.AlternativeHeaders);
@@ -41,7 +43,11 @@ namespace BililiveRecorder.Flv.RuleTests.Integrated
             // Arrange
             var original = this.LoadFile(path).Tags;
 
-            var offset = new System.Random().Next(-9999, 9999);
+            var random = new System.Random();
+            var offset = random.Next(51, 9999);
+            if (random.Next(2) == 1)
+                offset = -offset;
+
             var inputTags = this.LoadFile(path).Tags;
             foreach (var tag in inputTags)
                 tag.Timestamp += offset;
@@ -54,7 +60,8 @@ namespace BililiveRecorder.Flv.RuleTests.Integrated
             await this.RunPipeline(reader, output, comments).ConfigureAwait(false);
 
             // Assert
-            Assert.Equal(CommentType.TimestampJump, Assert.Single(comments).CommentType);
+            comments.RemoveAll(x => x.T == CommentType.Logging);
+            Assert.Equal(CommentType.TimestampJump, Assert.Single(comments).T);
 
             Assert.Empty(output.AlternativeHeaders);
 

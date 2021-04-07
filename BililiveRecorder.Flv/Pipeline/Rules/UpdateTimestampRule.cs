@@ -64,8 +64,6 @@ namespace BililiveRecorder.Flv.Pipeline.Rules
             }
         }
 
-        private static readonly ProcessingComment SkippingComment = new ProcessingComment(CommentType.TimestampJump, "未检测到音频数据，跳过时间戳修改", skipCounting: true);
-
         private void SetDataTimestamp(IReadOnlyList<Tag> tags, TimestampStore ts, FlvProcessingContext context)
         {
             var diff = tags[0].Timestamp - ts.LastOriginal;

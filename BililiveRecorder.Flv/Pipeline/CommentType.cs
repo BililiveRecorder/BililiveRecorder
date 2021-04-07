@@ -3,8 +3,8 @@ namespace BililiveRecorder.Flv.Pipeline
     public enum CommentType
     {
         Other = 0,
+        Logging,
         Unrepairable,
-        Insignificant,
         TimestampJump,
         DecodingHeader,
         RepeatingData,

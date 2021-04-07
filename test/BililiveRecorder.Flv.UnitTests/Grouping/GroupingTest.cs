@@ -93,7 +93,7 @@ namespace BililiveRecorder.Flv.UnitTests.Grouping
 
                 pipeline(context);
 
-                comments.AddRange(context.Comments.Select(x => x.Comment));
+                comments.AddRange(context.Comments.Select(x => x.C));
                 await writer.WriteAsync(context).ConfigureAwait(false);
 
                 foreach (var action in context.Actions)

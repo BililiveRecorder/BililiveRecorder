@@ -12,7 +12,8 @@ namespace BililiveRecorder.Flv.Pipeline.Rules
     /// </remarks>
     public class HandleNewScriptRule : ISimpleProcessingRule
     {
-        private static readonly ProcessingComment comment = new ProcessingComment(CommentType.Other, "收到了非 onMetaData 的 Script Tag");
+        private static readonly ProcessingComment comment_other = new ProcessingComment(CommentType.Logging, "收到了非 onMetaData 的 Script Tag");
+        private static readonly ProcessingComment comment_onmetadata = new ProcessingComment(CommentType.Logging, "收到了 onMetaData");
 
         public void Run(FlvProcessingContext context, Action next)
         {
@@ -40,6 +41,7 @@ namespace BililiveRecorder.Flv.Pipeline.Rules
                     if (value is null)
                         value = new ScriptDataEcmaArray();
 
+                    context.AddComment(comment_onmetadata);
                     yield return PipelineNewFileAction.Instance;
                     yield return (new PipelineScriptAction(new Tag
                     {
@@ -53,7 +55,7 @@ namespace BililiveRecorder.Flv.Pipeline.Rules
                 }
                 else
                 {
-                    context.AddComment(comment);
+                    context.AddComment(comment_other);
                 }
             }
             else

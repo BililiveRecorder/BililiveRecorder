@@ -34,9 +34,11 @@ namespace BililiveRecorder.Flv.RuleTests.Integrated
             // Assert
             Assert.Equal(info.AlternativeHeaderCount, output.AlternativeHeaders.Count);
 
+            comments.RemoveAll(x => x.T == CommentType.Logging);
+
             Assert.Equal(info.AllowedComments.Values.Sum(x => x), comments.Count);
-            Assert.DoesNotContain(comments, x => !info.AllowedComments.ContainsKey(x.CommentType));
-            Assert.True(info.AllowedComments.All(x => x.Value == comments.Count(c => c.CommentType == x.Key)));
+            Assert.DoesNotContain(comments, x => !info.AllowedComments.ContainsKey(x.T));
+            Assert.True(info.AllowedComments.All(x => x.Value == comments.Count(c => c.T == x.Key)));
 
             Assert.Equal(info.Files.Length, output.Files.Count);
             for (var i = 0; i < info.Files.Length; i++)

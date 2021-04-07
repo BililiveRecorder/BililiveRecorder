@@ -203,17 +203,17 @@ namespace BililiveRecorder.WPF.Pages
                     }
                 }).ConfigureAwait(true);
 
-                var countableComments = comments.Where(x => !x.SkipCounting);
+                var countableComments = comments.Where(x => x.T != CommentType.Logging);
                 var model = new AnalyzeResultModel
                 {
                     File = inputPath,
-                    NeedFix = comments.Count > 0,
-                    Unrepairable = comments.Any(x => x.CommentType == CommentType.Unrepairable),
-                    IssueTypeOther = countableComments.Count(x => x.CommentType == CommentType.Other),
-                    IssueTypeUnrepairable = countableComments.Count(x => x.CommentType == CommentType.Unrepairable),
-                    IssueTypeTimestampJump = countableComments.Count(x => x.CommentType == CommentType.TimestampJump),
-                    IssueTypeDecodingHeader = countableComments.Count(x => x.CommentType == CommentType.DecodingHeader),
-                    IssueTypeRepeatingData = countableComments.Count(x => x.CommentType == CommentType.RepeatingData)
+                    NeedFix = countableComments.Any(),
+                    Unrepairable = countableComments.Any(x => x.T == CommentType.Unrepairable),
+                    IssueTypeOther = countableComments.Count(x => x.T == CommentType.Other),
+                    IssueTypeUnrepairable = countableComments.Count(x => x.T == CommentType.Unrepairable),
+                    IssueTypeTimestampJump = countableComments.Count(x => x.T == CommentType.TimestampJump),
+                    IssueTypeDecodingHeader = countableComments.Count(x => x.T == CommentType.DecodingHeader),
+                    IssueTypeRepeatingData = countableComments.Count(x => x.T == CommentType.RepeatingData)
                 };
 
                 this.analyzeResultDisplayArea.DataContext = model;

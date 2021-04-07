@@ -59,6 +59,7 @@ namespace BililiveRecorder.Flv.RuleTests.Integrated
 
             await this.RunPipeline(reader, output, comments).ConfigureAwait(false);
 
+            comments.RemoveAll(x => x.T == CommentType.Logging);
             Assert.Empty(comments);
             Assert.Empty(output.AlternativeHeaders);
 
