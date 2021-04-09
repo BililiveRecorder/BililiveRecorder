@@ -31,8 +31,8 @@ namespace BililiveRecorder.Cli
                 new Option<string>(new []{ "--cookie", "-c" }, "Cookie string for api requests"),
                 new Option<string>("--live-api-host"),
                 new Option<string>(new[]{ "--filename-format", "-f" }, "File name format"),
-                new Argument<string>("output path"),
-                new Argument<int[]>("room ids")
+                new Argument<string>("output-path"),
+                new Argument<int[]>("room-ids")
             };
             cmd_portable.Handler = CommandHandler.Create<PortableModeArguments>(RunPortableMode);
 
@@ -82,17 +82,10 @@ namespace BililiveRecorder.Cli
 
         private static int RunPortableMode(PortableModeArguments opts)
         {
-            throw new NotImplementedException();
+            var logger = BuildLogger();
+            Log.Logger = logger;
 
-#pragma warning disable CS0162 // Unreachable code detected
-            var semaphore = new SemaphoreSlim(0, 1);
-#pragma warning restore CS0162 // Unreachable code detected
-
-            var serviceProvider = BuildServiceProvider(null, null);
-            var recorder = serviceProvider.GetRequiredService<IRecorder>();
-
-            var config = new ConfigV2()
-            {
+            var config = new ConfigV2(){
                 DisableConfigSave = true,
             };
 
@@ -106,7 +99,11 @@ namespace BililiveRecorder.Cli
             config.Global.WorkDirectory = opts.OutputPath;
             config.Rooms = opts.RoomIds.Select(x => new RoomConfig { RoomId = x, AutoRecord = true }).ToList();
 
+            var serviceProvider = BuildServiceProvider(config, logger);
+            var recorder = serviceProvider.GetRequiredService<IRecorder>();
+
             ConsoleCancelEventHandler p = null!;
+            var semaphore = new SemaphoreSlim(0, 1);
             p = (sender, e) =>
             {
                 Console.CancelKeyPress -= p;
@@ -116,13 +113,9 @@ namespace BililiveRecorder.Cli
             };
             Console.CancelKeyPress += p;
 
-            //if (!((DeadCodeRecorder)recorder).InitializeWithConfig(config))
-            //{
-            //    Console.WriteLine("Initialize Error");
-            //    return -1;
-            //}
-
             semaphore.Wait();
+            Thread.Sleep(1000 * 2);
+            Console.ReadLine();
             return 0;
         }
 
