@@ -338,6 +338,8 @@ namespace BililiveRecorder.Core
         ///
         private void RecordTask_RecordFileClosed(object sender, RecordFileClosedEventArgs e)
         {
+            this.basicDanmakuWriter.Disable();
+
             RecordFileClosed?.Invoke(this, e);
         }
 

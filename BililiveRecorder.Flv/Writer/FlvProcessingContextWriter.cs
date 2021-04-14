@@ -255,6 +255,7 @@ namespace BililiveRecorder.Flv.Writer
                 if (disposing)
                 {
                     // dispose managed state (managed objects)
+                    this.CloseCurrentFileImpl();
                     this.tagWriter.Dispose();
                 }
 

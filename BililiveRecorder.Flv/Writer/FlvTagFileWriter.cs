@@ -20,6 +20,7 @@ namespace BililiveRecorder.Flv.Writer
 
         private Stream? stream;
         private uint lastMetadataLength;
+        private bool disposedValue;
 
         public FlvTagFileWriter(IFlvWriterTargetProvider targetProvider, IMemoryStreamProvider memoryStreamProvider, ILogger? logger)
         {
@@ -33,6 +34,9 @@ namespace BililiveRecorder.Flv.Writer
 
         public bool CloseCurrentFile()
         {
+            if (this.disposedValue) 
+                throw new ObjectDisposedException(nameof(FlvTagFileWriter));
+
             if (this.stream is null)
                 return false;
 
@@ -45,6 +49,9 @@ namespace BililiveRecorder.Flv.Writer
 
         public async Task CreateNewFile()
         {
+            if (this.disposedValue)
+                throw new ObjectDisposedException(nameof(FlvTagFileWriter));
+
             this.stream?.Dispose();
 
             (this.stream, this.State) = this.targetProvider.CreateOutputStream();
@@ -54,6 +61,9 @@ namespace BililiveRecorder.Flv.Writer
 
         public async Task OverwriteMetadata(ScriptTagBody metadata)
         {
+            if (this.disposedValue)
+                throw new ObjectDisposedException(nameof(FlvTagFileWriter));
+
             if (this.stream is null || metadata is null)
                 return;
 
@@ -81,6 +91,9 @@ namespace BililiveRecorder.Flv.Writer
 
         public async Task WriteAlternativeHeaders(IEnumerable<Tag> tags)
         {
+            if (this.disposedValue)
+                throw new ObjectDisposedException(nameof(FlvTagFileWriter));
+
             using var writer = new StreamWriter(this.targetProvider.CreateAlternativeHeaderStream(), Encoding.UTF8);
             await writer.WriteLineAsync("----- Group Start -----").ConfigureAwait(false);
             await writer.WriteLineAsync("连续遇到了多个不同的音视频Header，如果录制的文件不能正常播放可以尝试用这里的数据进行修复").ConfigureAwait(false);
@@ -98,6 +111,9 @@ namespace BililiveRecorder.Flv.Writer
 
         public Task WriteTag(Tag tag)
         {
+            if (this.disposedValue)
+                throw new ObjectDisposedException(nameof(FlvTagFileWriter));
+
             if (this.stream is null)
                 throw new InvalidOperationException("stream is null");
 
@@ -151,10 +167,34 @@ namespace BililiveRecorder.Flv.Writer
             }
         }
 
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!this.disposedValue)
+            {
+                if (disposing)
+                {
+                    this.stream?.Dispose();
+                    this.stream = null;
+                }
+
+                // free unmanaged resources (unmanaged objects) and override finalizer
+                // set large fields to null
+                this.disposedValue = true;
+            }
+        }
+
+        // override finalizer only if 'Dispose(bool disposing)' has code to free unmanaged resources
+        // ~FlvTagFileWriter()
+        // {
+        //     // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
+        //     Dispose(disposing: false);
+        // }
+
         public void Dispose()
         {
-            this.stream?.Dispose();
-            this.stream = null;
+            // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
+            this.Dispose(disposing: true);
+            GC.SuppressFinalize(this);
         }
     }
 }

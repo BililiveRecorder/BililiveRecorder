@@ -136,7 +136,6 @@ namespace BililiveRecorder.Core.Recording
             this.writer.BeforeScriptTagWrite = this.Writer_BeforeScriptTagWrite;
             this.writer.FileClosed += (sender, e) =>
             {
-                // TODO 检查 FileClosed event 没有正确触发的问题
                 var openingEventArgs = (RecordFileOpeningEventArgs)e.State!;
                 RecordFileClosed?.Invoke(this, new RecordFileClosedEventArgs(this.room)
                 {
