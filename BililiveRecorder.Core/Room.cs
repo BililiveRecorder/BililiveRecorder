@@ -153,6 +153,8 @@ namespace BililiveRecorder.Core
                 if (this.recordTask == null)
                     return;
 
+                this.logger.Write(LogEventLevel.Debug, "StopRecord called {StackTrace}", Environment.StackTrace);
+
                 this.recordTask.RequestStop();
             }
         }
@@ -395,8 +397,9 @@ namespace BililiveRecorder.Core
                     this.AreaNameParent = d.ParentAreaName ?? this.AreaNameParent;
                     this.AreaNameChild = d.AreaName ?? this.AreaNameChild;
 
-                    //主播更换直播内容    stop 后重新 start
-                    // ? restart 似乎不行
+                    // ! 主播更换直播内容    stop 后重新 start
+                    // todo 需要加个判断，决定是否需要停止
+                    // * 在debug出问题后更换！
                     this.StopRecord();
                     this.CreateAndStartNewRecordTask();
 
