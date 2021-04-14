@@ -104,7 +104,8 @@ namespace BililiveRecorder.Core.Danmaku
                                 var size = danmakuModel.RawObject?["info"]?[0]?[2]?.ToObject<int>() ?? 25;
                                 var color = danmakuModel.RawObject?["info"]?[0]?[3]?.ToObject<int>() ?? 0XFFFFFF;
                                 var st = danmakuModel.RawObject?["info"]?[0]?[4]?.ToObject<long>() ?? 0L;
-                                var ts = Math.Max((DateTimeOffset.FromUnixTimeMilliseconds(st) - this.offset).TotalSeconds, 0d);
+
+                                var ts = Math.Max((DateTimeOffset.UtcNow - this.offset).TotalSeconds, 0d);
 
                                 this.xmlWriter.WriteStartElement("d");
                                 this.xmlWriter.WriteAttributeString("p", $"{ts},{type},{size},{color},{st},0,{danmakuModel.UserID},0");
