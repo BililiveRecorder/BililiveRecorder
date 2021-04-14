@@ -34,7 +34,7 @@ namespace BililiveRecorder.Flv.Writer
 
         public bool CloseCurrentFile()
         {
-            if (this.disposedValue) 
+            if (this.disposedValue)
                 throw new ObjectDisposedException(nameof(FlvTagFileWriter));
 
             if (this.stream is null)
@@ -52,6 +52,7 @@ namespace BililiveRecorder.Flv.Writer
             if (this.disposedValue)
                 throw new ObjectDisposedException(nameof(FlvTagFileWriter));
 
+            System.Diagnostics.Debug.Assert(this.stream is null, "stream is not null");
             this.stream?.Dispose();
 
             (this.stream, this.State) = this.targetProvider.CreateOutputStream();

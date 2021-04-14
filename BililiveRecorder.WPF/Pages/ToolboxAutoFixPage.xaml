@@ -11,7 +11,8 @@
     l:ResxLocalizationProvider.DefaultDictionary="Strings"
     xmlns:local="clr-namespace:BililiveRecorder.WPF.Pages"
     xmlns:model="clr-namespace:BililiveRecorder.WPF.Models"
-    xmlns:c="clr-namespace:BililiveRecorder.WPF.Converters"    
+    xmlns:c="clr-namespace:BililiveRecorder.WPF.Converters"
+    xmlns:tool="clr-namespace:BililiveRecorder.ToolBox.Commands;assembly=BililiveRecorder.ToolBox"
     mc:Ignorable="d" DataContext="{x:Null}"
     d:DesignHeight="600" d:DesignWidth="900"
     Title="ToolboxAutoFixPage">
@@ -67,7 +68,7 @@
                         <TextBlock Text="注：不分析也可以进行修复操作" VerticalAlignment="Center" HorizontalAlignment="Center"/>
                     </StackPanel>
                 </DataTemplate>
-                <DataTemplate x:Key="NormalAnalyzeResult" DataType="{x:Type model:AnalyzeResultModel}">
+                <DataTemplate x:Key="NormalAnalyzeResult" DataType="{x:Type tool:AnalyzeResponse}">
                     <Grid Margin="5">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto"/>
@@ -75,7 +76,7 @@
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="*"/>
                         </Grid.RowDefinitions>
-                        <TextBox Grid.Row="0" IsReadOnly="True" Text="{Binding File}" ui:ControlHelper.Header="文件："/>
+                        <TextBox Grid.Row="0" IsReadOnly="True" Text="{Binding InputPath}" ui:ControlHelper.Header="文件："/>
                         <TextBlock Grid.Row="1" HorizontalAlignment="Center" FontSize="24" Text="无需修复" Foreground="Green"
                                    Visibility="{Binding NeedFix,Converter={StaticResource InvertBooleanToVisibilityCollapsedConverter}}"/>
                         <TextBlock Grid.Row="1" HorizontalAlignment="Center" FontSize="24" Text="需要修复" Foreground="Red"
@@ -86,6 +87,7 @@
                             <TextBlock HorizontalAlignment="Center" Text="请点击“修复失败？”按钮并反馈本问题"/>
                         </StackPanel>
                         <StackPanel Grid.Row="3" HorizontalAlignment="Center" Margin="10">
+                            <TextBlock Text="{Binding OutputFileCount,StringFormat=修复将会输出 {0} 个文件}" Margin="0,0,0,5"/>
                             <TextBlock Text="{Binding IssueTypeTimestampJump,StringFormat=时间戳问题 {0} 处}"/>
                             <TextBlock Text="{Binding IssueTypeDecodingHeader,StringFormat=分辨率、解码问题 {0} 处}"/>
                             <TextBlock Text="{Binding IssueTypeRepeatingData,StringFormat=重复片段 {0} 处}"/>

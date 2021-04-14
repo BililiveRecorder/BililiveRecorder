@@ -9,6 +9,7 @@ using BililiveRecorder.Core;
 using BililiveRecorder.Core.Config;
 using BililiveRecorder.Core.Config.V2;
 using BililiveRecorder.DependencyInjection;
+using BililiveRecorder.ToolBox;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog;
 using Serilog.Events;
@@ -39,7 +40,8 @@ namespace BililiveRecorder.Cli
             var root = new RootCommand("A Stream Recorder For Bilibili Live")
             {
                 cmd_run,
-                cmd_portable
+                cmd_portable,
+                new ToolCommand()
             };
 
             return root.Invoke(args);
@@ -85,7 +87,8 @@ namespace BililiveRecorder.Cli
             var logger = BuildLogger();
             Log.Logger = logger;
 
-            var config = new ConfigV2(){
+            var config = new ConfigV2()
+            {
                 DisableConfigSave = true,
             };
 

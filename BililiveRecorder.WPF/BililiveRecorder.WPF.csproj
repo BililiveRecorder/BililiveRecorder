@@ -120,7 +120,6 @@
     <Compile Include="Converters\RatioToArrowIconConverter.cs" />
     <Compile Include="Converters\ShortRoomIdToVisibilityConverter.cs" />
     <Compile Include="Converters\ValueConverterGroup.cs" />
-    <Compile Include="Models\AnalyzeResultModel.cs" />
     <Compile Include="Models\Commands.cs" />
     <Compile Include="Models\LogModel.cs" />
     <Compile Include="Models\PollyPolicyModel.cs" />
@@ -292,6 +291,10 @@
     <ProjectReference Include="..\BililiveRecorder.Flv\BililiveRecorder.Flv.csproj">
       <Project>{7610e19c-d3ab-4cbc-983e-6fda36f4d4b3}</Project>
       <Name>BililiveRecorder.Flv</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\BililiveRecorder.ToolBox\BililiveRecorder.ToolBox.csproj">
+      <Project>{4faae8e7-ac4e-4e99-a7d1-53d20ad8a200}</Project>
+      <Name>BililiveRecorder.ToolBox</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

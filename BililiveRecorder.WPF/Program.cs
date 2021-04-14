@@ -4,10 +4,12 @@ using System.CommandLine.Invocation;
 using System.Diagnostics;
 using System.IO;
 using System.Runtime.ExceptionServices;
+using System.Runtime.InteropServices;
 using System.Security;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Threading;
+using BililiveRecorder.ToolBox;
 using Sentry;
 using Serilog;
 using Serilog.Core;
@@ -29,6 +31,7 @@ namespace BililiveRecorder.WPF
 
         static Program()
         {
+            AttachConsole(-1);
             levelSwitchGlobal = new LoggingLevelSwitch(Serilog.Events.LogEventLevel.Debug);
             if (Debugger.IsAttached)
                 levelSwitchGlobal.MinimumLevel = Serilog.Events.LogEventLevel.Verbose;
@@ -82,7 +85,8 @@ namespace BililiveRecorder.WPF
                 new Option<bool>("--squirrel-firstrun")
                 {
                     IsHidden = true
-                }
+                },
+                new ToolCommand(),
             };
             root.Handler = CommandHandler.Create((bool squirrelFirstrun) => Commands.RunWpfHandler(null, squirrelFirstrun));
             return root;
@@ -126,20 +130,6 @@ namespace BililiveRecorder.WPF
 #pragma warning restore VSTHRD002 // Avoid problematic synchronous waits
                 }
             }
-
-            internal static int Tool_Fix(string path)
-            {
-                levelSwitchConsole.MinimumLevel = Serilog.Events.LogEventLevel.Information;
-                // run code
-                return 0;
-            }
-
-            internal static int Tool_Parse(string path)
-            {
-                levelSwitchConsole.MinimumLevel = Serilog.Events.LogEventLevel.Information;
-                // run code
-                return 0;
-            }
         }
 
         private static Logger BuildLogger() => new LoggerConfiguration()
@@ -156,7 +146,7 @@ namespace BililiveRecorder.WPF
 #else
             .WriteTo.Sink<WpfLogEventSink>(Serilog.Events.LogEventLevel.Information)
 #endif
-            .WriteTo.File(new CompactJsonFormatter(), "./logs/bilirec.txt", shared: true, rollingInterval: RollingInterval.Day)
+            .WriteTo.File(new CompactJsonFormatter(), "./logs/bilirec.txt", shared: true, rollingInterval: RollingInterval.Day, rollOnFileSizeLimit: true)
             .WriteTo.Sentry(o =>
             {
                 o.Dsn = "https://7c6c5da3140543809661813aaa836207@o210546.ingest.sentry.io/5556540";
@@ -174,6 +164,9 @@ namespace BililiveRecorder.WPF
 #endif
             })
             .CreateLogger();
+
+        [DllImport("kernel32")]
+        private static extern bool AttachConsole(int pid);
 
         [HandleProcessCorruptedStateExceptions, SecurityCritical]
         private static void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)

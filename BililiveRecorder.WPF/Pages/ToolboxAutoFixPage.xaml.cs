@@ -12,6 +12,7 @@ using BililiveRecorder.Flv.Parser;
 using BililiveRecorder.Flv.Pipeline;
 using BililiveRecorder.Flv.Writer;
 using BililiveRecorder.Flv.Xml;
+using BililiveRecorder.ToolBox.Commands;
 using BililiveRecorder.WPF.Controls;
 using BililiveRecorder.WPF.Models;
 using Microsoft.Extensions.DependencyInjection;
@@ -72,7 +73,7 @@ namespace BililiveRecorder.WPF.Pages
                 progressDialog = new AutoFixProgressDialog();
                 var showTask = progressDialog.ShowAsync();
 
-                IFlvWriterTargetProvider? targetProvider = null;
+                string? output_path;
                 {
                     var title = "选择保存位置";
                     var fileDialog = new CommonSaveFileDialog()
@@ -87,49 +88,25 @@ namespace BililiveRecorder.WPF.Pages
                         DefaultFileName = Path.GetFileName(inputPath)
                     };
                     if (fileDialog.ShowDialog() == CommonFileDialogResult.Ok)
-                        targetProvider = new AutoFixFlvWriterTargetProvider(fileDialog.FileName);
+                        output_path = fileDialog.FileName;
                     else
                         return;
                 }
 
-                using var inputStream = File.OpenRead(inputPath);
-                var memoryStreamProvider = new DefaultMemoryStreamProvider();
-                using var grouping = new TagGroupReader(new FlvTagPipeReader(PipeReader.Create(inputStream), memoryStreamProvider, skipData: false, logger: logger));
-                using var writer = new FlvProcessingContextWriter(new FlvTagFileWriter(targetProvider, memoryStreamProvider, logger));
-                var context = new FlvProcessingContext();
-                var session = new Dictionary<object, object?>();
-                var pipeline = new ProcessingPipelineBuilder(new ServiceCollection().BuildServiceProvider()).AddDefault().AddRemoveFillerData().Build();
-
-                await Task.Run(async () =>
+                var req = new FixRequest
                 {
-                    var count = 0;
-                    while (true)
+                    Input = inputPath,
+                    OutputBase = output_path,
+                };
+
+                var handler = new FixHandler();
+
+                var resp = await handler.Handle(req, async p =>
+                {
+                    await this.Dispatcher.InvokeAsync(() =>
                     {
-                        var group = await grouping.ReadGroupAsync(default).ConfigureAwait(false);
-                        if (group is null)
-                            break;
-
-                        context.Reset(group, session);
-                        pipeline(context);
-
-                        if (context.Comments.Count > 0)
-                            logger.Debug("修复逻辑输出 {@Comments}", context.Comments);
-
-                        await writer.WriteAsync(context).ConfigureAwait(false);
-
-                        foreach (var action in context.Actions)
-                            if (action is PipelineDataAction dataAction)
-                                foreach (var tag in dataAction.Tags)
-                                    tag.BinaryData?.Dispose();
-
-                        if (count++ % 5 == 0)
-                        {
-                            await this.Dispatcher.InvokeAsync(() =>
-                            {
-                                progressDialog.Progress = (int)((double)inputStream.Position / inputStream.Length * 98d);
-                            });
-                        }
-                    }
+                        progressDialog.Progress = (int)(p * 98d);
+                    });
                 }).ConfigureAwait(true);
 
                 progressDialog.Hide();
@@ -138,6 +115,7 @@ namespace BililiveRecorder.WPF.Pages
             catch (Exception ex)
             {
                 logger.Error(ex, "修复时发生错误");
+                MessageBox.Show("修复时发生错误\n" + ex.Message);
             }
             finally
             {
@@ -163,60 +141,22 @@ namespace BililiveRecorder.WPF.Pages
                 progressDialog = new AutoFixProgressDialog();
                 var showTask = progressDialog.ShowAsync();
 
-                using var inputStream = File.OpenRead(inputPath);
-                var memoryStreamProvider = new DefaultMemoryStreamProvider();
-                using var grouping = new TagGroupReader(new FlvTagPipeReader(PipeReader.Create(inputStream), memoryStreamProvider, skipData: false, logger: logger));
-                var comments = new List<ProcessingComment>();
-                var context = new FlvProcessingContext();
-                var session = new Dictionary<object, object?>();
-                var pipeline = new ProcessingPipelineBuilder(new ServiceCollection().BuildServiceProvider()).AddDefault().AddRemoveFillerData().Build();
-                await Task.Run(async () =>
+                var req = new AnalyzeRequest
                 {
-                    var count = 0;
-                    while (true)
-                    {
-                        var group = await grouping.ReadGroupAsync(default).ConfigureAwait(false);
-                        if (group is null)
-                            break;
-
-                        context.Reset(group, session);
-                        pipeline(context);
-
-                        if (context.Comments.Count > 0)
-                        {
-                            logger.Debug("分析逻辑输出 {@Comments}", context.Comments);
-                            comments.AddRange(context.Comments);
-                        }
-
-                        foreach (var action in context.Actions)
-                            if (action is PipelineDataAction dataAction)
-                                foreach (var tag in dataAction.Tags)
-                                    tag.BinaryData?.Dispose();
-
-                        if (count++ % 5 == 0)
-                        {
-                            await this.Dispatcher.InvokeAsync(() =>
-                            {
-                                progressDialog.Progress = (int)((double)inputStream.Position / inputStream.Length * 98d);
-                            });
-                        }
-                    }
-                }).ConfigureAwait(true);
-
-                var countableComments = comments.Where(x => x.T != CommentType.Logging);
-                var model = new AnalyzeResultModel
-                {
-                    File = inputPath,
-                    NeedFix = countableComments.Any(),
-                    Unrepairable = countableComments.Any(x => x.T == CommentType.Unrepairable),
-                    IssueTypeOther = countableComments.Count(x => x.T == CommentType.Other),
-                    IssueTypeUnrepairable = countableComments.Count(x => x.T == CommentType.Unrepairable),
-                    IssueTypeTimestampJump = countableComments.Count(x => x.T == CommentType.TimestampJump),
-                    IssueTypeDecodingHeader = countableComments.Count(x => x.T == CommentType.DecodingHeader),
-                    IssueTypeRepeatingData = countableComments.Count(x => x.T == CommentType.RepeatingData)
+                    Input = inputPath
                 };
 
-                this.analyzeResultDisplayArea.DataContext = model;
+                var handler = new AnalyzeHandler();
+
+                var resp = await handler.Handle(req, async p =>
+                {
+                    await this.Dispatcher.InvokeAsync(() =>
+                    {
+                        progressDialog.Progress = (int)(p * 98d);
+                    });
+                }).ConfigureAwait(true);
+
+                this.analyzeResultDisplayArea.DataContext = resp;
 
                 progressDialog.Hide();
                 await showTask.ConfigureAwait(true);
@@ -224,6 +164,7 @@ namespace BililiveRecorder.WPF.Pages
             catch (Exception ex)
             {
                 logger.Error(ex, "分析时发生错误");
+                MessageBox.Show("分析时发生错误\n" + ex.Message);
             }
             finally
             {
@@ -273,35 +214,19 @@ namespace BililiveRecorder.WPF.Pages
                     return;
                 }
 
-                using var inputStream = File.OpenRead(inputPath);
-                var outputStream = File.OpenWrite(outputPath);
-
-                var tags = new List<Tag>();
-                using var reader = new FlvTagPipeReader(PipeReader.Create(inputStream), new DefaultMemoryStreamProvider(), skipData: true, logger: logger);
-                await Task.Run(async () =>
+                var req = new ExportRequest
                 {
-                    var count = 0;
-                    while (true)
-                    {
-                        var tag = await reader.ReadTagAsync(default).ConfigureAwait(false);
-                        if (tag is null) break;
-                        tags.Add(tag);
-                        if (count++ % 300 == 0)
-                        {
-                            await this.Dispatcher.InvokeAsync(() =>
-                            {
-                                progressDialog.Progress = (int)((double)inputStream.Position / inputStream.Length * 95d);
-                            });
-                        }
-                    }
-                }).ConfigureAwait(true);
+                    Input = inputPath,
+                    Output = outputPath
+                };
 
-                await Task.Run(() =>
+                var handler = new ExportHandler();
+
+                var resp = await handler.Handle(req, async p =>
                 {
-                    using var writer = new StreamWriter(new GZipStream(outputStream, CompressionLevel.Optimal));
-                    XmlFlvFile.Serializer.Serialize(writer, new XmlFlvFile
+                    await this.Dispatcher.InvokeAsync(() =>
                     {
-                        Tags = tags
+                        progressDialog.Progress = (int)(p * 95d);
                     });
                 }).ConfigureAwait(true);
 
@@ -311,6 +236,7 @@ namespace BililiveRecorder.WPF.Pages
             catch (Exception ex)
             {
                 logger.Error(ex, "导出时发生错误");
+                MessageBox.Show("导出时发生错误\n" + ex.Message);
             }
             finally
             {
@@ -319,31 +245,6 @@ namespace BililiveRecorder.WPF.Pages
                     _ = this.Dispatcher.BeginInvoke((Action)(() => progressDialog?.Hide()));
                 }
                 catch (Exception) { }
-            }
-        }
-
-        private class AutoFixFlvWriterTargetProvider : IFlvWriterTargetProvider
-        {
-            private readonly string pathTemplate;
-            private int fileIndex = 1;
-
-            public AutoFixFlvWriterTargetProvider(string pathTemplate)
-            {
-                this.pathTemplate = pathTemplate;
-            }
-
-            public Stream CreateAlternativeHeaderStream()
-            {
-                var path = Path.ChangeExtension(this.pathTemplate, "header.txt");
-                return File.Open(path, FileMode.Append, FileAccess.Write, FileShare.None);
-            }
-
-            public (Stream stream, object state) CreateOutputStream()
-            {
-                var i = this.fileIndex++;
-                var path = Path.ChangeExtension(this.pathTemplate, $"fix_p{i}.flv");
-                var fileStream = File.Create(path);
-                return (fileStream, null!);
             }
         }
     }
