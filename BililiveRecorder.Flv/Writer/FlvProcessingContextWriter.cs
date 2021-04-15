@@ -10,6 +10,7 @@ namespace BililiveRecorder.Flv.Writer
     {
         private readonly SemaphoreSlim semaphoreSlim = new SemaphoreSlim(1, 1);
         private readonly IFlvTagWriter tagWriter;
+        private readonly bool allowMissingHeader;
         private bool disposedValue;
 
         private WriterState state = WriterState.EmptyFileOrNotOpen;
@@ -26,9 +27,13 @@ namespace BililiveRecorder.Flv.Writer
         public Action<ScriptTagBody>? BeforeScriptTagWrite { get; set; }
         public Action<ScriptTagBody>? BeforeScriptTagRewrite { get; set; }
 
-        public FlvProcessingContextWriter(IFlvTagWriter tagWriter)
+        public FlvProcessingContextWriter(IFlvTagWriter tagWriter) : this(tagWriter: tagWriter, allowMissingHeader: false)
+        { }
+
+        public FlvProcessingContextWriter(IFlvTagWriter tagWriter, bool allowMissingHeader)
         {
             this.tagWriter = tagWriter ?? throw new ArgumentNullException(nameof(tagWriter));
+            this.allowMissingHeader = allowMissingHeader;
         }
 
         public async Task WriteAsync(FlvProcessingContext context)
@@ -178,15 +183,25 @@ namespace BililiveRecorder.Flv.Writer
 
         private async Task WriteHeaderTagsImpl()
         {
-            if (this.nextVideoHeaderTag is null)
-                throw new InvalidOperationException("No video header tag availible");
+            if (this.allowMissingHeader)
+            {
+                if (this.nextVideoHeaderTag is not null)
+                    await this.tagWriter.WriteTag(this.nextVideoHeaderTag).ConfigureAwait(false);
 
-            if (this.nextAudioHeaderTag is null)
-                throw new InvalidOperationException("No audio header tag availible");
+                if (this.nextAudioHeaderTag is not null)
+                    await this.tagWriter.WriteTag(this.nextAudioHeaderTag).ConfigureAwait(false);
+            }
+            else
+            {
+                if (this.nextVideoHeaderTag is null)
+                    throw new InvalidOperationException("No video header tag availible");
 
-            await this.tagWriter.WriteTag(this.nextVideoHeaderTag).ConfigureAwait(false);
-            await this.tagWriter.WriteTag(this.nextAudioHeaderTag).ConfigureAwait(false);
+                if (this.nextAudioHeaderTag is null)
+                    throw new InvalidOperationException("No audio header tag availible");
 
+                await this.tagWriter.WriteTag(this.nextVideoHeaderTag).ConfigureAwait(false);
+                await this.tagWriter.WriteTag(this.nextAudioHeaderTag).ConfigureAwait(false);
+            }
             this.state = WriterState.Writing;
         }
 

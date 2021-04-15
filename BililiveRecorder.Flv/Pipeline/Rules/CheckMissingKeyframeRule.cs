@@ -19,7 +19,9 @@ namespace BililiveRecorder.Flv.Pipeline.Rules
 
         public void Run(FlvProcessingContext context, Action next)
         {
-            context.PerActionRun(this.RunPerAction);
+            // context.PerActionRun(this.RunPerAction);
+            // 暂时禁用此规则，必要性待定
+            // TODO
             next();
         }
 

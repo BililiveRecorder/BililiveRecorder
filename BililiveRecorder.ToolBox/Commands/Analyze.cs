@@ -56,7 +56,7 @@ namespace BililiveRecorder.ToolBox.Commands
                 using var inputStream = File.OpenRead(inputPath);
 
                 using var grouping = new TagGroupReader(new FlvTagPipeReader(PipeReader.Create(inputStream), memoryStreamProvider, skipData: false, logger: logger));
-                using var writer = new FlvProcessingContextWriter(tagWriter);
+                using var writer = new FlvProcessingContextWriter(tagWriter: tagWriter, allowMissingHeader: true);
                 var pipeline = new ProcessingPipelineBuilder(new ServiceCollection().BuildServiceProvider()).AddDefault().AddRemoveFillerData().Build();
 
                 var count = 0;

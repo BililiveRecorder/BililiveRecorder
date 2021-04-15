@@ -31,88 +31,50 @@ namespace BililiveRecorder.Flv.Pipeline.Rules
         {
             if (action is PipelineHeaderAction header)
             {
-                Tag? lastVideoHeader, lastAudioHeader;
-                Tag? currentVideoHeader, currentAudioHeader;
-                var multiple_header_present = false;
-
                 // 从 Session Items 里取上次写入的 Header
-                lastVideoHeader = context.SessionItems.ContainsKey(VIDEO_HEADER_KEY) ? context.SessionItems[VIDEO_HEADER_KEY] as Tag : null;
-                lastAudioHeader = context.SessionItems.ContainsKey(AUDIO_HEADER_KEY) ? context.SessionItems[AUDIO_HEADER_KEY] as Tag : null;
+                var lastVideoHeader = context.SessionItems.ContainsKey(VIDEO_HEADER_KEY) ? context.SessionItems[VIDEO_HEADER_KEY] as Tag : null;
+                var lastAudioHeader = context.SessionItems.ContainsKey(AUDIO_HEADER_KEY) ? context.SessionItems[AUDIO_HEADER_KEY] as Tag : null;
+
+                var multiple_header_present = false;
 
                 // 音频 视频 分别单独处理
                 var group = header.AllTags.GroupBy(x => x.Type);
 
-                { // 音频
-                    var group_audio = group.FirstOrDefault(x => x.Key == TagType.Audio);
-                    if (group_audio != null)
-                    {
-                        // 检查是否存在 **多个** **不同的** Header
-                        if (group_audio.Count() > 1)
-                        {
-                            var first = group_audio.First();
-
-                            if (group_audio.Skip(1).All(x => first.BinaryData?.SequenceEqual(x.BinaryData) ?? false))
-                                currentAudioHeader = first;
-                            else
-                            {
-                                // 默认最后一个为正确的
-                                currentAudioHeader = group_audio.Last();
-                                multiple_header_present = true;
-                            }
-                        }
-                        else currentAudioHeader = group_audio.FirstOrDefault();
-                    }
-                    else currentAudioHeader = null;
-                }
-
-                { // 视频
-                    var group_video = group.FirstOrDefault(x => x.Key == TagType.Video);
-                    if (group_video != null)
-                    {
-                        // 检查是否存在 **多个** **不同的** Header
-                        if (group_video.Count() > 1)
-                        {
-                            var first = group_video.First();
-
-                            if (group_video.Skip(1).All(x => first.BinaryData?.SequenceEqual(x.BinaryData) ?? false))
-                                currentVideoHeader = first;
-                            else
-                            {
-                                // 默认最后一个为正确的
-                                currentVideoHeader = group_video.Last();
-                                multiple_header_present = true;
-                            }
-                        }
-                        else currentVideoHeader = group_video.FirstOrDefault();
-                    }
-                    else currentVideoHeader = null;
-                }
+                var currentVideoHeader = SelectHeader(ref multiple_header_present, group.FirstOrDefault(x => x.Key == TagType.Video));
+                var currentAudioHeader = SelectHeader(ref multiple_header_present, group.FirstOrDefault(x => x.Key == TagType.Audio));
 
                 if (multiple_header_present)
                     context.AddComment(MultipleHeaderComment);
+
+                // 是否需要创建新文件
+                // 如果存在多个不同 Header 则必定创建新文件
+                var split_file = multiple_header_present;
+
+                DecideSplit(ref lastVideoHeader, ref currentVideoHeader, ref split_file);
+                DecideSplit(ref lastAudioHeader, ref currentAudioHeader, ref split_file);
 
                 if (currentVideoHeader != null)
                     context.SessionItems[VIDEO_HEADER_KEY] = currentVideoHeader.Clone(); // TODO use memory provider
                 if (currentAudioHeader != null)
                     context.SessionItems[AUDIO_HEADER_KEY] = currentAudioHeader.Clone();
 
-                // 是否需要创建新文件
-                // 如果存在多个不同 Header 则必定创建新文件
-                var split_file = multiple_header_present;
-
                 // 如果最终选中的 Header 不等于上次写入的 Header
-                if (currentAudioHeader is not null && lastAudioHeader is not null && !(currentAudioHeader.BinaryData?.SequenceEqual(lastAudioHeader.BinaryData) ?? false))
-                    split_file = true;
-                if (currentVideoHeader is not null && lastVideoHeader is not null && !(currentVideoHeader.BinaryData?.SequenceEqual(lastVideoHeader.BinaryData) ?? false))
-                    split_file = true;
+                //if (currentAudioHeader is not null && lastAudioHeader is not null && !(currentAudioHeader.BinaryData?.SequenceEqual(lastAudioHeader.BinaryData) ?? false))
+                //    split_file = true;
+                //if (currentVideoHeader is not null && lastVideoHeader is not null && !(currentVideoHeader.BinaryData?.SequenceEqual(lastVideoHeader.BinaryData) ?? false))
+                //    split_file = true;
 
-                if (split_file && !multiple_header_present)
+                var notFirstTime = lastAudioHeader is not null || lastVideoHeader is not null;
+
+                if (notFirstTime // 第一次触发规则不判定为有问题
+                    && split_file
+                    && !multiple_header_present)
                     context.AddComment(SplitFileComment);
 
-                if (split_file)
+                if (notFirstTime && split_file)
                     yield return PipelineNewFileAction.Instance;
 
-                if (split_file || (lastAudioHeader is null && lastVideoHeader is null))
+                if (split_file)
                     yield return new PipelineHeaderAction(Array.Empty<Tag>())
                     {
                         AudioHeader = currentAudioHeader?.Clone(),
@@ -127,6 +89,81 @@ namespace BililiveRecorder.Flv.Pipeline.Rules
             }
             else
                 yield return action;
+        }
+
+        private static Tag? SelectHeader(ref bool multiple_header_present, IGrouping<TagType, Tag> tagGroup)
+        {
+            Tag? currentHeader;
+            if (tagGroup != null)
+            {
+                // 检查是否存在 **多个** **不同的** Header
+                if (tagGroup.Count() > 1)
+                {
+                    var first = tagGroup.First();
+
+                    if (tagGroup.Skip(1).All(x => first.BinaryData?.SequenceEqual(x.BinaryData) ?? false))
+                        currentHeader = first;
+                    else
+                    {
+                        // 默认最后一个为正确的
+                        currentHeader = tagGroup.Last();
+                        multiple_header_present = true;
+                    }
+                }
+                else
+                    currentHeader = tagGroup.FirstOrDefault();
+            }
+            else
+                currentHeader = null;
+
+            return currentHeader;
+        }
+
+        private static void DecideSplit(ref Tag? lastHeader, ref Tag? currentHeader, ref bool split_file)
+        {
+            if (lastHeader is null)
+            {
+                if (currentHeader is null)
+                {
+                    // 从未出现过、并且本次还没收到
+                    // 忽略不动
+                }
+                else
+                {
+                    // 之前未出现过 header
+                    // 所以以新收到的为准并切割文件
+
+                    // currentHeader = currentHeader;
+                    split_file = true;
+                }
+            }
+            else
+            {
+                if (currentHeader is null)
+                {
+                    // 以前收到过 header 但是本次没收到
+                    // 说明是收到了另一种 header
+                    // 使用上次收到的 header
+                    currentHeader = lastHeader;
+                }
+                else
+                {
+                    // 之前收到过、这次也收到了
+                    // 对 header 内容进行对比
+
+                    if (currentHeader.BinaryData?.SequenceEqual(lastHeader.BinaryData) ?? false) // 如果 BinaryData 为 null 则判定为不相同
+                    {
+                        // 如果内容相同、则忽略
+                        // currentHeader = currentHeader;
+                    }
+                    else
+                    {
+                        // 如果内容不同，则使用新收到的 header 并切分文件
+                        // currentHeader = currentHeader;
+                        split_file = true;
+                    }
+                }
+            }
         }
     }
 }

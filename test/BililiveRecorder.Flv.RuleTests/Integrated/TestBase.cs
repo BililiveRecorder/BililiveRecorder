@@ -31,7 +31,7 @@ namespace BililiveRecorder.Flv.RuleTests.Integrated
 
         protected async Task RunPipeline(ITagGroupReader reader, IFlvTagWriter output, List<ProcessingComment> comments)
         {
-            var writer = new FlvProcessingContextWriter(output);
+            var writer = new FlvProcessingContextWriter(tagWriter: output, allowMissingHeader: true);
             var session = new Dictionary<object, object?>();
             var context = new FlvProcessingContext();
             var pipeline = this.BuildPipeline();

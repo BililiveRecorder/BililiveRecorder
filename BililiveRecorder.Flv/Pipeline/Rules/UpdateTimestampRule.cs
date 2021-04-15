@@ -88,17 +88,16 @@ namespace BililiveRecorder.Flv.Pipeline.Rules
 
         private int CalculateNewTarget(IReadOnlyList<Tag> tags)
         {
-            var video = CalculatePerChannel(tags, VIDEO_DURATION_FALLBACK, VIDEO_DURATION_MAX, VIDEO_DURATION_MIN, TagType.Video);
+            // 有可能出现只有音频或只有视频的情况
+            int video = 0, audio = 0;
+
+            if (tags.Any(x => x.Type == TagType.Video))
+                video = CalculatePerChannel(tags, VIDEO_DURATION_FALLBACK, VIDEO_DURATION_MAX, VIDEO_DURATION_MIN, TagType.Video);
 
             if (tags.Any(x => x.Type == TagType.Audio))
-            {
-                var audio = CalculatePerChannel(tags, AUDIO_DURATION_FALLBACK, AUDIO_DURATION_MAX, AUDIO_DURATION_MIN, TagType.Audio);
-                return Math.Max(video, audio);
-            }
-            else
-            {
-                return video;
-            }
+                audio = CalculatePerChannel(tags, AUDIO_DURATION_FALLBACK, AUDIO_DURATION_MAX, AUDIO_DURATION_MIN, TagType.Audio);
+
+            return Math.Max(video, audio);
 
             static int CalculatePerChannel(IReadOnlyList<Tag> tags, int fallback, int max, int min, TagType type)
             {
