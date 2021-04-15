@@ -95,7 +95,7 @@ namespace BililiveRecorder.Core.Api.Http
             if (this.disposedValue)
                 throw new ObjectDisposedException(nameof(HttpApiClient));
 
-            var url = $@"https://api.live.bilibili.com/room/v1/Room/get_info?id={roomid}";
+            var url = $@"{this.config.LiveApiHost}/room/v1/Room/get_info?id={roomid}";
             return FetchAsync<RoomInfo>(this.mainClient, url);
         }
 
@@ -104,7 +104,7 @@ namespace BililiveRecorder.Core.Api.Http
             if (this.disposedValue)
                 throw new ObjectDisposedException(nameof(HttpApiClient));
 
-            var url = $@"https://api.live.bilibili.com/live_user/v1/UserInfo/get_anchor_in_room?roomid={roomid}";
+            var url = $@"{this.config.LiveApiHost}/live_user/v1/UserInfo/get_anchor_in_room?roomid={roomid}";
             return FetchAsync<UserInfo>(this.mainClient, url);
         }
 
@@ -113,7 +113,7 @@ namespace BililiveRecorder.Core.Api.Http
             if (this.disposedValue)
                 throw new ObjectDisposedException(nameof(HttpApiClient));
 
-            var url = $@"https://api.live.bilibili.com/xlive/web-room/v2/index/getRoomPlayInfo?room_id={roomid}&protocol=0%2C1&format=0%2C2&codec=0%2C1&qn=10000&platform=web&ptype=16";
+            var url = $@"{this.config.LiveApiHost}/xlive/web-room/v2/index/getRoomPlayInfo?room_id={roomid}&protocol=0%2C1&format=0%2C2&codec=0%2C1&qn=10000&platform=web&ptype=16";
             return FetchAsync<RoomPlayInfo>(this.mainClient, url);
         }
 
@@ -122,7 +122,7 @@ namespace BililiveRecorder.Core.Api.Http
             if (this.disposedValue)
                 throw new ObjectDisposedException(nameof(HttpApiClient));
 
-            var url = $@"https://api.live.bilibili.com/xlive/web-room/v1/index/getDanmuInfo?id={roomid}&type=0";
+            var url = $@"{this.config.LiveApiHost}/xlive/web-room/v1/index/getDanmuInfo?id={roomid}&type=0";
             return FetchAsync<DanmuInfo>(this.anonClient, url);
         }
 

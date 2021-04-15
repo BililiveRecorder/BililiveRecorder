@@ -25,8 +25,9 @@ namespace BililiveRecorder.Core.Recording
         private const string HttpHeaderReferer = "https://live.bilibili.com/";
         private const string HttpHeaderUserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.141 Safari/537.36";
 
+        private const int timer_inverval = 2;
+        private readonly Timer timer = new Timer(1000 * timer_inverval);
         private readonly Random random = new Random();
-        private readonly Timer timer = new Timer(1000 * 2);
         private readonly CancellationTokenSource cts = new CancellationTokenSource();
         private readonly CancellationToken ct;
 
@@ -52,7 +53,8 @@ namespace BililiveRecorder.Core.Recording
 
         private readonly object fillerStatsLock = new object();
         private int fillerDownloadedBytes;
-        private DateTimeOffset fillerLastStatsTrigger;
+        private DateTimeOffset fillerStatsLastTrigger;
+        private TimeSpan durationSinceNoDataReceived;
 
         public RecordTask(IRoom room,
                           ILogger logger,
@@ -149,7 +151,8 @@ namespace BililiveRecorder.Core.Recording
                 });
             };
 
-            this.fillerLastStatsTrigger = DateTimeOffset.UtcNow;
+            this.fillerStatsLastTrigger = DateTimeOffset.UtcNow;
+            this.durationSinceNoDataReceived = TimeSpan.Zero;
             this.filler = Task.Run(async () => await this.FillPipeAsync(stream, pipe.Writer).ConfigureAwait(false));
 
             _ = Task.Run(this.RecordingLoopAsync);
@@ -202,9 +205,11 @@ namespace BililiveRecorder.Core.Recording
             {
                 bytes = Interlocked.Exchange(ref this.fillerDownloadedBytes, 0);
                 end = DateTimeOffset.UtcNow;
-                start = this.fillerLastStatsTrigger;
-                this.fillerLastStatsTrigger = end;
+                start = this.fillerStatsLastTrigger;
+                this.fillerStatsLastTrigger = end;
                 diff = end - start;
+
+                this.durationSinceNoDataReceived = bytes > 0 ? TimeSpan.Zero : this.durationSinceNoDataReceived + diff;
             }
 
             var mbps = bytes * 8d / 1024d / 1024d / diff.TotalSeconds;
@@ -217,6 +222,12 @@ namespace BililiveRecorder.Core.Recording
                 EndTime = end,
                 Mbps = mbps
             });
+
+            if (this.durationSinceNoDataReceived.TotalMilliseconds > this.room.RoomConfig.TimingWatchdogTimeout)
+            {
+                this.logger.Warning("直播服务器未断开连接但停止发送直播数据，将会主动断开连接");
+                this.RequestStop();
+            }
         }
 
         private void Writer_BeforeScriptTagWrite(ScriptTagBody scriptTagBody)
