@@ -22,7 +22,7 @@ namespace BililiveRecorder.WPF
                 if (!File.Exists("BILILIVE_RECORDER_DISABLE_SENTRY")
                 && string.IsNullOrWhiteSpace(Environment.GetEnvironmentVariable("BILILIVE_RECORDER_DISABLE_SENTRY")))
                 {
-                    o.Dsn = new Dsn("https://efc16b0fd5604608b811c3b358e9d1f1@o210546.ingest.sentry.io/5556540");
+                    o.Dsn = new Dsn("https://74f6e28f6a8848dabbb96c5b5c51c4c2@o210546.ingest.sentry.io/5556540");
                 }
 
                 var v = typeof(Program).Assembly.GetName().Version;
