@@ -22,7 +22,7 @@ namespace BililiveRecorder.Core.Danmaku
         };
 
         private static readonly Regex invalidXMLChars = new Regex(@"(?<![\uD800-\uDBFF])[\uDC00-\uDFFF]|[\uD800-\uDBFF](?![\uDC00-\uDFFF])|[\x00-\x08\x0B\x0C\x0E-\x1F\x7F-\x9F\uFEFF\uFFFE\uFFFF]", RegexOptions.Compiled);
-        private static string RemoveInvalidXMLChars(string? text) => string.IsNullOrEmpty(text) ? string.Empty : invalidXMLChars.Replace(text, string.Empty);
+        private static string RemoveInvalidXMLChars(string? text) => string.IsNullOrWhiteSpace(text) ? string.Empty : invalidXMLChars.Replace(text, string.Empty);
 
         private XmlWriter? xmlWriter = null;
         private DateTimeOffset offset = DateTimeOffset.UtcNow;
@@ -109,7 +109,7 @@ namespace BililiveRecorder.Core.Danmaku
 
                                 this.xmlWriter.WriteStartElement("d");
                                 this.xmlWriter.WriteAttributeString("p", $"{ts},{type},{size},{color},{st},0,{danmakuModel.UserID},0");
-                                this.xmlWriter.WriteAttributeString("user", danmakuModel.UserName);
+                                this.xmlWriter.WriteAttributeString("user", RemoveInvalidXMLChars(danmakuModel.UserName));
                                 if (recordDanmakuRaw)
                                     this.xmlWriter.WriteAttributeString("raw", danmakuModel.RawObject?["info"]?.ToString(Newtonsoft.Json.Formatting.None));
                                 this.xmlWriter.WriteValue(RemoveInvalidXMLChars(danmakuModel.CommentText));
@@ -122,7 +122,7 @@ namespace BililiveRecorder.Core.Danmaku
                                 this.xmlWriter.WriteStartElement("sc");
                                 var ts = Math.Max((DateTimeOffset.UtcNow - this.offset).TotalSeconds, 0d);
                                 this.xmlWriter.WriteAttributeString("ts", ts.ToString());
-                                this.xmlWriter.WriteAttributeString("user", danmakuModel.UserName);
+                                this.xmlWriter.WriteAttributeString("user", RemoveInvalidXMLChars(danmakuModel.UserName));
                                 this.xmlWriter.WriteAttributeString("price", danmakuModel.Price.ToString());
                                 this.xmlWriter.WriteAttributeString("time", danmakuModel.SCKeepTime.ToString());
                                 if (recordDanmakuRaw)
@@ -137,8 +137,8 @@ namespace BililiveRecorder.Core.Danmaku
                                 this.xmlWriter.WriteStartElement("gift");
                                 var ts = Math.Max((DateTimeOffset.UtcNow - this.offset).TotalSeconds, 0d);
                                 this.xmlWriter.WriteAttributeString("ts", ts.ToString());
-                                this.xmlWriter.WriteAttributeString("user", danmakuModel.UserName);
-                                this.xmlWriter.WriteAttributeString("giftname", danmakuModel.GiftName);
+                                this.xmlWriter.WriteAttributeString("user", RemoveInvalidXMLChars(danmakuModel.UserName));
+                                this.xmlWriter.WriteAttributeString("giftname", RemoveInvalidXMLChars(danmakuModel.GiftName));
                                 this.xmlWriter.WriteAttributeString("giftcount", danmakuModel.GiftCount.ToString());
                                 if (recordDanmakuRaw)
                                     this.xmlWriter.WriteAttributeString("raw", danmakuModel.RawObject?["data"]?.ToString(Newtonsoft.Json.Formatting.None));
@@ -151,7 +151,7 @@ namespace BililiveRecorder.Core.Danmaku
                                 this.xmlWriter.WriteStartElement("guard");
                                 var ts = Math.Max((DateTimeOffset.UtcNow - this.offset).TotalSeconds, 0d);
                                 this.xmlWriter.WriteAttributeString("ts", ts.ToString());
-                                this.xmlWriter.WriteAttributeString("user", danmakuModel.UserName);
+                                this.xmlWriter.WriteAttributeString("user", RemoveInvalidXMLChars(danmakuModel.UserName));
                                 this.xmlWriter.WriteAttributeString("level", danmakuModel.UserGuardLevel.ToString()); ;
                                 this.xmlWriter.WriteAttributeString("count", danmakuModel.GiftCount.ToString());
                                 if (recordDanmakuRaw)
