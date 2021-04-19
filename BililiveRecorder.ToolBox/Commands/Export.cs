@@ -26,41 +26,103 @@ namespace BililiveRecorder.ToolBox.Commands
     {
         private static readonly ILogger logger = Log.ForContext<ExportHandler>();
 
-        public Task<ExportResponse> Handle(ExportRequest request) => this.Handle(request, null);
+        public Task<CommandResponse<ExportResponse>> Handle(ExportRequest request) => this.Handle(request, null);
 
-        public async Task<ExportResponse> Handle(ExportRequest request, Func<double, Task>? progress)
+        public async Task<CommandResponse<ExportResponse>> Handle(ExportRequest request, Func<double, Task>? progress)
         {
-            using var inputStream = File.OpenRead(request.Input);
-            using var outputStream = File.OpenWrite(request.Output);
-
-            var tags = new List<Tag>();
-
+            FileStream? inputStream = null, outputStream = null;
+            try
             {
-                using var reader = new FlvTagPipeReader(PipeReader.Create(inputStream), new DefaultMemoryStreamProvider(), skipData: true, logger: logger);
-                var count = 0;
-                while (true)
+                try
                 {
-                    var tag = await reader.ReadTagAsync(default).ConfigureAwait(false);
-                    if (tag is null) break;
-                    tags.Add(tag);
-
-                    if (count++ % 300 == 0)
-                        progress?.Invoke((double)inputStream.Position / inputStream.Length);
+                    inputStream = File.Open(request.Input, FileMode.Open, FileAccess.Read, FileShare.Read);
                 }
-            }
-
-            {
-                using var writer = new StreamWriter(new GZipStream(outputStream, CompressionLevel.Optimal));
-                XmlFlvFile.Serializer.Serialize(writer, new XmlFlvFile
+                catch (Exception ex)
                 {
-                    Tags = tags
-                });
-            }
+                    return new CommandResponse<ExportResponse>
+                    {
+                        Status = ResponseStatus.InputIOError,
+                        Exception = ex,
+                        ErrorMessage = ex.Message
+                    };
+                }
 
-            return new ExportResponse();
+                try
+                {
+                    outputStream = File.OpenWrite(request.Output);
+                }
+                catch (Exception ex)
+                {
+                    return new CommandResponse<ExportResponse>
+                    {
+                        Status = ResponseStatus.OutputIOError,
+                        Exception = ex,
+                        ErrorMessage = ex.Message
+                    };
+                }
+
+                var tags = await Task.Run(async () =>
+                {
+                    var count = 0;
+                    var tags = new List<Tag>();
+                    using var reader = new FlvTagPipeReader(PipeReader.Create(inputStream), new DefaultMemoryStreamProvider(), skipData: true, logger: logger);
+                    while (true)
+                    {
+                        var tag = await reader.ReadTagAsync(default).ConfigureAwait(false);
+                        if (tag is null) break;
+                        tags.Add(tag);
+
+                        if (count++ % 300 == 0 && progress is not null)
+                            await progress((double)inputStream.Position / inputStream.Length);
+                    }
+                    return tags;
+                });
+
+                await Task.Run(() =>
+                {
+                    using var writer = new StreamWriter(new GZipStream(outputStream, CompressionLevel.Optimal));
+                    XmlFlvFile.Serializer.Serialize(writer, new XmlFlvFile
+                    {
+                        Tags = tags
+                    });
+                });
+
+                return new CommandResponse<ExportResponse> { Status = ResponseStatus.OK, Result = new ExportResponse() };
+            }
+            catch (NotFlvFileException ex)
+            {
+                return new CommandResponse<ExportResponse>
+                {
+                    Status = ResponseStatus.NotFlvFile,
+                    Exception = ex,
+                    ErrorMessage = ex.Message
+                };
+            }
+            catch (UnknownFlvTagTypeException ex)
+            {
+                return new CommandResponse<ExportResponse>
+                {
+                    Status = ResponseStatus.UnknownFlvTagType,
+                    Exception = ex,
+                    ErrorMessage = ex.Message
+                };
+            }
+            catch (Exception ex)
+            {
+                return new CommandResponse<ExportResponse>
+                {
+                    Status = ResponseStatus.Error,
+                    Exception = ex,
+                    ErrorMessage = ex.Message
+                };
+            }
+            finally
+            {
+                inputStream?.Dispose();
+                outputStream?.Dispose();
+            }
         }
 
-        public void PrintResponse(ExportResponse response)
-        { }
+        public void PrintResponse(ExportResponse response) => Console.WriteLine("OK");
     }
 }

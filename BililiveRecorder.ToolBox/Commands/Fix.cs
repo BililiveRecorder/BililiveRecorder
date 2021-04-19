@@ -43,79 +43,126 @@ namespace BililiveRecorder.ToolBox.Commands
     {
         private static readonly ILogger logger = Log.ForContext<FixHandler>();
 
-        public Task<FixResponse> Handle(FixRequest request) => this.Handle(request, null);
+        public Task<CommandResponse<FixResponse>> Handle(FixRequest request) => this.Handle(request, null);
 
-        public async Task<FixResponse> Handle(FixRequest request, Func<double, Task>? progress)
+        public async Task<CommandResponse<FixResponse>> Handle(FixRequest request, Func<double, Task>? progress)
         {
-            var inputPath = Path.GetFullPath(request.Input);
-
-            var outputPaths = new List<string>();
-            var targetProvider = new AutoFixFlvWriterTargetProvider(request.OutputBase);
-            targetProvider.BeforeFileOpen += (sender, path) => outputPaths.Add(path);
-
-            var memoryStreamProvider = new DefaultMemoryStreamProvider();
-            var tagWriter = new FlvTagFileWriter(targetProvider, memoryStreamProvider, logger);
-
-            var comments = new List<ProcessingComment>();
-            var context = new FlvProcessingContext();
-            var session = new Dictionary<object, object?>();
-
+            FileStream? inputStream = null;
+            try
             {
-                using var inputStream = File.OpenRead(inputPath);
+                var inputPath = Path.GetFullPath(request.Input);
 
-                using var grouping = new TagGroupReader(new FlvTagPipeReader(PipeReader.Create(inputStream), memoryStreamProvider, skipData: false, logger: logger));
-                using var writer = new FlvProcessingContextWriter(tagWriter: tagWriter, allowMissingHeader: true);
-                var pipeline = new ProcessingPipelineBuilder(new ServiceCollection().BuildServiceProvider()).AddDefault().AddRemoveFillerData().Build();
+                var outputPaths = new List<string>();
+                var targetProvider = new AutoFixFlvWriterTargetProvider(request.OutputBase);
+                targetProvider.BeforeFileOpen += (sender, path) => outputPaths.Add(path);
 
-                var count = 0;
-                while (true)
+                var memoryStreamProvider = new DefaultMemoryStreamProvider();
+                var tagWriter = new FlvTagFileWriter(targetProvider, memoryStreamProvider, logger);
+
+                var comments = new List<ProcessingComment>();
+                var context = new FlvProcessingContext();
+                var session = new Dictionary<object, object?>();
+
                 {
-                    var group = await grouping.ReadGroupAsync(default).ConfigureAwait(false);
-                    if (group is null)
-                        break;
-
-                    context.Reset(group, session);
-                    pipeline(context);
-
-                    if (context.Comments.Count > 0)
+                    try
                     {
-                        comments.AddRange(context.Comments);
-                        logger.Debug("修复逻辑输出 {@Comments}", context.Comments);
+                        inputStream = File.Open(inputPath, FileMode.Open, FileAccess.Read, FileShare.Read);
+                    }
+                    catch (Exception ex) when (ex is not FlvException)
+                    {
+                        return new CommandResponse<FixResponse>
+                        {
+                            Status = ResponseStatus.InputIOError,
+                            Exception = ex,
+                            ErrorMessage = ex.Message
+                        };
                     }
 
-                    await writer.WriteAsync(context).ConfigureAwait(false);
+                    using var grouping = new TagGroupReader(new FlvTagPipeReader(PipeReader.Create(inputStream), memoryStreamProvider, skipData: false, logger: logger));
+                    using var writer = new FlvProcessingContextWriter(tagWriter: tagWriter, allowMissingHeader: true);
+                    var pipeline = new ProcessingPipelineBuilder(new ServiceCollection().BuildServiceProvider()).AddDefault().AddRemoveFillerData().Build();
 
-                    foreach (var action in context.Actions)
-                        if (action is PipelineDataAction dataAction)
-                            foreach (var tag in dataAction.Tags)
-                                tag.BinaryData?.Dispose();
-
-                    if (count++ % 10 == 0)
+                    var count = 0;
+                    while (true)
                     {
-                        progress?.Invoke((double)inputStream.Position / inputStream.Length);
+                        var group = await grouping.ReadGroupAsync(default).ConfigureAwait(false);
+                        if (group is null)
+                            break;
+
+                        context.Reset(group, session);
+                        pipeline(context);
+
+                        if (context.Comments.Count > 0)
+                        {
+                            comments.AddRange(context.Comments);
+                            logger.Debug("修复逻辑输出 {@Comments}", context.Comments);
+                        }
+
+                        await writer.WriteAsync(context).ConfigureAwait(false);
+
+                        foreach (var action in context.Actions)
+                            if (action is PipelineDataAction dataAction)
+                                foreach (var tag in dataAction.Tags)
+                                    tag.BinaryData?.Dispose();
+
+                        if (count++ % 10 == 0 && progress is not null)
+                            await progress((double)inputStream.Position / inputStream.Length);
                     }
                 }
+
+                var response = await Task.Run(() =>
+                {
+                    var countableComments = comments.Where(x => x.T != CommentType.Logging).ToArray();
+                    return new FixResponse
+                    {
+                        InputPath = inputPath,
+                        OutputPaths = outputPaths.ToArray(),
+                        OutputFileCount = outputPaths.Count,
+
+                        NeedFix = outputPaths.Count != 1 || countableComments.Any(),
+                        Unrepairable = countableComments.Any(x => x.T == CommentType.Unrepairable),
+
+                        IssueTypeOther = countableComments.Count(x => x.T == CommentType.Other),
+                        IssueTypeUnrepairable = countableComments.Count(x => x.T == CommentType.Unrepairable),
+                        IssueTypeTimestampJump = countableComments.Count(x => x.T == CommentType.TimestampJump),
+                        IssueTypeDecodingHeader = countableComments.Count(x => x.T == CommentType.DecodingHeader),
+                        IssueTypeRepeatingData = countableComments.Count(x => x.T == CommentType.RepeatingData)
+                    };
+                });
+
+                return new CommandResponse<FixResponse> { Status = ResponseStatus.OK, Result = response };
             }
-
-            var countableComments = comments.Where(x => x.T != CommentType.Logging);
-
-            var response = new FixResponse
+            catch (NotFlvFileException ex)
             {
-                InputPath = inputPath,
-                OutputPaths = outputPaths.ToArray(),
-                OutputFileCount = outputPaths.Count,
-
-                NeedFix = outputPaths.Count != 1 || countableComments.Any(),
-                Unrepairable = countableComments.Any(x => x.T == CommentType.Unrepairable),
-
-                IssueTypeOther = countableComments.Count(x => x.T == CommentType.Other),
-                IssueTypeUnrepairable = countableComments.Count(x => x.T == CommentType.Unrepairable),
-                IssueTypeTimestampJump = countableComments.Count(x => x.T == CommentType.TimestampJump),
-                IssueTypeDecodingHeader = countableComments.Count(x => x.T == CommentType.DecodingHeader),
-                IssueTypeRepeatingData = countableComments.Count(x => x.T == CommentType.RepeatingData)
-            };
-
-            return response;
+                return new CommandResponse<FixResponse>
+                {
+                    Status = ResponseStatus.NotFlvFile,
+                    Exception = ex,
+                    ErrorMessage = ex.Message
+                };
+            }
+            catch (UnknownFlvTagTypeException ex)
+            {
+                return new CommandResponse<FixResponse>
+                {
+                    Status = ResponseStatus.UnknownFlvTagType,
+                    Exception = ex,
+                    ErrorMessage = ex.Message
+                };
+            }
+            catch (Exception ex)
+            {
+                return new CommandResponse<FixResponse>
+                {
+                    Status = ResponseStatus.Error,
+                    Exception = ex,
+                    ErrorMessage = ex.Message
+                };
+            }
+            finally
+            {
+                inputStream?.Dispose();
+            }
         }
 
         public void PrintResponse(FixResponse response)

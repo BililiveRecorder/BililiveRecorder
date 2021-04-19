@@ -1,21 +1,10 @@
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.IO.Compression;
-using System.IO.Pipelines;
-using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
-using BililiveRecorder.Flv;
-using BililiveRecorder.Flv.Grouping;
-using BililiveRecorder.Flv.Parser;
-using BililiveRecorder.Flv.Pipeline;
-using BililiveRecorder.Flv.Writer;
-using BililiveRecorder.Flv.Xml;
+using BililiveRecorder.ToolBox;
 using BililiveRecorder.ToolBox.Commands;
 using BililiveRecorder.WPF.Controls;
-using BililiveRecorder.WPF.Models;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.WindowsAPICodePack.Dialogs;
 using Serilog;
 
@@ -50,7 +39,8 @@ namespace BililiveRecorder.WPF.Pages
                 NavigateToShortcut = true,
                 Filters =
                 {
-                    new CommonFileDialogFilter("Flv files",".flv")
+                    new CommonFileDialogFilter("Flv files",".flv"),
+                    new CommonFileDialogFilter("Flv Xml files",".xml,.gz")
                 }
             };
             if (fileDialog.ShowDialog() == CommonFileDialogResult.Ok)
@@ -109,13 +99,25 @@ namespace BililiveRecorder.WPF.Pages
                     });
                 }).ConfigureAwait(true);
 
+                if (resp.Status != ResponseStatus.OK)
+                {
+                    logger.Warning(resp.Exception, "修复时发生错误 (@Status)", resp.Status);
+                    await Task.Run(() =>
+                    {
+                        // TODO 翻译
+                        // 例：在读取文件时发生了错误
+                        // 选择的不是 FLV 文件
+                        // FLV 文件格式错误
+                        MessageBox.Show($"错误类型: {resp.Status}\n{resp.ErrorMessage}", "修复时发生错误", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    }).ConfigureAwait(true);
+                }
+
                 progressDialog.Hide();
                 await showTask.ConfigureAwait(true);
             }
             catch (Exception ex)
             {
-                logger.Error(ex, "修复时发生错误");
-                MessageBox.Show("修复时发生错误\n" + ex.Message);
+                logger.Error(ex, "修复时发生未处理的错误");
             }
             finally
             {
@@ -156,15 +158,29 @@ namespace BililiveRecorder.WPF.Pages
                     });
                 }).ConfigureAwait(true);
 
-                this.analyzeResultDisplayArea.DataContext = resp;
+                if (resp.Status != ResponseStatus.OK)
+                {
+                    logger.Warning(resp.Exception, "分析时发生错误 (@Status)", resp.Status);
+                    await Task.Run(() =>
+                    {
+                        // TODO 翻译
+                        // 例：在读取文件时发生了错误
+                        // 选择的不是 FLV 文件
+                        // FLV 文件格式错误
+                        MessageBox.Show($"错误类型: {resp.Status}\n{resp.ErrorMessage}", "分析时发生错误", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    }).ConfigureAwait(true);
+                }
+                else
+                {
+                    this.analyzeResultDisplayArea.DataContext = resp.Result;
+                }
 
                 progressDialog.Hide();
                 await showTask.ConfigureAwait(true);
             }
             catch (Exception ex)
             {
-                logger.Error(ex, "分析时发生错误");
-                MessageBox.Show("分析时发生错误\n" + ex.Message);
+                logger.Error(ex, "分析时发生未处理的错误");
             }
             finally
             {
@@ -230,13 +246,25 @@ namespace BililiveRecorder.WPF.Pages
                     });
                 }).ConfigureAwait(true);
 
+                if (resp.Status != ResponseStatus.OK)
+                {
+                    logger.Warning(resp.Exception, "导出分析数据时发生错误 (@Status)", resp.Status);
+                    await Task.Run(() =>
+                    {
+                        // TODO 翻译
+                        // 例：在读取文件时发生了错误
+                        // 选择的不是 FLV 文件
+                        // FLV 文件格式错误
+                        MessageBox.Show($"错误类型: {resp.Status}\n{resp.ErrorMessage}", "导出分析数据时发生错误", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    }).ConfigureAwait(true);
+                }
+
                 progressDialog.Hide();
                 await showTask.ConfigureAwait(true);
             }
             catch (Exception ex)
             {
-                logger.Error(ex, "导出时发生错误");
-                MessageBox.Show("导出时发生错误\n" + ex.Message);
+                logger.Error(ex, "导出时发生未处理的错误");
             }
             finally
             {

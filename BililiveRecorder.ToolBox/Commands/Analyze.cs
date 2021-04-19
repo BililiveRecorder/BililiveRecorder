@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Compression;
 using System.IO.Pipelines;
 using System.Linq;
 using System.Threading.Tasks;
@@ -10,6 +11,7 @@ using BililiveRecorder.Flv.Grouping;
 using BililiveRecorder.Flv.Parser;
 using BililiveRecorder.Flv.Pipeline;
 using BililiveRecorder.Flv.Writer;
+using BililiveRecorder.Flv.Xml;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog;
 
@@ -40,22 +42,56 @@ namespace BililiveRecorder.ToolBox.Commands
     {
         private static readonly ILogger logger = Log.ForContext<AnalyzeHandler>();
 
-        public Task<AnalyzeResponse> Handle(AnalyzeRequest request) => this.Handle(request, null);
+        public Task<CommandResponse<AnalyzeResponse>> Handle(AnalyzeRequest request) => this.Handle(request, null);
 
-        public async Task<AnalyzeResponse> Handle(AnalyzeRequest request, Func<double, Task>? progress)
+        public async Task<CommandResponse<AnalyzeResponse>> Handle(AnalyzeRequest request, Func<double, Task>? progress)
         {
-            var inputPath = Path.GetFullPath(request.Input);
-
-            var memoryStreamProvider = new DefaultMemoryStreamProvider();
-            var tagWriter = new AnalyzeMockFlvTagWriter();
-            var comments = new List<ProcessingComment>();
-            var context = new FlvProcessingContext();
-            var session = new Dictionary<object, object?>();
-
+            try
             {
-                using var inputStream = File.OpenRead(inputPath);
+                var memoryStreamProvider = new DefaultMemoryStreamProvider();
+                var tagWriter = new AnalyzeMockFlvTagWriter();
+                var comments = new List<ProcessingComment>();
+                var context = new FlvProcessingContext();
+                var session = new Dictionary<object, object?>();
 
-                using var grouping = new TagGroupReader(new FlvTagPipeReader(PipeReader.Create(inputStream), memoryStreamProvider, skipData: false, logger: logger));
+                string? inputPath;
+                IFlvTagReader tagReader;
+                FileStream? flvFileStream = null;
+
+                try
+                {
+                    inputPath = Path.GetFullPath(request.Input);
+                    if (inputPath.EndsWith(".gz", StringComparison.OrdinalIgnoreCase))
+                        tagReader = await Task.Run(() =>
+                        {
+                            using var stream = new GZipStream(File.Open(inputPath, FileMode.Open, FileAccess.Read, FileShare.Read), CompressionMode.Decompress);
+                            var xmlFlvFile = (XmlFlvFile)XmlFlvFile.Serializer.Deserialize(stream);
+                            return new FlvTagListReader(xmlFlvFile.Tags);
+                        });
+                    else if (inputPath.EndsWith(".xml", StringComparison.OrdinalIgnoreCase))
+                        tagReader = await Task.Run(() =>
+                        {
+                            using var stream = File.Open(inputPath, FileMode.Open, FileAccess.Read, FileShare.Read);
+                            var xmlFlvFile = (XmlFlvFile)XmlFlvFile.Serializer.Deserialize(stream);
+                            return new FlvTagListReader(xmlFlvFile.Tags);
+                        });
+                    else
+                    {
+                        flvFileStream = File.Open(inputPath, FileMode.Open, FileAccess.Read, FileShare.Read);
+                        tagReader = new FlvTagPipeReader(PipeReader.Create(flvFileStream), memoryStreamProvider, skipData: false, logger: logger);
+                    }
+                }
+                catch (Exception ex) when (ex is not FlvException)
+                {
+                    return new CommandResponse<AnalyzeResponse>
+                    {
+                        Status = ResponseStatus.InputIOError,
+                        Exception = ex,
+                        ErrorMessage = ex.Message
+                    };
+                }
+
+                using var grouping = new TagGroupReader(tagReader);
                 using var writer = new FlvProcessingContextWriter(tagWriter: tagWriter, allowMissingHeader: true);
                 var pipeline = new ProcessingPipelineBuilder(new ServiceCollection().BuildServiceProvider()).AddDefault().AddRemoveFillerData().Build();
 
@@ -82,32 +118,63 @@ namespace BililiveRecorder.ToolBox.Commands
                             foreach (var tag in dataAction.Tags)
                                 tag.BinaryData?.Dispose();
 
-                    if (count++ % 10 == 0)
-                    {
-                        progress?.Invoke((double)inputStream.Position / inputStream.Length);
-                    }
+                    if (count++ % 10 == 0 && flvFileStream is not null && progress is not null)
+                        await progress((double)flvFileStream.Position / flvFileStream.Length);
                 }
+
+                var response = await Task.Run(() =>
+                {
+                    var countableComments = comments.Where(x => x.T != CommentType.Logging).ToArray();
+                    return new AnalyzeResponse
+                    {
+                        InputPath = inputPath,
+
+                        NeedFix = tagWriter.OutputFileCount != 1 || countableComments.Any(),
+                        Unrepairable = countableComments.Any(x => x.T == CommentType.Unrepairable),
+
+                        OutputFileCount = tagWriter.OutputFileCount,
+
+                        IssueTypeOther = countableComments.Count(x => x.T == CommentType.Other),
+                        IssueTypeUnrepairable = countableComments.Count(x => x.T == CommentType.Unrepairable),
+                        IssueTypeTimestampJump = countableComments.Count(x => x.T == CommentType.TimestampJump),
+                        IssueTypeDecodingHeader = countableComments.Count(x => x.T == CommentType.DecodingHeader),
+                        IssueTypeRepeatingData = countableComments.Count(x => x.T == CommentType.RepeatingData)
+                    };
+                });
+
+                return new CommandResponse<AnalyzeResponse>
+                {
+                    Status = ResponseStatus.OK,
+                    Result = response
+                };
             }
-
-            var countableComments = comments.Where(x => x.T != CommentType.Logging);
-
-            var response = new AnalyzeResponse
+            catch (NotFlvFileException ex)
             {
-                InputPath = inputPath,
-
-                NeedFix = tagWriter.OutputFileCount != 1 || countableComments.Any(),
-                Unrepairable = countableComments.Any(x => x.T == CommentType.Unrepairable),
-
-                OutputFileCount = tagWriter.OutputFileCount,
-
-                IssueTypeOther = countableComments.Count(x => x.T == CommentType.Other),
-                IssueTypeUnrepairable = countableComments.Count(x => x.T == CommentType.Unrepairable),
-                IssueTypeTimestampJump = countableComments.Count(x => x.T == CommentType.TimestampJump),
-                IssueTypeDecodingHeader = countableComments.Count(x => x.T == CommentType.DecodingHeader),
-                IssueTypeRepeatingData = countableComments.Count(x => x.T == CommentType.RepeatingData)
-            };
-
-            return response;
+                return new CommandResponse<AnalyzeResponse>
+                {
+                    Status = ResponseStatus.NotFlvFile,
+                    Exception = ex,
+                    ErrorMessage = ex.Message
+                };
+            }
+            catch (UnknownFlvTagTypeException ex)
+            {
+                return new CommandResponse<AnalyzeResponse>
+                {
+                    Status = ResponseStatus.UnknownFlvTagType,
+                    Exception = ex,
+                    ErrorMessage = ex.Message
+                };
+            }
+            catch (Exception ex)
+            {
+                return new CommandResponse<AnalyzeResponse>
+                {
+                    Status = ResponseStatus.Error,
+                    Exception = ex,
+                    ErrorMessage = ex.Message
+                };
+            }
         }
 
         public void PrintResponse(AnalyzeResponse response)

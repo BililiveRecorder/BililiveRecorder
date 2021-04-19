@@ -29,25 +29,27 @@ namespace BililiveRecorder.ToolBox
             });
         }
 
-        private void RegisterCommand<IHandler, IRequest, IResponse>(string name, string? description, Action<Command> configure)
-            where IHandler : ICommandHandler<IRequest, IResponse>
-            where IRequest : ICommandRequest<IResponse>
+        private void RegisterCommand<THandler, TRequest, TResponse>(string name, string? description, Action<Command> configure)
+            where THandler : ICommandHandler<TRequest, TResponse>
+            where TRequest : ICommandRequest<TResponse>
+            where TResponse : class
         {
             var cmd = new Command(name, description)
             {
                 new Option<bool>("--json", "print result as json string"),
                 new Option<bool>("--json-indented", "print result as indented json string")
             };
-            cmd.Handler = CommandHandler.Create((IRequest r, bool json, bool jsonIndented) => RunSubCommand<IHandler, IRequest, IResponse>(r, json, jsonIndented));
+            cmd.Handler = CommandHandler.Create((TRequest r, bool json, bool jsonIndented) => RunSubCommand<THandler, TRequest, TResponse>(r, json, jsonIndented));
             configure(cmd);
             this.Add(cmd);
         }
 
-        private static async Task<int> RunSubCommand<IHandler, IRequest, IResponse>(IRequest request, bool json, bool jsonIndented)
-            where IHandler : ICommandHandler<IRequest, IResponse>
-            where IRequest : ICommandRequest<IResponse>
+        private static async Task<int> RunSubCommand<THandler, TRequest, TResponse>(TRequest request, bool json, bool jsonIndented)
+            where THandler : ICommandHandler<TRequest, TResponse>
+            where TRequest : ICommandRequest<TResponse>
+            where TResponse : class
         {
-            var handler = Activator.CreateInstance<IHandler>();
+            var handler = Activator.CreateInstance<THandler>();
 
             var response = await handler.Handle(request).ConfigureAwait(false);
 
@@ -58,7 +60,16 @@ namespace BililiveRecorder.ToolBox
             }
             else
             {
-                handler.PrintResponse(response);
+                if (response.Status == ResponseStatus.OK)
+                {
+                    handler.PrintResponse(response.Result!);
+                }
+                else
+                {
+                    Console.Write("Error: ");
+                    Console.WriteLine(response.Status);
+                    Console.WriteLine(response.ErrorMessage);
+                }
             }
 
             return 0;

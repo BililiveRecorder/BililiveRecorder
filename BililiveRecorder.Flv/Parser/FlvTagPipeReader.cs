@@ -138,10 +138,10 @@ namespace BililiveRecorder.Flv.Parser
                 fileHeaderSlice.CopyTo(stackSpan);
 
             if (data[0] != 'F' || data[1] != 'L' || data[2] != 'V' || data[3] != 1)
-                throw new FlvException("Data is not FLV.");
+                throw new NotFlvFileException("Data is not FLV.");
 
             if (data[5] != 0 || data[6] != 0 || data[7] != 0 || data[8] != 9)
-                throw new FlvException("Not Supported FLV format.");
+                throw new NotFlvFileException("Not Supported FLV format.");
 
             buffer = buffer.Slice(fileHeaderSlice.End);
 
@@ -180,7 +180,7 @@ namespace BililiveRecorder.Flv.Parser
                 case TagType.Script:
                     break;
                 default:
-                    throw new FlvException("Unexpected Tag Type: " + header[0]);
+                    throw new UnknownFlvTagTypeException("Unknown Tag Type: " + header[0]);
             }
 
             // Read Tag Size
