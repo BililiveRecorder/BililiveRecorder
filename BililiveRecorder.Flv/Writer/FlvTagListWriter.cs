@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using BililiveRecorder.Flv.Amf;
 
-namespace BililiveRecorder.Flv.RuleTests
+namespace BililiveRecorder.Flv.Writer
 {
     public class FlvTagListWriter : IFlvTagWriter
     {

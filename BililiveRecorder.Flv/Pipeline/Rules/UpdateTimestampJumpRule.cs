@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace BililiveRecorder.Flv.Pipeline.Rules
 {
-    public class UpdateTimestampRule : ISimpleProcessingRule
+    public class UpdateTimestampJumpRule : ISimpleProcessingRule
     {
         private const string TS_STORE_KEY = "Timestamp_Store_Key";
 
@@ -66,16 +66,17 @@ namespace BililiveRecorder.Flv.Pipeline.Rules
 
         private void SetDataTimestamp(IReadOnlyList<Tag> tags, TimestampStore ts, FlvProcessingContext context)
         {
-            var diff = tags[0].Timestamp - ts.LastOriginal;
+            var currentTimestamp = tags[0].Timestamp;
+            var diff = currentTimestamp - ts.LastOriginal;
             if (diff < 0)
             {
-                context.AddComment(new ProcessingComment(CommentType.TimestampJump, "时间戳问题：变小, Diff: " + diff));
-                ts.CurrentOffset = tags[0].Timestamp - ts.NextTimestampTarget;
+                context.AddComment(new ProcessingComment(CommentType.TimestampJump, $"时间戳变小, curr: {currentTimestamp}, diff: {diff}"));
+                ts.CurrentOffset = currentTimestamp - ts.NextTimestampTarget;
             }
             else if (diff > JUMP_THRESHOLD)
             {
-                context.AddComment(new ProcessingComment(CommentType.TimestampJump, "时间戳问题：间隔过大, Diff: " + diff));
-                ts.CurrentOffset = tags[0].Timestamp - ts.NextTimestampTarget;
+                context.AddComment(new ProcessingComment(CommentType.TimestampJump, $"时间戳间隔过大, curr: {currentTimestamp}, diff: {diff}"));
+                ts.CurrentOffset = currentTimestamp - ts.NextTimestampTarget;
             }
 
             ts.LastOriginal = tags.Last().Timestamp;

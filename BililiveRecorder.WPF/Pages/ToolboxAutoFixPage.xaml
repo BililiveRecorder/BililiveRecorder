@@ -88,7 +88,8 @@
                         </StackPanel>
                         <StackPanel Grid.Row="3" HorizontalAlignment="Center" Margin="10">
                             <TextBlock Text="{Binding OutputFileCount,StringFormat=修复将会输出 {0} 个文件}" Margin="0,0,0,5"/>
-                            <TextBlock Text="{Binding IssueTypeTimestampJump,StringFormat=时间戳问题 {0} 处}"/>
+                            <TextBlock Text="{Binding IssueTypeTimestampOffset,StringFormat=时间戳错位问题 {0} 处}"/>
+                            <TextBlock Text="{Binding IssueTypeTimestampJump,StringFormat=时间戳跳变问题 {0} 处}"/>
                             <TextBlock Text="{Binding IssueTypeDecodingHeader,StringFormat=分辨率、解码问题 {0} 处}"/>
                             <TextBlock Text="{Binding IssueTypeRepeatingData,StringFormat=重复片段 {0} 处}"/>
                             <TextBlock Text="{Binding IssueTypeOther,StringFormat=其他问题 {0} 处}"/>

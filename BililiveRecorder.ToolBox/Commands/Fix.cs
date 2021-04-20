@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Compression;
 using System.IO.Pipelines;
 using System.Linq;
 using System.Threading.Tasks;
@@ -9,6 +10,7 @@ using BililiveRecorder.Flv.Grouping;
 using BililiveRecorder.Flv.Parser;
 using BililiveRecorder.Flv.Pipeline;
 using BililiveRecorder.Flv.Writer;
+using BililiveRecorder.Flv.Xml;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog;
 
@@ -35,6 +37,7 @@ namespace BililiveRecorder.ToolBox.Commands
         public int IssueTypeOther { get; set; }
         public int IssueTypeUnrepairable { get; set; }
         public int IssueTypeTimestampJump { get; set; }
+        public int IssueTypeTimestampOffset { get; set; }
         public int IssueTypeDecodingHeader { get; set; }
         public int IssueTypeRepeatingData { get; set; }
     }
@@ -47,41 +50,79 @@ namespace BililiveRecorder.ToolBox.Commands
 
         public async Task<CommandResponse<FixResponse>> Handle(FixRequest request, Func<double, Task>? progress)
         {
-            FileStream? inputStream = null;
+            FileStream? flvFileStream = null;
             try
             {
-                var inputPath = Path.GetFullPath(request.Input);
-
-                var outputPaths = new List<string>();
-                var targetProvider = new AutoFixFlvWriterTargetProvider(request.OutputBase);
-                targetProvider.BeforeFileOpen += (sender, path) => outputPaths.Add(path);
-
                 var memoryStreamProvider = new DefaultMemoryStreamProvider();
-                var tagWriter = new FlvTagFileWriter(targetProvider, memoryStreamProvider, logger);
-
                 var comments = new List<ProcessingComment>();
                 var context = new FlvProcessingContext();
                 var session = new Dictionary<object, object?>();
 
+                // Input
+                string? inputPath;
+                IFlvTagReader tagReader;
+                var xmlMode = false;
+                try
                 {
-                    try
+                    inputPath = Path.GetFullPath(request.Input);
+                    if (inputPath.EndsWith(".gz", StringComparison.OrdinalIgnoreCase))
                     {
-                        inputStream = File.Open(inputPath, FileMode.Open, FileAccess.Read, FileShare.Read);
-                    }
-                    catch (Exception ex) when (ex is not FlvException)
-                    {
-                        return new CommandResponse<FixResponse>
+                        xmlMode = true;
+                        tagReader = await Task.Run(() =>
                         {
-                            Status = ResponseStatus.InputIOError,
-                            Exception = ex,
-                            ErrorMessage = ex.Message
-                        };
+                            using var stream = new GZipStream(File.Open(inputPath, FileMode.Open, FileAccess.Read, FileShare.Read), CompressionMode.Decompress);
+                            var xmlFlvFile = (XmlFlvFile)XmlFlvFile.Serializer.Deserialize(stream);
+                            return new FlvTagListReader(xmlFlvFile.Tags);
+                        });
                     }
+                    else if (inputPath.EndsWith(".xml", StringComparison.OrdinalIgnoreCase))
+                    {
+                        xmlMode = true;
+                        tagReader = await Task.Run(() =>
+                        {
+                            using var stream = File.Open(inputPath, FileMode.Open, FileAccess.Read, FileShare.Read);
+                            var xmlFlvFile = (XmlFlvFile)XmlFlvFile.Serializer.Deserialize(stream);
+                            return new FlvTagListReader(xmlFlvFile.Tags);
+                        });
+                    }
+                    else
+                    {
+                        flvFileStream = new FileStream(inputPath, FileMode.Open, FileAccess.Read, FileShare.Read, 4096, FileOptions.Asynchronous | FileOptions.SequentialScan);
+                        tagReader = new FlvTagPipeReader(PipeReader.Create(flvFileStream), memoryStreamProvider, skipData: false, logger: logger);
+                    }
+                }
+                catch (Exception ex) when (ex is not FlvException)
+                {
+                    return new CommandResponse<FixResponse>
+                    {
+                        Status = ResponseStatus.InputIOError,
+                        Exception = ex,
+                        ErrorMessage = ex.Message
+                    };
+                }
 
-                    using var grouping = new TagGroupReader(new FlvTagPipeReader(PipeReader.Create(inputStream), memoryStreamProvider, skipData: false, logger: logger));
-                    using var writer = new FlvProcessingContextWriter(tagWriter: tagWriter, allowMissingHeader: true);
-                    var pipeline = new ProcessingPipelineBuilder(new ServiceCollection().BuildServiceProvider()).AddDefault().AddRemoveFillerData().Build();
+                // Output
+                var outputPaths = new List<string>();
+                IFlvTagWriter tagWriter;
+                if (xmlMode)
+                {
+                    tagWriter = new FlvTagListWriter();
+                }
+                else
+                {
+                    var targetProvider = new AutoFixFlvWriterTargetProvider(request.OutputBase);
+                    targetProvider.BeforeFileOpen += (sender, path) => outputPaths.Add(path);
+                    tagWriter = new FlvTagFileWriter(targetProvider, memoryStreamProvider, logger);
+                }
 
+                // Pipeline
+                using var grouping = new TagGroupReader(tagReader);
+                using var writer = new FlvProcessingContextWriter(tagWriter: tagWriter, allowMissingHeader: true);
+                var pipeline = new ProcessingPipelineBuilder(new ServiceCollection().BuildServiceProvider()).AddDefault().AddRemoveFillerData().Build();
+
+                // Run
+                await Task.Run(async () =>
+                {
                     var count = 0;
                     while (true)
                     {
@@ -105,11 +146,41 @@ namespace BililiveRecorder.ToolBox.Commands
                                 foreach (var tag in dataAction.Tags)
                                     tag.BinaryData?.Dispose();
 
-                        if (count++ % 10 == 0 && progress is not null)
-                            await progress((double)inputStream.Position / inputStream.Length);
+                        if (count++ % 10 == 0 && progress is not null && flvFileStream is not null)
+                            await progress((double)flvFileStream.Position / flvFileStream.Length);
                     }
+                }).ConfigureAwait(false);
+
+                // Post Run
+                if (xmlMode)
+                {
+                    await Task.Run(() =>
+                    {
+                        var w = (FlvTagListWriter)tagWriter;
+
+                        for (var i = 0; i < w.Files.Count; i++)
+                        {
+                            var path = Path.ChangeExtension(request.OutputBase, $"fix_p{i + 1}.brec.xml");
+                            outputPaths.Add(path);
+                            using var file = new StreamWriter(File.Create(path));
+                            XmlFlvFile.Serializer.Serialize(file, new XmlFlvFile { Tags = w.Files[i] });
+                        }
+
+                        if (w.AlternativeHeaders.Count > 0)
+                        {
+                            var path = Path.ChangeExtension(request.OutputBase, $"headers.txt");
+                            using var writer = new StreamWriter(File.Open(path, FileMode.Append, FileAccess.Write, FileShare.None));
+                            foreach (var tag in w.AlternativeHeaders)
+                            {
+                                writer.WriteLine();
+                                writer.WriteLine(tag.ToString());
+                                writer.WriteLine(tag.BinaryDataForSerializationUseOnly);
+                            }
+                        }
+                    });
                 }
 
+                // Result
                 var response = await Task.Run(() =>
                 {
                     var countableComments = comments.Where(x => x.T != CommentType.Logging).ToArray();
@@ -125,6 +196,7 @@ namespace BililiveRecorder.ToolBox.Commands
                         IssueTypeOther = countableComments.Count(x => x.T == CommentType.Other),
                         IssueTypeUnrepairable = countableComments.Count(x => x.T == CommentType.Unrepairable),
                         IssueTypeTimestampJump = countableComments.Count(x => x.T == CommentType.TimestampJump),
+                        IssueTypeTimestampOffset = countableComments.Count(x => x.T == CommentType.TimestampOffset),
                         IssueTypeDecodingHeader = countableComments.Count(x => x.T == CommentType.DecodingHeader),
                         IssueTypeRepeatingData = countableComments.Count(x => x.T == CommentType.RepeatingData)
                     };
@@ -161,7 +233,7 @@ namespace BililiveRecorder.ToolBox.Commands
             }
             finally
             {
-                inputStream?.Dispose();
+                flvFileStream?.Dispose();
             }
         }
 
@@ -218,7 +290,7 @@ namespace BililiveRecorder.ToolBox.Commands
             {
                 var i = this.fileIndex++;
                 var path = Path.ChangeExtension(this.pathTemplate, $"fix_p{i}.flv");
-                var fileStream = File.Create(path);
+                var fileStream = File.Open(path, FileMode.CreateNew, FileAccess.Write, FileShare.Read);
                 BeforeFileOpen?.Invoke(this, path);
                 return (fileStream, null!);
             }

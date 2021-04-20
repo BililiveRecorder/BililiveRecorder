@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using BililiveRecorder.Flv.Grouping;
 using BililiveRecorder.Flv.Pipeline;
+using BililiveRecorder.Flv.Writer;
 using BililiveRecorder.Flv.Xml;
 using Newtonsoft.Json;
 using Xunit;

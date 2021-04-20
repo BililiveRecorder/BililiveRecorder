@@ -6,6 +6,7 @@ namespace BililiveRecorder.Flv.Pipeline
         Logging,
         Unrepairable,
         TimestampJump,
+        TimestampOffset,
         DecodingHeader,
         RepeatingData,
     }

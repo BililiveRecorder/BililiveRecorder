@@ -5,6 +5,7 @@ using System.Windows;
 using BililiveRecorder.WPF.Controls;
 using Hardcodet.Wpf.TaskbarNotification;
 using ModernWpf.Controls;
+using Serilog;
 using WPFLocalizeExtension.Engine;
 using WPFLocalizeExtension.Extensions;
 
@@ -111,6 +112,7 @@ namespace BililiveRecorder.WPF
             else
             {
                 SingleInstance.NotificationReceived -= this.SingleInstance_NotificationReceived;
+                Log.Logger.ForContext<NewMainWindow>().Debug("Window Closing");
                 NativeBeforeWindowClose?.Invoke(this, EventArgs.Empty);
                 return;
             }

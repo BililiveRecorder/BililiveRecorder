@@ -7,6 +7,7 @@ using BililiveRecorder.Core.Config;
 using BililiveRecorder.Core.Config.V2;
 using BililiveRecorder.Core.Event;
 using BililiveRecorder.Core.SimpleWebhook;
+using Serilog;
 
 namespace BililiveRecorder.Core
 {
@@ -15,15 +16,17 @@ namespace BililiveRecorder.Core
         private readonly object lockObject = new object();
         private readonly ObservableCollection<IRoom> roomCollection;
         private readonly IRoomFactory roomFactory;
+        private readonly ILogger logger;
         private readonly BasicWebhookV1 basicWebhookV1;
         private readonly BasicWebhookV2 basicWebhookV2;
 
         private bool disposedValue;
 
-        public Recorder(IRoomFactory roomFactory, ConfigV2 config)
+        public Recorder(IRoomFactory roomFactory, ConfigV2 config, ILogger logger)
         {
             this.roomFactory = roomFactory ?? throw new ArgumentNullException(nameof(roomFactory));
             this.Config = config ?? throw new ArgumentNullException(nameof(config));
+            this.logger = logger?.ForContext<Recorder>() ?? throw new ArgumentNullException(nameof(logger));
             this.roomCollection = new ObservableCollection<IRoom>();
             this.Rooms = new ReadOnlyObservableCollection<IRoom>(this.roomCollection);
 
@@ -169,6 +172,7 @@ namespace BililiveRecorder.Core
                 if (disposing)
                 {
                     // dispose managed state (managed objects)
+                    this.logger.Debug("Dispose called");
                     this.SaveConfig();
                     foreach (var room in this.roomCollection)
                         room.Dispose();

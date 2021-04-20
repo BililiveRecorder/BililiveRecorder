@@ -34,6 +34,7 @@ namespace BililiveRecorder.ToolBox.Commands
         public int IssueTypeOther { get; set; }
         public int IssueTypeUnrepairable { get; set; }
         public int IssueTypeTimestampJump { get; set; }
+        public int IssueTypeTimestampOffset { get; set; }
         public int IssueTypeDecodingHeader { get; set; }
         public int IssueTypeRepeatingData { get; set; }
     }
@@ -46,18 +47,17 @@ namespace BililiveRecorder.ToolBox.Commands
 
         public async Task<CommandResponse<AnalyzeResponse>> Handle(AnalyzeRequest request, Func<double, Task>? progress)
         {
+            FileStream? flvFileStream = null;
             try
             {
                 var memoryStreamProvider = new DefaultMemoryStreamProvider();
-                var tagWriter = new AnalyzeMockFlvTagWriter();
                 var comments = new List<ProcessingComment>();
                 var context = new FlvProcessingContext();
                 var session = new Dictionary<object, object?>();
 
+                // Input
                 string? inputPath;
                 IFlvTagReader tagReader;
-                FileStream? flvFileStream = null;
-
                 try
                 {
                     inputPath = Path.GetFullPath(request.Input);
@@ -77,7 +77,7 @@ namespace BililiveRecorder.ToolBox.Commands
                         });
                     else
                     {
-                        flvFileStream = File.Open(inputPath, FileMode.Open, FileAccess.Read, FileShare.Read);
+                        flvFileStream = new FileStream(inputPath, FileMode.Open, FileAccess.Read, FileShare.Read, 4096, FileOptions.Asynchronous | FileOptions.SequentialScan);
                         tagReader = new FlvTagPipeReader(PipeReader.Create(flvFileStream), memoryStreamProvider, skipData: false, logger: logger);
                     }
                 }
@@ -91,37 +91,46 @@ namespace BililiveRecorder.ToolBox.Commands
                     };
                 }
 
+                // Output
+                var tagWriter = new AnalyzeMockFlvTagWriter();
+
+                // Pipeline
                 using var grouping = new TagGroupReader(tagReader);
                 using var writer = new FlvProcessingContextWriter(tagWriter: tagWriter, allowMissingHeader: true);
                 var pipeline = new ProcessingPipelineBuilder(new ServiceCollection().BuildServiceProvider()).AddDefault().AddRemoveFillerData().Build();
 
-                var count = 0;
-                while (true)
+                // Run
+                await Task.Run(async () =>
                 {
-                    var group = await grouping.ReadGroupAsync(default).ConfigureAwait(false);
-                    if (group is null)
-                        break;
-
-                    context.Reset(group, session);
-                    pipeline(context);
-
-                    if (context.Comments.Count > 0)
+                    var count = 0;
+                    while (true)
                     {
-                        comments.AddRange(context.Comments);
-                        logger.Debug("分析逻辑输出 {@Comments}", context.Comments);
+                        var group = await grouping.ReadGroupAsync(default).ConfigureAwait(false);
+                        if (group is null)
+                            break;
+
+                        context.Reset(group, session);
+                        pipeline(context);
+
+                        if (context.Comments.Count > 0)
+                        {
+                            comments.AddRange(context.Comments);
+                            logger.Debug("分析逻辑输出 {@Comments}", context.Comments);
+                        }
+
+                        await writer.WriteAsync(context).ConfigureAwait(false);
+
+                        foreach (var action in context.Actions)
+                            if (action is PipelineDataAction dataAction)
+                                foreach (var tag in dataAction.Tags)
+                                    tag.BinaryData?.Dispose();
+
+                        if (count++ % 10 == 0 && flvFileStream is not null && progress is not null)
+                            await progress((double)flvFileStream.Position / flvFileStream.Length);
                     }
+                }).ConfigureAwait(false);
 
-                    await writer.WriteAsync(context).ConfigureAwait(false);
-
-                    foreach (var action in context.Actions)
-                        if (action is PipelineDataAction dataAction)
-                            foreach (var tag in dataAction.Tags)
-                                tag.BinaryData?.Dispose();
-
-                    if (count++ % 10 == 0 && flvFileStream is not null && progress is not null)
-                        await progress((double)flvFileStream.Position / flvFileStream.Length);
-                }
-
+                // Result
                 var response = await Task.Run(() =>
                 {
                     var countableComments = comments.Where(x => x.T != CommentType.Logging).ToArray();
@@ -137,6 +146,7 @@ namespace BililiveRecorder.ToolBox.Commands
                         IssueTypeOther = countableComments.Count(x => x.T == CommentType.Other),
                         IssueTypeUnrepairable = countableComments.Count(x => x.T == CommentType.Unrepairable),
                         IssueTypeTimestampJump = countableComments.Count(x => x.T == CommentType.TimestampJump),
+                        IssueTypeTimestampOffset = countableComments.Count(x => x.T == CommentType.TimestampOffset),
                         IssueTypeDecodingHeader = countableComments.Count(x => x.T == CommentType.DecodingHeader),
                         IssueTypeRepeatingData = countableComments.Count(x => x.T == CommentType.RepeatingData)
                     };
@@ -174,6 +184,10 @@ namespace BililiveRecorder.ToolBox.Commands
                     Exception = ex,
                     ErrorMessage = ex.Message
                 };
+            }
+            finally
+            {
+                flvFileStream?.Dispose();
             }
         }
 

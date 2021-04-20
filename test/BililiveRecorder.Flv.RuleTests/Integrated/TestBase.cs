@@ -16,14 +16,23 @@ namespace BililiveRecorder.Flv.RuleTests.Integrated
     {
         protected XmlFlvFile LoadFile(string path)
         {
-            if (Path.GetExtension(path) == ".gz")
-                return (XmlFlvFile)XmlFlvFile.Serializer.Deserialize(new GZipStream(File.Open(path, FileMode.Open, FileAccess.Read, FileShare.Read), CompressionMode.Decompress));
+            Stream? stream = null;
+            try
+            {
+                var gz_path = path + ".gz";
+                if (Path.GetExtension(path) == ".gz")
+                    stream = new GZipStream(File.Open(path, FileMode.Open, FileAccess.Read, FileShare.Read), CompressionMode.Decompress);
+                else if (File.Exists(gz_path))
+                    stream = new GZipStream(File.Open(gz_path, FileMode.Open, FileAccess.Read, FileShare.Read), CompressionMode.Decompress);
+                else
+                    stream = File.Open(path, FileMode.Open, FileAccess.Read, FileShare.Read);
 
-            var gz = path + ".gz";
-            if (File.Exists(gz))
-                return (XmlFlvFile)XmlFlvFile.Serializer.Deserialize(new GZipStream(File.Open(gz, FileMode.Open, FileAccess.Read, FileShare.Read), CompressionMode.Decompress));
-
-            return (XmlFlvFile)XmlFlvFile.Serializer.Deserialize(File.Open(path, FileMode.Open, FileAccess.Read, FileShare.Read));
+                return (XmlFlvFile)XmlFlvFile.Serializer.Deserialize(stream);
+            }
+            finally
+            {
+                stream?.Dispose();
+            }
         }
 
         protected ProcessingDelegate BuildPipeline() =>
