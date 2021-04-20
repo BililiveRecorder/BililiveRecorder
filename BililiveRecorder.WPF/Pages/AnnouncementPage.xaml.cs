@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Net.Http;
@@ -55,11 +56,10 @@ namespace BililiveRecorder.WPF.Pages
             {
                 try
                 {
-#if DEBUG
-                    var uri = $"http://rec.127-0-0-1.nip.io/wpf/announcement.php?c={CultureInfo.Name}";
-#else
-                    var uri = $"https://rec.danmuji.org/wpf/announcement.xml?c={CultureInfo.Name}";
-#endif
+                    var uri = Debugger.IsAttached
+                        ? $"http://rec.127-0-0-1.nip.io/wpf/announcement.php?c={CultureInfo.Name}"
+                        : $"https://rec.danmuji.org/wpf/announcement.xml?c={CultureInfo.Name}";
+
                     var resp = await client.GetAsync(uri);
                     var stream = await resp.EnsureSuccessStatusCode().Content.ReadAsStreamAsync();
                     var mstream = new MemoryStream();
