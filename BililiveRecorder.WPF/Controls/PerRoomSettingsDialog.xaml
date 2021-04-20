@@ -46,6 +46,20 @@
                         </local:SettingWithDefault>
                     </StackPanel>
                 </GroupBox>
+                <GroupBox Header="录制模式">
+                    <StackPanel>
+                        <local:SettingWithDefault IsSettingNotUsingDefault="{Binding HasRecordMode}">
+                            <StackPanel>
+                                <RadioButton GroupName="RecordMode" Content="标准模式"
+                                             IsChecked="{Binding Path=RecordMode, Converter={StaticResource EnumToBooleanConverter},
+                                    ConverterParameter={x:Static confiv2:RecordMode.Standard}}" />
+                                <RadioButton GroupName="RecordMode" Content="原始数据模式"
+                                             IsChecked="{Binding Path=RecordMode, Converter={StaticResource EnumToBooleanConverter},
+                                    ConverterParameter={x:Static confiv2:RecordMode.RawData}}" />
+                            </StackPanel>
+                        </local:SettingWithDefault>
+                    </StackPanel>
+                </GroupBox>
                 <GroupBox Header="{l:Loc Settings_Splitting_Title}">
                     <StackPanel>
                         <local:SettingWithDefault IsSettingNotUsingDefault="{Binding HasCuttingMode}">

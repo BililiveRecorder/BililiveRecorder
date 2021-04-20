@@ -29,6 +29,14 @@ namespace BililiveRecorder.Core.Config.V2
         public Optional<bool> OptionalAutoRecord { get => this.GetPropertyValueOptional<bool>(nameof(this.AutoRecord)); set => this.SetPropertyValueOptional(value, nameof(this.AutoRecord)); }
 
         /// <summary>
+        /// 录制模式
+        /// </summary>
+        public RecordMode RecordMode { get => this.GetPropertyValue<RecordMode>(); set => this.SetPropertyValue(value); }
+        public bool HasRecordMode { get => this.GetPropertyHasValue(nameof(this.RecordMode)); set => this.SetPropertyHasValue<RecordMode>(value, nameof(this.RecordMode)); }
+        [JsonProperty(nameof(RecordMode)), EditorBrowsable(EditorBrowsableState.Never)]
+        public Optional<RecordMode> OptionalRecordMode { get => this.GetPropertyValueOptional<RecordMode>(nameof(this.RecordMode)); set => this.SetPropertyValueOptional(value, nameof(this.RecordMode)); }
+
+        /// <summary>
         /// 录制文件自动切割模式
         /// </summary>
         public CuttingMode CuttingMode { get => this.GetPropertyValue<CuttingMode>(); set => this.SetPropertyValue(value); }
@@ -246,6 +254,14 @@ namespace BililiveRecorder.Core.Config.V2
         public Optional<bool> OptionalWpfShowTitleAndArea { get => this.GetPropertyValueOptional<bool>(nameof(this.WpfShowTitleAndArea)); set => this.SetPropertyValueOptional(value, nameof(this.WpfShowTitleAndArea)); }
 
         /// <summary>
+        /// 录制模式
+        /// </summary>
+        public RecordMode RecordMode { get => this.GetPropertyValue<RecordMode>(); set => this.SetPropertyValue(value); }
+        public bool HasRecordMode { get => this.GetPropertyHasValue(nameof(this.RecordMode)); set => this.SetPropertyHasValue<RecordMode>(value, nameof(this.RecordMode)); }
+        [JsonProperty(nameof(RecordMode)), EditorBrowsable(EditorBrowsableState.Never)]
+        public Optional<RecordMode> OptionalRecordMode { get => this.GetPropertyValueOptional<RecordMode>(nameof(this.RecordMode)); set => this.SetPropertyValueOptional(value, nameof(this.RecordMode)); }
+
+        /// <summary>
         /// 录制文件自动切割模式
         /// </summary>
         public CuttingMode CuttingMode { get => this.GetPropertyValue<CuttingMode>(); set => this.SetPropertyValue(value); }
@@ -331,6 +347,8 @@ namespace BililiveRecorder.Core.Config.V2
         public string RecordFilenameFormat => @"{roomid}-{name}/录制-{roomid}-{date}-{time}-{title}.flv";
 
         public bool WpfShowTitleAndArea => true;
+
+        public RecordMode RecordMode => RecordMode.Standard;
 
         public CuttingMode CuttingMode => CuttingMode.Disabled;
 

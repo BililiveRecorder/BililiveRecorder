@@ -64,7 +64,7 @@ module.exports = {
         "type": "bool",
         "desc": "是否显示直播间标题和分区",
         "default": "true",
-    },],
+    }, ],
     "room": [{
         "name": "RoomId",
         "type": "int",
@@ -77,6 +77,11 @@ module.exports = {
         "desc": "是否启用自动录制",
         "default": "default",
         "without_global": true
+    }, {
+        "name": "RecordMode",
+        "type": "RecordMode",
+        "desc": "录制模式",
+        "default": "RecordMode.Standard"
     }, {
         "name": "CuttingMode",
         "type": "CuttingMode",
@@ -112,5 +117,5 @@ module.exports = {
         "type": "bool",
         "desc": "是否同时录制 上船",
         "default": "true"
-    },]
+    }, ]
 }
