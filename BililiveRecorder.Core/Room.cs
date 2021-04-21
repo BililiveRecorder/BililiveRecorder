@@ -41,8 +41,9 @@ namespace BililiveRecorder.Core
         private string title = string.Empty;
         private string areaNameParent = string.Empty;
         private string areaNameChild = string.Empty;
-        private bool streaming;
         private bool danmakuConnected;
+        private bool streaming;
+        private bool autoRecordForThisSession = true;
 
         private IRecordTask? recordTask;
         private DateTimeOffset recordTaskStartTime;
@@ -62,8 +63,11 @@ namespace BililiveRecorder.Core
             this.cts = new CancellationTokenSource();
             this.ct = this.cts.Token;
 
+            this.PropertyChanged += this.Room_PropertyChanged;
             this.RoomConfig.PropertyChanged += this.RoomConfig_PropertyChanged;
+
             this.timer.Elapsed += this.Timer_Elapsed;
+
             this.danmakuClient.StatusChanged += this.DanmakuClient_StatusChanged;
             this.danmakuClient.DanmakuReceived += this.DanmakuClient_DanmakuReceived;
 
@@ -79,28 +83,14 @@ namespace BililiveRecorder.Core
         public string Title { get => this.title; private set => this.SetField(ref this.title, value); }
         public string AreaNameParent { get => this.areaNameParent; private set => this.SetField(ref this.areaNameParent, value); }
         public string AreaNameChild { get => this.areaNameChild; private set => this.SetField(ref this.areaNameChild, value); }
-        public bool Streaming
-        {
-            get => this.streaming;
-            private set
-            {
-                if (value == this.streaming) return;
 
-                // 从未开播状态切换为开播状态时重置允许录制状态
-                var triggerRecord = value && !this.streaming;
-                if (triggerRecord)
-                    this.AutoRecordAllowedForThisSession = true;
+        public bool Streaming { get => this.streaming; private set => this.SetField(ref this.streaming, value); }
 
-                this.streaming = value;
-                this.OnPropertyChanged(nameof(this.Streaming));
-                if (triggerRecord && this.RoomConfig.AutoRecord)
-                    _ = Task.Run(() => this.CreateAndStartNewRecordTask());
-            }
-        }
+        public bool AutoRecordForThisSession { get => this.autoRecordForThisSession; private set => this.SetField(ref this.autoRecordForThisSession, value); }
+
         public bool DanmakuConnected { get => this.danmakuConnected; private set => this.SetField(ref this.danmakuConnected, value); }
-        public bool Recording => this.recordTask != null;
 
-        public bool AutoRecordAllowedForThisSession { get; private set; }
+        public bool Recording => this.recordTask != null;
 
         public RoomConfig RoomConfig { get; }
         public RecordingStats Stats { get; } = new RecordingStats();
@@ -127,13 +117,13 @@ namespace BililiveRecorder.Core
         {
             lock (this.recordStartLock)
             {
-                this.AutoRecordAllowedForThisSession = true;
+                this.AutoRecordForThisSession = true;
 
-                _ = Task.Run(async () =>
+                _ = Task.Run(() =>
                 {
                     try
                     {
-                        await this.FetchRoomInfoThenCreateRecordTaskAsync().ConfigureAwait(false);
+                        this.CreateAndStartNewRecordTask();
                     }
                     catch (Exception ex)
                     {
@@ -147,7 +137,7 @@ namespace BililiveRecorder.Core
         {
             lock (this.recordStartLock)
             {
-                this.AutoRecordAllowedForThisSession = false;
+                this.AutoRecordForThisSession = false;
 
                 if (this.recordTask == null)
                     return;
@@ -163,6 +153,9 @@ namespace BililiveRecorder.Core
                 await this.FetchUserInfoAsync().ConfigureAwait(false);
                 await this.FetchRoomInfoAsync().ConfigureAwait(false);
                 this.StartDamakuConnection(delay: false);
+
+                if (this.Streaming && this.AutoRecordForThisSession && this.RoomConfig.AutoRecord)
+                    this.CreateAndStartNewRecordTask();
             }
             catch (Exception ex)
             {
@@ -192,13 +185,6 @@ namespace BililiveRecorder.Core
         {
             var user = await this.apiClient.GetUserInfoAsync(this.RoomConfig.RoomId).ConfigureAwait(false);
             this.Name = user.Data?.Info?.Name ?? this.Name;
-        }
-
-        /// <exception cref="Exception"/>
-        private async Task FetchRoomInfoThenCreateRecordTaskAsync()
-        {
-            await this.FetchRoomInfoAsync().ConfigureAwait(false);
-            this.CreateAndStartNewRecordTask();
         }
 
         ///
@@ -237,8 +223,11 @@ namespace BililiveRecorder.Core
                         this.logger.Write(ex is ExecutionRejectedException ? LogEventLevel.Debug : LogEventLevel.Warning, ex, "启动录制出错");
 
                         this.recordTask = null;
-                        _ = Task.Run(async () => await this.TryRestartRecordingAsync().ConfigureAwait(false));
                         this.OnPropertyChanged(nameof(this.Recording));
+
+                        // 请求直播流出错时的重试逻辑
+                        _ = Task.Run(async () => await this.RestartAfterRecordTaskFailedAsync().ConfigureAwait(false));
+
                         return;
                     }
                     RecordSessionStarted?.Invoke(this, new RecordSessionStartedEventArgs(this)
@@ -250,37 +239,39 @@ namespace BililiveRecorder.Core
         }
 
         ///
-        private async Task TryRestartRecordingAsync(bool delay = true)
+        private async Task RestartAfterRecordTaskFailedAsync()
         {
-            if (this.AutoRecordAllowedForThisSession)
+            if (!this.Streaming || !this.AutoRecordForThisSession)
+                return;
+
+            try
             {
+                if (!await this.recordRetryDelaySemaphoreSlim.WaitAsync(0).ConfigureAwait(false))
+                    return;
+
                 try
                 {
-                    if (delay)
-                    {
-                        if (!await this.recordRetryDelaySemaphoreSlim.WaitAsync(0).ConfigureAwait(false))
-                            return;
-
-                        try
-                        {
-                            await Task.Delay((int)this.RoomConfig.TimingStreamRetry, this.ct).ConfigureAwait(false);
-                        }
-                        finally
-                        {
-                            this.recordRetryDelaySemaphoreSlim.Release();
-                        }
-                    }
-
-                    if (!this.AutoRecordAllowedForThisSession)
-                        return;
-
-                    await this.FetchRoomInfoThenCreateRecordTaskAsync().ConfigureAwait(false);
+                    await Task.Delay((int)this.RoomConfig.TimingStreamRetry, this.ct).ConfigureAwait(false);
                 }
-                catch (TaskCanceledException) { }
-                catch (Exception ex)
+                finally
                 {
-                    this.logger.Write(ex is ExecutionRejectedException ? LogEventLevel.Debug : LogEventLevel.Warning, ex, "重试开始录制时出错");
+                    this.recordRetryDelaySemaphoreSlim.Release();
                 }
+
+                if (!this.Streaming || !this.AutoRecordForThisSession)
+                    return;
+
+                await this.FetchRoomInfoAsync().ConfigureAwait(false);
+
+                if (this.Streaming && this.AutoRecordForThisSession)
+                    this.CreateAndStartNewRecordTask();
+            }
+            catch (TaskCanceledException) { }
+            catch (ExecutionRejectedException) { }
+            catch (Exception ex)
+            {
+                this.logger.Write(LogEventLevel.Warning, ex, "重试开始录制时出错");
+                _ = Task.Run(async () => await this.RestartAfterRecordTaskFailedAsync().ConfigureAwait(false));
             }
         }
 
@@ -363,7 +354,17 @@ namespace BililiveRecorder.Core
             {
                 id = this.recordTask?.SessionId ?? default;
                 this.recordTask = null;
-                _ = Task.Run(async () => await this.TryRestartRecordingAsync(delay: false).ConfigureAwait(false));
+                _ = Task.Run(async () =>
+                {
+                    // 录制结束退出后的重试逻辑
+                    if (!this.Streaming || !this.AutoRecordForThisSession)
+                        return;
+
+                    await this.FetchRoomInfoAsync().ConfigureAwait(false);
+
+                    if (this.Streaming && this.AutoRecordForThisSession)
+                        this.CreateAndStartNewRecordTask();
+                });
             }
 
             this.basicDanmakuWriter.Disable();
@@ -410,14 +411,44 @@ namespace BililiveRecorder.Core
             else
             {
                 this.DanmakuConnected = false;
-                this.StartDamakuConnection();
+                this.StartDamakuConnection(delay: true);
             }
         }
 
         private void Timer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
+            this.StartDamakuConnection(delay: false);
+
             if (this.RoomConfig.AutoRecord)
-                _ = Task.Run(async () => await this.TryRestartRecordingAsync(delay: false).ConfigureAwait(false));
+            {
+                _ = Task.Run(async () =>
+                {
+                    await this.FetchRoomInfoAsync().ConfigureAwait(false);
+
+                    if (this.Streaming && this.AutoRecordForThisSession && this.RoomConfig.AutoRecord)
+                        this.CreateAndStartNewRecordTask();
+                });
+            }
+        }
+
+        private void Room_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            switch (e.PropertyName)
+            {
+                case nameof(this.Streaming):
+                    if (this.Streaming)
+                    {
+                        if (this.AutoRecordForThisSession && this.RoomConfig.AutoRecord)
+                            this.CreateAndStartNewRecordTask();
+                    }
+                    else
+                    {
+                        this.AutoRecordForThisSession = true;
+                    }
+                    break;
+                default:
+                    break;
+            }
         }
 
         private void RoomConfig_PropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -432,7 +463,11 @@ namespace BililiveRecorder.Core
                     break;
                 case nameof(this.RoomConfig.AutoRecord):
                     if (this.RoomConfig.AutoRecord)
-                        this.AutoRecordAllowedForThisSession = true;
+                    {
+                        this.AutoRecordForThisSession = true;
+                        if (this.Streaming && this.AutoRecordForThisSession)
+                            this.CreateAndStartNewRecordTask();
+                    }
                     break;
                 default:
                     break;

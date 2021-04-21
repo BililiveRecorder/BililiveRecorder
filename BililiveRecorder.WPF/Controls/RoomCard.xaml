@@ -28,7 +28,6 @@
                        TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" FontFamily="Microsoft Yahei" 
                        Text="{Binding Name,Mode=OneWay}" ToolTip="{Binding Name,Mode=OneWay}"
                        ContextMenu="{StaticResource CopyTextContextMenu}"/>
-
             <Grid Grid.Row="1">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
@@ -52,17 +51,20 @@
                 </StackPanel>
                 <StackPanel Grid.Row="3" VerticalAlignment="Center" HorizontalAlignment="Stretch" Orientation="Horizontal">
                     <ui:PathIcon Height="10" Margin="0,0,2,0" Style="{Binding DanmakuConnected,Converter={StaticResource BooleanToDanmakuConnectedStyleConverter}}"
-                             Foreground="{Binding DanmakuConnected,Converter={StaticResource BooleanToDanmakuConnectedColorBrushConverter}}"
-                             ToolTip="{Binding DanmakuConnected,Converter={StaticResource BooleanToDanmakuConnectedTooltipConverter}}"/>
+                                 Foreground="{Binding DanmakuConnected,Converter={StaticResource BooleanToDanmakuConnectedColorBrushConverter}}"
+                                 ToolTip="{Binding DanmakuConnected,Converter={StaticResource BooleanToDanmakuConnectedTooltipConverter}}"/>
                     <ui:PathIcon Height="10" Margin="0,0,3,0" Style="{StaticResource PathIconDataAccessPoint}"
-                             Foreground="{Binding Streaming,Converter={StaticResource BooleanToLiveStatusColorBrushConverter}}"
-                             ToolTip="{Binding Streaming,Converter={StaticResource BooleanToLiveStatusTooltipConverter}}"/>
+                                 Foreground="{Binding Streaming,Converter={StaticResource BooleanToLiveStatusColorBrushConverter}}"
+                                 ToolTip="{Binding Streaming,Converter={StaticResource BooleanToLiveStatusTooltipConverter}}"/>
+                    <ui:PathIcon Height="10" Margin="0,0,3,0" Style="{StaticResource PathIconDataVideoOffOutline}"
+                                 Visibility="{Binding AutoRecordForThisSession,Converter={StaticResource InvertBooleanToVisibilityCollapsedConverter}}"
+                                 Foreground="DarkOrange" ToolTip="本次直播不再自动录制，结束直播时恢复"/>
                     <ui:PathIcon Height="10" Style="{StaticResource PathIconDataUpperCaseIdentifier}" />
                     <TextBlock Text="{Binding RoomConfig.RoomId, StringFormat=\{0\},Mode=OneWay}" ContextMenu="{StaticResource CopyTextContextMenu}" Margin="4,0" FontSize="11"/>
                     <ui:PathIcon Height="10" Style="{StaticResource PathIconDataLowerCaseIdentifier}" Margin="3,0"
-                             Visibility="{Binding ShortId,Converter={StaticResource ShortRoomIdToVisibilityConverter}}"/>
+                                 Visibility="{Binding ShortId,Converter={StaticResource ShortRoomIdToVisibilityConverter}}"/>
                     <TextBlock Text="{Binding ShortId, StringFormat=\{0\},Mode=OneWay}" ContextMenu="{StaticResource CopyTextContextMenu}" FontSize="11"
-                           Visibility="{Binding ShortId,Converter={StaticResource ShortRoomIdToVisibilityConverter}}"/>
+                               Visibility="{Binding ShortId,Converter={StaticResource ShortRoomIdToVisibilityConverter}}"/>
                 </StackPanel>
                 <Menu Grid.Column="1" Grid.RowSpan="3" VerticalAlignment="Center" HorizontalAlignment="Right">
                     <MenuItem ToolTip="{l:Loc RoomCard_Menu_Tooltip}">

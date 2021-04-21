@@ -21,6 +21,7 @@ namespace BililiveRecorder.Core
         bool Recording { get; }
         bool Streaming { get; }
         bool DanmakuConnected { get; }
+        bool AutoRecordForThisSession { get; }
         RecordingStats Stats { get; }
 
         event EventHandler<RecordSessionStartedEventArgs>? RecordSessionStarted;

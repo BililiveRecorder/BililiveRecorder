@@ -34,11 +34,11 @@
             Null="{StaticResource AddRoomCardTemplate}"/>
         <converters:BoolToValueConverter x:Key="BooleanToUniformGridLayoutConverter">
             <converters:BoolToValueConverter.TrueValue>
-                <ui:UniformGridLayout MinItemWidth="220" MinItemHeight="125"
+                <ui:UniformGridLayout MinItemWidth="230" MinItemHeight="125"
                     ItemsStretch="None" MinRowSpacing="7" MinColumnSpacing="5"/>
             </converters:BoolToValueConverter.TrueValue>
             <converters:BoolToValueConverter.FalseValue>
-                <ui:UniformGridLayout MinItemWidth="220" MinItemHeight="100"
+                <ui:UniformGridLayout MinItemWidth="230" MinItemHeight="100"
                     ItemsStretch="None" MinRowSpacing="7" MinColumnSpacing="5"/>
             </converters:BoolToValueConverter.FalseValue>
         </converters:BoolToValueConverter>

@@ -19,7 +19,7 @@
         ui:TitleBar.IsBackEnabled="False"
         ui:TitleBar.IsBackButtonVisible="False"
         ui:TitleBar.IsIconVisible="True"
-        Width="960" Height="650" MinHeight="400" MinWidth="340"
+        Width="1000" Height="650" MinHeight="400" MinWidth="340"
         WindowStartupLocation="CenterScreen"
         FontFamily="Microsoft YaHei"
         Closing="Window_Closing" StateChanged="Window_StateChanged" 
