@@ -134,11 +134,13 @@ namespace BililiveRecorder.Core.Recording
             var now = DateTime.Now;
             var date = now.ToString("yyyyMMdd");
             var time = now.ToString("HHmmss");
+            var ms = now.ToString("fff");
             var randomStr = this.random.Next(100, 999).ToString();
 
             var relativePath = formatString
                 .Replace(@"{date}", date)
                 .Replace(@"{time}", time)
+                .Replace(@"{ms}", ms)
                 .Replace(@"{random}", randomStr)
                 .Replace(@"{roomid}", this.room.RoomConfig.RoomId.ToString())
                 .Replace(@"{title}", RemoveInvalidFileName(this.room.Title))

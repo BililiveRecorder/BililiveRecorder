@@ -344,7 +344,7 @@ namespace BililiveRecorder.Core.Config.V2
 
         public string LiveApiHost => "https://api.live.bilibili.com";
 
-        public string RecordFilenameFormat => @"{roomid}-{name}/录制-{roomid}-{date}-{time}-{title}.flv";
+        public string RecordFilenameFormat => @"{roomid}-{name}/录制-{roomid}-{date}-{time}-{ms}-{title}.flv";
 
         public bool WpfShowTitleAndArea => true;
 

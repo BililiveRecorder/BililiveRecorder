@@ -57,7 +57,7 @@ module.exports = {
         "name": "RecordFilenameFormat",
         "type": "string",
         "desc": "录制文件名模板",
-        "default": "@\"{roomid}-{name}/录制-{roomid}-{date}-{time}-{title}.flv\"",
+        "default": "@\"{roomid}-{name}/录制-{roomid}-{date}-{time}-{ms}-{title}.flv\"",
         "nullable": true
     }, {
         "name": "WpfShowTitleAndArea",
