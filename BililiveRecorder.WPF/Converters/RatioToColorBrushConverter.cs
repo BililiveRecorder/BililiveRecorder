@@ -8,6 +8,7 @@ namespace BililiveRecorder.WPF.Converters
 {
     internal class RatioToColorBrushConverter : IValueConverter
     {
+        private static readonly SolidColorBrush Disabled = new SolidColorBrush(Colors.AliceBlue);
         private static readonly SolidColorBrush[] ColorMap;
 
         static RatioToColorBrushConverter()
@@ -29,7 +30,12 @@ namespace BililiveRecorder.WPF.Converters
 
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            var i = (int)Math.Ceiling((1.1d - Math.Abs((1d - (double)value) * 4d)) * 20d);
+            var input = (double)value;
+
+            if (double.IsNaN(input))
+                return Disabled;
+
+            var i = (int)Math.Ceiling((1.1d - Math.Abs((1d - input) * 4d)) * 20d);
             return i switch
             {
                 < 0 => ColorMap[0],

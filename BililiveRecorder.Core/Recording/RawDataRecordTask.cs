@@ -27,23 +27,22 @@ namespace BililiveRecorder.Core.Recording
 
         protected override void StartRecordingLoop(Stream stream)
         {
-            var paths = this.CreateFileName();
+            var (fullPath, relativePath) = this.CreateFileName();
 
             try
-            { Directory.CreateDirectory(Path.GetDirectoryName(paths.fullPath)); }
+            { Directory.CreateDirectory(Path.GetDirectoryName(fullPath)); }
             catch (Exception) { }
 
             this.fileOpeningEventArgs = new RecordFileOpeningEventArgs(this.room)
             {
                 SessionId = this.SessionId,
-                FullPath = paths.fullPath,
-                RelativePath = paths.relativePath,
+                FullPath = fullPath,
+                RelativePath = relativePath,
                 FileOpenTime = DateTimeOffset.Now,
             };
             this.OnRecordFileOpening(this.fileOpeningEventArgs);
 
-
-            var file = new FileStream(paths.fullPath, FileMode.CreateNew, FileAccess.ReadWrite, FileShare.Read | FileShare.Delete);
+            var file = new FileStream(fullPath, FileMode.CreateNew, FileAccess.ReadWrite, FileShare.Read | FileShare.Delete);
 
             _ = Task.Run(async () => await this.WriteStreamToFileAsync(stream, file).ConfigureAwait(false));
         }

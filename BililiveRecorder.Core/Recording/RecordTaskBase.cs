@@ -44,7 +44,7 @@ namespace BililiveRecorder.Core.Recording
 
             this.ct = this.cts.Token;
 
-            this.timer.Elapsed += this.Timer_Elapsed_TriggerStats;
+            this.timer.Elapsed += this.Timer_Elapsed_TriggerNetworkStats;
         }
 
         public Guid SessionId { get; } = Guid.NewGuid();
@@ -90,7 +90,7 @@ namespace BililiveRecorder.Core.Recording
 
         protected abstract void StartRecordingLoop(Stream stream);
 
-        private void Timer_Elapsed_TriggerStats(object sender, ElapsedEventArgs e)
+        private void Timer_Elapsed_TriggerNetworkStats(object sender, ElapsedEventArgs e)
         {
             int bytes;
             TimeSpan diff;
@@ -129,12 +129,12 @@ namespace BililiveRecorder.Core.Recording
 
         protected (string fullPath, string relativePath) CreateFileName()
         {
-            var formatString = room.RoomConfig.RecordFilenameFormat!;
+            var formatString = this.room.RoomConfig.RecordFilenameFormat!;
 
             var now = DateTime.Now;
             var date = now.ToString("yyyyMMdd");
             var time = now.ToString("HHmmss");
-            var randomStr = random.Next(100, 999).ToString();
+            var randomStr = this.random.Next(100, 999).ToString();
 
             var relativePath = formatString
                 .Replace(@"{date}", date)

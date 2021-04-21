@@ -223,6 +223,7 @@ namespace BililiveRecorder.Core
                 task.RecordSessionEnded += this.RecordTask_RecordSessionEnded;
                 this.recordTask = task;
                 this.recordTaskStartTime = DateTimeOffset.UtcNow;
+                this.Stats.Reset();
                 this.OnPropertyChanged(nameof(this.Recording));
 
                 _ = Task.Run(async () =>
@@ -368,6 +369,8 @@ namespace BililiveRecorder.Core
             this.basicDanmakuWriter.Disable();
 
             this.OnPropertyChanged(nameof(this.Recording));
+            this.Stats.Reset();
+
             RecordSessionEnded?.Invoke(this, new RecordSessionEndedEventArgs(this)
             {
                 SessionId = id
