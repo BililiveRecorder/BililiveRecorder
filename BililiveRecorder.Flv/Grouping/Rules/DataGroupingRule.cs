@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using BililiveRecorder.Flv.Pipeline;
@@ -11,11 +10,14 @@ namespace BililiveRecorder.Flv.Grouping.Rules
 
         public bool AppendWith(Tag tag, LinkedList<Tag> tags, out LinkedList<Tag>? leftover)
         {
-            var flag = tag.IsNonKeyframeData()
-                        || (tag.IsKeyframeData() && tags.All(x => x.IsNonKeyframeData()))
-                        || (tag.Type == TagType.Audio && tag.Flag == TagFlag.Header && tags.All(x => x.Type != TagType.Audio || x.Flag == TagFlag.Header));
+            var shouldAppend =
+                // Tag 是非关键帧数据
+                tag.IsNonKeyframeData()
+                // 或是音频头，并且之前未出现过音频数据
+                || (tag.Type == TagType.Audio && tag.Flag == TagFlag.Header && tags.All(x => x.Type != TagType.Audio || x.Flag == TagFlag.Header));
+            // || (tag.IsKeyframeData() && tags.All(x => x.IsNonKeyframeData()))
 
-            if (flag)
+            if (shouldAppend)
             {
                 tags.AddLast(tag);
                 leftover = null;
@@ -23,40 +25,9 @@ namespace BililiveRecorder.Flv.Grouping.Rules
             }
             else
             {
-                var ts = tag.Timestamp;
-                var lastAudio = tags.LastOrDefault(x => x.Type == TagType.Audio);
-
-                bool predicate(Tag x) => x.Type == TagType.Audio && x.Timestamp >= ts;
-
-                if (tag.IsKeyframeData() && lastAudio is not null && Math.Abs(tag.Timestamp - lastAudio.Timestamp) <= 50 && tags.Any(predicate))
-                {
-                    {
-                        leftover = new LinkedList<Tag>();
-                        foreach (var item in tags.Where(predicate))
-                            leftover.AddLast(item);
-                        leftover.AddLast(tag);
-                    }
-
-                    // tags.RemoveAll(predicate);
-                    {
-                        var node = tags.First;
-                        while (node != null)
-                        {
-                            var next = node.Next;
-                            if (predicate(node.Value))
-                                tags.Remove(node);
-                            node = next;
-                        }
-                    }
-
-                    return false;
-                }
-                else
-                {
-                    leftover = new LinkedList<Tag>();
-                    leftover.AddLast(tag);
-                    return false;
-                }
+                leftover = new LinkedList<Tag>();
+                leftover.AddLast(tag);
+                return false;
             }
         }
 

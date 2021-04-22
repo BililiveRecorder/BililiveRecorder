@@ -104,7 +104,7 @@ namespace BililiveRecorder.Flv.RuleTests.Integrated
             Assert.Equal(0, tags[2].Timestamp);
             Assert.Equal(TagFlag.Header, tags[2].Flag);
 
-            Assert.Equal(0, tags[3].Timestamp);
+            Assert.InRange(tags[3].Timestamp, 0, 50);
         }
 
         protected void AssertTagsAlmostEqual(List<Tag> expected, List<Tag> actual)

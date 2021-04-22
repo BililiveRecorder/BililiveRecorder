@@ -275,5 +275,19 @@ namespace BililiveRecorder.WPF.Pages
                 catch (Exception) { }
             }
         }
+
+        private void FileNameTextBox_Drop(object sender, DragEventArgs e)
+        {
+            try
+            {
+                if (e.Data.GetDataPresent(DataFormats.FileDrop))
+                {
+                    var files = (string[])e.Data.GetData(DataFormats.FileDrop);
+                    this.FileNameTextBox.Text = files[0];
+                }
+            }
+            catch (Exception)
+            { }
+        }
     }
 }

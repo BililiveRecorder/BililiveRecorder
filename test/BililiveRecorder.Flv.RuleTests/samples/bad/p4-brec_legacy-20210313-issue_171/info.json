@@ -2,6 +2,7 @@
   "AlternativeHeaderCount": 0,
   "AllowedComments": {
     "DecodingHeader": 1,
+    "TimestampOffset": 1,
     "TimestampJump": 1
   },
   "Files": [

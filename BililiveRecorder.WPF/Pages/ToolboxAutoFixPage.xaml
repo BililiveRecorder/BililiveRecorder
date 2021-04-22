@@ -16,90 +16,92 @@
     mc:Ignorable="d" DataContext="{x:Null}"
     d:DesignHeight="600" d:DesignWidth="900"
     Title="ToolboxAutoFixPage">
-    <Grid Margin="20">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
-        <DockPanel Margin="0,0,0,10">
-            <Button VerticalAlignment="Bottom" DockPanel.Dock="Right" Content="修复失败？">
-                <ui:FlyoutService.Flyout>
-                    <ui:Flyout Placement="LeftEdgeAlignedTop">
-                        <StackPanel>
-                            <TextBlock Text="如果修复出错、或在修复后依旧有问题"/>
-                            <TextBlock Text="请发邮件到 rec@danmuji.org 反馈"/>
-                            <TextBlock Text="在邮件内附上此处导出的分析数据"/>
-                            <TextBlock Text="并尽量详细描述视频的问题、所使用的录播姬版本"/>
-                            <TextBlock Text="请分析未经修复的原始文件，而不是录播姬修复后的文件"/>
-                            <TextBlock><Hyperlink NavigateUri=""><Run Text="更多信息请点击这里"/></Hyperlink></TextBlock>
-                            <Button Margin="0,15,0,10" HorizontalAlignment="Center" Click="Export_Button_Click">
-                                <StackPanel Orientation="Horizontal">
-                                    <ui:PathIcon Margin="0,0,5,0" Style="{StaticResource PathIconDataExport}"/>
-                                    <TextBlock Text="导出原始分析数据"/>
-                                </StackPanel>
-                            </Button>
-                        </StackPanel>
-                    </ui:Flyout>
-                </ui:FlyoutService.Flyout>
-            </Button>
-            <Button VerticalAlignment="Bottom" DockPanel.Dock="Right" Margin="5,0" Click="Fix_Button_Click">
-                <StackPanel Orientation="Horizontal">
-                    <ui:PathIcon Height="14" Margin="0,0,5,0" Style="{StaticResource PathIconDataAutoFix}"/>
-                    <TextBlock Text="修复"/>
-                </StackPanel>
-            </Button>
-            <Button VerticalAlignment="Bottom" DockPanel.Dock="Right" Click="Analyze_Button_Click">
-                <StackPanel Orientation="Horizontal">
-                    <ui:PathIcon Height="14" Margin="0,0,5,0" Style="{StaticResource PathIconDataMagnifyScan}"/>
-                    <TextBlock Text="分析"/>
-                </StackPanel>
-            </Button>
-            <Button VerticalAlignment="Bottom" DockPanel.Dock="Right" Margin="0,0,5,0" Content="选择..." Click="SelectFile_Button_Click"/>
-            <TextBox ui:ControlHelper.PlaceholderText="FLV 文件" ui:TextBoxHelper.IsDeleteButtonVisible="False" x:Name="FileNameTextBox"/>
-        </DockPanel>
-        <Border Grid.Row="1" BorderThickness="1" CornerRadius="5" x:Name="analyzeResultDisplayArea" DataContext="{x:Null}"
+    <Border Background="Transparent" AllowDrop="True" Drop="FileNameTextBox_Drop">
+        <Grid Margin="20" >
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <DockPanel Margin="0,0,0,10">
+                <Button VerticalAlignment="Bottom" DockPanel.Dock="Right" Content="修复失败？">
+                    <ui:FlyoutService.Flyout>
+                        <ui:Flyout Placement="LeftEdgeAlignedTop">
+                            <StackPanel>
+                                <TextBlock Text="如果修复出错、或在修复后依旧有问题"/>
+                                <TextBlock Text="请发邮件到 rec@danmuji.org 反馈"/>
+                                <TextBlock Text="在邮件内附上此处导出的分析数据"/>
+                                <TextBlock Text="并尽量详细描述视频的问题、所使用的录播姬版本"/>
+                                <TextBlock Text="请分析未经修复的原始文件，而不是录播姬修复后的文件"/>
+                                <TextBlock><Hyperlink NavigateUri=""><Run Text="更多信息请点击这里"/></Hyperlink></TextBlock>
+                                <Button Margin="0,15,0,10" HorizontalAlignment="Center" Click="Export_Button_Click">
+                                    <StackPanel Orientation="Horizontal">
+                                        <ui:PathIcon Margin="0,0,5,0" Style="{StaticResource PathIconDataExport}"/>
+                                        <TextBlock Text="导出原始分析数据"/>
+                                    </StackPanel>
+                                </Button>
+                            </StackPanel>
+                        </ui:Flyout>
+                    </ui:FlyoutService.Flyout>
+                </Button>
+                <Button VerticalAlignment="Bottom" DockPanel.Dock="Right" Margin="5,0" Click="Fix_Button_Click">
+                    <StackPanel Orientation="Horizontal">
+                        <ui:PathIcon Height="14" Margin="0,0,5,0" Style="{StaticResource PathIconDataAutoFix}"/>
+                        <TextBlock Text="修复"/>
+                    </StackPanel>
+                </Button>
+                <Button VerticalAlignment="Bottom" DockPanel.Dock="Right" Click="Analyze_Button_Click">
+                    <StackPanel Orientation="Horizontal">
+                        <ui:PathIcon Height="14" Margin="0,0,5,0" Style="{StaticResource PathIconDataMagnifyScan}"/>
+                        <TextBlock Text="分析"/>
+                    </StackPanel>
+                </Button>
+                <Button VerticalAlignment="Bottom" DockPanel.Dock="Right" Margin="0,0,5,0" Content="选择..." Click="SelectFile_Button_Click"/>
+                <TextBox ui:ControlHelper.PlaceholderText="FLV 文件" ui:TextBoxHelper.IsDeleteButtonVisible="False" x:Name="FileNameTextBox" />
+            </DockPanel>
+            <Border Grid.Row="1" BorderThickness="1" CornerRadius="5" x:Name="analyzeResultDisplayArea" DataContext="{x:Null}"
             Background="{DynamicResource SystemControlBackgroundAltHighBrush}"
             BorderBrush="{DynamicResource SystemControlBackgroundAccentBrush}">
-            <Border.Resources>
-                <DataTemplate x:Key="NullAnalyzeResult">
-                    <StackPanel Margin="16">
-                        <TextBlock Text="点击分析按钮开始分析" FontSize="26" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                        <TextBlock Text="注：不分析也可以进行修复操作" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                    </StackPanel>
-                </DataTemplate>
-                <DataTemplate x:Key="NormalAnalyzeResult" DataType="{x:Type tool:AnalyzeResponse}">
-                    <Grid Margin="5">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="*"/>
-                        </Grid.RowDefinitions>
-                        <TextBox Grid.Row="0" IsReadOnly="True" Text="{Binding InputPath}" ui:ControlHelper.Header="文件："/>
-                        <TextBlock Grid.Row="1" HorizontalAlignment="Center" FontSize="24" Text="无需修复" Foreground="Green"
+                <Border.Resources>
+                    <DataTemplate x:Key="NullAnalyzeResult">
+                        <StackPanel Margin="16">
+                            <TextBlock Text="点击分析按钮开始分析" FontSize="26" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                            <TextBlock Text="注：不分析也可以进行修复操作" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                        </StackPanel>
+                    </DataTemplate>
+                    <DataTemplate x:Key="NormalAnalyzeResult" DataType="{x:Type tool:AnalyzeResponse}">
+                        <Grid Margin="5">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <TextBox Grid.Row="0" IsReadOnly="True" Text="{Binding InputPath}" ui:ControlHelper.Header="文件："/>
+                            <TextBlock Grid.Row="1" HorizontalAlignment="Center" FontSize="24" Text="无需修复" Foreground="Green"
                                    Visibility="{Binding NeedFix,Converter={StaticResource InvertBooleanToVisibilityCollapsedConverter}}"/>
-                        <TextBlock Grid.Row="1" HorizontalAlignment="Center" FontSize="24" Text="需要修复" Foreground="Red"
+                            <TextBlock Grid.Row="1" HorizontalAlignment="Center" FontSize="24" Text="需要修复" Foreground="Red"
                                    Visibility="{Binding NeedFix,Converter={StaticResource BooleanToVisibilityCollapsedConverter}}"/>
-                        <StackPanel Grid.Row="2" HorizontalAlignment="Center"
+                            <StackPanel Grid.Row="2" HorizontalAlignment="Center"
                                     Visibility="{Binding Unrepairable,Converter={StaticResource BooleanToVisibilityCollapsedConverter}}">
-                            <TextBlock HorizontalAlignment="Center" FontSize="20" Text="文件内存在录播姬无法自动修复的问题" Foreground="Red"/>
-                            <TextBlock HorizontalAlignment="Center" Text="请点击“修复失败？”按钮并反馈本问题"/>
-                        </StackPanel>
-                        <StackPanel Grid.Row="3" HorizontalAlignment="Center" Margin="10">
-                            <TextBlock Text="{Binding OutputFileCount,StringFormat=修复将会输出 {0} 个文件}" Margin="0,0,0,5"/>
-                            <TextBlock Text="{Binding IssueTypeTimestampOffset,StringFormat=时间戳错位问题 {0} 处}"/>
-                            <TextBlock Text="{Binding IssueTypeTimestampJump,StringFormat=时间戳跳变问题 {0} 处}"/>
-                            <TextBlock Text="{Binding IssueTypeDecodingHeader,StringFormat=分辨率、解码问题 {0} 处}"/>
-                            <TextBlock Text="{Binding IssueTypeRepeatingData,StringFormat=重复片段 {0} 处}"/>
-                            <TextBlock Text="{Binding IssueTypeOther,StringFormat=其他问题 {0} 处}"/>
-                            <TextBlock Text="{Binding IssueTypeUnrepairable,StringFormat=无法修复的问题 {0} 处}"/>
-                        </StackPanel>
-                    </Grid>
-                </DataTemplate>
-                <c:NullValueTemplateSelector x:Key="SelectorTemplate" Normal="{StaticResource NormalAnalyzeResult}" Null="{StaticResource NullAnalyzeResult}"/>
-            </Border.Resources>
-            <ContentControl Content="{Binding}" ContentTemplateSelector="{StaticResource SelectorTemplate}"/>
-        </Border>
-    </Grid>
+                                <TextBlock HorizontalAlignment="Center" FontSize="20" Text="文件内存在录播姬无法自动修复的问题" Foreground="Red"/>
+                                <TextBlock HorizontalAlignment="Center" Text="请点击 修复失败？ 按钮并反馈本问题"/>
+                            </StackPanel>
+                            <StackPanel Grid.Row="3" HorizontalAlignment="Center" Margin="10">
+                                <TextBlock Text="{Binding OutputFileCount,StringFormat=修复将会输出 {0} 个文件}" Margin="0,0,0,5"/>
+                                <TextBlock Text="{Binding IssueTypeTimestampOffset,StringFormat=时间戳错位问题 {0} 处}"/>
+                                <TextBlock Text="{Binding IssueTypeTimestampJump,StringFormat=时间戳跳变问题 {0} 处}"/>
+                                <TextBlock Text="{Binding IssueTypeDecodingHeader,StringFormat=分辨率、解码问题 {0} 处}"/>
+                                <TextBlock Text="{Binding IssueTypeRepeatingData,StringFormat=重复片段 {0} 处}"/>
+                                <TextBlock Text="{Binding IssueTypeOther,StringFormat=其他问题 {0} 处}"/>
+                                <TextBlock Text="{Binding IssueTypeUnrepairable,StringFormat=无法修复的问题 {0} 处}"/>
+                            </StackPanel>
+                        </Grid>
+                    </DataTemplate>
+                    <c:NullValueTemplateSelector x:Key="SelectorTemplate" Normal="{StaticResource NormalAnalyzeResult}" Null="{StaticResource NullAnalyzeResult}"/>
+                </Border.Resources>
+                <ContentControl Content="{Binding}" ContentTemplateSelector="{StaticResource SelectorTemplate}"/>
+            </Border>
+        </Grid>
+    </Border>
 </ui:Page>

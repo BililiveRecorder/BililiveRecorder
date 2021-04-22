@@ -65,7 +65,8 @@ namespace BililiveRecorder.ToolBox.Commands
                 {
                     var count = 0;
                     var tags = new List<Tag>();
-                    using var reader = new FlvTagPipeReader(PipeReader.Create(inputStream), new DefaultMemoryStreamProvider(), skipData: true, logger: logger);
+                    var memoryStreamProvider = new RecyclableMemoryStreamProvider();
+                    using var reader = new FlvTagPipeReader(PipeReader.Create(inputStream), memoryStreamProvider, skipData: true, logger: logger);
                     while (true)
                     {
                         var tag = await reader.ReadTagAsync(default).ConfigureAwait(false);

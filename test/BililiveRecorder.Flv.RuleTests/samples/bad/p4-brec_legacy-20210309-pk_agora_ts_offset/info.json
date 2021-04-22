@@ -1,4 +1,7 @@
 {
+  "AllowedComments": {
+    "TimestampOffset": 105
+  },
   "Files": [
     {
       "VideoHeaderData": "17000000000164001F030100176764001FACB402802DD0800000030080000018478C195001000468EF3CB0",

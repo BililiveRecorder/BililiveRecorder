@@ -53,7 +53,7 @@ namespace BililiveRecorder.ToolBox.Commands
             FileStream? flvFileStream = null;
             try
             {
-                var memoryStreamProvider = new DefaultMemoryStreamProvider();
+                var memoryStreamProvider = new RecyclableMemoryStreamProvider();
                 var comments = new List<ProcessingComment>();
                 var context = new FlvProcessingContext();
                 var session = new Dictionary<object, object?>();

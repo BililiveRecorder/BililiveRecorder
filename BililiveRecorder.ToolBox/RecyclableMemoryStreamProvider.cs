@@ -2,7 +2,7 @@ using System.IO;
 using BililiveRecorder.Flv;
 using Microsoft.IO;
 
-namespace BililiveRecorder.Core
+namespace BililiveRecorder.ToolBox
 {
     internal class RecyclableMemoryStreamProvider : IMemoryStreamProvider
     {
