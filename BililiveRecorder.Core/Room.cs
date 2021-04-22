@@ -154,6 +154,7 @@ namespace BililiveRecorder.Core
                     return;
 
                 this.logger.Write(LogEventLevel.Debug, "StopRecord called {StackTrace}", Environment.StackTrace);
+                Console.Write("StopRecord called " + Environment.StackTrace);
 
                 this.recordTask.RequestStop();
             }
@@ -209,6 +210,9 @@ namespace BililiveRecorder.Core
         {
             lock (this.recordStartLock)
             {
+                this.logger.Write(LogEventLevel.Debug, "data: name=" + this.name + " autoRecord=" + this.AutoRecordAllowedForThisSession);
+                Console.Write("data: name=" + this.name + " autoRecord=" + this.AutoRecordAllowedForThisSession);
+
                 if (this.disposedValue)
                     return;
                 if (!this.Streaming)
@@ -221,7 +225,8 @@ namespace BililiveRecorder.Core
                     return;
                 if (!String.IsNullOrEmpty(this.RoomConfig.BlacklistRecordingChildArea) && Regex.IsMatch(this.areaNameChild, this.RoomConfig.BlacklistRecordingChildArea))
                     return;
-
+                this.logger.Write(LogEventLevel.Debug, "data: name=" + this.name + " isn't blocked by Backlist");
+                Console.Write("data: name=" + this.name + " isn't blocked by Backlist");
 
                 var task = this.recordTaskFactory.CreateRecordTask(this);
                 task.NetworkingStats += this.RecordTask_NetworkingStats;
