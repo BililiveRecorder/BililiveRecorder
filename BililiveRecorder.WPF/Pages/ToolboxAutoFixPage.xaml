@@ -12,14 +12,14 @@
     xmlns:local="clr-namespace:BililiveRecorder.WPF.Pages"
     xmlns:model="clr-namespace:BililiveRecorder.WPF.Models"
     xmlns:c="clr-namespace:BililiveRecorder.WPF.Converters"
-    xmlns:tool="clr-namespace:BililiveRecorder.ToolBox.Commands;assembly=BililiveRecorder.ToolBox"
+    xmlns:t="clr-namespace:BililiveRecorder.ToolBox.Commands;assembly=BililiveRecorder.ToolBox"
+    xmlns:tr="clr-namespace:BililiveRecorder.ToolBox.ProcessingRules;assembly=BililiveRecorder.ToolBox"
     mc:Ignorable="d" DataContext="{x:Null}"
     d:DesignHeight="600" d:DesignWidth="900"
     Title="ToolboxAutoFixPage">
     <Border Background="Transparent" AllowDrop="True" Drop="FileNameTextBox_Drop">
         <Grid Margin="20" >
             <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
@@ -69,15 +69,41 @@
                             <TextBlock Text="注：不分析也可以进行修复操作" VerticalAlignment="Center" HorizontalAlignment="Center"/>
                         </StackPanel>
                     </DataTemplate>
-                    <DataTemplate x:Key="NormalAnalyzeResult" DataType="{x:Type tool:AnalyzeResponse}">
+                    <DataTemplate x:Key="FlvStatsPanel" DataType="{x:Type tr:FlvStats}">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <TextBlock Grid.Row="0" HorizontalAlignment="Center" Text="{Binding FrameCount,StringFormat=帧数量 {0} 个}"/>
+                            <TextBlock Grid.Row="1" HorizontalAlignment="Center" Text="{Binding FramePerSecond,StringFormat=平均FPS {0:F2}}"/>
+                            <ListView Grid.Row="2" ItemsSource="{Binding FrameDurations}" Margin="5" BorderThickness="1" 
+                                      BorderBrush="{DynamicResource SystemControlBackgroundAccentBrush}">
+                                <ListView.Resources>
+                                    <!-- 忽略此处的一个 Error，是 Visual Studio 的 bug -->
+                                    <!-- Ignore the following Error, caused by Visual Studio bug -->
+                                    <ResourceDictionary Source="pack://application:,,,/ModernWpf;component/DensityStyles/Compact.xaml" />
+                                </ListView.Resources>
+                                <ListView.View>
+                                    <GridView AllowsColumnReorder="False">
+                                        <GridViewColumn Header="帧时长" DisplayMemberBinding="{Binding Key,StringFormat=\{0\} ms}"/>
+                                        <GridViewColumn Header="帧数量" DisplayMemberBinding="{Binding Value}"/>
+                                    </GridView>
+                                </ListView.View>
+                            </ListView>
+                        </Grid>
+                    </DataTemplate>
+                    <DataTemplate x:Key="NormalAnalyzeResult" DataType="{x:Type t:AnalyzeResponse}">
                         <Grid Margin="5">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="*"/>
                             </Grid.RowDefinitions>
-                            <TextBox Grid.Row="0" IsReadOnly="True" Text="{Binding InputPath}" ui:ControlHelper.Header="文件："/>
+                            <TextBox Grid.Row="0" IsReadOnly="True" Text="{Binding InputPath}"/>
                             <TextBlock Grid.Row="1" HorizontalAlignment="Center" FontSize="24" Text="无需修复" Foreground="Green"
                                    Visibility="{Binding NeedFix,Converter={StaticResource InvertBooleanToVisibilityCollapsedConverter}}"/>
                             <TextBlock Grid.Row="1" HorizontalAlignment="Center" FontSize="24" Text="需要修复" Foreground="Red"
@@ -96,6 +122,27 @@
                                 <TextBlock Text="{Binding IssueTypeOther,StringFormat=其他问题 {0} 处}"/>
                                 <TextBlock Text="{Binding IssueTypeUnrepairable,StringFormat=无法修复的问题 {0} 处}"/>
                             </StackPanel>
+                            <Grid Grid.Row="4" Margin="10">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <StackPanel HorizontalAlignment="Center" Grid.ColumnSpan="3">
+                                    <TextBlock HorizontalAlignment="Center" FontSize="20" Text="统计数据"/>
+                                    <TextBlock HorizontalAlignment="Center" Text="仅供参考，有问题的文件的统计可能不准确"/>
+                                </StackPanel>
+                                <Separator Grid.Column="1" Grid.Row="1" Grid.RowSpan="2" Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}" />
+                                <TextBlock Grid.Row="1" Grid.Column="0" TextAlignment="Center" FontSize="16" Text="视频"/>
+                                <TextBlock Grid.Row="1" Grid.Column="2" TextAlignment="Center" FontSize="16" Text="音频"/>
+                                <ContentControl Grid.Row="2" Grid.Column="0" Content="{Binding VideoStats}" ContentTemplate="{StaticResource FlvStatsPanel}"/>
+                                <ContentControl Grid.Row="2" Grid.Column="2" Content="{Binding AudioStats}" ContentTemplate="{StaticResource FlvStatsPanel}"/>
+                            </Grid>
                         </Grid>
                     </DataTemplate>
                     <c:NullValueTemplateSelector x:Key="SelectorTemplate" Normal="{StaticResource NormalAnalyzeResult}" Null="{StaticResource NullAnalyzeResult}"/>

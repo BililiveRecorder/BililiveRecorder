@@ -11,6 +11,7 @@ using BililiveRecorder.Flv.Parser;
 using BililiveRecorder.Flv.Pipeline;
 using BililiveRecorder.Flv.Writer;
 using BililiveRecorder.Flv.Xml;
+using BililiveRecorder.ToolBox.ProcessingRules;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog;
 
@@ -33,6 +34,9 @@ namespace BililiveRecorder.ToolBox.Commands
         public bool Unrepairable { get; set; }
 
         public int OutputFileCount { get; set; }
+
+        public FlvStats? VideoStats { get; set; }
+        public FlvStats? AudioStats { get; set; }
 
         public int IssueTypeOther { get; set; }
         public int IssueTypeUnrepairable { get; set; }
@@ -118,7 +122,8 @@ namespace BililiveRecorder.ToolBox.Commands
                 // Pipeline
                 using var grouping = new TagGroupReader(tagReader);
                 using var writer = new FlvProcessingContextWriter(tagWriter: tagWriter, allowMissingHeader: true);
-                var pipeline = new ProcessingPipelineBuilder(new ServiceCollection().BuildServiceProvider()).AddDefault().AddRemoveFillerData().Build();
+                var statsRule = new StatsRule();
+                var pipeline = new ProcessingPipelineBuilder(new ServiceCollection().BuildServiceProvider()).Add(statsRule).AddDefault().AddRemoveFillerData().Build();
 
                 // Run
                 await Task.Run(async () =>
@@ -183,6 +188,8 @@ namespace BililiveRecorder.ToolBox.Commands
                 // Result
                 var response = await Task.Run(() =>
                 {
+                    var (videoStats, audioStats) = statsRule.GetStats();
+
                     var countableComments = comments.Where(x => x.T != CommentType.Logging).ToArray();
                     return new FixResponse
                     {
@@ -192,6 +199,9 @@ namespace BililiveRecorder.ToolBox.Commands
 
                         NeedFix = outputPaths.Count != 1 || countableComments.Any(),
                         Unrepairable = countableComments.Any(x => x.T == CommentType.Unrepairable),
+
+                        VideoStats = videoStats,
+                        AudioStats = audioStats,
 
                         IssueTypeOther = countableComments.Count(x => x.T == CommentType.Other),
                         IssueTypeUnrepairable = countableComments.Count(x => x.T == CommentType.Unrepairable),
