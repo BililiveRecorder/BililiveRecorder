@@ -30,6 +30,7 @@ namespace BililiveRecorder.Core.Recording
         protected readonly IApiClient apiClient;
 
         protected bool started = false;
+        protected bool timeoutTriggered = false;
 
         private readonly object fillerStatsLock = new object();
         protected int fillerDownloadedBytes;
@@ -85,6 +86,18 @@ namespace BililiveRecorder.Core.Recording
             this.fillerStatsLastTrigger = DateTimeOffset.UtcNow;
             this.durationSinceNoDataReceived = TimeSpan.Zero;
 
+            this.ct.Register(state => Task.Run(async () =>
+            {
+                try
+                {
+                    await Task.Delay(1000);
+                    if (((WeakReference<Stream>)state).TryGetTarget(out var weakStream))
+                        weakStream.Dispose();
+                }
+                catch (Exception)
+                { }
+            }), state: new WeakReference<Stream>(stream), useSynchronizationContext: false);
+
             this.StartRecordingLoop(stream);
         }
 
@@ -118,8 +131,9 @@ namespace BililiveRecorder.Core.Recording
                 Mbps = mbps
             });
 
-            if (this.durationSinceNoDataReceived.TotalMilliseconds > this.room.RoomConfig.TimingWatchdogTimeout)
+            if ((!this.timeoutTriggered) && (this.durationSinceNoDataReceived.TotalMilliseconds > this.room.RoomConfig.TimingWatchdogTimeout))
             {
+                this.timeoutTriggered = true;
                 this.logger.Warning("直播服务器未断开连接但停止发送直播数据，将会主动断开连接");
                 this.RequestStop();
             }

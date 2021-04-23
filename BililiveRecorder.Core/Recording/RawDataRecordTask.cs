@@ -23,8 +23,6 @@ namespace BililiveRecorder.Core.Recording
 
         public override void SplitOutput() { }
 
-        public override void RequestStop() => this.cts.Cancel();
-
         protected override void StartRecordingLoop(Stream stream)
         {
             var (fullPath, relativePath) = this.CreateFileName();
@@ -79,10 +77,8 @@ namespace BililiveRecorder.Core.Recording
             }
             finally
             {
-                this.logger.Debug("录制退出");
-
                 this.timer.Stop();
-                this.cts.Cancel();
+                this.RequestStop();
 
                 try
                 {
@@ -104,10 +100,12 @@ namespace BililiveRecorder.Core.Recording
                     this.logger.Warning(ex, "Error calling OnRecordFileClosed");
                 }
 
-                stream.Dispose();
                 file.Dispose();
+                stream.Dispose();
 
                 this.OnRecordSessionEnded(EventArgs.Empty);
+
+                this.logger.Debug("录制退出");
             }
         }
     }

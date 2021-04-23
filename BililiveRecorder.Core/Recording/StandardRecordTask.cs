@@ -111,6 +111,7 @@ namespace BililiveRecorder.Core.Recording
         {
             const int minimumBufferSize = 1024;
             this.timer.Start();
+
             Exception? exception = null;
             try
             {
@@ -188,15 +189,15 @@ namespace BililiveRecorder.Core.Recording
             }
             finally
             {
-                this.logger.Debug("录制退出");
-
                 this.reader?.Dispose();
                 this.reader = null;
                 this.writer?.Dispose();
                 this.writer = null;
-                this.cts.Cancel();
+                this.RequestStop();
 
                 this.OnRecordSessionEnded(EventArgs.Empty);
+
+                this.logger.Debug("录制退出");
             }
         }
 

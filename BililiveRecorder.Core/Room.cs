@@ -127,7 +127,7 @@ namespace BililiveRecorder.Core
                     }
                     catch (Exception ex)
                     {
-                        this.logger.Write(ex is ExecutionRejectedException ? LogEventLevel.Debug : LogEventLevel.Warning, ex, "尝试开始录制时出错");
+                        this.logger.Write(ex is ExecutionRejectedException ? LogEventLevel.Verbose : LogEventLevel.Warning, ex, "尝试开始录制时出错");
                     }
                 });
             }
@@ -159,7 +159,7 @@ namespace BililiveRecorder.Core
             }
             catch (Exception ex)
             {
-                this.logger.Write(ex is ExecutionRejectedException ? LogEventLevel.Debug : LogEventLevel.Warning, ex, "刷新房间信息时出错");
+                this.logger.Write(ex is ExecutionRejectedException ? LogEventLevel.Verbose : LogEventLevel.Warning, ex, "刷新房间信息时出错");
             }
         }
 
@@ -220,13 +220,13 @@ namespace BililiveRecorder.Core
                     }
                     catch (Exception ex)
                     {
-                        this.logger.Write(ex is ExecutionRejectedException ? LogEventLevel.Debug : LogEventLevel.Warning, ex, "启动录制出错");
+                        this.logger.Write(ex is ExecutionRejectedException ? LogEventLevel.Verbose : LogEventLevel.Warning, ex, "启动录制出错");
 
                         this.recordTask = null;
                         this.OnPropertyChanged(nameof(this.Recording));
 
                         // 请求直播流出错时的重试逻辑
-                        _ = Task.Run(async () => await this.RestartAfterRecordTaskFailedAsync().ConfigureAwait(false));
+                        _ = Task.Run(this.RestartAfterRecordTaskFailedAsync);
 
                         return;
                     }
@@ -253,6 +253,11 @@ namespace BililiveRecorder.Core
                 {
                     await Task.Delay((int)this.RoomConfig.TimingStreamRetry, this.ct).ConfigureAwait(false);
                 }
+                catch (TaskCanceledException)
+                {
+                    // 房间已经被删除
+                    return;
+                }
                 finally
                 {
                     this.recordRetryDelaySemaphoreSlim.Release();
@@ -266,12 +271,10 @@ namespace BililiveRecorder.Core
                 if (this.Streaming && this.AutoRecordForThisSession)
                     this.CreateAndStartNewRecordTask();
             }
-            catch (TaskCanceledException) { }
-            catch (ExecutionRejectedException) { }
             catch (Exception ex)
             {
-                this.logger.Write(LogEventLevel.Warning, ex, "重试开始录制时出错");
-                _ = Task.Run(async () => await this.RestartAfterRecordTaskFailedAsync().ConfigureAwait(false));
+                this.logger.Write(ex is ExecutionRejectedException ? LogEventLevel.Verbose : LogEventLevel.Warning, ex, "重试开始录制时出错");
+                _ = Task.Run(this.RestartAfterRecordTaskFailedAsync);
             }
         }
 
@@ -282,14 +285,21 @@ namespace BililiveRecorder.Core
                 try
                 {
                     if (delay)
-                        await Task.Delay((int)this.RoomConfig.TimingDanmakuRetry, this.ct).ConfigureAwait(false);
+                        try
+                        {
+                            await Task.Delay((int)this.RoomConfig.TimingDanmakuRetry, this.ct).ConfigureAwait(false);
+                        }
+                        catch (TaskCanceledException)
+                        {
+                            // 房间已被删除
+                            return;
+                        }
 
                     await this.danmakuClient.ConnectAsync(this.RoomConfig.RoomId, this.ct).ConfigureAwait(false);
                 }
-                catch (TaskCanceledException) { }
                 catch (Exception ex)
                 {
-                    this.logger.Write(ex is ExecutionRejectedException ? LogEventLevel.Debug : LogEventLevel.Warning, ex, "连接弹幕服务器时出错");
+                    this.logger.Write(ex is ExecutionRejectedException ? LogEventLevel.Verbose : LogEventLevel.Warning, ex, "连接弹幕服务器时出错");
 
                     if (!this.ct.IsCancellationRequested)
                         this.StartDamakuConnection();
@@ -357,13 +367,23 @@ namespace BililiveRecorder.Core
                 _ = Task.Run(async () =>
                 {
                     // 录制结束退出后的重试逻辑
+                    // 比 RestartAfterRecordTaskFailedAsync 少了等待时间
+
                     if (!this.Streaming || !this.AutoRecordForThisSession)
                         return;
 
-                    await this.FetchRoomInfoAsync().ConfigureAwait(false);
+                    try
+                    {
+                        await this.FetchRoomInfoAsync().ConfigureAwait(false);
 
-                    if (this.Streaming && this.AutoRecordForThisSession)
-                        this.CreateAndStartNewRecordTask();
+                        if (this.Streaming && this.AutoRecordForThisSession)
+                            this.CreateAndStartNewRecordTask();
+                    }
+                    catch (Exception ex)
+                    {
+                        this.logger.Write(LogEventLevel.Warning, ex, "重试开始录制时出错");
+                        _ = Task.Run(this.RestartAfterRecordTaskFailedAsync);
+                    }
                 });
             }
 
@@ -423,6 +443,8 @@ namespace BililiveRecorder.Core
             {
                 _ = Task.Run(async () =>
                 {
+                    // 定时主动检查不需要错误重试
+
                     await this.FetchRoomInfoAsync().ConfigureAwait(false);
 
                     if (this.Streaming && this.AutoRecordForThisSession && this.RoomConfig.AutoRecord)
