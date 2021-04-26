@@ -6,6 +6,7 @@ using System.Threading;
 using System.Xml;
 using BililiveRecorder.Core.Api.Danmaku;
 using BililiveRecorder.Core.Config.V2;
+using Serilog;
 
 #nullable enable
 namespace BililiveRecorder.Core.Danmaku
@@ -29,10 +30,13 @@ namespace BililiveRecorder.Core.Danmaku
         private uint writeCount = 0;
         private RoomConfig? config;
 
-        public BasicDanmakuWriter()
-        { }
-
         private readonly SemaphoreSlim semaphoreSlim = new SemaphoreSlim(1, 1);
+        private readonly ILogger logger;
+
+        public BasicDanmakuWriter(ILogger logger)
+        {
+            this.logger = logger?.ForContext<BasicDanmakuWriter>() ?? throw new ArgumentNullException(nameof(logger));
+        }
 
         public void EnableWithPath(string path, IRoom room)
         {
@@ -71,6 +75,18 @@ namespace BililiveRecorder.Core.Danmaku
             this.semaphoreSlim.Wait();
             try
             {
+                this.DisableCore();
+            }
+            finally
+            {
+                this.semaphoreSlim.Release();
+            }
+        }
+
+        private void DisableCore()
+        {
+            try
+            {
                 if (this.xmlWriter != null)
                 {
                     this.xmlWriter.Close();
@@ -78,9 +94,10 @@ namespace BililiveRecorder.Core.Danmaku
                     this.xmlWriter = null;
                 }
             }
-            finally
+            catch (Exception ex)
             {
-                this.semaphoreSlim.Release();
+                this.logger.Warning(ex, "关闭弹幕文件时发生错误");
+                this.xmlWriter = null;
             }
         }
 
@@ -171,6 +188,11 @@ namespace BililiveRecorder.Core.Danmaku
                     }
                 }
             }
+            catch (Exception ex)
+            {
+                this.logger.Warning(ex, "写入弹幕时发生错误");
+                this.DisableCore();
+            }
             finally
             {
                 this.semaphoreSlim.Release();
@@ -221,6 +243,7 @@ namespace BililiveRecorder.Core.Danmaku
                     this.semaphoreSlim.Dispose();
                     this.xmlWriter?.Close();
                     this.xmlWriter?.Dispose();
+                    this.xmlWriter = null;
                 }
 
                 // free unmanaged resources (unmanaged objects) and override finalizer
