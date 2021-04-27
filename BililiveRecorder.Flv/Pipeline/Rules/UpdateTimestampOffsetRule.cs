@@ -58,8 +58,8 @@ namespace BililiveRecorder.Flv.Pipeline.Rules
                     }
                     else
                     {
-                        context.AddComment(comment2); 
-                        yield return PipelineDisconnectAction.Instance; 
+                        context.AddComment(comment2);
+                        yield return PipelineDisconnectAction.Instance;
                         yield break;
                     }
                 }
@@ -102,21 +102,55 @@ namespace BililiveRecorder.Flv.Pipeline.Rules
 
             public bool Calculate(out int offset)
             {
-                this.ReduceOffsetRange(this.lastAudio, null);
-                this.lastAudio = null;
+                {
+                    var last = this.lastAudio;
+                    this.lastAudio = null;
+                    this.ReduceOffsetRange(last, null);
+                }
 
                 if (this.minOffset == this.maxOffset)
                 {
+                    // 理想情况允许偏移范围只有一个值
                     offset = this.minOffset;
                     return true;
                 }
-                else if (this.minOffset <= this.maxOffset)
+                else if (this.minOffset < this.maxOffset)
                 {
-                    offset = (this.minOffset + this.maxOffset) / 2;
-                    return true;
+                    // 允许偏移的值是一个范围
+                    if (this.minOffset != int.MinValue)
+                    {
+                        if (this.maxOffset != int.MaxValue)
+                        {
+                            // 有一个有效范围，取平均值
+                            offset = (int)(((long)this.minOffset + this.maxOffset) / 2L);
+                            return true;
+                        }
+                        else
+                        {
+                            // 无效最大偏移，以最小偏移为准
+                            offset = this.minOffset + 1;
+                            return true;
+                        }
+                    }
+                    else
+                    {
+                        if (this.maxOffset != int.MaxValue)
+                        {
+                            // 无效最小偏移，以最大偏移为准
+                            offset = this.maxOffset - 1;
+                            return true;
+                        }
+                        else
+                        {
+                            // 无效结果
+                            offset = 0;
+                            return false;
+                        }
+                    }
                 }
                 else
                 {
+                    // 范围无效
                     offset = 0;
                     return false;
                 }
