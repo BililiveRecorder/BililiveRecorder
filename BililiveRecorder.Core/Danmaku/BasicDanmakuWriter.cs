@@ -3,6 +3,7 @@ using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Xml;
 using BililiveRecorder.Core.Api.Danmaku;
 using BililiveRecorder.Core.Config.V2;
@@ -15,11 +16,12 @@ namespace BililiveRecorder.Core.Danmaku
     {
         private static readonly XmlWriterSettings xmlWriterSettings = new XmlWriterSettings
         {
+            Async = true,
             Indent = true,
             IndentChars = "  ",
             Encoding = Encoding.UTF8,
             CloseOutput = true,
-            WriteEndDocumentOnClose = true
+            WriteEndDocumentOnClose = true,
         };
 
         private static readonly Regex invalidXMLChars = new Regex(@"(?<![\uD800-\uDBFF])[\uDC00-\uDFFF]|[\uD800-\uDBFF](?![\uDC00-\uDFFF])|[\x00-\x08\x0B\x0C\x0E-\x1F\x7F-\x9F\uFEFF\uFFFE\uFFFF]", RegexOptions.Compiled);
@@ -101,12 +103,12 @@ namespace BililiveRecorder.Core.Danmaku
             }
         }
 
-        public void Write(DanmakuModel danmakuModel)
+        public async Task WriteAsync(DanmakuModel danmakuModel)
         {
             if (this.disposedValue) return;
             if (this.config is null) return;
 
-            this.semaphoreSlim.Wait();
+            await this.semaphoreSlim.WaitAsync();
             try
             {
                 if (this.xmlWriter != null)
@@ -124,56 +126,56 @@ namespace BililiveRecorder.Core.Danmaku
 
                                 var ts = Math.Max((DateTimeOffset.UtcNow - this.offset).TotalSeconds, 0d);
 
-                                this.xmlWriter.WriteStartElement("d");
-                                this.xmlWriter.WriteAttributeString("p", $"{ts},{type},{size},{color},{st},0,{danmakuModel.UserID},0");
-                                this.xmlWriter.WriteAttributeString("user", RemoveInvalidXMLChars(danmakuModel.UserName));
+                                await this.xmlWriter.WriteStartElementAsync(null, "d", null).ConfigureAwait(false);
+                                await this.xmlWriter.WriteAttributeStringAsync(null, "p", null, $"{ts:F3},{type},{size},{color},{st},0,{danmakuModel.UserID},0").ConfigureAwait(false);
+                                await this.xmlWriter.WriteAttributeStringAsync(null, "user", null, RemoveInvalidXMLChars(danmakuModel.UserName)).ConfigureAwait(false);
                                 if (recordDanmakuRaw)
-                                    this.xmlWriter.WriteAttributeString("raw", danmakuModel.RawObject?["info"]?.ToString(Newtonsoft.Json.Formatting.None));
+                                    await this.xmlWriter.WriteAttributeStringAsync(null, "raw", null, danmakuModel.RawObject?["info"]?.ToString(Newtonsoft.Json.Formatting.None)).ConfigureAwait(false);
                                 this.xmlWriter.WriteValue(RemoveInvalidXMLChars(danmakuModel.CommentText));
-                                this.xmlWriter.WriteEndElement();
+                                await this.xmlWriter.WriteEndElementAsync().ConfigureAwait(false);
                             }
                             break;
                         case DanmakuMsgType.SuperChat:
                             if (this.config.RecordDanmakuSuperChat)
                             {
-                                this.xmlWriter.WriteStartElement("sc");
+                                await this.xmlWriter.WriteStartElementAsync(null, "sc", null).ConfigureAwait(false);
                                 var ts = Math.Max((DateTimeOffset.UtcNow - this.offset).TotalSeconds, 0d);
-                                this.xmlWriter.WriteAttributeString("ts", ts.ToString());
-                                this.xmlWriter.WriteAttributeString("user", RemoveInvalidXMLChars(danmakuModel.UserName));
-                                this.xmlWriter.WriteAttributeString("price", danmakuModel.Price.ToString());
-                                this.xmlWriter.WriteAttributeString("time", danmakuModel.SCKeepTime.ToString());
+                                await this.xmlWriter.WriteAttributeStringAsync(null, "ts", null, ts.ToString("F3")).ConfigureAwait(false);
+                                await this.xmlWriter.WriteAttributeStringAsync(null, "user", null, RemoveInvalidXMLChars(danmakuModel.UserName)).ConfigureAwait(false);
+                                await this.xmlWriter.WriteAttributeStringAsync(null, "price", null, danmakuModel.Price.ToString()).ConfigureAwait(false);
+                                await this.xmlWriter.WriteAttributeStringAsync(null, "time", null, danmakuModel.SCKeepTime.ToString()).ConfigureAwait(false);
                                 if (recordDanmakuRaw)
-                                    this.xmlWriter.WriteAttributeString("raw", danmakuModel.RawObject?["data"]?.ToString(Newtonsoft.Json.Formatting.None));
+                                    await this.xmlWriter.WriteAttributeStringAsync(null, "raw", null, danmakuModel.RawObject?["data"]?.ToString(Newtonsoft.Json.Formatting.None)).ConfigureAwait(false);
                                 this.xmlWriter.WriteValue(RemoveInvalidXMLChars(danmakuModel.CommentText));
-                                this.xmlWriter.WriteEndElement();
+                                await this.xmlWriter.WriteEndElementAsync().ConfigureAwait(false);
                             }
                             break;
                         case DanmakuMsgType.GiftSend:
                             if (this.config.RecordDanmakuGift)
                             {
-                                this.xmlWriter.WriteStartElement("gift");
+                                await this.xmlWriter.WriteStartElementAsync(null, "gift", null).ConfigureAwait(false);
                                 var ts = Math.Max((DateTimeOffset.UtcNow - this.offset).TotalSeconds, 0d);
-                                this.xmlWriter.WriteAttributeString("ts", ts.ToString());
-                                this.xmlWriter.WriteAttributeString("user", RemoveInvalidXMLChars(danmakuModel.UserName));
-                                this.xmlWriter.WriteAttributeString("giftname", RemoveInvalidXMLChars(danmakuModel.GiftName));
-                                this.xmlWriter.WriteAttributeString("giftcount", danmakuModel.GiftCount.ToString());
+                                await this.xmlWriter.WriteAttributeStringAsync(null, "ts", null, ts.ToString("F3")).ConfigureAwait(false);
+                                await this.xmlWriter.WriteAttributeStringAsync(null, "user", null, RemoveInvalidXMLChars(danmakuModel.UserName)).ConfigureAwait(false);
+                                await this.xmlWriter.WriteAttributeStringAsync(null, "giftname", null, RemoveInvalidXMLChars(danmakuModel.GiftName)).ConfigureAwait(false);
+                                await this.xmlWriter.WriteAttributeStringAsync(null, "giftcount", null, danmakuModel.GiftCount.ToString()).ConfigureAwait(false);
                                 if (recordDanmakuRaw)
-                                    this.xmlWriter.WriteAttributeString("raw", danmakuModel.RawObject?["data"]?.ToString(Newtonsoft.Json.Formatting.None));
-                                this.xmlWriter.WriteEndElement();
+                                    await this.xmlWriter.WriteAttributeStringAsync(null, "raw", null, danmakuModel.RawObject?["data"]?.ToString(Newtonsoft.Json.Formatting.None)).ConfigureAwait(false);
+                                await this.xmlWriter.WriteEndElementAsync().ConfigureAwait(false);
                             }
                             break;
                         case DanmakuMsgType.GuardBuy:
                             if (this.config.RecordDanmakuGuard)
                             {
-                                this.xmlWriter.WriteStartElement("guard");
+                                await this.xmlWriter.WriteStartElementAsync(null, "guard", null).ConfigureAwait(false);
                                 var ts = Math.Max((DateTimeOffset.UtcNow - this.offset).TotalSeconds, 0d);
-                                this.xmlWriter.WriteAttributeString("ts", ts.ToString());
-                                this.xmlWriter.WriteAttributeString("user", RemoveInvalidXMLChars(danmakuModel.UserName));
-                                this.xmlWriter.WriteAttributeString("level", danmakuModel.UserGuardLevel.ToString()); ;
-                                this.xmlWriter.WriteAttributeString("count", danmakuModel.GiftCount.ToString());
+                                await this.xmlWriter.WriteAttributeStringAsync(null, "ts", null, ts.ToString("F3")).ConfigureAwait(false);
+                                await this.xmlWriter.WriteAttributeStringAsync(null, "user", null, RemoveInvalidXMLChars(danmakuModel.UserName)).ConfigureAwait(false);
+                                await this.xmlWriter.WriteAttributeStringAsync(null, "level", null, danmakuModel.UserGuardLevel.ToString()).ConfigureAwait(false); ;
+                                await this.xmlWriter.WriteAttributeStringAsync(null, "count", null, danmakuModel.GiftCount.ToString()).ConfigureAwait(false);
                                 if (recordDanmakuRaw)
-                                    this.xmlWriter.WriteAttributeString("raw", danmakuModel.RawObject?["data"]?.ToString(Newtonsoft.Json.Formatting.None));
-                                this.xmlWriter.WriteEndElement();
+                                    await this.xmlWriter.WriteAttributeStringAsync(null, "raw", null, danmakuModel.RawObject?["data"]?.ToString(Newtonsoft.Json.Formatting.None)).ConfigureAwait(false);
+                                await this.xmlWriter.WriteEndElementAsync().ConfigureAwait(false);
                             }
                             break;
                         default:
@@ -183,7 +185,7 @@ namespace BililiveRecorder.Core.Danmaku
 
                     if (write && this.writeCount++ >= this.config.RecordDanmakuFlushInterval)
                     {
-                        this.xmlWriter.Flush();
+                        await this.xmlWriter.FlushAsync();
                         this.writeCount = 0;
                     }
                 }
@@ -212,9 +214,11 @@ namespace BililiveRecorder.Core.Danmaku
             writer.WriteElementString("state", "0");
             writer.WriteElementString("real_name", "0");
             writer.WriteElementString("source", "0");
+
             writer.WriteStartElement("BililiveRecorder");
             writer.WriteAttributeString("version", GitVersionInformation.FullSemVer);
             writer.WriteEndElement();
+
             writer.WriteStartElement("BililiveRecorderRecordInfo");
             writer.WriteAttributeString("roomid", room.RoomConfig.RoomId.ToString());
             writer.WriteAttributeString("shortid", room.ShortId.ToString());
@@ -224,7 +228,9 @@ namespace BililiveRecorder.Core.Danmaku
             writer.WriteAttributeString("areanamechild", room.AreaNameChild);
             writer.WriteAttributeString("start_time", DateTimeOffset.Now.ToString("O"));
             writer.WriteEndElement();
+
             const string style = @"<z:stylesheet version=""1.0"" id=""s"" xml:id=""s"" xmlns:z=""http://www.w3.org/1999/XSL/Transform""><z:output method=""html""/><z:template match=""/""><html><meta name=""viewport"" content=""width=device-width""/><title>B站录播姬弹幕文件 - <z:value-of select=""/i/BililiveRecorderRecordInfo/@name""/></title><style>body{margin:0}h1,h2,p,table{margin-left:5px}table{border-spacing:0}td,th{border:1px solid grey;padding:1px}th{position:sticky;top:0;background:#4098de}tr:hover{background:#d9f4ff}div{overflow:auto;max-height:80vh;max-width:100vw;width:fit-content}</style><h1>B站录播姬弹幕XML文件</h1><p>本文件的弹幕信息兼容B站主站视频弹幕XML格式，可以使用现有的转换工具把文件中的弹幕转为ass字幕文件</p><table><tr><td>录播姬版本</td><td><z:value-of select=""/i/BililiveRecorder/@version""/></td></tr><tr><td>房间号</td><td><z:value-of select=""/i/BililiveRecorderRecordInfo/@roomid""/></td></tr><tr><td>主播名</td><td><z:value-of select=""/i/BililiveRecorderRecordInfo/@name""/></td></tr><tr><td>录制开始时间</td><td><z:value-of select=""/i/BililiveRecorderRecordInfo/@start_time""/></td></tr><tr><td><a href=""#d"">弹幕</a></td><td>共 <z:value-of select=""count(/i/d)""/> 条记录</td></tr><tr><td><a href=""#guard"">上船</a></td><td>共 <z:value-of select=""count(/i/guard)""/> 条记录</td></tr><tr><td><a href=""#sc"">SC</a></td><td>共 <z:value-of select=""count(/i/sc)""/> 条记录</td></tr><tr><td><a href=""#gift"">礼物</a></td><td>共 <z:value-of select=""count(/i/gift)""/> 条记录</td></tr></table><h2 id=""d"">弹幕</h2><div><table><tr><th>用户名</th><th>弹幕</th><th>参数</th></tr><z:for-each select=""/i/d""><tr><td><z:value-of select=""@user""/></td><td><z:value-of select="".""/></td><td><z:value-of select=""@p""/></td></tr></z:for-each></table></div><h2 id=""guard"">舰长购买</h2><div><table><tr><th>用户名</th><th>舰长等级</th><th>购买数量</th><th>出现时间</th></tr><z:for-each select=""/i/guard""><tr><td><z:value-of select=""@user""/></td><td><z:value-of select=""@level""/></td><td><z:value-of select=""@count""/></td><td><z:value-of select=""@ts""/></td></tr></z:for-each></table></div><h2 id=""sc"">SuperChat 醒目留言</h2><div><table><tr><th>用户名</th><th>内容</th><th>显示时长</th><th>价格</th><th>出现时间</th></tr><z:for-each select=""/i/sc""><tr><td><z:value-of select=""@user""/></td><td><z:value-of select="".""/></td><td><z:value-of select=""@time""/></td><td><z:value-of select=""@price""/></td><td><z:value-of select=""@ts""/></td></tr></z:for-each></table></div><h2 id=""gift"">礼物</h2><div><table><tr><th>用户名</th><th>礼物名</th><th>礼物数量</th><th>出现时间</th></tr><z:for-each select=""/i/gift""><tr><td><z:value-of select=""@user""/></td><td><z:value-of select=""@giftname""/></td><td><z:value-of select=""@giftcount""/></td><td><z:value-of select=""@ts""/></td></tr></z:for-each></table></div></html></z:template></z:stylesheet>";
+
             writer.WriteStartElement("BililiveRecorderXmlStyle");
             writer.WriteRaw(style);
             writer.WriteEndElement();
