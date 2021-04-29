@@ -26,9 +26,6 @@ namespace BililiveRecorder.Flv.Pipeline
             builder
             .Add<HandleEndTagRule>()
             .Add<HandleDelayedAudioHeaderRule>()
-            // TODO .Add<CheckMissingKeyframeRule>()
-            // .Add<UpdateDataTagOrderRule>()
-            // .Add<CheckDiscontinuityRule>()
             .Add<UpdateTimestampOffsetRule>()
             .Add<UpdateTimestampJumpRule>()
             .Add<HandleNewScriptRule>()

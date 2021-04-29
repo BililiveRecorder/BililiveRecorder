@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace BililiveRecorder.Flv.Pipeline
+namespace BililiveRecorder.Flv.Pipeline.Actions
 {
     public class PipelineLogAlternativeHeaderAction : PipelineAction
     {

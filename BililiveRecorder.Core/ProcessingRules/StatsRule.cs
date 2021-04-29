@@ -4,6 +4,8 @@ using System.Linq;
 using BililiveRecorder.Core.Event;
 using BililiveRecorder.Flv;
 using BililiveRecorder.Flv.Pipeline;
+using BililiveRecorder.Flv.Pipeline.Actions;
+using StructLinq;
 
 namespace BililiveRecorder.Core.ProcessingRules
 {
@@ -32,10 +34,20 @@ namespace BililiveRecorder.Core.ProcessingRules
         {
             var e = new RecordingStatsEventArgs();
 
-            e.TotalInputVideoByteCount = this.TotalInputVideoByteCount += e.InputVideoByteCount =
-                context.Actions.Where(x => x is PipelineDataAction).Cast<PipelineDataAction>().Sum(data => data.Tags.Where(x => x.Type == TagType.Video).Sum(x => x.Size + (11 + 4)));
-            e.TotalInputAudioByteCount = this.TotalInputAudioByteCount += e.InputAudioByteCount =
-                context.Actions.Where(x => x is PipelineDataAction).Cast<PipelineDataAction>().Sum(data => data.Tags.Where(x => x.Type == TagType.Audio).Sum(x => x.Size + (11 + 4)));
+            {
+                static IEnumerable<PipelineDataAction> FilterDataActions(IEnumerable<PipelineAction> actions)
+                {
+                    foreach (var action in actions)
+                        if (action is PipelineDataAction dataAction)
+                            yield return dataAction;
+                }
+
+                e.TotalInputVideoByteCount = this.TotalInputVideoByteCount += e.InputVideoByteCount =
+                    FilterDataActions(context.Actions).ToStructEnumerable().Sum(ref LinqFunctions.SumSizeOfVideoData, x => x, x => x);
+
+                e.TotalInputAudioByteCount = this.TotalInputAudioByteCount += e.InputAudioByteCount =
+                    FilterDataActions(context.Actions).ToStructEnumerable().Sum(ref LinqFunctions.SumSizeOfAudioData, x => x, x => x);
+            }
 
             next();
 
@@ -81,10 +93,17 @@ namespace BililiveRecorder.Core.ProcessingRules
             {
                 if (dataActions.Count > 0)
                 {
-                    e.TotalOutputVideoFrameCount = this.TotalOutputVideoFrameCount += e.OutputVideoFrameCount = dataActions.Sum(x => x.Tags.Count(x => x.Type == TagType.Video));
-                    e.TotalOutputAudioFrameCount = this.TotalOutputAudioFrameCount += e.OutputAudioFrameCount = dataActions.Sum(x => x.Tags.Count(x => x.Type == TagType.Audio));
-                    e.TotalOutputVideoByteCount = this.TotalOutputVideoByteCount += e.OutputVideoByteCount = dataActions.Sum(x => x.Tags.Where(x => x.Type == TagType.Video).Sum(x => (x.Nalus == null ? x.Size : (5 + x.Nalus.Sum(n => n.FullSize + 4))) + (11 + 4)));
-                    e.TotalOutputAudioByteCount = this.TotalOutputAudioByteCount += e.OutputAudioByteCount = dataActions.Sum(x => x.Tags.Where(x => x.Type == TagType.Audio).Sum(x => x.Size + (11 + 4)));
+                    e.TotalOutputVideoFrameCount = this.TotalOutputVideoFrameCount += e.OutputVideoFrameCount =
+                        dataActions.ToStructEnumerable().Sum(ref LinqFunctions.CountVideoTags, x => x, x => x);
+
+                    e.TotalOutputAudioFrameCount = this.TotalOutputAudioFrameCount += e.OutputAudioFrameCount =
+                        dataActions.ToStructEnumerable().Sum(ref LinqFunctions.CountAudioTags, x => x, x => x);
+
+                    e.TotalOutputVideoByteCount = this.TotalOutputVideoByteCount += e.OutputVideoByteCount =
+                        dataActions.ToStructEnumerable().Sum(ref LinqFunctions.SumSizeOfVideoDataByNalu, x => x, x => x);
+
+                    e.TotalOutputAudioByteCount = this.TotalOutputAudioByteCount += e.OutputAudioByteCount =
+                        dataActions.ToStructEnumerable().Sum(ref LinqFunctions.SumSizeOfAudioData, x => x, x => x);
 
                     e.CurrnetFileSize = this.CurrnetFileSize += e.OutputVideoByteCount + e.OutputAudioByteCount;
 

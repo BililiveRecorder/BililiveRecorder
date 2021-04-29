@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using BililiveRecorder.Flv;
+using BililiveRecorder.Flv.Pipeline.Actions;
+using StructLinq;
 
 namespace BililiveRecorder.Flv.Pipeline.Rules
 {
@@ -80,7 +82,7 @@ namespace BililiveRecorder.Flv.Pipeline.Rules
                 }
 
                 // 对比历史特征
-                if (history.Any(x => x.SequenceEqual(feature)))
+                if (history.ToStructEnumerable().Any(x => x.SequenceEqual(feature), x => x))
                 {
                     context.AddComment(comment);
                 }

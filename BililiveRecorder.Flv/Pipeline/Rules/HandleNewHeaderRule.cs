@@ -1,6 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using BililiveRecorder.Flv.Pipeline.Actions;
+using StructLinq;
+using StructLinq.Where;
 
 namespace BililiveRecorder.Flv.Pipeline.Rules
 {
@@ -40,8 +43,8 @@ namespace BililiveRecorder.Flv.Pipeline.Rules
                 // 音频 视频 分别单独处理
                 var group = header.AllTags.GroupBy(x => x.Type);
 
-                var currentVideoHeader = SelectHeader(ref multiple_header_present, group.FirstOrDefault(x => x.Key == TagType.Video));
-                var currentAudioHeader = SelectHeader(ref multiple_header_present, group.FirstOrDefault(x => x.Key == TagType.Audio));
+                var currentVideoHeader = SelectHeader(ref multiple_header_present, header.AllTags.ToStructEnumerable().Where(ref LinqFunctions.TagIsVideo, x => x));
+                var currentAudioHeader = SelectHeader(ref multiple_header_present, header.AllTags.ToStructEnumerable().Where(ref LinqFunctions.TagIsAudio, x => x));
 
                 if (multiple_header_present)
                     context.AddComment(MultipleHeaderComment);
@@ -91,30 +94,29 @@ namespace BililiveRecorder.Flv.Pipeline.Rules
                 yield return action;
         }
 
-        private static Tag? SelectHeader(ref bool multiple_header_present, IGrouping<TagType, Tag> tagGroup)
+        private static Tag? SelectHeader<TEnumerable, TEnumerator, TFunction>(ref bool multiple_header_present, WhereEnumerable<Tag, TEnumerable, TEnumerator, TFunction> tags)
+            where TEnumerable : struct, IStructEnumerable<Tag, TEnumerator>
+            where TEnumerator : struct, IStructEnumerator<Tag>
+            where TFunction : struct, IFunction<Tag, bool>
         {
             Tag? currentHeader;
-            if (tagGroup != null)
+
+            if (tags.Count(x => x) > 1)
             {
                 // 检查是否存在 **多个** **不同的** Header
-                if (tagGroup.Count() > 1)
-                {
-                    var first = tagGroup.First();
+                var first = tags.First(x => x);
 
-                    if (tagGroup.Skip(1).All(x => first.BinaryData?.SequenceEqual(x.BinaryData) ?? false))
-                        currentHeader = first;
-                    else
-                    {
-                        // 默认最后一个为正确的
-                        currentHeader = tagGroup.Last();
-                        multiple_header_present = true;
-                    }
-                }
+                if (tags.Skip(1, x => x).All(x => first.BinaryData?.SequenceEqual(x.BinaryData) ?? false))
+                    currentHeader = first;
                 else
-                    currentHeader = tagGroup.FirstOrDefault();
+                {
+                    // 默认最后一个为正确的
+                    currentHeader = tags.Last(x => x);
+                    multiple_header_present = true;
+                }
             }
             else
-                currentHeader = null;
+                currentHeader = tags.FirstOrDefault(x => x);
 
             return currentHeader;
         }

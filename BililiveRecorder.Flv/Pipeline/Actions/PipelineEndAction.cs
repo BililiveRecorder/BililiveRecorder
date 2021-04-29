@@ -1,4 +1,4 @@
-namespace BililiveRecorder.Flv.Pipeline
+namespace BililiveRecorder.Flv.Pipeline.Actions
 {
     public class PipelineEndAction : PipelineAction
     {

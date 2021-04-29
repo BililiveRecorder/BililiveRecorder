@@ -10,6 +10,7 @@ using BililiveRecorder.Flv.Amf;
 using BililiveRecorder.Flv.Grouping;
 using BililiveRecorder.Flv.Parser;
 using BililiveRecorder.Flv.Pipeline;
+using BililiveRecorder.Flv.Pipeline.Actions;
 using BililiveRecorder.Flv.Writer;
 using BililiveRecorder.Flv.Xml;
 using BililiveRecorder.ToolBox.ProcessingRules;

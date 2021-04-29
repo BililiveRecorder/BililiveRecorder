@@ -14,18 +14,46 @@ namespace BililiveRecorder.Flv
             if (!iterator.MoveNext())
                 return false;
 
-            var lastItem = iterator.Current;
+            var previousItem = iterator.Current;
 
             while (iterator.MoveNext())
             {
-                var current = iterator.Current;
+                var currentItem = iterator.Current;
 
-                if (predicate(lastItem, current))
+                if (predicate(previousItem, currentItem))
                     return true;
 
-                lastItem = current;
+                previousItem = currentItem;
             }
             return false;
         }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool Any2<TIn, TFunction>(this IEnumerable<TIn> source, ref TFunction function)
+            where TFunction : ITwoInputFunction<TIn, bool>
+        {
+            using var iterator = source.GetEnumerator();
+
+            if (!iterator.MoveNext())
+                return false;
+
+            var previousItem = iterator.Current;
+
+            while (iterator.MoveNext())
+            {
+                var currentItem = iterator.Current;
+
+                if (function.Eval(previousItem, currentItem))
+                    return true;
+
+                previousItem = currentItem;
+            }
+            return false;
+        }
+    }
+
+    public interface ITwoInputFunction<in TIn, out TOut>
+    {
+        TOut Eval(TIn a, TIn b);
     }
 }

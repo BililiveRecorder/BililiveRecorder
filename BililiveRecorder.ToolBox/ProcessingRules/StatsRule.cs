@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using BililiveRecorder.Flv;
 using BililiveRecorder.Flv.Pipeline;
+using BililiveRecorder.Flv.Pipeline.Actions;
+using StructLinq;
 
 namespace BililiveRecorder.ToolBox.ProcessingRules
 {
@@ -40,13 +42,14 @@ namespace BililiveRecorder.ToolBox.ProcessingRules
             var stat = new FlvStats
             {
                 FrameCount = timestamps.Count,
-                FrameDurations = timestamps.Select((time, i) => i == 0 ? 0 : time - timestamps[i - 1])
-                                           .Skip(1)
-                                           .GroupBy(x => x)
-                                           .ToDictionary(x => x.Key, x => x.Count())
-                                           .OrderByDescending(x => x.Value)
-                                           .ThenByDescending(x => x.Key)
-                                           .ToDictionary(x => x.Key, x => x.Value)
+                FrameDurations = timestamps
+                .Select((time, i) => i == 0 ? 0 : time - timestamps[i - 1])
+                .Skip(1)
+                .GroupBy(x => x)
+                .ToDictionary(x => x.Key, x => x.Count())
+                .OrderByDescending(x => x.Value)
+                .ThenByDescending(x => x.Key)
+                .ToDictionary(x => x.Key, x => x.Value)
             };
             stat.FramePerSecond = 1000d / stat.FrameDurations.Select(x => x.Key * ((double)x.Value / timestamps.Count)).Sum();
 

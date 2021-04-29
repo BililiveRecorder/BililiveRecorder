@@ -1,19 +1,14 @@
 using System.Collections.Generic;
-using BililiveRecorder.Flv.Pipeline;
+using BililiveRecorder.Flv.Pipeline.Actions;
 
 namespace BililiveRecorder.Flv.Grouping.Rules
 {
     public class ScriptGroupingRule : IGroupingRule
     {
-        public bool StartWith(Tag tag) => tag.IsScript();
+        public bool CanStartWith(Tag tag) => tag.IsScript();
 
-        public bool AppendWith(Tag tag, LinkedList<Tag> tags, out LinkedList<Tag>? leftover)
-        {
-            leftover = new LinkedList<Tag>();
-            leftover.AddLast(tag);
-            return false;
-        }
+        public bool CanAppendWith(Tag tag, List<Tag> tags) => false;
 
-        public PipelineAction CreatePipelineAction(LinkedList<Tag> tags) => new PipelineScriptAction(tags.First.Value);
+        public PipelineAction CreatePipelineAction(List<Tag> tags) => new PipelineScriptAction(tags[0]);
     }
 }

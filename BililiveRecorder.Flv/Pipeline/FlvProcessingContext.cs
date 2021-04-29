@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using BililiveRecorder.Flv.Pipeline.Actions;
+using StructLinq;
 
 namespace BililiveRecorder.Flv.Pipeline
 {

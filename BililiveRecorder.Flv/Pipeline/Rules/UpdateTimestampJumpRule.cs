@@ -1,6 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
+using BililiveRecorder.Flv.Pipeline.Actions;
+using StructLinq;
 
 namespace BililiveRecorder.Flv.Pipeline.Rules
 {
@@ -28,8 +31,27 @@ namespace BililiveRecorder.Flv.Pipeline.Rules
             foreach (var action in context.Actions)
             {
                 if (action is PipelineDataAction dataAction)
-                {
-                    this.SetDataTimestamp(dataAction.Tags, ts, context);
+                {   // SetDataTimestamp
+                    var tags = dataAction.Tags;
+                    var currentTimestamp = tags[0].Timestamp;
+                    var diff = currentTimestamp - ts.LastOriginal;
+                    if (diff < 0)
+                    {
+                        context.AddComment(new ProcessingComment(CommentType.TimestampJump, $"时间戳变小, curr: {currentTimestamp}, diff: {diff}"));
+                        ts.CurrentOffset = currentTimestamp - ts.NextTimestampTarget;
+                    }
+                    else if (diff > JUMP_THRESHOLD)
+                    {
+                        context.AddComment(new ProcessingComment(CommentType.TimestampJump, $"时间戳间隔过大, curr: {currentTimestamp}, diff: {diff}"));
+                        ts.CurrentOffset = currentTimestamp - ts.NextTimestampTarget;
+                    }
+
+                    ts.LastOriginal = tags[tags.Count - 1].Timestamp;
+
+                    foreach (var tag in tags)
+                        tag.Timestamp -= ts.CurrentOffset;
+
+                    ts.NextTimestampTarget = this.CalculateNewTarget(tags);
                 }
                 else if (action is PipelineEndAction endAction)
                 {
@@ -64,45 +86,24 @@ namespace BililiveRecorder.Flv.Pipeline.Rules
             }
         }
 
-        private void SetDataTimestamp(IReadOnlyList<Tag> tags, TimestampStore ts, FlvProcessingContext context)
-        {
-            var currentTimestamp = tags[0].Timestamp;
-            var diff = currentTimestamp - ts.LastOriginal;
-            if (diff < 0)
-            {
-                context.AddComment(new ProcessingComment(CommentType.TimestampJump, $"时间戳变小, curr: {currentTimestamp}, diff: {diff}"));
-                ts.CurrentOffset = currentTimestamp - ts.NextTimestampTarget;
-            }
-            else if (diff > JUMP_THRESHOLD)
-            {
-                context.AddComment(new ProcessingComment(CommentType.TimestampJump, $"时间戳间隔过大, curr: {currentTimestamp}, diff: {diff}"));
-                ts.CurrentOffset = currentTimestamp - ts.NextTimestampTarget;
-            }
-
-            ts.LastOriginal = tags.Last().Timestamp;
-
-            foreach (var tag in tags)
-                tag.Timestamp -= ts.CurrentOffset;
-
-            ts.NextTimestampTarget = this.CalculateNewTarget(tags);
-        }
-
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private int CalculateNewTarget(IReadOnlyList<Tag> tags)
         {
             // 有可能出现只有音频或只有视频的情况
             int video = 0, audio = 0;
 
-            if (tags.Any(x => x.Type == TagType.Video))
+            if (tags.ToStructEnumerable().Any(ref LinqFunctions.TagIsVideo, x => x))
                 video = CalculatePerChannel(tags, VIDEO_DURATION_FALLBACK, VIDEO_DURATION_MAX, VIDEO_DURATION_MIN, TagType.Video);
 
-            if (tags.Any(x => x.Type == TagType.Audio))
+            if (tags.ToStructEnumerable().Any(ref LinqFunctions.TagIsAudio, x => x))
                 audio = CalculatePerChannel(tags, AUDIO_DURATION_FALLBACK, AUDIO_DURATION_MAX, AUDIO_DURATION_MIN, TagType.Audio);
 
             return Math.Max(video, audio);
 
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
             static int CalculatePerChannel(IReadOnlyList<Tag> tags, int fallback, int max, int min, TagType type)
             {
-                var sample = tags.Where(x => x.Type == type).Take(2).ToArray();
+                var sample = tags.ToStructEnumerable().Where(x => x.Type == type).Take(2).ToArray();
                 int durationPerTag;
                 if (sample.Length != 2)
                 {
@@ -116,7 +117,7 @@ namespace BililiveRecorder.Flv.Pipeline.Rules
                         durationPerTag = fallback;
                 }
 
-                return durationPerTag + tags.Last(x => x.Type == type).Timestamp;
+                return durationPerTag + tags.ToStructEnumerable().Last(x => x.Type == type).Timestamp;
             }
         }
 

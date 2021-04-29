@@ -1,36 +1,27 @@
 using System.Collections.Generic;
 using System.Linq;
-using BililiveRecorder.Flv.Pipeline;
+using BililiveRecorder.Flv.Pipeline.Actions;
+using StructLinq;
 
 namespace BililiveRecorder.Flv.Grouping.Rules
 {
     public class DataGroupingRule : IGroupingRule
     {
-        public bool StartWith(Tag tag) => tag.IsData();
-
-        public bool AppendWith(Tag tag, LinkedList<Tag> tags, out LinkedList<Tag>? leftover)
+        private readonly struct DoesNotContainAudioData : IFunction<Tag, bool>
         {
-            var shouldAppend =
-                // Tag 是非关键帧数据
-                tag.IsNonKeyframeData()
-                // 或是音频头，并且之前未出现过音频数据
-                || (tag.Type == TagType.Audio && tag.Flag == TagFlag.Header && tags.All(x => x.Type != TagType.Audio || x.Flag == TagFlag.Header));
-            // || (tag.IsKeyframeData() && tags.All(x => x.IsNonKeyframeData()))
-
-            if (shouldAppend)
-            {
-                tags.AddLast(tag);
-                leftover = null;
-                return true;
-            }
-            else
-            {
-                leftover = new LinkedList<Tag>();
-                leftover.AddLast(tag);
-                return false;
-            }
+            public static DoesNotContainAudioData Instance;
+            public bool Eval(Tag element) => element.Type != TagType.Audio || element.Flag == TagFlag.Header;
         }
 
-        public PipelineAction CreatePipelineAction(LinkedList<Tag> tags) => new PipelineDataAction(new List<Tag>(tags));
+        public bool CanStartWith(Tag tag) => tag.IsData();
+
+        public bool CanAppendWith(Tag tag, List<Tag> tags) =>
+            // Tag 是非关键帧数据
+            tag.IsNonKeyframeData()
+            // 或是音频头，并且之前未出现过音频数据
+            || (tag.Type == TagType.Audio && tag.Flag == TagFlag.Header && tags.ToStructEnumerable().All(ref DoesNotContainAudioData.Instance, x => x));
+        // || (tag.IsKeyframeData() && tags.All(x => x.IsNonKeyframeData()))
+
+        public PipelineAction CreatePipelineAction(List<Tag> tags) => new PipelineDataAction(tags);
     }
 }

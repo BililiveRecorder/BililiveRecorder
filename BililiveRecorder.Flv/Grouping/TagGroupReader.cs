@@ -1,10 +1,9 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using BililiveRecorder.Flv.Grouping.Rules;
-using BililiveRecorder.Flv.Pipeline;
+using BililiveRecorder.Flv.Pipeline.Actions;
 
 namespace BililiveRecorder.Flv.Grouping
 {
@@ -14,7 +13,7 @@ namespace BililiveRecorder.Flv.Grouping
         private readonly bool leaveOpen;
         private bool disposedValue;
 
-        private LinkedList<Tag>? leftover;
+        private Tag? leftoverTag;
 
         public IFlvTagReader TagReader { get; }
         public IList<IGroupingRule> GroupingRules { get; }
@@ -45,16 +44,12 @@ namespace BililiveRecorder.Flv.Grouping
             }
             try
             {
-                LinkedList<Tag>? queue = null;
                 Tag? firstTag;
 
-                if (this.leftover is not null && this.leftover.Count > 0)
+                if (this.leftoverTag is not null)
                 {
-                    queue = this.leftover;
-                    this.leftover = null;
-
-                    firstTag = queue.First.Value;
-                    queue.RemoveFirst();
+                    firstTag = this.leftoverTag;
+                    this.leftoverTag = null;
                 }
                 else
                 {
@@ -65,38 +60,44 @@ namespace BililiveRecorder.Flv.Grouping
                         return null;
                 }
 
-                var rule = this.GroupingRules.FirstOrDefault(x => x.StartWith(firstTag));
+                // 查找能处理此 Tag 的分组规则
+                // var rule = this.GroupingRules.FirstOrDefault(x => x.StartWith(firstTag));
+                IGroupingRule? rule = null;
+                {
+                    var rules = this.GroupingRules;
+                    for (var i = 0; i < rules.Count; i++)
+                    {
+                        var item = rules[i];
+                        if (item.CanStartWith(firstTag))
+                        {
+                            rule = item;
+                            break;
+                        }
+                    }
+                }
 
                 if (rule is null)
                     throw new Exception("No grouping rule accepting tags: " + firstTag.ToString());
 
-                var tags = new LinkedList<Tag>();
-                tags.AddLast(firstTag);
+                var tags = new List<Tag>(32)
+                {
+                    firstTag
+                };
+
+                firstTag = null;
 
                 while (!token.IsCancellationRequested)
                 {
-                    Tag? tag;
+                    var tag = await this.TagReader.ReadTagAsync(token).ConfigureAwait(false);
 
-                    if (queue is not null && queue.Count > 0)
+                    if (tag != null && rule.CanAppendWith(tag, tags))
                     {
-                        tag = queue.First.Value;
-                        queue.RemoveFirst();
+                        tags.Add(tag);
                     }
                     else
                     {
-                        tag = await this.TagReader.ReadTagAsync(token).ConfigureAwait(false);
-                    }
-
-                    if (tag == null || !rule.AppendWith(tag, tags, out this.leftover))
-                    {
-                        if (queue is not null && queue.Count > 0)
-                        {
-                            if (this.leftover is null)
-                                this.leftover = queue;
-                            else
-                                foreach (var item in queue)
-                                    this.leftover.AddLast(item);
-                        }
+                        // 如果数据已经读完，或当前规则不接受此 Tag
+                        this.leftoverTag = tag;
                         break;
                     }
                 }

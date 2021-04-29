@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using BililiveRecorder.Flv.Pipeline.Actions;
+using StructLinq;
 
 namespace BililiveRecorder.Flv.Pipeline.Rules
 {
@@ -12,7 +14,8 @@ namespace BililiveRecorder.Flv.Pipeline.Rules
     /// </remarks>
     public class HandleDelayedAudioHeaderRule : ISimpleProcessingRule
     {
-        private static readonly ProcessingComment comment = new ProcessingComment(CommentType.DecodingHeader, "检测到延后收到的音频头");
+        private static readonly ProcessingComment comment1 = new ProcessingComment(CommentType.Unrepairable, "音频数据出现在音频头之前");
+        private static readonly ProcessingComment comment2 = new ProcessingComment(CommentType.DecodingHeader, "检测到延后收到的音频头");
 
         public void Run(FlvProcessingContext context, Action next)
         {
@@ -25,25 +28,42 @@ namespace BililiveRecorder.Flv.Pipeline.Rules
             if (action is PipelineDataAction data)
             {
                 var tags = data.Tags;
-                if (tags.Any(x => x.IsHeader()))
+                // 如果分组内含有 Heaer
+                if (tags.ToStructEnumerable().Any(ref LinqFunctions.TagIsHeader, x => x))
                 {
-                    context.AddComment(comment);
-
-                    var index = tags.IndexOf(tags.Last(x => x.Flag == TagFlag.Header));
-                    for (var i = 0; i < index; i++)
                     {
-                        if (tags[i].Type == TagType.Audio)
+                        var shouldReportError = false;
+                        for (var i = tags.Count - 1; i >= 0; i--)
                         {
-                            // 在一段数据内 Header 之前出现了音频数据
-                            yield return PipelineDisconnectAction.Instance;
-                            yield return null;
-                            yield break;
+                            if (tags[i].Type == TagType.Audio)
+                            {
+                                if (tags[i].Flag != TagFlag.None)
+                                {
+                                    // 发现了 Audio Header
+                                    shouldReportError = true;
+                                }
+                                else
+                                {
+                                    // 在一段数据内 Header 之前出现了音频数据
+                                    if (shouldReportError)
+                                    {
+                                        context.AddComment(comment1);
+                                        yield return PipelineDisconnectAction.Instance;
+                                        yield return PipelineNewFileAction.Instance;
+                                        yield return null;
+                                        yield break;
+                                    }
+                                }
+                            }
                         }
                     }
 
-                    var headerTags = tags.Where(x => x.Flag == TagFlag.Header).ToList();
+                    context.AddComment(comment2);
+
+                    var headerTags = tags.ToStructEnumerable().Where(ref LinqFunctions.TagIsHeader, x => x).ToArray();
                     var newHeaderAction = new PipelineHeaderAction(headerTags);
-                    var dataTags = tags.Where(x => x.Flag != TagFlag.Header).ToList();
+
+                    var dataTags = tags.ToStructEnumerable().Except(headerTags.ToStructEnumerable(), x => x, x => x).ToArray();
                     var newDataAction = new PipelineDataAction(dataTags);
 
                     yield return newHeaderAction;
