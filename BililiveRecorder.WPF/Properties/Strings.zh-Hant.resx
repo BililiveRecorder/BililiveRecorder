@@ -204,6 +204,7 @@
   <data name="RoomCard_Menu_Tooltip" xml:space="preserve">
     <value>操作</value>
   </data>
+  
   <data name="RoomCard_Status_DanmakuConnectionTooltip_False" xml:space="preserve">
     <value>彈幕連結被中斷
 錄播姬通過彈幕伺服器接收開播狀態推送</value>
