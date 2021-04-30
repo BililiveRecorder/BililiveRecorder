@@ -79,6 +79,8 @@ namespace BililiveRecorder.Core.Api.Danmaku
                     return;
                 serverInfo.Data.ChooseOne(out var host, out var port, out var token);
 
+                this.logger.Debug("Connecting to {Host}:{Port} with a {TokenLength} char long token for room {RoomId}", host, port, token?.Length, roomid);
+
                 if (cancellationToken.IsCancellationRequested)
                     return;
 
@@ -87,7 +89,7 @@ namespace BililiveRecorder.Core.Api.Danmaku
 
                 this.danmakuStream = tcp.GetStream();
 
-                await SendHelloAsync(this.danmakuStream, roomid, token).ConfigureAwait(false);
+                await SendHelloAsync(this.danmakuStream, roomid, token!).ConfigureAwait(false);
                 await SendPingAsync(this.danmakuStream);
 
                 if (cancellationToken.IsCancellationRequested)
@@ -109,7 +111,7 @@ namespace BililiveRecorder.Core.Api.Danmaku
                     catch (ObjectDisposedException) { }
                     catch (Exception ex)
                     {
-                        this.logger.Warning(ex, "Error running ProcessDataAsync");
+                        this.logger.Debug(ex, "Error running ProcessDataAsync");
                     }
 
                     try
@@ -252,11 +254,7 @@ namespace BililiveRecorder.Core.Api.Danmaku
         private static async Task ProcessDataAsync(Stream stream, Action<string> callback)
         {
             var reader = PipeReader.Create(stream);
-            await ReadPipeAsync(reader, callback).ConfigureAwait(false);
-        }
 
-        private static async Task ReadPipeAsync(PipeReader reader, Action<string> callback)
-        {
             while (true)
             {
                 var result = await reader.ReadAsync();

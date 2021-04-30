@@ -105,7 +105,7 @@ namespace BililiveRecorder.Core.Recording
 
                 this.OnRecordSessionEnded(EventArgs.Empty);
 
-                this.logger.Debug("录制退出");
+                this.logger.Information("录制结束");
             }
         }
     }

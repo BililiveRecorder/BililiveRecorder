@@ -4,6 +4,6 @@ namespace BililiveRecorder.Core
 {
     public interface IRoomFactory
     {
-        IRoom CreateRoom(RoomConfig roomConfig);
+        IRoom CreateRoom(RoomConfig roomConfig, int initDelayFactor);
     }
 }

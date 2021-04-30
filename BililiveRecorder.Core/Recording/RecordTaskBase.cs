@@ -276,7 +276,7 @@ namespace BililiveRecorder.Core.Recording
                 {
                     case System.Net.HttpStatusCode.OK:
                         {
-                            this.logger.Debug("开始接收直播流");
+                            this.logger.Information("开始接收直播流");
                             var stream = await resp.Content.ReadAsStreamAsync().ConfigureAwait(false);
                             return stream;
                         }

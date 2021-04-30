@@ -7,7 +7,6 @@ using BililiveRecorder.Core.Danmaku;
 using BililiveRecorder.Core.Recording;
 using BililiveRecorder.Flv;
 using Microsoft.Extensions.DependencyInjection;
-using Polly;
 using Polly.Registry;
 
 namespace BililiveRecorder.DependencyInjection
@@ -26,7 +25,6 @@ namespace BililiveRecorder.DependencyInjection
             .AddRecorderRecording()
             .AddSingleton<IRecorder, Recorder>()
             .AddSingleton<IRoomFactory, RoomFactory>()
-            .AddScoped<IRoom, Room>()
             .AddScoped<IBasicDanmakuWriter, BasicDanmakuWriter>()
             ;
 

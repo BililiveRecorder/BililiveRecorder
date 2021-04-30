@@ -211,7 +211,7 @@ namespace BililiveRecorder.WPF.Pages
 
                     _ = Task.Run(async () =>
                     {
-                        await Task.Delay(100);
+                        await Task.Delay(150);
                         _ = this.Dispatcher.BeginInvoke(DispatcherPriority.Normal, method: new Action(() =>
                         {
                             this.RoomListPageNavigationViewItem.IsSelected = true;

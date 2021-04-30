@@ -48,7 +48,7 @@ namespace BililiveRecorder.Core
         private IRecordTask? recordTask;
         private DateTimeOffset recordTaskStartTime;
 
-        public Room(IServiceScope scope, RoomConfig roomConfig, ILogger logger, IDanmakuClient danmakuClient, IApiClient apiClient, IBasicDanmakuWriter basicDanmakuWriter, IRecordTaskFactory recordTaskFactory)
+        public Room(IServiceScope scope, RoomConfig roomConfig, int initDelayFactor, ILogger logger, IDanmakuClient danmakuClient, IApiClient apiClient, IBasicDanmakuWriter basicDanmakuWriter, IRecordTaskFactory recordTaskFactory)
         {
             this.scope = scope ?? throw new ArgumentNullException(nameof(scope));
             this.RoomConfig = roomConfig ?? throw new ArgumentNullException(nameof(roomConfig));
@@ -73,7 +73,8 @@ namespace BililiveRecorder.Core
 
             _ = Task.Run(async () =>
             {
-                await Task.Delay(1000);
+                await Task.Delay(1500 + (initDelayFactor * 500));
+                this.timer.Start();
                 await this.RefreshRoomInfoAsync();
             });
         }
@@ -107,6 +108,9 @@ namespace BililiveRecorder.Core
 
         public void SplitOutput()
         {
+            if (this.disposedValue)
+                return;
+
             lock (this.recordStartLock)
             {
                 this.recordTask?.SplitOutput();
@@ -115,6 +119,9 @@ namespace BililiveRecorder.Core
 
         public void StartRecord()
         {
+            if (this.disposedValue)
+                return;
+
             lock (this.recordStartLock)
             {
                 this.AutoRecordForThisSession = true;
@@ -135,6 +142,9 @@ namespace BililiveRecorder.Core
 
         public void StopRecord()
         {
+            if (this.disposedValue)
+                return;
+
             lock (this.recordStartLock)
             {
                 this.AutoRecordForThisSession = false;
@@ -148,6 +158,9 @@ namespace BililiveRecorder.Core
 
         public async Task RefreshRoomInfoAsync()
         {
+            if (this.disposedValue)
+                return;
+
             try
             {
                 await this.FetchUserInfoAsync().ConfigureAwait(false);
@@ -168,6 +181,8 @@ namespace BililiveRecorder.Core
         /// <exception cref="Exception"/>
         private async Task FetchRoomInfoAsync()
         {
+            if (this.disposedValue)
+                return;
             var room = (await this.apiClient.GetRoomInfoAsync(this.RoomConfig.RoomId).ConfigureAwait(false)).Data;
             if (room != null)
             {
@@ -183,6 +198,8 @@ namespace BililiveRecorder.Core
         /// <exception cref="Exception"/>
         private async Task FetchUserInfoAsync()
         {
+            if (this.disposedValue)
+                return;
             var user = await this.apiClient.GetUserInfoAsync(this.RoomConfig.RoomId).ConfigureAwait(false);
             this.Name = user.Data?.Info?.Name ?? this.Name;
         }
@@ -241,6 +258,8 @@ namespace BililiveRecorder.Core
         ///
         private async Task RestartAfterRecordTaskFailedAsync()
         {
+            if (this.disposedValue)
+                return;
             if (!this.Streaming || !this.AutoRecordForThisSession)
                 return;
 
@@ -282,6 +301,8 @@ namespace BililiveRecorder.Core
         private void StartDamakuConnection(bool delay = true) =>
             Task.Run(async () =>
             {
+                if (this.disposedValue)
+                    return;
                 try
                 {
                     if (delay)
@@ -427,10 +448,12 @@ namespace BililiveRecorder.Core
             if (e.Connected)
             {
                 this.DanmakuConnected = true;
+                this.logger.Information("弹幕服务器已连接");
             }
             else
             {
                 this.DanmakuConnected = false;
+                this.logger.Information("与弹幕服务器的连接被断开");
                 this.StartDamakuConnection(delay: true);
             }
         }

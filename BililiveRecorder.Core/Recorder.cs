@@ -34,8 +34,13 @@ namespace BililiveRecorder.Core
             this.basicWebhookV2 = new BasicWebhookV2(config.Global);
 
             {
-                foreach (var item in config.Rooms)
-                    this.AddRoom(item);
+                for (var i = 0; i < config.Rooms.Count; i++)
+                {
+                    var item = config.Rooms[i];
+                    if (item is not null)
+                        this.AddRoom(roomConfig: item, initDelayFactor: i);
+                }
+
                 this.SaveConfig();
             }
         }
@@ -59,15 +64,15 @@ namespace BililiveRecorder.Core
             lock (this.lockObject)
             {
                 var roomConfig = new RoomConfig { RoomId = roomid, AutoRecord = enabled };
-                this.AddRoom(roomConfig);
+                this.AddRoom(roomConfig, 0);
                 this.SaveConfig();
             }
         }
 
-        private void AddRoom(RoomConfig roomConfig)
+        private void AddRoom(RoomConfig roomConfig, int initDelayFactor)
         {
             roomConfig.SetParent(this.Config.Global);
-            var room = this.roomFactory.CreateRoom(roomConfig);
+            var room = this.roomFactory.CreateRoom(roomConfig, initDelayFactor);
             this.roomCollection.Add(room);
             this.AddEventSubscription(room);
         }
