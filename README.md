@@ -1,8 +1,8 @@
 # BiliBili Stream Recorder B站录播姬
 
-[![Build status](https://ci.appveyor.com/api/projects/status/1n4822yitgtu7ht7?svg=true)](https://ci.appveyor.com/project/Genteure/bililiverecorder)
+[![Build and Test](https://github.com/Bililive/BililiveRecorder/actions/workflows/build.yml/badge.svg)](https://github.com/Bililive/BililiveRecorder/actions/workflows/build.yml)
 [![Version](https://img.shields.io/github/tag/Bililive/BililiveRecorder.svg?label=Version)](#)
-[![license](https://img.shields.io/github/license/Bililive/BililiveRecorder.svg)](#)
+[![License](https://img.shields.io/github/license/Bililive/BililiveRecorder.svg)](#)
 [![Crowdin](https://badges.crowdin.net/bililiverecorder/localized.svg)](https://crowdin.com/project/bililiverecorder)
 
 [简体中文 README | Simplified Chinese](README_CN.md)

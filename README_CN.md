@@ -1,6 +1,6 @@
 # B站录播姬
 
-[![编译状态](https://ci.appveyor.com/api/projects/status/1n4822yitgtu7ht7?svg=true)](https://ci.appveyor.com/project/Genteure/bililiverecorder)
+[![Build and Test](https://github.com/Bililive/BililiveRecorder/actions/workflows/build.yml/badge.svg)](https://github.com/Bililive/BililiveRecorder/actions/workflows/build.yml)
 [![当前版本](https://img.shields.io/github/tag/Bililive/BililiveRecorder.svg?label=当前版本)](#)
 [![开源协议](https://img.shields.io/github/license/Bililive/BililiveRecorder.svg?label=开源协议)](#)
 [![QQ群 689636812](https://img.shields.io/badge/QQ%E7%BE%A4-689636812-success)](https://jq.qq.com/?_wv=1027&k=5zVwEyf)
