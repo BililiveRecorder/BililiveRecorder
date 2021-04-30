@@ -204,6 +204,7 @@
   <data name="RoomCard_Menu_Tooltip" xml:space="preserve">
     <value>Actions</value>
   </data>
+  
   <data name="RoomCard_Status_DanmakuConnectionTooltip_False" xml:space="preserve">
     <value>Chat Server Disconnected
 BiliRec receive live notifications from the chat server</value>
