@@ -15,14 +15,14 @@ namespace BililiveRecorder.Flv.UnitTests
 
         static TestRecyclableMemoryStreamProvider()
         {
-            manager.StreamFinalized += () =>
-            {
-                Debug.WriteLine("TestRecyclableMemoryStreamProvider: Stream Finalized");
-            };
-            manager.StreamDisposed += () =>
-            {
-                // Debug.WriteLine("TestRecyclableMemoryStreamProvider: Stream Disposed");
-            };
+            //manager.StreamFinalized += (sender, e) =>
+            //{
+            //    Debug.WriteLine("TestRecyclableMemoryStreamProvider: Stream Finalized");
+            //};
+            //manager.StreamDisposed += (sender, e) =>
+            //{
+            //    // Debug.WriteLine("TestRecyclableMemoryStreamProvider: Stream Disposed");
+            //};
         }
 
         public Stream CreateMemoryStream(string tag) => manager.GetStream(tag);
