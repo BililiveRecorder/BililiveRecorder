@@ -204,6 +204,7 @@
   <data name="RoomCard_Menu_Tooltip" xml:space="preserve">
     <value>設定</value>
   </data>
+  
   <data name="RoomCard_Status_DanmakuConnectionTooltip_False" xml:space="preserve">
     <value>配信コメントの接続状態は失われました
 リコーダーはコメントサーバーから配信状況データを受信する</value>
