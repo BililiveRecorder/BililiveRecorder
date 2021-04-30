@@ -120,10 +120,14 @@
     <Compile Include="Converters\RatioToArrowIconConverter.cs" />
     <Compile Include="Converters\ShortRoomIdToVisibilityConverter.cs" />
     <Compile Include="Converters\ValueConverterGroup.cs" />
+    <Compile Include="Models\AboutModel.cs" />
     <Compile Include="Models\Commands.cs" />
     <Compile Include="Models\LogModel.cs" />
     <Compile Include="Models\PollyPolicyModel.cs" />
     <Compile Include="Models\RootModel.cs" />
+    <Compile Include="Pages\AboutPage.xaml.cs">
+      <DependentUpon>AboutPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Pages\AnnouncementPage.xaml.cs">
       <DependentUpon>AnnouncementPage.xaml</DependentUpon>
     </Compile>
@@ -190,6 +194,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\WorkDirectorySelectorDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\AboutPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

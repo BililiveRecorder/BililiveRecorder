@@ -45,8 +45,9 @@ namespace BililiveRecorder.WPF.Pages
         {
             void AddType(Type t) => this.PageMap.Add(t.Name, t);
             AddType(typeof(RoomListPage));
-            AddType(typeof(LogPage));
             AddType(typeof(SettingsPage));
+            AddType(typeof(LogPage));
+            AddType(typeof(AboutPage));
             AddType(typeof(AdvancedSettingsPage));
             AddType(typeof(AnnouncementPage));
             AddType(typeof(ToolboxAutoFixPage));
@@ -66,6 +67,10 @@ namespace BililiveRecorder.WPF.Pages
 
             this.InitializeComponent();
             this.AdvancedSettingsPageItem.Visibility = Visibility.Hidden;
+
+#if DEBUG
+            this.DebugBuildIcon.Visibility = Visibility.Visible;
+#endif
 
             var mw = Application.Current.MainWindow as NewMainWindow;
             if (mw is not null)

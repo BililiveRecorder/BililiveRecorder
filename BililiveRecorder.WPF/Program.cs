@@ -60,8 +60,12 @@ namespace BililiveRecorder.WPF
         {
             try
             {
-                logger.Debug("Starting, CurrentDirectory: {CurrentDirectory}, CommandLine: {CommandLine}", Environment.CurrentDirectory, Environment.CommandLine);
+                logger.Debug("Starting, Version: {Version}, CurrentDirectory: {CurrentDirectory}, CommandLine: {CommandLine}",
+                             GitVersionInformation.InformationalVersion,
+                             Environment.CurrentDirectory,
+                             Environment.CommandLine);
                 var code = BuildCommand().Invoke(args);
+                logger.Debug("Exit code: {ExitCode}, RunWpf: {RunWpf}", code, code == CODE__WPF);
                 return code == CODE__WPF ? Commands.RunWpfReal() : code;
             }
             finally

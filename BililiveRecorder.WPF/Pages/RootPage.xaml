@@ -66,6 +66,12 @@
                     </MenuItem>
                 </Menu>
             </ui:NavigationView.PaneCustomContent>
+            <ui:NavigationView.PaneFooter>
+                <Grid Width="40" Height="40" x:Name="DebugBuildIcon" Visibility="Collapsed" HorizontalAlignment="Left">
+                    <ui:PathIcon Width="24" Height="24" ToolTip="Debug Build 测试版"
+                                 Style="{StaticResource PathIconDataBugOutline}"/>
+                </Grid>
+            </ui:NavigationView.PaneFooter>
             <ui:NavigationView.MenuItems>
                 <ui:NavigationViewItem Content="{l:Loc RootPage_NavigationViewItem_AnnouncementPage}" Tag="AnnouncementPage" IsSelected="True">
                     <ui:NavigationViewItem.Icon>
@@ -96,17 +102,22 @@
                         <ui:PathIcon Style="{StaticResource PathIconDataCogs}"/>
                     </ui:NavigationViewItem.Icon>
                 </ui:NavigationViewItem>
-                <ui:NavigationViewItem Content="{l:Loc RootPage_NavigationViewItem_LogPage}" Tag="LogPage">
-                    <ui:NavigationViewItem.Icon>
-                        <ui:PathIcon Style="{StaticResource PathIconDataPaperRollOutline}"/>
-                    </ui:NavigationViewItem.Icon>
-                </ui:NavigationViewItem>
                 <ui:NavigationViewItem Content="{l:Loc RootPage_NavigationViewItem_SettingsPage}" Tag="SettingsPage"
                                        IsEnabled="False"
                                        x:Name="SettingsPageNavigationViewItem"
                                        MouseRightButtonUp="NavigationViewItem_MouseRightButtonUp">
                     <ui:NavigationViewItem.Icon>
                         <ui:PathIcon Style="{StaticResource PathIconDataCogOutline}"/>
+                    </ui:NavigationViewItem.Icon>
+                </ui:NavigationViewItem>
+                <ui:NavigationViewItem Content="{l:Loc RootPage_NavigationViewItem_LogPage}" Tag="LogPage">
+                    <ui:NavigationViewItem.Icon>
+                        <ui:PathIcon Style="{StaticResource PathIconDataPaperRollOutline}"/>
+                    </ui:NavigationViewItem.Icon>
+                </ui:NavigationViewItem>
+                <ui:NavigationViewItem Content="关于录播姬" Tag="AboutPage">
+                    <ui:NavigationViewItem.Icon>
+                        <ui:PathIcon Style="{StaticResource PathIconDataInformationOutline}"/>
                     </ui:NavigationViewItem.Icon>
                 </ui:NavigationViewItem>
             </ui:NavigationView.FooterMenuItems>
