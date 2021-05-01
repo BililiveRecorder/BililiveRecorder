@@ -88,7 +88,9 @@ namespace BililiveRecorder.WPF
 
         public bool PromptCloseConfirm { get; set; } = true;
 
+#pragma warning disable VSTHRD100 // Avoid async void methods
         private async void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+#pragma warning restore VSTHRD100 // Avoid async void methods
         {
             if (this.PromptCloseConfirm && !this.CloseConfirmed)
             {

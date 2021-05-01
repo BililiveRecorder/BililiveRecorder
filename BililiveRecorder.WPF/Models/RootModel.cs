@@ -4,16 +4,17 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using BililiveRecorder.Core;
 
+#nullable enable
 namespace BililiveRecorder.WPF.Models
 {
     internal class RootModel : INotifyPropertyChanged, IDisposable
     {
         private bool disposedValue;
-        private IRecorder recorder;
+        private IRecorder? recorder;
 
-        public event PropertyChangedEventHandler PropertyChanged;
+        public event PropertyChangedEventHandler? PropertyChanged;
 
-        public IRecorder Recorder { get => this.recorder; internal set => this.SetField(ref this.recorder, value); }
+        public IRecorder? Recorder { get => this.recorder; internal set => this.SetField(ref this.recorder, value); }
 
         public RootModel()
         {

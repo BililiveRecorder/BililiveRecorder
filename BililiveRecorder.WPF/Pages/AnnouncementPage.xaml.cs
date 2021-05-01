@@ -36,7 +36,16 @@ namespace BililiveRecorder.WPF.Pages
             _ = this.Dispatcher.BeginInvoke(DispatcherPriority.Normal, (Func<Task>)(async () => await this.LoadAnnouncementAsync(ignore_cache: false, show_error: false)));
         }
 
-        private async void Button_Click(object sender, RoutedEventArgs e) => await this.LoadAnnouncementAsync(ignore_cache: true, show_error: Keyboard.Modifiers.HasFlag(ModifierKeys.Control));
+#pragma warning disable VSTHRD100 // Avoid async void methods
+        private async void Button_Click(object sender, RoutedEventArgs e)
+#pragma warning restore VSTHRD100 // Avoid async void methods
+        {
+            try
+            {
+                await this.LoadAnnouncementAsync(ignore_cache: true, show_error: Keyboard.Modifiers.HasFlag(ModifierKeys.Control));
+            }
+            catch (Exception) { }
+        }
 
         private async Task LoadAnnouncementAsync(bool ignore_cache, bool show_error)
         {
@@ -110,7 +119,9 @@ namespace BililiveRecorder.WPF.Pages
             }
         }
 
+#pragma warning disable VSTHRD100 // Avoid async void methods
         private async void Button_MouseRightButtonUp(object sender, MouseButtonEventArgs e)
+#pragma warning restore VSTHRD100 // Avoid async void methods
         {
             if (!Keyboard.Modifiers.HasFlag(ModifierKeys.Control) || !Keyboard.Modifiers.HasFlag(ModifierKeys.Alt)) return;
 

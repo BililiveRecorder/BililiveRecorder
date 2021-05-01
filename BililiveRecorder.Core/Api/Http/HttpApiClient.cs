@@ -85,8 +85,8 @@ namespace BililiveRecorder.Core.Api.Http
             var text = await resp.Content.ReadAsStringAsync().ConfigureAwait(false);
 
             var obj = JsonConvert.DeserializeObject<BilibiliApiResponse<T>>(text);
-            if (obj.Code != 0)
-                throw new BilibiliApiResponseCodeNotZeroException("Bilibili api code: " + (obj.Code?.ToString() ?? "(null)") + "\n" + text);
+            if (obj?.Code != 0)
+                throw new BilibiliApiResponseCodeNotZeroException("Bilibili api code: " + (obj?.Code?.ToString() ?? "(null)") + "\n" + text);
             return obj;
         }
 

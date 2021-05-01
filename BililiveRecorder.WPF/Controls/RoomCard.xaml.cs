@@ -4,6 +4,7 @@ using System.Windows;
 using System.Windows.Controls;
 using BililiveRecorder.Core;
 
+#nullable enable
 namespace BililiveRecorder.WPF.Controls
 {
     /// <summary>
@@ -16,9 +17,9 @@ namespace BililiveRecorder.WPF.Controls
             this.InitializeComponent();
         }
 
-        public event EventHandler DeleteRequested;
+        public event EventHandler? DeleteRequested;
 
-        public event EventHandler ShowSettingsRequested;
+        public event EventHandler? ShowSettingsRequested;
 
         private void MenuItem_StartRecording_Click(object sender, RoutedEventArgs e) => (this.DataContext as IRoom)?.StartRecord();
 

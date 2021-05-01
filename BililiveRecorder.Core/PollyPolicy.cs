@@ -24,7 +24,7 @@ namespace BililiveRecorder.Core
                 durationOfBreak: TimeSpan.FromMinutes(2),
                 onBreak: (_, _) =>
                 {
-                    logger.Warning("检测到被屏蔽，暂停发送请求");
+                    logger.Warning("检测到被屏蔽(HTTP 412)，暂停发送请求");
                 },
                 onReset: () =>
                 {

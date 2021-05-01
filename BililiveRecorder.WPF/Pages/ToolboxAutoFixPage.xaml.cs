@@ -49,7 +49,9 @@ namespace BililiveRecorder.WPF.Pages
             }
         }
 
+#pragma warning disable VSTHRD100 // Avoid async void methods
         private async void Fix_Button_Click(object sender, RoutedEventArgs e)
+#pragma warning restore VSTHRD100 // Avoid async void methods
         {
             AutoFixProgressDialog? progressDialog = null;
             try
@@ -74,6 +76,7 @@ namespace BililiveRecorder.WPF.Pages
                         EnsureValidNames = true,
                         NavigateToShortcut = true,
                         OverwritePrompt = false,
+                        InitialDirectory = Path.GetDirectoryName(inputPath),
                         DefaultDirectory = Path.GetDirectoryName(inputPath),
                         DefaultFileName = Path.GetFileName(inputPath)
                     };
@@ -129,7 +132,9 @@ namespace BililiveRecorder.WPF.Pages
             }
         }
 
+#pragma warning disable VSTHRD100 // Avoid async void methods
         private async void Analyze_Button_Click(object sender, RoutedEventArgs e)
+#pragma warning restore VSTHRD100 // Avoid async void methods
         {
             AutoFixProgressDialog? progressDialog = null;
             try
@@ -192,7 +197,9 @@ namespace BililiveRecorder.WPF.Pages
             }
         }
 
+#pragma warning disable VSTHRD100 // Avoid async void methods
         private async void Export_Button_Click(object sender, RoutedEventArgs e)
+#pragma warning restore VSTHRD100 // Avoid async void methods
         {
             AutoFixProgressDialog? progressDialog = null;
             try
@@ -216,6 +223,8 @@ namespace BililiveRecorder.WPF.Pages
                         EnsurePathExists = true,
                         EnsureValidNames = true,
                         NavigateToShortcut = true,
+                        OverwritePrompt = false,
+                        InitialDirectory = Path.GetDirectoryName(inputPath),
                         DefaultDirectory = Path.GetDirectoryName(inputPath),
                         DefaultFileName = Path.GetFileNameWithoutExtension(inputPath) + ".brec.xml.gz"
                     };

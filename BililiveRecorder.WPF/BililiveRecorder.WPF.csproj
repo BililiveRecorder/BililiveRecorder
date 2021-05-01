@@ -140,7 +140,6 @@
     <Compile Include="Converters\MultiBoolToValueConverter.cs" />
     <Compile Include="Converters\NullValueTemplateSelector.cs" />
     <Compile Include="Converters\RatioToColorBrushConverter.cs" />
-    <Compile Include="Converters\RoomListInterceptConverter.cs" />
     <Compile Include="Pages\ToolboxAutoFixPage.xaml.cs">
       <DependentUpon>ToolboxAutoFixPage.xaml</DependentUpon>
     </Compile>

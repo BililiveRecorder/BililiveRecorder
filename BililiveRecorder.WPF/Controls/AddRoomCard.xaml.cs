@@ -3,6 +3,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 
+#nullable enable
 namespace BililiveRecorder.WPF.Controls
 {
     /// <summary>
@@ -10,7 +11,7 @@ namespace BililiveRecorder.WPF.Controls
     /// </summary>
     public partial class AddRoomCard : UserControl
     {
-        public event EventHandler<string> AddRoomRequested;
+        public event EventHandler<string>? AddRoomRequested;
 
         public AddRoomCard()
         {

@@ -52,6 +52,6 @@ namespace BililiveRecorder.WPF
 
         private void SystemEvents_TimeChanged(object sender, System.EventArgs e) => this.loggerSystemEvents.Debug("TimeChanged");
 
-        private void SystemEvents_PowerModeChanged(object sender, PowerModeChangedEventArgs e) => this.loggerSystemEvents.Warning("PowerModeChanged {Mode}", e.Mode);
+        private void SystemEvents_PowerModeChanged(object sender, PowerModeChangedEventArgs e) => this.loggerSystemEvents.Debug("PowerModeChanged {Mode}", e.Mode);
     }
 }

@@ -85,7 +85,9 @@ namespace BililiveRecorder.WPF.Pages
             SingleInstance.Cleanup();
         }
 
+#pragma warning disable VSTHRD100 // Avoid async void methods
         private async void RootPage_Loaded(object sender, RoutedEventArgs e)
+#pragma warning restore VSTHRD100 // Avoid async void methods
         {
             var first_time = true;
             var from_argument = false;

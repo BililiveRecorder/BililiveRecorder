@@ -60,8 +60,10 @@ namespace BililiveRecorder.Core.Config
 #pragma warning disable CS0612
                             var v1Data = JsonConvert.DeserializeObject<V1.ConfigV1>(v1.Data ?? string.Empty);
 #pragma warning restore CS0612
-                            var newConfig = ConfigMapper.Map1To2(v1Data);
+                            if (v1Data is null)
+                                return new V2.ConfigV2();
 
+                            var newConfig = ConfigMapper.Map1To2(v1Data);
                             return newConfig;
                         }
                     case V2.ConfigV2 v2:
