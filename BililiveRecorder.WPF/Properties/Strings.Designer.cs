@@ -1059,15 +1059,6 @@ namespace BililiveRecorder.WPF.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 平均FPS {0:F2}.
-        /// </summary>
-        public static string Toolbox_AutoFix_AnalyzeResult_AvgFPS {
-            get {
-                return ResourceManager.GetString("Toolbox_AutoFix_AnalyzeResult_AvgFPS", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to 文件内存在录播姬无法自动修复的问题
         ///请点击 修复失败？ 按钮并反馈本问题.
         /// </summary>
@@ -1182,6 +1173,15 @@ namespace BililiveRecorder.WPF.Properties {
         public static string Toolbox_AutoFix_AnalyzeResult_Stats_Audio {
             get {
                 return ResourceManager.GetString("Toolbox_AutoFix_AnalyzeResult_Stats_Audio", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 平均FPS {0:F2}.
+        /// </summary>
+        public static string Toolbox_AutoFix_AnalyzeResult_Stats_AvgFPS {
+            get {
+                return ResourceManager.GetString("Toolbox_AutoFix_AnalyzeResult_Stats_AvgFPS", resourceCulture);
             }
         }
         

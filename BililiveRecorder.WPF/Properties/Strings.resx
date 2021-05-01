@@ -455,7 +455,7 @@ Will use default setting and disable user input when checked.</comment>
   <data name="TaskbarIconControl_Title" xml:space="preserve">
     <value>B站录播姬</value>
   </data>
-  <data name="Toolbox_AutoFix_AnalyzeResult_AvgFPS" xml:space="preserve">
+  <data name="Toolbox_AutoFix_AnalyzeResult_Stats_AvgFPS" xml:space="preserve">
     <value>平均FPS {0:F2}</value>
   </data>
   <data name="Toolbox_AutoFix_AnalyzeResult_ContainsUnrepairable" xml:space="preserve">

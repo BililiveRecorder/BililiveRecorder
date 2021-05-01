@@ -75,7 +75,7 @@
                             <TextBlock Grid.Row="0" HorizontalAlignment="Center">
                                 <TextBlock.Text>
                                     <MultiBinding Converter="{l:StringFormatConverter}">
-                                        <l:BLoc Key="Toolbox_AutoFix_AnalyzeResult_FrameCountTemplate"/>
+                                        <l:BLoc Key="Toolbox_AutoFix_AnalyzeResult_Stats_FrameCountTemplate"/>
                                         <Binding Path="FrameCount" Mode="OneWay"/>
                                     </MultiBinding>
                                 </TextBlock.Text>
@@ -83,7 +83,7 @@
                             <TextBlock Grid.Row="1" HorizontalAlignment="Center">
                                 <TextBlock.Text>
                                     <MultiBinding Converter="{l:StringFormatConverter}">
-                                        <l:BLoc Key="Toolbox_AutoFix_AnalyzeResult_AvgFPS"/>
+                                        <l:BLoc Key="Toolbox_AutoFix_AnalyzeResult_Stats_AvgFPS"/>
                                         <Binding Path="FramePerSecond" Mode="OneWay"/>
                                     </MultiBinding>
                                 </TextBlock.Text>
@@ -97,8 +97,8 @@
                                 </ListView.Resources>
                                 <ListView.View>
                                     <GridView AllowsColumnReorder="False">
-                                        <GridViewColumn Header="{l:Loc Toolbox_AutoFix_AnalyzeResult_FrameDuration}" DisplayMemberBinding="{Binding Key,StringFormat=\{0\} ms}"/>
-                                        <GridViewColumn Header="{l:Loc Toolbox_AutoFix_AnalyzeResult_FrameCount}" DisplayMemberBinding="{Binding Value}"/>
+                                        <GridViewColumn Header="{l:Loc Toolbox_AutoFix_AnalyzeResult_Stats_FrameDuration}" DisplayMemberBinding="{Binding Key,StringFormat=\{0\} ms}"/>
+                                        <GridViewColumn Header="{l:Loc Toolbox_AutoFix_AnalyzeResult_Stats_FrameCount}" DisplayMemberBinding="{Binding Value}"/>
                                     </GridView>
                                 </ListView.View>
                             </ListView>
