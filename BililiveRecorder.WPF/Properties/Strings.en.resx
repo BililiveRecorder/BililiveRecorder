@@ -65,20 +65,20 @@
           <xsd:element name="data">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
-                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2"/>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" msdata:Ordinal="1"/>
-              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3"/>
-              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4"/>
+              <xsd:attribute name="name" type="xsd:string" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="resheader">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required"/>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
             </xsd:complexType>
           </xsd:element>
         </xsd:choice>
@@ -98,15 +98,18 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.3500.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="About_Contact" xml:space="preserve">
-    <value>Contact/Feedback: </value>
+    <value>Contact</value>
     <comment>Add a space after colon ":"</comment>
   </data>
   <data name="About_Name" xml:space="preserve">
     <value>BiliRec (B站录播姬)</value>
     <comment>Add "(B站录播姬)" after translation</comment>
   </data>
+  <data name="About_Project" xml:space="preserve">
+    <value>Project Homepage</value>
+  </data>
   <data name="About_Website" xml:space="preserve">
-    <value>Website: </value>
+    <value>Website</value>
     <comment>Add a space after colon ":"</comment>
   </data>
   <data name="AddRoomCard_ConfirmButton" xml:space="preserve">
@@ -117,7 +120,6 @@
     <value>Channel Id or Link</value>
     <comment>id or link</comment>
   </data>
-  
   <data name="AddRoomCard_Title" xml:space="preserve">
     <value>Add Channel</value>
   </data>
@@ -239,6 +241,12 @@ It should be close to 100% and the color will be green</value>
     <value>Current speed ratio: {0:P2}</value>
     <comment>Speed percentage relative to upload speed of the streamer</comment>
   </data>
+  <data name="RoomCard_Status_SpeedIndicator_TotalnputBytes" xml:space="preserve">
+    <value>Received {0}</value>
+  </data>
+  <data name="RoomCard_Status_SpeedIndicator_TotalOutputBytes" xml:space="preserve">
+    <value>Written {0}</value>
+  </data>
   <data name="RoomListPage_Menu_AutoRecord" xml:space="preserve">
     <value>Auto Record</value>
   </data>
@@ -354,20 +362,6 @@ Only FLV is supported</value>
   <data name="Settings_RecordMode_Clip_PastDuration_Right" xml:space="preserve">
     <value>seconds</value>
   </data>
-  <data name="Settings_RecordMode_Description" xml:space="preserve">
-    <value>Recording only is recommended
-Clipping will be removed in the future
-Memory leak might occur when clipping is enabled</value>
-  </data>
-  <data name="Settings_RecordMode_RadioButton_Both" xml:space="preserve">
-    <value>Both</value>
-  </data>
-  <data name="Settings_RecordMode_RadioButton_ClipOnly" xml:space="preserve">
-    <value>Clipping only</value>
-  </data>
-  <data name="Settings_RecordMode_RadioButton_RecordOnly" xml:space="preserve">
-    <value>Recording only</value>
-  </data>
   <data name="Settings_RecordMode_Title" xml:space="preserve">
     <value>Record Mode</value>
   </data>
@@ -418,6 +412,9 @@ Will use default setting and disable user input when checked.</comment>
   <data name="TaskbarIconControl_Title" xml:space="preserve">
     <value>BiliRec (B站录播姬)</value>
   </data>
+  <data name="Toolbox_AutoFix_Error_Type_OK" xml:space="preserve">
+    <value>OK</value>
+  </data>
   <data name="Window_Title" xml:space="preserve">
     <value>BiliRec (B站录播姬) {0}</value>
     
@@ -428,7 +425,6 @@ Will use default setting and disable user input when checked.</comment>
   <data name="WorkDirectorySelector_Error_FailedToLoadConfig" xml:space="preserve">
     <value>Failed to load config</value>
   </data>
-  
   <data name="WorkDirectorySelector_Error_PathContainsFiles" xml:space="preserve">
     <value>The path contains other files</value>
   </data>

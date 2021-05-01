@@ -46,14 +46,14 @@
                         </local:SettingWithDefault>
                     </StackPanel>
                 </GroupBox>
-                <GroupBox Header="录制模式">
+                <GroupBox Header="{l:Loc Settings_RecordMode_Title}">
                     <StackPanel>
                         <local:SettingWithDefault IsSettingNotUsingDefault="{Binding HasRecordMode}">
                             <StackPanel>
-                                <RadioButton GroupName="RecordMode" Content="标准模式"
+                                <RadioButton GroupName="RecordMode" Content="{l:Loc Settings_RecordMode_RadioButton_Standard}"
                                              IsChecked="{Binding Path=RecordMode, Converter={StaticResource EnumToBooleanConverter},
                                     ConverterParameter={x:Static confiv2:RecordMode.Standard}}" />
-                                <RadioButton GroupName="RecordMode" Content="原始数据模式"
+                                <RadioButton GroupName="RecordMode" Content="{l:Loc Settings_RecordMode_RadioButton_RawData}"
                                              IsChecked="{Binding Path=RecordMode, Converter={StaticResource EnumToBooleanConverter},
                                     ConverterParameter={x:Static confiv2:RecordMode.RawData}}" />
                             </StackPanel>

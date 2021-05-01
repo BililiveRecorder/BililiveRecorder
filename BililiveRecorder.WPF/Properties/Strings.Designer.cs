@@ -61,11 +61,39 @@ namespace BililiveRecorder.WPF.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 联系方式/问题反馈: .
+        ///   Looks up a localized string similar to 联系方式.
         /// </summary>
         public static string About_Contact {
             get {
                 return ResourceManager.GetString("About_Contact", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 版权所有.
+        /// </summary>
+        public static string About_Copyright {
+            get {
+                return ResourceManager.GetString("About_Copyright", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 使用的库.
+        /// </summary>
+        public static string About_LibrariesUsed {
+            get {
+                return ResourceManager.GetString("About_LibrariesUsed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 本软件为免费软件。
+        ///本软件为开源软件，使用 GNU通用公共许可证第三版 （GPLv3） 授权。.
+        /// </summary>
+        public static string About_License {
+            get {
+                return ResourceManager.GetString("About_License", resourceCulture);
             }
         }
         
@@ -79,7 +107,43 @@ namespace BililiveRecorder.WPF.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 官网: .
+        ///   Looks up a localized string similar to 项目首页.
+        /// </summary>
+        public static string About_Project {
+            get {
+                return ResourceManager.GetString("About_Project", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 关于.
+        /// </summary>
+        public static string About_Title {
+            get {
+                return ResourceManager.GetString("About_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 翻译者.
+        /// </summary>
+        public static string About_Translator {
+            get {
+                return ResourceManager.GetString("About_Translator", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 版本 {0}.
+        /// </summary>
+        public static string About_Version {
+            get {
+                return ResourceManager.GetString("About_Version", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 官方网站.
         /// </summary>
         public static string About_Website {
             get {
@@ -376,6 +440,15 @@ namespace BililiveRecorder.WPF.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to 本次直播不再自动录制，结束直播时恢复.
+        /// </summary>
+        public static string RoomCard_Status_AutoRecordForThisSessionDisabled_Tooltip {
+            get {
+                return ResourceManager.GetString("RoomCard_Status_AutoRecordForThisSessionDisabled_Tooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to 弹幕连接被断开
         ///录播姬通过弹幕服务器接收开播状态推送.
         /// </summary>
@@ -432,12 +505,30 @@ namespace BililiveRecorder.WPF.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to 当前文件时长: {0:g}.
+        /// </summary>
+        public static string RoomCard_Status_SpeedIndicator_CurrentFileDuration {
+            get {
+                return ResourceManager.GetString("RoomCard_Status_SpeedIndicator_CurrentFileDuration", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to 这里显示的是录制的速度与主播直播速度的比
         ///正常应为接近 100% 颜色显示为绿色.
         /// </summary>
         public static string RoomCard_Status_SpeedIndicator_Description {
             get {
                 return ResourceManager.GetString("RoomCard_Status_SpeedIndicator_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 录制经过时间: {0:g}.
+        /// </summary>
+        public static string RoomCard_Status_SpeedIndicator_SessionDuration {
+            get {
+                return ResourceManager.GetString("RoomCard_Status_SpeedIndicator_SessionDuration", resourceCulture);
             }
         }
         
@@ -456,6 +547,33 @@ namespace BililiveRecorder.WPF.Properties {
         public static string RoomCard_Status_SpeedIndicator_SpeedInPercentage {
             get {
                 return ResourceManager.GetString("RoomCard_Status_SpeedIndicator_SpeedInPercentage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 所有文件时长: {0:g}.
+        /// </summary>
+        public static string RoomCard_Status_SpeedIndicator_TotalFileDuration {
+            get {
+                return ResourceManager.GetString("RoomCard_Status_SpeedIndicator_TotalFileDuration", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 接收数据量 {0}.
+        /// </summary>
+        public static string RoomCard_Status_SpeedIndicator_TotalnputBytes {
+            get {
+                return ResourceManager.GetString("RoomCard_Status_SpeedIndicator_TotalnputBytes", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 写入数据量 {0}.
+        /// </summary>
+        public static string RoomCard_Status_SpeedIndicator_TotalOutputBytes {
+            get {
+                return ResourceManager.GetString("RoomCard_Status_SpeedIndicator_TotalOutputBytes", resourceCulture);
             }
         }
         
@@ -779,40 +897,20 @@ namespace BililiveRecorder.WPF.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 推荐使用 只启用录制功能
-        ///即时剪辑功能会在之后的版本删除
-        ///启用剪辑功能有小概率会遇到内存泄漏的问题.
+        ///   Looks up a localized string similar to 原始数据模式.
         /// </summary>
-        public static string Settings_RecordMode_Description {
+        public static string Settings_RecordMode_RadioButton_RawData {
             get {
-                return ResourceManager.GetString("Settings_RecordMode_Description", resourceCulture);
+                return ResourceManager.GetString("Settings_RecordMode_RadioButton_RawData", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 同时启用两个功能.
+        ///   Looks up a localized string similar to 标准模式.
         /// </summary>
-        public static string Settings_RecordMode_RadioButton_Both {
+        public static string Settings_RecordMode_RadioButton_Standard {
             get {
-                return ResourceManager.GetString("Settings_RecordMode_RadioButton_Both", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to 只启用即时剪辑功能.
-        /// </summary>
-        public static string Settings_RecordMode_RadioButton_ClipOnly {
-            get {
-                return ResourceManager.GetString("Settings_RecordMode_RadioButton_ClipOnly", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to 只启用录制功能.
-        /// </summary>
-        public static string Settings_RecordMode_RadioButton_RecordOnly {
-            get {
-                return ResourceManager.GetString("Settings_RecordMode_RadioButton_RecordOnly", resourceCulture);
+                return ResourceManager.GetString("Settings_RecordMode_RadioButton_Standard", resourceCulture);
             }
         }
         
@@ -957,6 +1055,362 @@ namespace BililiveRecorder.WPF.Properties {
         public static string TaskbarIconControl_Title {
             get {
                 return ResourceManager.GetString("TaskbarIconControl_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 平均FPS {0:F2}.
+        /// </summary>
+        public static string Toolbox_AutoFix_AnalyzeResult_AvgFPS {
+            get {
+                return ResourceManager.GetString("Toolbox_AutoFix_AnalyzeResult_AvgFPS", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 文件内存在录播姬无法自动修复的问题
+        ///请点击 修复失败？ 按钮并反馈本问题.
+        /// </summary>
+        public static string Toolbox_AutoFix_AnalyzeResult_ContainsUnrepairable {
+            get {
+                return ResourceManager.GetString("Toolbox_AutoFix_AnalyzeResult_ContainsUnrepairable", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 需要修复.
+        /// </summary>
+        public static string Toolbox_AutoFix_AnalyzeResult_FixNeeded {
+            get {
+                return ResourceManager.GetString("Toolbox_AutoFix_AnalyzeResult_FixNeeded", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 无需修复.
+        /// </summary>
+        public static string Toolbox_AutoFix_AnalyzeResult_FixNotNeeded {
+            get {
+                return ResourceManager.GetString("Toolbox_AutoFix_AnalyzeResult_FixNotNeeded", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 分辨率、解码问题 {0} 处.
+        /// </summary>
+        public static string Toolbox_AutoFix_AnalyzeResult_IssueTypeDecodingHeader {
+            get {
+                return ResourceManager.GetString("Toolbox_AutoFix_AnalyzeResult_IssueTypeDecodingHeader", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 其他问题 {0} 处.
+        /// </summary>
+        public static string Toolbox_AutoFix_AnalyzeResult_IssueTypeOther {
+            get {
+                return ResourceManager.GetString("Toolbox_AutoFix_AnalyzeResult_IssueTypeOther", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 重复片段 {0} 处.
+        /// </summary>
+        public static string Toolbox_AutoFix_AnalyzeResult_IssueTypeRepeatingData {
+            get {
+                return ResourceManager.GetString("Toolbox_AutoFix_AnalyzeResult_IssueTypeRepeatingData", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 时间戳跳变问题 {0} 处.
+        /// </summary>
+        public static string Toolbox_AutoFix_AnalyzeResult_IssueTypeTimestampJump {
+            get {
+                return ResourceManager.GetString("Toolbox_AutoFix_AnalyzeResult_IssueTypeTimestampJump", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 时间戳错位问题 {0} 处.
+        /// </summary>
+        public static string Toolbox_AutoFix_AnalyzeResult_IssueTypeTimestampOffset {
+            get {
+                return ResourceManager.GetString("Toolbox_AutoFix_AnalyzeResult_IssueTypeTimestampOffset", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 无法修复的问题 {0} 处.
+        /// </summary>
+        public static string Toolbox_AutoFix_AnalyzeResult_IssueTypeUnrepairable {
+            get {
+                return ResourceManager.GetString("Toolbox_AutoFix_AnalyzeResult_IssueTypeUnrepairable", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 注：不分析也可以进行修复操作.
+        /// </summary>
+        public static string Toolbox_AutoFix_AnalyzeResult_NoDataNote {
+            get {
+                return ResourceManager.GetString("Toolbox_AutoFix_AnalyzeResult_NoDataNote", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 点击分析按钮开始分析.
+        /// </summary>
+        public static string Toolbox_AutoFix_AnalyzeResult_NoDataTitle {
+            get {
+                return ResourceManager.GetString("Toolbox_AutoFix_AnalyzeResult_NoDataTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 修复将会输出 {0} 个文件.
+        /// </summary>
+        public static string Toolbox_AutoFix_AnalyzeResult_OutputFileCount {
+            get {
+                return ResourceManager.GetString("Toolbox_AutoFix_AnalyzeResult_OutputFileCount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 音频.
+        /// </summary>
+        public static string Toolbox_AutoFix_AnalyzeResult_Stats_Audio {
+            get {
+                return ResourceManager.GetString("Toolbox_AutoFix_AnalyzeResult_Stats_Audio", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 仅供参考，有问题的文件的统计可能不准确.
+        /// </summary>
+        public static string Toolbox_AutoFix_AnalyzeResult_Stats_Disclaimer {
+            get {
+                return ResourceManager.GetString("Toolbox_AutoFix_AnalyzeResult_Stats_Disclaimer", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 帧数量.
+        /// </summary>
+        public static string Toolbox_AutoFix_AnalyzeResult_Stats_FrameCount {
+            get {
+                return ResourceManager.GetString("Toolbox_AutoFix_AnalyzeResult_Stats_FrameCount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 帧数量 {0} 个.
+        /// </summary>
+        public static string Toolbox_AutoFix_AnalyzeResult_Stats_FrameCountTemplate {
+            get {
+                return ResourceManager.GetString("Toolbox_AutoFix_AnalyzeResult_Stats_FrameCountTemplate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 帧时长.
+        /// </summary>
+        public static string Toolbox_AutoFix_AnalyzeResult_Stats_FrameDuration {
+            get {
+                return ResourceManager.GetString("Toolbox_AutoFix_AnalyzeResult_Stats_FrameDuration", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 统计数据.
+        /// </summary>
+        public static string Toolbox_AutoFix_AnalyzeResult_Stats_Title {
+            get {
+                return ResourceManager.GetString("Toolbox_AutoFix_AnalyzeResult_Stats_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 视频.
+        /// </summary>
+        public static string Toolbox_AutoFix_AnalyzeResult_Stats_Video {
+            get {
+                return ResourceManager.GetString("Toolbox_AutoFix_AnalyzeResult_Stats_Video", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 分析.
+        /// </summary>
+        public static string Toolbox_AutoFix_ButtonAnalyze {
+            get {
+                return ResourceManager.GetString("Toolbox_AutoFix_ButtonAnalyze", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 修复.
+        /// </summary>
+        public static string Toolbox_AutoFix_ButtonFix {
+            get {
+                return ResourceManager.GetString("Toolbox_AutoFix_ButtonFix", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 修复失败？.
+        /// </summary>
+        public static string Toolbox_AutoFix_ButtonNotFixed {
+            get {
+                return ResourceManager.GetString("Toolbox_AutoFix_ButtonNotFixed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 选择....
+        /// </summary>
+        public static string Toolbox_AutoFix_ButtonSelectInput {
+            get {
+                return ResourceManager.GetString("Toolbox_AutoFix_ButtonSelectInput", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 发生了错误.
+        /// </summary>
+        public static string Toolbox_AutoFix_Error_Title {
+            get {
+                return ResourceManager.GetString("Toolbox_AutoFix_Error_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 未知错误.
+        /// </summary>
+        public static string Toolbox_AutoFix_Error_Type_Error {
+            get {
+                return ResourceManager.GetString("Toolbox_AutoFix_Error_Type_Error", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 读取文件失败.
+        /// </summary>
+        public static string Toolbox_AutoFix_Error_Type_InputIOError {
+            get {
+                return ResourceManager.GetString("Toolbox_AutoFix_Error_Type_InputIOError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 输入不是FLV文件.
+        /// </summary>
+        public static string Toolbox_AutoFix_Error_Type_NotFlvFile {
+            get {
+                return ResourceManager.GetString("Toolbox_AutoFix_Error_Type_NotFlvFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to OK.
+        /// </summary>
+        public static string Toolbox_AutoFix_Error_Type_OK {
+            get {
+                return ResourceManager.GetString("Toolbox_AutoFix_Error_Type_OK", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 写入文件失败.
+        /// </summary>
+        public static string Toolbox_AutoFix_Error_Type_OutputIOError {
+            get {
+                return ResourceManager.GetString("Toolbox_AutoFix_Error_Type_OutputIOError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 未知的FLV数据类型.
+        /// </summary>
+        public static string Toolbox_AutoFix_Error_Type_UnknownFlvTagType {
+            get {
+                return ResourceManager.GetString("Toolbox_AutoFix_Error_Type_UnknownFlvTagType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to FLV 文件.
+        /// </summary>
+        public static string Toolbox_AutoFix_InputPathPlaceholder {
+            get {
+                return ResourceManager.GetString("Toolbox_AutoFix_InputPathPlaceholder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 导出原始分析数据.
+        /// </summary>
+        public static string Toolbox_AutoFix_NotFixed_ButtonExportData {
+            get {
+                return ResourceManager.GetString("Toolbox_AutoFix_NotFixed_ButtonExportData", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 如果修复出错、或在修复后依旧有问题
+        ///请发邮件到 rec@danmuji.org 反馈。
+        ///在邮件内附上此处导出的分析数据，
+        ///并尽量详细描述视频的问题、所使用的录播姬版本。
+        ///请分析未经修复的原始文件，而不是录播姬修复后的文件.
+        /// </summary>
+        public static string Toolbox_AutoFix_NotFixed_Description {
+            get {
+                return ResourceManager.GetString("Toolbox_AutoFix_NotFixed_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 更多信息请点击这里.
+        /// </summary>
+        public static string Toolbox_AutoFix_NotFixed_LearnMore {
+            get {
+                return ResourceManager.GetString("Toolbox_AutoFix_NotFixed_LearnMore", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 选择视频文件.
+        /// </summary>
+        public static string Toolbox_AutoFix_SelectInputDialog_Title {
+            get {
+                return ResourceManager.GetString("Toolbox_AutoFix_SelectInputDialog_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 选择保存位置.
+        /// </summary>
+        public static string Toolbox_AutoFix_SelectOutputDialog_Title {
+            get {
+                return ResourceManager.GetString("Toolbox_AutoFix_SelectOutputDialog_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 录播修复.
+        /// </summary>
+        public static string Toolbox_AutoFix_Title {
+            get {
+                return ResourceManager.GetString("Toolbox_AutoFix_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 工具箱.
+        /// </summary>
+        public static string Toolbox_Title {
+            get {
+                return ResourceManager.GetString("Toolbox_Title", resourceCulture);
             }
         }
         

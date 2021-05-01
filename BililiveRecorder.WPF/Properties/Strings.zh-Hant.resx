@@ -65,20 +65,20 @@
           <xsd:element name="data">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
-                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2"/>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" msdata:Ordinal="1"/>
-              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3"/>
-              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4"/>
+              <xsd:attribute name="name" type="xsd:string" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="resheader">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required"/>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
             </xsd:complexType>
           </xsd:element>
         </xsd:choice>
@@ -98,7 +98,7 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.3500.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="About_Contact" xml:space="preserve">
-    <value>聯絡方式/回報問題: </value>
+    <value>聯絡方式</value>
     <comment>Add a space after colon ":"</comment>
   </data>
   <data name="About_Name" xml:space="preserve">
@@ -106,7 +106,7 @@
     <comment>Add "(B站录播姬)" after translation</comment>
   </data>
   <data name="About_Website" xml:space="preserve">
-    <value>官網: </value>
+    <value>官方網站</value>
     <comment>Add a space after colon ":"</comment>
   </data>
   <data name="AddRoomCard_ConfirmButton" xml:space="preserve">
@@ -117,7 +117,6 @@
     <value>房間號或房間連結</value>
     <comment>id or link</comment>
   </data>
-  
   <data name="AddRoomCard_Title" xml:space="preserve">
     <value>新增錄製房間</value>
   </data>
@@ -354,20 +353,6 @@
   <data name="Settings_RecordMode_Clip_PastDuration_Right" xml:space="preserve">
     <value>秒</value>
   </data>
-  <data name="Settings_RecordMode_Description" xml:space="preserve">
-    <value>推薦使用 只啟用錄製功能
-即時剪輯功能將會在往後版本中刪除
-開啟剪輯功能有可能會遇到記憶體洩漏的問題</value>
-  </data>
-  <data name="Settings_RecordMode_RadioButton_Both" xml:space="preserve">
-    <value>同時開啟兩個功能</value>
-  </data>
-  <data name="Settings_RecordMode_RadioButton_ClipOnly" xml:space="preserve">
-    <value>只啟用即時剪輯功能</value>
-  </data>
-  <data name="Settings_RecordMode_RadioButton_RecordOnly" xml:space="preserve">
-    <value>只啟用錄製功能</value>
-  </data>
   <data name="Settings_RecordMode_Title" xml:space="preserve">
     <value>錄製模式</value>
   </data>
@@ -418,6 +403,9 @@ Will use default setting and disable user input when checked.</comment>
   <data name="TaskbarIconControl_Title" xml:space="preserve">
     <value>B站錄播姬</value>
   </data>
+  <data name="Toolbox_AutoFix_Error_Type_OK" xml:space="preserve">
+    <value>OK</value>
+  </data>
   <data name="Window_Title" xml:space="preserve">
     <value>B站錄播姬 {0}</value>
     
@@ -428,7 +416,6 @@ Will use default setting and disable user input when checked.</comment>
   <data name="WorkDirectorySelector_Error_FailedToLoadConfig" xml:space="preserve">
     <value>設定文件載入失敗</value>
   </data>
-  
   <data name="WorkDirectorySelector_Error_PathContainsFiles" xml:space="preserve">
     <value>目錄已有其他文件</value>
   </data>

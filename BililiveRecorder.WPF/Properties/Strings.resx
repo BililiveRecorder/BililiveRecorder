@@ -98,16 +98,38 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.3500.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="About_Contact" xml:space="preserve">
-    <value>联系方式/问题反馈: </value>
-    <comment>Add a space after colon ":"</comment>
+    <value>联系方式</value>
+    
+  </data>
+  <data name="About_Copyright" xml:space="preserve">
+    <value>版权所有</value>
+  </data>
+  <data name="About_LibrariesUsed" xml:space="preserve">
+    <value>使用的库</value>
+  </data>
+  <data name="About_License" xml:space="preserve">
+    <value>本软件为免费软件。
+本软件为开源软件，使用 GNU通用公共许可证第三版 （GPLv3） 授权。</value>
   </data>
   <data name="About_Name" xml:space="preserve">
     <value>B站录播姬</value>
     <comment>Add "(B站录播姬)" after translation</comment>
   </data>
+  <data name="About_Project" xml:space="preserve">
+    <value>项目首页</value>
+  </data>
+  <data name="About_Title" xml:space="preserve">
+    <value>关于</value>
+  </data>
+  <data name="About_Translator" xml:space="preserve">
+    <value>翻译者</value>
+  </data>
+  <data name="About_Version" xml:space="preserve">
+    <value>版本 {0}</value>
+  </data>
   <data name="About_Website" xml:space="preserve">
-    <value>官网: </value>
-    <comment>Add a space after colon ":"</comment>
+    <value>官方网站</value>
+    
   </data>
   <data name="AddRoomCard_ConfirmButton" xml:space="preserve">
     <value>确定</value>
@@ -209,6 +231,9 @@
   <data name="RoomCard_SplitButton_Tooltip" xml:space="preserve">
     <value>切割录制输出文件</value>
   </data>
+  <data name="RoomCard_Status_AutoRecordForThisSessionDisabled_Tooltip" xml:space="preserve">
+    <value>本次直播不再自动录制，结束直播时恢复</value>
+  </data>
   <data name="RoomCard_Status_DanmakuConnectionTooltip_False" xml:space="preserve">
     <value>弹幕连接被断开
 录播姬通过弹幕服务器接收开播状态推送</value>
@@ -231,10 +256,16 @@
     <value>录制中</value>
     <comment>Short status text</comment>
   </data>
+  <data name="RoomCard_Status_SpeedIndicator_CurrentFileDuration" xml:space="preserve">
+    <value>当前文件时长: {0:g}</value>
+  </data>
   <data name="RoomCard_Status_SpeedIndicator_Description" xml:space="preserve">
     <value>这里显示的是录制的速度与主播直播速度的比
 正常应为接近 100% 颜色显示为绿色</value>
     <comment>Shown in tooltip</comment>
+  </data>
+  <data name="RoomCard_Status_SpeedIndicator_SessionDuration" xml:space="preserve">
+    <value>录制经过时间: {0:g}</value>
   </data>
   <data name="RoomCard_Status_SpeedIndicator_SpeedInMbps" xml:space="preserve">
     <value>{0:F2} Mbps</value>
@@ -243,6 +274,15 @@
   <data name="RoomCard_Status_SpeedIndicator_SpeedInPercentage" xml:space="preserve">
     <value>当前速度比： {0:P2}</value>
     <comment>Speed percentage relative to upload speed of the streamer</comment>
+  </data>
+  <data name="RoomCard_Status_SpeedIndicator_TotalFileDuration" xml:space="preserve">
+    <value>所有文件时长: {0:g}</value>
+  </data>
+  <data name="RoomCard_Status_SpeedIndicator_TotalnputBytes" xml:space="preserve">
+    <value>接收数据量 {0}</value>
+  </data>
+  <data name="RoomCard_Status_SpeedIndicator_TotalOutputBytes" xml:space="preserve">
+    <value>写入数据量 {0}</value>
   </data>
   <data name="RoomListPage_Menu_AutoRecord" xml:space="preserve">
     <value>监控</value>
@@ -359,19 +399,11 @@
   <data name="Settings_RecordMode_Clip_PastDuration_Right" xml:space="preserve">
     <value>秒</value>
   </data>
-  <data name="Settings_RecordMode_Description" xml:space="preserve">
-    <value>推荐使用 只启用录制功能
-即时剪辑功能会在之后的版本删除
-启用剪辑功能有小概率会遇到内存泄漏的问题</value>
+  <data name="Settings_RecordMode_RadioButton_RawData" xml:space="preserve">
+    <value>原始数据模式</value>
   </data>
-  <data name="Settings_RecordMode_RadioButton_Both" xml:space="preserve">
-    <value>同时启用两个功能</value>
-  </data>
-  <data name="Settings_RecordMode_RadioButton_ClipOnly" xml:space="preserve">
-    <value>只启用即时剪辑功能</value>
-  </data>
-  <data name="Settings_RecordMode_RadioButton_RecordOnly" xml:space="preserve">
-    <value>只启用录制功能</value>
+  <data name="Settings_RecordMode_RadioButton_Standard" xml:space="preserve">
+    <value>标准模式</value>
   </data>
   <data name="Settings_RecordMode_Title" xml:space="preserve">
     <value>录制模式</value>
@@ -422,6 +454,129 @@ Will use default setting and disable user input when checked.</comment>
   </data>
   <data name="TaskbarIconControl_Title" xml:space="preserve">
     <value>B站录播姬</value>
+  </data>
+  <data name="Toolbox_AutoFix_AnalyzeResult_AvgFPS" xml:space="preserve">
+    <value>平均FPS {0:F2}</value>
+  </data>
+  <data name="Toolbox_AutoFix_AnalyzeResult_ContainsUnrepairable" xml:space="preserve">
+    <value>文件内存在录播姬无法自动修复的问题
+请点击 修复失败？ 按钮并反馈本问题</value>
+  </data>
+  <data name="Toolbox_AutoFix_AnalyzeResult_FixNeeded" xml:space="preserve">
+    <value>需要修复</value>
+  </data>
+  <data name="Toolbox_AutoFix_AnalyzeResult_FixNotNeeded" xml:space="preserve">
+    <value>无需修复</value>
+  </data>
+  <data name="Toolbox_AutoFix_AnalyzeResult_IssueTypeDecodingHeader" xml:space="preserve">
+    <value>分辨率、解码问题 {0} 处</value>
+  </data>
+  <data name="Toolbox_AutoFix_AnalyzeResult_IssueTypeOther" xml:space="preserve">
+    <value>其他问题 {0} 处</value>
+  </data>
+  <data name="Toolbox_AutoFix_AnalyzeResult_IssueTypeRepeatingData" xml:space="preserve">
+    <value>重复片段 {0} 处</value>
+  </data>
+  <data name="Toolbox_AutoFix_AnalyzeResult_IssueTypeTimestampJump" xml:space="preserve">
+    <value>时间戳跳变问题 {0} 处</value>
+  </data>
+  <data name="Toolbox_AutoFix_AnalyzeResult_IssueTypeTimestampOffset" xml:space="preserve">
+    <value>时间戳错位问题 {0} 处</value>
+  </data>
+  <data name="Toolbox_AutoFix_AnalyzeResult_IssueTypeUnrepairable" xml:space="preserve">
+    <value>无法修复的问题 {0} 处</value>
+  </data>
+  <data name="Toolbox_AutoFix_AnalyzeResult_NoDataNote" xml:space="preserve">
+    <value>注：不分析也可以进行修复操作</value>
+  </data>
+  <data name="Toolbox_AutoFix_AnalyzeResult_NoDataTitle" xml:space="preserve">
+    <value>点击分析按钮开始分析</value>
+  </data>
+  <data name="Toolbox_AutoFix_AnalyzeResult_OutputFileCount" xml:space="preserve">
+    <value>修复将会输出 {0} 个文件</value>
+  </data>
+  <data name="Toolbox_AutoFix_AnalyzeResult_Stats_Audio" xml:space="preserve">
+    <value>音频</value>
+  </data>
+  <data name="Toolbox_AutoFix_AnalyzeResult_Stats_Disclaimer" xml:space="preserve">
+    <value>仅供参考，有问题的文件的统计可能不准确</value>
+  </data>
+  <data name="Toolbox_AutoFix_AnalyzeResult_Stats_FrameCount" xml:space="preserve">
+    <value>帧数量</value>
+  </data>
+  <data name="Toolbox_AutoFix_AnalyzeResult_Stats_FrameCountTemplate" xml:space="preserve">
+    <value>帧数量 {0} 个</value>
+  </data>
+  <data name="Toolbox_AutoFix_AnalyzeResult_Stats_FrameDuration" xml:space="preserve">
+    <value>帧时长</value>
+  </data>
+  <data name="Toolbox_AutoFix_AnalyzeResult_Stats_Title" xml:space="preserve">
+    <value>统计数据</value>
+  </data>
+  <data name="Toolbox_AutoFix_AnalyzeResult_Stats_Video" xml:space="preserve">
+    <value>视频</value>
+  </data>
+  <data name="Toolbox_AutoFix_ButtonAnalyze" xml:space="preserve">
+    <value>分析</value>
+  </data>
+  <data name="Toolbox_AutoFix_ButtonFix" xml:space="preserve">
+    <value>修复</value>
+  </data>
+  <data name="Toolbox_AutoFix_ButtonNotFixed" xml:space="preserve">
+    <value>修复失败？</value>
+  </data>
+  <data name="Toolbox_AutoFix_ButtonSelectInput" xml:space="preserve">
+    <value>选择...</value>
+  </data>
+  <data name="Toolbox_AutoFix_Error_Title" xml:space="preserve">
+    <value>发生了错误</value>
+  </data>
+  <data name="Toolbox_AutoFix_Error_Type_Error" xml:space="preserve">
+    <value>未知错误</value>
+  </data>
+  <data name="Toolbox_AutoFix_Error_Type_InputIOError" xml:space="preserve">
+    <value>读取文件失败</value>
+  </data>
+  <data name="Toolbox_AutoFix_Error_Type_NotFlvFile" xml:space="preserve">
+    <value>输入不是FLV文件</value>
+  </data>
+  <data name="Toolbox_AutoFix_Error_Type_OK" xml:space="preserve">
+    <value>OK</value>
+    <comment>其实不是错误类型</comment>
+  </data>
+  <data name="Toolbox_AutoFix_Error_Type_OutputIOError" xml:space="preserve">
+    <value>写入文件失败</value>
+  </data>
+  <data name="Toolbox_AutoFix_Error_Type_UnknownFlvTagType" xml:space="preserve">
+    <value>未知的FLV数据类型</value>
+  </data>
+  <data name="Toolbox_AutoFix_InputPathPlaceholder" xml:space="preserve">
+    <value>FLV 文件</value>
+  </data>
+  <data name="Toolbox_AutoFix_NotFixed_ButtonExportData" xml:space="preserve">
+    <value>导出原始分析数据</value>
+  </data>
+  <data name="Toolbox_AutoFix_NotFixed_Description" xml:space="preserve">
+    <value>如果修复出错、或在修复后依旧有问题
+请发邮件到 rec@danmuji.org 反馈。
+在邮件内附上此处导出的分析数据，
+并尽量详细描述视频的问题、所使用的录播姬版本。
+请分析未经修复的原始文件，而不是录播姬修复后的文件</value>
+  </data>
+  <data name="Toolbox_AutoFix_NotFixed_LearnMore" xml:space="preserve">
+    <value>更多信息请点击这里</value>
+  </data>
+  <data name="Toolbox_AutoFix_SelectInputDialog_Title" xml:space="preserve">
+    <value>选择视频文件</value>
+  </data>
+  <data name="Toolbox_AutoFix_SelectOutputDialog_Title" xml:space="preserve">
+    <value>选择保存位置</value>
+  </data>
+  <data name="Toolbox_AutoFix_Title" xml:space="preserve">
+    <value>录播修复</value>
+  </data>
+  <data name="Toolbox_Title" xml:space="preserve">
+    <value>工具箱</value>
   </data>
   <data name="Window_Title" xml:space="preserve">
     <value>B站录播姬 {0}</value>

@@ -14,7 +14,7 @@
     d:DataContext="{d:DesignInstance Type=local:WorkDirectorySelectorDialog}"
     DefaultButton="Primary"
     PrimaryButtonText="{l:Loc Global_Confirm}"
-    SecondaryButtonText="工具箱模式"
+    SecondaryButtonText="{l:Loc Toolbox_Title}"
     CloseButtonText="{l:Loc Global_Quit}">
     <Grid>
         <Grid.RowDefinitions>

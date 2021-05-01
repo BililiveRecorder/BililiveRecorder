@@ -67,20 +67,29 @@
             </StackPanel>
         </StackPanel>
         <StackPanel Grid.Row="1" Margin="0,10">
-            <TextBlock FontSize="16" Text="{Binding InformationalVersion,StringFormat=版本 {0}}"/>
-            <TextBlock FontSize="16" Text="版权所有 © 2021 Genteure"/>
-            <TextBlock FontSize="16" Text="本软件为免费软件。"/>
-            <TextBlock FontSize="16" Text="本软件为开源软件，使用 GNU通用公共许可证第三版 （GPLv3） 授权。"/>
+            <TextBlock FontSize="16">
+                <TextBlock.Text>
+                    <MultiBinding Converter="{l:StringFormatConverter}">
+                        <l:BLoc Key="About_Version"/>
+                        <Binding Path="InformationalVersion" Mode="OneWay"/>
+                    </MultiBinding>
+                </TextBlock.Text>
+            </TextBlock>
             <StackPanel Orientation="Horizontal">
-                <TextBlock FontSize="16" Text="联系方式" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                <TextBlock FontSize="16" Text="{l:Loc About_Copyright}"/>
+                <TextBlock FontSize="16" Text=" © 2021 Genteure"/>
+            </StackPanel>
+            <TextBlock FontSize="16" Text="{l:Loc About_License}"/>
+            <StackPanel Orientation="Horizontal">
+                <TextBlock FontSize="16" Text="{l:Loc About_Contact}" VerticalAlignment="Center" Margin="0,0,5,0"/>
                 <ui:HyperlinkButton Padding="0" Content="rec@danmuji.org" NavigateUri="mailto:rec@danmuji.org"/>
             </StackPanel>
             <StackPanel Orientation="Horizontal">
-                <TextBlock FontSize="16" Text="官方网站" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                <TextBlock FontSize="16" Text="{l:Loc About_Website}" VerticalAlignment="Center" Margin="0,0,5,0"/>
                 <ui:HyperlinkButton Padding="0" Content="https://rec.danmuji.org" NavigateUri="https://rec.danmuji.org"/>
             </StackPanel>
             <StackPanel Orientation="Horizontal">
-                <TextBlock FontSize="16" Text="项目首页" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                <TextBlock FontSize="16" Text="{l:Loc About_Project}" VerticalAlignment="Center" Margin="0,0,5,0"/>
                 <ui:HyperlinkButton Padding="0" Content="https://github.com/Bililive/BililiveRecorder" NavigateUri="https://github.com/Bililive/BililiveRecorder"/>
             </StackPanel>
         </StackPanel>
@@ -89,7 +98,7 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
-            <TextBlock Text="翻译者" FontSize="22"/>
+            <TextBlock Text="{l:Loc About_Translator}" FontSize="22"/>
             <ListView Grid.Row="1">
                 <ListView.Items>
                     <Label Content="User Name (username)"/>
@@ -106,7 +115,7 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
-            <TextBlock Text="使用的库" FontSize="22"/>
+            <TextBlock Text="{l:Loc About_LibrariesUsed}" FontSize="22"/>
             <ListView Grid.Row="1">
                 <ListView.Items>
                     <Label Content="TODO"/>

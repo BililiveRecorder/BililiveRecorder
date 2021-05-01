@@ -65,20 +65,20 @@
           <xsd:element name="data">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
-                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2"/>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" msdata:Ordinal="1"/>
-              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3"/>
-              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4"/>
+              <xsd:attribute name="name" type="xsd:string" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="resheader">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required"/>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
             </xsd:complexType>
           </xsd:element>
         </xsd:choice>
@@ -98,7 +98,7 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.3500.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="About_Contact" xml:space="preserve">
-    <value>連絡先・お問い合わせ: </value>
+    <value>連絡先</value>
     <comment>Add a space after colon ":"</comment>
   </data>
   <data name="About_Name" xml:space="preserve">
@@ -106,7 +106,7 @@
     <comment>Add "(B站录播姬)" after translation</comment>
   </data>
   <data name="About_Website" xml:space="preserve">
-    <value>公式サイト: </value>
+    <value>公式サイト</value>
     <comment>Add a space after colon ":"</comment>
   </data>
   <data name="AddRoomCard_ConfirmButton" xml:space="preserve">
@@ -117,7 +117,6 @@
     <value>ルーム番号/URL</value>
     <comment>id or link</comment>
   </data>
-  
   <data name="AddRoomCard_Title" xml:space="preserve">
     <value>チャンネル追加</value>
   </data>
@@ -354,20 +353,6 @@ FLV フォーマットのみサポートされています。</value>
   <data name="Settings_RecordMode_Clip_PastDuration_Right" xml:space="preserve">
     <value>秒前からカットする</value>
   </data>
-  <data name="Settings_RecordMode_Description" xml:space="preserve">
-    <value>録画のみ　をおすすめします。
-即時編集機能は未来のバージョンから削除予定です。
-即時編集機能はまれにメモリリークの問題を引き起こします。</value>
-  </data>
-  <data name="Settings_RecordMode_RadioButton_Both" xml:space="preserve">
-    <value>両方とも</value>
-  </data>
-  <data name="Settings_RecordMode_RadioButton_ClipOnly" xml:space="preserve">
-    <value>即時編集のみ</value>
-  </data>
-  <data name="Settings_RecordMode_RadioButton_RecordOnly" xml:space="preserve">
-    <value>録画のみ</value>
-  </data>
   <data name="Settings_RecordMode_Title" xml:space="preserve">
     <value>録画モード</value>
   </data>
@@ -418,6 +403,9 @@ Will use default setting and disable user input when checked.</comment>
   <data name="TaskbarIconControl_Title" xml:space="preserve">
     <value>ビリビリ生配信リコーダー</value>
   </data>
+  <data name="Toolbox_AutoFix_Error_Type_OK" xml:space="preserve">
+    <value>OK</value>
+  </data>
   <data name="Window_Title" xml:space="preserve">
     <value>ビリビリ録画機 (B站录播姬) {0}</value>
     
@@ -428,7 +416,6 @@ Will use default setting and disable user input when checked.</comment>
   <data name="WorkDirectorySelector_Error_FailedToLoadConfig" xml:space="preserve">
     <value>構成ファイルのロードに失敗しました</value>
   </data>
-  
   <data name="WorkDirectorySelector_Error_PathContainsFiles" xml:space="preserve">
     <value>このファイルには他のファイルが存在し
 空のフォルダを設定してください</value>

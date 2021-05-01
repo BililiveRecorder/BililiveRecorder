@@ -7,6 +7,7 @@ using BililiveRecorder.ToolBox.Commands;
 using BililiveRecorder.WPF.Controls;
 using Microsoft.WindowsAPICodePack.Dialogs;
 using Serilog;
+using WPFLocalizeExtension.Extensions;
 
 #nullable enable
 namespace BililiveRecorder.WPF.Pages
@@ -25,8 +26,7 @@ namespace BililiveRecorder.WPF.Pages
 
         private void SelectFile_Button_Click(object sender, RoutedEventArgs e)
         {
-            // var title = LocExtension.GetLocalizedValue<string>("BililiveRecorder.WPF:Strings:WorkDirectorySelector_Title");
-            var title = "选择要修复的文件";
+            var title = LocExtension.GetLocalizedValue<string>("BililiveRecorder.WPF:Strings:Toolbox_AutoFix_SelectInputDialog_Title");
             var fileDialog = new CommonOpenFileDialog()
             {
                 Title = title,
@@ -39,8 +39,8 @@ namespace BililiveRecorder.WPF.Pages
                 NavigateToShortcut = true,
                 Filters =
                 {
-                    new CommonFileDialogFilter("Flv files",".flv"),
-                    new CommonFileDialogFilter("Flv Xml files",".xml,.gz")
+                    new CommonFileDialogFilter("FLV",".flv"),
+                    new CommonFileDialogFilter("dev's toy",".xml,.gz")
                 }
             };
             if (fileDialog.ShowDialog() == CommonFileDialogResult.Ok)
@@ -67,7 +67,7 @@ namespace BililiveRecorder.WPF.Pages
 
                 string? output_path;
                 {
-                    var title = "选择保存位置";
+                    var title = LocExtension.GetLocalizedValue<string>("BililiveRecorder.WPF:Strings:Toolbox_AutoFix_SelectOutputDialog_Title");
                     var fileDialog = new CommonSaveFileDialog()
                     {
                         Title = title,
@@ -105,14 +105,7 @@ namespace BililiveRecorder.WPF.Pages
                 if (resp.Status != ResponseStatus.OK)
                 {
                     logger.Warning(resp.Exception, "修复时发生错误 (@Status)", resp.Status);
-                    await Task.Run(() =>
-                    {
-                        // TODO 翻译
-                        // 例：在读取文件时发生了错误
-                        // 选择的不是 FLV 文件
-                        // FLV 文件格式错误
-                        MessageBox.Show($"错误类型: {resp.Status}\n{resp.ErrorMessage}", "修复时发生错误", MessageBoxButton.OK, MessageBoxImage.Warning);
-                    }).ConfigureAwait(true);
+                    await Task.Run(() => ShowErrorMessageBox(resp)).ConfigureAwait(true);
                 }
 
                 progressDialog.Hide();
@@ -130,6 +123,13 @@ namespace BililiveRecorder.WPF.Pages
                 }
                 catch (Exception) { }
             }
+        }
+
+        private static void ShowErrorMessageBox<T>(CommandResponse<T> resp) where T : class
+        {
+            var title = LocExtension.GetLocalizedValue<string>("BililiveRecorder.WPF:Strings:Toolbox_AutoFix_Error_Title");
+            var type = LocExtension.GetLocalizedValue<string>("BililiveRecorder.WPF:Strings:Toolbox_AutoFix_Error_Type_" + resp.Status.ToString());
+            MessageBox.Show($"{type}\n{resp.ErrorMessage}", title, MessageBoxButton.OK, MessageBoxImage.Warning);
         }
 
 #pragma warning disable VSTHRD100 // Avoid async void methods
@@ -166,14 +166,7 @@ namespace BililiveRecorder.WPF.Pages
                 if (resp.Status != ResponseStatus.OK)
                 {
                     logger.Warning(resp.Exception, "分析时发生错误 (@Status)", resp.Status);
-                    await Task.Run(() =>
-                    {
-                        // TODO 翻译
-                        // 例：在读取文件时发生了错误
-                        // 选择的不是 FLV 文件
-                        // FLV 文件格式错误
-                        MessageBox.Show($"错误类型: {resp.Status}\n{resp.ErrorMessage}", "分析时发生错误", MessageBoxButton.OK, MessageBoxImage.Warning);
-                    }).ConfigureAwait(true);
+                    await Task.Run(() => ShowErrorMessageBox(resp)).ConfigureAwait(true);
                 }
                 else
                 {
@@ -215,7 +208,7 @@ namespace BililiveRecorder.WPF.Pages
 
                 var outputPath = string.Empty;
                 {
-                    var title = "选择保存位置";
+                    var title = LocExtension.GetLocalizedValue<string>("BililiveRecorder.WPF:Strings:Toolbox_AutoFix_SelectOutputDialog_Title");
                     var fileDialog = new CommonSaveFileDialog()
                     {
                         Title = title,
@@ -223,7 +216,7 @@ namespace BililiveRecorder.WPF.Pages
                         EnsurePathExists = true,
                         EnsureValidNames = true,
                         NavigateToShortcut = true,
-                        OverwritePrompt = false,
+                        OverwritePrompt = true,
                         InitialDirectory = Path.GetDirectoryName(inputPath),
                         DefaultDirectory = Path.GetDirectoryName(inputPath),
                         DefaultFileName = Path.GetFileNameWithoutExtension(inputPath) + ".brec.xml.gz"
@@ -232,11 +225,6 @@ namespace BililiveRecorder.WPF.Pages
                         outputPath = fileDialog.FileName;
                     else
                         return;
-                }
-                if (File.Exists(outputPath))
-                {
-                    MessageBox.Show("保存位置已经存在文件");
-                    return;
                 }
 
                 var req = new ExportRequest
@@ -258,14 +246,7 @@ namespace BililiveRecorder.WPF.Pages
                 if (resp.Status != ResponseStatus.OK)
                 {
                     logger.Warning(resp.Exception, "导出分析数据时发生错误 (@Status)", resp.Status);
-                    await Task.Run(() =>
-                    {
-                        // TODO 翻译
-                        // 例：在读取文件时发生了错误
-                        // 选择的不是 FLV 文件
-                        // FLV 文件格式错误
-                        MessageBox.Show($"错误类型: {resp.Status}\n{resp.ErrorMessage}", "导出分析数据时发生错误", MessageBoxButton.OK, MessageBoxImage.Warning);
-                    }).ConfigureAwait(true);
+                    await Task.Run(() => ShowErrorMessageBox(resp)).ConfigureAwait(true);
                 }
 
                 progressDialog.Hide();

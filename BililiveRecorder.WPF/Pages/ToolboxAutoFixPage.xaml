@@ -24,20 +24,16 @@
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
             <DockPanel Margin="0,0,0,10">
-                <Button VerticalAlignment="Bottom" DockPanel.Dock="Right" Content="修复失败？">
+                <Button VerticalAlignment="Bottom" DockPanel.Dock="Right" Content="{l:Loc Toolbox_AutoFix_ButtonNotFixed}">
                     <ui:FlyoutService.Flyout>
                         <ui:Flyout Placement="LeftEdgeAlignedTop">
                             <StackPanel>
-                                <TextBlock Text="如果修复出错、或在修复后依旧有问题"/>
-                                <TextBlock Text="请发邮件到 rec@danmuji.org 反馈"/>
-                                <TextBlock Text="在邮件内附上此处导出的分析数据"/>
-                                <TextBlock Text="并尽量详细描述视频的问题、所使用的录播姬版本"/>
-                                <TextBlock Text="请分析未经修复的原始文件，而不是录播姬修复后的文件"/>
-                                <TextBlock><Hyperlink NavigateUri=""><Run Text="更多信息请点击这里"/></Hyperlink></TextBlock>
+                                <TextBlock Text="{l:Loc Toolbox_AutoFix_NotFixed_Description}"/>
+                                <ui:HyperlinkButton NavigateUri="" Content="{l:Loc Toolbox_AutoFix_NotFixed_LearnMore}"/>
                                 <Button Margin="0,15,0,10" HorizontalAlignment="Center" Click="Export_Button_Click">
                                     <StackPanel Orientation="Horizontal">
                                         <ui:PathIcon Margin="0,0,5,0" Style="{StaticResource PathIconDataExport}"/>
-                                        <TextBlock Text="导出原始分析数据"/>
+                                        <TextBlock Text="{l:Loc Toolbox_AutoFix_NotFixed_ButtonExportData}"/>
                                     </StackPanel>
                                 </Button>
                             </StackPanel>
@@ -47,17 +43,17 @@
                 <Button VerticalAlignment="Bottom" DockPanel.Dock="Right" Margin="5,0" Click="Fix_Button_Click">
                     <StackPanel Orientation="Horizontal">
                         <ui:PathIcon Height="14" Margin="0,0,5,0" Style="{StaticResource PathIconDataAutoFix}"/>
-                        <TextBlock Text="修复"/>
+                        <TextBlock Text="{l:Loc Toolbox_AutoFix_ButtonFix}"/>
                     </StackPanel>
                 </Button>
                 <Button VerticalAlignment="Bottom" DockPanel.Dock="Right" Click="Analyze_Button_Click">
                     <StackPanel Orientation="Horizontal">
                         <ui:PathIcon Height="14" Margin="0,0,5,0" Style="{StaticResource PathIconDataMagnifyScan}"/>
-                        <TextBlock Text="分析"/>
+                        <TextBlock Text="{l:Loc Toolbox_AutoFix_ButtonAnalyze}"/>
                     </StackPanel>
                 </Button>
-                <Button VerticalAlignment="Bottom" DockPanel.Dock="Right" Margin="0,0,5,0" Content="选择..." Click="SelectFile_Button_Click"/>
-                <TextBox ui:ControlHelper.PlaceholderText="FLV 文件" ui:TextBoxHelper.IsDeleteButtonVisible="False" x:Name="FileNameTextBox" />
+                <Button VerticalAlignment="Bottom" DockPanel.Dock="Right" Margin="0,0,5,0" Content="{l:Loc Toolbox_AutoFix_ButtonSelectInput}" Click="SelectFile_Button_Click"/>
+                <TextBox ui:ControlHelper.PlaceholderText="{l:Loc Toolbox_AutoFix_InputPathPlaceholder}" ui:TextBoxHelper.IsDeleteButtonVisible="False" x:Name="FileNameTextBox" />
             </DockPanel>
             <Border Grid.Row="1" BorderThickness="1" CornerRadius="5" x:Name="analyzeResultDisplayArea" DataContext="{x:Null}"
             Background="{DynamicResource SystemControlBackgroundAltHighBrush}"
@@ -65,8 +61,8 @@
                 <Border.Resources>
                     <DataTemplate x:Key="NullAnalyzeResult">
                         <StackPanel Margin="16">
-                            <TextBlock Text="点击分析按钮开始分析" FontSize="26" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                            <TextBlock Text="注：不分析也可以进行修复操作" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                            <TextBlock Text="{l:Loc Toolbox_AutoFix_AnalyzeResult_NoDataTitle}" FontSize="26" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                            <TextBlock Text="{l:Loc Toolbox_AutoFix_AnalyzeResult_NoDataNote}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
                         </StackPanel>
                     </DataTemplate>
                     <DataTemplate x:Key="FlvStatsPanel" DataType="{x:Type tr:FlvStats}">
@@ -76,8 +72,22 @@
                                 <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="*"/>
                             </Grid.RowDefinitions>
-                            <TextBlock Grid.Row="0" HorizontalAlignment="Center" Text="{Binding FrameCount,StringFormat=帧数量 {0} 个}"/>
-                            <TextBlock Grid.Row="1" HorizontalAlignment="Center" Text="{Binding FramePerSecond,StringFormat=平均FPS {0:F2}}"/>
+                            <TextBlock Grid.Row="0" HorizontalAlignment="Center">
+                                <TextBlock.Text>
+                                    <MultiBinding Converter="{l:StringFormatConverter}">
+                                        <l:BLoc Key="Toolbox_AutoFix_AnalyzeResult_FrameCountTemplate"/>
+                                        <Binding Path="FrameCount" Mode="OneWay"/>
+                                    </MultiBinding>
+                                </TextBlock.Text>
+                            </TextBlock>
+                            <TextBlock Grid.Row="1" HorizontalAlignment="Center">
+                                <TextBlock.Text>
+                                    <MultiBinding Converter="{l:StringFormatConverter}">
+                                        <l:BLoc Key="Toolbox_AutoFix_AnalyzeResult_AvgFPS"/>
+                                        <Binding Path="FramePerSecond" Mode="OneWay"/>
+                                    </MultiBinding>
+                                </TextBlock.Text>
+                            </TextBlock>
                             <ListView Grid.Row="2" ItemsSource="{Binding FrameDurations}" Margin="5" BorderThickness="1" 
                                       BorderBrush="{DynamicResource SystemControlBackgroundAccentBrush}">
                                 <ListView.Resources>
@@ -87,8 +97,8 @@
                                 </ListView.Resources>
                                 <ListView.View>
                                     <GridView AllowsColumnReorder="False">
-                                        <GridViewColumn Header="帧时长" DisplayMemberBinding="{Binding Key,StringFormat=\{0\} ms}"/>
-                                        <GridViewColumn Header="帧数量" DisplayMemberBinding="{Binding Value}"/>
+                                        <GridViewColumn Header="{l:Loc Toolbox_AutoFix_AnalyzeResult_FrameDuration}" DisplayMemberBinding="{Binding Key,StringFormat=\{0\} ms}"/>
+                                        <GridViewColumn Header="{l:Loc Toolbox_AutoFix_AnalyzeResult_FrameCount}" DisplayMemberBinding="{Binding Value}"/>
                                     </GridView>
                                 </ListView.View>
                             </ListView>
@@ -104,23 +114,70 @@
                                 <RowDefinition Height="*"/>
                             </Grid.RowDefinitions>
                             <TextBox Grid.Row="0" IsReadOnly="True" Text="{Binding InputPath}"/>
-                            <TextBlock Grid.Row="1" HorizontalAlignment="Center" FontSize="24" Text="无需修复" Foreground="Green"
+                            <TextBlock Grid.Row="1" HorizontalAlignment="Center" FontSize="24" Text="{l:Loc Toolbox_AutoFix_AnalyzeResult_FixNotNeeded}" Foreground="Green"
                                    Visibility="{Binding NeedFix,Converter={StaticResource InvertBooleanToVisibilityCollapsedConverter}}"/>
-                            <TextBlock Grid.Row="1" HorizontalAlignment="Center" FontSize="24" Text="需要修复" Foreground="Red"
+                            <TextBlock Grid.Row="1" HorizontalAlignment="Center" FontSize="24" Text="{l:Loc Toolbox_AutoFix_AnalyzeResult_FixNeeded}" Foreground="Red"
                                    Visibility="{Binding NeedFix,Converter={StaticResource BooleanToVisibilityCollapsedConverter}}"/>
-                            <StackPanel Grid.Row="2" HorizontalAlignment="Center"
-                                    Visibility="{Binding Unrepairable,Converter={StaticResource BooleanToVisibilityCollapsedConverter}}">
-                                <TextBlock HorizontalAlignment="Center" FontSize="20" Text="文件内存在录播姬无法自动修复的问题" Foreground="Red"/>
-                                <TextBlock HorizontalAlignment="Center" Text="请点击 修复失败？ 按钮并反馈本问题"/>
-                            </StackPanel>
+                            <TextBlock Grid.Row="2" HorizontalAlignment="Center" FontSize="15" Foreground="Red"
+                                       Visibility="{Binding Unrepairable,Converter={StaticResource BooleanToVisibilityCollapsedConverter}}"
+                                       Text="{l:Loc Toolbox_AutoFix_AnalyzeResult_ContainsUnrepairable}"/>
                             <StackPanel Grid.Row="3" HorizontalAlignment="Center" Margin="10">
-                                <TextBlock Text="{Binding OutputFileCount,StringFormat=修复将会输出 {0} 个文件}" Margin="0,0,0,5"/>
-                                <TextBlock Text="{Binding IssueTypeTimestampOffset,StringFormat=时间戳错位问题 {0} 处}"/>
-                                <TextBlock Text="{Binding IssueTypeTimestampJump,StringFormat=时间戳跳变问题 {0} 处}"/>
-                                <TextBlock Text="{Binding IssueTypeDecodingHeader,StringFormat=分辨率、解码问题 {0} 处}"/>
-                                <TextBlock Text="{Binding IssueTypeRepeatingData,StringFormat=重复片段 {0} 处}"/>
-                                <TextBlock Text="{Binding IssueTypeOther,StringFormat=其他问题 {0} 处}"/>
-                                <TextBlock Text="{Binding IssueTypeUnrepairable,StringFormat=无法修复的问题 {0} 处}"/>
+                                <TextBlock Margin="0,0,0,5">
+                                    <TextBlock.Text>
+                                        <MultiBinding Converter="{l:StringFormatConverter}">
+                                            <l:BLoc Key="Toolbox_AutoFix_AnalyzeResult_OutputFileCount"/>
+                                            <Binding Path="OutputFileCount" Mode="OneWay"/>
+                                        </MultiBinding>
+                                    </TextBlock.Text>
+                                </TextBlock>
+                                <TextBlock>
+                                    <TextBlock.Text>
+                                        <MultiBinding Converter="{l:StringFormatConverter}">
+                                            <l:BLoc Key="Toolbox_AutoFix_AnalyzeResult_IssueTypeTimestampOffset"/>
+                                            <Binding Path="IssueTypeTimestampOffset" Mode="OneWay"/>
+                                        </MultiBinding>
+                                    </TextBlock.Text>
+                                </TextBlock>
+                                <TextBlock>
+                                    <TextBlock.Text>
+                                        <MultiBinding Converter="{l:StringFormatConverter}">
+                                            <l:BLoc Key="Toolbox_AutoFix_AnalyzeResult_IssueTypeTimestampJump"/>
+                                            <Binding Path="IssueTypeTimestampJump" Mode="OneWay"/>
+                                        </MultiBinding>
+                                    </TextBlock.Text>
+                                </TextBlock>
+                                <TextBlock>
+                                    <TextBlock.Text>
+                                        <MultiBinding Converter="{l:StringFormatConverter}">
+                                            <l:BLoc Key="Toolbox_AutoFix_AnalyzeResult_IssueTypeDecodingHeader"/>
+                                            <Binding Path="IssueTypeDecodingHeader" Mode="OneWay"/>
+                                        </MultiBinding>
+                                    </TextBlock.Text>
+                                </TextBlock>
+                                <TextBlock>
+                                    <TextBlock.Text>
+                                        <MultiBinding Converter="{l:StringFormatConverter}">
+                                            <l:BLoc Key="Toolbox_AutoFix_AnalyzeResult_IssueTypeRepeatingData"/>
+                                            <Binding Path="IssueTypeRepeatingData" Mode="OneWay"/>
+                                        </MultiBinding>
+                                    </TextBlock.Text>
+                                </TextBlock>
+                                <TextBlock>
+                                    <TextBlock.Text>
+                                        <MultiBinding Converter="{l:StringFormatConverter}">
+                                            <l:BLoc Key="Toolbox_AutoFix_AnalyzeResult_IssueTypeOther"/>
+                                            <Binding Path="IssueTypeOther" Mode="OneWay"/>
+                                        </MultiBinding>
+                                    </TextBlock.Text>
+                                </TextBlock>
+                                <TextBlock>
+                                    <TextBlock.Text>
+                                        <MultiBinding Converter="{l:StringFormatConverter}">
+                                            <l:BLoc Key="Toolbox_AutoFix_AnalyzeResult_IssueTypeUnrepairable"/>
+                                            <Binding Path="IssueTypeUnrepairable" Mode="OneWay"/>
+                                        </MultiBinding>
+                                    </TextBlock.Text>
+                                </TextBlock>
                             </StackPanel>
                             <Grid Grid.Row="4" Margin="10">
                                 <Grid.RowDefinitions>
@@ -134,12 +191,12 @@
                                     <ColumnDefinition Width="*"/>
                                 </Grid.ColumnDefinitions>
                                 <StackPanel HorizontalAlignment="Center" Grid.ColumnSpan="3">
-                                    <TextBlock HorizontalAlignment="Center" FontSize="20" Text="统计数据"/>
-                                    <TextBlock HorizontalAlignment="Center" Text="仅供参考，有问题的文件的统计可能不准确"/>
+                                    <TextBlock HorizontalAlignment="Center" FontSize="20" Text="{l:Loc Toolbox_AutoFix_AnalyzeResult_Stats_Title}"/>
+                                    <TextBlock HorizontalAlignment="Center" Text="{l:Loc Toolbox_AutoFix_AnalyzeResult_Stats_Disclaimer}"/>
                                 </StackPanel>
                                 <Separator Grid.Column="1" Grid.Row="1" Grid.RowSpan="2" Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}" />
-                                <TextBlock Grid.Row="1" Grid.Column="0" TextAlignment="Center" FontSize="16" Text="视频"/>
-                                <TextBlock Grid.Row="1" Grid.Column="2" TextAlignment="Center" FontSize="16" Text="音频"/>
+                                <TextBlock Grid.Row="1" Grid.Column="0" TextAlignment="Center" FontSize="16" Text="{l:Loc Toolbox_AutoFix_AnalyzeResult_Stats_Audio}"/>
+                                <TextBlock Grid.Row="1" Grid.Column="2" TextAlignment="Center" FontSize="16" Text="{l:Loc Toolbox_AutoFix_AnalyzeResult_Stats_Video}"/>
                                 <ContentControl Grid.Row="2" Grid.Column="0" Content="{Binding VideoStats}" ContentTemplate="{StaticResource FlvStatsPanel}"/>
                                 <ContentControl Grid.Row="2" Grid.Column="2" Content="{Binding AudioStats}" ContentTemplate="{StaticResource FlvStatsPanel}"/>
                             </Grid>

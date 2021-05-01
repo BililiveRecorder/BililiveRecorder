@@ -58,7 +58,7 @@
                                  ToolTip="{Binding Streaming,Converter={StaticResource BooleanToLiveStatusTooltipConverter}}"/>
                     <ui:PathIcon Height="10" Margin="0,0,3,0" Style="{StaticResource PathIconDataVideoOffOutline}"
                                  Visibility="{Binding AutoRecordForThisSession,Converter={StaticResource InvertBooleanToVisibilityCollapsedConverter}}"
-                                 Foreground="DarkOrange" ToolTip="本次直播不再自动录制，结束直播时恢复"/>
+                                 Foreground="DarkOrange" ToolTip="{l:Loc RoomCard_Status_AutoRecordForThisSessionDisabled_Tooltip}"/>
                     <ui:PathIcon Height="10" Style="{StaticResource PathIconDataUpperCaseIdentifier}" />
                     <TextBlock Text="{Binding RoomConfig.RoomId, StringFormat=\{0\},Mode=OneWay}" ContextMenu="{StaticResource CopyTextContextMenu}" Margin="4,0" FontSize="11"/>
                     <ui:PathIcon Height="10" Style="{StaticResource PathIconDataLowerCaseIdentifier}" Margin="3,0"
