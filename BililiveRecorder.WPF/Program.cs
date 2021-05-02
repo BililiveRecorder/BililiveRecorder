@@ -144,6 +144,14 @@ namespace BililiveRecorder.WPF
             .Enrich.WithThreadName()
             .Enrich.FromLogContext()
             .Enrich.WithExceptionDetails()
+            .Destructure.ByTransforming<Flv.Xml.XmlFlvFile.XmlFlvFileMeta>(x => new
+            {
+                x.Version,
+                x.ExportTime,
+                x.FileSize,
+                x.FileCreationTime,
+                x.FileModificationTime,
+            })
             .WriteTo.Console(levelSwitch: levelSwitchConsole)
 #if DEBUG
             .WriteTo.Debug()

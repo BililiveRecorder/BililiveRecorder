@@ -34,8 +34,18 @@ namespace BililiveRecorder.ToolBox.Commands
             FileStream? inputStream = null, outputStream = null;
             try
             {
+                XmlFlvFile.XmlFlvFileMeta meta;
                 try
                 {
+                    var fi = new FileInfo(request.Input);
+                    meta = new XmlFlvFile.XmlFlvFileMeta
+                    {
+                        ExportTime = DateTimeOffset.Now,
+                        Version = GitVersionInformation.InformationalVersion,
+                        FileSize = fi.Length,
+                        FileCreationTime = fi.CreationTime,
+                        FileModificationTime = fi.LastWriteTime
+                    };
                     inputStream = File.Open(request.Input, FileMode.Open, FileAccess.Read, FileShare.Read);
                 }
                 catch (Exception ex)
@@ -88,7 +98,8 @@ namespace BililiveRecorder.ToolBox.Commands
                     using var writer = new StreamWriter(new GZipStream(outputStream, CompressionLevel.Optimal));
                     XmlFlvFile.Serializer.Serialize(writer, new XmlFlvFile
                     {
-                        Tags = tags
+                        Tags = tags,
+                        Meta = meta
                     });
                 });
 

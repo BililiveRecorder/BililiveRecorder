@@ -56,6 +56,8 @@ namespace BililiveRecorder.ToolBox.Commands
             FileStream? flvFileStream = null;
             try
             {
+                XmlFlvFile.XmlFlvFileMeta? meta = null;
+
                 var memoryStreamProvider = new RecyclableMemoryStreamProvider();
                 var comments = new List<ProcessingComment>();
                 var context = new FlvProcessingContext();
@@ -72,6 +74,7 @@ namespace BililiveRecorder.ToolBox.Commands
                         {
                             using var stream = new GZipStream(File.Open(inputPath, FileMode.Open, FileAccess.Read, FileShare.Read), CompressionMode.Decompress);
                             var xmlFlvFile = (XmlFlvFile)XmlFlvFile.Serializer.Deserialize(stream);
+                            meta = xmlFlvFile.Meta;
                             return new FlvTagListReader(xmlFlvFile.Tags);
                         });
                     else if (inputPath.EndsWith(".xml", StringComparison.OrdinalIgnoreCase))
@@ -79,6 +82,7 @@ namespace BililiveRecorder.ToolBox.Commands
                         {
                             using var stream = File.Open(inputPath, FileMode.Open, FileAccess.Read, FileShare.Read);
                             var xmlFlvFile = (XmlFlvFile)XmlFlvFile.Serializer.Deserialize(stream);
+                            meta = xmlFlvFile.Meta;
                             return new FlvTagListReader(xmlFlvFile.Tags);
                         });
                     else
@@ -139,6 +143,9 @@ namespace BililiveRecorder.ToolBox.Commands
 
                 if (cancellationToken.IsCancellationRequested)
                     return new CommandResponse<AnalyzeResponse> { Status = ResponseStatus.Cancelled };
+
+                if (meta is not null)
+                    logger.Information("Xml meta: {@Meta}", meta);
 
                 // Result
                 var response = await Task.Run(() =>

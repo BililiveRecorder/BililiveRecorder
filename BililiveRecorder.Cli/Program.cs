@@ -12,8 +12,10 @@ using BililiveRecorder.DependencyInjection;
 using BililiveRecorder.ToolBox;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog;
+using Serilog.Core;
 using Serilog.Events;
 using Serilog.Exceptions;
+using Serilog.Formatting.Compact;
 
 namespace BililiveRecorder.Cli
 {
@@ -49,7 +51,7 @@ namespace BililiveRecorder.Cli
 
         private static int RunConfigMode(string path)
         {
-            var logger = BuildLogger();
+            using var logger = BuildLogger();
             Log.Logger = logger;
 
             path = Path.GetFullPath(path);
@@ -84,7 +86,7 @@ namespace BililiveRecorder.Cli
 
         private static int RunPortableMode(PortableModeArguments opts)
         {
-            var logger = BuildLogger();
+            using var logger = BuildLogger();
             Log.Logger = logger;
 
             var config = new ConfigV2()
@@ -129,14 +131,23 @@ namespace BililiveRecorder.Cli
             .AddRecorder()
             .BuildServiceProvider();
 
-        private static ILogger BuildLogger() => new LoggerConfiguration()
+        private static Logger BuildLogger() => new LoggerConfiguration()
             .MinimumLevel.Verbose()
             .Enrich.WithProcessId()
             .Enrich.WithThreadId()
             .Enrich.WithThreadName()
             .Enrich.FromLogContext()
             .Enrich.WithExceptionDetails()
+            .Destructure.ByTransforming<Flv.Xml.XmlFlvFile.XmlFlvFileMeta>(x => new
+            {
+                x.Version,
+                x.ExportTime,
+                x.FileSize,
+                x.FileCreationTime,
+                x.FileModificationTime,
+            })
             .WriteTo.Console(restrictedToMinimumLevel: LogEventLevel.Verbose, outputTemplate: "[{Timestamp:HH:mm:ss} {Level:u3}] [{RoomId}] {Message:lj}{NewLine}{Exception}")
+            .WriteTo.File(new CompactJsonFormatter(), "./logs/bilirec.txt", shared: true, rollingInterval: RollingInterval.Day, rollOnFileSizeLimit: true)
             .CreateLogger();
 
         public class PortableModeArguments
