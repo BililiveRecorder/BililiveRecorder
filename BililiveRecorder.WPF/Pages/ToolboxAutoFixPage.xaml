@@ -27,7 +27,7 @@
                 <Button VerticalAlignment="Bottom" DockPanel.Dock="Right" Content="{l:Loc Toolbox_AutoFix_ButtonNotFixed}">
                     <ui:FlyoutService.Flyout>
                         <ui:Flyout Placement="LeftEdgeAlignedTop">
-                            <StackPanel>
+                            <StackPanel l:ResxLocalizationProvider.DefaultDictionary="Strings">
                                 <TextBlock Text="{l:Loc Toolbox_AutoFix_NotFixed_Description}"/>
                                 <ui:HyperlinkButton NavigateUri="" Content="{l:Loc Toolbox_AutoFix_NotFixed_LearnMore}"/>
                                 <Button Margin="0,15,0,10" HorizontalAlignment="Center" Click="Export_Button_Click">

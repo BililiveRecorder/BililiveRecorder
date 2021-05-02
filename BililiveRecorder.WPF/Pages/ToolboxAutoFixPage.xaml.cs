@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using BililiveRecorder.ToolBox;
@@ -62,7 +63,12 @@ namespace BililiveRecorder.WPF.Pages
 
                 logger.Debug("修复文件 {Path}", inputPath);
 
-                progressDialog = new AutoFixProgressDialog();
+                progressDialog = new AutoFixProgressDialog()
+                {
+                    CancelButtonVisibility = Visibility.Visible,
+                    CancellationTokenSource = new CancellationTokenSource()
+                };
+                var token = progressDialog.CancellationTokenSource.Token;
                 var showTask = progressDialog.ShowAsync();
 
                 string? output_path;
@@ -94,7 +100,7 @@ namespace BililiveRecorder.WPF.Pages
 
                 var handler = new FixHandler();
 
-                var resp = await handler.Handle(req, async p =>
+                var resp = await handler.Handle(req, token, async p =>
                 {
                     await this.Dispatcher.InvokeAsync(() =>
                     {
@@ -102,7 +108,7 @@ namespace BililiveRecorder.WPF.Pages
                     });
                 }).ConfigureAwait(true);
 
-                if (resp.Status != ResponseStatus.OK)
+                if (resp.Status != ResponseStatus.Cancelled && resp.Status != ResponseStatus.OK)
                 {
                     logger.Warning(resp.Exception, "修复时发生错误 (@Status)", resp.Status);
                     await Task.Run(() => ShowErrorMessageBox(resp)).ConfigureAwait(true);
@@ -145,7 +151,12 @@ namespace BililiveRecorder.WPF.Pages
 
                 logger.Debug("分析文件 {Path}", inputPath);
 
-                progressDialog = new AutoFixProgressDialog();
+                progressDialog = new AutoFixProgressDialog()
+                {
+                    CancelButtonVisibility = Visibility.Visible,
+                    CancellationTokenSource = new CancellationTokenSource()
+                };
+                var token = progressDialog.CancellationTokenSource.Token;
                 var showTask = progressDialog.ShowAsync();
 
                 var req = new AnalyzeRequest
@@ -155,7 +166,7 @@ namespace BililiveRecorder.WPF.Pages
 
                 var handler = new AnalyzeHandler();
 
-                var resp = await handler.Handle(req, async p =>
+                var resp = await handler.Handle(req, token, async p =>
                 {
                     await this.Dispatcher.InvokeAsync(() =>
                     {
@@ -163,14 +174,17 @@ namespace BililiveRecorder.WPF.Pages
                     });
                 }).ConfigureAwait(true);
 
-                if (resp.Status != ResponseStatus.OK)
+                if (resp.Status != ResponseStatus.Cancelled)
                 {
-                    logger.Warning(resp.Exception, "分析时发生错误 (@Status)", resp.Status);
-                    await Task.Run(() => ShowErrorMessageBox(resp)).ConfigureAwait(true);
-                }
-                else
-                {
-                    this.analyzeResultDisplayArea.DataContext = resp.Result;
+                    if (resp.Status != ResponseStatus.OK)
+                    {
+                        logger.Warning(resp.Exception, "分析时发生错误 (@Status)", resp.Status);
+                        await Task.Run(() => ShowErrorMessageBox(resp)).ConfigureAwait(true);
+                    }
+                    else
+                    {
+                        this.analyzeResultDisplayArea.DataContext = resp.Result;
+                    }
                 }
 
                 progressDialog.Hide();
@@ -203,7 +217,12 @@ namespace BililiveRecorder.WPF.Pages
 
                 logger.Debug("导出文件 {Path}", inputPath);
 
-                progressDialog = new AutoFixProgressDialog();
+                progressDialog = new AutoFixProgressDialog()
+                {
+                    CancelButtonVisibility = Visibility.Visible,
+                    CancellationTokenSource = new CancellationTokenSource()
+                };
+                var token = progressDialog.CancellationTokenSource.Token;
                 var showTask = progressDialog.ShowAsync();
 
                 var outputPath = string.Empty;
@@ -235,7 +254,7 @@ namespace BililiveRecorder.WPF.Pages
 
                 var handler = new ExportHandler();
 
-                var resp = await handler.Handle(req, async p =>
+                var resp = await handler.Handle(req, token, async p =>
                 {
                     await this.Dispatcher.InvokeAsync(() =>
                     {
@@ -243,7 +262,7 @@ namespace BililiveRecorder.WPF.Pages
                     });
                 }).ConfigureAwait(true);
 
-                if (resp.Status != ResponseStatus.OK)
+                if (resp.Status != ResponseStatus.Cancelled && resp.Status != ResponseStatus.OK)
                 {
                     logger.Warning(resp.Exception, "导出分析数据时发生错误 (@Status)", resp.Status);
                     await Task.Run(() => ShowErrorMessageBox(resp)).ConfigureAwait(true);

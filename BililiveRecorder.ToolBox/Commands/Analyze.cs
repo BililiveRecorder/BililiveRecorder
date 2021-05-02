@@ -4,6 +4,7 @@ using System.IO;
 using System.IO.Compression;
 using System.IO.Pipelines;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using BililiveRecorder.Flv;
 using BililiveRecorder.Flv.Amf;
@@ -48,9 +49,9 @@ namespace BililiveRecorder.ToolBox.Commands
     {
         private static readonly ILogger logger = Log.ForContext<AnalyzeHandler>();
 
-        public Task<CommandResponse<AnalyzeResponse>> Handle(AnalyzeRequest request) => this.Handle(request, null);
+        public Task<CommandResponse<AnalyzeResponse>> Handle(AnalyzeRequest request) => this.Handle(request, default, null);
 
-        public async Task<CommandResponse<AnalyzeResponse>> Handle(AnalyzeRequest request, Func<double, Task>? progress)
+        public async Task<CommandResponse<AnalyzeResponse>> Handle(AnalyzeRequest request, CancellationToken cancellationToken, Func<double, Task>? progress)
         {
             FileStream? flvFileStream = null;
             try
@@ -109,9 +110,9 @@ namespace BililiveRecorder.ToolBox.Commands
                 await Task.Run(async () =>
                 {
                     var count = 0;
-                    while (true)
+                    while (!cancellationToken.IsCancellationRequested)
                     {
-                        var group = await grouping.ReadGroupAsync(default).ConfigureAwait(false);
+                        var group = await grouping.ReadGroupAsync(cancellationToken).ConfigureAwait(false);
                         if (group is null)
                             break;
 
@@ -135,6 +136,9 @@ namespace BililiveRecorder.ToolBox.Commands
                             await progress((double)flvFileStream.Position / flvFileStream.Length);
                     }
                 }).ConfigureAwait(false);
+
+                if (cancellationToken.IsCancellationRequested)
+                    return new CommandResponse<AnalyzeResponse> { Status = ResponseStatus.Cancelled };
 
                 // Result
                 var response = await Task.Run(() =>
@@ -168,6 +172,10 @@ namespace BililiveRecorder.ToolBox.Commands
                     Status = ResponseStatus.OK,
                     Result = response
                 };
+            }
+            catch (TaskCanceledException) when (cancellationToken.IsCancellationRequested)
+            {
+                return new CommandResponse<AnalyzeResponse> { Status = ResponseStatus.Cancelled };
             }
             catch (NotFlvFileException ex)
             {

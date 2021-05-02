@@ -1,5 +1,7 @@
+using System.Threading;
 using System.Windows;
 
+#nullable enable
 namespace BililiveRecorder.WPF.Controls
 {
     /// <summary>
@@ -20,5 +22,18 @@ namespace BililiveRecorder.WPF.Controls
             get => (int)this.GetValue(ProgressProperty);
             set => this.SetValue(ProgressProperty, value);
         }
+
+        public static readonly DependencyProperty CancelButtonVisibilityProperty =
+            DependencyProperty.Register(nameof(CancelButtonVisibility), typeof(Visibility), typeof(AutoFixProgressDialog), new PropertyMetadata(Visibility.Collapsed));
+
+        public Visibility CancelButtonVisibility
+        {
+            get => (Visibility)this.GetValue(CancelButtonVisibilityProperty);
+            set => this.SetValue(CancelButtonVisibilityProperty, value);
+        }
+
+        public CancellationTokenSource? CancellationTokenSource { get; set; }
+
+        private void Button_Click(object sender, RoutedEventArgs e) => this.CancellationTokenSource?.Cancel();
     }
 }

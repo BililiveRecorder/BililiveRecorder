@@ -88,7 +88,8 @@
                         <ui:PathIcon Style="{StaticResource PathIconDataToolboxOutline}"/>
                     </ui:NavigationViewItem.Icon>
                     <ui:NavigationViewItem.MenuItems>
-                        <ui:NavigationViewItem Content="{l:Loc Toolbox_AutoFix_Title}" Tag="ToolboxAutoFixPage">
+                        <ui:NavigationViewItem l:ResxLocalizationProvider.DefaultDictionary="Strings" 
+                                               Content="{l:Loc Toolbox_AutoFix_Title}" Tag="ToolboxAutoFixPage">
                             <ui:NavigationViewItem.Icon>
                                 <ui:PathIcon Style="{StaticResource PathIconDataAutoFix}"/>
                             </ui:NavigationViewItem.Icon>
