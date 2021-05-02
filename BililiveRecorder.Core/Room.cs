@@ -466,12 +466,15 @@ namespace BililiveRecorder.Core
             {
                 _ = Task.Run(async () =>
                 {
-                    // 定时主动检查不需要错误重试
+                    try
+                    {
+                        // 定时主动检查不需要错误重试
+                        await this.FetchRoomInfoAsync().ConfigureAwait(false);
 
-                    await this.FetchRoomInfoAsync().ConfigureAwait(false);
-
-                    if (this.Streaming && this.AutoRecordForThisSession && this.RoomConfig.AutoRecord)
-                        this.CreateAndStartNewRecordTask();
+                        if (this.Streaming && this.AutoRecordForThisSession && this.RoomConfig.AutoRecord)
+                            this.CreateAndStartNewRecordTask();
+                    }
+                    catch (Exception) { }
                 });
             }
         }
