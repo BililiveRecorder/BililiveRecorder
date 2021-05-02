@@ -65,20 +65,20 @@
           <xsd:element name="data">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
-                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2"/>
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" msdata:Ordinal="1" />
-              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
-              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute name="name" type="xsd:string" msdata:Ordinal="1"/>
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3"/>
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4"/>
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="resheader">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required" />
+              <xsd:attribute name="name" type="xsd:string" use="required"/>
             </xsd:complexType>
           </xsd:element>
         </xsd:choice>
@@ -99,15 +99,37 @@
   </resheader>
   <data name="About_Contact" xml:space="preserve">
     <value>聯絡方式</value>
-    <comment>Add a space after colon ":"</comment>
+    
+  </data>
+  <data name="About_Copyright" xml:space="preserve">
+    <value>版權所有</value>
+  </data>
+  <data name="About_LibrariesUsed" xml:space="preserve">
+    <value>使用的庫</value>
+  </data>
+  <data name="About_License" xml:space="preserve">
+    <value>本軟件為免費軟件。
+本軟件為開源軟件，使用 GNU通用公共許可證第三版 （GPLv3） 授權。</value>
   </data>
   <data name="About_Name" xml:space="preserve">
     <value>B站錄播姬</value>
     <comment>Add "(B站录播姬)" after translation</comment>
   </data>
+  <data name="About_Project" xml:space="preserve">
+    <value>項目首頁</value>
+  </data>
+  <data name="About_Title" xml:space="preserve">
+    <value>關於</value>
+  </data>
+  <data name="About_Translator" xml:space="preserve">
+    <value>翻譯者</value>
+  </data>
+  <data name="About_Version" xml:space="preserve">
+    <value>版本{0}</value>
+  </data>
   <data name="About_Website" xml:space="preserve">
     <value>官方網站</value>
-    <comment>Add a space after colon ":"</comment>
+    
   </data>
   <data name="AddRoomCard_ConfirmButton" xml:space="preserve">
     <value>確定</value>
@@ -116,6 +138,9 @@
   <data name="AddRoomCard_PlaceholderText" xml:space="preserve">
     <value>房間號或房間連結</value>
     <comment>id or link</comment>
+  </data>
+  <data name="AddRoomCard_PlaceholderText_FontSize" xml:space="preserve">
+    <value>14</value>
   </data>
   <data name="AddRoomCard_Title" xml:space="preserve">
     <value>新增錄製房間</value>
@@ -203,6 +228,12 @@
   <data name="RoomCard_Menu_Tooltip" xml:space="preserve">
     <value>操作</value>
   </data>
+  <data name="RoomCard_SplitButton_Tooltip" xml:space="preserve">
+    <value>切割錄製輸出文件</value>
+  </data>
+  <data name="RoomCard_Status_AutoRecordForThisSessionDisabled_Tooltip" xml:space="preserve">
+    <value>本次直播不再自動錄製，結束直播時恢復</value>
+  </data>
   <data name="RoomCard_Status_DanmakuConnectionTooltip_False" xml:space="preserve">
     <value>彈幕連結被中斷
 錄播姬通過彈幕伺服器接收開播狀態推送</value>
@@ -225,10 +256,16 @@
     <value>錄製中</value>
     <comment>Short status text</comment>
   </data>
+  <data name="RoomCard_Status_SpeedIndicator_CurrentFileDuration" xml:space="preserve">
+    <value>當前文件時長: {0:g}</value>
+  </data>
   <data name="RoomCard_Status_SpeedIndicator_Description" xml:space="preserve">
     <value>這裡顯示的是錄製的速度與主播直播速度的比值
 正常應為接近 100% 並且顏色顯示為綠色</value>
     <comment>Shown in tooltip</comment>
+  </data>
+  <data name="RoomCard_Status_SpeedIndicator_SessionDuration" xml:space="preserve">
+    <value>錄製經過時間: {0:g}</value>
   </data>
   <data name="RoomCard_Status_SpeedIndicator_SpeedInMbps" xml:space="preserve">
     <value>{0:F2} Mbps</value>
@@ -237,6 +274,15 @@
   <data name="RoomCard_Status_SpeedIndicator_SpeedInPercentage" xml:space="preserve">
     <value>當前速度比值：{0:P2}</value>
     <comment>Speed percentage relative to upload speed of the streamer</comment>
+  </data>
+  <data name="RoomCard_Status_SpeedIndicator_TotalFileDuration" xml:space="preserve">
+    <value>所有檔案時長: {0:g}</value>
+  </data>
+  <data name="RoomCard_Status_SpeedIndicator_TotalnputBytes" xml:space="preserve">
+    <value>接收數據量 {0}</value>
+  </data>
+  <data name="RoomCard_Status_SpeedIndicator_TotalOutputBytes" xml:space="preserve">
+    <value>寫入數據量 {0}</value>
   </data>
   <data name="RoomListPage_Menu_AutoRecord" xml:space="preserve">
     <value>監控</value>
@@ -353,6 +399,12 @@
   <data name="Settings_RecordMode_Clip_PastDuration_Right" xml:space="preserve">
     <value>秒</value>
   </data>
+  <data name="Settings_RecordMode_RadioButton_RawData" xml:space="preserve">
+    <value>原始數據模式</value>
+  </data>
+  <data name="Settings_RecordMode_RadioButton_Standard" xml:space="preserve">
+    <value>標準模式</value>
+  </data>
   <data name="Settings_RecordMode_Title" xml:space="preserve">
     <value>錄製模式</value>
   </data>
@@ -403,8 +455,128 @@ Will use default setting and disable user input when checked.</comment>
   <data name="TaskbarIconControl_Title" xml:space="preserve">
     <value>B站錄播姬</value>
   </data>
+  <data name="Toolbox_AutoFix_AnalyzeResult_Stats_AvgFPS" xml:space="preserve">
+    <value>平均FPS {0:F2}</value>
+  </data>
+  <data name="Toolbox_AutoFix_AnalyzeResult_ContainsUnrepairable" xml:space="preserve">
+    <value>文件內存在錄播姬無法自動修復的問題
+請點擊 修復失敗？ 按鈕並反饋本問題</value>
+  </data>
+  <data name="Toolbox_AutoFix_AnalyzeResult_FixNeeded" xml:space="preserve">
+    <value>需要修復</value>
+  </data>
+  <data name="Toolbox_AutoFix_AnalyzeResult_FixNotNeeded" xml:space="preserve">
+    <value>無需修復</value>
+  </data>
+  <data name="Toolbox_AutoFix_AnalyzeResult_IssueTypeDecodingHeader" xml:space="preserve">
+    <value>分辨率、解碼問題 {0} 處</value>
+  </data>
+  <data name="Toolbox_AutoFix_AnalyzeResult_IssueTypeOther" xml:space="preserve">
+    <value>其他問題 {0} 處</value>
+  </data>
+  <data name="Toolbox_AutoFix_AnalyzeResult_IssueTypeRepeatingData" xml:space="preserve">
+    <value>重複片段 {0} 處</value>
+  </data>
+  <data name="Toolbox_AutoFix_AnalyzeResult_IssueTypeTimestampJump" xml:space="preserve">
+    <value>時間戳跳變問題 {0} 處</value>
+  </data>
+  <data name="Toolbox_AutoFix_AnalyzeResult_IssueTypeTimestampOffset" xml:space="preserve">
+    <value>時間戳錯位問題 {0} 處</value>
+  </data>
+  <data name="Toolbox_AutoFix_AnalyzeResult_IssueTypeUnrepairable" xml:space="preserve">
+    <value>無法修復的問題 {0} 處</value>
+  </data>
+  <data name="Toolbox_AutoFix_AnalyzeResult_NoDataNote" xml:space="preserve">
+    <value>注: 不分析也可以進行修復操作</value>
+  </data>
+  <data name="Toolbox_AutoFix_AnalyzeResult_NoDataTitle" xml:space="preserve">
+    <value>點擊分析按鈕開始分析</value>
+  </data>
+  <data name="Toolbox_AutoFix_AnalyzeResult_OutputFileCount" xml:space="preserve">
+    <value>修復將會輸出 {0} 個文件</value>
+  </data>
+  <data name="Toolbox_AutoFix_AnalyzeResult_Stats_Audio" xml:space="preserve">
+    <value>音頻</value>
+  </data>
+  <data name="Toolbox_AutoFix_AnalyzeResult_Stats_Disclaimer" xml:space="preserve">
+    <value>僅供參考，有問題的文件的統計可能不准確</value>
+  </data>
+  <data name="Toolbox_AutoFix_AnalyzeResult_Stats_FrameCount" xml:space="preserve">
+    <value>幀數量</value>
+  </data>
+  <data name="Toolbox_AutoFix_AnalyzeResult_Stats_FrameCountTemplate" xml:space="preserve">
+    <value>幀數量 {0} 個</value>
+  </data>
+  <data name="Toolbox_AutoFix_AnalyzeResult_Stats_FrameDuration" xml:space="preserve">
+    <value>幀時長</value>
+  </data>
+  <data name="Toolbox_AutoFix_AnalyzeResult_Stats_Title" xml:space="preserve">
+    <value>統計數據</value>
+  </data>
+  <data name="Toolbox_AutoFix_AnalyzeResult_Stats_Video" xml:space="preserve">
+    <value>視頻</value>
+  </data>
+  <data name="Toolbox_AutoFix_ButtonAnalyze" xml:space="preserve">
+    <value>分析</value>
+  </data>
+  <data name="Toolbox_AutoFix_ButtonFix" xml:space="preserve">
+    <value>修復</value>
+  </data>
+  <data name="Toolbox_AutoFix_ButtonNotFixed" xml:space="preserve">
+    <value>修復失敗？</value>
+  </data>
+  <data name="Toolbox_AutoFix_ButtonSelectInput" xml:space="preserve">
+    <value>選擇...</value>
+  </data>
+  <data name="Toolbox_AutoFix_Error_Title" xml:space="preserve">
+    <value>發生了錯誤</value>
+  </data>
+  <data name="Toolbox_AutoFix_Error_Type_Error" xml:space="preserve">
+    <value>未知錯誤</value>
+  </data>
+  <data name="Toolbox_AutoFix_Error_Type_InputIOError" xml:space="preserve">
+    <value>讀取檔案失敗</value>
+  </data>
+  <data name="Toolbox_AutoFix_Error_Type_NotFlvFile" xml:space="preserve">
+    <value>輸入不是FLV檔案</value>
+  </data>
   <data name="Toolbox_AutoFix_Error_Type_OK" xml:space="preserve">
     <value>OK</value>
+    <comment>其实不是错误类型</comment>
+  </data>
+  <data name="Toolbox_AutoFix_Error_Type_OutputIOError" xml:space="preserve">
+    <value>檔案寫入失敗</value>
+  </data>
+  <data name="Toolbox_AutoFix_Error_Type_UnknownFlvTagType" xml:space="preserve">
+    <value>未知的FLV檔案類型</value>
+  </data>
+  <data name="Toolbox_AutoFix_InputPathPlaceholder" xml:space="preserve">
+    <value>FLV 檔案</value>
+  </data>
+  <data name="Toolbox_AutoFix_NotFixed_ButtonExportData" xml:space="preserve">
+    <value>導出原始分析數據</value>
+  </data>
+  <data name="Toolbox_AutoFix_NotFixed_Description" xml:space="preserve">
+    <value>如果修復出錯、或在修復後依舊有問題
+請發郵件到 rec@danmuji.org 反饋。
+在郵件內附上此處導出的分析數據，
+並儘量詳細描述視頻的問題、所使用的錄播姬版本。
+請分析未經修復的原始文件，而不是錄播姬修復後的文件</value>
+  </data>
+  <data name="Toolbox_AutoFix_NotFixed_LearnMore" xml:space="preserve">
+    <value>更多信息請點擊這裡</value>
+  </data>
+  <data name="Toolbox_AutoFix_SelectInputDialog_Title" xml:space="preserve">
+    <value>選擇視頻文件</value>
+  </data>
+  <data name="Toolbox_AutoFix_SelectOutputDialog_Title" xml:space="preserve">
+    <value>選擇保存位置</value>
+  </data>
+  <data name="Toolbox_AutoFix_Title" xml:space="preserve">
+    <value>錄播修復</value>
+  </data>
+  <data name="Toolbox_Title" xml:space="preserve">
+    <value>工具箱</value>
   </data>
   <data name="Window_Title" xml:space="preserve">
     <value>B站錄播姬 {0}</value>
@@ -416,6 +588,7 @@ Will use default setting and disable user input when checked.</comment>
   <data name="WorkDirectorySelector_Error_FailedToLoadConfig" xml:space="preserve">
     <value>設定文件載入失敗</value>
   </data>
+  
   <data name="WorkDirectorySelector_Error_PathContainsFiles" xml:space="preserve">
     <value>目錄已有其他文件</value>
   </data>

@@ -65,20 +65,20 @@
           <xsd:element name="data">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
-                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2"/>
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" msdata:Ordinal="1" />
-              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
-              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute name="name" type="xsd:string" msdata:Ordinal="1"/>
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3"/>
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4"/>
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="resheader">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required" />
+              <xsd:attribute name="name" type="xsd:string" use="required"/>
             </xsd:complexType>
           </xsd:element>
         </xsd:choice>
@@ -99,15 +99,32 @@
   </resheader>
   <data name="About_Contact" xml:space="preserve">
     <value>連絡先</value>
-    <comment>Add a space after colon ":"</comment>
+    
   </data>
+  <data name="About_Copyright" xml:space="preserve">
+    <value>Copyright</value>
+  </data>
+  <data name="About_LibrariesUsed" xml:space="preserve">
+    <value>使用されるサード・パーティ・ライブラリ</value>
+  </data>
+  
   <data name="About_Name" xml:space="preserve">
     <value>ビリビリ生配信リコーダー</value>
     <comment>Add "(B站录播姬)" after translation</comment>
   </data>
+  
+  <data name="About_Title" xml:space="preserve">
+    <value>ビリビリ生配信リコーダーについて</value>
+  </data>
+  <data name="About_Translator" xml:space="preserve">
+    <value>翻訳者</value>
+  </data>
+  <data name="About_Version" xml:space="preserve">
+    <value>バージョン {0}</value>
+  </data>
   <data name="About_Website" xml:space="preserve">
     <value>公式サイト</value>
-    <comment>Add a space after colon ":"</comment>
+    
   </data>
   <data name="AddRoomCard_ConfirmButton" xml:space="preserve">
     <value>追加</value>
@@ -116,6 +133,9 @@
   <data name="AddRoomCard_PlaceholderText" xml:space="preserve">
     <value>ルーム番号/URL</value>
     <comment>id or link</comment>
+  </data>
+  <data name="AddRoomCard_PlaceholderText_FontSize" xml:space="preserve">
+    <value>14</value>
   </data>
   <data name="AddRoomCard_Title" xml:space="preserve">
     <value>チャンネル追加</value>
@@ -203,6 +223,8 @@
   <data name="RoomCard_Menu_Tooltip" xml:space="preserve">
     <value>設定</value>
   </data>
+  
+  
   <data name="RoomCard_Status_DanmakuConnectionTooltip_False" xml:space="preserve">
     <value>配信コメントの接続状態は失われました
 リコーダーはコメントサーバーから配信状況データを受信する</value>
@@ -225,11 +247,13 @@
     <value>録画中</value>
     <comment>Short status text</comment>
   </data>
+  
   <data name="RoomCard_Status_SpeedIndicator_Description" xml:space="preserve">
     <value>ここは録画の速度と実際生放送速度（スピードレート）の比率
 正常の状態なれば　数字は100％に近い　背景色はグリーン</value>
     <comment>Shown in tooltip</comment>
   </data>
+  
   <data name="RoomCard_Status_SpeedIndicator_SpeedInMbps" xml:space="preserve">
     <value>{0:F2} Mbps</value>
     <comment>Should not translate</comment>
@@ -238,6 +262,9 @@
     <value>現在の速度比：{0:P2}</value>
     <comment>Speed percentage relative to upload speed of the streamer</comment>
   </data>
+  
+  
+  
   <data name="RoomListPage_Menu_AutoRecord" xml:space="preserve">
     <value>監視</value>
   </data>
@@ -353,6 +380,12 @@ FLV フォーマットのみサポートされています。</value>
   <data name="Settings_RecordMode_Clip_PastDuration_Right" xml:space="preserve">
     <value>秒前からカットする</value>
   </data>
+  <data name="Settings_RecordMode_RadioButton_RawData" xml:space="preserve">
+    <value>オリジナルデータモード</value>
+  </data>
+  <data name="Settings_RecordMode_RadioButton_Standard" xml:space="preserve">
+    <value>ノーマルモード</value>
+  </data>
   <data name="Settings_RecordMode_Title" xml:space="preserve">
     <value>録画モード</value>
   </data>
@@ -403,9 +436,45 @@ Will use default setting and disable user input when checked.</comment>
   <data name="TaskbarIconControl_Title" xml:space="preserve">
     <value>ビリビリ生配信リコーダー</value>
   </data>
-  <data name="Toolbox_AutoFix_Error_Type_OK" xml:space="preserve">
-    <value>OK</value>
-  </data>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
   <data name="Window_Title" xml:space="preserve">
     <value>ビリビリ録画機 (B站录播姬) {0}</value>
     
@@ -416,6 +485,7 @@ Will use default setting and disable user input when checked.</comment>
   <data name="WorkDirectorySelector_Error_FailedToLoadConfig" xml:space="preserve">
     <value>構成ファイルのロードに失敗しました</value>
   </data>
+  
   <data name="WorkDirectorySelector_Error_PathContainsFiles" xml:space="preserve">
     <value>このファイルには他のファイルが存在し
 空のフォルダを設定してください</value>
