@@ -177,7 +177,7 @@ namespace BililiveRecorder.ToolBox.Commands
 
                         for (var i = 0; i < w.Files.Count; i++)
                         {
-                            var path = Path.ChangeExtension(request.OutputBase, $"fix_p{i + 1}.brec.xml");
+                            var path = Path.ChangeExtension(request.OutputBase, $"fix_p{i + 1:D3}.brec.xml");
                             outputPaths.Add(path);
                             using var file = new StreamWriter(File.Create(path));
                             XmlFlvFile.Serializer.Serialize(file, new XmlFlvFile { Tags = w.Files[i] });
@@ -318,7 +318,7 @@ namespace BililiveRecorder.ToolBox.Commands
             public (Stream stream, object state) CreateOutputStream()
             {
                 var i = this.fileIndex++;
-                var path = Path.ChangeExtension(this.pathTemplate, $"fix_p{i}.flv");
+                var path = Path.ChangeExtension(this.pathTemplate, $"fix_p{i:D3}.flv");
                 var fileStream = File.Open(path, FileMode.CreateNew, FileAccess.Write, FileShare.Read);
                 BeforeFileOpen?.Invoke(this, path);
                 return (fileStream, null!);
