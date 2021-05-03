@@ -118,12 +118,38 @@
             <TextBlock Text="{l:Loc About_LibrariesUsed}" FontSize="22"/>
             <ListView Grid.Row="1">
                 <ListView.Items>
-                    <Label Content="TODO"/>
-                    <Label Content="TODO"/>
-                    <Label Content="TODO"/>
-                    <Label Content="TODO"/>
-                    <Label Content="TODO"/>
-                    <Label Content="TODO"/>
+                    <Label Content="GitVersion"/>
+                    <Label Content="Hardcodet.NotifyIcon.Wpf"/>
+                    <Label Content="HierarchicalPropertyDefault"/>
+                    <Label Content="JsonSubTypes"/>
+                    <Label Content="Microsoft.Bcl.HashCode"/>
+                    <Label Content="Microsoft.Extensions.DependencyInjection"/>
+                    <Label Content="Microsoft.Extensions.DependencyInjection.Abstractions"/>
+                    <Label Content="Microsoft.IO.RecyclableMemoryStream"/>
+                    <Label Content="ModernWpfUI"/>
+                    <Label Content="Nerdbank.Streams"/>
+                    <Label Content="Newtonsoft.Json"/>
+                    <Label Content="Nullable"/>
+                    <Label Content="Polly"/>
+                    <Label Content="Polly.Caching.Memory"/>
+                    <Label Content="Sentry"/>
+                    <Label Content="Sentry.Serilog"/>
+                    <Label Content="Serilog"/>
+                    <Label Content="Serilog.Enrichers.Process"/>
+                    <Label Content="Serilog.Enrichers.Thread"/>
+                    <Label Content="Serilog.Exceptions"/>
+                    <Label Content="Serilog.Formatting.Compact"/>
+                    <Label Content="Serilog.Sinks.Console"/>
+                    <Label Content="Serilog.Sinks.Debug"/>
+                    <Label Content="Serilog.Sinks.File"/>
+                    <Label Content="squirrel.windows"/>
+                    <Label Content="StructLinq"/>
+                    <Label Content="System.CommandLine"/>
+                    <Label Content="System.IO.Pipeline"/>
+                    <Label Content="System.Memory"/>
+                    <Label Content="WindowsAPICodePack-Core"/>
+                    <Label Content="WindowsAPICodePack-Shell"/>
+                    <Label Content="WPFLocalizeExtension"/>
                 </ListView.Items>
             </ListView>
         </Grid>
