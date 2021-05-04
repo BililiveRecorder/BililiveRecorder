@@ -11,6 +11,8 @@
 
     <c:MultiBoolToValueConverter x:Key="MultiBoolToVisibilityCollapsedConverter" TrueValue="{x:Static Visibility.Visible}" FalseValue="{x:Static Visibility.Collapsed}"/>
 
+    <c:IsNaNToValueConverter x:Key="IsNaNToVisibilityCollapsedConverter" TrueValue="{x:Static Visibility.Visible}" FalseValue="{x:Static Visibility.Collapsed}" />
+    <c:IsNaNToValueConverter x:Key="InvertIsNaNToVisibilityCollapsedConverter" TrueValue="{x:Static Visibility.Collapsed}" FalseValue="{x:Static Visibility.Visible}" />
     <c:BoolToValueConverter x:Key="BooleanToVisibilityCollapsedConverter" TrueValue="{x:Static Visibility.Visible}" FalseValue="{x:Static Visibility.Collapsed}" />
     <c:BoolToValueConverter x:Key="InvertBooleanToVisibilityCollapsedConverter" TrueValue="{x:Static Visibility.Collapsed}" FalseValue="{x:Static Visibility.Visible}" />
     <c:BoolToValueConverter x:Key="BooleanToVisibilityHiddenConverter" TrueValue="{x:Static Visibility.Visible}" FalseValue="{x:Static Visibility.Hidden}" />
@@ -53,6 +55,7 @@
     <c:IsNullToVisibilityConverter x:Key="IsNullToVisibilityCollapsedConverter"/>
     <c:RatioToColorBrushConverter x:Key="RatioToColorBrushConverter"/>
     <c:RatioToArrowIconConverter x:Key="RatioToArrowIconConverter" UpArrow="{StaticResource PathIconDataArrowUpBold}" DownArrow="{StaticResource PathIconDataArrowDownBold}"/>
+    
     <c:ShortRoomIdToVisibilityConverter x:Key="ShortRoomIdToVisibilityConverter"/>
     <c:ByteUnitsConverter x:Key="ByteUnitsConverter"/>
 </ResourceDictionary>

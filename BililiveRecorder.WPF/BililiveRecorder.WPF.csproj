@@ -118,6 +118,7 @@
     <Compile Include="Converters\EnumToBooleanConverter.cs" />
     <Compile Include="Converters\IsNullToVisibilityConverter.cs" />
     <Compile Include="Converters\RatioToArrowIconConverter.cs" />
+    <Compile Include="Converters\IsNaNToValueConverter.cs" />
     <Compile Include="Converters\ShortRoomIdToVisibilityConverter.cs" />
     <Compile Include="Converters\ValueConverterGroup.cs" />
     <Compile Include="Models\AboutModel.cs" />

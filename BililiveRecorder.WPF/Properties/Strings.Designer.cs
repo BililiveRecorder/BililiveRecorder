@@ -524,6 +524,15 @@ namespace BililiveRecorder.WPF.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to 无统计数据.
+        /// </summary>
+        public static string RoomCard_Status_SpeedIndicator_NoData {
+            get {
+                return ResourceManager.GetString("RoomCard_Status_SpeedIndicator_NoData", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to 录制经过时间: {0:g}.
         /// </summary>
         public static string RoomCard_Status_SpeedIndicator_SessionDuration {

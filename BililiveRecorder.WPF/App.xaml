@@ -26,58 +26,64 @@
                      l:ResxLocalizationProvider.DefaultDictionary="Strings">
                 <MenuItem Header="{l:Loc Global_Copy}" Command="{x:Static m:Commands.Copy}" CommandParameter="{Binding Text}"/>
             </ContextMenu>
-            <DataTemplate x:Key="RoomCardStatsPopup">
-                <StackPanel l:ResxLocalizationProvider.DefaultDictionary="Strings">
-                    <TextBlock>
-                        <TextBlock.Text>
-                            <MultiBinding Converter="{l:StringFormatConverter}">
-                                <l:BLoc Key="RoomCard_Status_SpeedIndicator_SpeedInPercentage"/>
-                                <Binding Path="Stats.DuraionRatio" Mode="OneWay"/>
-                            </MultiBinding>
-                        </TextBlock.Text>
-                    </TextBlock>
-                    <TextBlock>
-                        <TextBlock.Text>
-                            <MultiBinding Converter="{l:StringFormatConverter}">
-                                <l:BLoc Key="RoomCard_Status_SpeedIndicator_CurrentFileDuration"/>
-                                <Binding Path="Stats.FileMaxTimestamp" Mode="OneWay"/>
-                            </MultiBinding>
-                        </TextBlock.Text>
-                    </TextBlock>
-                    <TextBlock>
-                        <TextBlock.Text>
-                            <MultiBinding Converter="{l:StringFormatConverter}">
-                                <l:BLoc Key="RoomCard_Status_SpeedIndicator_TotalFileDuration"/>
-                                <Binding Path="Stats.SessionMaxTimestamp" Mode="OneWay"/>
-                            </MultiBinding>
-                        </TextBlock.Text>
-                    </TextBlock>
-                    <TextBlock>
-                        <TextBlock.Text>
-                            <MultiBinding Converter="{l:StringFormatConverter}">
-                                <l:BLoc Key="RoomCard_Status_SpeedIndicator_SessionDuration"/>
-                                <Binding Path="Stats.SessionDuration" Mode="OneWay"/>
-                            </MultiBinding>
-                        </TextBlock.Text>
-                    </TextBlock>
-                    <TextBlock>
-                        <TextBlock.Text>
-                            <MultiBinding Converter="{l:StringFormatConverter}">
-                                <l:BLoc Key="RoomCard_Status_SpeedIndicator_TotalnputBytes"/>
-                                <Binding Path="Stats.TotalInputBytes" Converter="{StaticResource ByteUnitsConverter}" Mode="OneWay"/>
-                            </MultiBinding>
-                        </TextBlock.Text>
-                    </TextBlock>
-                    <TextBlock>
-                        <TextBlock.Text>
-                            <MultiBinding Converter="{l:StringFormatConverter}">
-                                <l:BLoc Key="RoomCard_Status_SpeedIndicator_TotalOutputBytes"/>
-                                <Binding Path="Stats.TotalOutputBytes" Converter="{StaticResource ByteUnitsConverter}" Mode="OneWay"/>
-                            </MultiBinding>
-                        </TextBlock.Text>
-                    </TextBlock>
-                    <TextBlock Margin="0,5,0,0" Text="{l:Loc RoomCard_Status_SpeedIndicator_Description}"/>
-                </StackPanel>
+            <DataTemplate x:Key="RoomCardStatsPopup" 
+                          xmlns:core="clr-namespace:BililiveRecorder.Core;assembly=BililiveRecorder.Core"
+                          DataType="{x:Type core:Room}">
+                <Grid l:ResxLocalizationProvider.DefaultDictionary="Strings">
+                    <TextBlock Visibility="{Binding Stats.DuraionRatio,Converter={StaticResource IsNaNToVisibilityCollapsedConverter}}" 
+                               TextAlignment="Center" Text="{l:Loc RoomCard_Status_SpeedIndicator_NoData}"/>
+                    <StackPanel Visibility="{Binding Stats.DuraionRatio,Converter={StaticResource InvertIsNaNToVisibilityCollapsedConverter}}">
+                        <TextBlock>
+                            <TextBlock.Text>
+                                <MultiBinding Converter="{l:StringFormatConverter}">
+                                    <l:BLoc Key="RoomCard_Status_SpeedIndicator_SpeedInPercentage"/>
+                                    <Binding Path="Stats.DuraionRatio" Mode="OneWay"/>
+                                </MultiBinding>
+                            </TextBlock.Text>
+                        </TextBlock>
+                        <TextBlock>
+                            <TextBlock.Text>
+                                <MultiBinding Converter="{l:StringFormatConverter}">
+                                    <l:BLoc Key="RoomCard_Status_SpeedIndicator_CurrentFileDuration"/>
+                                    <Binding Path="Stats.FileMaxTimestamp" Mode="OneWay"/>
+                                </MultiBinding>
+                            </TextBlock.Text>
+                        </TextBlock>
+                        <TextBlock>
+                            <TextBlock.Text>
+                                <MultiBinding Converter="{l:StringFormatConverter}">
+                                    <l:BLoc Key="RoomCard_Status_SpeedIndicator_TotalFileDuration"/>
+                                    <Binding Path="Stats.SessionMaxTimestamp" Mode="OneWay"/>
+                                </MultiBinding>
+                            </TextBlock.Text>
+                        </TextBlock>
+                        <TextBlock>
+                            <TextBlock.Text>
+                                <MultiBinding Converter="{l:StringFormatConverter}">
+                                    <l:BLoc Key="RoomCard_Status_SpeedIndicator_SessionDuration"/>
+                                    <Binding Path="Stats.SessionDuration" Mode="OneWay"/>
+                                </MultiBinding>
+                            </TextBlock.Text>
+                        </TextBlock>
+                        <TextBlock>
+                            <TextBlock.Text>
+                                <MultiBinding Converter="{l:StringFormatConverter}">
+                                    <l:BLoc Key="RoomCard_Status_SpeedIndicator_TotalnputBytes"/>
+                                    <Binding Path="Stats.TotalInputBytes" Converter="{StaticResource ByteUnitsConverter}" Mode="OneWay"/>
+                                </MultiBinding>
+                            </TextBlock.Text>
+                        </TextBlock>
+                        <TextBlock>
+                            <TextBlock.Text>
+                                <MultiBinding Converter="{l:StringFormatConverter}">
+                                    <l:BLoc Key="RoomCard_Status_SpeedIndicator_TotalOutputBytes"/>
+                                    <Binding Path="Stats.TotalOutputBytes" Converter="{StaticResource ByteUnitsConverter}" Mode="OneWay"/>
+                                </MultiBinding>
+                            </TextBlock.Text>
+                        </TextBlock>
+                        <TextBlock Margin="0,5,0,0" Text="{l:Loc RoomCard_Status_SpeedIndicator_Description}"/>
+                    </StackPanel>
+                </Grid>
             </DataTemplate>
             <DataTemplate x:Key="RoomDialogHeader">
                 <StackPanel>

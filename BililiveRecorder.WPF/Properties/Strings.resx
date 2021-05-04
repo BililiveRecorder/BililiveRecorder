@@ -264,6 +264,9 @@
 正常应为接近 100% 颜色显示为绿色</value>
     <comment>Shown in tooltip</comment>
   </data>
+  <data name="RoomCard_Status_SpeedIndicator_NoData" xml:space="preserve">
+    <value>无统计数据</value>
+  </data>
   <data name="RoomCard_Status_SpeedIndicator_SessionDuration" xml:space="preserve">
     <value>录制经过时间: {0:g}</value>
   </data>
@@ -455,9 +458,6 @@ Will use default setting and disable user input when checked.</comment>
   <data name="TaskbarIconControl_Title" xml:space="preserve">
     <value>B站录播姬</value>
   </data>
-  <data name="Toolbox_AutoFix_AnalyzeResult_Stats_AvgFPS" xml:space="preserve">
-    <value>平均FPS {0:F2}</value>
-  </data>
   <data name="Toolbox_AutoFix_AnalyzeResult_ContainsUnrepairable" xml:space="preserve">
     <value>文件内存在录播姬无法自动修复的问题
 请点击 修复失败？ 按钮并反馈本问题</value>
@@ -497,6 +497,9 @@ Will use default setting and disable user input when checked.</comment>
   </data>
   <data name="Toolbox_AutoFix_AnalyzeResult_Stats_Audio" xml:space="preserve">
     <value>音频</value>
+  </data>
+  <data name="Toolbox_AutoFix_AnalyzeResult_Stats_AvgFPS" xml:space="preserve">
+    <value>平均FPS {0:F2}</value>
   </data>
   <data name="Toolbox_AutoFix_AnalyzeResult_Stats_Disclaimer" xml:space="preserve">
     <value>仅供参考，有问题的文件的统计可能不准确</value>
