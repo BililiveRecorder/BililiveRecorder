@@ -260,6 +260,9 @@
 正常の状態なれば　数字は100％に近い　背景色はグリーン</value>
     <comment>Shown in tooltip</comment>
   </data>
+  <data name="RoomCard_Status_SpeedIndicator_NoData" xml:space="preserve">
+    <value>統計データはありません</value>
+  </data>
   <data name="RoomCard_Status_SpeedIndicator_SessionDuration" xml:space="preserve">
     <value>経過時間: {0:g}</value>
   </data>
@@ -451,9 +454,6 @@ Will use default setting and disable user input when checked.</comment>
   <data name="TaskbarIconControl_Title" xml:space="preserve">
     <value>ビリビリ生配信リコーダー</value>
   </data>
-  <data name="Toolbox_AutoFix_AnalyzeResult_Stats_AvgFPS" xml:space="preserve">
-    <value>平均FPS {0:F2}</value>
-  </data>
   
   <data name="Toolbox_AutoFix_AnalyzeResult_FixNeeded" xml:space="preserve">
     <value>要修正</value>
@@ -472,6 +472,9 @@ Will use default setting and disable user input when checked.</comment>
   
   <data name="Toolbox_AutoFix_AnalyzeResult_Stats_Audio" xml:space="preserve">
     <value>音声</value>
+  </data>
+  <data name="Toolbox_AutoFix_AnalyzeResult_Stats_AvgFPS" xml:space="preserve">
+    <value>平均FPS {0:F2}</value>
   </data>
   
   
