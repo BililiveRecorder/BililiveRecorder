@@ -229,7 +229,9 @@
     <value>設定</value>
   </data>
   
-  
+  <data name="RoomCard_Status_AutoRecordForThisSessionDisabled_Tooltip" xml:space="preserve">
+    <value>今回の配信の自動録画が停止しました。配信終了後に再開されます</value>
+  </data>
   <data name="RoomCard_Status_DanmakuConnectionTooltip_False" xml:space="preserve">
     <value>配信コメントの接続状態は失われました
 リコーダーはコメントサーバーから配信状況データを受信する</value>
@@ -456,20 +458,28 @@ Will use default setting and disable user input when checked.</comment>
   </data>
   
   <data name="Toolbox_AutoFix_AnalyzeResult_FixNeeded" xml:space="preserve">
-    <value>要修正</value>
+    <value>修復は必要です</value>
   </data>
   <data name="Toolbox_AutoFix_AnalyzeResult_FixNotNeeded" xml:space="preserve">
-    <value>修復は必要ありません</value>
+    <value>修復は不要です</value>
+  </data>
+  
+  
+  <data name="Toolbox_AutoFix_AnalyzeResult_IssueTypeRepeatingData" xml:space="preserve">
+    <value>{0} パートが重複しました</value>
   </data>
   
   
   
-  
-  
-  
-  
-  
-  
+  <data name="Toolbox_AutoFix_AnalyzeResult_NoDataNote" xml:space="preserve">
+    <value>備考：解析しなくても修復することができます</value>
+  </data>
+  <data name="Toolbox_AutoFix_AnalyzeResult_NoDataTitle" xml:space="preserve">
+    <value>解析ボタンを押すと解析が始まります</value>
+  </data>
+  <data name="Toolbox_AutoFix_AnalyzeResult_OutputFileCount" xml:space="preserve">
+    <value>今回の修復は {0} 個ファイルが出力されます</value>
+  </data>
   <data name="Toolbox_AutoFix_AnalyzeResult_Stats_Audio" xml:space="preserve">
     <value>音声</value>
   </data>
@@ -490,7 +500,7 @@ Will use default setting and disable user input when checked.</comment>
     <value>分析</value>
   </data>
   <data name="Toolbox_AutoFix_ButtonFix" xml:space="preserve">
-    <value>修正</value>
+    <value>修復</value>
   </data>
   <data name="Toolbox_AutoFix_ButtonNotFixed" xml:space="preserve">
     <value>修復に失敗しました?</value>
@@ -507,7 +517,9 @@ Will use default setting and disable user input when checked.</comment>
   <data name="Toolbox_AutoFix_Error_Type_InputIOError" xml:space="preserve">
     <value>ファイルを読み取れません</value>
   </data>
-  
+  <data name="Toolbox_AutoFix_Error_Type_NotFlvFile" xml:space="preserve">
+    <value>FLVファイルではありません</value>
+  </data>
   <data name="Toolbox_AutoFix_Error_Type_OK" xml:space="preserve">
     <value>OK</value>
     <comment>其实不是错误类型</comment>
@@ -533,7 +545,7 @@ Will use default setting and disable user input when checked.</comment>
     <value>保存先を選択</value>
   </data>
   <data name="Toolbox_AutoFix_Title" xml:space="preserve">
-    <value>録画の修正</value>
+    <value>録画の修復</value>
   </data>
   <data name="Toolbox_Title" xml:space="preserve">
     <value>ツールボックス</value>
