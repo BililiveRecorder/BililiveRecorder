@@ -108,6 +108,8 @@ namespace BililiveRecorder.WPF.Pages
                     });
                 }).ConfigureAwait(true);
 
+                logger.Debug("修复结果 {@Response}", resp);
+
                 if (resp.Status != ResponseStatus.Cancelled && resp.Status != ResponseStatus.OK)
                 {
                     logger.Warning(resp.Exception, "修复时发生错误 (@Status)", resp.Status);
@@ -173,6 +175,8 @@ namespace BililiveRecorder.WPF.Pages
                         progressDialog.Progress = (int)(p * 98d);
                     });
                 }).ConfigureAwait(true);
+
+                logger.Debug("分析结果 {@Response}", resp);
 
                 if (resp.Status != ResponseStatus.Cancelled)
                 {
@@ -261,6 +265,8 @@ namespace BililiveRecorder.WPF.Pages
                         progressDialog.Progress = (int)(p * 95d);
                     });
                 }).ConfigureAwait(true);
+
+                logger.Debug("导出分析数据结果 {@Response}", resp);
 
                 if (resp.Status != ResponseStatus.Cancelled && resp.Status != ResponseStatus.OK)
                 {

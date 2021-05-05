@@ -12,6 +12,13 @@
     <language>zh-CN</language>
   </metadata>
   <files>
-    <file src="**" target="lib\net45\" exclude="*.nupkg;*.vshost.*;*.log;*.txt;NuGet.Squirrel.pdb;*\Microsoft.VisualStudio.Threading.resources.dll;*\Microsoft.VisualStudio.Validation.resources.dll"/>
+    <file src="*" target="lib\net45\" exclude="*.nupkg;*.vshost.*;*.log;*.txt;NuGet.Squirrel.pdb"/>
+    <file src="zh-Hans\*" target="lib\net45\zh-Hans\" exclude="**\*.nupkg;**\*.vshost.*;**\*.log;**\*.txt;**\Microsoft.VisualStudio.Threading.resources.dll;**\Microsoft.VisualStudio.Validation.resources.dll"/>
+    <file src="zh-Hant\*" target="lib\net45\zh-Hant\" exclude="**\*.nupkg;**\*.vshost.*;**\*.log;**\*.txt;**\Microsoft.VisualStudio.Threading.resources.dll;**\Microsoft.VisualStudio.Validation.resources.dll"/>
+    <file src="zh-CN\*" target="lib\net45\zh-CN\" exclude="**\*.nupkg;**\*.vshost.*;**\*.log;**\*.txt;**\Microsoft.VisualStudio.Threading.resources.dll;**\Microsoft.VisualStudio.Validation.resources.dll"/>
+    <file src="zh-TW\*" target="lib\net45\zh-TW\" exclude="**\*.nupkg;**\*.vshost.*;**\*.log;**\*.txt;**\Microsoft.VisualStudio.Threading.resources.dll;**\Microsoft.VisualStudio.Validation.resources.dll"/>
+    <file src="en\*" target="lib\net45\en\" exclude="**\*.nupkg;**\*.vshost.*;**\*.log;**\*.txt;**\Microsoft.VisualStudio.Threading.resources.dll;**\Microsoft.VisualStudio.Validation.resources.dll"/>
+    <file src="ja\*" target="lib\net45\ja\" exclude="**\*.nupkg;**\*.vshost.*;**\*.log;**\*.txt;**\Microsoft.VisualStudio.Threading.resources.dll;**\Microsoft.VisualStudio.Validation.resources.dll"/>
+    <file src="ja-JP\*" target="lib\net45\ja-JP\" exclude="**\*.nupkg;**\*.vshost.*;**\*.log;**\*.txt;**\Microsoft.VisualStudio.Threading.resources.dll;**\Microsoft.VisualStudio.Validation.resources.dll"/>
   </files>
 </package>
