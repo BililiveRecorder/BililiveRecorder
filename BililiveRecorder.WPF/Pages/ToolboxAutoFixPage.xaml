@@ -195,8 +195,8 @@
                                     <TextBlock HorizontalAlignment="Center" Text="{l:Loc Toolbox_AutoFix_AnalyzeResult_Stats_Disclaimer}"/>
                                 </StackPanel>
                                 <Separator Grid.Column="1" Grid.Row="1" Grid.RowSpan="2" Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}" />
-                                <TextBlock Grid.Row="1" Grid.Column="0" TextAlignment="Center" FontSize="16" Text="{l:Loc Toolbox_AutoFix_AnalyzeResult_Stats_Audio}"/>
-                                <TextBlock Grid.Row="1" Grid.Column="2" TextAlignment="Center" FontSize="16" Text="{l:Loc Toolbox_AutoFix_AnalyzeResult_Stats_Video}"/>
+                                <TextBlock Grid.Row="1" Grid.Column="0" TextAlignment="Center" FontSize="16" Text="{l:Loc Toolbox_AutoFix_AnalyzeResult_Stats_Video}"/>
+                                <TextBlock Grid.Row="1" Grid.Column="2" TextAlignment="Center" FontSize="16" Text="{l:Loc Toolbox_AutoFix_AnalyzeResult_Stats_Audio}"/>
                                 <ContentControl Grid.Row="2" Grid.Column="0" Content="{Binding VideoStats}" ContentTemplate="{StaticResource FlvStatsPanel}"/>
                                 <ContentControl Grid.Row="2" Grid.Column="2" Content="{Binding AudioStats}" ContentTemplate="{StaticResource FlvStatsPanel}"/>
                             </Grid>
