@@ -67,7 +67,7 @@
             </StackPanel>
         </StackPanel>
         <StackPanel Grid.Row="1" Margin="0,10">
-            <TextBlock FontSize="16">
+            <TextBlock FontSize="16" TextWrapping="Wrap">
                 <TextBlock.Text>
                     <MultiBinding Converter="{l:StringFormatConverter}">
                         <l:BLoc Key="About_Version"/>
@@ -79,7 +79,7 @@
                 <TextBlock FontSize="16" Text="{l:Loc About_Copyright}"/>
                 <TextBlock FontSize="16" Text=" © 2021 Genteure"/>
             </StackPanel>
-            <TextBlock FontSize="16" Text="{l:Loc About_License}"/>
+            <TextBlock FontSize="16" TextWrapping="Wrap" Text="{l:Loc About_License}"/>
             <StackPanel Orientation="Horizontal">
                 <TextBlock FontSize="16" Text="{l:Loc About_Contact}" VerticalAlignment="Center" Margin="0,0,5,0"/>
                 <ui:HyperlinkButton Padding="0" Content="rec@danmuji.org" NavigateUri="mailto:rec@danmuji.org"/>
