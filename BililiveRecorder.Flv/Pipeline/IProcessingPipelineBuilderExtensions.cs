@@ -24,6 +24,7 @@ namespace BililiveRecorder.Flv.Pipeline
 
         public static IProcessingPipelineBuilder AddDefault(this IProcessingPipelineBuilder builder) =>
             builder
+            .Add<PrintSecretMessageRule>()
             .Add<HandleEndTagRule>()
             .Add<HandleDelayedAudioHeaderRule>()
             .Add<UpdateTimestampOffsetRule>()
