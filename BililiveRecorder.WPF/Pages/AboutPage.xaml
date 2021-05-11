@@ -101,12 +101,14 @@
             <TextBlock Text="{l:Loc About_Translator}" FontSize="22"/>
             <ListView Grid.Row="1">
                 <ListView.Items>
-                    <Label Content="User Name (username)"/>
-                    <Label Content="User Name (username)"/>
-                    <Label Content="User Name (username)"/>
-                    <Label Content="User Name (username)"/>
-                    <Label Content="User Name (username)"/>
-                    <Label Content="User Name (username)"/>
+                    <Label Content="Dewei Li (deweili)"/>
+                    <Label Content="Fox Older (olderfox)"/>
+                    <Label Content="Genteure (genteure)"/>
+                    <Label Content="Heongle (heongle)"/>
+                    <Label Content="kafu (kafu0611)"/>
+                    <Label Content="Kenneth (w41k3r15347)"/>
+                    <Label Content="OrangeCat (dust0517)"/>
+                    <Label Content="Vincent Tse (vincentkilua)"/>
                 </ListView.Items>
             </ListView>
         </Grid>

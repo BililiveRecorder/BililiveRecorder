@@ -29,7 +29,7 @@
                         <ui:Flyout Placement="LeftEdgeAlignedTop">
                             <StackPanel l:ResxLocalizationProvider.DefaultDictionary="Strings">
                                 <TextBlock Text="{l:Loc Toolbox_AutoFix_NotFixed_Description}"/>
-                                <ui:HyperlinkButton NavigateUri="" Content="{l:Loc Toolbox_AutoFix_NotFixed_LearnMore}"/>
+                                <ui:HyperlinkButton NavigateUri="https://rec.danmuji.org/link/fix_feedback/" Content="{l:Loc Toolbox_AutoFix_NotFixed_LearnMore}"/>
                                 <Button Margin="0,15,0,10" HorizontalAlignment="Center" Click="Export_Button_Click">
                                     <StackPanel Orientation="Horizontal">
                                         <ui:PathIcon Margin="0,0,5,0" Style="{StaticResource PathIconDataExport}"/>
