@@ -107,12 +107,17 @@
   <data name="About_LibrariesUsed" xml:space="preserve">
     <value>使用されるサード・パーティ・ライブラリ</value>
   </data>
-  
+  <data name="About_License" xml:space="preserve">
+    <value>このソフトウェアはフリーソフトウェアです。
+このソフトウェアはオープンソースソフトウェアです。GNU GPLv3でライセンスされています。</value>
+  </data>
   <data name="About_Name" xml:space="preserve">
     <value>ビリビリ生配信リコーダー</value>
     <comment>Add "(B站录播姬)" after translation</comment>
   </data>
-  
+  <data name="About_Project" xml:space="preserve">
+    <value>プロジェクトホーム</value>
+  </data>
   <data name="About_Title" xml:space="preserve">
     <value>ビリビリ生配信リコーダーについて</value>
   </data>
@@ -224,7 +229,9 @@
     <value>設定</value>
   </data>
   
-  
+  <data name="RoomCard_Status_AutoRecordForThisSessionDisabled_Tooltip" xml:space="preserve">
+    <value>今回の配信の自動録画が停止しました。配信終了後に再開されます</value>
+  </data>
   <data name="RoomCard_Status_DanmakuConnectionTooltip_False" xml:space="preserve">
     <value>配信コメントの接続状態は失われました
 リコーダーはコメントサーバーから配信状況データを受信する</value>
@@ -247,13 +254,20 @@
     <value>録画中</value>
     <comment>Short status text</comment>
   </data>
-  
+  <data name="RoomCard_Status_SpeedIndicator_CurrentFileDuration" xml:space="preserve">
+    <value>現在の動画の長さ: {0:g}</value>
+  </data>
   <data name="RoomCard_Status_SpeedIndicator_Description" xml:space="preserve">
     <value>ここは録画の速度と実際生放送速度（スピードレート）の比率
 正常の状態なれば　数字は100％に近い　背景色はグリーン</value>
     <comment>Shown in tooltip</comment>
   </data>
-  
+  <data name="RoomCard_Status_SpeedIndicator_NoData" xml:space="preserve">
+    <value>統計データはありません</value>
+  </data>
+  <data name="RoomCard_Status_SpeedIndicator_SessionDuration" xml:space="preserve">
+    <value>経過時間: {0:g}</value>
+  </data>
   <data name="RoomCard_Status_SpeedIndicator_SpeedInMbps" xml:space="preserve">
     <value>{0:F2} Mbps</value>
     <comment>Should not translate</comment>
@@ -262,9 +276,15 @@
     <value>現在の速度比：{0:P2}</value>
     <comment>Speed percentage relative to upload speed of the streamer</comment>
   </data>
-  
-  
-  
+  <data name="RoomCard_Status_SpeedIndicator_TotalFileDuration" xml:space="preserve">
+    <value>全てのファイルの長さ: {0:g}</value>
+  </data>
+  <data name="RoomCard_Status_SpeedIndicator_TotalnputBytes" xml:space="preserve">
+    <value>受信したデータ量 {0}</value>
+  </data>
+  <data name="RoomCard_Status_SpeedIndicator_TotalOutputBytes" xml:space="preserve">
+    <value>書き込んだデータ量 {0}</value>
+  </data>
   <data name="RoomListPage_Menu_AutoRecord" xml:space="preserve">
     <value>監視</value>
   </data>
@@ -437,44 +457,99 @@ Will use default setting and disable user input when checked.</comment>
     <value>ビリビリ生配信リコーダー</value>
   </data>
   
+  <data name="Toolbox_AutoFix_AnalyzeResult_FixNeeded" xml:space="preserve">
+    <value>修復は必要です</value>
+  </data>
+  <data name="Toolbox_AutoFix_AnalyzeResult_FixNotNeeded" xml:space="preserve">
+    <value>修復は不要です</value>
+  </data>
+  
+  
+  <data name="Toolbox_AutoFix_AnalyzeResult_IssueTypeRepeatingData" xml:space="preserve">
+    <value>{0} パートが重複しました</value>
+  </data>
+  
+  
+  
+  <data name="Toolbox_AutoFix_AnalyzeResult_NoDataNote" xml:space="preserve">
+    <value>備考：解析しなくても修復することができます</value>
+  </data>
+  <data name="Toolbox_AutoFix_AnalyzeResult_NoDataTitle" xml:space="preserve">
+    <value>解析ボタンを押すと解析が始まります</value>
+  </data>
+  <data name="Toolbox_AutoFix_AnalyzeResult_OutputFileCount" xml:space="preserve">
+    <value>今回の修復は {0} 個ファイルが出力されます</value>
+  </data>
+  <data name="Toolbox_AutoFix_AnalyzeResult_Stats_Audio" xml:space="preserve">
+    <value>音声</value>
+  </data>
+  <data name="Toolbox_AutoFix_AnalyzeResult_Stats_AvgFPS" xml:space="preserve">
+    <value>平均FPS {0:F2}</value>
+  </data>
   
   
   
   
+  <data name="Toolbox_AutoFix_AnalyzeResult_Stats_Title" xml:space="preserve">
+    <value>統計情報</value>
+  </data>
+  <data name="Toolbox_AutoFix_AnalyzeResult_Stats_Video" xml:space="preserve">
+    <value>ビデオ</value>
+  </data>
+  <data name="Toolbox_AutoFix_ButtonAnalyze" xml:space="preserve">
+    <value>分析</value>
+  </data>
+  <data name="Toolbox_AutoFix_ButtonFix" xml:space="preserve">
+    <value>修復</value>
+  </data>
+  <data name="Toolbox_AutoFix_ButtonNotFixed" xml:space="preserve">
+    <value>修復に失敗しました?</value>
+  </data>
+  <data name="Toolbox_AutoFix_ButtonSelectInput" xml:space="preserve">
+    <value>選択...</value>
+  </data>
+  <data name="Toolbox_AutoFix_Error_Title" xml:space="preserve">
+    <value>エラーが発生しました</value>
+  </data>
+  <data name="Toolbox_AutoFix_Error_Type_Error" xml:space="preserve">
+    <value>不明なエラー</value>
+  </data>
+  <data name="Toolbox_AutoFix_Error_Type_InputIOError" xml:space="preserve">
+    <value>ファイルを読み取れません</value>
+  </data>
+  <data name="Toolbox_AutoFix_Error_Type_NotFlvFile" xml:space="preserve">
+    <value>FLVファイルではありません</value>
+  </data>
+  <data name="Toolbox_AutoFix_Error_Type_OK" xml:space="preserve">
+    <value>OK</value>
+    <comment>其实不是错误类型</comment>
+  </data>
+  <data name="Toolbox_AutoFix_Error_Type_OutputIOError" xml:space="preserve">
+    <value>ファイルの書き込みに失敗</value>
+  </data>
+  <data name="Toolbox_AutoFix_Error_Type_UnknownFlvTagType" xml:space="preserve">
+    <value>未知のFLVデータ型です</value>
+  </data>
+  <data name="Toolbox_AutoFix_InputPathPlaceholder" xml:space="preserve">
+    <value>FLV ファイル</value>
+  </data>
   
   
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
+  <data name="Toolbox_AutoFix_NotFixed_LearnMore" xml:space="preserve">
+    <value>詳細はこちらをクリック</value>
+  </data>
+  <data name="Toolbox_AutoFix_SelectInputDialog_Title" xml:space="preserve">
+    <value>動画ファイルを選択</value>
+  </data>
+  <data name="Toolbox_AutoFix_SelectOutputDialog_Title" xml:space="preserve">
+    <value>保存先を選択</value>
+  </data>
+  <data name="Toolbox_AutoFix_Title" xml:space="preserve">
+    <value>録画の修復</value>
+  </data>
+  <data name="Toolbox_Title" xml:space="preserve">
+    <value>ツールボックス</value>
+  </data>
   <data name="Window_Title" xml:space="preserve">
     <value>ビリビリ録画機 (B站录播姬) {0}</value>
     
