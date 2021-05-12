@@ -81,7 +81,7 @@ namespace BililiveRecorder.Flv.UnitTests.Grouping
             var sp = new ServiceCollection().BuildServiceProvider();
             var pipeline = new ProcessingPipelineBuilder(sp).AddDefault().AddRemoveFillerData().Build();
 
-            using var writer = new FlvProcessingContextWriter(new FlvTagFileWriter(new TestOutputProvider(), new TestRecyclableMemoryStreamProvider(), null));
+            using var writer = new FlvProcessingContextWriter(tagWriter: new FlvTagFileWriter(new TestOutputProvider(), new TestRecyclableMemoryStreamProvider(), null), allowMissingHeader: false, disableKeyframes: true);
 
             while (true)
             {

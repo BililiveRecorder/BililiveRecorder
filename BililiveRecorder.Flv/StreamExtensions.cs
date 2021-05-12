@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -101,6 +102,7 @@ namespace BililiveRecorder.Flv
             return b;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         internal static void Write(this Stream stream, byte[] bytes) => stream.Write(bytes, 0, bytes.Length);
 
         internal static bool SequenceEqual(this Stream self, Stream? other)

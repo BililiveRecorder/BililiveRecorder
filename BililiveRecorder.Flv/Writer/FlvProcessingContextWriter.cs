@@ -12,6 +12,7 @@ namespace BililiveRecorder.Flv.Writer
         private readonly SemaphoreSlim semaphoreSlim = new SemaphoreSlim(1, 1);
         private readonly IFlvTagWriter tagWriter;
         private readonly bool allowMissingHeader;
+        private readonly bool disableKeyframes;
         private bool disposedValue;
 
         private WriterState state = WriterState.EmptyFileOrNotOpen;
@@ -21,6 +22,7 @@ namespace BililiveRecorder.Flv.Writer
         private Tag? nextVideoHeaderTag = null;
 
         private ScriptTagBody? lastScriptBody = null;
+        private KeyframesScriptDataValue? keyframesScriptDataValue = null;
         private double lastDuration;
 
         public event EventHandler<FileClosedEventArgs>? FileClosed;
@@ -28,13 +30,11 @@ namespace BililiveRecorder.Flv.Writer
         public Action<ScriptTagBody>? BeforeScriptTagWrite { get; set; }
         public Action<ScriptTagBody>? BeforeScriptTagRewrite { get; set; }
 
-        public FlvProcessingContextWriter(IFlvTagWriter tagWriter) : this(tagWriter: tagWriter, allowMissingHeader: false)
-        { }
-
-        public FlvProcessingContextWriter(IFlvTagWriter tagWriter, bool allowMissingHeader)
+        public FlvProcessingContextWriter(IFlvTagWriter tagWriter, bool allowMissingHeader, bool disableKeyframes)
         {
             this.tagWriter = tagWriter ?? throw new ArgumentNullException(nameof(tagWriter));
             this.allowMissingHeader = allowMissingHeader;
+            this.disableKeyframes = disableKeyframes;
         }
 
         public async Task WriteAsync(FlvProcessingContext context)
@@ -147,7 +147,7 @@ namespace BililiveRecorder.Flv.Writer
             this.state = WriterState.BeforeScript;
         }
 
-        private async Task RewriteScriptTagImpl(double duration)
+        private async Task RewriteScriptTagImpl(double duration, bool updateKeyframes, double keyframeTime, double filePosition)
         {
             if (this.lastScriptBody is null)
                 return;
@@ -155,6 +155,9 @@ namespace BililiveRecorder.Flv.Writer
             var value = this.lastScriptBody.GetMetadataValue();
             if (value is not null)
                 value["duration"] = (ScriptDataNumber)duration;
+
+            if (updateKeyframes && this.keyframesScriptDataValue is not null)
+                this.keyframesScriptDataValue.AddData(keyframeTime, filePosition);
 
             this.BeforeScriptTagRewrite?.Invoke(this.lastScriptBody);
 
@@ -173,7 +176,16 @@ namespace BililiveRecorder.Flv.Writer
 
             var value = this.lastScriptBody.GetMetadataValue();
             if (value is not null)
+            {
                 value["duration"] = (ScriptDataNumber)0;
+
+                if (!this.disableKeyframes)
+                {
+                    var kfv = new KeyframesScriptDataValue();
+                    value["keyframes"] = kfv;
+                    this.keyframesScriptDataValue = kfv;
+                }
+            }
 
             this.BeforeScriptTagWrite?.Invoke(this.lastScriptBody);
 
@@ -228,12 +240,16 @@ namespace BililiveRecorder.Flv.Writer
                     throw new InvalidOperationException($"Can't write data tag with current state ({this.state})");
             }
 
-            foreach (var tag in dataAction.Tags)
+            var pos = this.tagWriter.FileSize;
+            var tags = dataAction.Tags;
+            var firstTag = tags[0];
+            var duration = tags[tags.Count - 1].Timestamp / 1000d;
+            this.lastDuration = duration;
+
+            foreach (var tag in tags)
                 await this.tagWriter.WriteTag(tag).ConfigureAwait(false);
 
-            var duration = dataAction.Tags[dataAction.Tags.Count - 1].Timestamp / 1000d;
-            this.lastDuration = duration;
-            await this.RewriteScriptTagImpl(duration).ConfigureAwait(false);
+            await this.RewriteScriptTagImpl(duration, firstTag.IsKeyframeData(), firstTag.Timestamp, pos).ConfigureAwait(false);
         }
 
         private async Task WriteEndTag(PipelineEndAction endAction)

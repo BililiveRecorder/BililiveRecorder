@@ -13,7 +13,6 @@ namespace BililiveRecorder.Flv.Pipeline.Rules
     /// </remarks>
     public class HandleNewScriptRule : ISimpleProcessingRule
     {
-        private static readonly ProcessingComment comment_other = new ProcessingComment(CommentType.Logging, "收到了非 onMetaData 的 Script Tag");
         private static readonly ProcessingComment comment_onmetadata = new ProcessingComment(CommentType.Logging, "收到了 onMetaData");
 
         public void Run(FlvProcessingContext context, Action next)
@@ -32,15 +31,12 @@ namespace BililiveRecorder.Flv.Pipeline.Rules
                     && data.Values[0] is ScriptDataString name
                     && name == "onMetaData")
                 {
-                    ScriptDataEcmaArray? value = data.Values[1] switch
+                    ScriptDataEcmaArray value = data.Values[1] switch
                     {
                         ScriptDataObject obj => obj,
                         ScriptDataEcmaArray arr => arr,
-                        _ => null
+                        _ => new ScriptDataEcmaArray()
                     };
-
-                    if (value is null)
-                        value = new ScriptDataEcmaArray();
 
                     context.AddComment(comment_onmetadata);
                     yield return PipelineNewFileAction.Instance;
@@ -56,7 +52,7 @@ namespace BililiveRecorder.Flv.Pipeline.Rules
                 }
                 else
                 {
-                    context.AddComment(comment_other);
+                    context.AddComment(new ProcessingComment(CommentType.Logging, "收到了非 onMetaData 的 Script Tag: " + (data?.ToJson() ?? "(null)")));
                 }
             }
             else

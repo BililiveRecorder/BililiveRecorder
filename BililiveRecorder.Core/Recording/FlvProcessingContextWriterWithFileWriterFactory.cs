@@ -16,8 +16,11 @@ namespace BililiveRecorder.Core.Recording
         }
 
         public IFlvProcessingContextWriter CreateWriter(IFlvWriterTargetProvider targetProvider) =>
-            new FlvProcessingContextWriter(new FlvTagFileWriter(targetProvider,
-                                                                this.serviceProvider.GetRequiredService<IMemoryStreamProvider>(),
-                                                                this.serviceProvider.GetService<ILogger>()));
+            new FlvProcessingContextWriter(
+                tagWriter: new FlvTagFileWriter(targetProvider: targetProvider,
+                                                memoryStreamProvider: this.serviceProvider.GetRequiredService<IMemoryStreamProvider>(),
+                                                logger: this.serviceProvider.GetService<ILogger>()),
+                allowMissingHeader: false,
+                disableKeyframes: false);
     }
 }
