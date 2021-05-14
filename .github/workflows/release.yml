@@ -53,14 +53,16 @@ jobs:
           name: WPF-NupkgReleases
           path: BililiveRecorder.WPF/bin/NupkgReleases
       - name: Pack Portable Zip File
-        run: 7z a BililiveRecorder-WPF-Portable.zip BililiveRecorder.WPF/bin/${{ matrix.build_configuration }}
+        run: |
+          cd BililiveRecorder.WPF/bin/${{ matrix.build_configuration }}
+          7z a BililiveRecorder-WPF-Portable.zip .
       - name: Upload Portable Zip File
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ github.event.release.upload_url }}
-          asset_path: BililiveRecorder-WPF-Portable.zip
+          asset_path: BililiveRecorder.WPF/bin/${{ matrix.build_configuration }}/BililiveRecorder-WPF-Portable.zip
           asset_name: BililiveRecorder-WPF-Portable.zip
           asset_content_type: application/zip
       - name: Upload Installer
@@ -108,6 +110,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ github.event.release.upload_url }}
-          asset_path: BililiveRecorder.Cli/publish/CLI-${{ matrix.rid }}-${{ matrix.rid }}.zip
+          asset_path: BililiveRecorder.Cli/publish/CLI-${{ matrix.rid }}-${{ matrix.build_configuration }}.zip
           asset_name: BililiveRecorder-CLI-${{ matrix.rid }}.zip
           asset_content_type: application/zip
