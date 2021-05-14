@@ -42,14 +42,19 @@ jobs:
         run: nuget restore -Verbosity quiet
       - name: Build WPF
         run: msbuild /nologo /v:m /p:Configuration="${{ matrix.build_configuration }}"
-      - name: Upload Artifacts
+      - name: Upload Build Artifacts
         uses: actions/upload-artifact@v2
         with:
           name: WPF-${{ matrix.build_configuration }}
           path: BililiveRecorder.WPF/bin/${{ matrix.build_configuration }}
-      - name: Pack Release Asset
+      - name: Upload Packed Artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: WPF-NupkgReleases
+          path: BililiveRecorder.WPF/bin/NupkgReleases
+      - name: Pack Portable Zip File
         run: 7z a BililiveRecorder-WPF-Portable.zip BililiveRecorder.WPF/bin/${{ matrix.build_configuration }}
-      - name: Upload Release Asset
+      - name: Upload Portable Zip File
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -58,7 +63,7 @@ jobs:
           asset_path: BililiveRecorder-WPF-Portable.zip
           asset_name: BililiveRecorder-WPF-Portable.zip
           asset_content_type: application/zip
-      - name: Upload Release Asset
+      - name: Upload Installer
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
