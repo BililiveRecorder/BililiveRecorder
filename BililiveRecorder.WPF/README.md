@@ -1,3 +1,0 @@
-# BililiveRecorder.WPF
-
-TODO
