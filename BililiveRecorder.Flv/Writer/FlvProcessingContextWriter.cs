@@ -157,7 +157,7 @@ namespace BililiveRecorder.Flv.Writer
                 value["duration"] = (ScriptDataNumber)duration;
 
             if (updateKeyframes && this.keyframesScriptDataValue is not null)
-                this.keyframesScriptDataValue.AddData(keyframeTime, filePosition);
+                this.keyframesScriptDataValue.AddData(time_in_ms: keyframeTime, filePosition: filePosition);
 
             this.BeforeScriptTagRewrite?.Invoke(this.lastScriptBody);
 

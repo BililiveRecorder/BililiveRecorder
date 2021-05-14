@@ -37,12 +37,12 @@ namespace BililiveRecorder.Flv.Writer
         private readonly List<Data> KeyframesData = new();
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void AddData(double time, double filePosition)
+        public void AddData(double time_in_ms, double filePosition)
         {
             var keyframesData = this.KeyframesData;
-            if (keyframesData.Count < MaxDataCount && (keyframesData.Count == 0 || ((time - keyframesData[keyframesData.Count - 1].Time) > MinInterval)))
+            if (keyframesData.Count < MaxDataCount && (keyframesData.Count == 0 || ((time_in_ms - keyframesData[keyframesData.Count - 1].Time) > MinInterval)))
             {
-                keyframesData.Add(new Data(time: time, filePosition: filePosition));
+                keyframesData.Add(new Data(time: time_in_ms / 1000d, filePosition: filePosition));
             }
         }
 
