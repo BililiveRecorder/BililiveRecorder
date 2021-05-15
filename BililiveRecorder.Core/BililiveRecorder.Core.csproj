@@ -9,7 +9,7 @@
 
   <ItemGroup>
     <PackageReference Include="JsonSubTypes" Version="1.8.0" />
-    <PackageReference Include="HierarchicalPropertyDefault" Version="0.1.1-beta-g721d36b97c" />
+    <PackageReference Include="HierarchicalPropertyDefault" Version="0.1.4-beta-g75fdf624b1" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="5.0.0" />
     <PackageReference Include="Microsoft.IO.RecyclableMemoryStream" Version="2.0.0" />
     <PackageReference Include="Nerdbank.Streams" Version="2.7.74" />
