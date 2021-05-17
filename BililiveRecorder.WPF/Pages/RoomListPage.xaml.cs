@@ -126,7 +126,6 @@ namespace BililiveRecorder.WPF.Pages
                     if (result == ContentDialogResult.Primary)
                     {
                         rec.RemoveRoom(room);
-                        rec.SaveConfig();
                     }
                 }
                 catch (Exception) { }
@@ -199,7 +198,6 @@ namespace BililiveRecorder.WPF.Pages
             }
 
             rec.AddRoom(roomid);
-            rec.SaveConfig();
         }
 
         private void MenuItem_EnableAutoRecAll_Click(object sender, RoutedEventArgs e)

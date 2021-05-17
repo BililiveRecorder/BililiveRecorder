@@ -29,6 +29,7 @@ namespace BililiveRecorder.Core.Recording
         protected readonly ILogger logger;
         protected readonly IApiClient apiClient;
 
+        protected string? streamHost;
         protected bool started = false;
         protected bool timeoutTriggered = false;
 
@@ -78,7 +79,8 @@ namespace BililiveRecorder.Core.Recording
 
             var fullUrl = await this.FetchStreamUrlAsync(this.room.RoomConfig.RoomId).ConfigureAwait(false);
 
-            this.logger.Information("连接直播服务器 {Host}", new Uri(fullUrl).Host);
+            this.streamHost = new Uri(fullUrl).Host;
+            this.logger.Information("连接直播服务器 {Host}", this.streamHost);
             this.logger.Debug("直播流地址 {Url}", fullUrl);
 
             var stream = await this.GetStreamAsync(fullUrl: fullUrl, timeout: (int)this.room.RoomConfig.TimingStreamConnect).ConfigureAwait(false);

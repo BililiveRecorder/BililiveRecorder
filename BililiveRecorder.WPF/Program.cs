@@ -43,15 +43,28 @@ namespace BililiveRecorder.WPF
             SentrySdk.ConfigureScope(s =>
             {
                 s.SetTag("fullsemver", GitVersionInformation.FullSemVer);
-                try
+            });
+            _ = SentrySdk.ConfigureScopeAsync(async s =>
+            {
+                var path = Path.GetFullPath(Path.Combine(Path.GetDirectoryName(typeof(Program).Assembly.Location), "..", "packages", ".betaId"));
+                for (var i = 0; i < 10; i++)
                 {
-                    var path = Path.GetFullPath(Path.Combine(Path.GetDirectoryName(typeof(Program).Assembly.Location), "..", "packages", ".betaId"));
-                    if (!File.Exists(path)) return;
-                    var content = File.ReadAllText(path);
-                    if (Guid.TryParse(content, out var id))
-                        s.User = new User { Id = id.ToString() };
+                    if (i != 0)
+                        await Task.Delay(TimeSpan.FromSeconds(5));
+                    try
+                    {
+                        if (!File.Exists(path))
+                            continue;
+                        var content = File.ReadAllText(path);
+                        if (Guid.TryParse(content, out var id))
+                        {
+                            s.User.Id = id.ToString();
+                            return;
+                        }
+                    }
+                    catch (Exception)
+                    { }
                 }
-                catch (Exception) { }
             });
             update = new Update(logger);
         }
@@ -163,7 +176,7 @@ namespace BililiveRecorder.WPF
             .WriteTo.Sentry(o =>
             {
                 o.Dsn = "https://ac2e03c2f25249968853611a97fcd6ee@o210546.ingest.sentry.io/5556540";
-
+                o.SendDefaultPii = true;
                 o.DisableAppDomainUnhandledExceptionCapture();
                 o.DisableTaskUnobservedTaskExceptionCapture();
                 o.AddExceptionFilterForType<System.Net.Http.HttpRequestException>();
