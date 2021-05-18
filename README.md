@@ -44,6 +44,10 @@ BililiveRecorder.ToolBox | .NET Standard 2.0 | library used by WPF & Cli
 BililiveRecorder.Core | .NET Standard 2.0 | Main recording logic
 BililiveRecorder.Flv | .NET Standard 2.0 | Data processing logic
 
+## Versioning
+
+This project does not follow semantic versioning, no source code compatibility is guaranteed between any version.
+
 ## Reference & Acknowledgements
 
 - [Adobe Flash Video File Format Specification 10.1.2.01.pdf](https://www.adobe.com/content/dam/acom/en/devnet/flv/video_file_format_spec_v10_1.pdf)

@@ -34,6 +34,10 @@ BililiveRecorder.ToolBox | .NET Standard 2.0 | WPF 和 Cli 使用的库
 BililiveRecorder.Core | .NET Standard 2.0 | 核心录制逻辑
 BililiveRecorder.Flv | .NET Standard 2.0 | 数据处理逻辑
 
+## 版本号
+
+本项目不使用 Semantic Versioning，不保证任何版本之间源代码接口的兼容性。
+
 ## 参考资料 & 鸣谢
 
 - [Adobe Flash Video File Format Specification 10.1.2.01.pdf](https://www.adobe.com/content/dam/acom/en/devnet/flv/video_file_format_spec_v10_1.pdf)
