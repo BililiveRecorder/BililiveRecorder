@@ -99,17 +99,29 @@
                 </GroupBox.DataContext>
                 <Button Content="Reset" Command="{Binding ResetAllPolicy}"/>
             </GroupBox>
-            <GroupBox Header="手动崩溃">
-                <Button Content="Crash EVERTHING !!1">
-                    <ui:FlyoutService.Flyout>
-                        <ui:Flyout>
-                            <StackPanel>
-                                <TextBlock Text="Are you sure about that?" Margin="0,0,0,12" />
-                                <Button Click="Crash_Click" Content="Yes" />
-                            </StackPanel>
-                        </ui:Flyout>
-                    </ui:FlyoutService.Flyout>
-                </Button>
+            <GroupBox Header="手动崩溃 Test Crash">
+                <StackPanel>
+                    <Button Content="Crash EVERTHING !!1">
+                        <ui:FlyoutService.Flyout>
+                            <ui:Flyout>
+                                <StackPanel>
+                                    <TextBlock Text="Are you sure about that?" Margin="0,0,0,12" />
+                                    <Button Click="Crash_Click" Content="Yes" />
+                                </StackPanel>
+                            </ui:Flyout>
+                        </ui:FlyoutService.Flyout>
+                    </Button>
+                    <Button Content="Throw in task">
+                        <ui:FlyoutService.Flyout>
+                            <ui:Flyout>
+                                <StackPanel>
+                                    <TextBlock Text="Are you sure about that?" Margin="0,0,0,12" />
+                                    <Button Click="Throw_In_Task_Click" Content="Yes" />
+                                </StackPanel>
+                            </ui:Flyout>
+                        </ui:FlyoutService.Flyout>
+                    </Button>
+                </StackPanel>
             </GroupBox>
         </ui:SimpleStackPanel>
     </ScrollViewer>

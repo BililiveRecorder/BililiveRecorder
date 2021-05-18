@@ -199,7 +199,7 @@ namespace BililiveRecorder.WPF
         private static void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
         {
             if (e.ExceptionObject is Exception ex)
-                logger.Fatal(ex, "Unhandled exception from Application.UnhandledException");
+                logger.Fatal(ex, "Unhandled exception from AppDomain.UnhandledException");
         }
 
         [HandleProcessCorruptedStateExceptions, SecurityCritical]
@@ -208,6 +208,6 @@ namespace BililiveRecorder.WPF
 
         [HandleProcessCorruptedStateExceptions, SecurityCritical]
         private static void App_DispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e) =>
-            logger.Fatal(e.Exception, "Unhandled exception from AppDomain.DispatcherUnhandledException");
+            logger.Fatal(e.Exception, "Unhandled exception from Application.DispatcherUnhandledException");
     }
 }
