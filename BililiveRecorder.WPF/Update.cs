@@ -14,7 +14,7 @@ namespace BililiveRecorder.WPF
 
         public Update(ILogger logger)
         {
-            this.logger = logger;
+            this.logger = logger.ForContext<Update>();
         }
 
         public async Task UpdateAsync()
