@@ -223,7 +223,7 @@ namespace BililiveRecorder.Core.Recording
                 {
                     ["RecordedBy"] = (ScriptDataString)"BililiveRecorder B站录播姬",
                     ["RecordedFrom"] = (ScriptDataString)(this.streamHost ?? string.Empty),
-                    ["RecorderVersion"] = (ScriptDataString)GitVersionInformation.FullSemVer,
+                    ["RecorderVersion"] = (ScriptDataString)GitVersionInformation.InformationalVersion,
                     ["StartTime"] = (ScriptDataDate)now,
                     ["RoomId"] = (ScriptDataString)this.room.RoomConfig.RoomId.ToString(),
                     ["ShortId"] = (ScriptDataString)this.room.ShortId.ToString(),
