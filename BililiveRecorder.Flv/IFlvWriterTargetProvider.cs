@@ -4,7 +4,7 @@ namespace BililiveRecorder.Flv
 {
     public interface IFlvWriterTargetProvider
     {
-        (Stream stream, object state) CreateOutputStream();
+        (Stream stream, object? state) CreateOutputStream();
 
         Stream CreateAlternativeHeaderStream();
     }

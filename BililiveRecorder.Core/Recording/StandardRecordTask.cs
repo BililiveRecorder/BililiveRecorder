@@ -265,7 +265,7 @@ namespace BililiveRecorder.Core.Recording
                 this.OnNewFile = onNewFile ?? throw new ArgumentNullException(nameof(onNewFile));
             }
 
-            public (Stream stream, object state) CreateOutputStream()
+            public (Stream stream, object? state) CreateOutputStream()
             {
                 var paths = this.task.CreateFileName();
 
@@ -290,7 +290,7 @@ namespace BililiveRecorder.Core.Recording
                 { Directory.CreateDirectory(Path.GetDirectoryName(path)); }
                 catch (Exception) { }
 
-                var stream = new FileStream(path, FileMode.Append, FileAccess.Read, FileShare.ReadWrite | FileShare.Delete);
+                var stream = new FileStream(path, FileMode.Append, FileAccess.Write, FileShare.Read);
                 return stream;
             }
         }

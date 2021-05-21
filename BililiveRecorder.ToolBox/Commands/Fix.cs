@@ -312,16 +312,16 @@ namespace BililiveRecorder.ToolBox.Commands
             public Stream CreateAlternativeHeaderStream()
             {
                 var path = Path.ChangeExtension(this.pathTemplate, "header.txt");
-                return File.Open(path, FileMode.Append, FileAccess.Write, FileShare.None);
+                return new FileStream(path, FileMode.Append, FileAccess.Write, FileShare.Read);
             }
 
-            public (Stream stream, object state) CreateOutputStream()
+            public (Stream stream, object? state) CreateOutputStream()
             {
                 var i = this.fileIndex++;
                 var path = Path.ChangeExtension(this.pathTemplate, $"fix_p{i:D3}.flv");
                 var fileStream = File.Open(path, FileMode.CreateNew, FileAccess.Write, FileShare.Read);
                 BeforeFileOpen?.Invoke(this, path);
-                return (fileStream, null!);
+                return (fileStream, null);
             }
         }
     }

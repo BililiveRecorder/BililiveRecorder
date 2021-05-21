@@ -21,7 +21,7 @@ namespace BililiveRecorder.Flv.UnitTests.Grouping
         public class TestOutputProvider : IFlvWriterTargetProvider
         {
             public Stream CreateAlternativeHeaderStream() => throw new NotImplementedException();
-            public (Stream, object) CreateOutputStream() => (File.Open(Path.Combine(TEST_OUTPUT_PATH, DateTimeOffset.Now.ToString("s").Replace(':', '-') + ".flv"), FileMode.CreateNew, FileAccess.ReadWrite, FileShare.None), null!);
+            public (Stream, object?) CreateOutputStream() => (File.Open(Path.Combine(TEST_OUTPUT_PATH, DateTimeOffset.Now.ToString("s").Replace(':', '-') + ".flv"), FileMode.CreateNew, FileAccess.ReadWrite, FileShare.None), null);
         }
 
         [Fact(Skip = "Not ready")]
