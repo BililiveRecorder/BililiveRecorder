@@ -27,16 +27,19 @@ namespace BililiveRecorder.Cli
             {
                 new Argument<string>("path"),
             };
+            cmd_run.AddAlias("r");
             cmd_run.Handler = CommandHandler.Create<string>(RunConfigMode);
 
             var cmd_portable = new Command("portable", "Run BililiveRecorder in config-less mode")
             {
                 new Option<string>(new []{ "--cookie", "-c" }, "Cookie string for api requests"),
+                new Option<string>(new []{ "--filename-format", "-f" }, "File name format"),
+                new Option<PortableModeArguments.PortableDanmakuMode>(new []{ "--danmaku", "-d" }, "Flags for danmaku recording"),
                 new Option<string>("--live-api-host"),
-                new Option<string>(new[]{ "--filename-format", "-f" }, "File name format"),
                 new Argument<string>("output-path"),
                 new Argument<int[]>("room-ids")
             };
+            cmd_portable.AddAlias("p");
             cmd_portable.Handler = CommandHandler.Create<PortableModeArguments>(RunPortableMode);
 
             var root = new RootCommand("A Stream Recorder For Bilibili Live")
@@ -94,15 +97,28 @@ namespace BililiveRecorder.Cli
                 DisableConfigSave = true,
             };
 
-            if (!string.IsNullOrWhiteSpace(opts.Cookie))
-                config.Global.Cookie = opts.Cookie;
-            if (!string.IsNullOrWhiteSpace(opts.LiveApiHost))
-                config.Global.LiveApiHost = opts.LiveApiHost;
-            if (!string.IsNullOrWhiteSpace(opts.FilenameFormat))
-                config.Global.RecordFilenameFormat = opts.FilenameFormat;
+            {
+                var global = config.Global;
 
-            config.Global.WorkDirectory = opts.OutputPath;
-            config.Rooms = opts.RoomIds.Select(x => new RoomConfig { RoomId = x, AutoRecord = true }).ToList();
+                if (!string.IsNullOrWhiteSpace(opts.Cookie))
+                    global.Cookie = opts.Cookie;
+
+                if (!string.IsNullOrWhiteSpace(opts.LiveApiHost))
+                    global.LiveApiHost = opts.LiveApiHost;
+
+                if (!string.IsNullOrWhiteSpace(opts.FilenameFormat))
+                    global.RecordFilenameFormat = opts.FilenameFormat;
+
+                var danmaku = opts.Danmaku;
+                global.RecordDanmaku = danmaku != PortableModeArguments.PortableDanmakuMode.None;
+                global.RecordDanmakuSuperChat = danmaku.HasFlag(PortableModeArguments.PortableDanmakuMode.SuperChat);
+                global.RecordDanmakuGuard = danmaku.HasFlag(PortableModeArguments.PortableDanmakuMode.Guard);
+                global.RecordDanmakuGift = danmaku.HasFlag(PortableModeArguments.PortableDanmakuMode.Gift);
+                global.RecordDanmakuRaw = danmaku.HasFlag(PortableModeArguments.PortableDanmakuMode.RawData);
+
+                global.WorkDirectory = opts.OutputPath;
+                config.Rooms = opts.RoomIds.Select(x => new RoomConfig { RoomId = x, AutoRecord = true }).ToList();
+            }
 
             var serviceProvider = BuildServiceProvider(config, logger);
             var recorder = serviceProvider.GetRequiredService<IRecorder>();
@@ -160,7 +176,21 @@ namespace BililiveRecorder.Cli
 
             public string? FilenameFormat { get; set; }
 
+            public PortableDanmakuMode Danmaku { get; set; }
+
             public IEnumerable<int> RoomIds { get; set; } = Enumerable.Empty<int>();
+
+            [Flags]
+            public enum PortableDanmakuMode
+            {
+                None = 0,
+                Danmaku = 1 << 0,
+                SuperChat = 1 << 1,
+                Guard = 1 << 2,
+                Gift = 1 << 3,
+                RawData = 1 << 4,
+                All = Danmaku | SuperChat | Guard | Gift | RawData
+            }
         }
     }
 }
