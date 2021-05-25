@@ -25,13 +25,15 @@ namespace BililiveRecorder.Cli
         {
             var cmd_run = new Command("run", "Run BililiveRecorder in standard mode")
             {
+                new Option<LogEventLevel>(new []{ "--loglevel", "--log", "-l" }, () => LogEventLevel.Information, "Minimal log level"),
                 new Argument<string>("path"),
             };
             cmd_run.AddAlias("r");
-            cmd_run.Handler = CommandHandler.Create<string>(RunConfigMode);
+            cmd_run.Handler = CommandHandler.Create<string, LogEventLevel>(RunConfigMode);
 
             var cmd_portable = new Command("portable", "Run BililiveRecorder in config-less mode")
             {
+                new Option<LogEventLevel>(new []{ "--loglevel", "--log", "-l" }, () => LogEventLevel.Information, "Minimal log level"),
                 new Option<string>(new []{ "--cookie", "-c" }, "Cookie string for api requests"),
                 new Option<string>(new []{ "--filename-format", "-f" }, "File name format"),
                 new Option<PortableModeArguments.PortableDanmakuMode>(new []{ "--danmaku", "-d" }, "Flags for danmaku recording"),
@@ -52,9 +54,9 @@ namespace BililiveRecorder.Cli
             return root.Invoke(args);
         }
 
-        private static int RunConfigMode(string path)
+        private static int RunConfigMode(string path, LogEventLevel logLevel)
         {
-            using var logger = BuildLogger();
+            using var logger = BuildLogger(logLevel);
             Log.Logger = logger;
 
             path = Path.GetFullPath(path);
@@ -89,7 +91,7 @@ namespace BililiveRecorder.Cli
 
         private static int RunPortableMode(PortableModeArguments opts)
         {
-            using var logger = BuildLogger();
+            using var logger = BuildLogger(opts.LogLevel);
             Log.Logger = logger;
 
             var config = new ConfigV2()
@@ -147,7 +149,7 @@ namespace BililiveRecorder.Cli
             .AddRecorder()
             .BuildServiceProvider();
 
-        private static Logger BuildLogger() => new LoggerConfiguration()
+        private static Logger BuildLogger(LogEventLevel logLevel) => new LoggerConfiguration()
             .MinimumLevel.Verbose()
             .Enrich.WithProcessId()
             .Enrich.WithThreadId()
@@ -162,12 +164,14 @@ namespace BililiveRecorder.Cli
                 x.FileCreationTime,
                 x.FileModificationTime,
             })
-            .WriteTo.Console(restrictedToMinimumLevel: LogEventLevel.Verbose, outputTemplate: "[{Timestamp:HH:mm:ss} {Level:u3}] [{RoomId}] {Message:lj}{NewLine}{Exception}")
+            .WriteTo.Console(restrictedToMinimumLevel: logLevel, outputTemplate: "[{Timestamp:HH:mm:ss} {Level:u3}] [{RoomId}] {Message:lj}{NewLine}{Exception}")
             .WriteTo.File(new CompactJsonFormatter(), "./logs/bilirec.txt", shared: true, rollingInterval: RollingInterval.Day, rollOnFileSizeLimit: true)
             .CreateLogger();
 
         public class PortableModeArguments
         {
+            public LogEventLevel LogLevel { get; set; } = LogEventLevel.Information;
+
             public string OutputPath { get; set; } = string.Empty;
 
             public string? Cookie { get; set; }
