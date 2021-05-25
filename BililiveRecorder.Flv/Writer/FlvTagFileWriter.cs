@@ -40,8 +40,11 @@ namespace BililiveRecorder.Flv.Writer
             if (this.stream is null)
                 return false;
 
-            this.stream.Close();
-            this.stream.Dispose();
+            try
+            { this.stream.Dispose(); }
+            catch (Exception ex)
+            { this.logger?.Warning(ex, "关闭文件时发生错误"); }
+
             this.stream = null;
 
             return true;
@@ -174,7 +177,15 @@ namespace BililiveRecorder.Flv.Writer
             {
                 if (disposing)
                 {
-                    this.stream?.Dispose();
+                    try
+                    {
+                        this.stream?.Dispose();
+                    }
+                    catch (Exception ex)
+                    {
+                        this.logger?.Warning(ex, "关闭文件时发生错误");
+                    }
+
                     this.stream = null;
                 }
 
