@@ -1,13 +1,4 @@
-import { spawn } from "child_process";
-import { stdout, stderr } from "process";
-import { writeFileSync } from "fs";
-import { resolve, dirname } from "path";
-import { fileURLToPath } from 'url';
-
-import { data } from "./data"
 import * as generators from "./generators"
-
-const baseDirectory = __dirname
 
 const argv = process.argv.slice(2)
 

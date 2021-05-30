@@ -58,20 +58,21 @@ namespace BililiveRecorder.Core
 
         public ReadOnlyObservableCollection<IRoom> Rooms { get; }
 
-        public void AddRoom(int roomid) => this.AddRoom(roomid, true);
+        public IRoom AddRoom(int roomid) => this.AddRoom(roomid, true);
 
-        public void AddRoom(int roomid, bool enabled)
+        public IRoom AddRoom(int roomid, bool enabled)
         {
             lock (this.lockObject)
             {
                 this.logger.Debug("AddRoom {RoomId}, AutoRecord: {AutoRecord}", roomid, enabled);
                 var roomConfig = new RoomConfig { RoomId = roomid, AutoRecord = enabled };
-                this.AddRoom(roomConfig, 0);
+                var room = this.AddRoom(roomConfig, 0);
                 this.SaveConfig();
+                return room;
             }
         }
 
-        private void AddRoom(RoomConfig roomConfig, int initDelayFactor)
+        private IRoom AddRoom(RoomConfig roomConfig, int initDelayFactor)
         {
             roomConfig.SetParent(this.Config.Global);
             var room = this.roomFactory.CreateRoom(roomConfig, initDelayFactor);
@@ -85,6 +86,7 @@ namespace BililiveRecorder.Core
             room.PropertyChanged += this.Room_PropertyChanged;
 
             this.roomCollection.Add(room);
+            return room;
         }
 
         public void RemoveRoom(IRoom room)

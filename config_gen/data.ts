@@ -7,7 +7,7 @@ export const data: Array<ConfigEntry> = [
         type: "int",
         configType: "roomOnly",
         defaultValue: "default",
-        // web_readonly: true,
+        webReadonly: true,
         markdown: ""
     },
     {

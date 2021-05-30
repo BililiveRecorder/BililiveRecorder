@@ -33,7 +33,7 @@ const map: SectionInfoMap = {
         header: true,
         build: builderCli
     },
-    web_is_disabled_for_now: {
+    web: {
         path: './BililiveRecorder.Web.Schemas/Types/Config.gen.cs',
         format: true,
         header: true,

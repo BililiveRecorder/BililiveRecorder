@@ -16,6 +16,8 @@ export interface ConfigEntry {
     readonly type: string,
     /** 设置类型 */
     readonly configType: ConfigEntryType
+    /** Web API 只读属性 */
+    readonly webReadonly?: boolean,
     /** 是否为高级设置（隐藏设置），默认为 false */
     readonly advancedConfig?: boolean,
     /** 默认值 */

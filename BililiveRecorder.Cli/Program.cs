@@ -6,12 +6,16 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using BililiveRecorder.Cli.Configure;
+using System.Threading.Tasks;
 using BililiveRecorder.Core;
 using BililiveRecorder.Core.Config;
 using BililiveRecorder.Core.Config.V2;
 using BililiveRecorder.DependencyInjection;
 using BililiveRecorder.ToolBox;
+using BililiveRecorder.Web;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Serilog;
 using Serilog.Core;
 using Serilog.Events;
@@ -26,12 +30,13 @@ namespace BililiveRecorder.Cli
         {
             var cmd_run = new Command("run", "Run BililiveRecorder in standard mode")
             {
+                new Option<string?>(new []{ "--web-bind", "--bind", "-b" }, () => null, "Bind address for web api"),
                 new Option<LogEventLevel>(new []{ "--loglevel", "--log", "-l" }, () => LogEventLevel.Information, "Minimal log level output to console"),
                 new Option<LogEventLevel>(new []{ "--logfilelevel", "--flog" }, () => LogEventLevel.Debug, "Minimal log level output to file"),
                 new Argument<string>("path"),
             };
             cmd_run.AddAlias("r");
-            cmd_run.Handler = CommandHandler.Create<string, LogEventLevel, LogEventLevel>(RunConfigMode);
+            cmd_run.Handler = CommandHandler.Create<RunModeArguments>(RunConfigModeAsync);
 
             var cmd_portable = new Command("portable", "Run BililiveRecorder in config-less mode")
             {
@@ -60,9 +65,11 @@ namespace BililiveRecorder.Cli
             return root.Invoke(args);
         }
 
-        private static int RunConfigMode(string path, LogEventLevel logLevel, LogEventLevel logFileLevel)
+        private static async Task<int> RunConfigModeAsync(RunModeArguments args)
         {
-            using var logger = BuildLogger(logLevel, logFileLevel);
+            var path = args.Path;
+
+            using var logger = BuildLogger(args.LogLevel, args.LogFileLevel);
             Log.Logger = logger;
 
             path = Path.GetFullPath(path);
@@ -76,22 +83,64 @@ namespace BililiveRecorder.Cli
             config.Global.WorkDirectory = path;
 
             var serviceProvider = BuildServiceProvider(config, logger);
+            IRecorder recorderAccessProxy(IServiceProvider x) => serviceProvider.GetRequiredService<IRecorder>();
+
+            // recorder setup done
+            // check if web service required
+            IHost? host = null;
+            if (string.IsNullOrWhiteSpace(args.WebBind))
+            {
+                logger.Information("Web API not enabled");
+            }
+            else
+            {
+                logger.Information("Creating web server on {BindAddress}", args.WebBind);
+
+                host = new HostBuilder()
+                    .ConfigureServices(services =>
+                    {
+                        services.AddSingleton(recorderAccessProxy);
+                    })
+                    .ConfigureWebHost(webBuilder =>
+                    {
+                        webBuilder
+                        .UseUrls(urls: args.WebBind)
+                        .UseKestrel()
+                        .UseSerilog(logger: logger)
+                        .UseStartup<Startup>();
+                    })
+                    .Build();
+            }
+
+            // make sure recorder is created, also used in cleanup ( .Dispose() )
             var recorder = serviceProvider.GetRequiredService<IRecorder>();
 
             ConsoleCancelEventHandler p = null!;
-            var semaphore = new SemaphoreSlim(0, 1);
+            var cts = new CancellationTokenSource();
             p = (sender, e) =>
             {
+                logger.Information("Ctrl+C pressed. Exiting");
                 Console.CancelKeyPress -= p;
                 e.Cancel = true;
-                recorder.Dispose();
-                semaphore.Release();
+                cts.Cancel();
             };
             Console.CancelKeyPress += p;
 
-            semaphore.Wait();
-            Thread.Sleep(1000 * 2);
-            Console.ReadLine();
+            var token = cts.Token;
+            if (host is not null)
+            {
+                var hostStartTask = host.RunAsync(token);
+                await Task.WhenAny(Task.Delay(-1, token), hostStartTask).ConfigureAwait(false);
+                await host.StopAsync().ConfigureAwait(false);
+            }
+            else
+            {
+                await Task.Delay(-1, token).ConfigureAwait(false);
+            }
+
+            recorder.Dispose();
+
+            await Task.Delay(1000 * 3).ConfigureAwait(false);
             return 0;
         }
 
@@ -140,6 +189,7 @@ namespace BililiveRecorder.Cli
             var semaphore = new SemaphoreSlim(0, 1);
             p = (sender, e) =>
             {
+                logger.Information("Ctrl+C pressed. Exiting");
                 Console.CancelKeyPress -= p;
                 e.Cancel = true;
                 recorder.Dispose();
@@ -178,6 +228,17 @@ namespace BililiveRecorder.Cli
             .WriteTo.Console(restrictedToMinimumLevel: logLevel, outputTemplate: "[{Timestamp:HH:mm:ss} {Level:u3}] [{RoomId}] {Message:lj}{NewLine}{Exception}")
             .WriteTo.File(new CompactJsonFormatter(), "./logs/bilirec.txt", restrictedToMinimumLevel: logFileLevel, shared: true, rollingInterval: RollingInterval.Day, rollOnFileSizeLimit: true)
             .CreateLogger();
+
+        public class RunModeArguments
+        {
+            public LogEventLevel LogLevel { get; set; } = LogEventLevel.Information;
+
+            public LogEventLevel LogFileLevel { get; set; } = LogEventLevel.Information;
+
+            public string? WebBind { get; set; } = null;
+
+            public string Path { get; set; } = string.Empty;
+        }
 
         public class PortableModeArguments
         {
