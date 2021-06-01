@@ -40,6 +40,8 @@ namespace BililiveRecorder.Core.Recording
             };
             this.OnRecordFileOpening(this.fileOpeningEventArgs);
 
+            this.logger.Information("新建录制文件 {Path}", fullPath);
+
             var file = new FileStream(fullPath, FileMode.CreateNew, FileAccess.ReadWrite, FileShare.Read | FileShare.Delete);
 
             _ = Task.Run(async () => await this.WriteStreamToFileAsync(stream, file).ConfigureAwait(false));
