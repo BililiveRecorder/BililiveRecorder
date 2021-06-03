@@ -173,6 +173,10 @@ namespace BililiveRecorder.Core.Api.Danmaku
             this.RawObject = obj;
 
             var cmd = obj["cmd"]?.ToObject<string>();
+
+            if (cmd?.StartsWith("DANMU_MSG:") ?? false)
+                cmd = "DANMU_MSG";
+
             switch (cmd)
             {
                 case "LIVE":
