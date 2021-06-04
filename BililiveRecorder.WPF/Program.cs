@@ -15,6 +15,7 @@ using Serilog;
 using Serilog.Core;
 using Serilog.Exceptions;
 using Serilog.Formatting.Compact;
+using Serilog.Formatting.Display;
 
 #nullable enable
 namespace BililiveRecorder.WPF
@@ -180,6 +181,8 @@ namespace BililiveRecorder.WPF
                 o.DisableAppDomainUnhandledExceptionCapture();
                 o.DisableTaskUnobservedTaskExceptionCapture();
                 o.AddExceptionFilterForType<System.Net.Http.HttpRequestException>();
+
+                o.TextFormatter = new MessageTemplateTextFormatter("[{RoomId}] {Message}{NewLine}{Exception}{@ExceptionDetail:j}");
 
                 o.MinimumBreadcrumbLevel = Serilog.Events.LogEventLevel.Debug;
                 o.MinimumEventLevel = Serilog.Events.LogEventLevel.Error;
