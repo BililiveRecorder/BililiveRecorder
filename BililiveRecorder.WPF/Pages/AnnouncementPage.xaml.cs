@@ -65,7 +65,7 @@ namespace BililiveRecorder.WPF.Pages
             {
                 try
                 {
-                    var uri = Debugger.IsAttached
+                    var uri = Program.DebugMode
                         ? $"http://rec.127-0-0-1.nip.io/wpf/announcement.php?c={CultureInfo.Name}"
                         : $"https://rec.danmuji.org/wpf/announcement.xml?c={CultureInfo.Name}";
 

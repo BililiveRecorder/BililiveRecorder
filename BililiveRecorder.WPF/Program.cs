@@ -30,11 +30,17 @@ namespace BililiveRecorder.WPF
         internal static readonly Update update;
         internal static Task? updateTask;
 
+#if DEBUG
+        internal static readonly bool DebugMode = Debugger.IsAttached;
+#else
+        internal static readonly bool DebugMode = false;
+#endif
+
         static Program()
         {
             AttachConsole(-1);
             levelSwitchGlobal = new LoggingLevelSwitch(Serilog.Events.LogEventLevel.Debug);
-            if (Debugger.IsAttached)
+            if (DebugMode)
                 levelSwitchGlobal.MinimumLevel = Serilog.Events.LogEventLevel.Verbose;
             levelSwitchConsole = new LoggingLevelSwitch(Serilog.Events.LogEventLevel.Error);
             logger = BuildLogger();
