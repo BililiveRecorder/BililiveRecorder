@@ -19,6 +19,7 @@ namespace BililiveRecorder.WPF.Pages
     public partial class ToolboxAutoFixPage
     {
         private static readonly ILogger logger = Log.ForContext<ToolboxAutoFixPage>();
+        private readonly SemaphoreSlim semaphoreSlim = new SemaphoreSlim(1, 1);
 
         public ToolboxAutoFixPage()
         {
@@ -55,6 +56,10 @@ namespace BililiveRecorder.WPF.Pages
 #pragma warning restore VSTHRD100 // Avoid async void methods
         {
             AutoFixProgressDialog? progressDialog = null;
+
+            if (!this.semaphoreSlim.Wait(0))
+                return;
+
             try
             {
                 var inputPath = this.FileNameTextBox.Text;
@@ -128,8 +133,11 @@ namespace BililiveRecorder.WPF.Pages
                 try
                 {
                     _ = this.Dispatcher.BeginInvoke((Action)(() => progressDialog?.Hide()));
+                    progressDialog?.CancellationTokenSource?.Cancel();
                 }
                 catch (Exception) { }
+
+                this.semaphoreSlim.Release();
             }
         }
 
@@ -145,6 +153,10 @@ namespace BililiveRecorder.WPF.Pages
 #pragma warning restore VSTHRD100 // Avoid async void methods
         {
             AutoFixProgressDialog? progressDialog = null;
+
+            if (!this.semaphoreSlim.Wait(0))
+                return;
+
             try
             {
                 var inputPath = this.FileNameTextBox.Text;
@@ -203,8 +215,11 @@ namespace BililiveRecorder.WPF.Pages
                 try
                 {
                     _ = this.Dispatcher.BeginInvoke((Action)(() => progressDialog?.Hide()));
+                    progressDialog?.CancellationTokenSource?.Cancel();
                 }
                 catch (Exception) { }
+
+                this.semaphoreSlim.Release();
             }
         }
 
@@ -213,6 +228,10 @@ namespace BililiveRecorder.WPF.Pages
 #pragma warning restore VSTHRD100 // Avoid async void methods
         {
             AutoFixProgressDialog? progressDialog = null;
+
+            if (!this.semaphoreSlim.Wait(0))
+                return;
+
             try
             {
                 var inputPath = this.FileNameTextBox.Text;
@@ -286,8 +305,11 @@ namespace BililiveRecorder.WPF.Pages
                 try
                 {
                     _ = this.Dispatcher.BeginInvoke((Action)(() => progressDialog?.Hide()));
+                    progressDialog?.CancellationTokenSource?.Cancel();
                 }
                 catch (Exception) { }
+
+                this.semaphoreSlim.Release();
             }
         }
 
