@@ -152,6 +152,7 @@
       <DependentUpon>Strings.resx</DependentUpon>
     </Compile>
     <Compile Include="Update.cs" />
+    <Compile Include="WorkDirectoryLoader.cs" />
     <Compile Include="WpfLogEventSink.cs" />
     <Page Include="Controls\AddRoomCard.xaml">
       <SubType>Designer</SubType>

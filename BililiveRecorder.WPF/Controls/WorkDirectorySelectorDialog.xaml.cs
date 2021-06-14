@@ -14,10 +14,13 @@ namespace BililiveRecorder.WPF.Controls
     {
         private WorkDirectorySelectorDialogError error = WorkDirectorySelectorDialogError.None;
         private string path = string.Empty;
+        private bool skipAsking;
 
         public WorkDirectorySelectorDialogError Error { get => this.error; set => this.SetField(ref this.error, value); }
 
         public string Path { get => this.path; set => this.SetField(ref this.path, value); }
+
+        public bool SkipAsking { get => this.skipAsking; set => this.SetField(ref this.skipAsking, value); }
 
         public WorkDirectorySelectorDialog()
         {

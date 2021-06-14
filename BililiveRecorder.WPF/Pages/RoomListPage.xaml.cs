@@ -266,6 +266,30 @@ namespace BililiveRecorder.WPF.Pages
             }
         }
 
+        private void MenuItem_SaveConfig_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                if (this.DataContext is IRecorder rec)
+                    rec.SaveConfig();
+            }
+            catch (Exception)
+            {
+            }
+        }
+
+        private void MenuItem_ChangeWorkPath_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                logger.Debug("ChangeWorkPath menu button invoked");
+                Process.Start(typeof(RoomListPage).Assembly.Location, "run --ask-path");
+                (Application.Current.MainWindow as NewMainWindow)?.CloseWithoutConfirmAction();
+            }
+            catch (Exception)
+            { }
+        }
+
         private void MenuItem_ShowHideTitleArea_Click(object sender, RoutedEventArgs e)
         {
             if (((MenuItem)sender).Tag is bool b && this.DataContext is IRecorder rec)

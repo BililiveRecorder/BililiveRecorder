@@ -124,7 +124,7 @@ namespace BililiveRecorder.Core.Config
         }
 
         // https://stackoverflow.com/q/25366534 with modification
-        private static void WriteAllTextWithBackup(string path, string contents)
+        public static void WriteAllTextWithBackup(string path, string contents)
         {
             if (!File.Exists(path))
             {

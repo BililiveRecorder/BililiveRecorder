@@ -55,6 +55,8 @@
                 <Separator/>
                 <MenuItem Header="{l:Loc RoomListPage_Menu_File}">
                     <MenuItem Header="{l:Loc RoomListPage_Menu_File_OpenWorkDirectory}" Click="MenuItem_OpenWorkDirectory_Click"/>
+                    <MenuItem Header="{l:Loc RoomListPage_Menu_File_ChangeWorkPath}" Click="MenuItem_ChangeWorkPath_Click"/>
+                    <MenuItem Header="{l:Loc RoomListPage_Menu_File_SaveConfig}" Click="MenuItem_SaveConfig_Click"/>
                 </MenuItem>
                 <MenuItem Header="{l:Loc RoomListPage_Menu_View}">
                     <MenuItem Header="{l:Loc RoomListPage_Menu_Sort_Default}" Tag="{x:Static local:SortedBy.None}" Click="MenuItem_SortBy_Click"/>

@@ -46,5 +46,6 @@
                      ui:TextBoxHelper.IsDeleteButtonVisible="False" ContextMenu="{x:Null}"/>
             <Button Grid.Column="1" Click="Button_Click" Content="{l:Loc WorkDirectorySelector_Browse}"/>
         </Grid>
+        <CheckBox Grid.Row="3" IsChecked="{Binding SkipAsking}" Content="{l:Loc WorkDirectorySelector_SkipAsking}"/>
     </Grid>
 </ui:ContentDialog>

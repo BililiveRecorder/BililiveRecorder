@@ -99,10 +99,10 @@ namespace BililiveRecorder.WPF
         {
             var run = new Command("run", "Run BililiveRecorder at path")
             {
-                new Argument<string>("path","Work directory")
-
+                new Argument<string?>("path", () => null, "Work directory"),
+                new Option<bool>("--ask-path", "Ask path in GUI even when \"don't ask again\" is selected before.")
             };
-            run.Handler = CommandHandler.Create((string path) => Commands.RunWpfHandler(path, false));
+            run.Handler = CommandHandler.Create((string? path, bool askPath) => Commands.RunWpfHandler(path, false, askPath));
 
             var root = new RootCommand("")
             {
@@ -113,16 +113,17 @@ namespace BililiveRecorder.WPF
                 },
                 new ToolCommand(),
             };
-            root.Handler = CommandHandler.Create((bool squirrelFirstrun) => Commands.RunWpfHandler(null, squirrelFirstrun));
+            root.Handler = CommandHandler.Create((bool squirrelFirstrun) => Commands.RunWpfHandler(null, squirrelFirstrun, false));
             return root;
         }
 
         private static class Commands
         {
-            internal static int RunWpfHandler(string? path, bool squirrelFirstrun)
+            internal static int RunWpfHandler(string? path, bool squirrelFirstrun, bool askPath)
             {
                 Pages.RootPage.CommandArgumentRecorderPath = path;
                 Pages.RootPage.CommandArgumentFirstRun = squirrelFirstrun;
+                Pages.RootPage.CommandArgumentAskPath = askPath;
                 return CODE__WPF;
             }
 

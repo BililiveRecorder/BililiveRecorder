@@ -623,11 +623,29 @@ namespace BililiveRecorder.WPF.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to 修改工作目录（会重启）.
+        /// </summary>
+        public static string RoomListPage_Menu_File_ChangeWorkPath {
+            get {
+                return ResourceManager.GetString("RoomListPage_Menu_File_ChangeWorkPath", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to 打开工作目录.
         /// </summary>
         public static string RoomListPage_Menu_File_OpenWorkDirectory {
             get {
                 return ResourceManager.GetString("RoomListPage_Menu_File_OpenWorkDirectory", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 保存设置.
+        /// </summary>
+        public static string RoomListPage_Menu_File_SaveConfig {
+            get {
+                return ResourceManager.GetString("RoomListPage_Menu_File_SaveConfig", resourceCulture);
             }
         }
         
@@ -1492,6 +1510,15 @@ namespace BililiveRecorder.WPF.Properties {
         public static string WorkDirectorySelector_Error_UnknownError {
             get {
                 return ResourceManager.GetString("WorkDirectorySelector_Error_UnknownError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 不再询问.
+        /// </summary>
+        public static string WorkDirectorySelector_SkipAsking {
+            get {
+                return ResourceManager.GetString("WorkDirectorySelector_SkipAsking", resourceCulture);
             }
         }
         

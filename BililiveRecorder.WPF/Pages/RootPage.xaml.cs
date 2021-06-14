@@ -30,9 +30,10 @@ namespace BililiveRecorder.WPF.Pages
 
         internal static string? CommandArgumentRecorderPath = null;
         internal static bool CommandArgumentFirstRun = false; // TODO
+        internal static bool CommandArgumentAskPath = false;
 
         private readonly Dictionary<string, Type> PageMap = new Dictionary<string, Type>();
-        private readonly string lastdir_path = Path.Combine(Path.GetDirectoryName(typeof(RootPage).Assembly.Location), "lastdir.txt");
+        private readonly WorkDirectoryLoader workDirectoryLoader = new WorkDirectoryLoader();
         private readonly NavigationTransitionInfo transitionInfo = new DrillInNavigationTransitionInfo();
 
         private int SettingsClickCount = 0;
@@ -89,18 +90,26 @@ namespace BililiveRecorder.WPF.Pages
         private async void RootPage_Loaded(object sender, RoutedEventArgs e)
 #pragma warning restore VSTHRD100 // Avoid async void methods
         {
+            // 上次选择的路径信息
+            var pathInfo = this.workDirectoryLoader.Read();
+            // 第一次尝试从命令行和配置文件自动选择路径
             var first_time = true;
+            // 如果是从命令行参数传入的路径，则不保存选择的路径到文件
             var from_argument = false;
+
+            // 路径选择错误
             var error = WorkDirectorySelectorDialog.WorkDirectorySelectorDialogError.None;
+            // 最终选择的路径
             string path;
 
             while (true)
             {
                 try
                 {
+                    // 获取一个路径
                     if (first_time)
                     {
-                        // while 循环第一次运行时检查命令行参数
+                        // while 循环第一次运行时检查命令行参数、和上次选择记住的路径
                         try
                         {
                             first_time = false;
@@ -109,11 +118,16 @@ namespace BililiveRecorder.WPF.Pages
                             {
                                 // 如果有参数直接跳到检查路径
                                 path = Path.GetFullPath(CommandArgumentRecorderPath);
-                                from_argument = true;
+                                from_argument = true; // 用于控制不写入文件保存
+                            }
+                            else if (pathInfo.SkipAsking && !CommandArgumentAskPath)
+                            {
+                                // 上次选择了“不再询问”
+                                path = pathInfo.Path;
                             }
                             else
                             {
-                                // 无命令行参数
+                                // 无命令行参数 和 记住选择
                                 continue;
                             }
                         }
@@ -126,19 +140,14 @@ namespace BililiveRecorder.WPF.Pages
                     else
                     {
                         // 尝试读取上次选择的路径
-                        var lastdir = string.Empty;
-                        try
-                        {
-                            if (File.Exists(this.lastdir_path))
-                                lastdir = File.ReadAllText(this.lastdir_path).Replace("\r", "").Replace("\n", "").Trim();
-                        }
-                        catch (Exception) { }
+                        var lastdir = pathInfo.Path;
 
                         // 显示路径选择界面
                         var dialog = new WorkDirectorySelectorDialog
                         {
                             Error = error,
-                            Path = lastdir
+                            Path = lastdir,
+                            SkipAsking = pathInfo.SkipAsking
                         };
                         var dialogResult = await dialog.ShowAsync();
                         switch (dialogResult)
@@ -153,6 +162,8 @@ namespace BililiveRecorder.WPF.Pages
                                 return;
                         }
 
+                        pathInfo.SkipAsking = dialog.SkipAsking;
+
                         try
                         { path = Path.GetFullPath(dialog.Path); }
                         catch (Exception)
@@ -161,6 +172,7 @@ namespace BililiveRecorder.WPF.Pages
                             continue;
                         }
                     }
+                    // 获取一个路径结束
 
                     var configFilePath = Path.Combine(path, "config.json");
 
@@ -185,7 +197,10 @@ namespace BililiveRecorder.WPF.Pages
                     try
                     {
                         if (!from_argument)
-                            File.WriteAllText(this.lastdir_path, path);
+                        {
+                            pathInfo.Path = path;
+                            this.workDirectoryLoader.Write(pathInfo);
+                        }
                     }
                     catch (Exception) { }
 
