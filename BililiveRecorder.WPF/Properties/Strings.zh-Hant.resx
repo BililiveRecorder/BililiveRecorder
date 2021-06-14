@@ -299,8 +299,14 @@
   <data name="RoomListPage_Menu_File" xml:space="preserve">
     <value>檔案</value>
   </data>
+  <data name="RoomListPage_Menu_File_ChangeWorkPath" xml:space="preserve">
+    <value>修改工作目錄（會重啟）</value>
+  </data>
   <data name="RoomListPage_Menu_File_OpenWorkDirectory" xml:space="preserve">
     <value>開啟工作目錄</value>
+  </data>
+  <data name="RoomListPage_Menu_File_SaveConfig" xml:space="preserve">
+    <value>儲存設定</value>
   </data>
   <data name="RoomListPage_Menu_Sort_Default" xml:space="preserve">
     <value>不排序</value>
@@ -603,6 +609,9 @@ Will use default setting and disable user input when checked.</comment>
   </data>
   <data name="WorkDirectorySelector_Error_UnknownError" xml:space="preserve">
     <value>發生了未知錯誤</value>
+  </data>
+  <data name="WorkDirectorySelector_SkipAsking" xml:space="preserve">
+    <value>不再詢問</value>
   </data>
   <data name="WorkDirectorySelector_Title" xml:space="preserve">
     <value>選擇工作目錄</value>

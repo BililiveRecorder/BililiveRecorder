@@ -299,8 +299,14 @@ It should be close to 100% and the color will be green</value>
   <data name="RoomListPage_Menu_File" xml:space="preserve">
     <value>File</value>
   </data>
+  <data name="RoomListPage_Menu_File_ChangeWorkPath" xml:space="preserve">
+    <value>Change work directory (will restart)</value>
+  </data>
   <data name="RoomListPage_Menu_File_OpenWorkDirectory" xml:space="preserve">
     <value>Open Working Directory</value>
+  </data>
+  <data name="RoomListPage_Menu_File_SaveConfig" xml:space="preserve">
+    <value>Save Settings</value>
   </data>
   <data name="RoomListPage_Menu_Sort_Default" xml:space="preserve">
     <value>Not Sorted</value>
@@ -603,6 +609,9 @@ Please analyze the original file, not the output of auto repair.</value>
   </data>
   <data name="WorkDirectorySelector_Error_UnknownError" xml:space="preserve">
     <value>An unknown error has occurred</value>
+  </data>
+  <data name="WorkDirectorySelector_SkipAsking" xml:space="preserve">
+    <value>Don't ask again</value>
   </data>
   <data name="WorkDirectorySelector_Title" xml:space="preserve">
     <value>Select Directory</value>

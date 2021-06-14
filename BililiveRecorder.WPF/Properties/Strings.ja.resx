@@ -297,8 +297,14 @@
   <data name="RoomListPage_Menu_File" xml:space="preserve">
     <value>ファイル</value>
   </data>
+  <data name="RoomListPage_Menu_File_ChangeWorkPath" xml:space="preserve">
+    <value>作業フォルダの変更（再起動されます）</value>
+  </data>
   <data name="RoomListPage_Menu_File_OpenWorkDirectory" xml:space="preserve">
     <value>ダウンロード先を開く</value>
+  </data>
+  <data name="RoomListPage_Menu_File_SaveConfig" xml:space="preserve">
+    <value>設定を保存</value>
   </data>
   <data name="RoomListPage_Menu_Sort_Default" xml:space="preserve">
     <value>並べて表示しない</value>
@@ -573,6 +579,9 @@ Will use default setting and disable user input when checked.</comment>
   </data>
   <data name="WorkDirectorySelector_Error_UnknownError" xml:space="preserve">
     <value>不明なエラーが発生しました</value>
+  </data>
+  <data name="WorkDirectorySelector_SkipAsking" xml:space="preserve">
+    <value>今後は確認しない</value>
   </data>
   <data name="WorkDirectorySelector_Title" xml:space="preserve">
     <value>ディレクトリーを設定</value>
