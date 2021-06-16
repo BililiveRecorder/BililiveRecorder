@@ -133,6 +133,8 @@ namespace BililiveRecorder.WPF
                 var token = cancel.Token;
                 try
                 {
+                    SleepBlocker.Start();
+
                     var app = new App();
                     app.InitializeComponent();
                     app.DispatcherUnhandledException += App_DispatcherUnhandledException;
@@ -155,6 +157,46 @@ namespace BililiveRecorder.WPF
                     update.WaitForUpdatesOnShutdownAsync().GetAwaiter().GetResult();
 #pragma warning restore VSTHRD002 // Avoid problematic synchronous waits
                 }
+            }
+        }
+
+        private static class SleepBlocker
+        {
+            internal static void Start()
+            {
+                var t = new Thread(EntryPoint)
+                {
+                    Name = "SystemSleepBlocker",
+                    IsBackground = true,
+                    Priority = ThreadPriority.BelowNormal
+                };
+                t.Start();
+            }
+
+            [DllImport("kernel32", CharSet = CharSet.Auto, SetLastError = true)]
+            private static extern EXECUTION_STATE SetThreadExecutionState(EXECUTION_STATE esFlags);
+
+            [Flags]
+            private enum EXECUTION_STATE : uint
+            {
+                ES_AWAYMODE_REQUIRED = 0x00000040,
+                ES_CONTINUOUS = 0x80000000,
+                ES_DISPLAY_REQUIRED = 0x00000002,
+                ES_SYSTEM_REQUIRED = 0x00000001
+            }
+
+            private static void EntryPoint()
+            {
+                try
+                {
+                    try
+                    {
+                        SetThreadExecutionState(EXECUTION_STATE.ES_SYSTEM_REQUIRED | EXECUTION_STATE.ES_CONTINUOUS);
+                    }
+                    catch (Exception) { }
+                    Thread.Sleep(millisecondsTimeout: 30 * 1000);
+                }
+                catch (Exception) { }
             }
         }
 
