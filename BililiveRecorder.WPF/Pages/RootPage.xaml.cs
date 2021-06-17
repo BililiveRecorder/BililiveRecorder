@@ -117,11 +117,13 @@ namespace BililiveRecorder.WPF.Pages
                             if (!string.IsNullOrWhiteSpace(CommandArgumentRecorderPath))
                             {
                                 // 如果有参数直接跳到检查路径
+                                logger.Debug("Using path from command argument");
                                 path = Path.GetFullPath(CommandArgumentRecorderPath);
                                 from_argument = true; // 用于控制不写入文件保存
                             }
                             else if (pathInfo.SkipAsking && !CommandArgumentAskPath)
                             {
+                                logger.Debug("Using path from path.json file");
                                 // 上次选择了“不再询问”
                                 path = pathInfo.Path;
                             }
@@ -153,11 +155,14 @@ namespace BililiveRecorder.WPF.Pages
                         switch (dialogResult)
                         {
                             case ContentDialogResult.Primary:
+                                logger.Debug("Confirm path selected");
                                 break;
                             case ContentDialogResult.Secondary:
+                                logger.Debug("Toolbox mode selected");
                                 return;
                             case ContentDialogResult.None:
                             default:
+                                logger.Debug("Exit selected");
                                 (Application.Current.MainWindow as NewMainWindow)!.CloseWithoutConfirmAction();
                                 return;
                         }
