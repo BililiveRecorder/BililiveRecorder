@@ -1,0 +1,6 @@
+FROM mcr.microsoft.com/dotnet/runtime:5.0
+COPY ./BililiveRecorder.Cli/bin/docker_out /app
+VOLUME [ "/rec" ]
+WORKDIR /app
+ENTRYPOINT [ "dotnet", "/app/BililiveRecorder.Cli.dll" ]
+CMD [ "-h" ]
