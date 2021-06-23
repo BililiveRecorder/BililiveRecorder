@@ -3,6 +3,8 @@ COPY . /src
 RUN cd /src/BililiveRecorder.Cli && dotnet build -o /output -c Release
 
 FROM mcr.microsoft.com/dotnet/runtime:5.0-alpine
+RUN apk add --no-cache tzdata
+ENV TZ=Asia/Shanghai
 COPY --from=0 /output /app
 VOLUME [ "/rec" ]
 WORKDIR /app
