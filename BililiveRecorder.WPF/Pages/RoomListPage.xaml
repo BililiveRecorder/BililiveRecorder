@@ -11,6 +11,7 @@
     l:ResxLocalizationProvider.DefaultDictionary="Strings"
     xmlns:local="clr-namespace:BililiveRecorder.WPF.Pages"
     xmlns:c="clr-namespace:BililiveRecorder.WPF.Controls"
+    xmlns:m="clr-namespace:BililiveRecorder.WPF.Models;assembly=BililiveRecorder.WPF"
     xmlns:converters="clr-namespace:BililiveRecorder.WPF.Converters"
     mc:Ignorable="d" 
     x:Name="TheRoomListPage"
@@ -69,6 +70,9 @@
                 <MenuItem Header="{l:Loc RoomListPage_Menu_AutoRecord}">
                     <MenuItem Header="{l:Loc RoomListPage_Menu_AutoRecord_EnableAll}" Click="MenuItem_EnableAutoRecAll_Click"/>
                     <MenuItem Header="{l:Loc RoomListPage_Menu_AutoRecord_DisableAll}" Click="MenuItem_DisableAutoRecAll_Click"/>
+                </MenuItem>
+                <MenuItem Header="赞助">
+                    <MenuItem Header="打开赞助页" Command="{x:Static m:Commands.OpenLink}" CommandParameter="https://rec.danmuji.org/link/sponsor/"/>
                 </MenuItem>
             </Menu>
             <Separator/>
