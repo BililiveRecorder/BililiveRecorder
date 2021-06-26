@@ -17,7 +17,7 @@
     <PackageReference Include="Polly" Version="7.2.2" />
     <PackageReference Include="Polly.Caching.Memory" Version="3.0.2" />
     <PackageReference Include="Serilog" Version="2.10.0" />
-    <PackageReference Include="StructLinq" Version="0.26.4" />
+    <PackageReference Include="StructLinq" Version="0.27.0" />
     <PackageReference Include="System.IO.Pipelines" Version="5.0.1" />
   </ItemGroup>
 
