@@ -1,7 +1,9 @@
 using System;
 using System.Globalization;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Threading;
 using BililiveRecorder.WPF.Controls;
 using Hardcodet.Wpf.TaskbarNotification;
 using ModernWpf.Controls;
@@ -44,7 +46,7 @@ namespace BililiveRecorder.WPF
         internal void CloseWithoutConfirmAction()
         {
             this.CloseConfirmed = true;
-            this.Close();
+            this.Dispatcher.BeginInvoke(this.Close, DispatcherPriority.Normal);
         }
 
         internal void SuperActivateAction()
@@ -88,28 +90,32 @@ namespace BililiveRecorder.WPF
 
         public bool PromptCloseConfirm { get; set; } = true;
 
-#pragma warning disable VSTHRD100 // Avoid async void methods
-        private async void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
-#pragma warning restore VSTHRD100 // Avoid async void methods
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             if (this.PromptCloseConfirm && !this.CloseConfirmed)
             {
                 e.Cancel = true;
-                if (this.CloseWindowSemaphoreSlim.Wait(0))
+                _ = Task.Run(async () =>
                 {
-                    try
+                    if (await this.CloseWindowSemaphoreSlim.WaitAsync(0))
                     {
-                        if (await new CloseWindowConfirmDialog().ShowAsync() == ContentDialogResult.Primary)
+                        try
                         {
-                            this.CloseConfirmed = true;
+                            if (await new CloseWindowConfirmDialog().ShowAsync() == ContentDialogResult.Primary)
+                            {
+                                this.CloseConfirmed = true;
+                                this.CloseWindowSemaphoreSlim.Release();
+                                _ = this.Dispatcher.BeginInvoke(this.Close, DispatcherPriority.Normal);
+                                return;
+                            }
+                        }
+                        catch (Exception) { }
+                        finally
+                        {
                             this.CloseWindowSemaphoreSlim.Release();
-                            this.Close();
-                            return;
                         }
                     }
-                    catch (Exception) { }
-                    this.CloseWindowSemaphoreSlim.Release();
-                }
+                });
             }
             else
             {
