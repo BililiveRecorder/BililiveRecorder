@@ -90,32 +90,31 @@ namespace BililiveRecorder.WPF
 
         public bool PromptCloseConfirm { get; set; } = true;
 
-        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+#pragma warning disable VSTHRD100 // Avoid async void methods
+        private async void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+#pragma warning restore VSTHRD100 // Avoid async void methods
         {
             if (this.PromptCloseConfirm && !this.CloseConfirmed)
             {
                 e.Cancel = true;
-                _ = Task.Run(async () =>
+
+                if (await this.CloseWindowSemaphoreSlim.WaitAsync(0))
                 {
-                    if (await this.CloseWindowSemaphoreSlim.WaitAsync(0))
+                    try
                     {
-                        try
+                        if (await new CloseWindowConfirmDialog().ShowAsync() == ContentDialogResult.Primary)
                         {
-                            if (await new CloseWindowConfirmDialog().ShowAsync() == ContentDialogResult.Primary)
-                            {
-                                this.CloseConfirmed = true;
-                                this.CloseWindowSemaphoreSlim.Release();
-                                _ = this.Dispatcher.BeginInvoke(this.Close, DispatcherPriority.Normal);
-                                return;
-                            }
-                        }
-                        catch (Exception) { }
-                        finally
-                        {
-                            this.CloseWindowSemaphoreSlim.Release();
+                            this.CloseConfirmed = true;
+                            _ = this.Dispatcher.BeginInvoke(this.Close, DispatcherPriority.Normal);
+                            return;
                         }
                     }
-                });
+                    catch (Exception) { }
+                    finally
+                    {
+                        this.CloseWindowSemaphoreSlim.Release();
+                    }
+                }
             }
             else
             {
