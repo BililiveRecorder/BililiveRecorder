@@ -326,6 +326,11 @@
     <PackageReference Include="Newtonsoft.Json">
       <Version>13.0.1</Version>
     </PackageReference>
+    <PackageReference Include="NuGet.CommandLine">
+      <Version>5.9.1</Version>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
     <PackageReference Include="Sentry">
       <Version>3.6.0</Version>
     </PackageReference>
@@ -378,7 +383,7 @@
       <NupkgReleaseDir>bin\NupkgReleases\</NupkgReleaseDir>
       <SquirrelReleaseDir>bin\SquirrelReleases\</SquirrelReleaseDir>
     </PropertyGroup>
-    <Exec Command="nuget pack BililiveRecorder.nuspec -Version %(myAssemblyInfo.Version) -Properties Configuration=Release -OutputDirectory $(NupkgReleaseDir) -BasePath $(OutDir)" />
+    <Exec Command="$(PkgNuGet_CommandLine)\tools\NuGet pack BililiveRecorder.nuspec -Version %(myAssemblyInfo.Version) -Properties Configuration=Release -OutputDirectory $(NupkgReleaseDir) -BasePath $(OutDir) -NonInteractive -ForceEnglishOutput" />
     <Exec Command="$(SquirrelToolsPath)\squirrel --releasify $(NupkgReleaseDir)\BililiveRecorder.$([System.Version]::Parse(%(myAssemblyInfo.Version)).ToString(3)).nupkg --releaseDir=$(SquirrelReleaseDir) --framework-version net472 --no-msi" />
   </Target>
 </Project>

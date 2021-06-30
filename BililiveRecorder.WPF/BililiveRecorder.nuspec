@@ -7,9 +7,11 @@
     <authors>Genteure</authors>
     <owners>Genteure</owners>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <iconUrl>https://rec.danmuji.org/favicon.ico</iconUrl>
-    <description>B站录播姬</description>
+    <description>B站录播姬 安装包</description>
     <language>zh-CN</language>
+    <dependencies>
+      <group targetFramework=".NETFramework4.5"/>
+    </dependencies>
   </metadata>
   <files>
     <file src="*" target="lib\net45\" exclude="*.nupkg;*.vshost.*;*.log;*.txt;NuGet.Squirrel.pdb"/>
