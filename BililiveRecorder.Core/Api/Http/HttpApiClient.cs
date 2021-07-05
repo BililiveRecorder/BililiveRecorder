@@ -23,6 +23,8 @@ namespace BililiveRecorder.Core.Api.Http
         private HttpClient mainClient;
         private bool disposedValue;
 
+        public HttpClient MainHttpClient => mainClient;
+
         public HttpApiClient(GlobalConfig config)
         {
             this.config = config ?? throw new ArgumentNullException(nameof(config));

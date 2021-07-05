@@ -36,9 +36,12 @@
             <TextBlock Text="{l:Loc Settings_AdvancedPage_Title}" Style="{StaticResource TitleTextBlockStyle}" FontFamily="Microsoft YaHei" Margin="0,10"/>
             <TextBlock Text="{l:Loc Settings_AdvancedPage_Warning}"/>
             <GroupBox Header="Cookie">
-                <c:SettingWithDefault IsSettingNotUsingDefault="{Binding HasCookie}">
-                    <TextBox Text="{Binding Cookie,UpdateSourceTrigger=PropertyChanged,Delay=1000}" Width="220" HorizontalAlignment="Left"/>
-                </c:SettingWithDefault>
+                <StackPanel Orientation="Vertical">
+                    <c:SettingWithDefault IsSettingNotUsingDefault="{Binding HasCookie}">
+                        <TextBox Text="{Binding Cookie,UpdateSourceTrigger=PropertyChanged,Delay=1000}" Width="220" HorizontalAlignment="Left"/>
+                    </c:SettingWithDefault>
+                    <Button Content="Test" Click="TestCookie_Click"/>
+                </StackPanel>
             </GroupBox>
             <GroupBox Header="{l:Loc Settings_Danmaku_Title}">
                 <c:SettingWithDefault IsSettingNotUsingDefault="{Binding HasRecordDanmakuFlushInterval}" Header="{l:Loc Settings_Danmaku_FlushInterval}">
