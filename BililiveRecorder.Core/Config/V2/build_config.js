@@ -78,3 +78,90 @@ fs.writeFileSync("./Config.gen.cs", result, {
 });
 
 console.log("记得 format Config.gen.cs")
+
+/** 进行一个json schema的生成 */
+const sharedConfig = {};
+const globalConfig = {};
+const roomConfig = {};
+function tEval(str) {
+    try {
+        return eval(str);
+    } catch {
+        return str;
+    }
+}
+function switchType(name, type, defVal) {
+    switch (type) {
+        case "RecordMode":
+            return { type: "number", default: 0, enum: [0, 1], "description": "0: Standard\n1: Raw" };
+        case "CuttingMode":
+            return { type: "number", default: 0, enum: [0, 1, 2], "description": "0: 禁用\n1: 根据时间切割\n2: 根据文件大小切割" };
+        case "uint":
+            return { type: "number", minimum: 0, default: tEval(defVal) };
+        case "bool":
+            return { type: "boolean", default: tEval(defVal) };
+        case "string":
+            if (name === 'Cookie') {
+                return { type: "string", pattern: "^(\S+=\S+;? ?)*$", maxLength: 4096, };
+            }
+            return { type: "string", default: defVal === 'string.Empty' ? '' : tEval(defVal.replace(/^@/, '')) };
+        default:
+            return { type, default: defVal };
+    }
+}
+function insert(target, { name, type, desc, default: defVal/*, nullable */ }) {
+    const typeObj = switchType(name, type, defVal);
+    if (defVal === 'default') delete typeObj['default'];
+    target[name] = {
+        "description": desc,
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+            "HasValue": { "type": "boolean", "default": false }, "Value": typeObj
+        }
+    };
+}
+data.room.filter(x => !x.without_global).forEach(v => insert(sharedConfig, v));
+data.room.filter(x => x.without_global).forEach(v => insert(roomConfig, v));
+data.global.forEach(v => insert(globalConfig, v));
+
+
+fs.writeFileSync("./build_config.schema.json", "// GENERATED CODE, DO NOT EDIT.\n" + JSON.stringify({
+    "$schema": "http://json-schema.org/schema",
+    "definitions": {
+        "global-config": {
+            "description": "全局配置",
+            "additionalProperties": false,
+            "properties": { ...sharedConfig, ...globalConfig }
+        },
+        "room-config": {
+            "description": "单个房间配置",
+            "additionalProperties": false,
+            "properties": { ...sharedConfig, ...roomConfig }
+        }
+    },
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+        "$schema",
+        "version"
+    ],
+    "properties": {
+        "$schema": {
+            "type": "string",
+            "default": "https://github.com/Bililive/BililiveRecorder/blob/dev-1.3/BililiveRecorder.Core/Config/V2/build_config.schema.json"
+        },
+        "version": {
+            "const": 2
+        },
+        "global": {
+            "$ref": "#/definitions/global-config"
+        },
+        "rooms": {
+            "type": "array",
+            "items": {
+                "$ref": "#/definitions/room-config"
+            }
+        }
+    }
+}, null, 4));
