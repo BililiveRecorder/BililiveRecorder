@@ -1,0 +1,521 @@
+// GENERATED CODE, DO NOT EDIT.
+{
+    "$schema": "http://json-schema.org/schema",
+    "definitions": {
+        "global-config": {
+            "description": "全局配置",
+            "additionalProperties": false,
+            "properties": {
+                "RecordMode": {
+                    "description": "录制模式",
+                    "type": "object",
+                    "additionalProperties": false,
+                    "properties": {
+                        "HasValue": {
+                            "type": "boolean",
+                            "default": false
+                        },
+                        "Value": {
+                            "type": "number",
+                            "default": 0,
+                            "enum": [
+                                0,
+                                1
+                            ],
+                            "description": "0: Standard\n1: Raw"
+                        }
+                    }
+                },
+                "CuttingMode": {
+                    "description": "录制文件自动切割模式",
+                    "type": "object",
+                    "additionalProperties": false,
+                    "properties": {
+                        "HasValue": {
+                            "type": "boolean",
+                            "default": false
+                        },
+                        "Value": {
+                            "type": "number",
+                            "default": 0,
+                            "enum": [
+                                0,
+                                1,
+                                2
+                            ],
+                            "description": "0: 禁用\n1: 根据时间切割\n2: 根据文件大小切割"
+                        }
+                    }
+                },
+                "CuttingNumber": {
+                    "description": "录制文件自动切割数值（分钟/MiB）",
+                    "type": "object",
+                    "additionalProperties": false,
+                    "properties": {
+                        "HasValue": {
+                            "type": "boolean",
+                            "default": false
+                        },
+                        "Value": {
+                            "type": "number",
+                            "minimum": 0,
+                            "default": 100
+                        }
+                    }
+                },
+                "RecordDanmaku": {
+                    "description": "是否同时录制弹幕",
+                    "type": "object",
+                    "additionalProperties": false,
+                    "properties": {
+                        "HasValue": {
+                            "type": "boolean",
+                            "default": false
+                        },
+                        "Value": {
+                            "type": "boolean",
+                            "default": false
+                        }
+                    }
+                },
+                "RecordDanmakuRaw": {
+                    "description": "是否记录弹幕原始数据",
+                    "type": "object",
+                    "additionalProperties": false,
+                    "properties": {
+                        "HasValue": {
+                            "type": "boolean",
+                            "default": false
+                        },
+                        "Value": {
+                            "type": "boolean",
+                            "default": false
+                        }
+                    }
+                },
+                "RecordDanmakuSuperChat": {
+                    "description": "是否同时录制 SuperChat",
+                    "type": "object",
+                    "additionalProperties": false,
+                    "properties": {
+                        "HasValue": {
+                            "type": "boolean",
+                            "default": false
+                        },
+                        "Value": {
+                            "type": "boolean",
+                            "default": true
+                        }
+                    }
+                },
+                "RecordDanmakuGift": {
+                    "description": "是否同时录制 礼物",
+                    "type": "object",
+                    "additionalProperties": false,
+                    "properties": {
+                        "HasValue": {
+                            "type": "boolean",
+                            "default": false
+                        },
+                        "Value": {
+                            "type": "boolean",
+                            "default": false
+                        }
+                    }
+                },
+                "RecordDanmakuGuard": {
+                    "description": "是否同时录制 上船",
+                    "type": "object",
+                    "additionalProperties": false,
+                    "properties": {
+                        "HasValue": {
+                            "type": "boolean",
+                            "default": false
+                        },
+                        "Value": {
+                            "type": "boolean",
+                            "default": true
+                        }
+                    }
+                },
+                "TimingStreamRetry": {
+                    "description": "录制断开重连时间间隔 毫秒",
+                    "type": "object",
+                    "additionalProperties": false,
+                    "properties": {
+                        "HasValue": {
+                            "type": "boolean",
+                            "default": false
+                        },
+                        "Value": {
+                            "type": "number",
+                            "minimum": 0,
+                            "default": 6000
+                        }
+                    }
+                },
+                "TimingStreamConnect": {
+                    "description": "连接直播服务器超时时间 毫秒",
+                    "type": "object",
+                    "additionalProperties": false,
+                    "properties": {
+                        "HasValue": {
+                            "type": "boolean",
+                            "default": false
+                        },
+                        "Value": {
+                            "type": "number",
+                            "minimum": 0,
+                            "default": 5000
+                        }
+                    }
+                },
+                "TimingDanmakuRetry": {
+                    "description": "弹幕服务器重连时间间隔 毫秒",
+                    "type": "object",
+                    "additionalProperties": false,
+                    "properties": {
+                        "HasValue": {
+                            "type": "boolean",
+                            "default": false
+                        },
+                        "Value": {
+                            "type": "number",
+                            "minimum": 0,
+                            "default": 15000
+                        }
+                    }
+                },
+                "TimingCheckInterval": {
+                    "description": "HTTP API 检查时间间隔 秒",
+                    "type": "object",
+                    "additionalProperties": false,
+                    "properties": {
+                        "HasValue": {
+                            "type": "boolean",
+                            "default": false
+                        },
+                        "Value": {
+                            "type": "number",
+                            "minimum": 0,
+                            "default": 600
+                        }
+                    }
+                },
+                "TimingWatchdogTimeout": {
+                    "description": "最大未收到新直播数据时间 毫秒",
+                    "type": "object",
+                    "additionalProperties": false,
+                    "properties": {
+                        "HasValue": {
+                            "type": "boolean",
+                            "default": false
+                        },
+                        "Value": {
+                            "type": "number",
+                            "minimum": 0,
+                            "default": 10000
+                        }
+                    }
+                },
+                "RecordDanmakuFlushInterval": {
+                    "description": "触发 <see cref=\"System.Xml.XmlWriter.Flush\"/> 的弹幕个数",
+                    "type": "object",
+                    "additionalProperties": false,
+                    "properties": {
+                        "HasValue": {
+                            "type": "boolean",
+                            "default": false
+                        },
+                        "Value": {
+                            "type": "number",
+                            "minimum": 0,
+                            "default": 20
+                        }
+                    }
+                },
+                "Cookie": {
+                    "description": "请求 API 时使用的 Cookie",
+                    "type": "object",
+                    "additionalProperties": false,
+                    "properties": {
+                        "HasValue": {
+                            "type": "boolean",
+                            "default": false
+                        },
+                        "Value": {
+                            "type": "string",
+                            "pattern": "^(S+=S+;? ?)*$",
+                            "maxLength": 4096
+                        }
+                    }
+                },
+                "WebHookUrls": {
+                    "description": "录制文件写入结束 Webhook 地址 每行一个",
+                    "type": "object",
+                    "additionalProperties": false,
+                    "properties": {
+                        "HasValue": {
+                            "type": "boolean",
+                            "default": false
+                        },
+                        "Value": {
+                            "type": "string",
+                            "default": ""
+                        }
+                    }
+                },
+                "WebHookUrlsV2": {
+                    "description": "Webhook v2 地址 每行一个",
+                    "type": "object",
+                    "additionalProperties": false,
+                    "properties": {
+                        "HasValue": {
+                            "type": "boolean",
+                            "default": false
+                        },
+                        "Value": {
+                            "type": "string",
+                            "default": ""
+                        }
+                    }
+                },
+                "LiveApiHost": {
+                    "description": "替换 api.live.bilibili.com 服务器为其他反代，可以支持在云服务器上录制",
+                    "type": "object",
+                    "additionalProperties": false,
+                    "properties": {
+                        "HasValue": {
+                            "type": "boolean",
+                            "default": false
+                        },
+                        "Value": {
+                            "type": "string",
+                            "default": "https://api.live.bilibili.com"
+                        }
+                    }
+                },
+                "RecordFilenameFormat": {
+                    "description": "录制文件名模板",
+                    "type": "object",
+                    "additionalProperties": false,
+                    "properties": {
+                        "HasValue": {
+                            "type": "boolean",
+                            "default": false
+                        },
+                        "Value": {
+                            "type": "string",
+                            "default": "{roomid}-{name}/录制-{roomid}-{date}-{time}-{ms}-{title}.flv"
+                        }
+                    }
+                },
+                "WpfShowTitleAndArea": {
+                    "description": "是否显示直播间标题和分区",
+                    "type": "object",
+                    "additionalProperties": false,
+                    "properties": {
+                        "HasValue": {
+                            "type": "boolean",
+                            "default": false
+                        },
+                        "Value": {
+                            "type": "boolean",
+                            "default": true
+                        }
+                    }
+                }
+            }
+        },
+        "room-config": {
+            "description": "单个房间配置",
+            "additionalProperties": false,
+            "properties": {
+                "RecordMode": {
+                    "description": "录制模式",
+                    "type": "object",
+                    "additionalProperties": false,
+                    "properties": {
+                        "HasValue": {
+                            "type": "boolean",
+                            "default": false
+                        },
+                        "Value": {
+                            "type": "number",
+                            "default": 0,
+                            "enum": [
+                                0,
+                                1
+                            ],
+                            "description": "0: Standard\n1: Raw"
+                        }
+                    }
+                },
+                "CuttingMode": {
+                    "description": "录制文件自动切割模式",
+                    "type": "object",
+                    "additionalProperties": false,
+                    "properties": {
+                        "HasValue": {
+                            "type": "boolean",
+                            "default": false
+                        },
+                        "Value": {
+                            "type": "number",
+                            "default": 0,
+                            "enum": [
+                                0,
+                                1,
+                                2
+                            ],
+                            "description": "0: 禁用\n1: 根据时间切割\n2: 根据文件大小切割"
+                        }
+                    }
+                },
+                "CuttingNumber": {
+                    "description": "录制文件自动切割数值（分钟/MiB）",
+                    "type": "object",
+                    "additionalProperties": false,
+                    "properties": {
+                        "HasValue": {
+                            "type": "boolean",
+                            "default": false
+                        },
+                        "Value": {
+                            "type": "number",
+                            "minimum": 0,
+                            "default": 100
+                        }
+                    }
+                },
+                "RecordDanmaku": {
+                    "description": "是否同时录制弹幕",
+                    "type": "object",
+                    "additionalProperties": false,
+                    "properties": {
+                        "HasValue": {
+                            "type": "boolean",
+                            "default": false
+                        },
+                        "Value": {
+                            "type": "boolean",
+                            "default": false
+                        }
+                    }
+                },
+                "RecordDanmakuRaw": {
+                    "description": "是否记录弹幕原始数据",
+                    "type": "object",
+                    "additionalProperties": false,
+                    "properties": {
+                        "HasValue": {
+                            "type": "boolean",
+                            "default": false
+                        },
+                        "Value": {
+                            "type": "boolean",
+                            "default": false
+                        }
+                    }
+                },
+                "RecordDanmakuSuperChat": {
+                    "description": "是否同时录制 SuperChat",
+                    "type": "object",
+                    "additionalProperties": false,
+                    "properties": {
+                        "HasValue": {
+                            "type": "boolean",
+                            "default": false
+                        },
+                        "Value": {
+                            "type": "boolean",
+                            "default": true
+                        }
+                    }
+                },
+                "RecordDanmakuGift": {
+                    "description": "是否同时录制 礼物",
+                    "type": "object",
+                    "additionalProperties": false,
+                    "properties": {
+                        "HasValue": {
+                            "type": "boolean",
+                            "default": false
+                        },
+                        "Value": {
+                            "type": "boolean",
+                            "default": false
+                        }
+                    }
+                },
+                "RecordDanmakuGuard": {
+                    "description": "是否同时录制 上船",
+                    "type": "object",
+                    "additionalProperties": false,
+                    "properties": {
+                        "HasValue": {
+                            "type": "boolean",
+                            "default": false
+                        },
+                        "Value": {
+                            "type": "boolean",
+                            "default": true
+                        }
+                    }
+                },
+                "RoomId": {
+                    "description": "房间号",
+                    "type": "object",
+                    "additionalProperties": false,
+                    "properties": {
+                        "HasValue": {
+                            "type": "boolean",
+                            "default": false
+                        },
+                        "Value": {
+                            "type": "int"
+                        }
+                    }
+                },
+                "AutoRecord": {
+                    "description": "是否启用自动录制",
+                    "type": "object",
+                    "additionalProperties": false,
+                    "properties": {
+                        "HasValue": {
+                            "type": "boolean",
+                            "default": false
+                        },
+                        "Value": {
+                            "type": "boolean"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+        "$schema",
+        "version"
+    ],
+    "properties": {
+        "$schema": {
+            "type": "string",
+            "default": "https://raw.githubusercontent.com/Bililive/BililiveRecorder/dev-1.3/BililiveRecorder.Core/Config/V2/config.schema.json"
+        },
+        "version": {
+            "const": 2
+        },
+        "global": {
+            "$ref": "#/definitions/global-config"
+        },
+        "rooms": {
+            "type": "array",
+            "items": {
+                "$ref": "#/definitions/room-config"
+            }
+        }
+    }
+}

@@ -126,7 +126,7 @@ data.room.filter(x => x.without_global).forEach(v => insert(roomConfig, v));
 data.global.forEach(v => insert(globalConfig, v));
 
 
-fs.writeFileSync("./build_config.schema.json", "// GENERATED CODE, DO NOT EDIT.\n" + JSON.stringify({
+fs.writeFileSync("./config.schema.json", "// GENERATED CODE, DO NOT EDIT.\n" + JSON.stringify({
     "$schema": "http://json-schema.org/schema",
     "definitions": {
         "global-config": {
@@ -149,7 +149,7 @@ fs.writeFileSync("./build_config.schema.json", "// GENERATED CODE, DO NOT EDIT.\
     "properties": {
         "$schema": {
             "type": "string",
-            "default": "https://github.com/Bililive/BililiveRecorder/blob/dev-1.3/BililiveRecorder.Core/Config/V2/build_config.schema.json"
+            "default": "https://raw.githubusercontent.com/Bililive/BililiveRecorder/dev-1.3/BililiveRecorder.Core/Config/V2/config.schema.json"
         },
         "version": {
             "const": 2
