@@ -93,11 +93,13 @@ function tEval(str) {
 function switchType(name, type, defVal) {
     switch (type) {
         case "RecordMode":
-            return { type: "number", default: 0, enum: [0, 1], "description": "0: Standard\n1: Raw" };
+            return { type: "integer", default: 0, enum: [0, 1], "description": "0: Standard\n1: Raw" };
         case "CuttingMode":
-            return { type: "number", default: 0, enum: [0, 1, 2], "description": "0: 禁用\n1: 根据时间切割\n2: 根据文件大小切割" };
+            return { type: "integer", default: 0, enum: [0, 1, 2], "description": "0: 禁用\n1: 根据时间切割\n2: 根据文件大小切割" };
         case "uint":
-            return { type: "number", minimum: 0, default: tEval(defVal) };
+            return { type: "integer", minimum: 0, maximum: 4294967295, default: tEval(defVal) };
+        case "int":
+            return { type: "integer", minimum: -2147483648, maximum: 2147483647, default: tEval(defVal) };
         case "bool":
             return { type: "boolean", default: tEval(defVal) };
         case "string":
@@ -117,7 +119,7 @@ function insert(target, { name, type, desc, default: defVal/*, nullable */ }) {
         "type": "object",
         "additionalProperties": false,
         "properties": {
-            "HasValue": { "type": "boolean", "default": false }, "Value": typeObj
+            "HasValue": { "type": "boolean", "default": true }, "Value": typeObj
         }
     };
 }

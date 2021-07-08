@@ -9,6 +9,9 @@ namespace BililiveRecorder.Core.Config
     [JsonSubtypes.KnownSubType(typeof(V2.ConfigV2), 2)]
     public abstract class ConfigBase
     {
+        [JsonProperty("$schema", Order = -2)]
+        public string? DollarSignSchema { get; set; }
+
         [JsonProperty("version")]
         public virtual int Version { get; internal protected set; }
     }
