@@ -27,9 +27,9 @@ namespace BililiveRecorder.Core.Api
             .ExecuteAsync(_ => this.client.GetRoomInfoAsync(roomid), new Context(PolicyNames.CacheKeyRoomInfo + ":" + roomid))
             .ConfigureAwait(false);
 
-        public async Task<BilibiliApiResponse<RoomPlayInfo>> GetStreamUrlAsync(int roomid) => await this.policies
+        public async Task<BilibiliApiResponse<RoomPlayInfo>> GetStreamUrlAsync(int roomid, int qn) => await this.policies
             .Get<IAsyncPolicy>(PolicyNames.PolicyStreamApiRequestAsync)
-            .ExecuteAsync(_ => this.client.GetStreamUrlAsync(roomid), new Context(PolicyNames.CacheKeyStream + ":" + roomid))
+            .ExecuteAsync(_ => this.client.GetStreamUrlAsync(roomid, qn), new Context(PolicyNames.CacheKeyStream + ":" + roomid + ":" + qn))
             .ConfigureAwait(false);
 
         public async Task<BilibiliApiResponse<UserInfo>> GetUserInfoAsync(int roomid) => await this.policies

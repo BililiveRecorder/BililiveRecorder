@@ -99,6 +99,15 @@
                              Text="{Binding WebHookUrls,UpdateSourceTrigger=PropertyChanged,Delay=1000}" ui:TextBoxHelper.IsDeleteButtonVisible="False"/>
                 </StackPanel>
             </GroupBox>
+            <GroupBox Header="录制画质">
+                <StackPanel MaxWidth="400" HorizontalAlignment="Left">
+                    <TextBlock Text="逗号分割的录制画质ID"/>
+                    <c:SettingWithDefault IsSettingNotUsingDefault="{Binding HasRecordingQuality}">
+                        <TextBox Text="{Binding RecordingQuality,UpdateSourceTrigger=PropertyChanged,Delay=1000}"
+                                 ui:TextBoxHelper.IsDeleteButtonVisible="False" Width="220" HorizontalAlignment="Left"/>
+                    </c:SettingWithDefault>
+                </StackPanel>
+            </GroupBox>
         </ui:SimpleStackPanel>
     </ScrollViewer>
 </ui:Page>

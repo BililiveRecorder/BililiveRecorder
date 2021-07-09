@@ -93,6 +93,14 @@ namespace BililiveRecorder.Core.Config.V2
         public Optional<bool> OptionalRecordDanmakuGuard { get => this.GetPropertyValueOptional<bool>(nameof(this.RecordDanmakuGuard)); set => this.SetPropertyValueOptional(value, nameof(this.RecordDanmakuGuard)); }
 
         /// <summary>
+        /// 录制的直播画质 qn 值，逗号分割，靠前的优先
+        /// </summary>
+        public string RecordingQuality { get => this.GetPropertyValue<string>(); set => this.SetPropertyValue(value); }
+        public bool HasRecordingQuality { get => this.GetPropertyHasValue(nameof(this.RecordingQuality)); set => this.SetPropertyHasValue<string>(value, nameof(this.RecordingQuality)); }
+        [JsonProperty(nameof(RecordingQuality)), EditorBrowsable(EditorBrowsableState.Never)]
+        public Optional<string> OptionalRecordingQuality { get => this.GetPropertyValueOptional<string>(nameof(this.RecordingQuality)); set => this.SetPropertyValueOptional(value, nameof(this.RecordingQuality)); }
+
+        /// <summary>
         /// 录制断开重连时间间隔 毫秒
         /// </summary>
         public uint TimingStreamRetry => this.GetPropertyValue<uint>();
@@ -317,6 +325,14 @@ namespace BililiveRecorder.Core.Config.V2
         [JsonProperty(nameof(RecordDanmakuGuard)), EditorBrowsable(EditorBrowsableState.Never)]
         public Optional<bool> OptionalRecordDanmakuGuard { get => this.GetPropertyValueOptional<bool>(nameof(this.RecordDanmakuGuard)); set => this.SetPropertyValueOptional(value, nameof(this.RecordDanmakuGuard)); }
 
+        /// <summary>
+        /// 录制的直播画质 qn 值，逗号分割，靠前的优先
+        /// </summary>
+        public string RecordingQuality { get => this.GetPropertyValue<string>(); set => this.SetPropertyValue(value); }
+        public bool HasRecordingQuality { get => this.GetPropertyHasValue(nameof(this.RecordingQuality)); set => this.SetPropertyHasValue<string>(value, nameof(this.RecordingQuality)); }
+        [JsonProperty(nameof(RecordingQuality)), EditorBrowsable(EditorBrowsableState.Never)]
+        public Optional<string> OptionalRecordingQuality { get => this.GetPropertyValueOptional<string>(nameof(this.RecordingQuality)); set => this.SetPropertyValueOptional(value, nameof(this.RecordingQuality)); }
+
     }
 
     public sealed partial class DefaultConfig
@@ -363,6 +379,8 @@ namespace BililiveRecorder.Core.Config.V2
         public bool RecordDanmakuGift => false;
 
         public bool RecordDanmakuGuard => true;
+
+        public string RecordingQuality => "10000";
 
     }
 

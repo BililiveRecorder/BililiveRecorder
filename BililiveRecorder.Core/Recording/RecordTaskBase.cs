@@ -236,24 +236,56 @@ namespace BililiveRecorder.Core.Recording
 
         protected async Task<string> FetchStreamUrlAsync(int roomid)
         {
-            var apiResp = await this.apiClient.GetStreamUrlAsync(roomid: roomid).ConfigureAwait(false);
-            var url_data = apiResp?.Data?.PlayurlInfo?.Playurl?.Streams;
+            const int DefaultQn = 10000;
+            var selected_qn = DefaultQn;
+            int[] qns;
+            Api.Model.RoomPlayInfo.UrlInfoItem[]? url_infos;
 
-            if (url_data is null)
-                throw new Exception("playurl is null");
+            var codecItem = await this.apiClient.GetCodecItemInStreamUrlAsync(roomid: roomid, qn: DefaultQn).ConfigureAwait(false);
 
-            var url_http_stream_flv_avc =
-                url_data.FirstOrDefault(x => x.ProtocolName == "http_stream")
-                ?.Formats?.FirstOrDefault(x => x.FormatName == "flv")
-                ?.Codecs?.FirstOrDefault(x => x.CodecName == "avc");
+            if (codecItem is null)
+                throw new Exception("no supported stream url, qn: " + DefaultQn);
 
-            if (url_http_stream_flv_avc is null)
-                throw new Exception("no supported stream url");
+            {
+                try
+                {
+                    qns = this.room.RoomConfig.RecordingQuality.Split(new[] { ',', '，', '、', ' ' }, StringSplitOptions.RemoveEmptyEntries)
+                                                                  .Select(x => int.TryParse(x, out var num) ? num : -1)
+                                                                  .Where(x => x > 0)
+                                                                  .ToArray();
 
-            if (url_http_stream_flv_avc.CurrentQn != 10000)
-                this.logger.Warning("当前录制的画质是 {CurrentQn}", url_http_stream_flv_avc.CurrentQn);
+                    foreach (var qn in qns)
+                    {
+                        if (codecItem.AcceptQn.Contains(qn))
+                        {
+                            selected_qn = qn;
+                            break;
+                        }
+                    }
 
-            var url_infos = url_http_stream_flv_avc.UrlInfos;
+                    this.logger.Debug("设置画质 {QnSettings}, 可用画质 {AcceptQn}, 最终选择 {SelectedQn}", qns, codecItem.AcceptQn, selected_qn);
+                }
+                catch (Exception ex)
+                {
+                    this.logger.Warning(ex, "判断录制画质时出错，将默认使用 原画(10000)");
+                    qns = new[] { DefaultQn };
+                    url_infos = codecItem.UrlInfos;
+                }
+            }
+
+            if (selected_qn != DefaultQn)
+            {
+                // 最终选择的 qn 与默认不同，需要重新请求一次
+                codecItem = await this.apiClient.GetCodecItemInStreamUrlAsync(roomid: roomid, qn: selected_qn).ConfigureAwait(false);
+
+                if (codecItem is null)
+                    throw new Exception("no supported stream url, qn: " + DefaultQn);
+            }
+
+            if (codecItem.CurrentQn != selected_qn || !qns.Contains(codecItem.CurrentQn))
+                this.logger.Warning("当前录制的画质是 {CurrentQn}", codecItem.CurrentQn);
+
+            url_infos = codecItem.UrlInfos;
             if (url_infos is null || url_infos.Length == 0)
                 throw new Exception("no url_info");
 
@@ -264,7 +296,7 @@ namespace BililiveRecorder.Core.Recording
                 ? url_infos_without_mcdn[this.random.Next(url_infos_without_mcdn.Length)]
                 : url_infos[this.random.Next(url_infos.Length)];
 
-            var fullUrl = url_info.Host + url_http_stream_flv_avc.BaseUrl + url_info.Extra;
+            var fullUrl = url_info.Host + codecItem.BaseUrl + url_info.Extra;
             return fullUrl;
         }
 

@@ -8,6 +8,6 @@ namespace BililiveRecorder.Core.Api
     {
         Task<BilibiliApiResponse<RoomInfo>> GetRoomInfoAsync(int roomid);
         Task<BilibiliApiResponse<UserInfo>> GetUserInfoAsync(int roomid);
-        Task<BilibiliApiResponse<RoomPlayInfo>> GetStreamUrlAsync(int roomid);
+        Task<BilibiliApiResponse<RoomPlayInfo>> GetStreamUrlAsync(int roomid, int qn);
     }
 }

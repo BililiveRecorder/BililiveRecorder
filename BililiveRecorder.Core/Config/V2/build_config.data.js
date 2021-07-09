@@ -64,7 +64,7 @@ module.exports = {
         "type": "bool",
         "desc": "是否显示直播间标题和分区",
         "default": "true",
-    }, ],
+    },],
     "room": [{
         "name": "RoomId",
         "type": "int",
@@ -117,5 +117,10 @@ module.exports = {
         "type": "bool",
         "desc": "是否同时录制 上船",
         "default": "true"
-    }, ]
+    }, {
+        "name": "RecordingQuality",
+        "type": "string",
+        "desc": "录制的直播画质 qn 值，逗号分割，靠前的优先",
+        "default": "\"10000\""
+    },]
 }

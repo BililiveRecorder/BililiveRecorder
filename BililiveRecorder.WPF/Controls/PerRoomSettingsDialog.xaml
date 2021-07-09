@@ -88,6 +88,15 @@
                         </local:SettingWithDefault>
                     </StackPanel>
                 </GroupBox>
+                <GroupBox Header="录制画质">
+                    <StackPanel>
+                        <TextBlock Text="逗号分割的录制画质ID"/>
+                        <local:SettingWithDefault IsSettingNotUsingDefault="{Binding HasRecordingQuality}">
+                            <TextBox Text="{Binding RecordingQuality,UpdateSourceTrigger=PropertyChanged,Delay=1000}"
+                                 ui:TextBoxHelper.IsDeleteButtonVisible="False" Width="220" HorizontalAlignment="Left"/>
+                        </local:SettingWithDefault>
+                    </StackPanel>
+                </GroupBox>
             </ui:SimpleStackPanel>
         </ScrollViewer>
     </Grid>
