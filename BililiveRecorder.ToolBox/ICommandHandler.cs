@@ -1,12 +1,13 @@
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace BililiveRecorder.ToolBox
 {
     public interface ICommandHandler<TRequest, TResponse>
         where TRequest : ICommandRequest<TResponse>
-        where TResponse : class
+        where TResponse : IResponseData
     {
-        Task<CommandResponse<TResponse>> Handle(TRequest request);
-        void PrintResponse(TResponse response);
+        string Name { get; }
+        Task<CommandResponse<TResponse>> Handle(TRequest request, CancellationToken cancellationToken, ProgressCallback? progress);
     }
 }

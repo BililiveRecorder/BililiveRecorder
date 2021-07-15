@@ -24,9 +24,9 @@ namespace BililiveRecorder.ToolBox.Tool.Analyze
     {
         private static readonly ILogger logger = Log.ForContext<AnalyzeHandler>();
 
-        public Task<CommandResponse<AnalyzeResponse>> Handle(AnalyzeRequest request) => this.Handle(request, default, null);
+        public string Name => "Analyze";
 
-        public async Task<CommandResponse<AnalyzeResponse>> Handle(AnalyzeRequest request, CancellationToken cancellationToken, Func<double, Task>? progress)
+        public async Task<CommandResponse<AnalyzeResponse>> Handle(AnalyzeRequest request, CancellationToken cancellationToken, ProgressCallback? progress)
         {
             FileStream? flvFileStream = null;
             try
@@ -152,7 +152,7 @@ namespace BililiveRecorder.ToolBox.Tool.Analyze
                 return new CommandResponse<AnalyzeResponse>
                 {
                     Status = ResponseStatus.OK,
-                    Result = response
+                    Data = response
                 };
             }
             catch (TaskCanceledException) when (cancellationToken.IsCancellationRequested)
@@ -190,31 +190,6 @@ namespace BililiveRecorder.ToolBox.Tool.Analyze
             {
                 flvFileStream?.Dispose();
             }
-        }
-
-        public void PrintResponse(AnalyzeResponse response)
-        {
-            Console.Write("Input: ");
-            Console.WriteLine(response.InputPath);
-
-            Console.WriteLine(response.NeedFix ? "File needs repair" : "File doesn't need repair");
-
-            if (response.Unrepairable)
-                Console.WriteLine("File contains error(s) that are unrepairable (yet), please send sample to the author of this program.");
-
-            Console.WriteLine("Will output {0} file(s) if repaired", response.OutputFileCount);
-
-            Console.WriteLine("Types of error:");
-            Console.Write("Other: ");
-            Console.WriteLine(response.IssueTypeOther);
-            Console.Write("Unrepairable: ");
-            Console.WriteLine(response.IssueTypeUnrepairable);
-            Console.Write("TimestampJump: ");
-            Console.WriteLine(response.IssueTypeTimestampJump);
-            Console.Write("DecodingHeader: ");
-            Console.WriteLine(response.IssueTypeDecodingHeader);
-            Console.Write("RepeatingData: ");
-            Console.WriteLine(response.IssueTypeRepeatingData);
         }
 
         private class AnalyzeMockFlvTagWriter : IFlvTagWriter

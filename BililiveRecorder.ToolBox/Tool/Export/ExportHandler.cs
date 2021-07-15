@@ -15,10 +15,10 @@ namespace BililiveRecorder.ToolBox.Tool.Export
     public class ExportHandler : ICommandHandler<ExportRequest, ExportResponse>
     {
         private static readonly ILogger logger = Log.ForContext<ExportHandler>();
+        
+        public string Name => "Export";
 
-        public Task<CommandResponse<ExportResponse>> Handle(ExportRequest request) => this.Handle(request, default, null);
-
-        public async Task<CommandResponse<ExportResponse>> Handle(ExportRequest request, CancellationToken cancellationToken, Func<double, Task>? progress)
+        public async Task<CommandResponse<ExportResponse>> Handle(ExportRequest request, CancellationToken cancellationToken, ProgressCallback? progress)
         {
             FileStream? inputStream = null, outputStream = null;
             try
@@ -92,7 +92,7 @@ namespace BililiveRecorder.ToolBox.Tool.Export
                     });
                 });
 
-                return new CommandResponse<ExportResponse> { Status = ResponseStatus.OK, Result = new ExportResponse() };
+                return new CommandResponse<ExportResponse> { Status = ResponseStatus.OK, Data = new ExportResponse() };
             }
             catch (TaskCanceledException) when (cancellationToken.IsCancellationRequested)
             {
@@ -131,7 +131,5 @@ namespace BililiveRecorder.ToolBox.Tool.Export
                 outputStream?.Dispose();
             }
         }
-
-        public void PrintResponse(ExportResponse response) => Console.WriteLine("OK");
     }
 }

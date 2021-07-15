@@ -6,6 +6,7 @@ using BililiveRecorder.ToolBox.Tool.Analyze;
 using BililiveRecorder.ToolBox.Tool.Export;
 using BililiveRecorder.ToolBox.Tool.Fix;
 using Newtonsoft.Json;
+using Spectre.Console;
 
 namespace BililiveRecorder.ToolBox
 {
@@ -34,7 +35,7 @@ namespace BililiveRecorder.ToolBox
         private void RegisterCommand<THandler, TRequest, TResponse>(string name, string? description, Action<Command> configure)
             where THandler : ICommandHandler<TRequest, TResponse>
             where TRequest : ICommandRequest<TResponse>
-            where TResponse : class
+            where TResponse : IResponseData
         {
             var cmd = new Command(name, description)
             {
@@ -49,32 +50,77 @@ namespace BililiveRecorder.ToolBox
         private static async Task<int> RunSubCommand<THandler, TRequest, TResponse>(TRequest request, bool json, bool jsonIndented)
             where THandler : ICommandHandler<TRequest, TResponse>
             where TRequest : ICommandRequest<TResponse>
-            where TResponse : class
+            where TResponse : IResponseData
         {
+            var isInteractive = !(json || jsonIndented);
             var handler = Activator.CreateInstance<THandler>();
 
-            var response = await handler.Handle(request).ConfigureAwait(false);
 
-            if (json || jsonIndented)
+            CommandResponse<TResponse>? response;
+            if (isInteractive)
             {
-                var json_str = JsonConvert.SerializeObject(response, jsonIndented ? Formatting.Indented : Formatting.None);
-                Console.WriteLine(json_str);
+                response = await AnsiConsole
+                    .Progress()
+                    .Columns(new ProgressColumn[]
+                    {
+                        new TaskDescriptionColumn(),
+                        new ProgressBarColumn(),
+                        new PercentageColumn(),
+                        new SpinnerColumn(Spinner.Known.Dots10),
+                    })
+                    .StartAsync(async ctx =>
+                    {
+                        var t = ctx.AddTask(handler.Name);
+                        t.MaxValue = 1d;
+                        var r = await handler.Handle(request, default, async p => t.Value = p).ConfigureAwait(false);
+                        t.Value = 1d;
+                        return r;
+                    })
+                    .ConfigureAwait(false);
             }
             else
             {
+                response = await handler.Handle(request, default, null).ConfigureAwait(false);
+            }
+
+            if (isInteractive)
+            {
                 if (response.Status == ResponseStatus.OK)
                 {
-                    handler.PrintResponse(response.Result!);
+                    response.Data?.PrintToConsole();
+
+                    return 0;
                 }
                 else
                 {
-                    Console.Write("Error: ");
-                    Console.WriteLine(response.Status);
-                    Console.WriteLine(response.ErrorMessage);
+                    AnsiConsole.Render(new FigletText("Error").Color(Color.Red));
+
+                    var errorInfo = new Table
+                    {
+                        Border = TableBorder.Rounded
+                    };
+                    errorInfo.AddColumn(new TableColumn("Error Code").Centered());
+                    errorInfo.AddColumn(new TableColumn("Error Message").Centered());
+                    errorInfo.AddRow("[red]" + response.Status.ToString().EscapeMarkup() + "[/]", "[red]" + (response.ErrorMessage ?? string.Empty) + "[/]");
+                    AnsiConsole.Render(errorInfo);
+
+                    if (response.Exception is not null)
+                        AnsiConsole.Render(new Panel(response.Exception.GetRenderable(ExceptionFormats.ShortenPaths | ExceptionFormats.ShowLinks))
+                        {
+                            Header = new PanelHeader("Exception Info"),
+                            Border = BoxBorder.Rounded
+                        });
+
+                    return 1;
                 }
             }
+            else
+            {
+                var json_str = JsonConvert.SerializeObject(response, jsonIndented ? Formatting.Indented : Formatting.None);
+                Console.WriteLine(json_str);
 
-            return 0;
+                return response.Status == ResponseStatus.OK ? 0 : 1;
+            }
         }
     }
 }

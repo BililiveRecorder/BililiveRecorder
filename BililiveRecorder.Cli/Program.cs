@@ -5,6 +5,7 @@ using System.CommandLine.Invocation;
 using System.IO;
 using System.Linq;
 using System.Threading;
+using BililiveRecorder.Cli.Configure;
 using BililiveRecorder.Core;
 using BililiveRecorder.Core.Config;
 using BililiveRecorder.Core.Config.V2;
@@ -50,6 +51,7 @@ namespace BililiveRecorder.Cli
             {
                 cmd_run,
                 cmd_portable,
+                new ConfigureCommand(),
                 new ToolCommand()
             };
 

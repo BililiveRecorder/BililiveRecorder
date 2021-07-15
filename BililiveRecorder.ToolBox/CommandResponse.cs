@@ -4,12 +4,12 @@ using Newtonsoft.Json.Converters;
 
 namespace BililiveRecorder.ToolBox
 {
-    public class CommandResponse<TResponse> where TResponse : class
+    public class CommandResponse<TResponseData> where TResponseData : IResponseData
     {
         [JsonConverter(typeof(StringEnumConverter))]
         public ResponseStatus Status { get; set; }
 
-        public TResponse? Result { get; set; }
+        public TResponseData? Data { get; set; }
 
         public string? ErrorMessage { get; set; }
 

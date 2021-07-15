@@ -10,7 +10,7 @@ namespace BililiveRecorder.Core.Config
 {
     public class ConfigParser
     {
-        private const string CONFIG_FILE_NAME = "config.json";
+        public const string CONFIG_FILE_NAME = "config.json";
         private static readonly ILogger logger = Log.ForContext<ConfigParser>();
         private static readonly JsonSerializerSettings settings = new JsonSerializerSettings()
         {

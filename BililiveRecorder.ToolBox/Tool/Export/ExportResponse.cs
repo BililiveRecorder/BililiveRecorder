@@ -1,6 +1,7 @@
-﻿namespace BililiveRecorder.ToolBox.Tool.Export
+namespace BililiveRecorder.ToolBox.Tool.Export
 {
-    public class ExportResponse
+    public class ExportResponse : IResponseData
     {
+        public void PrintToConsole() { }
     }
 }

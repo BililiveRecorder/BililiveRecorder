@@ -23,9 +23,9 @@ namespace BililiveRecorder.ToolBox.Tool.Fix
     {
         private static readonly ILogger logger = Log.ForContext<FixHandler>();
 
-        public Task<CommandResponse<FixResponse>> Handle(FixRequest request) => this.Handle(request, default, null);
+        public string Name => "Fix";
 
-        public async Task<CommandResponse<FixResponse>> Handle(FixRequest request, CancellationToken cancellationToken, Func<double, Task>? progress)
+        public async Task<CommandResponse<FixResponse>> Handle(FixRequest request, CancellationToken cancellationToken, ProgressCallback? progress)
         {
             FileStream? flvFileStream = null;
             try
@@ -194,7 +194,7 @@ namespace BililiveRecorder.ToolBox.Tool.Fix
                     };
                 });
 
-                return new CommandResponse<FixResponse> { Status = ResponseStatus.OK, Result = response };
+                return new CommandResponse<FixResponse> { Status = ResponseStatus.OK, Data = response };
             }
             catch (TaskCanceledException) when (cancellationToken.IsCancellationRequested)
             {
@@ -231,37 +231,6 @@ namespace BililiveRecorder.ToolBox.Tool.Fix
             {
                 flvFileStream?.Dispose();
             }
-        }
-
-        public void PrintResponse(FixResponse response)
-        {
-            Console.Write("Input: ");
-            Console.WriteLine(response.InputPath);
-
-            Console.WriteLine(response.NeedFix ? "File needs repair" : "File doesn't need repair");
-
-            if (response.Unrepairable)
-                Console.WriteLine("File contains error(s) that are unrepairable (yet), please send sample to the author of this program.");
-
-            Console.WriteLine("{0} file(s) written", response.OutputFileCount);
-
-            foreach (var path in response.OutputPaths)
-            {
-                Console.Write("  ");
-                Console.WriteLine(path);
-            }
-
-            Console.WriteLine("Types of error:");
-            Console.Write("Other: ");
-            Console.WriteLine(response.IssueTypeOther);
-            Console.Write("Unrepairable: ");
-            Console.WriteLine(response.IssueTypeUnrepairable);
-            Console.Write("TimestampJump: ");
-            Console.WriteLine(response.IssueTypeTimestampJump);
-            Console.Write("DecodingHeader: ");
-            Console.WriteLine(response.IssueTypeDecodingHeader);
-            Console.Write("RepeatingData: ");
-            Console.WriteLine(response.IssueTypeRepeatingData);
         }
 
         private class AutoFixFlvWriterTargetProvider : IFlvWriterTargetProvider
