@@ -7,6 +7,7 @@ import { fileURLToPath } from 'url';
 
 import data from "./config_data.js"
 
+import generate_cli_configure from "./generate_cli_configure.js";
 import generate_json_schema from "./generate_json_schema.js"
 import generate_core_config from "./generate_core_config.js"
 import generate_web_config from "./generate_web_config.js"
@@ -47,6 +48,20 @@ writeFileSync(core_config_path, DO_NOT_EDIT_COMMENT + core_config_code, {
 });
 
 // ---------------------------------------------
+//                  CLI
+// ---------------------------------------------
+
+console.log("[node] writing cli configure config...")
+
+const cli_config_path = resolve(baseDirectory, '../BililiveRecorder.Cli/Configure/ConfigInstructions.gen.cs');
+
+const cli_config_code = generate_cli_configure(data);
+
+writeFileSync(cli_config_path, DO_NOT_EDIT_COMMENT + cli_config_code, {
+    encoding: "utf8"
+});
+
+// ---------------------------------------------
 //                  WEB
 // ---------------------------------------------
 /* disabled
@@ -66,7 +81,20 @@ writeFileSync(web_config_path, DO_NOT_EDIT_COMMENT + web_config_code, {
 
 console.log("[node] formatting...")
 
-let format = spawn('dotnet', ['tool', 'run', 'dotnet-format', '--', '--include', './BililiveRecorder.Core/Config/V2/Config.gen.cs'/*, './BililiveRecorder.Web.Schemas/Types/Config.gen.cs'*/])
+let format = spawn('dotnet',
+    [
+        'tool',
+        'run',
+        'dotnet-format',
+        '--',
+        '--include',
+        './BililiveRecorder.Core/Config/V2/Config.gen.cs',
+        './BililiveRecorder.Cli/Configure/ConfigInstructions.gen.cs',
+        // './BililiveRecorder.Web.Schemas/Types/Config.gen.cs'
+    ],
+    {
+        cwd: resolve(baseDirectory, "..")
+    })
 
 format.stdout.on('data', function (data) {
     stdout.write('[dotnet-format] ' + data.toString());

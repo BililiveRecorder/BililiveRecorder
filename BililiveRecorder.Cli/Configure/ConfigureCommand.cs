@@ -48,12 +48,10 @@ namespace BililiveRecorder.Cli.Configure
                         DeleteRoom(config);
                         break;
                     case RootMenuSelection.SetRoomConfig:
-                        // TODO
-                        AnsiConsole.MarkupLine("[bold red]Not Implemented Yet[/]");
+                        SetRoomConfig(config);
                         break;
                     case RootMenuSelection.SetGlobalConfig:
-                        // TODO
-                        AnsiConsole.MarkupLine("[bold red]Not Implemented Yet[/]");
+                        SetGlobalConfig(config);
                         break;
                     case RootMenuSelection.SetJsonSchema:
                         SetJsonSchema(config);
@@ -68,6 +66,73 @@ namespace BililiveRecorder.Cli.Configure
                     default:
                         break;
                 }
+            }
+        }
+
+        private static void SetRoomConfig(ConfigV2 config)
+        {
+            if (config.Rooms.Count < 1)
+            {
+                AnsiConsole.MarkupLine("[red]No room avaiable[/]");
+                return;
+            }
+            RoomConfig room;
+            if (config.Rooms.Count == 1)
+            {
+                room = config.Rooms[0];
+            }
+            else
+            {
+                room = AnsiConsole.Prompt(new SelectionPrompt<RoomConfig>()
+                    .UseConverter(r => r.RoomId.ToString())
+                    .PageSize(15)
+                    .MoreChoicesText("[grey](Move up and down to reveal more rooms)[/]")
+                    .AddChoices(config.Rooms));
+            }
+
+            while (true)
+            {
+                var selection = PromptEnumSelection<RoomConfigProperties>();
+                AnsiConsole.Clear();
+                if (selection == RoomConfigProperties.Exit)
+                    return;
+
+                var instruction = ConfigInstructions.RoomConfig[selection];
+
+                if (instruction.CanBeOptional)
+                {
+                    if (AnsiConsole.Confirm("Use default settings?", defaultValue: false))
+                    {
+                        instruction.UseDefaultValue(room);
+                        continue;
+                    }
+                }
+
+                instruction.PromptForCustomValue(room);
+            }
+        }
+
+        private static void SetGlobalConfig(ConfigV2 config)
+        {
+            while (true)
+            {
+                var selection = PromptEnumSelection<GlobalConfigProperties>();
+                AnsiConsole.Clear();
+                if (selection == GlobalConfigProperties.Exit)
+                    return;
+
+                var instruction = ConfigInstructions.GlobalConfig[selection];
+
+                if (instruction.CanBeOptional)
+                {
+                    if (AnsiConsole.Confirm("Use default settings?", defaultValue: false))
+                    {
+                        instruction.UseDefaultValue(config.Global);
+                        continue;
+                    }
+                }
+
+                instruction.PromptForCustomValue(config.Global);
             }
         }
 
@@ -192,9 +257,9 @@ namespace BililiveRecorder.Cli.Configure
 
         private static string EnumToDescriptionConverter<T>(T value) where T : struct, Enum
         {
-            var type = typeof(T);
-            var attrs = type.GetMember(Enum.GetName(type, value)!)[0].GetCustomAttributes(typeof(DescriptionAttribute), false);
-            return (attrs.Length > 0) ? ((DescriptionAttribute)attrs[0]).Description : string.Empty;
+            var name = Enum.GetName(typeof(T), value)!;
+            var attrs = typeof(T).GetMember(name)[0].GetCustomAttributes(typeof(DescriptionAttribute), false);
+            return (attrs.Length > 0) ? ((DescriptionAttribute)attrs[0]).Description : name;
         }
 
         private static T PromptEnumSelection<T>() where T : struct, Enum => AnsiConsole.Prompt(new SelectionPrompt<T>().AddChoices(Enum.GetValues<T>()).UseConverter(EnumToDescriptionConverter));
