@@ -308,6 +308,10 @@
   <data name="RoomListPage_Menu_File_SaveConfig" xml:space="preserve">
     <value>儲存設定</value>
   </data>
+  
+  
+  
+  
   <data name="RoomListPage_Menu_Sort_Default" xml:space="preserve">
     <value>不排序</value>
   </data>
