@@ -229,26 +229,20 @@ namespace BililiveRecorder.Cli.Configure
 
         private static bool FindConfig(string path, [NotNullWhen(true)] out ConfigV2? config, out string fullPath)
         {
-            if (File.Exists(path))
-            {
-                fullPath = Path.GetFullPath(path);
-                goto readFile;
-            }
-            else if (Directory.Exists(path))
+            if (Directory.Exists(path))
             {
                 fullPath = Path.GetFullPath(Path.Combine(path, ConfigParser.CONFIG_FILE_NAME));
-                goto readFile;
             }
             else
             {
-                AnsiConsole.MarkupLine("[red]Path does not exist.[/]");
-                config = null;
-                fullPath = string.Empty;
-                return false;
+                fullPath = Path.GetFullPath(path);
             }
 
-        readFile:
-            config = ConfigParser.LoadJson(File.ReadAllText(fullPath, Encoding.UTF8));
+            if (File.Exists(fullPath))
+                config = ConfigParser.LoadJson(File.ReadAllText(fullPath, Encoding.UTF8));
+            else
+                config = new ConfigV2();
+
             var result = config != null;
             if (!result)
                 AnsiConsole.MarkupLine("[red]Load failed.\nBroken or corrupted file, or no permission.[/]");
