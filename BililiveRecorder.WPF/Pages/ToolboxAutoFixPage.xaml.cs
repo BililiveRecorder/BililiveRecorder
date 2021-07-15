@@ -4,7 +4,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using BililiveRecorder.ToolBox;
-using BililiveRecorder.ToolBox.Commands;
+using BililiveRecorder.ToolBox.Tool.Analyze;
+using BililiveRecorder.ToolBox.Tool.Export;
+using BililiveRecorder.ToolBox.Tool.Fix;
 using BililiveRecorder.WPF.Controls;
 using Microsoft.WindowsAPICodePack.Dialogs;
 using Serilog;
@@ -141,7 +143,7 @@ namespace BililiveRecorder.WPF.Pages
             }
         }
 
-        private static void ShowErrorMessageBox<T>(CommandResponse<T> resp) where T : class
+        private static void ShowErrorMessageBox<T>(CommandResponse<T> resp) where T : IResponseData
         {
             var title = LocExtension.GetLocalizedValue<string>("BililiveRecorder.WPF:Strings:Toolbox_AutoFix_Error_Title");
             var type = LocExtension.GetLocalizedValue<string>("BililiveRecorder.WPF:Strings:Toolbox_AutoFix_Error_Type_" + resp.Status.ToString());
@@ -199,7 +201,7 @@ namespace BililiveRecorder.WPF.Pages
                     }
                     else
                     {
-                        this.analyzeResultDisplayArea.DataContext = resp.Result;
+                        this.analyzeResultDisplayArea.DataContext = resp.Data;
                     }
                 }
 

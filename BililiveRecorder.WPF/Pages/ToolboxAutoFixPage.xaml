@@ -12,7 +12,7 @@
     xmlns:local="clr-namespace:BililiveRecorder.WPF.Pages"
     xmlns:model="clr-namespace:BililiveRecorder.WPF.Models"
     xmlns:c="clr-namespace:BililiveRecorder.WPF.Converters"
-    xmlns:t="clr-namespace:BililiveRecorder.ToolBox.Commands;assembly=BililiveRecorder.ToolBox"
+    xmlns:t="clr-namespace:BililiveRecorder.ToolBox.Tool.Analyze;assembly=BililiveRecorder.ToolBox"
     xmlns:tr="clr-namespace:BililiveRecorder.ToolBox.ProcessingRules;assembly=BililiveRecorder.ToolBox"
     mc:Ignorable="d" DataContext="{x:Null}"
     d:DesignHeight="600" d:DesignWidth="900"
