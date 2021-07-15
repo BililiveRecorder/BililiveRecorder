@@ -121,6 +121,7 @@ module.exports = {
         "name": "RecordingQuality",
         "type": "string",
         "desc": "录制的直播画质 qn 值，逗号分割，靠前的优先",
-        "default": "\"10000\""
+        "default": "\"10000\"",
+        "nullable": true
     },]
 }

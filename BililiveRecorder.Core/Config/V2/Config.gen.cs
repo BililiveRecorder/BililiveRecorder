@@ -95,10 +95,10 @@ namespace BililiveRecorder.Core.Config.V2
         /// <summary>
         /// 录制的直播画质 qn 值，逗号分割，靠前的优先
         /// </summary>
-        public string RecordingQuality { get => this.GetPropertyValue<string>(); set => this.SetPropertyValue(value); }
+        public string? RecordingQuality { get => this.GetPropertyValue<string>(); set => this.SetPropertyValue(value); }
         public bool HasRecordingQuality { get => this.GetPropertyHasValue(nameof(this.RecordingQuality)); set => this.SetPropertyHasValue<string>(value, nameof(this.RecordingQuality)); }
         [JsonProperty(nameof(RecordingQuality)), EditorBrowsable(EditorBrowsableState.Never)]
-        public Optional<string> OptionalRecordingQuality { get => this.GetPropertyValueOptional<string>(nameof(this.RecordingQuality)); set => this.SetPropertyValueOptional(value, nameof(this.RecordingQuality)); }
+        public Optional<string?> OptionalRecordingQuality { get => this.GetPropertyValueOptional<string>(nameof(this.RecordingQuality)); set => this.SetPropertyValueOptional(value, nameof(this.RecordingQuality)); }
 
         /// <summary>
         /// 录制断开重连时间间隔 毫秒
@@ -328,10 +328,10 @@ namespace BililiveRecorder.Core.Config.V2
         /// <summary>
         /// 录制的直播画质 qn 值，逗号分割，靠前的优先
         /// </summary>
-        public string RecordingQuality { get => this.GetPropertyValue<string>(); set => this.SetPropertyValue(value); }
+        public string? RecordingQuality { get => this.GetPropertyValue<string>(); set => this.SetPropertyValue(value); }
         public bool HasRecordingQuality { get => this.GetPropertyHasValue(nameof(this.RecordingQuality)); set => this.SetPropertyHasValue<string>(value, nameof(this.RecordingQuality)); }
         [JsonProperty(nameof(RecordingQuality)), EditorBrowsable(EditorBrowsableState.Never)]
-        public Optional<string> OptionalRecordingQuality { get => this.GetPropertyValueOptional<string>(nameof(this.RecordingQuality)); set => this.SetPropertyValueOptional(value, nameof(this.RecordingQuality)); }
+        public Optional<string?> OptionalRecordingQuality { get => this.GetPropertyValueOptional<string>(nameof(this.RecordingQuality)); set => this.SetPropertyValueOptional(value, nameof(this.RecordingQuality)); }
 
     }
 
