@@ -650,6 +650,42 @@ namespace BililiveRecorder.WPF.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to 链接.
+        /// </summary>
+        public static string RoomListPage_Menu_Links {
+            get {
+                return ResourceManager.GetString("RoomListPage_Menu_Links", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 常见问题.
+        /// </summary>
+        public static string RoomListPage_Menu_Links_FAQ {
+            get {
+                return ResourceManager.GetString("RoomListPage_Menu_Links_FAQ", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 赞助.
+        /// </summary>
+        public static string RoomListPage_Menu_Links_Sponsor {
+            get {
+                return ResourceManager.GetString("RoomListPage_Menu_Links_Sponsor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 网站.
+        /// </summary>
+        public static string RoomListPage_Menu_Links_Website {
+            get {
+                return ResourceManager.GetString("RoomListPage_Menu_Links_Website", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to 不排序.
         /// </summary>
         public static string RoomListPage_Menu_Sort_Default {
