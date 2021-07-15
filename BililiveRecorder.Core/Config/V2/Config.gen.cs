@@ -1,7 +1,8 @@
 // ******************************
-//  GENERATED CODE, DO NOT EDIT.
-//  RUN FORMATTER AFTER GENERATE
+//  GENERATED CODE, DO NOT EDIT MANUALLY.
+//  SEE .tools/build_config.js
 // ******************************
+
 using System.ComponentModel;
 using HierarchicalPropertyDefault;
 using Newtonsoft.Json;
@@ -337,7 +338,7 @@ namespace BililiveRecorder.Core.Config.V2
 
     public sealed partial class DefaultConfig
     {
-        internal static readonly DefaultConfig Instance = new DefaultConfig();
+        public static readonly DefaultConfig Instance = new DefaultConfig();
         private DefaultConfig() { }
 
         public uint TimingStreamRetry => 6 * 1000;

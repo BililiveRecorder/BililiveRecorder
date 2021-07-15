@@ -135,7 +135,7 @@ namespace BililiveRecorder.Cli.Configure
             switch (selection)
             {
                 case JsonSchemaSelection.Default:
-                    config.DollarSignSchema = "https://raw.githubusercontent.com/Bililive/BililiveRecorder/dev-1.3/BililiveRecorder.Core/Config/V2/config.schema.json";
+                    config.DollarSignSchema = "https://raw.githubusercontent.com/Bililive/BililiveRecorder/dev-1.3/configV2.schema.json";
                     break;
                 case JsonSchemaSelection.Custom:
                     config.DollarSignSchema = AnsiConsole.Prompt(new TextPrompt<string>("[green]JSON Schema[/]:").AllowEmpty());

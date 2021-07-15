@@ -1,4 +1,4 @@
-module.exports = {
+export default {
     "global": [{
         "name": "TimingStreamRetry",
         "type": "uint",
@@ -70,13 +70,14 @@ module.exports = {
         "type": "int",
         "desc": "房间号",
         "default": "default",
-        "without_global": true
+        "without_global": true,
+        "web_readonly": true
     }, {
         "name": "AutoRecord",
         "type": "bool",
         "desc": "是否启用自动录制",
         "default": "default",
-        "without_global": true
+        "without_global": true,
     }, {
         "name": "RecordMode",
         "type": "RecordMode",
