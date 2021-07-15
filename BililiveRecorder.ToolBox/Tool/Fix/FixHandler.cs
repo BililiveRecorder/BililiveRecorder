@@ -17,37 +17,8 @@ using BililiveRecorder.ToolBox.ProcessingRules;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog;
 
-namespace BililiveRecorder.ToolBox.Commands
+namespace BililiveRecorder.ToolBox.Tool.Fix
 {
-    public class FixRequest : ICommandRequest<FixResponse>
-    {
-        public string Input { get; set; } = string.Empty;
-
-        public string OutputBase { get; set; } = string.Empty;
-    }
-
-    public class FixResponse
-    {
-        public string InputPath { get; set; } = string.Empty;
-
-        public string[] OutputPaths { get; set; } = Array.Empty<string>();
-
-        public bool NeedFix { get; set; }
-        public bool Unrepairable { get; set; }
-
-        public int OutputFileCount { get; set; }
-
-        public FlvStats? VideoStats { get; set; }
-        public FlvStats? AudioStats { get; set; }
-
-        public int IssueTypeOther { get; set; }
-        public int IssueTypeUnrepairable { get; set; }
-        public int IssueTypeTimestampJump { get; set; }
-        public int IssueTypeTimestampOffset { get; set; }
-        public int IssueTypeDecodingHeader { get; set; }
-        public int IssueTypeRepeatingData { get; set; }
-    }
-
     public class FixHandler : ICommandHandler<FixRequest, FixResponse>
     {
         private static readonly ILogger logger = Log.ForContext<FixHandler>();
@@ -115,9 +86,7 @@ namespace BililiveRecorder.ToolBox.Commands
                 var outputPaths = new List<string>();
                 IFlvTagWriter tagWriter;
                 if (xmlMode)
-                {
                     tagWriter = new FlvTagListWriter();
-                }
                 else
                 {
                     var targetProvider = new AutoFixFlvWriterTargetProvider(request.OutputBase);
@@ -170,7 +139,6 @@ namespace BililiveRecorder.ToolBox.Commands
                     logger.Information("Xml meta: {@Meta}", meta);
 
                 if (xmlMode)
-                {
                     await Task.Run(() =>
                     {
                         var w = (FlvTagListWriter)tagWriter;
@@ -195,7 +163,6 @@ namespace BililiveRecorder.ToolBox.Commands
                             }
                         }
                     });
-                }
 
                 if (cancellationToken.IsCancellationRequested)
                     return new CommandResponse<FixResponse> { Status = ResponseStatus.Cancelled };

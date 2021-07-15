@@ -10,19 +10,8 @@ using BililiveRecorder.Flv.Parser;
 using BililiveRecorder.Flv.Xml;
 using Serilog;
 
-namespace BililiveRecorder.ToolBox.Commands
+namespace BililiveRecorder.ToolBox.Tool.Export
 {
-    public class ExportRequest : ICommandRequest<ExportResponse>
-    {
-        public string Input { get; set; } = string.Empty;
-
-        public string Output { get; set; } = string.Empty;
-    }
-
-    public class ExportResponse
-    {
-    }
-
     public class ExportHandler : ICommandHandler<ExportRequest, ExportResponse>
     {
         private static readonly ILogger logger = Log.ForContext<ExportHandler>();

@@ -2,7 +2,9 @@ using System;
 using System.CommandLine;
 using System.CommandLine.Invocation;
 using System.Threading.Tasks;
-using BililiveRecorder.ToolBox.Commands;
+using BililiveRecorder.ToolBox.Tool.Analyze;
+using BililiveRecorder.ToolBox.Tool.Export;
+using BililiveRecorder.ToolBox.Tool.Fix;
 using Newtonsoft.Json;
 
 namespace BililiveRecorder.ToolBox
