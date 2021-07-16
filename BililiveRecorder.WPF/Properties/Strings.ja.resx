@@ -306,6 +306,18 @@
   <data name="RoomListPage_Menu_File_SaveConfig" xml:space="preserve">
     <value>設定を保存</value>
   </data>
+  <data name="RoomListPage_Menu_Links" xml:space="preserve">
+    <value>リンク</value>
+  </data>
+  <data name="RoomListPage_Menu_Links_FAQ" xml:space="preserve">
+    <value>よくある質問</value>
+  </data>
+  <data name="RoomListPage_Menu_Links_Sponsor" xml:space="preserve">
+    <value>スポンサー</value>
+  </data>
+  <data name="RoomListPage_Menu_Links_Website" xml:space="preserve">
+    <value>ウェブサイト</value>
+  </data>
   <data name="RoomListPage_Menu_Sort_Default" xml:space="preserve">
     <value>並べて表示しない</value>
   </data>
