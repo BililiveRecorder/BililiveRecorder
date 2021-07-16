@@ -31,6 +31,7 @@ namespace BililiveRecorder.WPF.Pages
         internal static string? CommandArgumentRecorderPath = null;
         internal static bool CommandArgumentFirstRun = false; // TODO
         internal static bool CommandArgumentAskPath = false;
+        internal static bool CommandArgumentHide = false;
 
         private readonly Dictionary<string, Type> PageMap = new Dictionary<string, Type>();
         private readonly WorkDirectoryLoader workDirectoryLoader = new WorkDirectoryLoader();
@@ -242,6 +243,9 @@ namespace BililiveRecorder.WPF.Pages
                         _ = this.Dispatcher.BeginInvoke(DispatcherPriority.Normal, method: new Action(() =>
                         {
                             this.RoomListPageNavigationViewItem.IsSelected = true;
+
+                            if (CommandArgumentHide)
+                                Application.Current.MainWindow.WindowState = WindowState.Minimized;
                         }));
                     });
 

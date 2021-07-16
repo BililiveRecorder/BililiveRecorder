@@ -100,9 +100,10 @@ namespace BililiveRecorder.WPF
             var run = new Command("run", "Run BililiveRecorder at path")
             {
                 new Argument<string?>("path", () => null, "Work directory"),
-                new Option<bool>("--ask-path", "Ask path in GUI even when \"don't ask again\" is selected before.")
+                new Option<bool>("--ask-path", "Ask path in GUI even when \"don't ask again\" is selected before."),
+                new Option<bool>("--hide", "Minimize to tray")
             };
-            run.Handler = CommandHandler.Create((string? path, bool askPath) => Commands.RunWpfHandler(path, false, askPath));
+            run.Handler = CommandHandler.Create((string? path, bool askPath, bool hide) => Commands.RunWpfHandler(path: path, squirrelFirstrun: false, askPath: askPath, hide: hide));
 
             var root = new RootCommand("")
             {
@@ -113,17 +114,18 @@ namespace BililiveRecorder.WPF
                 },
                 new ToolCommand(),
             };
-            root.Handler = CommandHandler.Create((bool squirrelFirstrun) => Commands.RunWpfHandler(null, squirrelFirstrun, false));
+            root.Handler = CommandHandler.Create((bool squirrelFirstrun) => Commands.RunWpfHandler(path: null, squirrelFirstrun: squirrelFirstrun, askPath: false, hide: false));
             return root;
         }
 
         private static class Commands
         {
-            internal static int RunWpfHandler(string? path, bool squirrelFirstrun, bool askPath)
+            internal static int RunWpfHandler(string? path, bool squirrelFirstrun, bool askPath, bool hide)
             {
                 Pages.RootPage.CommandArgumentRecorderPath = path;
                 Pages.RootPage.CommandArgumentFirstRun = squirrelFirstrun;
                 Pages.RootPage.CommandArgumentAskPath = askPath;
+                Pages.RootPage.CommandArgumentHide = hide;
                 return CODE__WPF;
             }
 
