@@ -308,6 +308,18 @@ It should be close to 100% and the color will be green</value>
   <data name="RoomListPage_Menu_File_SaveConfig" xml:space="preserve">
     <value>Save Settings</value>
   </data>
+  <data name="RoomListPage_Menu_Links" xml:space="preserve">
+    <value>Links</value>
+  </data>
+  <data name="RoomListPage_Menu_Links_FAQ" xml:space="preserve">
+    <value>FAQ</value>
+  </data>
+  <data name="RoomListPage_Menu_Links_Sponsor" xml:space="preserve">
+    <value>Sponsor</value>
+  </data>
+  <data name="RoomListPage_Menu_Links_Website" xml:space="preserve">
+    <value>Website</value>
+  </data>
   <data name="RoomListPage_Menu_Sort_Default" xml:space="preserve">
     <value>Not Sorted</value>
   </data>
