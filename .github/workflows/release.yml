@@ -67,15 +67,6 @@ jobs:
           asset_path: BililiveRecorder.WPF/bin/${{ matrix.build_configuration }}/BililiveRecorder-WPF-Portable.zip
           asset_name: BililiveRecorder-WPF-Portable.zip
           asset_content_type: application/zip
-      - name: Upload Installer
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ github.event.release.upload_url }}
-          asset_path: BililiveRecorder.WPF\bin\SquirrelReleases\Setup.exe
-          asset_name: BililiveRecorder-WPF-Setup.exe
-          asset_content_type: application/vnd.microsoft.portable-executable
 
   release_cli:
     needs: test

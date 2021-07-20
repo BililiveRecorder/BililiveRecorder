@@ -381,9 +381,7 @@
     </GetAssemblyIdentity>
     <PropertyGroup>
       <NupkgReleaseDir>bin\NupkgReleases\</NupkgReleaseDir>
-      <SquirrelReleaseDir>bin\SquirrelReleases\</SquirrelReleaseDir>
     </PropertyGroup>
     <Exec Command="$(PkgNuGet_CommandLine)\tools\NuGet pack BililiveRecorder.nuspec -Version %(myAssemblyInfo.Version) -Properties Configuration=Release -OutputDirectory $(NupkgReleaseDir) -BasePath $(OutDir) -NonInteractive -ForceEnglishOutput" />
-    <Exec Command="$(SquirrelToolsPath)\squirrel --releasify $(NupkgReleaseDir)\BililiveRecorder.$([System.Version]::Parse(%(myAssemblyInfo.Version)).ToString(3)).nupkg --releaseDir=$(SquirrelReleaseDir) --framework-version net472 --no-msi" />
   </Target>
 </Project>
