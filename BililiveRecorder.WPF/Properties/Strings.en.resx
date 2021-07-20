@@ -342,7 +342,7 @@ It should be close to 100% and the color will be green</value>
     <value>Advanced Settings</value>
   </data>
   <data name="RootPage_NavigationViewItem_AnnouncementPage" xml:space="preserve">
-    <value>Announcement</value>
+    <value>Announcements</value>
   </data>
   <data name="RootPage_NavigationViewItem_LogPage" xml:space="preserve">
     <value>Logs</value>
@@ -358,8 +358,8 @@ It should be close to 100% and the color will be green</value>
   </data>
   <data name="Settings_AdvancedPage_Warning" xml:space="preserve">
     <value>Note: General users usually don't need to nor should modify settings shown below.
-Modification of Timing might get you IP blocked, and/or unable to start recording in time.
-(Also those settings are not translated because those are hard to translate and I'm lazy)</value>
+Modification of timing might get your IP blocked, and/or unable to start recording in time.
+(Also those settings are not translated because those are hard to translate and I'm lazy.)</value>
   </data>
   <data name="Settings_Danmaku_FlushInterval" xml:space="preserve">
     <value>Number of messages needed to trigger disk flush</value>
