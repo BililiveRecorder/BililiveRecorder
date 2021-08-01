@@ -196,7 +196,7 @@
   <data name="LogPage_RightClickCopyToolTip" xml:space="preserve">
     <value>右クリックでこの行がコピーできる</value>
   </data>
-  <data name="Log_Detail" xml:space="preserve">
+  <data name="Log_Details" xml:space="preserve">
     <value>詳細</value>
   </data>
   <data name="Log_Level" xml:space="preserve">

@@ -196,7 +196,7 @@
   <data name="LogPage_RightClickCopyToolTip" xml:space="preserve">
     <value>點擊右鍵複製此行日誌</value>
   </data>
-  <data name="Log_Detail" xml:space="preserve">
+  <data name="Log_Details" xml:space="preserve">
     <value>詳細信息</value>
   </data>
   <data name="Log_Level" xml:space="preserve">
