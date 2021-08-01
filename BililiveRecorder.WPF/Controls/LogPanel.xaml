@@ -1,14 +1,19 @@
-<UserControl x:Class="BililiveRecorder.WPF.Controls.LogPanel"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:BililiveRecorder.WPF.Controls"
-             xmlns:models="clr-namespace:BililiveRecorder.WPF.Models"
-             mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
-    <ListView ItemsSource="{Binding}" SizeChanged="ListView_SizeChanged"
-              VirtualizingPanel.VirtualizationMode="Recycling" 
+<UserControl
+    x:Class="BililiveRecorder.WPF.Controls.LogPanel"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:l="https://github.com/XAMLMarkupExtensions/WPFLocalizationExtension"
+    l:LocalizeDictionary.DesignCulture=""
+    l:ResxLocalizationProvider.DefaultAssembly="BililiveRecorder.WPF"
+    l:ResxLocalizationProvider.DefaultDictionary="Strings"
+    xmlns:local="clr-namespace:BililiveRecorder.WPF.Controls"
+    xmlns:models="clr-namespace:BililiveRecorder.WPF.Models"
+    mc:Ignorable="d"
+    d:DesignHeight="450" d:DesignWidth="800">
+    <ListView x:Name="logView" ItemsSource="{Binding}" SizeChanged="ListView_SizeChanged"
+              VirtualizingPanel.VirtualizationMode="Recycling"
               ScrollViewer.HorizontalScrollBarVisibility="Disabled">
         <ListView.DataContext>
             <models:LogModel/>
@@ -22,13 +27,22 @@
         </ListView.Resources>
         <ListView.View>
             <GridView AllowsColumnReorder="False">
-                <GridViewColumn DisplayMemberBinding="{Binding Timestamp,StringFormat=HH:mm:ss.ffff}"/>
-                <GridViewColumn DisplayMemberBinding="{Binding Level}"/>
-                <GridViewColumn DisplayMemberBinding="{Binding RoomId}"/>
-                <GridViewColumn>
+                <GridViewColumn Header="{l:Loc LogPanel_Header_Timestamp}" DisplayMemberBinding="{Binding Timestamp,StringFormat=HH:mm:ss.ffff}"/>
+                <GridViewColumn Header="{l:Loc LogPanel_Header_Level}">
                     <GridViewColumn.CellTemplate>
                         <DataTemplate>
-                            <TextBlock Text="{Binding Message}" TextWrapping="Wrap"/>
+                            <TextBlock l:ResxLocalizationProvider.DefaultDictionary="Strings"
+                                       Text="{l:Loc {Binding Path=Level, StringFormat=LogPanel_Level_{0}}}"
+                                       TextWrapping="NoWrap"/>
+                        </DataTemplate>
+                    </GridViewColumn.CellTemplate>
+                </GridViewColumn>
+                <GridViewColumn Header="{l:Loc LogPanel_Header_RoomId}" DisplayMemberBinding="{Binding RoomId}"/>
+                <GridViewColumn Header="{l:Loc LogPanel_Header_Message}">
+                    <GridViewColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock l:ResxLocalizationProvider.DefaultDictionary="Strings"
+                                       Text="{Binding Message}" TextWrapping="Wrap"/>
                         </DataTemplate>
                     </GridViewColumn.CellTemplate>
                 </GridViewColumn>

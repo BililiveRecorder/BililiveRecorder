@@ -11,7 +11,7 @@ namespace BililiveRecorder.WPF
 {
     internal class WpfLogEventSink : ILogEventSink
     {
-        private const int MAX_LINE = 60;
+        private const int MAX_LINE = 150;
         internal static object _lock = new object();
         internal static ObservableCollection<LogModel> Logs = new ObservableCollection<LogModel>();
 
@@ -26,16 +26,7 @@ namespace BililiveRecorder.WPF
             var m = new LogModel
             {
                 Timestamp = logEvent.Timestamp,
-                Level = logEvent.Level switch
-                {
-                    LogEventLevel.Verbose => "Verbose",
-                    LogEventLevel.Debug => "Debug",
-                    LogEventLevel.Information => "Info",
-                    LogEventLevel.Warning => "Warn",
-                    LogEventLevel.Error => "Error",
-                    LogEventLevel.Fatal => "Fatal",
-                    _ => string.Empty,
-                },
+                Level = logEvent.Level,
                 Message = msg,
             };
 
@@ -69,7 +60,7 @@ namespace BililiveRecorder.WPF
         {
             public DateTimeOffset Timestamp { get; set; }
 
-            public string Level { get; set; } = string.Empty;
+            public LogEventLevel Level { get; set; }
 
             public string RoomId { get; set; } = string.Empty;
 

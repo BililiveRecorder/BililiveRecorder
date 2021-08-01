@@ -196,6 +196,36 @@
   <data name="LogPage_RightClickCopyToolTip" xml:space="preserve">
     <value>右键点击可以复制单行日志</value>
   </data>
+  <data name="LogPanel_Header_Level" xml:space="preserve">
+    <value>级别</value>
+  </data>
+  <data name="LogPanel_Header_Message" xml:space="preserve">
+    <value>消息</value>
+  </data>
+  <data name="LogPanel_Header_RoomId" xml:space="preserve">
+    <value>房间号</value>
+  </data>
+  <data name="LogPanel_Header_Timestamp" xml:space="preserve">
+    <value>时间</value>
+  </data>
+  <data name="LogPanel_Level_Debug" xml:space="preserve">
+    <value>调试</value>
+  </data>
+  <data name="LogPanel_Level_Error" xml:space="preserve">
+    <value>错误</value>
+  </data>
+  <data name="LogPanel_Level_Fatal" xml:space="preserve">
+    <value>致命</value>
+  </data>
+  <data name="LogPanel_Level_Information" xml:space="preserve">
+    <value>信息</value>
+  </data>
+  <data name="LogPanel_Level_Verbose" xml:space="preserve">
+    <value>详细</value>
+  </data>
+  <data name="LogPanel_Level_Warning" xml:space="preserve">
+    <value>警告</value>
+  </data>
   <data name="RoomCard_ClipButton_Tooltip" xml:space="preserve">
     <value>回放剪辑（正在处理中的数量）</value>
     <comment>This feature is off by default, and will be removed in the future.</comment>

@@ -341,6 +341,96 @@ namespace BililiveRecorder.WPF.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to 级别.
+        /// </summary>
+        public static string LogPanel_Header_Level {
+            get {
+                return ResourceManager.GetString("LogPanel_Header_Level", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 消息.
+        /// </summary>
+        public static string LogPanel_Header_Message {
+            get {
+                return ResourceManager.GetString("LogPanel_Header_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 房间号.
+        /// </summary>
+        public static string LogPanel_Header_RoomId {
+            get {
+                return ResourceManager.GetString("LogPanel_Header_RoomId", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 时间.
+        /// </summary>
+        public static string LogPanel_Header_Timestamp {
+            get {
+                return ResourceManager.GetString("LogPanel_Header_Timestamp", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 调试.
+        /// </summary>
+        public static string LogPanel_Level_Debug {
+            get {
+                return ResourceManager.GetString("LogPanel_Level_Debug", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 错误.
+        /// </summary>
+        public static string LogPanel_Level_Error {
+            get {
+                return ResourceManager.GetString("LogPanel_Level_Error", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 致命.
+        /// </summary>
+        public static string LogPanel_Level_Fatal {
+            get {
+                return ResourceManager.GetString("LogPanel_Level_Fatal", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 信息.
+        /// </summary>
+        public static string LogPanel_Level_Information {
+            get {
+                return ResourceManager.GetString("LogPanel_Level_Information", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 详细.
+        /// </summary>
+        public static string LogPanel_Level_Verbose {
+            get {
+                return ResourceManager.GetString("LogPanel_Level_Verbose", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 警告.
+        /// </summary>
+        public static string LogPanel_Level_Warning {
+            get {
+                return ResourceManager.GetString("LogPanel_Level_Warning", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to 回放剪辑（正在处理中的数量）.
         /// </summary>
         public static string RoomCard_ClipButton_Tooltip {

@@ -1,5 +1,8 @@
+using System;
+using System.Collections.Specialized;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
 
 #nullable enable
 namespace BililiveRecorder.WPF.Controls
@@ -12,6 +15,22 @@ namespace BililiveRecorder.WPF.Controls
         public LogPanel()
         {
             this.InitializeComponent();
+            ((INotifyCollectionChanged)this.logView.Items).CollectionChanged += this.LogView_CollectionChanged;
+        }
+
+        private void LogView_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            try
+            {
+                if (!this.logView.IsMouseOver && VisualTreeHelper.GetChildrenCount(this.logView) > 0)
+                {
+                    var border = (Border)VisualTreeHelper.GetChild(this.logView, 0);
+                    var scrollViewer = (ScrollViewer)VisualTreeHelper.GetChild(border, 0);
+                    scrollViewer.ScrollToBottom();
+                }
+            }
+            catch (Exception)
+            { }
         }
 
         private void ListView_SizeChanged(object sender, SizeChangedEventArgs e)
