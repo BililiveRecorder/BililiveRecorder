@@ -22,10 +22,10 @@
         </ListView.Resources>
         <ListView.View>
             <GridView AllowsColumnReorder="False">
-                <GridViewColumn DisplayMemberBinding="{Binding Timestamp,StringFormat=HH:mm:ss.ffff}"/>
-                <GridViewColumn DisplayMemberBinding="{Binding Level}"/>
-                <GridViewColumn DisplayMemberBinding="{Binding RoomId}"/>
-                <GridViewColumn>
+                <GridViewColumn DisplayMemberBinding="{Binding Timestamp,StringFormat=HH:mm:ss.ffff}" Header="{l:Loc Log_Timestamp}" />
+                <GridViewColumn DisplayMemberBinding="{Binding Level}" Header="{l:Loc Log_Level}"/>
+                <GridViewColumn DisplayMemberBinding="{Binding RoomId}" Header="{l:Loc Log_RommId}"/>
+                <GridViewColumn Header="{l:Loc Log_Details}">
                     <GridViewColumn.CellTemplate>
                         <DataTemplate>
                             <TextBlock Text="{Binding Message}" TextWrapping="Wrap"/>

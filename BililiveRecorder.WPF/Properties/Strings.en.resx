@@ -196,6 +196,18 @@ This software is open source and licensed under the GNU General Public License V
   <data name="LogPage_RightClickCopyToolTip" xml:space="preserve">
     <value>Right click to copy this line</value>
   </data>
+  <data name="Log_Details" xml:space="preserve">
+    <value>Details</value>
+  </data>
+  <data name="Log_Level" xml:space="preserve">
+    <value>Level</value>
+  </data>
+  <data name="Log_RommId" xml:space="preserve">
+    <value>Room ID</value>
+  </data>
+  <data name="Log_Timestamp" xml:space="preserve">
+    <value>Timestamp</value>
+  </data>
   <data name="RoomCard_ClipButton_Tooltip" xml:space="preserve">
     <value>Clip (Processing)</value>
     <comment>This feature is off by default, and will be removed in the future.</comment>

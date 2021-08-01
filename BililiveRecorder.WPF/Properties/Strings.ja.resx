@@ -196,6 +196,18 @@
   <data name="LogPage_RightClickCopyToolTip" xml:space="preserve">
     <value>右クリックでこの行がコピーできる</value>
   </data>
+  <data name="Log_Detail" xml:space="preserve">
+    <value>詳細</value>
+  </data>
+  <data name="Log_Level" xml:space="preserve">
+    <value>レベル</value>
+  </data>
+  <data name="Log_RommId" xml:space="preserve">
+    <value>ルーム番号</value>
+  </data>
+  <data name="Log_Timestamp" xml:space="preserve">
+    <value>タイムスタンプ</value>
+  </data>
   <data name="RoomCard_ClipButton_Tooltip" xml:space="preserve">
     <value>プレーバッククリップ（処理途中のファイル数）</value>
     <comment>This feature is off by default, and will be removed in the future.</comment>
