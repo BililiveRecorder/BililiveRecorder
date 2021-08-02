@@ -75,8 +75,16 @@ namespace BililiveRecorder.Core
         {
             roomConfig.SetParent(this.Config.Global);
             var room = this.roomFactory.CreateRoom(roomConfig, initDelayFactor);
+
+            room.RecordSessionStarted += this.Room_RecordSessionStarted;
+            room.RecordSessionEnded += this.Room_RecordSessionEnded;
+            room.RecordFileOpening += this.Room_RecordFileOpening;
+            room.RecordFileClosed += this.Room_RecordFileClosed;
+            room.NetworkingStats += this.Room_NetworkingStats;
+            room.RecordingStats += this.Room_RecordingStats;
+            room.PropertyChanged += this.Room_PropertyChanged;
+
             this.roomCollection.Add(room);
-            this.AddEventSubscription(room);
         }
 
         public void RemoveRoom(IRoom room)
@@ -85,7 +93,18 @@ namespace BililiveRecorder.Core
             {
                 if (this.roomCollection.Remove(room))
                 {
-                    this.RemoveEventSubscription(room);
+                    // 如果提前 detach 会导致 FileClosed SessionEnded 收不到
+                    // 目前没有在各种 event 里再使用 room object
+                    // 如果以后要使用 IRecorder 上的 event 再重新捋一遍防止出现奇怪 bug
+                    // 此处不会导致内存泄漏
+
+                    // room.RecordSessionStarted -= this.Room_RecordSessionStarted;
+                    // room.RecordSessionEnded -= this.Room_RecordSessionEnded;
+                    // room.RecordFileOpening -= this.Room_RecordFileOpening;
+                    // room.RecordFileClosed -= this.Room_RecordFileClosed;
+                    // room.RecordingStats -= this.Room_RecordingStats;
+                    // room.PropertyChanged -= this.Room_PropertyChanged;
+
                     this.logger.Debug("RemoveRoom {RoomId}", room.RoomConfig.RoomId);
                     room.Dispose();
                     this.SaveConfig();
@@ -100,17 +119,6 @@ namespace BililiveRecorder.Core
         }
 
         #region Events
-
-        private void AddEventSubscription(IRoom room)
-        {
-            room.RecordSessionStarted += this.Room_RecordSessionStarted;
-            room.RecordSessionEnded += this.Room_RecordSessionEnded;
-            room.RecordFileOpening += this.Room_RecordFileOpening;
-            room.RecordFileClosed += this.Room_RecordFileClosed;
-            room.NetworkingStats += this.Room_NetworkingStats;
-            room.RecordingStats += this.Room_RecordingStats;
-            room.PropertyChanged += this.Room_PropertyChanged;
-        }
 
         private void Room_NetworkingStats(object sender, NetworkingStatsEventArgs e)
         {
@@ -157,16 +165,6 @@ namespace BililiveRecorder.Core
         {
             // TODO
             // throw new NotImplementedException();
-        }
-
-        private void RemoveEventSubscription(IRoom room)
-        {
-            room.RecordSessionStarted -= this.Room_RecordSessionStarted;
-            room.RecordSessionEnded -= this.Room_RecordSessionEnded;
-            room.RecordFileOpening -= this.Room_RecordFileOpening;
-            room.RecordFileClosed -= this.Room_RecordFileClosed;
-            room.RecordingStats -= this.Room_RecordingStats;
-            room.PropertyChanged -= this.Room_PropertyChanged;
         }
 
         #endregion
