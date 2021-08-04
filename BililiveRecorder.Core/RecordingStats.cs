@@ -14,7 +14,7 @@ namespace BililiveRecorder.Core
         private double networkMbps;
         private long totalInputBytes;
         private long totalOutputBytes;
-        private double duraionRatio;
+        private double durationRatio;
 
         public RecordingStats()
         {
@@ -25,7 +25,7 @@ namespace BililiveRecorder.Core
         public TimeSpan SessionMaxTimestamp { get => this.sessionMaxTimestamp; set => this.SetField(ref this.sessionMaxTimestamp, value); }
         public TimeSpan FileMaxTimestamp { get => this.fileMaxTimestamp; set => this.SetField(ref this.fileMaxTimestamp, value); }
 
-        public double DuraionRatio { get => this.duraionRatio; set => this.SetField(ref this.duraionRatio, value); }
+        public double DurationRatio { get => this.durationRatio; set => this.SetField(ref this.durationRatio, value); }
 
         public long TotalInputBytes { get => this.totalInputBytes; set => this.SetField(ref this.totalInputBytes, value); }
         public long TotalOutputBytes { get => this.totalOutputBytes; set => this.SetField(ref this.totalOutputBytes, value); }
@@ -37,7 +37,7 @@ namespace BililiveRecorder.Core
             this.SessionDuration = TimeSpan.Zero;
             this.SessionMaxTimestamp = TimeSpan.Zero;
             this.FileMaxTimestamp = TimeSpan.Zero;
-            this.DuraionRatio = double.NaN;
+            this.DurationRatio = double.NaN;
             this.TotalInputBytes = 0;
             this.TotalOutputBytes = 0;
             this.NetworkMbps = 0;

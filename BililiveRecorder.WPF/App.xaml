@@ -30,14 +30,14 @@
                           xmlns:core="clr-namespace:BililiveRecorder.Core;assembly=BililiveRecorder.Core"
                           DataType="{x:Type core:Room}">
                 <Grid l:ResxLocalizationProvider.DefaultDictionary="Strings">
-                    <TextBlock Visibility="{Binding Stats.DuraionRatio,Converter={StaticResource IsNaNToVisibilityCollapsedConverter}}" 
+                    <TextBlock Visibility="{Binding Stats.DurationRatio,Converter={StaticResource IsNaNToVisibilityCollapsedConverter}}" 
                                TextAlignment="Center" Text="{l:Loc RoomCard_Status_SpeedIndicator_NoData}"/>
-                    <StackPanel Visibility="{Binding Stats.DuraionRatio,Converter={StaticResource InvertIsNaNToVisibilityCollapsedConverter}}">
+                    <StackPanel Visibility="{Binding Stats.DurationRatio,Converter={StaticResource InvertIsNaNToVisibilityCollapsedConverter}}">
                         <TextBlock>
                             <TextBlock.Text>
                                 <MultiBinding Converter="{l:StringFormatConverter}">
                                     <l:BLoc Key="RoomCard_Status_SpeedIndicator_SpeedInPercentage"/>
-                                    <Binding Path="Stats.DuraionRatio" Mode="OneWay"/>
+                                    <Binding Path="Stats.DurationRatio" Mode="OneWay"/>
                                 </MultiBinding>
                             </TextBlock.Text>
                         </TextBlock>

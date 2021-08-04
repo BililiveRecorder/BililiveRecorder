@@ -23,7 +23,7 @@ namespace BililiveRecorder.Core.ProcessingRules
         public long TotalOutputVideoByteCount { get; private set; }
         public long TotalOutputAudioByteCount { get; private set; }
 
-        public long CurrnetFileSize { get; private set; } = 13;
+        public long CurrentFileSize { get; private set; } = 13;
 
         public int SumOfMaxTimestampOfClosedFiles { get; private set; }
         public int CurrentFileMaxTimestamp { get; private set; }
@@ -84,7 +84,7 @@ namespace BililiveRecorder.Core.ProcessingRules
             var now = DateTimeOffset.UtcNow;
             e.PassedTime = (now - this.LastWriteTime).TotalSeconds;
             this.LastWriteTime = now;
-            e.DuraionRatio = e.AddedDuration / e.PassedTime;
+            e.DurationRatio = e.AddedDuration / e.PassedTime;
 
             StatsUpdated?.Invoke(this, e);
 
@@ -105,7 +105,7 @@ namespace BililiveRecorder.Core.ProcessingRules
                     e.TotalOutputAudioByteCount = this.TotalOutputAudioByteCount += e.OutputAudioByteCount =
                         dataActions.ToStructEnumerable().Sum(ref LinqFunctions.SumSizeOfAudioData, x => x, x => x);
 
-                    e.CurrnetFileSize = this.CurrnetFileSize += e.OutputVideoByteCount + e.OutputAudioByteCount;
+                    e.CurrentFileSize = this.CurrentFileSize += e.OutputVideoByteCount + e.OutputAudioByteCount;
 
                     foreach (var action in dataActions)
                     {
@@ -125,7 +125,7 @@ namespace BililiveRecorder.Core.ProcessingRules
             {
                 this.SumOfMaxTimestampOfClosedFiles += this.CurrentFileMaxTimestamp;
                 this.CurrentFileMaxTimestamp = 0;
-                this.CurrnetFileSize = 13;
+                this.CurrentFileSize = 13;
             }
         }
     }

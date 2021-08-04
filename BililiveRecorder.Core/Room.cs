@@ -350,7 +350,7 @@ namespace BililiveRecorder.Core
             this.Stats.SessionDuration = TimeSpan.FromSeconds(Math.Round(diff.TotalSeconds));
             this.Stats.FileMaxTimestamp = TimeSpan.FromMilliseconds(e.FileMaxTimestamp);
             this.Stats.SessionMaxTimestamp = TimeSpan.FromMilliseconds(e.SessionMaxTimestamp);
-            this.Stats.DuraionRatio = e.DuraionRatio;
+            this.Stats.DurationRatio = e.DurationRatio;
 
             this.Stats.TotalInputBytes = e.TotalInputVideoByteCount + e.TotalInputAudioByteCount;
             this.Stats.TotalOutputBytes = e.TotalOutputVideoByteCount + e.TotalOutputAudioByteCount;
