@@ -104,177 +104,558 @@
   <data name="About_Copyright" xml:space="preserve">
     <value>喵喵喵喵</value>
   </data>
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
+  <data name="About_LibrariesUsed" xml:space="preserve">
+    <value>喵喵喵喵</value>
+  </data>
+  <data name="About_License" xml:space="preserve">
+    <value>喵喵喵喵喵喵喵喵~
+喵喵喵喵喵喵喵喵~喵喵喵喵喵喵喵喵喵喵喵喵喵喵喵（喵喵喵喵喵）喵喵~</value>
+  </data>
+  <data name="About_Name" xml:space="preserve">
+    <value>喵喵喵喵喵~</value>
+    <comment>Add "(B站录播姬)" after translation</comment>
+  </data>
+  <data name="About_Project" xml:space="preserve">
+    <value>喵喵喵喵</value>
+  </data>
+  <data name="About_Title" xml:space="preserve">
+    <value>喵喵</value>
+  </data>
+  <data name="About_Translator" xml:space="preserve">
+    <value>喵喵喵</value>
+  </data>
+  <data name="About_Version" xml:space="preserve">
+    <value>喵喵 {0}</value>
+  </data>
+  <data name="About_Website" xml:space="preserve">
+    <value>喵喵喵喵</value>
+    
+  </data>
+  <data name="AddRoomCard_ConfirmButton" xml:space="preserve">
+    <value>喵喵</value>
+    <comment>Translate as "confirm" or "add"</comment>
+  </data>
+  <data name="AddRoomCard_PlaceholderText" xml:space="preserve">
+    <value>喵喵喵喵喵喵喵喵</value>
+    <comment>id or link</comment>
+  </data>
+  <data name="AddRoomCard_PlaceholderText_FontSize" xml:space="preserve">
+    <value>14</value>
+  </data>
+  <data name="AddRoomCard_Title" xml:space="preserve">
+    <value>喵喵喵喵</value>
+  </data>
+  <data name="AddRoomFailedDialog_CloseButtonText" xml:space="preserve">
+    <value>喵喵喵</value>
+  </data>
+  <data name="AddRoomFailedDialog_ErrorText_Duplicate" xml:space="preserve">
+    <value>喵喵喵喵喵喵喵喵喵喵喵喵</value>
+  </data>
+  <data name="AddRoomFailedDialog_ErrorText_InvalidInput" xml:space="preserve">
+    <value>喵喵喵喵喵喵喵喵喵喵喵喵喵喵喵喵</value>
+  </data>
+  <data name="AddRoomFailedDialog_ErrorText_RoomIdNegative" xml:space="preserve">
+    <value>喵喵喵喵喵喵喵喵</value>
+  </data>
+  <data name="AddRoomFailedDialog_ErrorText_RoomIdZero" xml:space="preserve">
+    <value>喵喵喵喵喵喵喵喵</value>
+  </data>
+  <data name="AddRoomFailedDialog_Title" xml:space="preserve">
+    <value>喵喵喵喵喵喵</value>
+  </data>
+  <data name="AnnouncementPage_FetchFailed" xml:space="preserve">
+    <value>喵喵喵喵喵喵</value>
+  </data>
+  <data name="AnnouncementPage_RefreshButton" xml:space="preserve">
+    <value>喵喵喵喵喵喵</value>
+  </data>
+  <data name="CloseWindowConfirmDialog_Title" xml:space="preserve">
+    <value>喵喵喵喵喵喵喵</value>
+  </data>
+  <data name="DeleteRoomConfirmDialog_Title" xml:space="preserve">
+    <value>喵喵喵喵喵喵喵喵喵喵喵喵</value>
+  </data>
+  <data name="Global_Cancel" xml:space="preserve">
+    <value>喵喵</value>
+  </data>
+  <data name="Global_Close" xml:space="preserve">
+    <value>喵喵</value>
+  </data>
+  <data name="Global_Confirm" xml:space="preserve">
+    <value>Nya Nya</value>
+  </data>
+  <data name="Global_Copy" xml:space="preserve">
+    <value>喵喵</value>
+  </data>
+  <data name="Global_Delete" xml:space="preserve">
+    <value>喵喵</value>
+  </data>
+  <data name="Global_Quit" xml:space="preserve">
+    <value>喵喵</value>
+  </data>
+  <data name="LogPage_RightClickCopyToolTip" xml:space="preserve">
+    <value>喵喵喵喵喵喵喵喵喵喵喵喵</value>
+  </data>
+  <data name="LogPanel_Header_Level" xml:space="preserve">
+    <value>喵喵</value>
+  </data>
+  <data name="LogPanel_Header_Message" xml:space="preserve">
+    <value>喵喵</value>
+  </data>
+  <data name="LogPanel_Header_RoomId" xml:space="preserve">
+    <value>喵喵喵</value>
+  </data>
+  <data name="LogPanel_Header_Timestamp" xml:space="preserve">
+    <value>喵喵</value>
+  </data>
+  <data name="LogPanel_Level_Debug" xml:space="preserve">
+    <value>喵喵</value>
+  </data>
+  <data name="LogPanel_Level_Error" xml:space="preserve">
+    <value>喵喵</value>
+  </data>
+  <data name="LogPanel_Level_Fatal" xml:space="preserve">
+    <value>喵喵</value>
+  </data>
+  <data name="LogPanel_Level_Information" xml:space="preserve">
+    <value>喵喵</value>
+  </data>
+  <data name="LogPanel_Level_Verbose" xml:space="preserve">
+    <value>喵喵</value>
+  </data>
+  <data name="LogPanel_Level_Warning" xml:space="preserve">
+    <value>喵喵</value>
+  </data>
+  <data name="RoomCard_ClipButton_Tooltip" xml:space="preserve">
+    <value>喵喵喵喵（喵喵喵喵喵喵喵喵喵喵）</value>
+    <comment>This feature is off by default, and will be removed in the future.</comment>
+  </data>
+  <data name="RoomCard_Menu_Delete" xml:space="preserve">
+    <value>喵喵喵喵</value>
+  </data>
+  <data name="RoomCard_Menu_DisableAutoRecord" xml:space="preserve">
+    <value>喵喵喵喵喵</value>
+  </data>
+  <data name="RoomCard_Menu_EnableAutoRecord" xml:space="preserve">
+    <value>喵喵喵喵</value>
+  </data>
+  <data name="RoomCard_Menu_OpenInBrowser" xml:space="preserve">
+    <value>喵喵喵喵喵喵喵</value>
+  </data>
+  <data name="RoomCard_Menu_RefreshInfo" xml:space="preserve">
+    <value>喵喵喵喵喵喵喵</value>
+  </data>
+  <data name="RoomCard_Menu_Settings" xml:space="preserve">
+    <value>喵喵喵喵</value>
+    <comment>This settings is different per room</comment>
+  </data>
+  <data name="RoomCard_Menu_StartRecording" xml:space="preserve">
+    <value>喵喵喵喵</value>
+  </data>
+  <data name="RoomCard_Menu_StopRecording" xml:space="preserve">
+    <value>喵喵喵喵</value>
+  </data>
+  <data name="RoomCard_Menu_Tooltip" xml:space="preserve">
+    <value>喵喵</value>
+  </data>
+  <data name="RoomCard_SplitButton_Tooltip" xml:space="preserve">
+    <value>喵喵喵喵喵喵喵喵</value>
+  </data>
+  <data name="RoomCard_Status_AutoRecordForThisSessionDisabled_Tooltip" xml:space="preserve">
+    <value>喵喵喵喵喵喵喵喵喵喵~ 喵喵喵喵喵喵喵</value>
+  </data>
+  <data name="RoomCard_Status_DanmakuConnectionTooltip_False" xml:space="preserve">
+    <value>喵喵喵喵喵喵喵~
+喵喵喵喵喵喵喵喵喵喵喵喵喵喵喵喵喵喵~</value>
+  </data>
+  <data name="RoomCard_Status_DanmakuConnectionTooltip_True" xml:space="preserve">
+    <value>喵喵喵喵喵喵喵nya~
+喵喵喵喵喵喵喵喵喵喵喵喵nya~</value>
+  </data>
+  <data name="RoomCard_Status_LiveStatusTooltip_False" xml:space="preserve">
+    <value>nya~</value>
+  </data>
+  <data name="RoomCard_Status_LiveStatusTooltip_True" xml:space="preserve">
+    <value>nyanyanya!</value>
+  </data>
+  <data name="RoomCard_Status_Monitoring" xml:space="preserve">
+    <value>nya~www</value>
+    <comment>Short status text</comment>
+  </data>
+  <data name="RoomCard_Status_Recording" xml:space="preserve">
+    <value>喵喵喵</value>
+    <comment>Short status text</comment>
+  </data>
+  <data name="RoomCard_Status_SpeedIndicator_CurrentFileDuration" xml:space="preserve">
+    <value>喵喵喵喵喵喵: {0:g}</value>
+  </data>
+  <data name="RoomCard_Status_SpeedIndicator_Description" xml:space="preserve">
+    <value>喵喵喵喵喵喵喵喵喵喵喵喵喵喵喵喵喵喵喵喵
+喵喵喵喵喵喵~喵喵喵~喵喵喵喵喵喵喵喵喵喵</value>
+    <comment>Shown in tooltip</comment>
+  </data>
+  <data name="RoomCard_Status_SpeedIndicator_NoData" xml:space="preserve">
+    <value>喵喵喵喵喵</value>
+  </data>
+  <data name="RoomCard_Status_SpeedIndicator_SessionDuration" xml:space="preserve">
+    <value>喵喵喵喵喵喵: {0:g}</value>
+  </data>
+  <data name="RoomCard_Status_SpeedIndicator_SpeedInMbps" xml:space="preserve">
+    <value>{0:F2} Nyaps</value>
+    <comment>Should not translate</comment>
+  </data>
+  <data name="RoomCard_Status_SpeedIndicator_SpeedInPercentage" xml:space="preserve">
+    <value>喵喵喵喵喵： {0:P2}</value>
+    <comment>Speed percentage relative to upload speed of the streamer</comment>
+  </data>
+  <data name="RoomCard_Status_SpeedIndicator_TotalFileDuration" xml:space="preserve">
+    <value>喵喵喵喵喵喵: {0:g}</value>
+  </data>
+  <data name="RoomCard_Status_SpeedIndicator_TotalnputBytes" xml:space="preserve">
+    <value>喵喵喵喵喵 {0}</value>
+  </data>
+  <data name="RoomCard_Status_SpeedIndicator_TotalOutputBytes" xml:space="preserve">
+    <value>喵喵喵喵喵 {0}</value>
+  </data>
+  <data name="RoomListPage_Menu_AutoRecord" xml:space="preserve">
+    <value>喵喵</value>
+  </data>
+  <data name="RoomListPage_Menu_AutoRecord_DisableAll" xml:space="preserve">
+    <value>喵喵喵喵喵喵喵喵喵喵</value>
+  </data>
+  <data name="RoomListPage_Menu_AutoRecord_EnableAll" xml:space="preserve">
+    <value>喵喵喵喵喵喵喵喵</value>
+  </data>
+  <data name="RoomListPage_Menu_File" xml:space="preserve">
+    <value>喵喵</value>
+  </data>
+  <data name="RoomListPage_Menu_File_ChangeWorkPath" xml:space="preserve">
+    <value>喵喵喵喵喵喵（喵喵喵）</value>
+  </data>
+  <data name="RoomListPage_Menu_File_OpenWorkDirectory" xml:space="preserve">
+    <value>喵喵喵喵喵喵</value>
+  </data>
+  <data name="RoomListPage_Menu_File_SaveConfig" xml:space="preserve">
+    <value>喵喵喵喵</value>
+  </data>
+  <data name="RoomListPage_Menu_Links" xml:space="preserve">
+    <value>喵喵</value>
+  </data>
+  <data name="RoomListPage_Menu_Links_FAQ" xml:space="preserve">
+    <value>喵喵喵喵</value>
+  </data>
+  <data name="RoomListPage_Menu_Links_Sponsor" xml:space="preserve">
+    <value>喵喵</value>
+  </data>
+  <data name="RoomListPage_Menu_Links_Website" xml:space="preserve">
+    <value>喵喵</value>
+  </data>
+  <data name="RoomListPage_Menu_Sort_Default" xml:space="preserve">
+    <value>喵喵喵</value>
+  </data>
+  <data name="RoomListPage_Menu_Sort_RoomId" xml:space="preserve">
+    <value>喵喵喵喵喵喵</value>
+  </data>
+  <data name="RoomListPage_Menu_Sort_Status" xml:space="preserve">
+    <value>喵喵喵喵喵喵喵</value>
+  </data>
+  <data name="RoomListPage_Menu_View" xml:space="preserve">
+    <value>喵喵</value>
+  </data>
+  <data name="RoomListPage_Menu_View_ShowLogCheckBox" xml:space="preserve">
+    <value>喵喵喵喵</value>
+  </data>
+  <data name="RoomListPage_Menu_View_ShowTitleAndAreaCheckBox" xml:space="preserve">
+    <value>喵喵喵喵喵喵喵喵喵喵</value>
+  </data>
+  <data name="RootPage_NavigationViewItem_AdvancedSettingsPage" xml:space="preserve">
+    <value>喵喵喵喵</value>
+  </data>
+  <data name="RootPage_NavigationViewItem_AnnouncementPage" xml:space="preserve">
+    <value>喵喵</value>
+  </data>
+  <data name="RootPage_NavigationViewItem_LogPage" xml:space="preserve">
+    <value>喵喵</value>
+  </data>
+  <data name="RootPage_NavigationViewItem_RoomListPage" xml:space="preserve">
+    <value>喵喵喵喵</value>
+  </data>
+  <data name="RootPage_NavigationViewItem_SettingsPage" xml:space="preserve">
+    <value>喵喵</value>
+  </data>
+  <data name="Settings_AdvancedPage_Title" xml:space="preserve">
+    <value>喵喵喵喵</value>
+  </data>
+  <data name="Settings_AdvancedPage_Warning" xml:space="preserve">
+    <value>喵：喵喵喵喵喵喵喵喵喵喵喵喵喵喵喵喵喵喵喵喵喵~
+喵 Timing 喵喵喵喵喵喵喵喵喵喵喵喵喵喵喵、喵喵喵喵喵喵喵喵喵喵喵~</value>
+  </data>
+  <data name="Settings_Danmaku_FlushInterval" xml:space="preserve">
+    <value>喵喵喵喵喵喵喵喵喵喵喵</value>
+  </data>
+  <data name="Settings_Danmaku_Title" xml:space="preserve">
+    <value>喵喵喵喵</value>
+  </data>
+  <data name="Settings_Danmaku_ToggleSwitch_Enabled" xml:space="preserve">
+    <value>喵喵喵喵</value>
+  </data>
+  <data name="Settings_Danmaku_ToggleSwitch_Gift" xml:space="preserve">
+    <value>喵喵 喵喵喵喵</value>
+  </data>
+  <data name="Settings_Danmaku_ToggleSwitch_Guard" xml:space="preserve">
+    <value>喵喵 喵喵喵喵</value>
+  </data>
+  <data name="Settings_Danmaku_ToggleSwitch_Raw" xml:space="preserve">
+    <value>喵喵 喵喵喵喵喵</value>
+  </data>
+  <data name="Settings_Danmaku_ToggleSwitch_SuperChat" xml:space="preserve">
+    <value>喵喵 SuperNyaChat</value>
+  </data>
+  <data name="Settings_FileName_Clip" xml:space="preserve">
+    <value>喵喵喵喵喵喵喵</value>
+  </data>
+  <data name="Settings_FileName_Description_Text" xml:space="preserve">
+    <value>喵喵</value>
+  </data>
+  <data name="Settings_FileName_Description_ToolTip" xml:space="preserve">
+    <value>喵喵喵喵喵喵喵
+
+喵喵: {date}
+喵喵: {time}
+喵喵喵: {roomid}
+喵喵: {title}
+喵喵喵: {name}
+喵喵喵: {parea}
+喵喵喵: {area}
+喵喵喵喵: {random}
+
+喵喵喵喵喵喵喵喵喵喵喵喵喵
+喵喵喵 NyaLV 喵喵</value>
+  </data>
+  <data name="Settings_FileName_Record" xml:space="preserve">
+    <value>喵喵喵喵喵喵喵</value>
+  </data>
+  <data name="Settings_FileName_Title" xml:space="preserve">
+    <value>喵喵喵</value>
+  </data>
+  <data name="Settings_RecordMode_Clip_FutureDuration_Left" xml:space="preserve">
+    <value>喵喵喵喵喵喵</value>
+  </data>
+  <data name="Settings_RecordMode_Clip_FutureDuration_Right" xml:space="preserve">
+    <value>nyan</value>
+  </data>
+  <data name="Settings_RecordMode_Clip_PastDuration_Left" xml:space="preserve">
+    <value>喵喵喵喵喵喵</value>
+  </data>
+  <data name="Settings_RecordMode_Clip_PastDuration_Right" xml:space="preserve">
+    <value>nyan</value>
+  </data>
+  <data name="Settings_RecordMode_RadioButton_RawData" xml:space="preserve">
+    <value>喵喵喵喵喵喵</value>
+  </data>
+  <data name="Settings_RecordMode_RadioButton_Standard" xml:space="preserve">
+    <value>喵喵喵喵</value>
+  </data>
+  <data name="Settings_RecordMode_Title" xml:space="preserve">
+    <value>喵喵喵喵</value>
+  </data>
+  <data name="Settings_SettingsPage_Title" xml:space="preserve">
+    <value>喵喵</value>
+  </data>
+  <data name="Settings_Splitting_RadioButton_BySize" xml:space="preserve">
+    <value>喵喵喵喵喵喵喵喵喵喵</value>
+  </data>
+  <data name="Settings_Splitting_RadioButton_ByTime" xml:space="preserve">
+    <value>喵喵喵喵喵喵喵喵喵喵</value>
+  </data>
+  <data name="Settings_Splitting_RadioButton_Disabled" xml:space="preserve">
+    <value>喵喵喵喵喵</value>
+  </data>
+  <data name="Settings_Splitting_TextBox_Left" xml:space="preserve">
+    <value>喵</value>
+  </data>
+  <data name="Settings_Splitting_TextBox_Right" xml:space="preserve">
+    <value>喵喵喵喵喵喵喵</value>
+  </data>
+  <data name="Settings_Splitting_TextBox_SizeUnit" xml:space="preserve">
+    <value>NyaiB</value>
+  </data>
+  <data name="Settings_Splitting_TextBox_TimeUnit" xml:space="preserve">
+    <value>nyah</value>
+  </data>
+  <data name="Settings_Splitting_Title" xml:space="preserve">
+    <value>喵喵喵喵</value>
+  </data>
+  <data name="Settings_Webhook_Address" xml:space="preserve">
+    <value>Nyahook 喵喵 喵喵喵喵</value>
+  </data>
+  <data name="Settings_Webhook_Title" xml:space="preserve">
+    <value>Nyahook</value>
+  </data>
+  <data name="SettingWithDefault_Default" xml:space="preserve">
+    <value>喵喵</value>
+    <comment>Text of the checkbox in the reuseable control for setting items.
+Will use default setting and disable user input when checked.</comment>
+  </data>
+  <data name="TaskbarIconControl_MenuItem_OpenMainWindow" xml:space="preserve">
+    <value>喵喵喵喵喵</value>
+  </data>
+  <data name="TaskbarIconControl_MinimizedNotification" xml:space="preserve">
+    <value>喵喵喵喵喵喵喵喵喵喵，喵喵喵喵喵喵喵喵喵喵</value>
+  </data>
+  <data name="TaskbarIconControl_Title" xml:space="preserve">
+    <value>Meow Meow Meow</value>
+  </data>
+  <data name="Toolbox_AutoFix_AnalyzeResult_ContainsUnrepairable" xml:space="preserve">
+    <value>喵喵喵喵喵喵喵喵喵喵喵喵喵喵喵喵喵喵~
+喵喵喵~喵喵喵喵？ 喵喵喵喵喵喵喵喵喵~</value>
+  </data>
+  <data name="Toolbox_AutoFix_AnalyzeResult_FixNeeded" xml:space="preserve">
+    <value>喵喵喵喵</value>
+  </data>
+  <data name="Toolbox_AutoFix_AnalyzeResult_FixNotNeeded" xml:space="preserve">
+    <value>喵</value>
+  </data>
+  <data name="Toolbox_AutoFix_AnalyzeResult_IssueTypeDecodingHeader" xml:space="preserve">
+    <value>喵喵喵~喵喵喵喵 {0} 喵~</value>
+  </data>
+  <data name="Toolbox_AutoFix_AnalyzeResult_IssueTypeOther" xml:space="preserve">
+    <value>喵喵喵喵 {0} 喵~</value>
+  </data>
+  <data name="Toolbox_AutoFix_AnalyzeResult_IssueTypeRepeatingData" xml:space="preserve">
+    <value>喵喵喵喵 {0} 喵~</value>
+  </data>
+  <data name="Toolbox_AutoFix_AnalyzeResult_IssueTypeTimestampJump" xml:space="preserve">
+    <value>喵喵喵喵喵喵喵 {0} 喵~</value>
+  </data>
+  <data name="Toolbox_AutoFix_AnalyzeResult_IssueTypeTimestampOffset" xml:space="preserve">
+    <value>喵喵喵喵喵喵喵 {0} 喵~</value>
+  </data>
+  <data name="Toolbox_AutoFix_AnalyzeResult_IssueTypeUnrepairable" xml:space="preserve">
+    <value>喵喵喵喵喵喵喵 {0} 喵~</value>
+  </data>
+  <data name="Toolbox_AutoFix_AnalyzeResult_NoDataNote" xml:space="preserve">
+    <value>喵~ 喵喵喵喵喵喵喵喵喵喵喵喵</value>
+  </data>
+  <data name="Toolbox_AutoFix_AnalyzeResult_NoDataTitle" xml:space="preserve">
+    <value>喵喵喵喵喵喵喵喵喵喵</value>
+  </data>
+  <data name="Toolbox_AutoFix_AnalyzeResult_OutputFileCount" xml:space="preserve">
+    <value>喵喵喵喵喵喵 {0} 喵喵喵~</value>
+  </data>
+  <data name="Toolbox_AutoFix_AnalyzeResult_Stats_Audio" xml:space="preserve">
+    <value>喵喵</value>
+  </data>
+  <data name="Toolbox_AutoFix_AnalyzeResult_Stats_AvgFPS" xml:space="preserve">
+    <value>喵喵 NyaPS {0:F2}</value>
+  </data>
+  <data name="Toolbox_AutoFix_AnalyzeResult_Stats_Disclaimer" xml:space="preserve">
+    <value>喵喵喵喵~ 喵喵喵喵喵喵喵喵喵喵喵喵喵喵喵喵~</value>
+  </data>
+  <data name="Toolbox_AutoFix_AnalyzeResult_Stats_FrameCount" xml:space="preserve">
+    <value>喵喵喵</value>
+  </data>
+  <data name="Toolbox_AutoFix_AnalyzeResult_Stats_FrameCountTemplate" xml:space="preserve">
+    <value>喵喵喵 {0} 喵~</value>
+  </data>
+  <data name="Toolbox_AutoFix_AnalyzeResult_Stats_FrameDuration" xml:space="preserve">
+    <value>喵喵喵</value>
+  </data>
+  <data name="Toolbox_AutoFix_AnalyzeResult_Stats_Title" xml:space="preserve">
+    <value>nya数据</value>
+  </data>
+  <data name="Toolbox_AutoFix_AnalyzeResult_Stats_Video" xml:space="preserve">
+    <value>猫片</value>
+  </data>
+  <data name="Toolbox_AutoFix_ButtonAnalyze" xml:space="preserve">
+    <value>喵喵的思考</value>
+  </data>
+  <data name="Toolbox_AutoFix_ButtonFix" xml:space="preserve">
+    <value>喵喵</value>
+  </data>
+  <data name="Toolbox_AutoFix_ButtonNotFixed" xml:space="preserve">
+    <value>喵喵捣乱惹~</value>
+  </data>
+  <data name="Toolbox_AutoFix_ButtonSelectInput" xml:space="preserve">
+    <value>喵喵...</value>
+  </data>
+  <data name="Toolbox_AutoFix_Error_Title" xml:space="preserve">
+    <value>喵喵喵喵喵</value>
+  </data>
+  <data name="Toolbox_AutoFix_Error_Type_Error" xml:space="preserve">
+    <value>喵喵喵喵</value>
+  </data>
+  <data name="Toolbox_AutoFix_Error_Type_InputIOError" xml:space="preserve">
+    <value>喵喵喵喵喵喵</value>
+  </data>
+  <data name="Toolbox_AutoFix_Error_Type_NotFlvFile" xml:space="preserve">
+    <value>喵喵喵喵 NyaLV 喵喵</value>
+  </data>
+  <data name="Toolbox_AutoFix_Error_Type_OK" xml:space="preserve">
+    <value>Nya</value>
+    <comment>其实不是错误类型</comment>
+  </data>
+  <data name="Toolbox_AutoFix_Error_Type_OutputIOError" xml:space="preserve">
+    <value>喵喵喵喵喵喵</value>
+  </data>
+  <data name="Toolbox_AutoFix_Error_Type_UnknownFlvTagType" xml:space="preserve">
+    <value>喵喵喵 NyaLV 喵喵喵喵</value>
+  </data>
+  <data name="Toolbox_AutoFix_InputPathPlaceholder" xml:space="preserve">
+    <value>NyaLV 喵喵</value>
+  </data>
+  <data name="Toolbox_AutoFix_NotFixed_ButtonExportData" xml:space="preserve">
+    <value>喵喵喵喵喵喵喵喵</value>
+  </data>
+  <data name="Toolbox_AutoFix_NotFixed_Description" xml:space="preserve">
+    <value>喵喵喵喵喵~喵喵喵喵喵喵喵喵喵喵喵
+喵喵喵喵喵 rec@danmuji.org 喵喵~
+喵喵喵喵喵喵喵喵喵喵喵喵喵喵喵~
+喵喵喵喵喵喵喵喵喵喵喵喵~喵喵喵喵喵喵喵喵喵~
+喵喵喵喵喵喵喵喵喵喵喵喵~喵喵喵喵喵喵喵喵喵喵喵喵</value>
+  </data>
+  <data name="Toolbox_AutoFix_NotFixed_LearnMore" xml:space="preserve">
+    <value>喵喵喵喵喵喵喵喵喵</value>
+  </data>
+  <data name="Toolbox_AutoFix_SelectInputDialog_Title" xml:space="preserve">
+    <value>选择猫片</value>
+  </data>
+  <data name="Toolbox_AutoFix_SelectOutputDialog_Title" xml:space="preserve">
+    <value>喵喵喵喵喵喵</value>
+  </data>
+  <data name="Toolbox_AutoFix_Title" xml:space="preserve">
+    <value>喵片修复</value>
+  </data>
+  <data name="Toolbox_Title" xml:space="preserve">
+    <value>喵喵喵</value>
+  </data>
+  <data name="Window_Title" xml:space="preserve">
+    <value>喵喵喵喵喵 {0}</value>
+    
+  </data>
+  <data name="WorkDirectorySelector_Browse" xml:space="preserve">
+    <value>喵喵…</value>
+  </data>
+  <data name="WorkDirectorySelector_Error_FailedToLoadConfig" xml:space="preserve">
+    <value>喵喵喵喵喵喵喵喵</value>
+  </data>
+  
+  <data name="WorkDirectorySelector_Error_PathContainsFiles" xml:space="preserve">
+    <value>喵喵喵喵喵喵喵喵</value>
+  </data>
+  <data name="WorkDirectorySelector_Error_PathDoesNotExist" xml:space="preserve">
+    <value>喵喵喵喵喵</value>
+  </data>
+  <data name="WorkDirectorySelector_Error_PathNotSupported" xml:space="preserve">
+    <value>喵喵喵喵喵喵</value>
+  </data>
+  <data name="WorkDirectorySelector_Error_UnknownError" xml:space="preserve">
+    <value>喵喵喵喵喵喵喵</value>
+  </data>
+  <data name="WorkDirectorySelector_SkipAsking" xml:space="preserve">
+    <value>喵喵喵喵</value>
+  </data>
+  <data name="WorkDirectorySelector_Title" xml:space="preserve">
+    <value>喵喵喵喵喵喵</value>
+  </data>
 </root>
