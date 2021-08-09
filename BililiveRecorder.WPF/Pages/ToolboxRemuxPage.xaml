@@ -1,0 +1,42 @@
+<ui:Page
+    x:Class="BililiveRecorder.WPF.Pages.ToolboxRemuxPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:ui="http://schemas.modernwpf.com/2019"
+    xmlns:l="https://github.com/XAMLMarkupExtensions/WPFLocalizationExtension"
+    l:LocalizeDictionary.DesignCulture=""
+    l:ResxLocalizationProvider.DefaultAssembly="BililiveRecorder.WPF"
+    l:ResxLocalizationProvider.DefaultDictionary="Strings"
+    xmlns:local="clr-namespace:BililiveRecorder.WPF.Pages"
+    xmlns:model="clr-namespace:BililiveRecorder.WPF.Models"
+    xmlns:c="clr-namespace:BililiveRecorder.WPF.Converters"
+    mc:Ignorable="d" 
+    d:DesignHeight="450" d:DesignWidth="800"
+    Title="ToolboxRemuxPage">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Button Margin="10" Padding="10" FontSize="20" HorizontalAlignment="Center" Content="{l:Loc Toolbox_Remux_Title}" Click="RemuxButton_Click"/>
+        <TextBlock Grid.Row="1" TextAlignment="Center">
+            用法
+            <LineBreak/>
+            1. 点击上面的转封装按钮<LineBreak/>
+            2. 选择要转封装的 FLV 文件<LineBreak/>
+            3. 选择 MP4 保存位置<LineBreak/>
+            <LineBreak/>
+            说明
+            <LineBreak/>
+            本工具基于 FFmpeg 实现，只提供最基本的转封装功能。<LineBreak/>
+            只支持从 FLV 转封装到 MP4，如需其他格式请使用其他工具。<LineBreak/>
+            转封装时会占满硬盘IO，可能导致正在进行的录播中断。<LineBreak/>
+            转封装大文件会花一两分钟时间，请耐心等待。<LineBreak/>
+            如果录播文件存在问题，请先用录播修复工具修复后再转封装。<LineBreak/>
+            如果文件存在问题，转封装后就无法修复了。<LineBreak/>
+            标准录制模式录出来的文件不需要手动修复。
+        </TextBlock>
+    </Grid>
+</ui:Page>

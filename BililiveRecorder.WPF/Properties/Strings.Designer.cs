@@ -1568,6 +1568,33 @@ namespace BililiveRecorder.WPF.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to 选择需要转封装的 FLV 文件.
+        /// </summary>
+        public static string Toolbox_Remux_OpenFileTitle {
+            get {
+                return ResourceManager.GetString("Toolbox_Remux_OpenFileTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 选择 MP4 文件保存位置.
+        /// </summary>
+        public static string Toolbox_Remux_SaveFileTitle {
+            get {
+                return ResourceManager.GetString("Toolbox_Remux_SaveFileTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 转封装.
+        /// </summary>
+        public static string Toolbox_Remux_Title {
+            get {
+                return ResourceManager.GetString("Toolbox_Remux_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to 工具箱.
         /// </summary>
         public static string Toolbox_Title {

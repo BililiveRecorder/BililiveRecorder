@@ -647,6 +647,15 @@ Will use default setting and disable user input when checked.</comment>
   <data name="Toolbox_AutoFix_Title" xml:space="preserve">
     <value>录播修复</value>
   </data>
+  <data name="Toolbox_Remux_OpenFileTitle" xml:space="preserve">
+    <value>选择需要转封装的 FLV 文件</value>
+  </data>
+  <data name="Toolbox_Remux_SaveFileTitle" xml:space="preserve">
+    <value>选择 MP4 文件保存位置</value>
+  </data>
+  <data name="Toolbox_Remux_Title" xml:space="preserve">
+    <value>转封装</value>
+  </data>
   <data name="Toolbox_Title" xml:space="preserve">
     <value>工具箱</value>
   </data>

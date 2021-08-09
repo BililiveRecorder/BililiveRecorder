@@ -102,6 +102,12 @@
                                 <ui:PathIcon Style="{StaticResource PathIconDataAutoFix}"/>
                             </ui:NavigationViewItem.Icon>
                         </ui:NavigationViewItem>
+                        <ui:NavigationViewItem l:ResxLocalizationProvider.DefaultDictionary="Strings" 
+                                               Content="{l:Loc Toolbox_Remux_Title}" Tag="ToolboxRemuxPage">
+                            <ui:NavigationViewItem.Icon>
+                                <ui:PathIcon Style="{StaticResource PathIconDataAlphaRCircleOutline}"/>
+                            </ui:NavigationViewItem.Icon>
+                        </ui:NavigationViewItem>
                     </ui:NavigationViewItem.MenuItems>
                 </ui:NavigationViewItem>
             </ui:NavigationView.MenuItems>
