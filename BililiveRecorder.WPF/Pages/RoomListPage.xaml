@@ -11,7 +11,7 @@
     l:ResxLocalizationProvider.DefaultDictionary="Strings"
     xmlns:local="clr-namespace:BililiveRecorder.WPF.Pages"
     xmlns:c="clr-namespace:BililiveRecorder.WPF.Controls"
-    xmlns:m="clr-namespace:BililiveRecorder.WPF.Models;assembly=BililiveRecorder.WPF"
+    xmlns:m="clr-namespace:BililiveRecorder.WPF.Models"
     xmlns:converters="clr-namespace:BililiveRecorder.WPF.Converters"
     mc:Ignorable="d" 
     x:Name="TheRoomListPage"

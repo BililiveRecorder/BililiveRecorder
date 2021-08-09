@@ -280,6 +280,7 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Strings.en.resx" />
+    <EmbeddedResource Include="Properties\Strings.en-PN.resx" />
     <EmbeddedResource Include="Properties\Strings.ja.resx" />
     <EmbeddedResource Include="Properties\Strings.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>

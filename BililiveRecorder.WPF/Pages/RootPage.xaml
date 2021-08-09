@@ -5,6 +5,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
     xmlns:ui="http://schemas.modernwpf.com/2019"
+    xmlns:m="clr-namespace:BililiveRecorder.WPF.Models"
     xmlns:l="https://github.com/XAMLMarkupExtensions/WPFLocalizationExtension"
     l:LocalizeDictionary.DesignCulture=""
     l:ResxLocalizationProvider.DefaultAssembly="BililiveRecorder.WPF"
@@ -63,6 +64,13 @@
                         <MenuItem Header="繁體中文" CommandParameter="zh-Hant" Command="{Binding Source={x:Static l:LocalizeDictionary.Instance}, Path=SetCultureCommand}"/>
                         <MenuItem Header="日本語" CommandParameter="ja" Command="{Binding Source={x:Static l:LocalizeDictionary.Instance}, Path=SetCultureCommand}"/>
                         <MenuItem Header="English" CommandParameter="en" Command="{Binding Source={x:Static l:LocalizeDictionary.Instance}, Path=SetCultureCommand}"/>
+                        <MenuItem Header="喵ニャーMeow🐱🐈" CommandParameter="en-PN" Command="{Binding Source={x:Static l:LocalizeDictionary.Instance}, Path=SetCultureCommand}"/>
+                        <Separator/>
+                        <MenuItem Header="参与翻译" Command="{x:Static m:Commands.OpenLink}" CommandParameter="https://rec.danmuji.org/link/translate/">
+                            <MenuItem.Icon>
+                                <ui:PathIcon Style="{StaticResource PathIconDataOpenInNew}"/>
+                            </MenuItem.Icon>
+                        </MenuItem>
                     </MenuItem>
                 </Menu>
             </ui:NavigationView.PaneCustomContent>
