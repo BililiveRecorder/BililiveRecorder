@@ -740,6 +740,15 @@ namespace BililiveRecorder.WPF.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to 显示日志文件.
+        /// </summary>
+        public static string RoomListPage_Menu_File_ShowLogFilesInExplorer {
+            get {
+                return ResourceManager.GetString("RoomListPage_Menu_File_ShowLogFilesInExplorer", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to 链接.
         /// </summary>
         public static string RoomListPage_Menu_Links {

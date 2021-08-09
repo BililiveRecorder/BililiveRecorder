@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows;
@@ -294,6 +295,17 @@ namespace BililiveRecorder.WPF.Pages
         {
             if (((MenuItem)sender).Tag is bool b && this.DataContext is IRecorder rec)
                 rec.Config.Global.WpfShowTitleAndArea = b;
+        }
+
+        private void MenuItem_ShowLogFilesInExplorer_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                var logPath = Path.Combine(Path.GetDirectoryName(typeof(RoomListPage).Assembly.Location), "logs");
+                Process.Start("explorer.exe", logPath);
+            }
+            catch (Exception)
+            { }
         }
     }
 
