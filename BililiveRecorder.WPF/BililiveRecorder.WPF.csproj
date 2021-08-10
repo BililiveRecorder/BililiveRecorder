@@ -144,6 +144,9 @@
     <Compile Include="Pages\ToolboxAutoFixPage.xaml.cs">
       <DependentUpon>ToolboxAutoFixPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Pages\ToolboxDanmakuMergerPage.xaml.cs">
+      <DependentUpon>ToolboxDanmakuMergerPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Pages\ToolboxRemuxPage.xaml.cs">
       <DependentUpon>ToolboxRemuxPage.xaml</DependentUpon>
     </Compile>
@@ -242,6 +245,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Pages\ToolboxAutoFixPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\ToolboxDanmakuMergerPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

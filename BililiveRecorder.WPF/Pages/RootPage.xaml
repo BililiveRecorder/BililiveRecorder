@@ -108,6 +108,12 @@
                                 <ui:PathIcon Style="{StaticResource PathIconDataAlphaRCircleOutline}"/>
                             </ui:NavigationViewItem.Icon>
                         </ui:NavigationViewItem>
+                        <ui:NavigationViewItem l:ResxLocalizationProvider.DefaultDictionary="Strings" 
+                                               Content="{l:Loc Toolbox_Merge_Title}" Tag="ToolboxDanmakuMergerPage">
+                            <ui:NavigationViewItem.Icon>
+                                <ui:PathIcon Style="{StaticResource PathIconDataMerge}"/>
+                            </ui:NavigationViewItem.Icon>
+                        </ui:NavigationViewItem>
                     </ui:NavigationViewItem.MenuItems>
                 </ui:NavigationViewItem>
             </ui:NavigationView.MenuItems>

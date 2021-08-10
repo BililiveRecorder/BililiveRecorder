@@ -54,6 +54,7 @@ namespace BililiveRecorder.WPF.Pages
             AddType(typeof(AnnouncementPage));
             AddType(typeof(ToolboxAutoFixPage));
             AddType(typeof(ToolboxRemuxPage));
+            AddType(typeof(ToolboxDanmakuMergerPage));
 
             this.Model = new RootModel();
             this.DataContext = this.Model;

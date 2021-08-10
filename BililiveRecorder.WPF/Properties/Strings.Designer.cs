@@ -1568,6 +1568,87 @@ namespace BililiveRecorder.WPF.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to 添加文件.
+        /// </summary>
+        public static string Toolbox_Merge_Button_AddFile {
+            get {
+                return ResourceManager.GetString("Toolbox_Merge_Button_AddFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 合并.
+        /// </summary>
+        public static string Toolbox_Merge_Button_Merge {
+            get {
+                return ResourceManager.GetString("Toolbox_Merge_Button_Merge", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 移除.
+        /// </summary>
+        public static string Toolbox_Merge_Button_Remove {
+            get {
+                return ResourceManager.GetString("Toolbox_Merge_Button_Remove", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 最少需要 2 个文件才能合并.
+        /// </summary>
+        public static string Toolbox_Merge_Error_AtLeastTwo {
+            get {
+                return ResourceManager.GetString("Toolbox_Merge_Error_AtLeastTwo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 选择要合并的 XML 弹幕文件.
+        /// </summary>
+        public static string Toolbox_Merge_OpenFileDialogTitle {
+            get {
+                return ResourceManager.GetString("Toolbox_Merge_OpenFileDialogTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 点击下方添加按钮，或拖动文件到此界面.
+        /// </summary>
+        public static string Toolbox_Merge_Tip {
+            get {
+                return ResourceManager.GetString("Toolbox_Merge_Tip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 弹幕合并.
+        /// </summary>
+        public static string Toolbox_Merge_Title {
+            get {
+                return ResourceManager.GetString("Toolbox_Merge_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 弹幕 XML 文件合并.
+        /// </summary>
+        public static string Toolbox_Merge_Title_Long {
+            get {
+                return ResourceManager.GetString("Toolbox_Merge_Title_Long", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to XML 弹幕文件.
+        /// </summary>
+        public static string Toolbox_Merge_XmlDanmakuFiles {
+            get {
+                return ResourceManager.GetString("Toolbox_Merge_XmlDanmakuFiles", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to 选择需要转封装的 FLV 文件.
         /// </summary>
         public static string Toolbox_Remux_OpenFileTitle {

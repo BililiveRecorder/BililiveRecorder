@@ -3,6 +3,7 @@ using System.CommandLine;
 using System.CommandLine.Invocation;
 using System.Threading.Tasks;
 using BililiveRecorder.ToolBox.Tool.Analyze;
+using BililiveRecorder.ToolBox.Tool.DanmakuMerger;
 using BililiveRecorder.ToolBox.Tool.Export;
 using BililiveRecorder.ToolBox.Tool.Fix;
 using Newtonsoft.Json;
@@ -29,6 +30,12 @@ namespace BililiveRecorder.ToolBox
             {
                 c.Add(new Argument<string>("input", "example: input.flv"));
                 c.Add(new Argument<string>("output", "example: output.brec.xml.gz"));
+            });
+
+            this.RegisterCommand<DanmakuMergerHandler, DanmakuMergerRequest, DanmakuMergerResponse>("danmaku-merge", null, c =>
+            {
+                c.Add(new Argument<string>("output", "example: output.xml"));
+                c.Add(new Argument<string[]>("inputs", "example: 1.xml 2.xml ..."));
             });
         }
 
