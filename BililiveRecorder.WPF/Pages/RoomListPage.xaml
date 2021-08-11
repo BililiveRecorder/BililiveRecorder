@@ -56,8 +56,10 @@
                 <Separator/>
                 <MenuItem Header="{l:Loc RoomListPage_Menu_File}">
                     <MenuItem Header="{l:Loc RoomListPage_Menu_File_OpenWorkDirectory}" Click="MenuItem_OpenWorkDirectory_Click"/>
-                    <MenuItem Header="{l:Loc RoomListPage_Menu_File_ChangeWorkPath}" Click="MenuItem_ChangeWorkPath_Click"/>
                     <MenuItem Header="{l:Loc RoomListPage_Menu_File_SaveConfig}" Click="MenuItem_SaveConfig_Click"/>
+                    <Separator/>
+                    <MenuItem Header="{l:Loc RoomListPage_Menu_File_ChangeWorkPath}" Click="MenuItem_ChangeWorkPath_Click"/>
+                    <Separator/>
                     <MenuItem Header="{l:Loc RoomListPage_Menu_File_ShowLogFilesInExplorer}" Click="MenuItem_ShowLogFilesInExplorer_Click"/>
                 </MenuItem>
                 <MenuItem Header="{l:Loc RoomListPage_Menu_View}">
