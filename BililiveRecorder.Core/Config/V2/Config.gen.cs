@@ -1,6 +1,6 @@
 // ******************************
 //  GENERATED CODE, DO NOT EDIT MANUALLY.
-//  SEE .tools/build_config.js
+//  SEE /config_gen/README.md
 // ******************************
 
 using System.ComponentModel;
@@ -22,7 +22,7 @@ namespace BililiveRecorder.Core.Config.V2
         public Optional<int> OptionalRoomId { get => this.GetPropertyValueOptional<int>(nameof(this.RoomId)); set => this.SetPropertyValueOptional(value, nameof(this.RoomId)); }
 
         /// <summary>
-        /// 是否启用自动录制
+        /// 自动录制
         /// </summary>
         public bool AutoRecord { get => this.GetPropertyValue<bool>(); set => this.SetPropertyValue(value); }
         public bool HasAutoRecord { get => this.GetPropertyHasValue(nameof(this.AutoRecord)); set => this.SetPropertyHasValue<bool>(value, nameof(this.AutoRecord)); }
@@ -38,7 +38,7 @@ namespace BililiveRecorder.Core.Config.V2
         public Optional<RecordMode> OptionalRecordMode { get => this.GetPropertyValueOptional<RecordMode>(nameof(this.RecordMode)); set => this.SetPropertyValueOptional(value, nameof(this.RecordMode)); }
 
         /// <summary>
-        /// 录制文件自动切割模式
+        /// 自动分段模式
         /// </summary>
         public CuttingMode CuttingMode { get => this.GetPropertyValue<CuttingMode>(); set => this.SetPropertyValue(value); }
         public bool HasCuttingMode { get => this.GetPropertyHasValue(nameof(this.CuttingMode)); set => this.SetPropertyHasValue<CuttingMode>(value, nameof(this.CuttingMode)); }
@@ -46,7 +46,7 @@ namespace BililiveRecorder.Core.Config.V2
         public Optional<CuttingMode> OptionalCuttingMode { get => this.GetPropertyValueOptional<CuttingMode>(nameof(this.CuttingMode)); set => this.SetPropertyValueOptional(value, nameof(this.CuttingMode)); }
 
         /// <summary>
-        /// 录制文件自动切割数值（分钟/MiB）
+        /// 自动分段数值
         /// </summary>
         public uint CuttingNumber { get => this.GetPropertyValue<uint>(); set => this.SetPropertyValue(value); }
         public bool HasCuttingNumber { get => this.GetPropertyHasValue(nameof(this.CuttingNumber)); set => this.SetPropertyHasValue<uint>(value, nameof(this.CuttingNumber)); }
@@ -54,7 +54,7 @@ namespace BililiveRecorder.Core.Config.V2
         public Optional<uint> OptionalCuttingNumber { get => this.GetPropertyValueOptional<uint>(nameof(this.CuttingNumber)); set => this.SetPropertyValueOptional(value, nameof(this.CuttingNumber)); }
 
         /// <summary>
-        /// 是否同时录制弹幕
+        /// 弹幕录制
         /// </summary>
         public bool RecordDanmaku { get => this.GetPropertyValue<bool>(); set => this.SetPropertyValue(value); }
         public bool HasRecordDanmaku { get => this.GetPropertyHasValue(nameof(this.RecordDanmaku)); set => this.SetPropertyHasValue<bool>(value, nameof(this.RecordDanmaku)); }
@@ -62,7 +62,7 @@ namespace BililiveRecorder.Core.Config.V2
         public Optional<bool> OptionalRecordDanmaku { get => this.GetPropertyValueOptional<bool>(nameof(this.RecordDanmaku)); set => this.SetPropertyValueOptional(value, nameof(this.RecordDanmaku)); }
 
         /// <summary>
-        /// 是否记录弹幕原始数据
+        /// 弹幕录制-原始数据
         /// </summary>
         public bool RecordDanmakuRaw { get => this.GetPropertyValue<bool>(); set => this.SetPropertyValue(value); }
         public bool HasRecordDanmakuRaw { get => this.GetPropertyHasValue(nameof(this.RecordDanmakuRaw)); set => this.SetPropertyHasValue<bool>(value, nameof(this.RecordDanmakuRaw)); }
@@ -70,7 +70,7 @@ namespace BililiveRecorder.Core.Config.V2
         public Optional<bool> OptionalRecordDanmakuRaw { get => this.GetPropertyValueOptional<bool>(nameof(this.RecordDanmakuRaw)); set => this.SetPropertyValueOptional(value, nameof(this.RecordDanmakuRaw)); }
 
         /// <summary>
-        /// 是否同时录制 SuperChat
+        /// 弹幕录制-SuperChat
         /// </summary>
         public bool RecordDanmakuSuperChat { get => this.GetPropertyValue<bool>(); set => this.SetPropertyValue(value); }
         public bool HasRecordDanmakuSuperChat { get => this.GetPropertyHasValue(nameof(this.RecordDanmakuSuperChat)); set => this.SetPropertyHasValue<bool>(value, nameof(this.RecordDanmakuSuperChat)); }
@@ -78,7 +78,7 @@ namespace BililiveRecorder.Core.Config.V2
         public Optional<bool> OptionalRecordDanmakuSuperChat { get => this.GetPropertyValueOptional<bool>(nameof(this.RecordDanmakuSuperChat)); set => this.SetPropertyValueOptional(value, nameof(this.RecordDanmakuSuperChat)); }
 
         /// <summary>
-        /// 是否同时录制 礼物
+        /// 弹幕录制-礼物
         /// </summary>
         public bool RecordDanmakuGift { get => this.GetPropertyValue<bool>(); set => this.SetPropertyValue(value); }
         public bool HasRecordDanmakuGift { get => this.GetPropertyHasValue(nameof(this.RecordDanmakuGift)); set => this.SetPropertyHasValue<bool>(value, nameof(this.RecordDanmakuGift)); }
@@ -86,7 +86,7 @@ namespace BililiveRecorder.Core.Config.V2
         public Optional<bool> OptionalRecordDanmakuGift { get => this.GetPropertyValueOptional<bool>(nameof(this.RecordDanmakuGift)); set => this.SetPropertyValueOptional(value, nameof(this.RecordDanmakuGift)); }
 
         /// <summary>
-        /// 是否同时录制 上船
+        /// 弹幕录制-上船
         /// </summary>
         public bool RecordDanmakuGuard { get => this.GetPropertyValue<bool>(); set => this.SetPropertyValue(value); }
         public bool HasRecordDanmakuGuard { get => this.GetPropertyHasValue(nameof(this.RecordDanmakuGuard)); set => this.SetPropertyHasValue<bool>(value, nameof(this.RecordDanmakuGuard)); }
@@ -94,12 +94,47 @@ namespace BililiveRecorder.Core.Config.V2
         public Optional<bool> OptionalRecordDanmakuGuard { get => this.GetPropertyValueOptional<bool>(nameof(this.RecordDanmakuGuard)); set => this.SetPropertyValueOptional(value, nameof(this.RecordDanmakuGuard)); }
 
         /// <summary>
-        /// 录制的直播画质 qn 值，逗号分割，靠前的优先
+        /// 直播画质
         /// </summary>
         public string? RecordingQuality { get => this.GetPropertyValue<string>(); set => this.SetPropertyValue(value); }
         public bool HasRecordingQuality { get => this.GetPropertyHasValue(nameof(this.RecordingQuality)); set => this.SetPropertyHasValue<string>(value, nameof(this.RecordingQuality)); }
         [JsonProperty(nameof(RecordingQuality)), EditorBrowsable(EditorBrowsableState.Never)]
         public Optional<string?> OptionalRecordingQuality { get => this.GetPropertyValueOptional<string>(nameof(this.RecordingQuality)); set => this.SetPropertyValueOptional(value, nameof(this.RecordingQuality)); }
+
+        /// <summary>
+        /// 录制文件名格式
+        /// </summary>
+        public string? RecordFilenameFormat => this.GetPropertyValue<string>();
+
+        /// <summary>
+        /// 录制文件写入结束 Webhook 地址 每行一个
+        /// </summary>
+        public string? WebHookUrls => this.GetPropertyValue<string>();
+
+        /// <summary>
+        /// Webhook v2 地址 每行一个
+        /// </summary>
+        public string? WebHookUrlsV2 => this.GetPropertyValue<string>();
+
+        /// <summary>
+        /// 在界面显示标题和分区
+        /// </summary>
+        public bool WpfShowTitleAndArea => this.GetPropertyValue<bool>();
+
+        /// <summary>
+        /// 请求 API 时使用的 Cookie
+        /// </summary>
+        public string? Cookie => this.GetPropertyValue<string>();
+
+        /// <summary>
+        /// 替换 api.live.bilibili.com 服务器为其他反代，可以支持在云服务器上录制
+        /// </summary>
+        public string? LiveApiHost => this.GetPropertyValue<string>();
+
+        /// <summary>
+        /// HTTP API 检查时间间隔 秒
+        /// </summary>
+        public uint TimingCheckInterval => this.GetPropertyValue<uint>();
 
         /// <summary>
         /// 录制断开重连时间间隔 毫秒
@@ -117,12 +152,7 @@ namespace BililiveRecorder.Core.Config.V2
         public uint TimingDanmakuRetry => this.GetPropertyValue<uint>();
 
         /// <summary>
-        /// HTTP API 检查时间间隔 秒
-        /// </summary>
-        public uint TimingCheckInterval => this.GetPropertyValue<uint>();
-
-        /// <summary>
-        /// 最大未收到新直播数据时间 毫秒
+        /// 最大允许未收到直播数据时间 毫秒
         /// </summary>
         public uint TimingWatchdogTimeout => this.GetPropertyValue<uint>();
 
@@ -131,41 +161,139 @@ namespace BililiveRecorder.Core.Config.V2
         /// </summary>
         public uint RecordDanmakuFlushInterval => this.GetPropertyValue<uint>();
 
-        /// <summary>
-        /// 请求 API 时使用的 Cookie
-        /// </summary>
-        public string? Cookie => this.GetPropertyValue<string>();
-
-        /// <summary>
-        /// 录制文件写入结束 Webhook 地址 每行一个
-        /// </summary>
-        public string? WebHookUrls => this.GetPropertyValue<string>();
-
-        /// <summary>
-        /// Webhook v2 地址 每行一个
-        /// </summary>
-        public string? WebHookUrlsV2 => this.GetPropertyValue<string>();
-
-        /// <summary>
-        /// 替换 api.live.bilibili.com 服务器为其他反代，可以支持在云服务器上录制
-        /// </summary>
-        public string? LiveApiHost => this.GetPropertyValue<string>();
-
-        /// <summary>
-        /// 录制文件名模板
-        /// </summary>
-        public string? RecordFilenameFormat => this.GetPropertyValue<string>();
-
-        /// <summary>
-        /// 是否显示直播间标题和分区
-        /// </summary>
-        public bool WpfShowTitleAndArea => this.GetPropertyValue<bool>();
-
     }
 
     [JsonObject(MemberSerialization.OptIn)]
     public sealed partial class GlobalConfig : HierarchicalObject<DefaultConfig, GlobalConfig>
     {
+        /// <summary>
+        /// 录制模式
+        /// </summary>
+        public RecordMode RecordMode { get => this.GetPropertyValue<RecordMode>(); set => this.SetPropertyValue(value); }
+        public bool HasRecordMode { get => this.GetPropertyHasValue(nameof(this.RecordMode)); set => this.SetPropertyHasValue<RecordMode>(value, nameof(this.RecordMode)); }
+        [JsonProperty(nameof(RecordMode)), EditorBrowsable(EditorBrowsableState.Never)]
+        public Optional<RecordMode> OptionalRecordMode { get => this.GetPropertyValueOptional<RecordMode>(nameof(this.RecordMode)); set => this.SetPropertyValueOptional(value, nameof(this.RecordMode)); }
+
+        /// <summary>
+        /// 自动分段模式
+        /// </summary>
+        public CuttingMode CuttingMode { get => this.GetPropertyValue<CuttingMode>(); set => this.SetPropertyValue(value); }
+        public bool HasCuttingMode { get => this.GetPropertyHasValue(nameof(this.CuttingMode)); set => this.SetPropertyHasValue<CuttingMode>(value, nameof(this.CuttingMode)); }
+        [JsonProperty(nameof(CuttingMode)), EditorBrowsable(EditorBrowsableState.Never)]
+        public Optional<CuttingMode> OptionalCuttingMode { get => this.GetPropertyValueOptional<CuttingMode>(nameof(this.CuttingMode)); set => this.SetPropertyValueOptional(value, nameof(this.CuttingMode)); }
+
+        /// <summary>
+        /// 自动分段数值
+        /// </summary>
+        public uint CuttingNumber { get => this.GetPropertyValue<uint>(); set => this.SetPropertyValue(value); }
+        public bool HasCuttingNumber { get => this.GetPropertyHasValue(nameof(this.CuttingNumber)); set => this.SetPropertyHasValue<uint>(value, nameof(this.CuttingNumber)); }
+        [JsonProperty(nameof(CuttingNumber)), EditorBrowsable(EditorBrowsableState.Never)]
+        public Optional<uint> OptionalCuttingNumber { get => this.GetPropertyValueOptional<uint>(nameof(this.CuttingNumber)); set => this.SetPropertyValueOptional(value, nameof(this.CuttingNumber)); }
+
+        /// <summary>
+        /// 弹幕录制
+        /// </summary>
+        public bool RecordDanmaku { get => this.GetPropertyValue<bool>(); set => this.SetPropertyValue(value); }
+        public bool HasRecordDanmaku { get => this.GetPropertyHasValue(nameof(this.RecordDanmaku)); set => this.SetPropertyHasValue<bool>(value, nameof(this.RecordDanmaku)); }
+        [JsonProperty(nameof(RecordDanmaku)), EditorBrowsable(EditorBrowsableState.Never)]
+        public Optional<bool> OptionalRecordDanmaku { get => this.GetPropertyValueOptional<bool>(nameof(this.RecordDanmaku)); set => this.SetPropertyValueOptional(value, nameof(this.RecordDanmaku)); }
+
+        /// <summary>
+        /// 弹幕录制-原始数据
+        /// </summary>
+        public bool RecordDanmakuRaw { get => this.GetPropertyValue<bool>(); set => this.SetPropertyValue(value); }
+        public bool HasRecordDanmakuRaw { get => this.GetPropertyHasValue(nameof(this.RecordDanmakuRaw)); set => this.SetPropertyHasValue<bool>(value, nameof(this.RecordDanmakuRaw)); }
+        [JsonProperty(nameof(RecordDanmakuRaw)), EditorBrowsable(EditorBrowsableState.Never)]
+        public Optional<bool> OptionalRecordDanmakuRaw { get => this.GetPropertyValueOptional<bool>(nameof(this.RecordDanmakuRaw)); set => this.SetPropertyValueOptional(value, nameof(this.RecordDanmakuRaw)); }
+
+        /// <summary>
+        /// 弹幕录制-SuperChat
+        /// </summary>
+        public bool RecordDanmakuSuperChat { get => this.GetPropertyValue<bool>(); set => this.SetPropertyValue(value); }
+        public bool HasRecordDanmakuSuperChat { get => this.GetPropertyHasValue(nameof(this.RecordDanmakuSuperChat)); set => this.SetPropertyHasValue<bool>(value, nameof(this.RecordDanmakuSuperChat)); }
+        [JsonProperty(nameof(RecordDanmakuSuperChat)), EditorBrowsable(EditorBrowsableState.Never)]
+        public Optional<bool> OptionalRecordDanmakuSuperChat { get => this.GetPropertyValueOptional<bool>(nameof(this.RecordDanmakuSuperChat)); set => this.SetPropertyValueOptional(value, nameof(this.RecordDanmakuSuperChat)); }
+
+        /// <summary>
+        /// 弹幕录制-礼物
+        /// </summary>
+        public bool RecordDanmakuGift { get => this.GetPropertyValue<bool>(); set => this.SetPropertyValue(value); }
+        public bool HasRecordDanmakuGift { get => this.GetPropertyHasValue(nameof(this.RecordDanmakuGift)); set => this.SetPropertyHasValue<bool>(value, nameof(this.RecordDanmakuGift)); }
+        [JsonProperty(nameof(RecordDanmakuGift)), EditorBrowsable(EditorBrowsableState.Never)]
+        public Optional<bool> OptionalRecordDanmakuGift { get => this.GetPropertyValueOptional<bool>(nameof(this.RecordDanmakuGift)); set => this.SetPropertyValueOptional(value, nameof(this.RecordDanmakuGift)); }
+
+        /// <summary>
+        /// 弹幕录制-上船
+        /// </summary>
+        public bool RecordDanmakuGuard { get => this.GetPropertyValue<bool>(); set => this.SetPropertyValue(value); }
+        public bool HasRecordDanmakuGuard { get => this.GetPropertyHasValue(nameof(this.RecordDanmakuGuard)); set => this.SetPropertyHasValue<bool>(value, nameof(this.RecordDanmakuGuard)); }
+        [JsonProperty(nameof(RecordDanmakuGuard)), EditorBrowsable(EditorBrowsableState.Never)]
+        public Optional<bool> OptionalRecordDanmakuGuard { get => this.GetPropertyValueOptional<bool>(nameof(this.RecordDanmakuGuard)); set => this.SetPropertyValueOptional(value, nameof(this.RecordDanmakuGuard)); }
+
+        /// <summary>
+        /// 直播画质
+        /// </summary>
+        public string? RecordingQuality { get => this.GetPropertyValue<string>(); set => this.SetPropertyValue(value); }
+        public bool HasRecordingQuality { get => this.GetPropertyHasValue(nameof(this.RecordingQuality)); set => this.SetPropertyHasValue<string>(value, nameof(this.RecordingQuality)); }
+        [JsonProperty(nameof(RecordingQuality)), EditorBrowsable(EditorBrowsableState.Never)]
+        public Optional<string?> OptionalRecordingQuality { get => this.GetPropertyValueOptional<string>(nameof(this.RecordingQuality)); set => this.SetPropertyValueOptional(value, nameof(this.RecordingQuality)); }
+
+        /// <summary>
+        /// 录制文件名格式
+        /// </summary>
+        public string? RecordFilenameFormat { get => this.GetPropertyValue<string>(); set => this.SetPropertyValue(value); }
+        public bool HasRecordFilenameFormat { get => this.GetPropertyHasValue(nameof(this.RecordFilenameFormat)); set => this.SetPropertyHasValue<string>(value, nameof(this.RecordFilenameFormat)); }
+        [JsonProperty(nameof(RecordFilenameFormat)), EditorBrowsable(EditorBrowsableState.Never)]
+        public Optional<string?> OptionalRecordFilenameFormat { get => this.GetPropertyValueOptional<string>(nameof(this.RecordFilenameFormat)); set => this.SetPropertyValueOptional(value, nameof(this.RecordFilenameFormat)); }
+
+        /// <summary>
+        /// 录制文件写入结束 Webhook 地址 每行一个
+        /// </summary>
+        public string? WebHookUrls { get => this.GetPropertyValue<string>(); set => this.SetPropertyValue(value); }
+        public bool HasWebHookUrls { get => this.GetPropertyHasValue(nameof(this.WebHookUrls)); set => this.SetPropertyHasValue<string>(value, nameof(this.WebHookUrls)); }
+        [JsonProperty(nameof(WebHookUrls)), EditorBrowsable(EditorBrowsableState.Never)]
+        public Optional<string?> OptionalWebHookUrls { get => this.GetPropertyValueOptional<string>(nameof(this.WebHookUrls)); set => this.SetPropertyValueOptional(value, nameof(this.WebHookUrls)); }
+
+        /// <summary>
+        /// Webhook v2 地址 每行一个
+        /// </summary>
+        public string? WebHookUrlsV2 { get => this.GetPropertyValue<string>(); set => this.SetPropertyValue(value); }
+        public bool HasWebHookUrlsV2 { get => this.GetPropertyHasValue(nameof(this.WebHookUrlsV2)); set => this.SetPropertyHasValue<string>(value, nameof(this.WebHookUrlsV2)); }
+        [JsonProperty(nameof(WebHookUrlsV2)), EditorBrowsable(EditorBrowsableState.Never)]
+        public Optional<string?> OptionalWebHookUrlsV2 { get => this.GetPropertyValueOptional<string>(nameof(this.WebHookUrlsV2)); set => this.SetPropertyValueOptional(value, nameof(this.WebHookUrlsV2)); }
+
+        /// <summary>
+        /// 在界面显示标题和分区
+        /// </summary>
+        public bool WpfShowTitleAndArea { get => this.GetPropertyValue<bool>(); set => this.SetPropertyValue(value); }
+        public bool HasWpfShowTitleAndArea { get => this.GetPropertyHasValue(nameof(this.WpfShowTitleAndArea)); set => this.SetPropertyHasValue<bool>(value, nameof(this.WpfShowTitleAndArea)); }
+        [JsonProperty(nameof(WpfShowTitleAndArea)), EditorBrowsable(EditorBrowsableState.Never)]
+        public Optional<bool> OptionalWpfShowTitleAndArea { get => this.GetPropertyValueOptional<bool>(nameof(this.WpfShowTitleAndArea)); set => this.SetPropertyValueOptional(value, nameof(this.WpfShowTitleAndArea)); }
+
+        /// <summary>
+        /// 请求 API 时使用的 Cookie
+        /// </summary>
+        public string? Cookie { get => this.GetPropertyValue<string>(); set => this.SetPropertyValue(value); }
+        public bool HasCookie { get => this.GetPropertyHasValue(nameof(this.Cookie)); set => this.SetPropertyHasValue<string>(value, nameof(this.Cookie)); }
+        [JsonProperty(nameof(Cookie)), EditorBrowsable(EditorBrowsableState.Never)]
+        public Optional<string?> OptionalCookie { get => this.GetPropertyValueOptional<string>(nameof(this.Cookie)); set => this.SetPropertyValueOptional(value, nameof(this.Cookie)); }
+
+        /// <summary>
+        /// 替换 api.live.bilibili.com 服务器为其他反代，可以支持在云服务器上录制
+        /// </summary>
+        public string? LiveApiHost { get => this.GetPropertyValue<string>(); set => this.SetPropertyValue(value); }
+        public bool HasLiveApiHost { get => this.GetPropertyHasValue(nameof(this.LiveApiHost)); set => this.SetPropertyHasValue<string>(value, nameof(this.LiveApiHost)); }
+        [JsonProperty(nameof(LiveApiHost)), EditorBrowsable(EditorBrowsableState.Never)]
+        public Optional<string?> OptionalLiveApiHost { get => this.GetPropertyValueOptional<string>(nameof(this.LiveApiHost)); set => this.SetPropertyValueOptional(value, nameof(this.LiveApiHost)); }
+
+        /// <summary>
+        /// HTTP API 检查时间间隔 秒
+        /// </summary>
+        public uint TimingCheckInterval { get => this.GetPropertyValue<uint>(); set => this.SetPropertyValue(value); }
+        public bool HasTimingCheckInterval { get => this.GetPropertyHasValue(nameof(this.TimingCheckInterval)); set => this.SetPropertyHasValue<uint>(value, nameof(this.TimingCheckInterval)); }
+        [JsonProperty(nameof(TimingCheckInterval)), EditorBrowsable(EditorBrowsableState.Never)]
+        public Optional<uint> OptionalTimingCheckInterval { get => this.GetPropertyValueOptional<uint>(nameof(this.TimingCheckInterval)); set => this.SetPropertyValueOptional(value, nameof(this.TimingCheckInterval)); }
+
         /// <summary>
         /// 录制断开重连时间间隔 毫秒
         /// </summary>
@@ -191,15 +319,7 @@ namespace BililiveRecorder.Core.Config.V2
         public Optional<uint> OptionalTimingDanmakuRetry { get => this.GetPropertyValueOptional<uint>(nameof(this.TimingDanmakuRetry)); set => this.SetPropertyValueOptional(value, nameof(this.TimingDanmakuRetry)); }
 
         /// <summary>
-        /// HTTP API 检查时间间隔 秒
-        /// </summary>
-        public uint TimingCheckInterval { get => this.GetPropertyValue<uint>(); set => this.SetPropertyValue(value); }
-        public bool HasTimingCheckInterval { get => this.GetPropertyHasValue(nameof(this.TimingCheckInterval)); set => this.SetPropertyHasValue<uint>(value, nameof(this.TimingCheckInterval)); }
-        [JsonProperty(nameof(TimingCheckInterval)), EditorBrowsable(EditorBrowsableState.Never)]
-        public Optional<uint> OptionalTimingCheckInterval { get => this.GetPropertyValueOptional<uint>(nameof(this.TimingCheckInterval)); set => this.SetPropertyValueOptional(value, nameof(this.TimingCheckInterval)); }
-
-        /// <summary>
-        /// 最大未收到新直播数据时间 毫秒
+        /// 最大允许未收到直播数据时间 毫秒
         /// </summary>
         public uint TimingWatchdogTimeout { get => this.GetPropertyValue<uint>(); set => this.SetPropertyValue(value); }
         public bool HasTimingWatchdogTimeout { get => this.GetPropertyHasValue(nameof(this.TimingWatchdogTimeout)); set => this.SetPropertyHasValue<uint>(value, nameof(this.TimingWatchdogTimeout)); }
@@ -214,156 +334,12 @@ namespace BililiveRecorder.Core.Config.V2
         [JsonProperty(nameof(RecordDanmakuFlushInterval)), EditorBrowsable(EditorBrowsableState.Never)]
         public Optional<uint> OptionalRecordDanmakuFlushInterval { get => this.GetPropertyValueOptional<uint>(nameof(this.RecordDanmakuFlushInterval)); set => this.SetPropertyValueOptional(value, nameof(this.RecordDanmakuFlushInterval)); }
 
-        /// <summary>
-        /// 请求 API 时使用的 Cookie
-        /// </summary>
-        public string? Cookie { get => this.GetPropertyValue<string>(); set => this.SetPropertyValue(value); }
-        public bool HasCookie { get => this.GetPropertyHasValue(nameof(this.Cookie)); set => this.SetPropertyHasValue<string>(value, nameof(this.Cookie)); }
-        [JsonProperty(nameof(Cookie)), EditorBrowsable(EditorBrowsableState.Never)]
-        public Optional<string?> OptionalCookie { get => this.GetPropertyValueOptional<string>(nameof(this.Cookie)); set => this.SetPropertyValueOptional(value, nameof(this.Cookie)); }
-
-        /// <summary>
-        /// 录制文件写入结束 Webhook 地址 每行一个
-        /// </summary>
-        public string? WebHookUrls { get => this.GetPropertyValue<string>(); set => this.SetPropertyValue(value); }
-        public bool HasWebHookUrls { get => this.GetPropertyHasValue(nameof(this.WebHookUrls)); set => this.SetPropertyHasValue<string>(value, nameof(this.WebHookUrls)); }
-        [JsonProperty(nameof(WebHookUrls)), EditorBrowsable(EditorBrowsableState.Never)]
-        public Optional<string?> OptionalWebHookUrls { get => this.GetPropertyValueOptional<string>(nameof(this.WebHookUrls)); set => this.SetPropertyValueOptional(value, nameof(this.WebHookUrls)); }
-
-        /// <summary>
-        /// Webhook v2 地址 每行一个
-        /// </summary>
-        public string? WebHookUrlsV2 { get => this.GetPropertyValue<string>(); set => this.SetPropertyValue(value); }
-        public bool HasWebHookUrlsV2 { get => this.GetPropertyHasValue(nameof(this.WebHookUrlsV2)); set => this.SetPropertyHasValue<string>(value, nameof(this.WebHookUrlsV2)); }
-        [JsonProperty(nameof(WebHookUrlsV2)), EditorBrowsable(EditorBrowsableState.Never)]
-        public Optional<string?> OptionalWebHookUrlsV2 { get => this.GetPropertyValueOptional<string>(nameof(this.WebHookUrlsV2)); set => this.SetPropertyValueOptional(value, nameof(this.WebHookUrlsV2)); }
-
-        /// <summary>
-        /// 替换 api.live.bilibili.com 服务器为其他反代，可以支持在云服务器上录制
-        /// </summary>
-        public string? LiveApiHost { get => this.GetPropertyValue<string>(); set => this.SetPropertyValue(value); }
-        public bool HasLiveApiHost { get => this.GetPropertyHasValue(nameof(this.LiveApiHost)); set => this.SetPropertyHasValue<string>(value, nameof(this.LiveApiHost)); }
-        [JsonProperty(nameof(LiveApiHost)), EditorBrowsable(EditorBrowsableState.Never)]
-        public Optional<string?> OptionalLiveApiHost { get => this.GetPropertyValueOptional<string>(nameof(this.LiveApiHost)); set => this.SetPropertyValueOptional(value, nameof(this.LiveApiHost)); }
-
-        /// <summary>
-        /// 录制文件名模板
-        /// </summary>
-        public string? RecordFilenameFormat { get => this.GetPropertyValue<string>(); set => this.SetPropertyValue(value); }
-        public bool HasRecordFilenameFormat { get => this.GetPropertyHasValue(nameof(this.RecordFilenameFormat)); set => this.SetPropertyHasValue<string>(value, nameof(this.RecordFilenameFormat)); }
-        [JsonProperty(nameof(RecordFilenameFormat)), EditorBrowsable(EditorBrowsableState.Never)]
-        public Optional<string?> OptionalRecordFilenameFormat { get => this.GetPropertyValueOptional<string>(nameof(this.RecordFilenameFormat)); set => this.SetPropertyValueOptional(value, nameof(this.RecordFilenameFormat)); }
-
-        /// <summary>
-        /// 是否显示直播间标题和分区
-        /// </summary>
-        public bool WpfShowTitleAndArea { get => this.GetPropertyValue<bool>(); set => this.SetPropertyValue(value); }
-        public bool HasWpfShowTitleAndArea { get => this.GetPropertyHasValue(nameof(this.WpfShowTitleAndArea)); set => this.SetPropertyHasValue<bool>(value, nameof(this.WpfShowTitleAndArea)); }
-        [JsonProperty(nameof(WpfShowTitleAndArea)), EditorBrowsable(EditorBrowsableState.Never)]
-        public Optional<bool> OptionalWpfShowTitleAndArea { get => this.GetPropertyValueOptional<bool>(nameof(this.WpfShowTitleAndArea)); set => this.SetPropertyValueOptional(value, nameof(this.WpfShowTitleAndArea)); }
-
-        /// <summary>
-        /// 录制模式
-        /// </summary>
-        public RecordMode RecordMode { get => this.GetPropertyValue<RecordMode>(); set => this.SetPropertyValue(value); }
-        public bool HasRecordMode { get => this.GetPropertyHasValue(nameof(this.RecordMode)); set => this.SetPropertyHasValue<RecordMode>(value, nameof(this.RecordMode)); }
-        [JsonProperty(nameof(RecordMode)), EditorBrowsable(EditorBrowsableState.Never)]
-        public Optional<RecordMode> OptionalRecordMode { get => this.GetPropertyValueOptional<RecordMode>(nameof(this.RecordMode)); set => this.SetPropertyValueOptional(value, nameof(this.RecordMode)); }
-
-        /// <summary>
-        /// 录制文件自动切割模式
-        /// </summary>
-        public CuttingMode CuttingMode { get => this.GetPropertyValue<CuttingMode>(); set => this.SetPropertyValue(value); }
-        public bool HasCuttingMode { get => this.GetPropertyHasValue(nameof(this.CuttingMode)); set => this.SetPropertyHasValue<CuttingMode>(value, nameof(this.CuttingMode)); }
-        [JsonProperty(nameof(CuttingMode)), EditorBrowsable(EditorBrowsableState.Never)]
-        public Optional<CuttingMode> OptionalCuttingMode { get => this.GetPropertyValueOptional<CuttingMode>(nameof(this.CuttingMode)); set => this.SetPropertyValueOptional(value, nameof(this.CuttingMode)); }
-
-        /// <summary>
-        /// 录制文件自动切割数值（分钟/MiB）
-        /// </summary>
-        public uint CuttingNumber { get => this.GetPropertyValue<uint>(); set => this.SetPropertyValue(value); }
-        public bool HasCuttingNumber { get => this.GetPropertyHasValue(nameof(this.CuttingNumber)); set => this.SetPropertyHasValue<uint>(value, nameof(this.CuttingNumber)); }
-        [JsonProperty(nameof(CuttingNumber)), EditorBrowsable(EditorBrowsableState.Never)]
-        public Optional<uint> OptionalCuttingNumber { get => this.GetPropertyValueOptional<uint>(nameof(this.CuttingNumber)); set => this.SetPropertyValueOptional(value, nameof(this.CuttingNumber)); }
-
-        /// <summary>
-        /// 是否同时录制弹幕
-        /// </summary>
-        public bool RecordDanmaku { get => this.GetPropertyValue<bool>(); set => this.SetPropertyValue(value); }
-        public bool HasRecordDanmaku { get => this.GetPropertyHasValue(nameof(this.RecordDanmaku)); set => this.SetPropertyHasValue<bool>(value, nameof(this.RecordDanmaku)); }
-        [JsonProperty(nameof(RecordDanmaku)), EditorBrowsable(EditorBrowsableState.Never)]
-        public Optional<bool> OptionalRecordDanmaku { get => this.GetPropertyValueOptional<bool>(nameof(this.RecordDanmaku)); set => this.SetPropertyValueOptional(value, nameof(this.RecordDanmaku)); }
-
-        /// <summary>
-        /// 是否记录弹幕原始数据
-        /// </summary>
-        public bool RecordDanmakuRaw { get => this.GetPropertyValue<bool>(); set => this.SetPropertyValue(value); }
-        public bool HasRecordDanmakuRaw { get => this.GetPropertyHasValue(nameof(this.RecordDanmakuRaw)); set => this.SetPropertyHasValue<bool>(value, nameof(this.RecordDanmakuRaw)); }
-        [JsonProperty(nameof(RecordDanmakuRaw)), EditorBrowsable(EditorBrowsableState.Never)]
-        public Optional<bool> OptionalRecordDanmakuRaw { get => this.GetPropertyValueOptional<bool>(nameof(this.RecordDanmakuRaw)); set => this.SetPropertyValueOptional(value, nameof(this.RecordDanmakuRaw)); }
-
-        /// <summary>
-        /// 是否同时录制 SuperChat
-        /// </summary>
-        public bool RecordDanmakuSuperChat { get => this.GetPropertyValue<bool>(); set => this.SetPropertyValue(value); }
-        public bool HasRecordDanmakuSuperChat { get => this.GetPropertyHasValue(nameof(this.RecordDanmakuSuperChat)); set => this.SetPropertyHasValue<bool>(value, nameof(this.RecordDanmakuSuperChat)); }
-        [JsonProperty(nameof(RecordDanmakuSuperChat)), EditorBrowsable(EditorBrowsableState.Never)]
-        public Optional<bool> OptionalRecordDanmakuSuperChat { get => this.GetPropertyValueOptional<bool>(nameof(this.RecordDanmakuSuperChat)); set => this.SetPropertyValueOptional(value, nameof(this.RecordDanmakuSuperChat)); }
-
-        /// <summary>
-        /// 是否同时录制 礼物
-        /// </summary>
-        public bool RecordDanmakuGift { get => this.GetPropertyValue<bool>(); set => this.SetPropertyValue(value); }
-        public bool HasRecordDanmakuGift { get => this.GetPropertyHasValue(nameof(this.RecordDanmakuGift)); set => this.SetPropertyHasValue<bool>(value, nameof(this.RecordDanmakuGift)); }
-        [JsonProperty(nameof(RecordDanmakuGift)), EditorBrowsable(EditorBrowsableState.Never)]
-        public Optional<bool> OptionalRecordDanmakuGift { get => this.GetPropertyValueOptional<bool>(nameof(this.RecordDanmakuGift)); set => this.SetPropertyValueOptional(value, nameof(this.RecordDanmakuGift)); }
-
-        /// <summary>
-        /// 是否同时录制 上船
-        /// </summary>
-        public bool RecordDanmakuGuard { get => this.GetPropertyValue<bool>(); set => this.SetPropertyValue(value); }
-        public bool HasRecordDanmakuGuard { get => this.GetPropertyHasValue(nameof(this.RecordDanmakuGuard)); set => this.SetPropertyHasValue<bool>(value, nameof(this.RecordDanmakuGuard)); }
-        [JsonProperty(nameof(RecordDanmakuGuard)), EditorBrowsable(EditorBrowsableState.Never)]
-        public Optional<bool> OptionalRecordDanmakuGuard { get => this.GetPropertyValueOptional<bool>(nameof(this.RecordDanmakuGuard)); set => this.SetPropertyValueOptional(value, nameof(this.RecordDanmakuGuard)); }
-
-        /// <summary>
-        /// 录制的直播画质 qn 值，逗号分割，靠前的优先
-        /// </summary>
-        public string? RecordingQuality { get => this.GetPropertyValue<string>(); set => this.SetPropertyValue(value); }
-        public bool HasRecordingQuality { get => this.GetPropertyHasValue(nameof(this.RecordingQuality)); set => this.SetPropertyHasValue<string>(value, nameof(this.RecordingQuality)); }
-        [JsonProperty(nameof(RecordingQuality)), EditorBrowsable(EditorBrowsableState.Never)]
-        public Optional<string?> OptionalRecordingQuality { get => this.GetPropertyValueOptional<string>(nameof(this.RecordingQuality)); set => this.SetPropertyValueOptional(value, nameof(this.RecordingQuality)); }
-
     }
 
     public sealed partial class DefaultConfig
     {
         public static readonly DefaultConfig Instance = new DefaultConfig();
         private DefaultConfig() { }
-
-        public uint TimingStreamRetry => 6 * 1000;
-
-        public uint TimingStreamConnect => 5 * 1000;
-
-        public uint TimingDanmakuRetry => 15 * 1000;
-
-        public uint TimingCheckInterval => 10 * 60;
-
-        public uint TimingWatchdogTimeout => 10 * 1000;
-
-        public uint RecordDanmakuFlushInterval => 20;
-
-        public string Cookie => string.Empty;
-
-        public string WebHookUrls => string.Empty;
-
-        public string WebHookUrlsV2 => string.Empty;
-
-        public string LiveApiHost => "https://api.live.bilibili.com";
-
-        public string RecordFilenameFormat => @"{roomid}-{name}/录制-{roomid}-{date}-{time}-{ms}-{title}.flv";
-
-        public bool WpfShowTitleAndArea => true;
 
         public RecordMode RecordMode => RecordMode.Standard;
 
@@ -382,6 +358,30 @@ namespace BililiveRecorder.Core.Config.V2
         public bool RecordDanmakuGuard => true;
 
         public string RecordingQuality => "10000";
+
+        public string RecordFilenameFormat => @"{roomid}-{name}/录制-{roomid}-{date}-{time}-{ms}-{title}.flv";
+
+        public string WebHookUrls => string.Empty;
+
+        public string WebHookUrlsV2 => string.Empty;
+
+        public bool WpfShowTitleAndArea => true;
+
+        public string Cookie => string.Empty;
+
+        public string LiveApiHost => "https://api.live.bilibili.com";
+
+        public uint TimingCheckInterval => 10 * 60;
+
+        public uint TimingStreamRetry => 6 * 1000;
+
+        public uint TimingStreamConnect => 5 * 1000;
+
+        public uint TimingDanmakuRetry => 9 * 1000;
+
+        public uint TimingWatchdogTimeout => 10 * 1000;
+
+        public uint RecordDanmakuFlushInterval => 20;
 
     }
 
