@@ -141,7 +141,7 @@
     <value>喵喵</value>
   </data>
   <data name="About_Translator" xml:space="preserve">
-    <value>喵喵喵</value>
+    <value>喵语者</value>
   </data>
   <data name="About_Version" xml:space="preserve">
     <value>喵喵 {0}</value>
@@ -366,10 +366,10 @@
     <value>喵喵喵喵</value>
   </data>
   <data name="RoomListPage_Menu_Links_Sponsor" xml:space="preserve">
-    <value>喵喵</value>
+    <value>投喂小鱼干</value>
   </data>
   <data name="RoomListPage_Menu_Links_Website" xml:space="preserve">
-    <value>喵喵</value>
+    <value>喵窝</value>
   </data>
   <data name="RoomListPage_Menu_Sort_Default" xml:space="preserve">
     <value>喵喵喵</value>
@@ -393,7 +393,7 @@
     <value>喵喵喵喵</value>
   </data>
   <data name="RootPage_NavigationViewItem_AnnouncementPage" xml:space="preserve">
-    <value>喵喵</value>
+    <value>铲屎官的话</value>
   </data>
   <data name="RootPage_NavigationViewItem_LogPage" xml:space="preserve">
     <value>喵喵</value>
@@ -415,10 +415,10 @@
     <value>喵喵喵喵喵喵喵喵喵喵喵</value>
   </data>
   <data name="Settings_Danmaku_Title" xml:space="preserve">
-    <value>喵喵喵喵</value>
+    <value>喵语录制</value>
   </data>
   <data name="Settings_Danmaku_ToggleSwitch_Enabled" xml:space="preserve">
-    <value>喵喵喵喵</value>
+    <value>保存喵话</value>
   </data>
   <data name="Settings_Danmaku_ToggleSwitch_Gift" xml:space="preserve">
     <value>喵喵 喵喵喵喵</value>
