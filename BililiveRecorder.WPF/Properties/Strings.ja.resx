@@ -354,7 +354,9 @@
   <data name="RoomListPage_Menu_File_SaveConfig" xml:space="preserve">
     <value>設定を保存</value>
   </data>
-  
+  <data name="RoomListPage_Menu_File_ShowLogFilesInExplorer" xml:space="preserve">
+    <value>ログ ファイルを表示</value>
+  </data>
   <data name="RoomListPage_Menu_Links" xml:space="preserve">
     <value>リンク</value>
   </data>
@@ -554,9 +556,15 @@ Will use default setting and disable user input when checked.</comment>
     <value>平均FPS {0:F2}</value>
   </data>
   
-  
-  
-  
+  <data name="Toolbox_AutoFix_AnalyzeResult_Stats_FrameCount" xml:space="preserve">
+    <value>フレーム数</value>
+  </data>
+  <data name="Toolbox_AutoFix_AnalyzeResult_Stats_FrameCountTemplate" xml:space="preserve">
+    <value>フレーム数 {0} 個</value>
+  </data>
+  <data name="Toolbox_AutoFix_AnalyzeResult_Stats_FrameDuration" xml:space="preserve">
+    <value>フレーム間隔</value>
+  </data>
   <data name="Toolbox_AutoFix_AnalyzeResult_Stats_Title" xml:space="preserve">
     <value>統計情報</value>
   </data>
@@ -614,13 +622,21 @@ Will use default setting and disable user input when checked.</comment>
   <data name="Toolbox_AutoFix_Title" xml:space="preserve">
     <value>録画の修復</value>
   </data>
+  <data name="Toolbox_Merge_Button_AddFile" xml:space="preserve">
+    <value>ファイルを追加</value>
+  </data>
+  <data name="Toolbox_Merge_Button_Merge" xml:space="preserve">
+    <value>マージ</value>
+  </data>
+  <data name="Toolbox_Merge_Button_Remove" xml:space="preserve">
+    <value>削除する</value>
+  </data>
   
   
   
-  
-  
-  
-  
+  <data name="Toolbox_Merge_Title" xml:space="preserve">
+    <value>弾幕マージ</value>
+  </data>
   
   
   
