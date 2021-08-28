@@ -222,10 +222,10 @@ namespace BililiveRecorder.Core.Danmaku
             writer.WriteStartElement("BililiveRecorderRecordInfo");
             writer.WriteAttributeString("roomid", room.RoomConfig.RoomId.ToString());
             writer.WriteAttributeString("shortid", room.ShortId.ToString());
-            writer.WriteAttributeString("name", room.Name);
-            writer.WriteAttributeString("title", room.Title);
-            writer.WriteAttributeString("areanameparent", room.AreaNameParent);
-            writer.WriteAttributeString("areanamechild", room.AreaNameChild);
+            writer.WriteAttributeString("name", RemoveInvalidXMLChars(room.Name));
+            writer.WriteAttributeString("title", RemoveInvalidXMLChars(room.Title));
+            writer.WriteAttributeString("areanameparent", RemoveInvalidXMLChars(room.AreaNameParent));
+            writer.WriteAttributeString("areanamechild", RemoveInvalidXMLChars(room.AreaNameChild));
             writer.WriteAttributeString("start_time", DateTimeOffset.Now.ToString("O"));
             writer.WriteEndElement();
 
