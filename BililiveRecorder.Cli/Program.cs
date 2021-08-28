@@ -40,6 +40,7 @@ namespace BililiveRecorder.Cli
                 new Option<string>(new []{ "--cookie", "-c" }, "Cookie string for api requests"),
                 new Option<string>(new []{ "--filename-format", "-f" }, "File name format"),
                 new Option<PortableModeArguments.PortableDanmakuMode>(new []{ "--danmaku", "-d" }, "Flags for danmaku recording"),
+                new Option<string>("--webhook-url", "URL of webhoook"),
                 new Option<string>("--live-api-host"),
                 new Argument<string>("output-path"),
                 new Argument<int[]>("room-ids")
@@ -115,6 +116,9 @@ namespace BililiveRecorder.Cli
                 if (!string.IsNullOrWhiteSpace(opts.FilenameFormat))
                     global.RecordFilenameFormat = opts.FilenameFormat;
 
+                if (!string.IsNullOrWhiteSpace(opts.WebhookUrl))
+                    global.WebHookUrlsV2 = opts.WebhookUrl;
+
                 var danmaku = opts.Danmaku;
                 global.RecordDanmaku = danmaku != PortableModeArguments.PortableDanmakuMode.None;
                 global.RecordDanmakuSuperChat = danmaku.HasFlag(PortableModeArguments.PortableDanmakuMode.SuperChat);
@@ -185,6 +189,8 @@ namespace BililiveRecorder.Cli
             public string? LiveApiHost { get; set; }
 
             public string? FilenameFormat { get; set; }
+
+            public string? WebhookUrl { get; set; }
 
             public PortableDanmakuMode Danmaku { get; set; }
 
