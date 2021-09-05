@@ -7,8 +7,8 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="5.0.2" />
     <PackageReference Include="Microsoft.IO.RecyclableMemoryStream" Version="2.1.2" />
-    <PackageReference Include="Spectre.Console" Version="0.40.0" />
-    <PackageReference Include="System.CommandLine" Version="2.0.0-beta1.21216.1" />
+    <PackageReference Include="Spectre.Console" Version="0.41.1-preview.0.12" />
+    <PackageReference Include="System.CommandLine" Version="2.0.0-beta1.21308.1" />
   </ItemGroup>
 
   <ItemGroup>
