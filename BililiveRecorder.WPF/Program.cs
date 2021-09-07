@@ -191,12 +191,15 @@ namespace BililiveRecorder.WPF
             {
                 try
                 {
-                    try
+                    while (true)
                     {
-                        SetThreadExecutionState(EXECUTION_STATE.ES_SYSTEM_REQUIRED | EXECUTION_STATE.ES_CONTINUOUS);
+                        try
+                        {
+                            _ = SetThreadExecutionState(EXECUTION_STATE.ES_SYSTEM_REQUIRED | EXECUTION_STATE.ES_CONTINUOUS);
+                        }
+                        catch (Exception) { }
+                        Thread.Sleep(millisecondsTimeout: 30 * 1000);
                     }
-                    catch (Exception) { }
-                    Thread.Sleep(millisecondsTimeout: 30 * 1000);
                 }
                 catch (Exception) { }
             }
