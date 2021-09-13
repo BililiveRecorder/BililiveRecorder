@@ -159,11 +159,17 @@ namespace BililiveRecorder.Flv.Writer
         {
             this.CloseCurrentFileImpl();
 
-            if (this.nextScriptTag is null)
-                throw new InvalidOperationException("No script tag availible");
-
-            if (this.nextScriptTag.ScriptData is null)
-                throw new InvalidOperationException("ScriptData is null");
+            if (this.nextScriptTag is null || this.nextScriptTag.ScriptData is null)
+            {
+                // SRT + d1--ov-gotcha05.bilivideo.com 会导致无 script tag
+                // 直接 new 一个出来用于存放录播姬写入的 metadata
+                this.nextScriptTag = new Tag
+                {
+                    Type = TagType.Script,
+                    Timestamp = 0,
+                    ScriptData = new ScriptTagBody(new() { (ScriptDataString)"onMetaData", new ScriptDataEcmaArray() })
+                };
+            }
 
             if (!this.allowMissingHeader)
             {
