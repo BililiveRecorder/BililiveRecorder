@@ -13,7 +13,7 @@ namespace BililiveRecorder.Flv.RuleTests
             var stackTrace = new StackTrace();
             var frames = stackTrace.GetFrames();
             var attr = frames.Select(x => x!.GetMethod()!.GetCustomAttribute<SampleFileTestDataAttribute>()).First(x => x is not null);
-            var fullPath = Path.Combine(attr!.BasePath, fileName);
+            var fullPath = Path.Combine(attr!.FullPath, fileName);
 
             using var s = File.Open(fullPath, FileMode.Open, FileAccess.Read, FileShare.Read);
 

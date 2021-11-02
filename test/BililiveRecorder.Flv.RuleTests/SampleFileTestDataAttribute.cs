@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using VerifyTests;
 using Xunit.Sdk;
 
 namespace BililiveRecorder.Flv.RuleTests
@@ -12,18 +13,19 @@ namespace BililiveRecorder.Flv.RuleTests
         public SampleFileTestDataAttribute(string basePath)
         {
             this.BasePath = basePath;
+            this.FullPath = Path.GetFullPath(Path.Combine(AttributeReader.GetProjectDirectory(), basePath));
         }
 
         public string BasePath { get; }
 
+        public string FullPath { get; }
+
         public override IEnumerable<object[]> GetData(MethodInfo testMethod)
         {
-            var fullPath = Path.IsPathRooted(this.BasePath) ? this.BasePath : Path.GetRelativePath(Directory.GetCurrentDirectory(), this.BasePath);
+            if (!Directory.Exists(this.FullPath))
+                throw new ArgumentException($"Could not find directory at path: {this.FullPath}");
 
-            if (!Directory.Exists(fullPath))
-                throw new ArgumentException($"Could not find directory at path: {fullPath}");
-
-            return new[] { "*.xml" }.SelectMany(x => Directory.GetFiles(fullPath, x)).Select(x => new object[] { Path.GetFileName(x) });
+            return new[] { "*.xml" }.SelectMany(x => Directory.GetFiles(this.FullPath, x)).Select(x => new object[] { Path.GetFileName(x) });
         }
     }
 }

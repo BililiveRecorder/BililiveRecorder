@@ -26,10 +26,4 @@
     <ProjectReference Include="..\..\BililiveRecorder.Flv\BililiveRecorder.Flv.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <None Update="TestData\**\*">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-
 </Project>

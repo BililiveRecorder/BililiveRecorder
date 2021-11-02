@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using BililiveRecorder.Flv.Grouping;
 using BililiveRecorder.Flv.Pipeline;
@@ -41,11 +40,8 @@ namespace BililiveRecorder.Flv.RuleTests.Integrated
 
             AssertTags.ShouldHaveLinearTimestamps(outputTags);
             AssertTags.ShouldHaveFullHeaderTags(outputTags);
-            //this.AssertTagsShouldPassBasicChecks(outputTags);
-
             AssertTags.ShouldHaveSingleHeaderTagPerType(outputTags);
             AssertTags.ShouldAlmostEqual(originalTags, outputTags);
-            //this.AssertTagsAlmostEqual(originalTags, outputTags);
 
             await AssertTagsByRerunPipeline(outputTags).ConfigureAwait(false);
 
@@ -88,11 +84,8 @@ namespace BililiveRecorder.Flv.RuleTests.Integrated
 
             AssertTags.ShouldHaveLinearTimestamps(outputTags);
             AssertTags.ShouldHaveFullHeaderTags(outputTags);
-            //this.AssertTagsShouldPassBasicChecks(outputTags);
-
             AssertTags.ShouldHaveSingleHeaderTagPerType(outputTags);
             AssertTags.ShouldAlmostEqual(originalTags, outputTags);
-            //this.AssertTagsAlmostEqual(originalTags, outputTags);
 
             await AssertTagsByRerunPipeline(outputTags).ConfigureAwait(false);
 
