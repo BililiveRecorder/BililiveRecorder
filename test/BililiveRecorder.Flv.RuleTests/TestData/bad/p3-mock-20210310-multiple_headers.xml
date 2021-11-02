@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  文件连续出现多个不同的 Header
+-->
+<BililiveRecorderFlv xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <Tags>
+    <Tag Type="Script" Flag="None" Size="293" Timestamp="0">
+      <ScriptData>[{"Type":"String","Value":"onMetaData"},{"Type":"EcmaArray","Value":{"duration":{"Type":"Number","Value":22.233},"width":{"Type":"Number","Value":1920.0},"height":{"Type":"Number","Value":1080.0},"videodatarate":{"Type":"Number","Value":1464.84375},"framerate":{"Type":"Number","Value":30.0},"videocodecid":{"Type":"Number","Value":7.0},"audiodatarate":{"Type":"Number","Value":156.25},"audiosamplerate":{"Type":"Number","Value":48000.0},"audiosamplesize":{"Type":"Number","Value":16.0},"stereo":{"Type":"Boolean","Value":true},"audiocodecid":{"Type":"Number","Value":10.0},"encoder":{"Type":"String","Value":"Lavf58.29.100"},"filesize":{"Type":"Number","Value":524554.0}}}]</ScriptData>
+    </Tag>
+    <Tag Type="Video" Flag="Header Keyframe" Size="49" Timestamp="0">
+      <BinaryData>170000000001640028FFE1001D67640028ACD940780227E59A808080A0000003002000000791E30632C001000468EF8FCBBABABABABABA</BinaryData>
+    </Tag>
+    <Tag Type="Audio" Flag="Header" Size="7" Timestamp="0">
+      <BinaryData>AF00119056E500FFFFFFFFFFFFFFFF</BinaryData>
+    </Tag>
+    <Tag Type="Video" Flag="Header Keyframe" Size="49" Timestamp="0">
+      <BinaryData>170000000001640028FFE1001D67640028ACD940780227E59A808080A0000003002000000791E30632C001000468EF8FCB</BinaryData>
+    </Tag>
+    <Tag Type="Audio" Flag="Header" Size="7" Timestamp="0">
+      <BinaryData>AF00119056E500AAAAAAAAAAAA</BinaryData>
+    </Tag>
+    <Tag Type="Audio" Flag="Header" Size="7" Timestamp="0">
+      <BinaryData>AF00119056E500</BinaryData>
+    </Tag>
+    <Tag Type="Video" Flag="Keyframe" Size="1993" Timestamp="0">
+      <Nalus StartPosition="9" FullSize="753" Type="Sei" />
+      <Nalus StartPosition="766" FullSize="29" Type="Sps" />
+      <Nalus StartPosition="799" FullSize="4" Type="Pps" />
+      <Nalus StartPosition="807" FullSize="753" Type="Sei" />
+      <Nalus StartPosition="1564" FullSize="429" Type="CodedSliceOfAnIdrPicture" />
+    </Tag>
+    <Tag Type="Video" Flag="None" Size="76" Timestamp="34">
+      <Nalus StartPosition="9" FullSize="67" Type="CodedSliceOfANonIdrPicture" />
+    </Tag>
+    <Tag Type="Video" Flag="None" Size="73" Timestamp="67">
+      <Nalus StartPosition="9" FullSize="64" Type="CodedSliceOfANonIdrPicture" />
+    </Tag>
+    <Tag Type="Audio" Flag="None" Size="405" Timestamp="67" />
+    <Tag Type="Audio" Flag="None" Size="481" Timestamp="88" />
+    <Tag Type="Video" Flag="None" Size="73" Timestamp="100">
+      <Nalus StartPosition="9" FullSize="64" Type="CodedSliceOfANonIdrPicture" />
+    </Tag>
+    <Tag Type="Audio" Flag="None" Size="444" Timestamp="110" />
+    <Tag Type="Audio" Flag="None" Size="431" Timestamp="131" />
+    <Tag Type="Video" Flag="None" Size="73" Timestamp="134">
+      <Nalus StartPosition="9" FullSize="64" Type="CodedSliceOfANonIdrPicture" />
+    </Tag>
+    <Tag Type="Audio" Flag="None" Size="329" Timestamp="152" />
+    <Tag Type="Video" Flag="None" Size="77" Timestamp="167">
+      <Nalus StartPosition="9" FullSize="68" Type="CodedSliceOfANonIdrPicture" />
+    </Tag>
+    <Tag Type="Audio" Flag="None" Size="336" Timestamp="174" />
+    <Tag Type="Audio" Flag="None" Size="339" Timestamp="195" />
+    <Tag Type="Video" Flag="None" Size="75" Timestamp="200">
+      <Nalus StartPosition="9" FullSize="66" Type="CodedSliceOfANonIdrPicture" />
+    </Tag>
+    <Tag Type="Audio" Flag="None" Size="337" Timestamp="216" />
+    <Tag Type="Video" Flag="None" Size="73" Timestamp="234">
+      <Nalus StartPosition="9" FullSize="64" Type="CodedSliceOfANonIdrPicture" />
+    </Tag>
+    <Tag Type="Audio" Flag="None" Size="355" Timestamp="238" />
+    <Tag Type="Audio" Flag="None" Size="409" Timestamp="259" />
+    <Tag Type="Video" Flag="None" Size="73" Timestamp="267">
+      <Nalus StartPosition="9" FullSize="64" Type="CodedSliceOfANonIdrPicture" />
+    </Tag>
+    <Tag Type="Audio" Flag="None" Size="401" Timestamp="280" />
+    <Tag Type="Video" Flag="None" Size="77" Timestamp="300">
+      <Nalus StartPosition="9" FullSize="68" Type="CodedSliceOfANonIdrPicture" />
+    </Tag>
+    <Tag Type="Audio" Flag="None" Size="409" Timestamp="302" />
+    <Tag Type="Audio" Flag="None" Size="411" Timestamp="323" />
+    <Tag Type="Video" Flag="None" Size="75" Timestamp="334">
+      <Nalus StartPosition="9" FullSize="66" Type="CodedSliceOfANonIdrPicture" />
+    </Tag>
+    <Tag Type="Audio" Flag="None" Size="443" Timestamp="344" />
+    <Tag Type="Audio" Flag="None" Size="394" Timestamp="366" />
+    <Tag Type="Video" Flag="None" Size="73" Timestamp="367">
+      <Nalus StartPosition="9" FullSize="64" Type="CodedSliceOfANonIdrPicture" />
+    </Tag>
+    <Tag Type="Audio" Flag="None" Size="425" Timestamp="387" />
+    <Tag Type="Video" Flag="None" Size="73" Timestamp="400">
+      <Nalus StartPosition="9" FullSize="64" Type="CodedSliceOfANonIdrPicture" />
+    </Tag>
+    <Tag Type="Audio" Flag="None" Size="432" Timestamp="408" />
+    <Tag Type="Audio" Flag="None" Size="424" Timestamp="430" />
+    <Tag Type="Video" Flag="None" Size="77" Timestamp="434">
+      <Nalus StartPosition="9" FullSize="68" Type="CodedSliceOfANonIdrPicture" />
+    </Tag>
+    <Tag Type="Audio" Flag="None" Size="415" Timestamp="451" />
+    <Tag Type="Video" Flag="None" Size="75" Timestamp="467">
+      <Nalus StartPosition="9" FullSize="66" Type="CodedSliceOfANonIdrPicture" />
+    </Tag>
+    <Tag Type="Audio" Flag="None" Size="475" Timestamp="472" />
+    <Tag Type="Audio" Flag="None" Size="462" Timestamp="494" />
+    <Tag Type="Video" Flag="None" Size="73" Timestamp="500">
+      <Nalus StartPosition="9" FullSize="64" Type="CodedSliceOfANonIdrPicture" />
+    </Tag>
+    <Tag Type="Audio" Flag="None" Size="415" Timestamp="515" />
+    <Tag Type="Video" Flag="None" Size="73" Timestamp="534">
+      <Nalus StartPosition="9" FullSize="64" Type="CodedSliceOfANonIdrPicture" />
+    </Tag>
+    <Tag Type="Audio" Flag="None" Size="425" Timestamp="536" />
+    <Tag Type="Audio" Flag="None" Size="422" Timestamp="558" />
+    <Tag Type="Video" Flag="None" Size="77" Timestamp="567">
+      <Nalus StartPosition="9" FullSize="68" Type="CodedSliceOfANonIdrPicture" />
+    </Tag>
+    <Tag Type="Audio" Flag="None" Size="418" Timestamp="579" />
+    <Tag Type="Video" Flag="None" Size="75" Timestamp="600">
+      <Nalus StartPosition="9" FullSize="66" Type="CodedSliceOfANonIdrPicture" />
+    </Tag>
+    <Tag Type="Audio" Flag="None" Size="401" Timestamp="600" />
+    <Tag Type="Audio" Flag="None" Size="415" Timestamp="622" />
+    <Tag Type="Video" Flag="None" Size="73" Timestamp="634">
+      <Nalus StartPosition="9" FullSize="64" Type="CodedSliceOfANonIdrPicture" />
+    </Tag>
+    <Tag Type="Audio" Flag="None" Size="419" Timestamp="643" />
+    <Tag Type="Audio" Flag="None" Size="412" Timestamp="664" />
+    <Tag Type="Video" Flag="None" Size="73" Timestamp="667">
+      <Nalus StartPosition="9" FullSize="64" Type="CodedSliceOfANonIdrPicture" />
+    </Tag>
+    <Tag Type="Audio" Flag="None" Size="438" Timestamp="686" />
+    <Tag Type="Video" Flag="None" Size="77" Timestamp="700">
+      <Nalus StartPosition="9" FullSize="68" Type="CodedSliceOfANonIdrPicture" />
+    </Tag>
+    <Tag Type="Audio" Flag="None" Size="426" Timestamp="707" />
+    <Tag Type="Audio" Flag="None" Size="425" Timestamp="728" />
+    <Tag Type="Video" Flag="None" Size="75" Timestamp="734">
+      <Nalus StartPosition="9" FullSize="66" Type="CodedSliceOfANonIdrPicture" />
+    </Tag>
+    <Tag Type="Audio" Flag="None" Size="447" Timestamp="750" />
+    <Tag Type="Video" Flag="None" Size="73" Timestamp="767">
+      <Nalus StartPosition="9" FullSize="64" Type="CodedSliceOfANonIdrPicture" />
+    </Tag>
+    <Tag Type="Audio" Flag="None" Size="404" Timestamp="771" />
+    <Tag Type="Audio" Flag="None" Size="442" Timestamp="792" />
+    <Tag Type="Video" Flag="None" Size="73" Timestamp="800">
+      <Nalus StartPosition="9" FullSize="64" Type="CodedSliceOfANonIdrPicture" />
+    </Tag>
+    <Tag Type="Audio" Flag="None" Size="440" Timestamp="814" />
+    <Tag Type="Video" Flag="None" Size="77" Timestamp="834">
+      <Nalus StartPosition="9" FullSize="68" Type="CodedSliceOfANonIdrPicture" />
+    </Tag>
+    <Tag Type="Audio" Flag="None" Size="439" Timestamp="835" />
+    <Tag Type="Audio" Flag="None" Size="425" Timestamp="856" />
+    <Tag Type="Video" Flag="None" Size="75" Timestamp="867">
+      <Nalus StartPosition="9" FullSize="66" Type="CodedSliceOfANonIdrPicture" />
+    </Tag>
+    <Tag Type="Audio" Flag="None" Size="471" Timestamp="878" />
+    <Tag Type="Audio" Flag="None" Size="466" Timestamp="899" />
+    <Tag Type="Video" Flag="None" Size="73" Timestamp="900">
+      <Nalus StartPosition="9" FullSize="64" Type="CodedSliceOfANonIdrPicture" />
+    </Tag>
+    <Tag Type="Audio" Flag="None" Size="447" Timestamp="920" />
+    <Tag Type="Video" Flag="None" Size="73" Timestamp="934">
+      <Nalus StartPosition="9" FullSize="64" Type="CodedSliceOfANonIdrPicture" />
+    </Tag>
+    <Tag Type="Audio" Flag="None" Size="455" Timestamp="942" />
+    <Tag Type="Audio" Flag="None" Size="450" Timestamp="963" />
+    <Tag Type="Video" Flag="None" Size="77" Timestamp="967">
+      <Nalus StartPosition="9" FullSize="68" Type="CodedSliceOfANonIdrPicture" />
+    </Tag>
+    <Tag Type="Audio" Flag="None" Size="409" Timestamp="984" />
+    <Tag Type="Video" Flag="None" Size="75" Timestamp="1000">
+      <Nalus StartPosition="9" FullSize="66" Type="CodedSliceOfANonIdrPicture" />
+    </Tag>
+  </Tags>
+</BililiveRecorderFlv>

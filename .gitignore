@@ -262,3 +262,5 @@ __pycache__/
 *.pyc
 
 BililiveRecorder.Cli/Properties/launchSettings.json
+
+**/*.received.*

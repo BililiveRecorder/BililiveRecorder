@@ -23,7 +23,7 @@ namespace BililiveRecorder.Flv.RuleTests
             if (!Directory.Exists(fullPath))
                 throw new ArgumentException($"Could not find directory at path: {fullPath}");
 
-            return new[] { "*.xml", "*.gz" }.SelectMany(x => Directory.GetFiles(fullPath, x)).Select(x => new object[] { x });
+            return new[] { "*.xml" }.SelectMany(x => Directory.GetFiles(fullPath, x)).Select(x => new object[] { Path.GetFileName(x) });
         }
     }
 }
