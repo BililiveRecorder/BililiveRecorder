@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.29924.181
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{FD13D9F6-94CD-4CBA-AEA8-EF71002EAC6B}"
 	ProjectSection(SolutionItems) = preProject
@@ -25,11 +25,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BililiveRecorder.Flv", "Bil
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BililiveRecorder.Core.UnitTests", "test\BililiveRecorder.Core.UnitTests\BililiveRecorder.Core.UnitTests.csproj", "{521EC763-5694-45A8-B87F-6E6B7F2A3BD4}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BililiveRecorder.Flv.UnitTests", "test\BililiveRecorder.Flv.UnitTests\BililiveRecorder.Flv.UnitTests.csproj", "{560E8483-9293-410E-81E9-AB36B49F8A7C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BililiveRecorder.ToolBox", "BililiveRecorder.ToolBox\BililiveRecorder.ToolBox.csproj", "{4FAAE8E7-AC4E-4E99-A7D1-53D20AD8A200}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BililiveRecorder.Flv.RuleTests", "test\BililiveRecorder.Flv.RuleTests\BililiveRecorder.Flv.RuleTests.csproj", "{75DA0162-DE06-4FA0-B6F8-C82C11AF65BC}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BililiveRecorder.ToolBox", "BililiveRecorder.ToolBox\BililiveRecorder.ToolBox.csproj", "{4FAAE8E7-AC4E-4E99-A7D1-53D20AD8A200}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BililiveRecorder.Flv.Tests", "test\BililiveRecorder.Flv.Tests\BililiveRecorder.Flv.Tests.csproj", "{32E554B1-0ECC-4145-85B8-3FC128FEBEA1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -57,18 +55,14 @@ Global
 		{521EC763-5694-45A8-B87F-6E6B7F2A3BD4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{521EC763-5694-45A8-B87F-6E6B7F2A3BD4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{521EC763-5694-45A8-B87F-6E6B7F2A3BD4}.Release|Any CPU.Build.0 = Release|Any CPU
-		{560E8483-9293-410E-81E9-AB36B49F8A7C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{560E8483-9293-410E-81E9-AB36B49F8A7C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{560E8483-9293-410E-81E9-AB36B49F8A7C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{560E8483-9293-410E-81E9-AB36B49F8A7C}.Release|Any CPU.Build.0 = Release|Any CPU
-		{75DA0162-DE06-4FA0-B6F8-C82C11AF65BC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{75DA0162-DE06-4FA0-B6F8-C82C11AF65BC}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{75DA0162-DE06-4FA0-B6F8-C82C11AF65BC}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{75DA0162-DE06-4FA0-B6F8-C82C11AF65BC}.Release|Any CPU.Build.0 = Release|Any CPU
 		{4FAAE8E7-AC4E-4E99-A7D1-53D20AD8A200}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{4FAAE8E7-AC4E-4E99-A7D1-53D20AD8A200}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4FAAE8E7-AC4E-4E99-A7D1-53D20AD8A200}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4FAAE8E7-AC4E-4E99-A7D1-53D20AD8A200}.Release|Any CPU.Build.0 = Release|Any CPU
+		{32E554B1-0ECC-4145-85B8-3FC128FEBEA1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{32E554B1-0ECC-4145-85B8-3FC128FEBEA1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{32E554B1-0ECC-4145-85B8-3FC128FEBEA1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{32E554B1-0ECC-4145-85B8-3FC128FEBEA1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -79,9 +73,8 @@ Global
 		{1B626335-283F-4313-9045-B5B96FAAB2DF} = {2D44A59D-E437-4FEE-8A2E-3FF00D53A64D}
 		{7610E19C-D3AB-4CBC-983E-6FDA36F4D4B3} = {2D44A59D-E437-4FEE-8A2E-3FF00D53A64D}
 		{521EC763-5694-45A8-B87F-6E6B7F2A3BD4} = {623A2ACC-DAC6-4E6F-9242-B4B54381AAE1}
-		{560E8483-9293-410E-81E9-AB36B49F8A7C} = {623A2ACC-DAC6-4E6F-9242-B4B54381AAE1}
-		{75DA0162-DE06-4FA0-B6F8-C82C11AF65BC} = {623A2ACC-DAC6-4E6F-9242-B4B54381AAE1}
 		{4FAAE8E7-AC4E-4E99-A7D1-53D20AD8A200} = {2D44A59D-E437-4FEE-8A2E-3FF00D53A64D}
+		{32E554B1-0ECC-4145-85B8-3FC128FEBEA1} = {623A2ACC-DAC6-4E6F-9242-B4B54381AAE1}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		RESX_SortFileContentOnSave = True

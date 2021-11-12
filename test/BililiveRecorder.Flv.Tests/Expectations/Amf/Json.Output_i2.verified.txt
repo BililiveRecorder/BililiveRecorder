@@ -1,0 +1,1 @@
+﻿[{"Type":"String","Value":"test"},{"Type":"Boolean","Value":true},{"Type":"Boolean","Value":false},{"Type":"Number","Value":0.0},{"Type":"Number","Value":-95.7}]
