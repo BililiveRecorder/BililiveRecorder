@@ -16,7 +16,7 @@ export const data: Array<ConfigEntry> = [
         type: "bool",
         configType: "roomOnly",
         defaultValue: "default",
-        markdown: ""
+        markdown: "设为 `true` 为启用自动录制，`false` 为不自动录制。"
     },
     {
         name: "RecordMode",
@@ -24,7 +24,7 @@ export const data: Array<ConfigEntry> = [
         type: "RecordMode",
         configType: "room",
         defaultValue: "RecordMode.Standard",
-        markdown: ""
+        markdown: "本设置项是一个 enum，键值对应如下：\n\n| 键 | 值 |\n|:--:|:--:|\n| RecordMode.Standard | 0 |\n| RecordMode.RawData | 1 |\n\n关于录制模式的说明见 [录制模式](/docs/basic/record_mode/)"
     },
     {
         name: "CuttingMode",
@@ -32,7 +32,7 @@ export const data: Array<ConfigEntry> = [
         type: "CuttingMode",
         configType: "room",
         defaultValue: "CuttingMode.Disabled",
-        markdown: ""
+        markdown: "本设置项是一个 enum，键值对应如下：\n\n| 键 | 值 |\n|:--:|:--:|\n| CuttingMode.Disabled | 0 |\n| CuttingMode.ByTime | 1 |\n| CuttingMode.BySize | 2 |"
     },
     {
         name: "CuttingNumber",
@@ -40,7 +40,7 @@ export const data: Array<ConfigEntry> = [
         type: "uint",
         configType: "room",
         defaultValue: "100",
-        markdown: "按时长分段时为分钟，按大小分段时为MiB"
+        markdown: "根据 CuttingMode 设置的不同：    \n当按时长分段时，本设置的单位为分钟。  \n当按大小分段时，本设置的单位为MiB。"
     },
     {
         name: "RecordDanmaku",
@@ -48,7 +48,7 @@ export const data: Array<ConfigEntry> = [
         type: "bool",
         configType: "room",
         defaultValue: "false",
-        markdown: ""
+        markdown: "是否录制弹幕，`true` 为录制，`false` 为不录制。\n\n本设置同时是所有“弹幕录制”的总开关，当本设置为 `false` 时其他所有“弹幕录制”设置无效，不会写入弹幕XML文件。"
     },
     {
         name: "RecordDanmakuRaw",
@@ -56,7 +56,7 @@ export const data: Array<ConfigEntry> = [
         type: "bool",
         configType: "room",
         defaultValue: "false",
-        markdown: ""
+        markdown: "是否记录原始 JSON 数据。\n\n弹幕原始数据会保存到 XML 文件每一条弹幕数据的 `raw` attribute 上。\n\n当 `RecordDanmaku` 为 `false` 时本项设置无效。"
     },
     {
         name: "RecordDanmakuSuperChat",
@@ -64,7 +64,7 @@ export const data: Array<ConfigEntry> = [
         type: "bool",
         configType: "room",
         defaultValue: "true",
-        markdown: ""
+        markdown: "是否记录 SuperChat。\n\n当 `RecordDanmaku` 为 `false` 时本项设置无效。"
     },
     {
         name: "RecordDanmakuGift",
@@ -72,7 +72,7 @@ export const data: Array<ConfigEntry> = [
         type: "bool",
         configType: "room",
         defaultValue: "false",
-        markdown: ""
+        markdown: "是否记录礼物。\n\n当 `RecordDanmaku` 为 `false` 时本项设置无效。"
     },
     {
         name: "RecordDanmakuGuard",
@@ -80,7 +80,7 @@ export const data: Array<ConfigEntry> = [
         type: "bool",
         configType: "room",
         defaultValue: "true",
-        markdown: ""
+        markdown: "是否记录上船（购买舰长）。\n\n当 `RecordDanmaku` 为 `false` 时本项设置无效。"
     },
     {
         name: "RecordingQuality",
@@ -89,7 +89,7 @@ export const data: Array<ConfigEntry> = [
         description: "直播画质",
         defaultValue: "\"10000\"",
         defaultValueDescription: "10000",
-        markdown: "录制的直播画质 qn 值，逗号分割，靠前的优先"
+        markdown: "录制的直播画质 qn 值，以英文逗号分割，靠前的优先。\n\n**注意**（从录播姬 1.3.10 开始）：\n\n- 所有主播刚开播时都是只有“原画”的，如果选择不录原画会导致直播开头漏录。\n- 如果设置的录制画质里没有原画，但是主播只有原画画质，会导致不能录制直播。\n- 录播姬不会为了切换录制的画质主动断开录制。\n\n画质 | qn 值\n:--:|:--:\n4K | 20000\n原画 | 10000\n蓝光(杜比) | 401\n蓝光 | 400\n超清 | 250\n高清 | 150\n流畅 | 80"
     },
     {
         name: "RecordFilenameFormat",
@@ -97,7 +97,7 @@ export const data: Array<ConfigEntry> = [
         type: "string?",
         configType: "globalOnly",
         defaultValue: "@\"{roomid}-{name}/录制-{roomid}-{date}-{time}-{ms}-{title}.flv\"",
-        markdown: ""
+        markdown: "- 只支持 FLV 格式\n- 所有大括号均为英文半角括号\n- 录制时如果出现文件名冲突，会使用一个默认文件名\n\n变量 | 含义\n:--:|:--:\n{date} | 当前日期（年月日）\n{time} | 当前时间（时分秒）\n{ms} | 当前时间毫秒\n{roomid} | 房间号\n{title} | 标题\n{name} | 主播名\n{parea} | 大分区\n{area} | 子分区\n{random} | 随机数字\n"
     },
     {
         name: "WebHookUrls",
@@ -106,7 +106,7 @@ export const data: Array<ConfigEntry> = [
         configType: "globalOnly",
         defaultValue: "string.Empty",
         xmlComment: "录制文件写入结束 Webhook 地址 每行一个",
-        markdown: ""
+        markdown: "具体文档见 [Webhook](/docs/basic/webhook/)"
     },
     {
         name: "WebHookUrlsV2",
@@ -115,7 +115,7 @@ export const data: Array<ConfigEntry> = [
         configType: "globalOnly",
         defaultValue: "string.Empty",
         xmlComment: "Webhook v2 地址 每行一个",
-        markdown: ""
+        markdown: "具体文档见 [Webhook](/docs/basic/webhook/)"
     },
     {
         name: "WpfShowTitleAndArea",
@@ -123,7 +123,7 @@ export const data: Array<ConfigEntry> = [
         type: "bool",
         configType: "globalOnly",
         defaultValue: "true",
-        markdown: ""
+        markdown: "只在桌面版（WPF版）有效"
     },
     {
         name: "Cookie",
