@@ -166,6 +166,16 @@ export const data: Array<ConfigEntry> = [
         markdown: ""
     },
     {
+        name: "TimingStreamRetryNoQn",
+        description: "录制无指定画质重连时间间隔 秒",
+        type: "uint",
+        configType: "globalOnly",
+        advancedConfig: true,
+        defaultValue: "90",
+        defaultValueDescription: "90 (1.5分钟)",
+        markdown: ""
+    },
+    {
         name: "TimingStreamConnect",
         description: "连接直播服务器超时时间 毫秒",
         type: "uint",

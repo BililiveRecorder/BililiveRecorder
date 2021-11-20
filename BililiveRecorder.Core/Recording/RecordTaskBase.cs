@@ -238,40 +238,32 @@ namespace BililiveRecorder.Core.Recording
         {
             const int DefaultQn = 10000;
             var selected_qn = DefaultQn;
-            int[] qns;
-            Api.Model.RoomPlayInfo.UrlInfoItem[]? url_infos;
-
             var codecItem = await this.apiClient.GetCodecItemInStreamUrlAsync(roomid: roomid, qn: DefaultQn).ConfigureAwait(false);
 
             if (codecItem is null)
                 throw new Exception("no supported stream url, qn: " + DefaultQn);
 
+            var qns = this.room.RoomConfig.RecordingQuality?.Split(new[] { ',', '，', '、', ' ' }, StringSplitOptions.RemoveEmptyEntries)
+                .Select(x => int.TryParse(x, out var num) ? num : -1)
+                .Where(x => x > 0)
+                .ToArray()
+                ?? Array.Empty<int>();
+
+            // Select first avaiable qn
+            foreach (var qn in qns)
             {
-                try
+                if (codecItem.AcceptQn.Contains(qn))
                 {
-                    qns = this.room.RoomConfig.RecordingQuality.Split(new[] { ',', '，', '、', ' ' }, StringSplitOptions.RemoveEmptyEntries)
-                                                                  .Select(x => int.TryParse(x, out var num) ? num : -1)
-                                                                  .Where(x => x > 0)
-                                                                  .ToArray();
-
-                    foreach (var qn in qns)
-                    {
-                        if (codecItem.AcceptQn.Contains(qn))
-                        {
-                            selected_qn = qn;
-                            break;
-                        }
-                    }
-
-                    this.logger.Debug("设置画质 {QnSettings}, 可用画质 {AcceptQn}, 最终选择 {SelectedQn}", qns, codecItem.AcceptQn, selected_qn);
-                }
-                catch (Exception ex)
-                {
-                    this.logger.Warning(ex, "判断录制画质时出错，将默认使用 原画(10000)");
-                    qns = new[] { DefaultQn };
-                    url_infos = codecItem.UrlInfos;
+                    selected_qn = qn;
+                    goto match_qn_success;
                 }
             }
+
+            this.logger.Information("没有符合设置要求的画质，稍后再试。设置画质 {QnSettings}, 可用画质 {AcceptQn}", qns, codecItem.AcceptQn);
+            throw new NoMatchingQnValueException();
+
+        match_qn_success:
+            this.logger.Debug("设置画质 {QnSettings}, 可用画质 {AcceptQn}, 最终选择 {SelectedQn}", qns, codecItem.AcceptQn, selected_qn);
 
             if (selected_qn != DefaultQn)
             {
@@ -279,13 +271,13 @@ namespace BililiveRecorder.Core.Recording
                 codecItem = await this.apiClient.GetCodecItemInStreamUrlAsync(roomid: roomid, qn: selected_qn).ConfigureAwait(false);
 
                 if (codecItem is null)
-                    throw new Exception("no supported stream url, qn: " + DefaultQn);
+                    throw new Exception("no supported stream url, qn: " + selected_qn);
             }
 
             if (codecItem.CurrentQn != selected_qn || !qns.Contains(codecItem.CurrentQn))
                 this.logger.Warning("当前录制的画质是 {CurrentQn}", codecItem.CurrentQn);
 
-            url_infos = codecItem.UrlInfos;
+            var url_infos = codecItem.UrlInfos;
             if (url_infos is null || url_infos.Length == 0)
                 throw new Exception("no url_info");
 

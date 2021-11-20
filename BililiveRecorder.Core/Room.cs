@@ -235,6 +235,16 @@ namespace BililiveRecorder.Core
                     {
                         await this.recordTask.StartAsync();
                     }
+                    catch (NoMatchingQnValueException)
+                    {
+                        this.recordTask = null;
+                        this.OnPropertyChanged(nameof(this.Recording));
+
+                        // 无匹配的画质，重试录制之前等待更长时间
+                        _ = Task.Run(() => this.RestartAfterRecordTaskFailedAsync(RestartRecordingReason.NoMatchingQnValue));
+
+                        return;
+                    }
                     catch (Exception ex)
                     {
                         this.logger.Write(ex is ExecutionRejectedException ? LogEventLevel.Verbose : LogEventLevel.Warning, ex, "启动录制出错");
@@ -243,10 +253,11 @@ namespace BililiveRecorder.Core
                         this.OnPropertyChanged(nameof(this.Recording));
 
                         // 请求直播流出错时的重试逻辑
-                        _ = Task.Run(this.RestartAfterRecordTaskFailedAsync);
+                        _ = Task.Run(() => this.RestartAfterRecordTaskFailedAsync(RestartRecordingReason.GenericRetry));
 
                         return;
                     }
+
                     RecordSessionStarted?.Invoke(this, new RecordSessionStartedEventArgs(this)
                     {
                         SessionId = this.recordTask.SessionId
@@ -256,7 +267,7 @@ namespace BililiveRecorder.Core
         }
 
         ///
-        private async Task RestartAfterRecordTaskFailedAsync()
+        private async Task RestartAfterRecordTaskFailedAsync(RestartRecordingReason restartRecordingReason)
         {
             if (this.disposedValue)
                 return;
@@ -270,7 +281,13 @@ namespace BililiveRecorder.Core
 
                 try
                 {
-                    await Task.Delay((int)this.RoomConfig.TimingStreamRetry, this.ct).ConfigureAwait(false);
+                    var delay = restartRecordingReason switch
+                    {
+                        RestartRecordingReason.GenericRetry => this.RoomConfig.TimingStreamRetry,
+                        RestartRecordingReason.NoMatchingQnValue => this.RoomConfig.TimingStreamRetryNoQn * 1000,
+                        _ => throw new InvalidOperationException()
+                    };
+                    await Task.Delay((int)delay, this.ct).ConfigureAwait(false);
                 }
                 catch (TaskCanceledException)
                 {
@@ -293,7 +310,7 @@ namespace BililiveRecorder.Core
             catch (Exception ex)
             {
                 this.logger.Write(ex is ExecutionRejectedException ? LogEventLevel.Verbose : LogEventLevel.Warning, ex, "重试开始录制时出错");
-                _ = Task.Run(this.RestartAfterRecordTaskFailedAsync);
+                _ = Task.Run(() => this.RestartAfterRecordTaskFailedAsync(restartRecordingReason));
             }
         }
 
@@ -403,7 +420,7 @@ namespace BililiveRecorder.Core
                     catch (Exception ex)
                     {
                         this.logger.Write(LogEventLevel.Warning, ex, "重试开始录制时出错");
-                        _ = Task.Run(this.RestartAfterRecordTaskFailedAsync);
+                        _ = Task.Run(() => this.RestartAfterRecordTaskFailedAsync(RestartRecordingReason.GenericRetry));
                     }
                 });
             }

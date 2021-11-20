@@ -56,6 +56,12 @@
                         </c:SettingWithDefault.ToolTip>
                         <ui:NumberBox Minimum="1000" Description="单位: 毫秒" SmallChange="100" Text="{Binding TimingStreamRetry,Delay=500}"/>
                     </c:SettingWithDefault>
+                    <c:SettingWithDefault IsSettingNotUsingDefault="{Binding HasTimingStreamRetryNoQn}" Header="录制重试间隔（无匹配画质）">
+                        <c:SettingWithDefault.ToolTip>
+                            <TextBlock>无匹配的画质后等待多长时间再尝试开始录制</TextBlock>
+                        </c:SettingWithDefault.ToolTip>
+                        <ui:NumberBox Minimum="10" Description="单位: 秒" SmallChange="5" Text="{Binding TimingStreamRetryNoQn,Delay=500}"/>
+                    </c:SettingWithDefault>
                     <c:SettingWithDefault IsSettingNotUsingDefault="{Binding HasTimingStreamConnect}" Header="录制连接超时">
                         <c:SettingWithDefault.ToolTip>
                             <TextBlock>

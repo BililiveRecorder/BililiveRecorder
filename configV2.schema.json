@@ -8,7 +8,7 @@
       "properties": {
         "RecordFilenameFormat": {
           "description": "录制文件名格式\n默认: {roomid}-{name}/录制-{roomid}-{date}-{time}-{ms}-{title}.flv",
-          "markdownDescription": "录制文件名格式  \n默认: `{roomid}-{name}/录制-{roomid}-{date}-{time}-{ms}-{title}.flv `\n\n",
+          "markdownDescription": "录制文件名格式  \n默认: `{roomid}-{name}/录制-{roomid}-{date}-{time}-{ms}-{title}.flv `\n\n- 只支持 FLV 格式\n- 所有大括号均为英文半角括号\n- 录制时如果出现文件名冲突，会使用一个默认文件名\n\n变量 | 含义\n:--:|:--:\n{date} | 当前日期（年月日）\n{time} | 当前时间（时分秒）\n{ms} | 当前时间毫秒\n{roomid} | 房间号\n{title} | 标题\n{name} | 主播名\n{parea} | 大分区\n{area} | 子分区\n{random} | 随机数字\n",
           "type": "object",
           "additionalProperties": false,
           "properties": {
@@ -24,7 +24,7 @@
         },
         "WebHookUrls": {
           "description": "WebhookV1\n默认: ",
-          "markdownDescription": "WebhookV1  \n默认: ` `\n\n",
+          "markdownDescription": "WebhookV1  \n默认: ` `\n\n具体文档见 [Webhook](/docs/basic/webhook/)",
           "type": "object",
           "additionalProperties": false,
           "properties": {
@@ -40,7 +40,7 @@
         },
         "WebHookUrlsV2": {
           "description": "WebhookV2\n默认: ",
-          "markdownDescription": "WebhookV2  \n默认: ` `\n\n",
+          "markdownDescription": "WebhookV2  \n默认: ` `\n\n具体文档见 [Webhook](/docs/basic/webhook/)",
           "type": "object",
           "additionalProperties": false,
           "properties": {
@@ -56,7 +56,7 @@
         },
         "WpfShowTitleAndArea": {
           "description": "在界面显示标题和分区\n默认: true",
-          "markdownDescription": "在界面显示标题和分区  \n默认: `true `\n\n",
+          "markdownDescription": "在界面显示标题和分区  \n默认: `true `\n\n只在桌面版（WPF版）有效",
           "type": "object",
           "additionalProperties": false,
           "properties": {
@@ -139,6 +139,24 @@
             }
           }
         },
+        "TimingStreamRetryNoQn": {
+          "description": "录制无指定画质重连时间间隔 秒\n默认: 90 (1.5分钟)",
+          "markdownDescription": "录制无指定画质重连时间间隔 秒  \n默认: `90 (1.5分钟) `\n\n",
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "HasValue": {
+              "type": "boolean",
+              "default": true
+            },
+            "Value": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 4294967295,
+              "default": 90
+            }
+          }
+        },
         "TimingStreamConnect": {
           "description": "连接直播服务器超时时间 毫秒\n默认: 5000 (5秒)",
           "markdownDescription": "连接直播服务器超时时间 毫秒  \n默认: `5000 (5秒) `\n\n",
@@ -213,7 +231,7 @@
         },
         "RecordMode": {
           "description": "录制模式\n默认: RecordMode.Standard",
-          "markdownDescription": "录制模式  \n默认: `RecordMode.Standard `\n\n",
+          "markdownDescription": "录制模式  \n默认: `RecordMode.Standard `\n\n本设置项是一个 enum，键值对应如下：\n\n| 键 | 值 |\n|:--:|:--:|\n| RecordMode.Standard | 0 |\n| RecordMode.RawData | 1 |\n\n关于录制模式的说明见 [录制模式](/docs/basic/record_mode/)",
           "type": "object",
           "additionalProperties": false,
           "properties": {
@@ -234,7 +252,7 @@
         },
         "CuttingMode": {
           "description": "自动分段模式\n默认: CuttingMode.Disabled",
-          "markdownDescription": "自动分段模式  \n默认: `CuttingMode.Disabled `\n\n",
+          "markdownDescription": "自动分段模式  \n默认: `CuttingMode.Disabled `\n\n本设置项是一个 enum，键值对应如下：\n\n| 键 | 值 |\n|:--:|:--:|\n| CuttingMode.Disabled | 0 |\n| CuttingMode.ByTime | 1 |\n| CuttingMode.BySize | 2 |",
           "type": "object",
           "additionalProperties": false,
           "properties": {
@@ -256,7 +274,7 @@
         },
         "CuttingNumber": {
           "description": "自动分段数值\n默认: 100",
-          "markdownDescription": "自动分段数值  \n默认: `100 `\n\n按时长分段时为分钟，按大小分段时为MiB",
+          "markdownDescription": "自动分段数值  \n默认: `100 `\n\n根据 CuttingMode 设置的不同：    \n当按时长分段时，本设置的单位为分钟。  \n当按大小分段时，本设置的单位为MiB。",
           "type": "object",
           "additionalProperties": false,
           "properties": {
@@ -274,7 +292,7 @@
         },
         "RecordDanmaku": {
           "description": "弹幕录制\n默认: false",
-          "markdownDescription": "弹幕录制  \n默认: `false `\n\n",
+          "markdownDescription": "弹幕录制  \n默认: `false `\n\n是否录制弹幕，`true` 为录制，`false` 为不录制。\n\n本设置同时是所有“弹幕录制”的总开关，当本设置为 `false` 时其他所有“弹幕录制”设置无效，不会写入弹幕XML文件。",
           "type": "object",
           "additionalProperties": false,
           "properties": {
@@ -290,7 +308,7 @@
         },
         "RecordDanmakuRaw": {
           "description": "弹幕录制-原始数据\n默认: false",
-          "markdownDescription": "弹幕录制-原始数据  \n默认: `false `\n\n",
+          "markdownDescription": "弹幕录制-原始数据  \n默认: `false `\n\n是否记录原始 JSON 数据。\n\n弹幕原始数据会保存到 XML 文件每一条弹幕数据的 `raw` attribute 上。\n\n当 `RecordDanmaku` 为 `false` 时本项设置无效。",
           "type": "object",
           "additionalProperties": false,
           "properties": {
@@ -306,7 +324,7 @@
         },
         "RecordDanmakuSuperChat": {
           "description": "弹幕录制-SuperChat\n默认: true",
-          "markdownDescription": "弹幕录制-SuperChat  \n默认: `true `\n\n",
+          "markdownDescription": "弹幕录制-SuperChat  \n默认: `true `\n\n是否记录 SuperChat。\n\n当 `RecordDanmaku` 为 `false` 时本项设置无效。",
           "type": "object",
           "additionalProperties": false,
           "properties": {
@@ -322,7 +340,7 @@
         },
         "RecordDanmakuGift": {
           "description": "弹幕录制-礼物\n默认: false",
-          "markdownDescription": "弹幕录制-礼物  \n默认: `false `\n\n",
+          "markdownDescription": "弹幕录制-礼物  \n默认: `false `\n\n是否记录礼物。\n\n当 `RecordDanmaku` 为 `false` 时本项设置无效。",
           "type": "object",
           "additionalProperties": false,
           "properties": {
@@ -338,7 +356,7 @@
         },
         "RecordDanmakuGuard": {
           "description": "弹幕录制-上船\n默认: true",
-          "markdownDescription": "弹幕录制-上船  \n默认: `true `\n\n",
+          "markdownDescription": "弹幕录制-上船  \n默认: `true `\n\n是否记录上船（购买舰长）。\n\n当 `RecordDanmaku` 为 `false` 时本项设置无效。",
           "type": "object",
           "additionalProperties": false,
           "properties": {
@@ -354,7 +372,7 @@
         },
         "RecordingQuality": {
           "description": "直播画质\n默认: 10000",
-          "markdownDescription": "直播画质  \n默认: `10000 `\n\n录制的直播画质 qn 值，逗号分割，靠前的优先",
+          "markdownDescription": "直播画质  \n默认: `10000 `\n\n录制的直播画质 qn 值，以英文逗号分割，靠前的优先。\n\n**注意**（从录播姬 1.3.10 开始）：\n\n- 所有主播刚开播时都是只有“原画”的，如果选择不录原画会导致直播开头漏录。\n- 如果设置的录制画质里没有原画，但是主播只有原画画质，会导致不能录制直播。\n- 录播姬不会为了切换录制的画质主动断开录制。\n\n画质 | qn 值\n:--:|:--:\n4K | 20000\n原画 | 10000\n蓝光(杜比) | 401\n蓝光 | 400\n超清 | 250\n高清 | 150\n流畅 | 80",
           "type": "object",
           "additionalProperties": false,
           "properties": {
@@ -393,7 +411,7 @@
         },
         "AutoRecord": {
           "description": "自动录制\n默认: default",
-          "markdownDescription": "自动录制  \n默认: `default `\n\n",
+          "markdownDescription": "自动录制  \n默认: `default `\n\n设为 `true` 为启用自动录制，`false` 为不自动录制。",
           "type": "object",
           "additionalProperties": false,
           "properties": {
@@ -408,7 +426,7 @@
         },
         "RecordMode": {
           "description": "录制模式\n默认: RecordMode.Standard",
-          "markdownDescription": "录制模式  \n默认: `RecordMode.Standard `\n\n",
+          "markdownDescription": "录制模式  \n默认: `RecordMode.Standard `\n\n本设置项是一个 enum，键值对应如下：\n\n| 键 | 值 |\n|:--:|:--:|\n| RecordMode.Standard | 0 |\n| RecordMode.RawData | 1 |\n\n关于录制模式的说明见 [录制模式](/docs/basic/record_mode/)",
           "type": "object",
           "additionalProperties": false,
           "properties": {
@@ -429,7 +447,7 @@
         },
         "CuttingMode": {
           "description": "自动分段模式\n默认: CuttingMode.Disabled",
-          "markdownDescription": "自动分段模式  \n默认: `CuttingMode.Disabled `\n\n",
+          "markdownDescription": "自动分段模式  \n默认: `CuttingMode.Disabled `\n\n本设置项是一个 enum，键值对应如下：\n\n| 键 | 值 |\n|:--:|:--:|\n| CuttingMode.Disabled | 0 |\n| CuttingMode.ByTime | 1 |\n| CuttingMode.BySize | 2 |",
           "type": "object",
           "additionalProperties": false,
           "properties": {
@@ -451,7 +469,7 @@
         },
         "CuttingNumber": {
           "description": "自动分段数值\n默认: 100",
-          "markdownDescription": "自动分段数值  \n默认: `100 `\n\n按时长分段时为分钟，按大小分段时为MiB",
+          "markdownDescription": "自动分段数值  \n默认: `100 `\n\n根据 CuttingMode 设置的不同：    \n当按时长分段时，本设置的单位为分钟。  \n当按大小分段时，本设置的单位为MiB。",
           "type": "object",
           "additionalProperties": false,
           "properties": {
@@ -469,7 +487,7 @@
         },
         "RecordDanmaku": {
           "description": "弹幕录制\n默认: false",
-          "markdownDescription": "弹幕录制  \n默认: `false `\n\n",
+          "markdownDescription": "弹幕录制  \n默认: `false `\n\n是否录制弹幕，`true` 为录制，`false` 为不录制。\n\n本设置同时是所有“弹幕录制”的总开关，当本设置为 `false` 时其他所有“弹幕录制”设置无效，不会写入弹幕XML文件。",
           "type": "object",
           "additionalProperties": false,
           "properties": {
@@ -485,7 +503,7 @@
         },
         "RecordDanmakuRaw": {
           "description": "弹幕录制-原始数据\n默认: false",
-          "markdownDescription": "弹幕录制-原始数据  \n默认: `false `\n\n",
+          "markdownDescription": "弹幕录制-原始数据  \n默认: `false `\n\n是否记录原始 JSON 数据。\n\n弹幕原始数据会保存到 XML 文件每一条弹幕数据的 `raw` attribute 上。\n\n当 `RecordDanmaku` 为 `false` 时本项设置无效。",
           "type": "object",
           "additionalProperties": false,
           "properties": {
@@ -501,7 +519,7 @@
         },
         "RecordDanmakuSuperChat": {
           "description": "弹幕录制-SuperChat\n默认: true",
-          "markdownDescription": "弹幕录制-SuperChat  \n默认: `true `\n\n",
+          "markdownDescription": "弹幕录制-SuperChat  \n默认: `true `\n\n是否记录 SuperChat。\n\n当 `RecordDanmaku` 为 `false` 时本项设置无效。",
           "type": "object",
           "additionalProperties": false,
           "properties": {
@@ -517,7 +535,7 @@
         },
         "RecordDanmakuGift": {
           "description": "弹幕录制-礼物\n默认: false",
-          "markdownDescription": "弹幕录制-礼物  \n默认: `false `\n\n",
+          "markdownDescription": "弹幕录制-礼物  \n默认: `false `\n\n是否记录礼物。\n\n当 `RecordDanmaku` 为 `false` 时本项设置无效。",
           "type": "object",
           "additionalProperties": false,
           "properties": {
@@ -533,7 +551,7 @@
         },
         "RecordDanmakuGuard": {
           "description": "弹幕录制-上船\n默认: true",
-          "markdownDescription": "弹幕录制-上船  \n默认: `true `\n\n",
+          "markdownDescription": "弹幕录制-上船  \n默认: `true `\n\n是否记录上船（购买舰长）。\n\n当 `RecordDanmaku` 为 `false` 时本项设置无效。",
           "type": "object",
           "additionalProperties": false,
           "properties": {
@@ -549,7 +567,7 @@
         },
         "RecordingQuality": {
           "description": "直播画质\n默认: 10000",
-          "markdownDescription": "直播画质  \n默认: `10000 `\n\n录制的直播画质 qn 值，逗号分割，靠前的优先",
+          "markdownDescription": "直播画质  \n默认: `10000 `\n\n录制的直播画质 qn 值，以英文逗号分割，靠前的优先。\n\n**注意**（从录播姬 1.3.10 开始）：\n\n- 所有主播刚开播时都是只有“原画”的，如果选择不录原画会导致直播开头漏录。\n- 如果设置的录制画质里没有原画，但是主播只有原画画质，会导致不能录制直播。\n- 录播姬不会为了切换录制的画质主动断开录制。\n\n画质 | qn 值\n:--:|:--:\n4K | 20000\n原画 | 10000\n蓝光(杜比) | 401\n蓝光 | 400\n超清 | 250\n高清 | 150\n流畅 | 80",
           "type": "object",
           "additionalProperties": false,
           "properties": {

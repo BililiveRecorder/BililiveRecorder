@@ -142,6 +142,11 @@ namespace BililiveRecorder.Core.Config.V2
         public uint TimingStreamRetry => this.GetPropertyValue<uint>();
 
         /// <summary>
+        /// 录制无指定画质重连时间间隔 秒
+        /// </summary>
+        public uint TimingStreamRetryNoQn => this.GetPropertyValue<uint>();
+
+        /// <summary>
         /// 连接直播服务器超时时间 毫秒
         /// </summary>
         public uint TimingStreamConnect => this.GetPropertyValue<uint>();
@@ -303,6 +308,14 @@ namespace BililiveRecorder.Core.Config.V2
         public Optional<uint> OptionalTimingStreamRetry { get => this.GetPropertyValueOptional<uint>(nameof(this.TimingStreamRetry)); set => this.SetPropertyValueOptional(value, nameof(this.TimingStreamRetry)); }
 
         /// <summary>
+        /// 录制无指定画质重连时间间隔 秒
+        /// </summary>
+        public uint TimingStreamRetryNoQn { get => this.GetPropertyValue<uint>(); set => this.SetPropertyValue(value); }
+        public bool HasTimingStreamRetryNoQn { get => this.GetPropertyHasValue(nameof(this.TimingStreamRetryNoQn)); set => this.SetPropertyHasValue<uint>(value, nameof(this.TimingStreamRetryNoQn)); }
+        [JsonProperty(nameof(TimingStreamRetryNoQn)), EditorBrowsable(EditorBrowsableState.Never)]
+        public Optional<uint> OptionalTimingStreamRetryNoQn { get => this.GetPropertyValueOptional<uint>(nameof(this.TimingStreamRetryNoQn)); set => this.SetPropertyValueOptional(value, nameof(this.TimingStreamRetryNoQn)); }
+
+        /// <summary>
         /// 连接直播服务器超时时间 毫秒
         /// </summary>
         public uint TimingStreamConnect { get => this.GetPropertyValue<uint>(); set => this.SetPropertyValue(value); }
@@ -374,6 +387,8 @@ namespace BililiveRecorder.Core.Config.V2
         public uint TimingCheckInterval => 10 * 60;
 
         public uint TimingStreamRetry => 6 * 1000;
+
+        public uint TimingStreamRetryNoQn => 90;
 
         public uint TimingStreamConnect => 5 * 1000;
 
