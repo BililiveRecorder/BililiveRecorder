@@ -21,7 +21,7 @@ namespace BililiveRecorder.WPF
             var exePath = Assembly.GetEntryAssembly().Location;
             this.basePath = string.IsNullOrWhiteSpace(exePath) ? Environment.CurrentDirectory : Path.GetDirectoryName(exePath);
 
-            if (Regex.IsMatch(this.basePath, @"^.*\\app-\d\.\d\.\d\\?$") && File.Exists(Path.Combine(this.basePath, "..", "Update.exe")))
+            if (Regex.IsMatch(this.basePath, @"^.*\\app-\d+\.\d+\.\d+\\?$") && File.Exists(Path.Combine(this.basePath, "..", "Update.exe")))
                 this.basePath = Path.Combine(this.basePath, "..");
 
             this.basePath = Path.GetFullPath(this.basePath);
