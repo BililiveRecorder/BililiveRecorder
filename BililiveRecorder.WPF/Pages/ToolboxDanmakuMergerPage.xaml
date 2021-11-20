@@ -28,19 +28,31 @@
             <Button Margin="0,0,5,0" Content="{l:Loc Toolbox_Merge_Button_AddFile}" Click="AddFile_Click"/>
             <Button Content="{l:Loc Toolbox_Merge_Button_Merge}" Click="Merge_Click"/>
         </StackPanel>
-        <ListBox Grid.Row="3" Margin="5" x:Name="listBox" AllowDrop="True" Drop="listBox_Drop">
-            <ListBox.ItemTemplate>
-                <DataTemplate>
-                    <Grid Margin="0,0">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="*" />
-                        </Grid.ColumnDefinitions>
-                        <Button Margin="0,0,5,0" Padding="2" Content="{l:Loc Toolbox_Merge_Button_Remove}" Click="RemoveFile_Click"/>
-                        <TextBlock Grid.Column="1" Text="{Binding}" ToolTip="{Binding}" TextWrapping="Wrap" VerticalAlignment="Center"/>
-                    </Grid>
-                </DataTemplate>
-            </ListBox.ItemTemplate>
-        </ListBox>
+        <ListView Grid.Row="3" Margin="5" x:Name="listView" AllowDrop="True" Drop="DragDrop">
+            <ListView.View>
+                <GridView AllowsColumnReorder="False">
+                    <GridViewColumn>
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <Button Padding="2" VerticalAlignment="Center" HorizontalAlignment="Center"
+                                        Content="{l:Loc Toolbox_Merge_Button_Remove}" Click="RemoveFile_Click"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn Header="偏移量（秒）" Width="120">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate><!--
+                                <ui:NumberBox Minimum="0" SmallChange="1" LargeChange="10" Text="{Binding Offset,UpdateSourceTrigger=PropertyChanged}"
+                                          SpinButtonPlacementMode="Inline" ValidationMode="InvalidInputOverwritten"/>
+                                -->
+                                <TextBox Width="100" Text="{Binding Offset,UpdateSourceTrigger=PropertyChanged,Delay=300}"
+                                         ui:TextBoxHelper.IsDeleteButtonVisible="False"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn Header="文件路径" DisplayMemberBinding="{Binding Path}"/>
+                </GridView>
+            </ListView.View>
+        </ListView>
     </Grid>
 </ui:Page>

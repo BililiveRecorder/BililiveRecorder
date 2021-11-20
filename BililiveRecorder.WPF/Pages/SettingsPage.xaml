@@ -10,6 +10,7 @@
     l:ResxLocalizationProvider.DefaultAssembly="BililiveRecorder.WPF"
     l:ResxLocalizationProvider.DefaultDictionary="Strings"
     xmlns:c="clr-namespace:BililiveRecorder.WPF.Controls"
+    xmlns:m="clr-namespace:BililiveRecorder.WPF.Models"
     xmlns:local="clr-namespace:BililiveRecorder.WPF.Pages"
     xmlns:config="clr-namespace:BililiveRecorder.Core.Config.V2;assembly=BililiveRecorder.Core"
     xmlns:confiv2="clr-namespace:BililiveRecorder.Core.Config.V2;assembly=BililiveRecorder.Core"
@@ -80,11 +81,29 @@
                             <TextBlock FontSize="13" Text="{l:Loc Settings_FileName_Description_ToolTip}"
                                        l:ResxLocalizationProvider.DefaultDictionary="Strings"/>
                         </StackPanel.ToolTip>
-                        <TextBlock Text="{l:Loc Settings_FileName_Description_Text}"/>
                         <ui:PathIcon Margin="2,0" VerticalAlignment="Center" Height="15" Style="{StaticResource PathIconDataInformationOutline}"/>
+                        <TextBlock VerticalAlignment="Center" Text="{l:Loc Settings_FileName_Description_Text}"/>
+                        <Button Margin="5,0,0,0" Command="{x:Static m:Commands.OpenLink}" CommandParameter="https://rec.danmuji.org/docs/basic/settings/#%E5%BD%95%E5%88%B6%E6%96%87%E4%BB%B6%E5%90%8D%E6%A0%BC%E5%BC%8F">
+                            <ui:PathIcon Margin="2,0" VerticalAlignment="Center" Height="15" Style="{StaticResource PathIconDataOpenInNew}"/>
+                        </Button>
                     </StackPanel>
                     <c:SettingWithDefault IsSettingNotUsingDefault="{Binding HasRecordFilenameFormat}" Header="{l:Loc Settings_FileName_Record}">
                         <TextBox Text="{Binding RecordFilenameFormat,Delay=500}" ui:TextBoxHelper.IsDeleteButtonVisible="False"/>
+                    </c:SettingWithDefault>
+                </StackPanel>
+            </GroupBox>
+            <GroupBox Header="录制画质">
+                <StackPanel MaxWidth="400" HorizontalAlignment="Left">
+                    <Button Margin="5,0,0,0" Command="{x:Static m:Commands.OpenLink}" CommandParameter="https://rec.danmuji.org/docs/basic/settings/#%E7%9B%B4%E6%92%AD%E7%94%BB%E8%B4%A8">
+                        <StackPanel Orientation="Horizontal">
+                            <ui:PathIcon Width="15" Height="15" Style="{StaticResource PathIconDataInformationOutline}"/>
+                            <ui:PathIcon Margin="5,0,0,0" Width="15" Height="15" Style="{StaticResource PathIconDataOpenInNew}"/>
+                        </StackPanel>
+                    </Button>
+                    <TextBlock Text="逗号分割的录制画质ID"/>
+                    <c:SettingWithDefault IsSettingNotUsingDefault="{Binding HasRecordingQuality}">
+                        <TextBox Text="{Binding RecordingQuality,UpdateSourceTrigger=PropertyChanged,Delay=1000}"
+                                 ui:TextBoxHelper.IsDeleteButtonVisible="False" Width="220" HorizontalAlignment="Left"/>
                     </c:SettingWithDefault>
                 </StackPanel>
             </GroupBox>
@@ -97,15 +116,6 @@
                     <TextBlock Text="Webhook v1"/>
                     <TextBox AcceptsReturn="True" TextWrapping="Wrap" VerticalScrollBarVisibility="Visible"
                              Text="{Binding WebHookUrls,UpdateSourceTrigger=PropertyChanged,Delay=1000}" ui:TextBoxHelper.IsDeleteButtonVisible="False"/>
-                </StackPanel>
-            </GroupBox>
-            <GroupBox Header="录制画质">
-                <StackPanel MaxWidth="400" HorizontalAlignment="Left">
-                    <TextBlock Text="逗号分割的录制画质ID"/>
-                    <c:SettingWithDefault IsSettingNotUsingDefault="{Binding HasRecordingQuality}">
-                        <TextBox Text="{Binding RecordingQuality,UpdateSourceTrigger=PropertyChanged,Delay=1000}"
-                                 ui:TextBoxHelper.IsDeleteButtonVisible="False" Width="220" HorizontalAlignment="Left"/>
-                    </c:SettingWithDefault>
                 </StackPanel>
             </GroupBox>
         </ui:SimpleStackPanel>

@@ -27,6 +27,18 @@ namespace BililiveRecorder.ToolBox.Tool.DanmakuMerger
                     ErrorMessage = "At least 2 input files required"
                 };
 
+            if (request.Offsets is not null)
+            {
+                if (request.Offsets.Length != inputLength)
+                {
+                    return new CommandResponse<DanmakuMergerResponse>
+                    {
+                        Status = ResponseStatus.Error,
+                        ErrorMessage = "The number of offsets should match the number of input files."
+                    };
+                }
+            }
+
             var files = new FileStream[inputLength];
             var readers = new XmlReader?[inputLength];
 
@@ -34,14 +46,16 @@ namespace BililiveRecorder.ToolBox.Tool.DanmakuMerger
             XmlWriter? writer = null;
             XElement recordInfo;
 
-            DateTimeOffset baseTime;
             TimeSpan[] timeDiff;
 
             try // finally
-            {
 
+            {
+                // 读取文件开头并计算时间差
                 try
                 {
+                    DateTimeOffset baseTime;
+
                     // 打开输入文件
                     for (var i = 0; i < inputLength; i++)
                     {
@@ -50,7 +64,7 @@ namespace BililiveRecorder.ToolBox.Tool.DanmakuMerger
                         readers[i] = XmlReader.Create(file, null);
                     }
 
-                    // 计算时间差
+                    // 读取XML文件开头
                     var startTimes = new (DateTimeOffset time, XElement element)[inputLength];
                     for (var i = 0; i < inputLength; i++)
                     {
@@ -72,10 +86,22 @@ namespace BililiveRecorder.ToolBox.Tool.DanmakuMerger
                         }
                     }
 
-                    var b = startTimes.OrderBy(x => x.time).First();
-                    recordInfo = b.element;
-                    baseTime = b.time;
-                    timeDiff = startTimes.Select(x => x.time - baseTime).ToArray();
+                    if (request.Offsets is not null)
+                    {
+                        // 使用传递进来的参数作为时间差
+                        timeDiff = request.Offsets.Select(x => TimeSpan.FromSeconds(x)).ToArray();
+                        var b = startTimes[Array.IndexOf(timeDiff, timeDiff.Min())];
+                        recordInfo = b.element;
+                        baseTime = b.time;
+                    }
+                    else
+                    {
+                        // 使用文件内的开始时间作为时间差
+                        var b = startTimes.OrderBy(x => x.time).First();
+                        recordInfo = b.element;
+                        baseTime = b.time;
+                        timeDiff = startTimes.Select(x => x.time - baseTime).ToArray();
+                    }
                 }
                 catch (Exception ex)
                 {

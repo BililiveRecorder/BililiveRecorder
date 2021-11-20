@@ -123,6 +123,7 @@
     <Compile Include="Converters\ValueConverterGroup.cs" />
     <Compile Include="Models\AboutModel.cs" />
     <Compile Include="Models\Commands.cs" />
+    <Compile Include="Models\DanmakuFileWithOffset.cs" />
     <Compile Include="Models\LogModel.cs" />
     <Compile Include="Models\PollyPolicyModel.cs" />
     <Compile Include="Models\RootModel.cs" />

@@ -6,9 +6,12 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Threading;
 using BililiveRecorder.ToolBox;
 using BililiveRecorder.ToolBox.Tool.DanmakuMerger;
+using BililiveRecorder.ToolBox.Tool.DanmakuStartTime;
 using BililiveRecorder.WPF.Controls;
+using BililiveRecorder.WPF.Models;
 using Microsoft.WindowsAPICodePack.Dialogs;
 using Serilog;
 using WPFLocalizeExtension.Extensions;
@@ -24,43 +27,38 @@ namespace BililiveRecorder.WPF.Pages
         private static readonly ILogger logger = Log.ForContext<ToolboxDanmakuMergerPage>();
         private static readonly string DesktopPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
 
-        private readonly ObservableCollection<string> Files = new ObservableCollection<string>();
+        private readonly ObservableCollection<DanmakuFileWithOffset> Files = new();
 
         public ToolboxDanmakuMergerPage()
         {
             this.InitializeComponent();
-            this.listBox.ItemsSource = this.Files;
+            this.listView.ItemsSource = this.Files;
         }
 
         private void RemoveFile_Click(object sender, RoutedEventArgs e)
         {
             var b = (Button)sender;
-            var f = (string)b.DataContext;
+            var f = (DanmakuFileWithOffset)b.DataContext;
             this.Files.Remove(f);
+
+            this.CalculateOffsets();
         }
 
-        private void listBox_Drop(object sender, DragEventArgs e)
+        private async void DragDrop(object sender, DragEventArgs e)
         {
             try
             {
                 if (e.Data.GetDataPresent(DataFormats.FileDrop))
                 {
                     var files = (string[])e.Data.GetData(DataFormats.FileDrop);
-                    for (var i = 0; i < files.Length; i++)
-                    {
-                        var file = files[i];
-                        if (file.EndsWith(".xml", StringComparison.InvariantCultureIgnoreCase))
-                        {
-                            this.Files.Add(file);
-                        }
-                    }
+                    await this.AddFilesAsync(files.Where(x => x.EndsWith(".xml", StringComparison.InvariantCultureIgnoreCase)).ToArray());
                 }
             }
             catch (Exception)
             { }
         }
 
-        private void AddFile_Click(object sender, RoutedEventArgs e)
+        private async void AddFile_Click(object sender, RoutedEventArgs e)
         {
             var d = new CommonOpenFileDialog
             {
@@ -79,10 +77,39 @@ namespace BililiveRecorder.WPF.Pages
             if (d.ShowDialog() != CommonFileDialogResult.Ok)
                 return;
 
-            foreach (var file in d.FileNames)
-            {
+            await this.AddFilesAsync(d.FileNames.ToArray());
+        }
+
+        private async Task AddFilesAsync(string[] paths)
+        {
+            var req = new DanmakuStartTimeRequest { Inputs = paths };
+            var handler = new DanmakuStartTimeHandler();
+            var resp = await handler.Handle(req, default, default).ConfigureAwait(true);
+
+            if (resp.Status != ResponseStatus.OK || resp.Data is null)
+                return;
+
+            var toBeAdded = resp.Data.StartTimes.Select(x => new DanmakuFileWithOffset(x.Path) { StartTime = x.StartTime });
+            foreach (var file in toBeAdded)
                 this.Files.Add(file);
+
+            _ = this.Dispatcher.BeginInvoke(DispatcherPriority.Normal, (Action)this.CalculateOffsets);
+        }
+
+        private void CalculateOffsets()
+        {
+            if (this.Files.Count == 0)
+                return;
+
+            var minTime = this.Files.Min(x => x.StartTime);
+
+            foreach (var item in this.Files)
+            {
+                item.Offset = (int)(item.StartTime - minTime).TotalSeconds;
             }
+
+            this.listView.DataContext = null;
+            this.listView.DataContext = this.Files;
         }
 
         private async void Merge_Click(object sender, RoutedEventArgs e)
@@ -124,7 +151,7 @@ namespace BililiveRecorder.WPF.Pages
                         EnsureValidNames = true,
                         NavigateToShortcut = true,
                         OverwritePrompt = false,
-                        InitialDirectory = Path.GetDirectoryName(inputPaths[0]),
+                        InitialDirectory = Path.GetDirectoryName(inputPaths[0].Path),
                     };
 
                     fileDialog.Filters.Add(new CommonFileDialogFilter(LocExtension.GetLocalizedValue<string>("BililiveRecorder.WPF:Strings:Toolbox_Merge_XmlDanmakuFiles"), "*.xml"));
@@ -137,7 +164,8 @@ namespace BililiveRecorder.WPF.Pages
 
                 var req = new DanmakuMergerRequest
                 {
-                    Inputs = inputPaths,
+                    Inputs = inputPaths.Select(x => x.Path).ToArray(),
+                    Offsets = inputPaths.Select(x => x.Offset).ToArray(),
                     Output = outputPath,
                 };
 

@@ -4,6 +4,7 @@ using System.CommandLine.Invocation;
 using System.Threading.Tasks;
 using BililiveRecorder.ToolBox.Tool.Analyze;
 using BililiveRecorder.ToolBox.Tool.DanmakuMerger;
+using BililiveRecorder.ToolBox.Tool.DanmakuStartTime;
 using BililiveRecorder.ToolBox.Tool.Export;
 using BililiveRecorder.ToolBox.Tool.Fix;
 using Newtonsoft.Json;
@@ -32,10 +33,16 @@ namespace BililiveRecorder.ToolBox
                 c.Add(new Argument<string>("output", "example: output.brec.xml.gz"));
             });
 
+            this.RegisterCommand<DanmakuStartTimeHandler, DanmakuStartTimeRequest, DanmakuStartTimeResponse>("danmaku-start-time", null, c =>
+            {
+                c.Add(new Argument<string[]>("inputs", "example: 1.xml 2.xml ..."));
+            });
+
             this.RegisterCommand<DanmakuMergerHandler, DanmakuMergerRequest, DanmakuMergerResponse>("danmaku-merge", null, c =>
             {
                 c.Add(new Argument<string>("output", "example: output.xml"));
                 c.Add(new Argument<string[]>("inputs", "example: 1.xml 2.xml ..."));
+                c.Add(new Option<int[]?>("--offsets", "Use offsets provided instead of calculating from starttime attribute."));
             });
         }
 

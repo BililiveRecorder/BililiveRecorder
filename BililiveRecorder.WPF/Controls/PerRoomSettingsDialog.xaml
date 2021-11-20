@@ -23,6 +23,7 @@
         </Grid.RowDefinitions>
         <StackPanel>
             <ContentControl Content="{Binding}" ContentTemplate="{StaticResource RoomDialogHeader}"/>
+            <TextBlock TextAlignment="Center" Text="Tip: 这里是房间独立设置，是对↙全局设置↙的覆盖"/>
             <Separator/>
         </StackPanel>
         <ScrollViewer Grid.Row="1">

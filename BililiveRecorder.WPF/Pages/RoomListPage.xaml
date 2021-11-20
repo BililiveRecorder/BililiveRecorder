@@ -91,6 +91,11 @@
                         </MenuItem.Icon>
                     </MenuItem>
                 </MenuItem>
+                <MenuItem Header="{l:Loc RoomListPage_Menu_Links_Sponsor}" Command="{x:Static m:Commands.OpenLink}" CommandParameter="https://rec.danmuji.org/link/sponsor/">
+                    <MenuItem.Icon>
+                        <ui:PathIcon Style="{StaticResource PathIconDataOpenInNew}"/>
+                    </MenuItem.Icon>
+                </MenuItem>
             </Menu>
             <Separator/>
         </StackPanel>
