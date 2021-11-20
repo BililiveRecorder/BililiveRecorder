@@ -120,7 +120,9 @@
             <TextBlock Text="{l:Loc About_LibrariesUsed}" FontSize="22"/>
             <ListView Grid.Row="1">
                 <ListView.Items>
-                    <Label Content="GitVersion"/>
+                    <Label Content="CliWrap"/>
+                    <Label Content="FastHashes"/>
+                    <Label Content="GitVersion.MsBuild"/>
                     <Label Content="Hardcodet.NotifyIcon.Wpf"/>
                     <Label Content="HierarchicalPropertyDefault"/>
                     <Label Content="JsonSubTypes"/>

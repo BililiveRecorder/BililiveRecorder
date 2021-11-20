@@ -26,11 +26,12 @@ See [rec.danmuji.org](https://rec.danmuji.org) (in Chinese)
 - Start recording automatically when stream starts
 - Record multiple stream at same time
 - Fix broken recording caused by broken bilibili stream server
-- Toolbox mode to fix broken bilibili stream recording recorded by other software*
-- Pure C#, no native dependency like ffmpeg
+- Toolbox mode to fix broken bilibili stream recording recorded by other software<sup>1</sup>
+- Pure C#, no native dependency like ffmpeg<sup>2</sup>
 - Open source!
 
-*Only unprocessed flv file downloaded directly from stream servers can be fixed. If the file is downloaded or processed by FFmpeg it no longer can be fixed, FFmpeg will fvck up the already broken recording even further.
+<sup>1</sup>: Only unprocessed flv file downloaded directly from stream servers can be fixed. If the file is downloaded or processed by FFmpeg it no longer can be fixed, FFmpeg will fvck up the already broken recording even further.  
+<sup>2</sup>: A minimal version of FFmpeg is bundled with the desktop edition of BililiveRecorder for the remux feature in toolbox.
 
 ## Develop & Build
 
