@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
+using System.Runtime.CompilerServices;
 using System.Xml.Serialization;
 using BililiveRecorder.Flv.Amf;
+using FastHashes;
 
 namespace BililiveRecorder.Flv
 {
@@ -26,8 +28,11 @@ namespace BililiveRecorder.Flv
         [XmlAttribute]
         public int Timestamp { get; set; }
 
+        [XmlAttribute]
+        public string? DataHash { get; set; }
+
         [XmlIgnore]
-        public Stream? BinaryData { get; set; }
+        public MemoryStream? BinaryData { get; set; }
 
         [XmlElement]
         public ScriptTagBody? ScriptData { get; set; }
@@ -43,7 +48,7 @@ namespace BililiveRecorder.Flv
                 : BinaryConvertUtilities.StreamToHexString(this.BinaryData);
             set
             {
-                Stream? new_stream = null;
+                MemoryStream? new_stream = null;
                 if (value != null)
                     new_stream = BinaryConvertUtilities.HexStringToMemoryStream(value);
 
@@ -52,10 +57,13 @@ namespace BililiveRecorder.Flv
             }
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool ShouldSerializeBinaryDataForSerializationUseOnly() => 0 != (this.Flag & TagFlag.Header);
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool ShouldSerializeScriptData() => this.Type == TagType.Script;
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool ShouldSerializeNalus() => this.Type == TagType.Video && (0 == (this.Flag & TagFlag.Header));
 
         public override string ToString() => this.DebuggerDisplay;
@@ -64,7 +72,7 @@ namespace BililiveRecorder.Flv
         public Tag Clone() => this.Clone(null);
         public Tag Clone(IMemoryStreamProvider? provider = null)
         {
-            Stream? binaryData = null;
+            MemoryStream? binaryData = null;
             if (this.BinaryData != null)
             {
                 binaryData = provider?.CreateMemoryStream(nameof(Tag) + ":" + nameof(Clone)) ?? new MemoryStream();
@@ -88,10 +96,35 @@ namespace BililiveRecorder.Flv
                 Size = this.Size,
                 Index = this.Index,
                 Timestamp = this.Timestamp,
+                DataHash = this.DataHash,
                 BinaryData = binaryData,
                 ScriptData = scriptData,
                 Nalus = this.Nalus is null ? null : new List<H264Nalu>(this.Nalus),
             };
+        }
+
+        private static readonly FarmHash64 farmHash64 = new FarmHash64();
+
+        public string? UpdateDataHash()
+        {
+            if (this.BinaryData is null)
+            {
+                this.DataHash = null;
+            }
+            else
+            {
+                var buffer = this.BinaryData.GetBuffer();
+                this.DataHash = BinaryConvertUtilities.ByteArrayToHexString(farmHash64.ComputeHash(buffer, (int)this.BinaryData.Length));
+
+                if (this.Nalus?.Count > 0)
+                {
+                    foreach (var nalu in this.Nalus)
+                    {
+                        nalu.NaluHash = BinaryConvertUtilities.ByteArrayToHexString(farmHash64.ComputeHash(buffer, nalu.StartPosition, (int)nalu.FullSize));
+                    }
+                }
+            }
+            return this.DataHash;
         }
 
         private string DebuggerDisplay => string.Format("{0}, {1}{2}{3}, TS={4}, Size={5}",
@@ -158,7 +191,7 @@ namespace BililiveRecorder.Flv
                 return new string(result);
             }
 
-            internal static Stream HexStringToMemoryStream(string hex)
+            internal static MemoryStream HexStringToMemoryStream(string hex)
             {
                 var stream = new MemoryStream(hex.Length / 2);
                 for (var i = 0; i < hex.Length; i += 2)

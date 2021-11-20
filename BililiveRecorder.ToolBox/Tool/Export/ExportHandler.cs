@@ -15,7 +15,7 @@ namespace BililiveRecorder.ToolBox.Tool.Export
     public class ExportHandler : ICommandHandler<ExportRequest, ExportResponse>
     {
         private static readonly ILogger logger = Log.ForContext<ExportHandler>();
-        
+
         public string Name => "Export";
 
         public async Task<CommandResponse<ExportResponse>> Handle(ExportRequest request, CancellationToken cancellationToken, ProgressCallback? progress)
@@ -66,11 +66,17 @@ namespace BililiveRecorder.ToolBox.Tool.Export
                     var count = 0;
                     var tags = new List<Tag>();
                     var memoryStreamProvider = new RecyclableMemoryStreamProvider();
-                    using var reader = new FlvTagPipeReader(PipeReader.Create(inputStream), memoryStreamProvider, skipData: true, logger: logger);
+                    using var reader = new FlvTagPipeReader(PipeReader.Create(inputStream), memoryStreamProvider, skipData: false, logger: logger);
                     while (!cancellationToken.IsCancellationRequested)
                     {
                         var tag = await reader.ReadTagAsync(cancellationToken).ConfigureAwait(false);
-                        if (tag is null) break;
+                        if (tag is null)
+                            break;
+
+                        tag.UpdateDataHash();
+                        if (!tag.ShouldSerializeBinaryDataForSerializationUseOnly())
+                            tag.BinaryData?.Dispose();
+
                         tags.Add(tag);
 
                         if (count++ % 300 == 0 && progress is not null)

@@ -31,6 +31,7 @@ namespace BililiveRecorder.Flv.Tests.FlvTests
             Assert.Equal(source.Index, result.Index);
             Assert.Equal(source.Size, result.Size);
             Assert.Equal(source.Timestamp, result.Timestamp);
+            Assert.Equal(source.DataHash, result.DataHash);
 
             Assert.NotSame(source.BinaryData, result.BinaryData);
             Assert.Equal(source.BinaryDataForSerializationUseOnly, result.BinaryDataForSerializationUseOnly);

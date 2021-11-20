@@ -28,6 +28,6 @@ namespace BililiveRecorder.ToolBox
             //};
         }
 
-        public Stream CreateMemoryStream(string tag) => this.manager.GetStream(tag);
+        public MemoryStream CreateMemoryStream(string tag) => this.manager.GetStream(tag);
     }
 }

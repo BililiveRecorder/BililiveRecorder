@@ -84,6 +84,12 @@ namespace BililiveRecorder.Flv
         /// </summary>
         [XmlAttribute]
         public H264NaluType Type { get; set; }
+
+        /// <summary>
+        /// nal_unit data hash
+        /// </summary>
+        [XmlAttribute]
+        public string? NaluHash { get; set; }
     }
 
     /// <summary>

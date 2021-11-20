@@ -4,6 +4,6 @@ namespace BililiveRecorder.Flv
 {
     public interface IMemoryStreamProvider
     {
-        Stream CreateMemoryStream(string tag);
+        MemoryStream CreateMemoryStream(string tag);
     }
 }

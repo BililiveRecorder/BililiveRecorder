@@ -12,6 +12,6 @@ namespace BililiveRecorder.Flv.Tests
                 MaximumFreeLargePoolBytes = 64 * 1024 * 32,
             };
 
-        public Stream CreateMemoryStream(string tag) => manager.GetStream(tag);
+        public MemoryStream CreateMemoryStream(string tag) => manager.GetStream(tag);
     }
 }
