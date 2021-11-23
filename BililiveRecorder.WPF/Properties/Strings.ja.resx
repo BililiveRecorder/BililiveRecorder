@@ -533,7 +533,9 @@ Will use default setting and disable user input when checked.</comment>
     <value>修復は不要です</value>
   </data>
   
-  
+  <data name="Toolbox_AutoFix_AnalyzeResult_IssueTypeOther" xml:space="preserve">
+    <value>その他の問題 {0}</value>
+  </data>
   <data name="Toolbox_AutoFix_AnalyzeResult_IssueTypeRepeatingData" xml:space="preserve">
     <value>{0} パートが重複しました</value>
   </data>
