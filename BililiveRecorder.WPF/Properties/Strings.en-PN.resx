@@ -430,7 +430,7 @@
     <value>喵喵 喵喵喵喵喵</value>
   </data>
   <data name="Settings_Danmaku_ToggleSwitch_SuperChat" xml:space="preserve">
-    <value>喵喵 SuperNyaChat</value>
+    <value>喵喵 Super~Nya~Chat~~❤</value>
   </data>
   <data name="Settings_FileName_Clip" xml:space="preserve">
     <value>喵喵喵喵喵喵喵</value>
@@ -532,10 +532,10 @@ Will use default setting and disable user input when checked.</comment>
 喵喵喵~喵喵喵喵？ 喵喵喵喵喵喵喵喵喵~</value>
   </data>
   <data name="Toolbox_AutoFix_AnalyzeResult_FixNeeded" xml:space="preserve">
-    <value>喵喵喵喵</value>
+    <value>喵！！</value>
   </data>
   <data name="Toolbox_AutoFix_AnalyzeResult_FixNotNeeded" xml:space="preserve">
-    <value>喵</value>
+    <value>喵呜~</value>
   </data>
   <data name="Toolbox_AutoFix_AnalyzeResult_IssueTypeDecodingHeader" xml:space="preserve">
     <value>喵喵喵~喵喵喵喵 {0} 喵~</value>
@@ -583,44 +583,44 @@ Will use default setting and disable user input when checked.</comment>
     <value>喵喵喵</value>
   </data>
   <data name="Toolbox_AutoFix_AnalyzeResult_Stats_Title" xml:space="preserve">
-    <value>nya数据</value>
+    <value>nya~nya数据</value>
   </data>
   <data name="Toolbox_AutoFix_AnalyzeResult_Stats_Video" xml:space="preserve">
-    <value>猫片</value>
+    <value>喵片</value>
   </data>
   <data name="Toolbox_AutoFix_ButtonAnalyze" xml:space="preserve">
-    <value>喵喵的思考</value>
+    <value>喵喵の思考</value>
   </data>
   <data name="Toolbox_AutoFix_ButtonFix" xml:space="preserve">
-    <value>喵喵</value>
+    <value>喵喵~</value>
   </data>
   <data name="Toolbox_AutoFix_ButtonNotFixed" xml:space="preserve">
-    <value>喵喵捣乱惹~</value>
+    <value>喵喵捣乱惹~呜……</value>
   </data>
   <data name="Toolbox_AutoFix_ButtonSelectInput" xml:space="preserve">
     <value>喵喵...</value>
   </data>
   <data name="Toolbox_AutoFix_Error_Title" xml:space="preserve">
-    <value>喵喵喵喵喵</value>
+    <value>喵喵喵喵喵？！！</value>
   </data>
   <data name="Toolbox_AutoFix_Error_Type_Error" xml:space="preserve">
-    <value>喵喵喵喵</value>
+    <value>喵喵喵喵！！</value>
   </data>
   <data name="Toolbox_AutoFix_Error_Type_InputIOError" xml:space="preserve">
-    <value>喵喵喵喵喵喵</value>
+    <value>喵喵喵喵喵喵……</value>
   </data>
   <data name="Toolbox_AutoFix_Error_Type_NotFlvFile" xml:space="preserve">
-    <value>喵喵喵喵 NyaLV 喵喵</value>
+    <value>喵喵喵喵 NyaLV 喵喵哟！</value>
   </data>
   <data name="Toolbox_AutoFix_Error_Type_OK" xml:space="preserve">
     <value>Nya</value>
     <comment>其实不是错误类型</comment>
   </data>
   <data name="Toolbox_AutoFix_Error_Type_OutputIOError" xml:space="preserve">
-    <value>喵喵喵喵喵喵</value>
+    <value>喵喵喵喵喵喵！</value>
   </data>
   <data name="Toolbox_AutoFix_Error_Type_UnknownFlvTagType" xml:space="preserve">
-    <value>喵喵喵 NyaLV 喵喵喵喵</value>
+    <value>喵喵喵 NyaLV 喵喵喵喵…？</value>
   </data>
   <data name="Toolbox_AutoFix_InputPathPlaceholder" xml:space="preserve">
     <value>NyaLV 喵喵</value>
@@ -639,7 +639,7 @@ Will use default setting and disable user input when checked.</comment>
     <value>喵喵喵喵喵喵喵喵喵</value>
   </data>
   <data name="Toolbox_AutoFix_SelectInputDialog_Title" xml:space="preserve">
-    <value>选择猫片</value>
+    <value>选择喵片</value>
   </data>
   <data name="Toolbox_AutoFix_SelectOutputDialog_Title" xml:space="preserve">
     <value>喵喵喵喵喵喵</value>
@@ -657,7 +657,7 @@ Will use default setting and disable user input when checked.</comment>
     <value>喵喵</value>
   </data>
   <data name="Toolbox_Merge_Error_AtLeastTwo" xml:space="preserve">
-    <value>喵喵喵喵喵喵喵喵喵喵喵喵喵喵</value>
+    <value>喵喵喵喵喵喵喵喵喵喵喵喵喵喵~</value>
   </data>
   <data name="Toolbox_Merge_OpenFileDialogTitle" xml:space="preserve">
     <value>喵喵喵喵喵喵喵喵喵喵喵喵喵喵喵</value>
@@ -697,21 +697,21 @@ Will use default setting and disable user input when checked.</comment>
   </data>
   
   <data name="WorkDirectorySelector_Error_PathContainsFiles" xml:space="preserve">
-    <value>喵喵喵喵喵喵喵喵</value>
+    <value>喵喵喵喵喵喵喵喵~</value>
   </data>
   <data name="WorkDirectorySelector_Error_PathDoesNotExist" xml:space="preserve">
-    <value>喵喵喵喵喵</value>
+    <value>喵喵喵喵喵！</value>
   </data>
   <data name="WorkDirectorySelector_Error_PathNotSupported" xml:space="preserve">
-    <value>喵喵喵喵喵喵</value>
+    <value>喵喵喵喵喵喵…</value>
   </data>
   <data name="WorkDirectorySelector_Error_UnknownError" xml:space="preserve">
-    <value>喵喵喵喵喵喵喵</value>
+    <value>喵喵喵喵喵喵喵？！</value>
   </data>
   <data name="WorkDirectorySelector_SkipAsking" xml:space="preserve">
-    <value>喵喵喵喵</value>
+    <value>喵喵喵喵！</value>
   </data>
   <data name="WorkDirectorySelector_Title" xml:space="preserve">
-    <value>喵喵喵喵喵喵</value>
+    <value>喵喵喵喵喵喵~</value>
   </data>
 </root>
