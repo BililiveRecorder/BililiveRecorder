@@ -1,4 +1,6 @@
 using System;
+using System.Buffers;
+using System.Buffers.Binary;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -36,6 +38,9 @@ namespace BililiveRecorder.Flv
 
         [XmlElement]
         public ScriptTagBody? ScriptData { get; set; }
+
+        [XmlElement]
+        public TagExtraData? ExtraData { get; set; }
 
         [XmlElement]
         public List<H264Nalu>? Nalus { get; set; }
@@ -103,7 +108,56 @@ namespace BililiveRecorder.Flv
             };
         }
 
-        private static readonly FarmHash64 farmHash64 = new FarmHash64();
+        private static readonly FarmHash64 farmHash64 = new();
+
+        public TagExtraData? UpdateExtraData()
+        {
+            if (this.BinaryData is not { } binaryData || binaryData.Length < 5)
+            {
+                this.ExtraData = null;
+            }
+            else
+            {
+                var old_position = binaryData.Position;
+                var extra = new TagExtraData();
+
+                binaryData.Position = 0;
+
+                var buffer = ArrayPool<byte>.Shared.Rent(5);
+                try
+                {
+                    binaryData.Read(buffer, 0, 5);
+                    extra.FirstBytes = BinaryConvertUtilities.ByteArrayToHexString(buffer, 0, 2);
+
+                    if (this.Type == TagType.Video)
+                    {
+                        buffer[1] = 0;
+
+                        const int mask = -16777216;
+                        var value = BinaryPrimitives.ReadInt32BigEndian(buffer.AsSpan(1));
+                        if ((value & 0x00800000) > 0)
+                            value |= mask;
+                        else
+                            value &= ~mask;
+
+                        extra.CompositionTime = value;
+                        extra.FinalTime = this.Timestamp + value;
+                    }
+                    else
+                    {
+                        extra.CompositionTime = int.MinValue;
+                    }
+                }
+                finally
+                {
+                    ArrayPool<byte>.Shared.Return(buffer);
+                }
+
+                binaryData.Position = old_position;
+                this.ExtraData = extra;
+            }
+            return this.ExtraData;
+        }
 
         public string? UpdateDataHash()
         {
@@ -156,11 +210,13 @@ namespace BililiveRecorder.Flv
                 return result;
             }
 
-            internal static string ByteArrayToHexString(byte[] bytes)
+            internal static string ByteArrayToHexString(byte[] bytes) => ByteArrayToHexString(bytes, 0, bytes.Length);
+
+            internal static string ByteArrayToHexString(byte[] bytes, int start, int length)
             {
                 var lookup32 = _lookup32;
-                var result = new char[bytes.Length * 2];
-                for (var i = 0; i < bytes.Length; i++)
+                var result = new char[length * 2];
+                for (var i = start; i < length; i++)
                 {
                     var val = lookup32[bytes[i]];
                     result[2 * i] = (char)val;
