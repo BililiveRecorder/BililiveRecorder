@@ -35,9 +35,12 @@ namespace BililiveRecorder.ToolBox.Tool.DanmakuStartTime
                             {
                                 var el = (XNode.ReadFrom(r) as XElement)!;
                                 var time = (DateTimeOffset)el.Attribute("start_time");
-                                result.Add(new DanmakuStartTimeResponse.DanmakuStartTime { Path = input, StartTime = time });
+
+                                lock (result)
+                                    result.Add(new DanmakuStartTimeResponse.DanmakuStartTime { Path = input, StartTime = time });
 
                                 Interlocked.Increment(ref finished);
+
                                 progress?.Invoke(finished / total);
                                 break;
                             }
