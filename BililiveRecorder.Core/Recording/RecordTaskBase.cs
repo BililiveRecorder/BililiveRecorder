@@ -77,10 +77,21 @@ namespace BililiveRecorder.Core.Recording
                 throw new InvalidOperationException("Only one StartAsync call allowed per instance.");
             this.started = true;
 
-            var fullUrl = await this.FetchStreamUrlAsync(this.room.RoomConfig.RoomId).ConfigureAwait(false);
+            var (fullUrl, qn) = await this.FetchStreamUrlAsync(this.room.RoomConfig.RoomId).ConfigureAwait(false);
 
             this.streamHost = new Uri(fullUrl).Host;
-            this.logger.Information("连接直播服务器 {Host}", this.streamHost);
+            var qnDesc = qn switch
+            {
+                20000 => "4K",
+                10000 => "原画",
+                401 => "蓝光(杜比)",
+                400 => "蓝光",
+                250 => "超清",
+                150 => "高清",
+                80 => "流畅",
+                _ => "未知"
+            };
+            this.logger.Information("连接直播服务器 {Host} 录制画质 {Qn} ({QnDescription})", this.streamHost, qn, qnDesc);
             this.logger.Debug("直播流地址 {Url}", fullUrl);
 
             var stream = await this.GetStreamAsync(fullUrl: fullUrl, timeout: (int)this.room.RoomConfig.TimingStreamConnect).ConfigureAwait(false);
@@ -234,7 +245,7 @@ namespace BililiveRecorder.Core.Recording
             return httpClient;
         }
 
-        protected async Task<string> FetchStreamUrlAsync(int roomid)
+        protected async Task<(string url, int qn)> FetchStreamUrlAsync(int roomid)
         {
             const int DefaultQn = 10000;
             var selected_qn = DefaultQn;
@@ -275,7 +286,7 @@ namespace BililiveRecorder.Core.Recording
             }
 
             if (codecItem.CurrentQn != selected_qn || !qns.Contains(codecItem.CurrentQn))
-                this.logger.Warning("当前录制的画质是 {CurrentQn}", codecItem.CurrentQn);
+                this.logger.Warning("返回的直播流地址的画质是 {CurrentQn} 而不是请求的 {SelectedQn}", codecItem.CurrentQn, selected_qn);
 
             var url_infos = codecItem.UrlInfos;
             if (url_infos is null || url_infos.Length == 0)
@@ -289,7 +300,7 @@ namespace BililiveRecorder.Core.Recording
                 : url_infos[this.random.Next(url_infos.Length)];
 
             var fullUrl = url_info.Host + codecItem.BaseUrl + url_info.Extra;
-            return fullUrl;
+            return (fullUrl, codecItem.CurrentQn);
         }
 
         protected async Task<Stream> GetStreamAsync(string fullUrl, int timeout)
