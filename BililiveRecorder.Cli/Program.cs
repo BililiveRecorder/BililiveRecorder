@@ -37,6 +37,7 @@ namespace BililiveRecorder.Cli
             {
                 new Option<LogEventLevel>(new []{ "--loglevel", "--log", "-l" }, () => LogEventLevel.Information, "Minimal log level output to console"),
                 new Option<LogEventLevel>(new []{ "--logfilelevel", "--flog" }, () => LogEventLevel.Debug, "Minimal log level output to file"),
+                new Option<RecordMode>(new []{ "--record-mode", "--mode" }, () => RecordMode.Standard, "Recording mode"),
                 new Option<string>(new []{ "--cookie", "-c" }, "Cookie string for api requests"),
                 new Option<string>(new []{ "--filename-format", "-f" }, "File name format"),
                 new Option<PortableModeArguments.PortableDanmakuMode>(new []{ "--danmaku", "-d" }, "Flags for danmaku recording"),
@@ -119,6 +120,8 @@ namespace BililiveRecorder.Cli
                 if (!string.IsNullOrWhiteSpace(opts.WebhookUrl))
                     global.WebHookUrlsV2 = opts.WebhookUrl;
 
+                global.RecordMode = opts.RecordMode;
+
                 var danmaku = opts.Danmaku;
                 global.RecordDanmaku = danmaku != PortableModeArguments.PortableDanmakuMode.None;
                 global.RecordDanmakuSuperChat = danmaku.HasFlag(PortableModeArguments.PortableDanmakuMode.SuperChat);
@@ -181,6 +184,8 @@ namespace BililiveRecorder.Cli
             public LogEventLevel LogLevel { get; set; } = LogEventLevel.Information;
 
             public LogEventLevel LogFileLevel { get; set; } = LogEventLevel.Debug;
+
+            public RecordMode RecordMode { get; set; } = RecordMode.Standard;
 
             public string OutputPath { get; set; } = string.Empty;
 
