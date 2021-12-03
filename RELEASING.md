@@ -1,6 +1,6 @@
 # 新版本发布流程备忘
 
-- 在 `dev--3` 分支完成修改的功能，实际运行测试一遍
+- 在 `dev-1.3` 分支完成修改的功能，实际运行测试一遍
 - 在 GitHub 创建 Release 并发布
   - GitHub Actions 会自动补充 Assets
 - 从 Artifacts 里下载 `WPF-NupkgReleases`
