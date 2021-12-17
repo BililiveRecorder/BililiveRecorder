@@ -10,10 +10,10 @@ using Serilog;
 #nullable enable
 namespace BililiveRecorder.WPF
 {
-    internal abstract class NetworkChangeDetector
+    internal static class NetworkChangeDetector
     {
         private static bool enabled = false;
-        private static readonly ILogger logger = Log.ForContext<NetworkChangeDetector>();
+        private static readonly ILogger logger = Log.ForContext(typeof(NetworkChangeDetector));
 
         private static readonly object debounceLock = new();
         private static readonly TimeSpan debounceDelay = TimeSpan.FromSeconds(15);
@@ -49,7 +49,6 @@ namespace BililiveRecorder.WPF
                     {
                         try
                         {
-
                             LogNetworkInfoWithoutDebounce();
                         }
                         catch (Exception ex)
