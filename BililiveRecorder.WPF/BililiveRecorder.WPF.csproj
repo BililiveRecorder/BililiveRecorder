@@ -127,6 +127,7 @@
     <Compile Include="Models\LogModel.cs" />
     <Compile Include="Models\PollyPolicyModel.cs" />
     <Compile Include="Models\RootModel.cs" />
+    <Compile Include="NetworkChangeDetector.cs" />
     <Compile Include="Pages\AboutPage.xaml.cs">
       <DependentUpon>AboutPage.xaml</DependentUpon>
     </Compile>

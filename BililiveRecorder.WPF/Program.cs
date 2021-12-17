@@ -3,6 +3,7 @@ using System.CommandLine;
 using System.CommandLine.Invocation;
 using System.Diagnostics;
 using System.IO;
+using System.Net;
 using System.Runtime.ExceptionServices;
 using System.Runtime.InteropServices;
 using System.Security;
@@ -220,6 +221,7 @@ namespace BililiveRecorder.WPF
                 x.FileCreationTime,
                 x.FileModificationTime,
             })
+            .Destructure.AsScalar<IPAddress>()
             .WriteTo.Console(levelSwitch: levelSwitchConsole)
 #if DEBUG
             .WriteTo.Debug()

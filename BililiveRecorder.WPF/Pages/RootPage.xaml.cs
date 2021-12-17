@@ -238,6 +238,7 @@ namespace BililiveRecorder.WPF.Pages
                     this.RoomListPageNavigationViewItem.IsEnabled = true;
                     this.SettingsPageNavigationViewItem.IsEnabled = true;
                     (Application.Current.MainWindow as NewMainWindow)!.HideToTray = true;
+                    NetworkChangeDetector.Enable();
 
                     _ = Task.Run(async () =>
                     {
