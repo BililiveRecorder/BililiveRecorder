@@ -29,7 +29,7 @@ namespace BililiveRecorder.Core
         event EventHandler<RecordFileOpeningEventArgs>? RecordFileOpening;
         event EventHandler<RecordFileClosedEventArgs>? RecordFileClosed;
         event EventHandler<RecordingStatsEventArgs>? RecordingStats;
-        event EventHandler<NetworkingStatsEventArgs>? NetworkingStats;
+        event EventHandler<IOStatsEventArgs>? IOStats;
 
         void StartRecord();
         void StopRecord();

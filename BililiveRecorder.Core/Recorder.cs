@@ -50,7 +50,7 @@ namespace BililiveRecorder.Core
         public event EventHandler<AggregatedRoomEventArgs<RecordSessionEndedEventArgs>>? RecordSessionEnded;
         public event EventHandler<AggregatedRoomEventArgs<RecordFileOpeningEventArgs>>? RecordFileOpening;
         public event EventHandler<AggregatedRoomEventArgs<RecordFileClosedEventArgs>>? RecordFileClosed;
-        public event EventHandler<AggregatedRoomEventArgs<NetworkingStatsEventArgs>>? NetworkingStats;
+        public event EventHandler<AggregatedRoomEventArgs<IOStatsEventArgs>>? IOStats;
         public event EventHandler<AggregatedRoomEventArgs<RecordingStatsEventArgs>>? RecordingStats;
         public event PropertyChangedEventHandler? PropertyChanged;
 
@@ -80,7 +80,7 @@ namespace BililiveRecorder.Core
             room.RecordSessionEnded += this.Room_RecordSessionEnded;
             room.RecordFileOpening += this.Room_RecordFileOpening;
             room.RecordFileClosed += this.Room_RecordFileClosed;
-            room.NetworkingStats += this.Room_NetworkingStats;
+            room.IOStats += this.Room_IOStats;
             room.RecordingStats += this.Room_RecordingStats;
             room.PropertyChanged += this.Room_PropertyChanged;
 
@@ -120,10 +120,10 @@ namespace BililiveRecorder.Core
 
         #region Events
 
-        private void Room_NetworkingStats(object sender, NetworkingStatsEventArgs e)
+        private void Room_IOStats(object sender, IOStatsEventArgs e)
         {
             var room = (IRoom)sender;
-            NetworkingStats?.Invoke(this, new AggregatedRoomEventArgs<NetworkingStatsEventArgs>(room, e));
+            IOStats?.Invoke(this, new AggregatedRoomEventArgs<IOStatsEventArgs>(room, e));
         }
 
         private void Room_RecordingStats(object sender, RecordingStatsEventArgs e)

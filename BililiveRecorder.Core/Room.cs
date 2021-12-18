@@ -102,7 +102,7 @@ namespace BililiveRecorder.Core
         public event EventHandler<RecordSessionEndedEventArgs>? RecordSessionEnded;
         public event EventHandler<RecordFileOpeningEventArgs>? RecordFileOpening;
         public event EventHandler<RecordFileClosedEventArgs>? RecordFileClosed;
-        public event EventHandler<NetworkingStatsEventArgs>? NetworkingStats;
+        public event EventHandler<IOStatsEventArgs>? IOStats;
         public event EventHandler<RecordingStatsEventArgs>? RecordingStats;
         public event PropertyChangedEventHandler? PropertyChanged;
 
@@ -219,7 +219,7 @@ namespace BililiveRecorder.Core
                     return;
 
                 var task = this.recordTaskFactory.CreateRecordTask(this);
-                task.NetworkingStats += this.RecordTask_NetworkingStats;
+                task.IOStats += this.RecordTask_IOStats;
                 task.RecordingStats += this.RecordTask_RecordingStats;
                 task.RecordFileOpening += this.RecordTask_RecordFileOpening;
                 task.RecordFileClosed += this.RecordTask_RecordFileClosed;
@@ -349,13 +349,13 @@ namespace BililiveRecorder.Core
         #region Event Handlers
 
         ///
-        private void RecordTask_NetworkingStats(object sender, NetworkingStatsEventArgs e)
+        private void RecordTask_IOStats(object sender, IOStatsEventArgs e)
         {
-            this.logger.Verbose("Networking stats: {@stats}", e);
+            this.logger.Verbose("IO stats: {@stats}", e);
 
-            this.Stats.NetworkMbps = e.Mbps;
+            this.Stats.NetworkMbps = e.NetworkMbps;
 
-            NetworkingStats?.Invoke(this, e);
+            IOStats?.Invoke(this, e);
         }
 
         ///

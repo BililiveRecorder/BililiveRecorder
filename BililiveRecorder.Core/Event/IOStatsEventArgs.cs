@@ -2,7 +2,7 @@ using System;
 
 namespace BililiveRecorder.Core.Event
 {
-    public class NetworkingStatsEventArgs : EventArgs
+    public class IOStatsEventArgs : EventArgs
     {
         public DateTimeOffset StartTime { get; set; }
 
@@ -10,8 +10,8 @@ namespace BililiveRecorder.Core.Event
 
         public TimeSpan Duration { get; set; }
 
-        public int BytesDownloaded { get; set; }
+        public int NetworkBytesDownloaded { get; set; }
 
-        public double Mbps { get; set; }
+        public double NetworkMbps { get; set; }
     }
 }

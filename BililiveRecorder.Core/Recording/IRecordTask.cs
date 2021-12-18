@@ -8,7 +8,7 @@ namespace BililiveRecorder.Core.Recording
     {
         Guid SessionId { get; }
 
-        event EventHandler<NetworkingStatsEventArgs>? NetworkingStats;
+        event EventHandler<IOStatsEventArgs>? IOStats;
         event EventHandler<RecordingStatsEventArgs>? RecordingStats;
         event EventHandler<RecordFileOpeningEventArgs>? RecordFileOpening;
         event EventHandler<RecordFileClosedEventArgs>? RecordFileClosed;

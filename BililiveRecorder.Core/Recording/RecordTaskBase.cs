@@ -46,20 +46,20 @@ namespace BililiveRecorder.Core.Recording
 
             this.ct = this.cts.Token;
 
-            this.timer.Elapsed += this.Timer_Elapsed_TriggerNetworkStats;
+            this.timer.Elapsed += this.Timer_Elapsed_TriggerIOStats;
         }
 
         public Guid SessionId { get; } = Guid.NewGuid();
 
         #region Events
 
-        public event EventHandler<NetworkingStatsEventArgs>? NetworkingStats;
+        public event EventHandler<IOStatsEventArgs>? IOStats;
         public event EventHandler<RecordingStatsEventArgs>? RecordingStats;
         public event EventHandler<RecordFileOpeningEventArgs>? RecordFileOpening;
         public event EventHandler<RecordFileClosedEventArgs>? RecordFileClosed;
         public event EventHandler? RecordSessionEnded;
 
-        protected void OnNetworkingStats(NetworkingStatsEventArgs e) => NetworkingStats?.Invoke(this, e);
+        protected void OnIOStats(IOStatsEventArgs e) => IOStats?.Invoke(this, e);
         protected void OnRecordingStats(RecordingStatsEventArgs e) => RecordingStats?.Invoke(this, e);
         protected void OnRecordFileOpening(RecordFileOpeningEventArgs e) => RecordFileOpening?.Invoke(this, e);
         protected void OnRecordFileClosed(RecordFileClosedEventArgs e) => RecordFileClosed?.Invoke(this, e);
@@ -116,7 +116,7 @@ namespace BililiveRecorder.Core.Recording
 
         protected abstract void StartRecordingLoop(Stream stream);
 
-        private void Timer_Elapsed_TriggerNetworkStats(object sender, ElapsedEventArgs e)
+        private void Timer_Elapsed_TriggerIOStats(object sender, ElapsedEventArgs e)
         {
             int bytes;
             TimeSpan diff;
@@ -135,19 +135,19 @@ namespace BililiveRecorder.Core.Recording
 
             var mbps = bytes * (8d / 1024d / 1024d) / diff.TotalSeconds;
 
-            this.OnNetworkingStats(new NetworkingStatsEventArgs
+            this.OnIOStats(new IOStatsEventArgs
             {
-                BytesDownloaded = bytes,
+                NetworkBytesDownloaded = bytes,
                 Duration = diff,
                 StartTime = start,
                 EndTime = end,
-                Mbps = mbps
+                NetworkMbps = mbps
             });
 
             if ((!this.timeoutTriggered) && (this.durationSinceNoDataReceived.TotalMilliseconds > this.room.RoomConfig.TimingWatchdogTimeout))
             {
                 this.timeoutTriggered = true;
-                this.logger.Warning("直播服务器未断开连接但停止发送直播数据，将会主动断开连接");
+                this.logger.Warning("检测到录制卡住，可能是网络或硬盘原因，将会主动断开连接");
                 this.RequestStop();
             }
         }
