@@ -57,13 +57,13 @@ namespace BililiveRecorder.WPF
         {
             try
             {
-                logger.Debug("Writing path file at {FilePathj}", this.filePath);
+                logger.Debug("Writing path file at {FilePath}", this.filePath);
                 var str = JsonConvert.SerializeObject(data);
                 Core.Config.ConfigParser.WriteAllTextWithBackup(this.filePath, str);
             }
             catch (Exception ex)
             {
-                logger.Warning(ex, "Error writing path file at {FilePathj}", this.filePath);
+                logger.Warning(ex, "Error writing path file at {FilePath}", this.filePath);
             }
         }
 
