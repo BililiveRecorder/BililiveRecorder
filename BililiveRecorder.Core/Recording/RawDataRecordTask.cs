@@ -60,9 +60,18 @@ namespace BililiveRecorder.Core.Recording
                     if (bytesRead == 0)
                         break;
 
-                    Interlocked.Add(ref this.fillerDownloadedBytes, bytesRead);
+                    Interlocked.Add(ref this.ioNetworkDownloadedBytes, bytesRead);
 
+                    this.ioDiskStopwatch.Restart();
                     await file.WriteAsync(buffer, 0, bytesRead).ConfigureAwait(false);
+                    this.ioDiskStopwatch.Stop();
+
+                    lock (this.ioDiskStatsLock)
+                    {
+                        this.ioDiskWriteTime += this.ioDiskStopwatch.Elapsed;
+                        this.ioDiskWrittenBytes += bytesRead;
+                    }
+                    this.ioDiskStopwatch.Reset();
                 }
             }
             catch (OperationCanceledException ex)

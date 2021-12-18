@@ -12,6 +12,18 @@ namespace BililiveRecorder.Core.Event
 
         public int NetworkBytesDownloaded { get; set; }
 
+        /// <summary>
+        /// mibi-bits per seconds
+        /// </summary>
         public double NetworkMbps { get; set; }
+
+        public TimeSpan DiskWriteTime { get; set; }
+
+        public int DiskBytesWritten { get; set; }
+
+        /// <summary>
+        /// mibi-bytes per seconds
+        /// </summary>
+        public double DiskMBps { get; set; }
     }
 }

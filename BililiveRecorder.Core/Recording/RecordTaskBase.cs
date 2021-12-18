@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
@@ -33,9 +34,17 @@ namespace BililiveRecorder.Core.Recording
         protected bool started = false;
         protected bool timeoutTriggered = false;
 
-        private readonly object fillerStatsLock = new object();
-        protected int fillerDownloadedBytes;
-        private DateTimeOffset fillerStatsLastTrigger;
+
+        private readonly object ioStatsLock = new();
+        protected int ioNetworkDownloadedBytes;
+
+        protected Stopwatch ioDiskStopwatch = new();
+        protected object ioDiskStatsLock = new();
+        protected TimeSpan ioDiskWriteTime;
+        protected int ioDiskWrittenBytes;
+        private DateTimeOffset ioDiskWarningTimeout;
+
+        private DateTimeOffset ioStatsLastTrigger;
         private TimeSpan durationSinceNoDataReceived;
 
         protected RecordTaskBase(IRoom room, ILogger logger, IApiClient apiClient)
@@ -96,7 +105,7 @@ namespace BililiveRecorder.Core.Recording
 
             var stream = await this.GetStreamAsync(fullUrl: fullUrl, timeout: (int)this.room.RoomConfig.TimingStreamConnect).ConfigureAwait(false);
 
-            this.fillerStatsLastTrigger = DateTimeOffset.UtcNow;
+            this.ioStatsLastTrigger = DateTimeOffset.UtcNow;
             this.durationSinceNoDataReceived = TimeSpan.Zero;
 
             this.ct.Register(state => Task.Run(async () =>
@@ -118,31 +127,54 @@ namespace BililiveRecorder.Core.Recording
 
         private void Timer_Elapsed_TriggerIOStats(object sender, ElapsedEventArgs e)
         {
-            int bytes;
-            TimeSpan diff;
-            DateTimeOffset start, end;
+            int networkDownloadBytes, diskWriteBytes;
+            TimeSpan durationDiff, diskWriteTime;
+            DateTimeOffset startTime, endTime;
 
-            lock (this.fillerStatsLock)
+
+            lock (this.ioStatsLock) // 锁 timer elapsed 事件本身防止并行运行
             {
-                bytes = Interlocked.Exchange(ref this.fillerDownloadedBytes, 0);
-                end = DateTimeOffset.UtcNow;
-                start = this.fillerStatsLastTrigger;
-                this.fillerStatsLastTrigger = end;
-                diff = end - start;
+                // networks
+                networkDownloadBytes = Interlocked.Exchange(ref this.ioNetworkDownloadedBytes, 0); // 锁网络统计
+                endTime = DateTimeOffset.UtcNow;
+                startTime = this.ioStatsLastTrigger;
+                this.ioStatsLastTrigger = endTime;
+                durationDiff = endTime - startTime;
 
-                this.durationSinceNoDataReceived = bytes > 0 ? TimeSpan.Zero : this.durationSinceNoDataReceived + diff;
+                this.durationSinceNoDataReceived = networkDownloadBytes > 0 ? TimeSpan.Zero : this.durationSinceNoDataReceived + durationDiff;
+
+                // disks
+                lock (this.ioDiskStatsLock) // 锁硬盘统计
+                {
+                    diskWriteTime = this.ioDiskWriteTime;
+                    diskWriteBytes = this.ioDiskWrittenBytes;
+                    this.ioDiskWriteTime = TimeSpan.Zero;
+                    this.ioDiskWrittenBytes = 0;
+                }
             }
 
-            var mbps = bytes * (8d / 1024d / 1024d) / diff.TotalSeconds;
+            var netMbps = networkDownloadBytes * (8d / 1024d / 1024d) / durationDiff.TotalSeconds;
+            var diskMBps = diskWriteBytes / (1024d * 1024d) / diskWriteTime.TotalSeconds;
 
             this.OnIOStats(new IOStatsEventArgs
             {
-                NetworkBytesDownloaded = bytes,
-                Duration = diff,
-                StartTime = start,
-                EndTime = end,
-                NetworkMbps = mbps
+                NetworkBytesDownloaded = networkDownloadBytes,
+                Duration = durationDiff,
+                StartTime = startTime,
+                EndTime = endTime,
+                NetworkMbps = netMbps,
+                DiskBytesWritten = diskWriteBytes,
+                DiskWriteTime = diskWriteTime,
+                DiskMBps = diskMBps,
             });
+
+            var now = DateTimeOffset.Now;
+            if (diskWriteBytes > 0 && this.ioDiskWarningTimeout < now && (diskWriteTime.TotalSeconds > 1d || diskMBps < 2d))
+            {
+                // 硬盘 IO 可能不能满足录播
+                this.ioDiskWarningTimeout = now + TimeSpan.FromMinutes(2); // 最多每 2 分钟提醒一次
+                this.logger.Warning("检测到硬盘写入速度较慢可能影响录播，请检查是否有其他软件或游戏正在使用硬盘");
+            }
 
             if ((!this.timeoutTriggered) && (this.durationSinceNoDataReceived.TotalMilliseconds > this.room.RoomConfig.TimingWatchdogTimeout))
             {
