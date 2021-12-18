@@ -1,6 +1,18 @@
 mode: ContinuousDelivery
 increment: Patch
-branches: {}
+branches:
+  develop:
+    mode: ContinuousDelivery
+    tag: alpha
+    increment: Patch
+    prevent-increment-of-merged-branch-version: false
+    track-merge-target: true
+    regex: ^dev(elop)?(ment)?$
+    source-branches: []
+    tracks-release-branches: true
+    is-release-branch: false
+    is-mainline: false
+    pre-release-weight: 0
 ignore:
   sha: []
 merge-message-formats: {}
