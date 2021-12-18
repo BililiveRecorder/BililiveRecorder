@@ -129,7 +129,7 @@ namespace BililiveRecorder.Core.Recording
                         if (bytesRead == 0)
                             break;
                         writer.Advance(bytesRead);
-                        Interlocked.Add(ref this.fillerDownloadedBytes, bytesRead);
+                        Interlocked.Add(ref this.ioNetworkDownloadedBytes, bytesRead);
                     }
                     catch (Exception ex)
                     {
@@ -171,7 +171,16 @@ namespace BililiveRecorder.Core.Recording
                     if (this.context.Comments.Count > 0)
                         this.logger.Debug("修复逻辑输出 {@Comments}", this.context.Comments);
 
-                    await this.writer.WriteAsync(this.context).ConfigureAwait(false);
+                    this.ioDiskStopwatch.Restart();
+                    var bytesWritten = await this.writer.WriteAsync(this.context).ConfigureAwait(false);
+                    this.ioDiskStopwatch.Stop();
+
+                    lock (this.ioDiskStatsLock)
+                    {
+                        this.ioDiskWriteTime += this.ioDiskStopwatch.Elapsed;
+                        this.ioDiskWrittenBytes += bytesWritten;
+                    }
+                    this.ioDiskStopwatch.Reset();
 
                     if (this.context.Actions.Any(x => x is PipelineDisconnectAction))
                     {

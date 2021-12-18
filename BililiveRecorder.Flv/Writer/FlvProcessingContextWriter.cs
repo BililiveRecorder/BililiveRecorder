@@ -25,6 +25,8 @@ namespace BililiveRecorder.Flv.Writer
         private KeyframesScriptDataValue? keyframesScriptDataValue = null;
         private double lastDuration;
 
+        private int bytesWrittenByCurrentWriteCall { get; set; }
+
         public event EventHandler<FileClosedEventArgs>? FileClosed;
 
         public Action<ScriptTagBody>? BeforeScriptTagWrite { get; set; }
@@ -37,7 +39,7 @@ namespace BililiveRecorder.Flv.Writer
             this.disableKeyframes = disableKeyframes;
         }
 
-        public async Task WriteAsync(FlvProcessingContext context)
+        public async Task<int> WriteAsync(FlvProcessingContext context)
         {
             if (this.state == WriterState.Invalid)
                 throw new InvalidOperationException("FlvProcessingContextWriter is in a invalid state.");
@@ -70,11 +72,16 @@ namespace BililiveRecorder.Flv.Writer
                 this.semaphoreSlim.Release();
             }
 
+            var bytesWritten = this.bytesWrittenByCurrentWriteCall;
+            this.bytesWrittenByCurrentWriteCall = 0;
+
             // Dispose tags
             foreach (var action in context.Actions)
                 if (action is PipelineDataAction dataAction)
                     foreach (var tag in dataAction.Tags)
                         tag.BinaryData?.Dispose();
+
+            return bytesWritten;
         }
 
         #region Flv Writer Implementation
@@ -214,6 +221,8 @@ namespace BililiveRecorder.Flv.Writer
                     await this.tagWriter.WriteTag(this.nextAudioHeaderTag).ConfigureAwait(false);
             }
 
+            this.bytesWrittenByCurrentWriteCall += (int)this.tagWriter.FileSize;
+
             this.state = WriterState.Writing;
         }
 
@@ -236,8 +245,12 @@ namespace BililiveRecorder.Flv.Writer
             var duration = tags[tags.Count - 1].Timestamp / 1000d;
             this.lastDuration = duration;
 
+            var beforeFileSize = this.tagWriter.FileSize;
+
             foreach (var tag in tags)
                 await this.tagWriter.WriteTag(tag).ConfigureAwait(false);
+
+            this.bytesWrittenByCurrentWriteCall += (int)(this.tagWriter.FileSize - beforeFileSize);
 
             await this.RewriteScriptTagImpl(duration, firstTag.IsKeyframeData(), firstTag.Timestamp, pos).ConfigureAwait(false);
         }
@@ -255,7 +268,11 @@ namespace BililiveRecorder.Flv.Writer
                     throw new InvalidOperationException($"Can't write data tag with current state ({this.state})");
             }
 
+            var beforeFileSize = this.tagWriter.FileSize;
+
             await this.tagWriter.WriteTag(endAction.Tag).ConfigureAwait(false);
+
+            this.bytesWrittenByCurrentWriteCall += (int)(this.tagWriter.FileSize - beforeFileSize);
         }
         #endregion
 

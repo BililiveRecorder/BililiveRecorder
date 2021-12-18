@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
@@ -35,9 +36,17 @@ namespace BililiveRecorder.Core.Recording
         protected bool started = false;
         protected bool timeoutTriggered = false;
 
-        private readonly object fillerStatsLock = new object();
-        protected int fillerDownloadedBytes;
-        private DateTimeOffset fillerStatsLastTrigger;
+
+        private readonly object ioStatsLock = new();
+        protected int ioNetworkDownloadedBytes;
+
+        protected Stopwatch ioDiskStopwatch = new();
+        protected object ioDiskStatsLock = new();
+        protected TimeSpan ioDiskWriteTime;
+        protected int ioDiskWrittenBytes;
+        private DateTimeOffset ioDiskWarningTimeout;
+
+        private DateTimeOffset ioStatsLastTrigger;
         private TimeSpan durationSinceNoDataReceived;
 
         protected RecordTaskBase(IRoom room, ILogger logger, IApiClient apiClient, FileNameGenerator fileNameGenerator)
@@ -48,20 +57,20 @@ namespace BililiveRecorder.Core.Recording
             this.fileNameGenerator = fileNameGenerator ?? throw new ArgumentNullException(nameof(fileNameGenerator));
             this.ct = this.cts.Token;
 
-            this.timer.Elapsed += this.Timer_Elapsed_TriggerNetworkStats;
+            this.timer.Elapsed += this.Timer_Elapsed_TriggerIOStats;
         }
 
         public Guid SessionId { get; } = Guid.NewGuid();
 
         #region Events
 
-        public event EventHandler<NetworkingStatsEventArgs>? NetworkingStats;
+        public event EventHandler<IOStatsEventArgs>? IOStats;
         public event EventHandler<RecordingStatsEventArgs>? RecordingStats;
         public event EventHandler<RecordFileOpeningEventArgs>? RecordFileOpening;
         public event EventHandler<RecordFileClosedEventArgs>? RecordFileClosed;
         public event EventHandler? RecordSessionEnded;
 
-        protected void OnNetworkingStats(NetworkingStatsEventArgs e) => NetworkingStats?.Invoke(this, e);
+        protected void OnIOStats(IOStatsEventArgs e) => IOStats?.Invoke(this, e);
         protected void OnRecordingStats(RecordingStatsEventArgs e) => RecordingStats?.Invoke(this, e);
         protected void OnRecordFileOpening(RecordFileOpeningEventArgs e) => RecordFileOpening?.Invoke(this, e);
         protected void OnRecordFileClosed(RecordFileClosedEventArgs e) => RecordFileClosed?.Invoke(this, e);
@@ -98,7 +107,7 @@ namespace BililiveRecorder.Core.Recording
 
             var stream = await this.GetStreamAsync(fullUrl: fullUrl, timeout: (int)this.room.RoomConfig.TimingStreamConnect).ConfigureAwait(false);
 
-            this.fillerStatsLastTrigger = DateTimeOffset.UtcNow;
+            this.ioStatsLastTrigger = DateTimeOffset.UtcNow;
             this.durationSinceNoDataReceived = TimeSpan.Zero;
 
             this.ct.Register(state => Task.Run(async () =>
@@ -118,38 +127,61 @@ namespace BililiveRecorder.Core.Recording
 
         protected abstract void StartRecordingLoop(Stream stream);
 
-        private void Timer_Elapsed_TriggerNetworkStats(object sender, ElapsedEventArgs e)
+        private void Timer_Elapsed_TriggerIOStats(object sender, ElapsedEventArgs e)
         {
-            int bytes;
-            TimeSpan diff;
-            DateTimeOffset start, end;
+            int networkDownloadBytes, diskWriteBytes;
+            TimeSpan durationDiff, diskWriteTime;
+            DateTimeOffset startTime, endTime;
 
-            lock (this.fillerStatsLock)
+
+            lock (this.ioStatsLock) // 锁 timer elapsed 事件本身防止并行运行
             {
-                bytes = Interlocked.Exchange(ref this.fillerDownloadedBytes, 0);
-                end = DateTimeOffset.UtcNow;
-                start = this.fillerStatsLastTrigger;
-                this.fillerStatsLastTrigger = end;
-                diff = end - start;
+                // networks
+                networkDownloadBytes = Interlocked.Exchange(ref this.ioNetworkDownloadedBytes, 0); // 锁网络统计
+                endTime = DateTimeOffset.UtcNow;
+                startTime = this.ioStatsLastTrigger;
+                this.ioStatsLastTrigger = endTime;
+                durationDiff = endTime - startTime;
 
-                this.durationSinceNoDataReceived = bytes > 0 ? TimeSpan.Zero : this.durationSinceNoDataReceived + diff;
+                this.durationSinceNoDataReceived = networkDownloadBytes > 0 ? TimeSpan.Zero : this.durationSinceNoDataReceived + durationDiff;
+
+                // disks
+                lock (this.ioDiskStatsLock) // 锁硬盘统计
+                {
+                    diskWriteTime = this.ioDiskWriteTime;
+                    diskWriteBytes = this.ioDiskWrittenBytes;
+                    this.ioDiskWriteTime = TimeSpan.Zero;
+                    this.ioDiskWrittenBytes = 0;
+                }
             }
 
-            var mbps = bytes * (8d / 1024d / 1024d) / diff.TotalSeconds;
+            var netMbps = networkDownloadBytes * (8d / 1024d / 1024d) / durationDiff.TotalSeconds;
+            var diskMBps = diskWriteBytes / (1024d * 1024d) / diskWriteTime.TotalSeconds;
 
-            this.OnNetworkingStats(new NetworkingStatsEventArgs
+            this.OnIOStats(new IOStatsEventArgs
             {
-                BytesDownloaded = bytes,
-                Duration = diff,
-                StartTime = start,
-                EndTime = end,
-                Mbps = mbps
+                NetworkBytesDownloaded = networkDownloadBytes,
+                Duration = durationDiff,
+                StartTime = startTime,
+                EndTime = endTime,
+                NetworkMbps = netMbps,
+                DiskBytesWritten = diskWriteBytes,
+                DiskWriteTime = diskWriteTime,
+                DiskMBps = diskMBps,
             });
+
+            var now = DateTimeOffset.Now;
+            if (diskWriteBytes > 0 && this.ioDiskWarningTimeout < now && (diskWriteTime.TotalSeconds > 1d || diskMBps < 2d))
+            {
+                // 硬盘 IO 可能不能满足录播
+                this.ioDiskWarningTimeout = now + TimeSpan.FromMinutes(2); // 最多每 2 分钟提醒一次
+                this.logger.Warning("检测到硬盘写入速度较慢可能影响录播，请检查是否有其他软件或游戏正在使用硬盘");
+            }
 
             if ((!this.timeoutTriggered) && (this.durationSinceNoDataReceived.TotalMilliseconds > this.room.RoomConfig.TimingWatchdogTimeout))
             {
                 this.timeoutTriggered = true;
-                this.logger.Warning("直播服务器未断开连接但停止发送直播数据，将会主动断开连接");
+                this.logger.Warning("检测到录制卡住，可能是网络或硬盘原因，将会主动断开连接");
                 this.RequestStop();
             }
         }

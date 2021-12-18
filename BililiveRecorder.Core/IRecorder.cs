@@ -15,7 +15,7 @@ namespace BililiveRecorder.Core
         event EventHandler<AggregatedRoomEventArgs<RecordSessionEndedEventArgs>>? RecordSessionEnded;
         event EventHandler<AggregatedRoomEventArgs<RecordFileOpeningEventArgs>>? RecordFileOpening;
         event EventHandler<AggregatedRoomEventArgs<RecordFileClosedEventArgs>>? RecordFileClosed;
-        event EventHandler<AggregatedRoomEventArgs<NetworkingStatsEventArgs>>? NetworkingStats;
+        event EventHandler<AggregatedRoomEventArgs<IOStatsEventArgs>>? IOStats;
         event EventHandler<AggregatedRoomEventArgs<RecordingStatsEventArgs>>? RecordingStats;
 
         IRoom AddRoom(int roomid);

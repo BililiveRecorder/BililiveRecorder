@@ -12,6 +12,6 @@ namespace BililiveRecorder.Flv
 
         event EventHandler<FileClosedEventArgs> FileClosed;
 
-        Task WriteAsync(FlvProcessingContext context);
+        Task<int> WriteAsync(FlvProcessingContext context);
     }
 }
