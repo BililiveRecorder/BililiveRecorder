@@ -96,7 +96,8 @@ export const data: Array<ConfigEntry> = [
         description: "录制文件名模板",
         type: "string?",
         configType: "globalOnly",
-        defaultValue: "@\"{roomid}-{name}/录制-{roomid}-{date}-{time}-{ms}-{title}.flv\"",
+        defaultValue: "\"{{ roomId }}-{{ name }}/录制-{{ roomId }}-{{ \\\"now\\\" | format_date: \\\"yyyyMMdd-HHmmss-fff\\\" }}-{{ title }}.flv\"",
+        defaultValueDescription: "\"{{ roomId }}-{{ name }}/录制-{{ roomId }}-{{ \"now\" | format_date: \"yyyyMMdd-HHmmss-fff\" }}-{{ title }}.flv\"",
         markdown: "TODO: config v3 新的文件名模板系统的文档还没有写"
     },
     {

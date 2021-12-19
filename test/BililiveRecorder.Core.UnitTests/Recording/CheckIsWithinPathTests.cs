@@ -32,7 +32,7 @@ namespace BililiveRecorder.Core.UnitTests.Recording
         public void Test(string parent, string child, bool result)
         {
             // TODO fix path tests
-            Assert.Equal(result, Core.Recording.RecordTaskBase.CheckIsWithinPath(parent, Path.GetDirectoryName(child)!));
+            Assert.Equal(result, Core.Templating.FileNameGenerator.CheckIsWithinPath(parent, Path.GetDirectoryName(child)!));
         }
     }
 }

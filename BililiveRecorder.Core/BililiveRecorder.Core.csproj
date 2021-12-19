@@ -8,6 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Fluid.Core" Version="2.2.8" />
     <PackageReference Include="JsonSubTypes" Version="1.8.0" />
     <PackageReference Include="HierarchicalPropertyDefault" Version="0.1.4-beta-g75fdf624b1" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="6.0.0" />

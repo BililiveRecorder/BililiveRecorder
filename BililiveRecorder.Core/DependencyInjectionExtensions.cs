@@ -5,6 +5,7 @@ using BililiveRecorder.Core.Api.Http;
 using BililiveRecorder.Core.Config.V3;
 using BililiveRecorder.Core.Danmaku;
 using BililiveRecorder.Core.Recording;
+using BililiveRecorder.Core.Templating;
 using BililiveRecorder.Flv;
 using Microsoft.Extensions.DependencyInjection;
 using Polly.Registry;
@@ -42,6 +43,7 @@ namespace BililiveRecorder.DependencyInjection
             ;
 
         public static IServiceCollection AddRecorderRecording(this IServiceCollection services) => services
+            .AddSingleton<FileNameGenerator>()
             .AddScoped<IRecordTaskFactory, RecordTaskFactory>()
             .AddScoped<IFlvProcessingContextWriterFactory, FlvProcessingContextWriterWithFileWriterFactory>()
             .AddScoped<IFlvTagReaderFactory, FlvTagReaderFactory>()

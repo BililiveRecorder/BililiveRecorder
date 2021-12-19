@@ -86,11 +86,18 @@ namespace BililiveRecorder.Core.Config
             // 如果用户设置了自定义的文件名格式才需要转换，否则使用全局默认
             if (v2.Global.HasRecordFilenameFormat && v2.Global.RecordFilenameFormat is not null)
             {
-                v3.Global.FileNameRecordTemplate = v2.Global.RecordFilenameFormat.Replace("", ""); // TODO
-
+                v3.Global.FileNameRecordTemplate = v2.Global.RecordFilenameFormat
+                    .Replace("{date}", "{{ \"now\" | format_date: \"yyyyMMdd\" }}")
+                    .Replace("{time}", "{{ \"now\" | format_date: \"HHmmss\" }}")
+                    .Replace("{ms}", "{{ \"now\" | format_date: \"fff\" }}")
+                    .Replace("{random}", "{% random 3 %}")
+                    .Replace("{roomid}", "{{ roomId }}")
+                    .Replace("{title}", "{{ title }}")
+                    .Replace("{name}", "{{ name }}")
+                    .Replace("{parea}", "{{ areaParent }}")
+                    .Replace("{area}", "{{ areaChild }}")
+                    ;
             }
-
-            throw new NotImplementedException("配置转换还未完成");
 
             return v3;
         }

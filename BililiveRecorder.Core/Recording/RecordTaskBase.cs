@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Timers;
 using BililiveRecorder.Core.Api;
 using BililiveRecorder.Core.Event;
+using BililiveRecorder.Core.Templating;
 using Serilog;
 using Timer = System.Timers.Timer;
 
@@ -28,6 +29,7 @@ namespace BililiveRecorder.Core.Recording
         protected readonly IRoom room;
         protected readonly ILogger logger;
         protected readonly IApiClient apiClient;
+        private readonly FileNameGenerator fileNameGenerator;
 
         protected string? streamHost;
         protected bool started = false;
@@ -38,12 +40,12 @@ namespace BililiveRecorder.Core.Recording
         private DateTimeOffset fillerStatsLastTrigger;
         private TimeSpan durationSinceNoDataReceived;
 
-        protected RecordTaskBase(IRoom room, ILogger logger, IApiClient apiClient)
+        protected RecordTaskBase(IRoom room, ILogger logger, IApiClient apiClient, FileNameGenerator fileNameGenerator)
         {
             this.room = room ?? throw new ArgumentNullException(nameof(room));
             this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
             this.apiClient = apiClient ?? throw new ArgumentNullException(nameof(apiClient));
-
+            this.fileNameGenerator = fileNameGenerator ?? throw new ArgumentNullException(nameof(fileNameGenerator));
             this.ct = this.cts.Token;
 
             this.timer.Elapsed += this.Timer_Elapsed_TriggerNetworkStats;
@@ -152,82 +154,15 @@ namespace BililiveRecorder.Core.Recording
             }
         }
 
-        #region File Name
-
-        protected (string fullPath, string relativePath) CreateFileName()
+        protected (string fullPath, string relativePath) CreateFileName() => this.fileNameGenerator.CreateFilePath(new FileNameGenerator.FileNameContextData
         {
-            var formatString = this.room.RoomConfig.FileNameRecordTemplate!; // TODO
-
-            var now = DateTime.Now;
-            var date = now.ToString("yyyyMMdd");
-            var time = now.ToString("HHmmss");
-            var ms = now.ToString("fff");
-            var randomStr = this.random.Next(100, 999).ToString();
-
-            var relativePath = formatString
-                .Replace(@"{date}", date)
-                .Replace(@"{time}", time)
-                .Replace(@"{ms}", ms)
-                .Replace(@"{random}", randomStr)
-                .Replace(@"{roomid}", this.room.RoomConfig.RoomId.ToString())
-                .Replace(@"{title}", RemoveInvalidFileName(this.room.Title))
-                .Replace(@"{name}", RemoveInvalidFileName(this.room.Name))
-                .Replace(@"{parea}", RemoveInvalidFileName(this.room.AreaNameParent))
-                .Replace(@"{area}", RemoveInvalidFileName(this.room.AreaNameChild))
-                ;
-
-            if (!relativePath.EndsWith(".flv", StringComparison.OrdinalIgnoreCase))
-                relativePath += ".flv";
-
-            relativePath = RemoveInvalidFileName(relativePath, ignore_slash: true);
-            var workDirectory = this.room.RoomConfig.WorkDirectory;
-            var fullPath = Path.Combine(workDirectory, relativePath);
-            fullPath = Path.GetFullPath(fullPath);
-
-            if (!CheckIsWithinPath(workDirectory!, Path.GetDirectoryName(fullPath)))
-            {
-                this.logger.Warning("录制文件位置超出允许范围，请检查设置。将写入到默认路径。");
-                relativePath = Path.Combine(this.room.RoomConfig.RoomId.ToString(), $"{this.room.RoomConfig.RoomId}-{date}-{time}-{randomStr}.flv");
-                fullPath = Path.Combine(workDirectory, relativePath);
-            }
-
-            if (File.Exists(fullPath))
-            {
-                this.logger.Warning("录制文件名冲突，请检查设置。将写入到默认路径。");
-                relativePath = Path.Combine(this.room.RoomConfig.RoomId.ToString(), $"{this.room.RoomConfig.RoomId}-{date}-{time}-{randomStr}.flv");
-                fullPath = Path.Combine(workDirectory, relativePath);
-            }
-
-            return (fullPath, relativePath);
-        }
-
-        internal static string RemoveInvalidFileName(string input, bool ignore_slash = false)
-        {
-            foreach (var c in Path.GetInvalidFileNameChars())
-                if (!ignore_slash || c != '\\' && c != '/')
-                    input = input.Replace(c, '_');
-            return input;
-        }
-
-        internal static bool CheckIsWithinPath(string parent, string child)
-        {
-            if (parent is null || child is null)
-                return false;
-
-            parent = parent.Replace('/', '\\');
-            if (!parent.EndsWith("\\"))
-                parent += "\\";
-            parent = Path.GetFullPath(parent);
-
-            child = child.Replace('/', '\\');
-            if (!child.EndsWith("\\"))
-                child += "\\";
-            child = Path.GetFullPath(child);
-
-            return child.StartsWith(parent, StringComparison.Ordinal);
-        }
-
-        #endregion
+            Name = this.room.Name,
+            Title = this.room.Title,
+            RoomId = this.room.RoomConfig.RoomId,
+            ShortId = this.room.ShortId,
+            AreaParent = this.room.AreaNameParent,
+            AreaChild = this.room.AreaNameChild,
+        });
 
         #region Api Requests
 

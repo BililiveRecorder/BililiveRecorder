@@ -87,8 +87,8 @@
                             <ui:PathIcon Margin="2,0" VerticalAlignment="Center" Height="15" Style="{StaticResource PathIconDataOpenInNew}"/>
                         </Button>
                     </StackPanel>
-                    <c:SettingWithDefault IsSettingNotUsingDefault="{Binding HasRecordFilenameFormat}" Header="{l:Loc Settings_FileName_Record}">
-                        <TextBox Text="{Binding RecordFilenameFormat,Delay=500}" ui:TextBoxHelper.IsDeleteButtonVisible="False"/>
+                    <c:SettingWithDefault IsSettingNotUsingDefault="{Binding HasFileNameRecordTemplate}" Header="{l:Loc Settings_FileName_Record}">
+                        <TextBox Text="{Binding FileNameRecordTemplate,Delay=500}" ui:TextBoxHelper.IsDeleteButtonVisible="False"/>
                     </c:SettingWithDefault>
                 </StackPanel>
             </GroupBox>

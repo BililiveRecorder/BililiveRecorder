@@ -372,7 +372,7 @@ namespace BililiveRecorder.Core.Config.V3
 
         public string RecordingQuality => "10000";
 
-        public string FileNameRecordTemplate => @"{roomid}-{name}/录制-{roomid}-{date}-{time}-{ms}-{title}.flv";
+        public string FileNameRecordTemplate => "{{ roomId }}-{{ name }}/录制-{{ roomId }}-{{ \"now\" | format_date: \"yyyyMMdd-HHmmss-fff\" }}-{{ title }}.flv";
 
         public string WebHookUrls => string.Empty;
 
