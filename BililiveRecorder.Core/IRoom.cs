@@ -1,7 +1,7 @@
 using System;
 using System.ComponentModel;
 using System.Threading.Tasks;
-using BililiveRecorder.Core.Config.V2;
+using BililiveRecorder.Core.Config.V3;
 using BililiveRecorder.Core.Event;
 
 namespace BililiveRecorder.Core

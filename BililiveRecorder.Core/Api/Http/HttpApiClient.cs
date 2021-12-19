@@ -5,7 +5,7 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using BililiveRecorder.Core.Api.Model;
-using BililiveRecorder.Core.Config.V2;
+using BililiveRecorder.Core.Config.V3;
 using Newtonsoft.Json;
 
 namespace BililiveRecorder.Core.Api.Http
@@ -23,7 +23,7 @@ namespace BililiveRecorder.Core.Api.Http
         private HttpClient mainClient;
         private bool disposedValue;
 
-        public HttpClient MainHttpClient => mainClient;
+        public HttpClient MainHttpClient => this.mainClient;
 
         public HttpApiClient(GlobalConfig config)
         {

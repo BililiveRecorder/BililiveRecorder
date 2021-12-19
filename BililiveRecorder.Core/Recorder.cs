@@ -4,7 +4,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 using BililiveRecorder.Core.Config;
-using BililiveRecorder.Core.Config.V2;
+using BililiveRecorder.Core.Config.V3;
 using BililiveRecorder.Core.Event;
 using BililiveRecorder.Core.SimpleWebhook;
 using Serilog;
@@ -22,7 +22,7 @@ namespace BililiveRecorder.Core
 
         private bool disposedValue;
 
-        public Recorder(IRoomFactory roomFactory, ConfigV2 config, ILogger logger)
+        public Recorder(IRoomFactory roomFactory, ConfigV3 config, ILogger logger)
         {
             this.roomFactory = roomFactory ?? throw new ArgumentNullException(nameof(roomFactory));
             this.Config = config ?? throw new ArgumentNullException(nameof(config));
@@ -54,7 +54,7 @@ namespace BililiveRecorder.Core
         public event EventHandler<AggregatedRoomEventArgs<RecordingStatsEventArgs>>? RecordingStats;
         public event PropertyChangedEventHandler? PropertyChanged;
 
-        public ConfigV2 Config { get; }
+        public ConfigV3 Config { get; }
 
         public ReadOnlyObservableCollection<IRoom> Rooms { get; }
 

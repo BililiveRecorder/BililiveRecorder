@@ -3,7 +3,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
-using BililiveRecorder.Core.Config.V2;
+using BililiveRecorder.Core.Config.V3;
 using Newtonsoft.Json;
 using Serilog;
 
@@ -14,7 +14,7 @@ namespace BililiveRecorder.Core.SimpleWebhook
         private static readonly ILogger logger = Log.ForContext<BasicWebhookV1>();
         private static readonly HttpClient client;
 
-        private readonly ConfigV2 Config;
+        private readonly ConfigV3 Config;
 
         static BasicWebhookV1()
         {
@@ -22,7 +22,7 @@ namespace BililiveRecorder.Core.SimpleWebhook
             client.DefaultRequestHeaders.Add("User-Agent", $"BililiveRecorder/{GitVersionInformation.FullSemVer}");
         }
 
-        public BasicWebhookV1(ConfigV2 config)
+        public BasicWebhookV1(ConfigV3 config)
         {
             this.Config = config ?? throw new ArgumentNullException(nameof(config));
         }

@@ -278,7 +278,7 @@ You can uninstall me in system settings.", "安装成功 Installed", MessageBoxB
             }
         }
 
-        private ServiceProvider BuildServiceProvider(Core.Config.V2.ConfigV2 config, ILogger logger) => new ServiceCollection()
+        private ServiceProvider BuildServiceProvider(Core.Config.V3.ConfigV3 config, ILogger logger) => new ServiceCollection()
             .AddSingleton(logger)
             .AddRecorderConfig(config)
             .AddFlv()

@@ -7,7 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using BililiveRecorder.Core.Config;
-using BililiveRecorder.Core.Config.V2;
+using BililiveRecorder.Core.Config.V3;
 using Spectre.Console;
 
 namespace BililiveRecorder.Cli.Configure
@@ -30,7 +30,7 @@ namespace BililiveRecorder.Cli.Configure
             return 0;
         }
 
-        private static void ShowRootMenu(ConfigV2 config, string fullPath)
+        private static void ShowRootMenu(ConfigV3 config, string fullPath)
         {
             while (true)
             {
@@ -69,7 +69,7 @@ namespace BililiveRecorder.Cli.Configure
             }
         }
 
-        private static void SetRoomConfig(ConfigV2 config)
+        private static void SetRoomConfig(ConfigV3 config)
         {
             if (config.Rooms.Count < 1)
             {
@@ -112,7 +112,7 @@ namespace BililiveRecorder.Cli.Configure
             }
         }
 
-        private static void SetGlobalConfig(ConfigV2 config)
+        private static void SetGlobalConfig(ConfigV3 config)
         {
             while (true)
             {
@@ -136,7 +136,7 @@ namespace BililiveRecorder.Cli.Configure
             }
         }
 
-        private static void ListRooms(ConfigV2 config)
+        private static void ListRooms(ConfigV3 config)
         {
             var table = new Table()
                 .AddColumns("Roomid", "AutoRecord")
@@ -150,7 +150,7 @@ namespace BililiveRecorder.Cli.Configure
             AnsiConsole.Render(table);
         }
 
-        private static void AddRoom(ConfigV2 config)
+        private static void AddRoom(ConfigV3 config)
         {
             while (true)
             {
@@ -177,7 +177,7 @@ namespace BililiveRecorder.Cli.Configure
             }
         }
 
-        private static void DeleteRoom(ConfigV2 config)
+        private static void DeleteRoom(ConfigV3 config)
         {
             var toBeDeleted = AnsiConsole.Prompt(new MultiSelectionPrompt<RoomConfig>()
                 .Title("Delete rooms")
@@ -194,7 +194,7 @@ namespace BililiveRecorder.Cli.Configure
             AnsiConsole.MarkupLine("[green]{0} rooms deleted[/]", toBeDeleted.Count);
         }
 
-        private static void SetJsonSchema(ConfigV2 config)
+        private static void SetJsonSchema(ConfigV3 config)
         {
             var selection = PromptEnumSelection<JsonSchemaSelection>();
             switch (selection)
@@ -210,7 +210,7 @@ namespace BililiveRecorder.Cli.Configure
             }
         }
 
-        private static bool SaveConfig(ConfigV2 config, string fullPath)
+        private static bool SaveConfig(ConfigV3 config, string fullPath)
         {
             try
             {
@@ -227,7 +227,7 @@ namespace BililiveRecorder.Cli.Configure
             }
         }
 
-        private static bool FindConfig(string path, [NotNullWhen(true)] out ConfigV2? config, out string fullPath)
+        private static bool FindConfig(string path, [NotNullWhen(true)] out ConfigV3? config, out string fullPath)
         {
             if (Directory.Exists(path))
             {
@@ -241,7 +241,7 @@ namespace BililiveRecorder.Cli.Configure
             if (File.Exists(fullPath))
                 config = ConfigParser.LoadJson(File.ReadAllText(fullPath, Encoding.UTF8));
             else
-                config = new ConfigV2();
+                config = new ConfigV3();
 
             var result = config != null;
             if (!result)

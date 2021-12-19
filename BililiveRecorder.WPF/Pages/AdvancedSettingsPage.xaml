@@ -11,7 +11,7 @@
     l:ResxLocalizationProvider.DefaultDictionary="Strings"
     xmlns:c="clr-namespace:BililiveRecorder.WPF.Controls"
     xmlns:local="clr-namespace:BililiveRecorder.WPF.Pages"
-    xmlns:config="clr-namespace:BililiveRecorder.Core.Config.V2;assembly=BililiveRecorder.Core"
+    xmlns:configv3="clr-namespace:BililiveRecorder.Core.Config.V3;assembly=BililiveRecorder.Core"
     xmlns:model="clr-namespace:BililiveRecorder.WPF.Models"
     mc:Ignorable="d" 
     d:DesignHeight="1500" d:DesignWidth="500"
@@ -31,7 +31,7 @@
             <Setter Property="SpinButtonPlacementMode" Value="Inline"/>
         </Style>
     </ui:Page.Resources>
-    <ScrollViewer d:DataContext="{d:DesignInstance Type=config:GlobalConfig}">
+    <ScrollViewer d:DataContext="{d:DesignInstance Type=configv3:GlobalConfig}">
         <ui:SimpleStackPanel Orientation="Vertical" Spacing="5" Margin="20">
             <TextBlock Text="{l:Loc Settings_AdvancedPage_Title}" Style="{StaticResource TitleTextBlockStyle}" FontFamily="Microsoft YaHei" Margin="0,10"/>
             <TextBlock Text="{l:Loc Settings_AdvancedPage_Warning}"/>

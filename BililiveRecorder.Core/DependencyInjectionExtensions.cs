@@ -2,7 +2,7 @@ using BililiveRecorder.Core;
 using BililiveRecorder.Core.Api;
 using BililiveRecorder.Core.Api.Danmaku;
 using BililiveRecorder.Core.Api.Http;
-using BililiveRecorder.Core.Config.V2;
+using BililiveRecorder.Core.Config.V3;
 using BililiveRecorder.Core.Danmaku;
 using BililiveRecorder.Core.Recording;
 using BililiveRecorder.Flv;
@@ -13,9 +13,9 @@ namespace BililiveRecorder.DependencyInjection
 {
     public static class DependencyInjectionExtensions
     {
-        public static IServiceCollection AddRecorderConfig(this IServiceCollection services, ConfigV2 config) => services
+        public static IServiceCollection AddRecorderConfig(this IServiceCollection services, ConfigV3 config) => services
             .AddSingleton(config)
-            .AddSingleton(sp => sp.GetRequiredService<ConfigV2>().Global)
+            .AddSingleton(sp => sp.GetRequiredService<ConfigV3>().Global)
             ;
 
         public static IServiceCollection AddRecorder(this IServiceCollection services) => services

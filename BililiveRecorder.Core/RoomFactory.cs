@@ -1,5 +1,5 @@
 using System;
-using BililiveRecorder.Core.Config.V2;
+using BililiveRecorder.Core.Config.V3;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace BililiveRecorder.Core

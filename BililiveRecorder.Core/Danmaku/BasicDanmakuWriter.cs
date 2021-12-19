@@ -6,7 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Xml;
 using BililiveRecorder.Core.Api.Danmaku;
-using BililiveRecorder.Core.Config.V2;
+using BililiveRecorder.Core.Config.V3;
 using Serilog;
 
 #nullable enable

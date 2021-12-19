@@ -5,6 +5,7 @@
 
 using System.Collections.Generic;
 using System.ComponentModel;
+using BililiveRecorder.Core.Config;
 using BililiveRecorder.Core.Config.V3;
 
 namespace BililiveRecorder.Cli.Configure

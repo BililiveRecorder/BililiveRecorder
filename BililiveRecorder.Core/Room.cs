@@ -6,7 +6,7 @@ using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 using BililiveRecorder.Core.Api;
-using BililiveRecorder.Core.Config.V2;
+using BililiveRecorder.Core.Config.V3;
 using BililiveRecorder.Core.Danmaku;
 using BililiveRecorder.Core.Event;
 using BililiveRecorder.Core.Recording;

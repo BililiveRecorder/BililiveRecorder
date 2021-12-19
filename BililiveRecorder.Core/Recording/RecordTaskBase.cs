@@ -156,7 +156,7 @@ namespace BililiveRecorder.Core.Recording
 
         protected (string fullPath, string relativePath) CreateFileName()
         {
-            var formatString = this.room.RoomConfig.RecordFilenameFormat!;
+            var formatString = this.room.RoomConfig.FileNameRecordTemplate!; // TODO
 
             var now = DateTime.Now;
             var date = now.ToString("yyyyMMdd");

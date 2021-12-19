@@ -1,4 +1,4 @@
-using BililiveRecorder.Core.Config.V2;
+using BililiveRecorder.Core.Config.V3;
 
 namespace BililiveRecorder.Core
 {

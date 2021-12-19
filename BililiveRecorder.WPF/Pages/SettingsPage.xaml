@@ -12,8 +12,8 @@
     xmlns:c="clr-namespace:BililiveRecorder.WPF.Controls"
     xmlns:m="clr-namespace:BililiveRecorder.WPF.Models"
     xmlns:local="clr-namespace:BililiveRecorder.WPF.Pages"
-    xmlns:config="clr-namespace:BililiveRecorder.Core.Config.V2;assembly=BililiveRecorder.Core"
-    xmlns:confiv2="clr-namespace:BililiveRecorder.Core.Config.V2;assembly=BililiveRecorder.Core"
+    xmlns:config="clr-namespace:BililiveRecorder.Core.Config;assembly=BililiveRecorder.Core"
+    xmlns:configv3="clr-namespace:BililiveRecorder.Core.Config.V3;assembly=BililiveRecorder.Core"
     mc:Ignorable="d" 
     d:DesignHeight="1500" d:DesignWidth="500"
     DataContext="{Binding RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=local:RootPage},Path=DataContext.Recorder.Config.Global}"
@@ -24,7 +24,7 @@
             <Setter Property="VerticalAlignment" Value="Center"/>
         </Style>
     </ui:Page.Resources>
-    <ScrollViewer d:DataContext="{d:DesignInstance Type=config:GlobalConfig}">
+    <ScrollViewer d:DataContext="{d:DesignInstance Type=configv3:GlobalConfig}">
         <ui:SimpleStackPanel Orientation="Vertical" Spacing="5" Margin="20">
             <TextBlock Text="{l:Loc Settings_SettingsPage_Title}" Style="{StaticResource TitleTextBlockStyle}" FontFamily="Microsoft Yahei" Margin="0,10"/>
             <GroupBox Header="{l:Loc Settings_Danmaku_Title}">
@@ -46,23 +46,23 @@
                 <StackPanel>
                     <RadioButton GroupName="RecordMode" Content="{l:Loc Settings_RecordMode_RadioButton_Standard}"
                                  IsChecked="{Binding Path=RecordMode, Converter={StaticResource EnumToBooleanConverter},
-                        ConverterParameter={x:Static confiv2:RecordMode.Standard}}" />
+                        ConverterParameter={x:Static config:RecordMode.Standard}}" />
                     <RadioButton GroupName="RecordMode" Content="{l:Loc Settings_RecordMode_RadioButton_RawData}"
                                  IsChecked="{Binding Path=RecordMode, Converter={StaticResource EnumToBooleanConverter},
-                        ConverterParameter={x:Static confiv2:RecordMode.RawData}}" />
+                        ConverterParameter={x:Static config:RecordMode.RawData}}" />
                 </StackPanel>
             </GroupBox>
             <GroupBox Header="{l:Loc Settings_Splitting_Title}">
                 <StackPanel>
                     <RadioButton GroupName="Splitting" Name="CutDisabledRadioButton" Content="{l:Loc Settings_Splitting_RadioButton_Disabled}"
                                  IsChecked="{Binding Path=CuttingMode, Converter={StaticResource EnumToBooleanConverter},
-                        ConverterParameter={x:Static confiv2:CuttingMode.Disabled}}" />
+                        ConverterParameter={x:Static config:CuttingMode.Disabled}}" />
                     <RadioButton GroupName="Splitting" Name="CutBySizeRadioButton" Content="{l:Loc Settings_Splitting_RadioButton_BySize}"
                                  IsChecked="{Binding Path=CuttingMode, Converter={StaticResource EnumToBooleanConverter},
-                        ConverterParameter={x:Static confiv2:CuttingMode.BySize}}" />
+                        ConverterParameter={x:Static config:CuttingMode.BySize}}" />
                     <RadioButton GroupName="Splitting" Name="CutByTimeRadioButton" Content="{l:Loc Settings_Splitting_RadioButton_ByTime}"
                                  IsChecked="{Binding Path=CuttingMode, Converter={StaticResource EnumToBooleanConverter},
-                        ConverterParameter={x:Static confiv2:CuttingMode.ByTime}}" />
+                        ConverterParameter={x:Static config:CuttingMode.ByTime}}" />
 
                     <StackPanel Orientation="Horizontal" Margin="0,5,0,0" 
                                 Visibility="{Binding ElementName=CutDisabledRadioButton,Path=IsChecked,Converter={StaticResource InvertBooleanToVisibilityCollapsedConverter}}">
