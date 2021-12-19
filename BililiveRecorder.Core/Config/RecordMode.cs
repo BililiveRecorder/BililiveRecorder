@@ -1,4 +1,4 @@
-namespace BililiveRecorder.Core.Config.V2
+namespace BililiveRecorder.Core.Config
 {
     public enum RecordMode : int
     {

@@ -22,7 +22,7 @@ interface SectionInfo {
 
 const map: SectionInfoMap = {
     core: {
-        path: './BililiveRecorder.Core/Config/V2/Config.gen.cs',
+        path: './BililiveRecorder.Core/Config/V3/Config.gen.cs',
         format: true,
         header: true,
         build: builderCore
@@ -40,7 +40,7 @@ const map: SectionInfoMap = {
         build: builderWeb
     },
     schema: {
-        path: './configV2.schema.json',
+        path: './configV3.schema.json',
         format: false,
         header: false,
         build: builderSchema

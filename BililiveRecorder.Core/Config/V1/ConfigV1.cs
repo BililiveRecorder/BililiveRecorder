@@ -41,7 +41,7 @@ namespace BililiveRecorder.Core.Config.V1
         /// 自动切割模式
         /// </summary>
         [JsonProperty("cutting_mode")]
-        public V2.CuttingMode CuttingMode { get => this._cuttingMode; set => this.SetField(ref this._cuttingMode, value); }
+        public CuttingMode CuttingMode { get => this._cuttingMode; set => this.SetField(ref this._cuttingMode, value); }
 
         /// <summary>
         /// 自动切割数值（分钟/MiB）
@@ -166,7 +166,7 @@ namespace BililiveRecorder.Core.Config.V1
         private uint _clipLengthFuture = 10;
         private uint _cuttingNumber = 10;
         //private EnabledFeature _enabledFeature = EnabledFeature.RecordOnly;
-        private V2.CuttingMode _cuttingMode = V2.CuttingMode.Disabled;
+        private CuttingMode _cuttingMode = CuttingMode.Disabled;
 
         private uint _timingWatchdogTimeout = 10 * 1000;
         private uint _timingStreamRetry = 6 * 1000;

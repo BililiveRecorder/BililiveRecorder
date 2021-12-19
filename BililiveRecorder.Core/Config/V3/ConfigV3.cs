@@ -1,14 +1,12 @@
-using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 
 #nullable enable
-namespace BililiveRecorder.Core.Config.V2
+namespace BililiveRecorder.Core.Config.V3
 {
-    [Obsolete("Use Config v3")]
-    public class ConfigV2 : ConfigBase
+    public class ConfigV3 : ConfigBase
     {
-        public override int Version => 2;
+        public override int Version => 3;
 
         [JsonProperty("global")]
         public GlobalConfig Global { get; set; } = new GlobalConfig();
@@ -20,7 +18,6 @@ namespace BililiveRecorder.Core.Config.V2
         public bool DisableConfigSave { get; set; } = false; // for CLI
     }
 
-    [Obsolete("Use Config v3")]
     public partial class RoomConfig
     {
         public RoomConfig() : base(x => x.AutoMap(p => new[] { "Has" + p.Name }))
@@ -31,7 +28,6 @@ namespace BililiveRecorder.Core.Config.V2
         public string? WorkDirectory => this.GetPropertyValue<string>();
     }
 
-    [Obsolete("Use Config v3")]
     public partial class GlobalConfig
     {
         public GlobalConfig() : base(x => x.AutoMap(p => new[] { "Has" + p.Name }))

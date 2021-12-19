@@ -7,7 +7,7 @@ using HierarchicalPropertyDefault;
 using Newtonsoft.Json;
 
 #nullable enable
-namespace BililiveRecorder.Core.Config.V2
+namespace BililiveRecorder.Core.Config.V3
 {
 `;
 

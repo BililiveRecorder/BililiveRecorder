@@ -18,7 +18,7 @@ namespace BililiveRecorder.Core.Config
             NullValueHandling = NullValueHandling.Ignore
         };
 
-        public static V2.ConfigV2? LoadFrom(string directory)
+        public static V3.ConfigV3? LoadFrom(string directory)
         {
             try
             {
@@ -30,7 +30,7 @@ namespace BililiveRecorder.Core.Config
                 if (!File.Exists(filepath))
                 {
                     logger.Debug("Config file does not exist {Path}", filepath);
-                    return new V2.ConfigV2();
+                    return new V3.ConfigV3();
                 }
 
                 logger.Debug("Loading config from {Path}", filepath);
@@ -45,7 +45,7 @@ namespace BililiveRecorder.Core.Config
             }
         }
 
-        public static V2.ConfigV2? LoadJson(string json)
+        public static V3.ConfigV3? LoadJson(string json)
         {
             try
             {
@@ -61,14 +61,22 @@ namespace BililiveRecorder.Core.Config
                             var v1Data = JsonConvert.DeserializeObject<V1.ConfigV1>(v1.Data ?? string.Empty);
 #pragma warning restore CS0612
                             if (v1Data is null)
-                                return new V2.ConfigV2();
+                                return new V3.ConfigV3();
 
-                            var newConfig = ConfigMapper.Map1To2(v1Data);
+                            var newConfig = ConfigMapper.Map2To3(ConfigMapper.Map1To2(v1Data));
                             return newConfig;
                         }
+
+#pragma warning disable CS0618 // Type or member is obsolete
                     case V2.ConfigV2 v2:
+#pragma warning restore CS0618 // Type or member is obsolete
                         logger.Debug("读取到 config v2");
-                        return v2;
+                        return ConfigMapper.Map2To3(v2);
+
+                    case V3.ConfigV3 v3:
+                        logger.Debug("读取到 config v3");
+                        return v3;
+
                     default:
                         logger.Error("读取到不支持的设置版本");
                         return null;
@@ -81,7 +89,7 @@ namespace BililiveRecorder.Core.Config
             }
         }
 
-        public static bool SaveTo(string directory, V2.ConfigV2 config)
+        public static bool SaveTo(string directory, V3.ConfigV3 config)
         {
             if (config.DisableConfigSave)
             {
@@ -109,7 +117,7 @@ namespace BililiveRecorder.Core.Config
             }
         }
 
-        public static string? SaveJson(V2.ConfigV2 config)
+        public static string? SaveJson(V3.ConfigV3 config)
         {
             try
             {

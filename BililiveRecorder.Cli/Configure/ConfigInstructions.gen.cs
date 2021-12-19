@@ -5,7 +5,7 @@
 
 using System.Collections.Generic;
 using System.ComponentModel;
-using BililiveRecorder.Core.Config.V2;
+using BililiveRecorder.Core.Config.V3;
 
 namespace BililiveRecorder.Cli.Configure
 {
@@ -22,7 +22,7 @@ namespace BililiveRecorder.Cli.Configure
         RecordDanmakuGift,
         RecordDanmakuGuard,
         RecordingQuality,
-        RecordFilenameFormat,
+        FileNameRecordTemplate,
         WebHookUrls,
         WebHookUrlsV2,
         WpfShowTitleAndArea,
@@ -68,7 +68,7 @@ namespace BililiveRecorder.Cli.Configure
             GlobalConfig.Add(GlobalConfigProperties.RecordDanmakuGift, new ConfigInstruction<GlobalConfig, bool>(config => config.HasRecordDanmakuGift = false, (config, value) => config.RecordDanmakuGift = value) { Name = "RecordDanmakuGift", CanBeOptional = true });
             GlobalConfig.Add(GlobalConfigProperties.RecordDanmakuGuard, new ConfigInstruction<GlobalConfig, bool>(config => config.HasRecordDanmakuGuard = false, (config, value) => config.RecordDanmakuGuard = value) { Name = "RecordDanmakuGuard", CanBeOptional = true });
             GlobalConfig.Add(GlobalConfigProperties.RecordingQuality, new ConfigInstruction<GlobalConfig, string>(config => config.HasRecordingQuality = false, (config, value) => config.RecordingQuality = value) { Name = "RecordingQuality", CanBeOptional = true });
-            GlobalConfig.Add(GlobalConfigProperties.RecordFilenameFormat, new ConfigInstruction<GlobalConfig, string>(config => config.HasRecordFilenameFormat = false, (config, value) => config.RecordFilenameFormat = value) { Name = "RecordFilenameFormat", CanBeOptional = true });
+            GlobalConfig.Add(GlobalConfigProperties.FileNameRecordTemplate, new ConfigInstruction<GlobalConfig, string>(config => config.HasFileNameRecordTemplate = false, (config, value) => config.FileNameRecordTemplate = value) { Name = "FileNameRecordTemplate", CanBeOptional = true });
             GlobalConfig.Add(GlobalConfigProperties.WebHookUrls, new ConfigInstruction<GlobalConfig, string>(config => config.HasWebHookUrls = false, (config, value) => config.WebHookUrls = value) { Name = "WebHookUrls", CanBeOptional = true });
             GlobalConfig.Add(GlobalConfigProperties.WebHookUrlsV2, new ConfigInstruction<GlobalConfig, string>(config => config.HasWebHookUrlsV2 = false, (config, value) => config.WebHookUrlsV2 = value) { Name = "WebHookUrlsV2", CanBeOptional = true });
             GlobalConfig.Add(GlobalConfigProperties.WpfShowTitleAndArea, new ConfigInstruction<GlobalConfig, bool>(config => config.HasWpfShowTitleAndArea = false, (config, value) => config.WpfShowTitleAndArea = value) { Name = "WpfShowTitleAndArea", CanBeOptional = true });

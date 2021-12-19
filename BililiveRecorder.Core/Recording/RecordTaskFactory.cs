@@ -1,5 +1,5 @@
 using System;
-using BililiveRecorder.Core.Config.V2;
+using BililiveRecorder.Core.Config;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog;
 

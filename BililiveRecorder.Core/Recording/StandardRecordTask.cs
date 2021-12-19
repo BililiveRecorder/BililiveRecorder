@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using BililiveRecorder.Core.Api;
+using BililiveRecorder.Core.Config;
 using BililiveRecorder.Core.Event;
 using BililiveRecorder.Core.ProcessingRules;
 using BililiveRecorder.Flv;
@@ -239,11 +240,11 @@ namespace BililiveRecorder.Core.Recording
         {
             switch (this.room.RoomConfig.CuttingMode)
             {
-                case Config.V2.CuttingMode.ByTime:
+                case CuttingMode.ByTime:
                     if (e.FileMaxTimestamp > this.room.RoomConfig.CuttingNumber * (60u * 1000u))
                         this.splitFileRule.SetSplitBeforeFlag();
                     break;
-                case Config.V2.CuttingMode.BySize:
+                case CuttingMode.BySize:
                     if ((e.CurrentFileSize + (e.OutputVideoByteCount * 1.1) + e.OutputAudioByteCount) / (1024d * 1024d) > this.room.RoomConfig.CuttingNumber)
                         this.splitFileRule.SetSplitBeforeFlag();
                     break;

@@ -92,12 +92,12 @@ export const data: Array<ConfigEntry> = [
         markdown: "录制的直播画质 qn 值，以英文逗号分割，靠前的优先。\n\n**注意**（从录播姬 1.3.10 开始）：\n\n- 所有主播刚开播时都是只有“原画”的，如果选择不录原画会导致直播开头漏录。\n- 如果设置的录制画质里没有原画，但是主播只有原画画质，会导致不能录制直播。\n- 录播姬不会为了切换录制的画质主动断开录制。\n\n画质 | qn 值\n:--:|:--:\n4K | 20000\n原画 | 10000\n蓝光(杜比) | 401\n蓝光 | 400\n超清 | 250\n高清 | 150\n流畅 | 80"
     },
     {
-        name: "RecordFilenameFormat",
-        description: "录制文件名格式",
+        name: "FileNameRecordTemplate",
+        description: "录制文件名模板",
         type: "string?",
         configType: "globalOnly",
         defaultValue: "@\"{roomid}-{name}/录制-{roomid}-{date}-{time}-{ms}-{title}.flv\"",
-        markdown: "- 只支持 FLV 格式\n- 所有大括号均为英文半角括号\n- 录制时如果出现文件名冲突，会使用一个默认文件名\n\n变量 | 含义\n:--:|:--:\n{date} | 当前日期（年月日）\n{time} | 当前时间（时分秒）\n{ms} | 当前时间毫秒\n{roomid} | 房间号\n{title} | 标题\n{name} | 主播名\n{parea} | 大分区\n{area} | 子分区\n{random} | 随机数字\n"
+        markdown: "TODO: config v3 新的文件名模板系统的文档还没有写"
     },
     {
         name: "WebHookUrls",
