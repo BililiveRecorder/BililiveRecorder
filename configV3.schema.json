@@ -7,8 +7,8 @@
       "additionalProperties": false,
       "properties": {
         "FileNameRecordTemplate": {
-          "description": "录制文件名模板\n默认: \"{{ roomId }}-{{ name }}/录制-{{ roomId }}-{{ \"now\" | format_date: \"yyyyMMdd-HHmmss-fff\" }}-{{ title }}.flv\"",
-          "markdownDescription": "录制文件名模板  \n默认: `\"{{ roomId }}-{{ name }}/录制-{{ roomId }}-{{ \"now\" | format_date: \"yyyyMMdd-HHmmss-fff\" }}-{{ title }}.flv\" `\n\nTODO: config v3 新的文件名模板系统的文档还没有写",
+          "description": "录制文件名模板\n默认: \"{{ roomId }}-{{ name }}/录制-{{ roomId }}-{{ \"now\" | time_zone: \"Asia/Shanghai\" | format_date: \"yyyyMMdd-HHmmss-fff\" }}-{{ title }}.flv\"",
+          "markdownDescription": "录制文件名模板  \n默认: `\"{{ roomId }}-{{ name }}/录制-{{ roomId }}-{{ \"now\" | time_zone: \"Asia/Shanghai\" | format_date: \"yyyyMMdd-HHmmss-fff\" }}-{{ title }}.flv\" `\n\nTODO: config v3 新的文件名模板系统的文档还没有写",
           "type": "object",
           "additionalProperties": false,
           "properties": {
@@ -18,7 +18,7 @@
             },
             "Value": {
               "type": "string",
-              "default": "{{ roomId }}-{{ name }}/录制-{{ roomId }}-{{ \"now\" | format_date: \"yyyyMMdd-HHmmss-fff\" }}-{{ title }}.flv"
+              "default": "{{ roomId }}-{{ name }}/录制-{{ roomId }}-{{ \"now\" | time_zone: \"Asia/Shanghai\" | format_date: \"yyyyMMdd-HHmmss-fff\" }}-{{ title }}.flv"
             }
           }
         },
