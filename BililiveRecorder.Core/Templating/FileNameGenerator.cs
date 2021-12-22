@@ -11,8 +11,8 @@ namespace BililiveRecorder.Core.Templating
     {
         private static readonly ILogger logger = Log.Logger.ForContext<FileNameGenerator>();
 
-        private static readonly FluidParser parser = new();
-        private static readonly IFluidTemplate defaultTemplate = parser.Parse(DefaultConfig.Instance.FileNameRecordTemplate);
+        private static readonly FluidParser parser;
+        private static readonly IFluidTemplate defaultTemplate;
 
         private static readonly Random _globalRandom = new();
         [ThreadStatic] private static Random? _localRandom;
@@ -38,6 +38,7 @@ namespace BililiveRecorder.Core.Templating
 
         static FileNameGenerator()
         {
+            parser = new FluidParser();
             parser.RegisterExpressionTag("random", async static (expression, writer, encoder, context) =>
             {
                 var value = await expression.EvaluateAsync(context);
@@ -59,7 +60,10 @@ namespace BililiveRecorder.Core.Templating
 
                 return Completion.Normal;
             });
-            parser.Compile();
+
+            parser = parser.Compile();
+
+            defaultTemplate = parser.Parse(DefaultConfig.Instance.FileNameRecordTemplate);
         }
 
         public FileNameGenerator(GlobalConfig config)
