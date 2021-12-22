@@ -90,6 +90,8 @@
                     <c:SettingWithDefault IsSettingNotUsingDefault="{Binding HasFileNameRecordTemplate}" Header="{l:Loc Settings_FileName_Record}">
                         <TextBox Text="{Binding FileNameRecordTemplate,Delay=500}" ui:TextBoxHelper.IsDeleteButtonVisible="False"/>
                     </c:SettingWithDefault>
+                    <Button Margin="0,10,0,5" Content="测试" Click="TestFileNameTemplate_Button_Click"/>
+                    <TextBox Visibility="Collapsed" IsReadOnly="True" x:Name="FileNameTestResult"/>
                 </StackPanel>
             </GroupBox>
             <GroupBox Header="录制画质">
