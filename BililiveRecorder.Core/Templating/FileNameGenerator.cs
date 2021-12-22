@@ -114,6 +114,14 @@ namespace BililiveRecorder.Core.Templating
                 goto returnDefaultPath;
             }
 
+            var ext = Path.GetExtension(fullPath);
+            if (!ext.Equals(".flv", StringComparison.OrdinalIgnoreCase))
+            {
+                logger.ForContext(LoggingContext.RoomId, data.RoomId).Warning("录播姬只支持FLV文件格式，将在录制文件后缀名 {ExtensionName} 后添加 .flv。", ext);
+                relativePath += ".flv";
+                fullPath += ".flv";
+            }
+
             if (File.Exists(fullPath))
             {
                 logger.ForContext(LoggingContext.RoomId, data.RoomId).Warning("录制文件名冲突，请检查设置。将写入到默认路径。");
