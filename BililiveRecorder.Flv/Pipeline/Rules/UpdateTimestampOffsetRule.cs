@@ -9,7 +9,6 @@ namespace BililiveRecorder.Flv.Pipeline.Rules
 {
     public class UpdateTimestampOffsetRule : ISimpleProcessingRule
     {
-        private const int MAX_ALLOWED_OFFSET_MS = 20;
         private static readonly ProcessingComment comment1 = new ProcessingComment(CommentType.Unrepairable, "GOP 内音频或视频时间戳不连续");
         private static readonly ProcessingComment comment2 = new ProcessingComment(CommentType.Unrepairable, "出现了无法计算偏移量的音视频偏移");
 
@@ -99,18 +98,7 @@ namespace BililiveRecorder.Flv.Pipeline.Rules
 
                     ReduceOffsetRange(ref maxOffset, ref minOffset, lastAudio, null, tags);
 
-                    if ((Math.Abs(minOffset) < MAX_ALLOWED_OFFSET_MS) && (Math.Abs(maxOffset) < MAX_ALLOWED_OFFSET_MS))
-                    {
-                        // 如果偏移范围在 20 ms 以内就忽略不管
-
-                        // 主要是为了兼容 SRT 推流的直播流，好像会在 composition time 里补上，所以最终是正常的
-                        // 理论上最正确的解决方法是带上 composition time 来计算应该怎么修改时间戳，但这样应该也行
-                        // 根据观察偏移量为 16 - 17 ms
-
-                        offset = 0;
-                        goto validOffset;
-                    }
-                    else if (minOffset == maxOffset)
+                    if (minOffset == maxOffset)
                     {   // 理想情况允许偏移范围只有一个值
                         offset = minOffset;
                         goto validOffset;
