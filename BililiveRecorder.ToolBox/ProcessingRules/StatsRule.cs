@@ -10,8 +10,11 @@ namespace BililiveRecorder.ToolBox.ProcessingRules
 {
     public class StatsRule : ISimpleProcessingRule
     {
-        private readonly List<int> audioTimestamp = new List<int>();
-        private readonly List<int> videoTimestamp = new List<int>();
+        private readonly List<int> audioTimestamp = new();
+        private readonly List<int> videoTimestamp = new();
+
+        private readonly List<int> frameComposition = new();
+        private readonly List<int> gopMinComposition = new();
 
         public void Run(FlvProcessingContext context, Action next)
         {
@@ -24,18 +27,32 @@ namespace BililiveRecorder.ToolBox.ProcessingRules
                         if (tag.Type == TagType.Video)
                         {
                             this.videoTimestamp.Add(tag.Timestamp);
+
+                            if (tag.ExtraData is { } extra)
+                                this.frameComposition.Add(extra.CompositionTime);
+                            else if (tag.UpdateExtraData() is { } extra2)
+                                this.frameComposition.Add(extra2.CompositionTime);
                         }
                         else if (tag.Type == TagType.Audio && tag.Flag == TagFlag.None)
                         {
                             this.audioTimestamp.Add(tag.Timestamp);
                         }
                     }
+
+                    var gopMin = data.Tags.Where(x => x.Type == TagType.Video).Min(x => x.ExtraData?.CompositionTime ?? int.MaxValue);
+                    if (gopMin == 0)
+                        System.Diagnostics.Debugger.Break();
+                    this.gopMinComposition.Add(gopMin);
                 }
             }
             next();
         }
 
-        public (FlvStats video, FlvStats audio) GetStats() => (this.CalculateOne(this.videoTimestamp), this.CalculateOne(this.audioTimestamp));
+        public StatsResult GetStats()
+            => new StatsResult(video: this.CalculateOne(this.videoTimestamp),
+                audio: this.CalculateOne(this.audioTimestamp),
+                tagCompositionTimes: this.frameComposition.GroupBy(x => x).ToDictionary(x => x.Key, x => x.Count()),
+                gopMinCompositionTimes: this.gopMinComposition.GroupBy(x => x).ToDictionary(x => x.Key, x => x.Count()));
 
         public FlvStats CalculateOne(List<int> timestamps)
         {

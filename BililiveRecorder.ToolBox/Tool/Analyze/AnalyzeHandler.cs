@@ -125,7 +125,7 @@ namespace BililiveRecorder.ToolBox.Tool.Analyze
                 // Result
                 var response = await Task.Run(() =>
                 {
-                    var (videoStats, audioStats) = statsRule.GetStats();
+                    var statsResult = statsRule.GetStats();
 
                     var countableComments = comments.Where(x => x.T != CommentType.Logging).ToArray();
                     return new AnalyzeResponse
@@ -137,8 +137,10 @@ namespace BililiveRecorder.ToolBox.Tool.Analyze
 
                         OutputFileCount = tagWriter.OutputFileCount,
 
-                        VideoStats = videoStats,
-                        AudioStats = audioStats,
+                        VideoStats = statsResult.Video,
+                        AudioStats = statsResult.Audio,
+                        TagCompositionTimes = statsResult.TagCompositionTimes,
+                        GopMinCompositionTimes = statsResult.GopMinCompositionTimes,
 
                         IssueTypeOther = countableComments.Count(x => x.T == CommentType.Other),
                         IssueTypeUnrepairable = countableComments.Count(x => x.T == CommentType.Unrepairable),

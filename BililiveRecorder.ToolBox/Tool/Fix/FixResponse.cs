@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using BililiveRecorder.ToolBox.ProcessingRules;
 using Spectre.Console;
 
@@ -17,6 +18,8 @@ namespace BililiveRecorder.ToolBox.Tool.Fix
 
         public FlvStats? VideoStats { get; set; }
         public FlvStats? AudioStats { get; set; }
+        public Dictionary<int, int>? TagCompositionTimes { get; set; }
+        public Dictionary<int, int>? GopMinCompositionTimes { get; set; }
 
         public int IssueTypeOther { get; set; }
         public int IssueTypeUnrepairable { get; set; }
