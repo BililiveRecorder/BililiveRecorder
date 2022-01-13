@@ -48,6 +48,14 @@
                     <ui:NumberBox Minimum="0" SmallChange="1" Text="{Binding RecordDanmakuFlushInterval,UpdateSourceTrigger=PropertyChanged}"/>
                 </c:SettingWithDefault>
             </GroupBox>
+            <GroupBox Header="FLV Keyframe Index">
+                <StackPanel>
+                    <c:SettingWithDefault IsSettingNotUsingDefault="{Binding HasFlvMetadataKeyframeIndexCount}" Header="索引数量 Index Count">
+                        <ui:NumberBox Minimum="0" SmallChange="1" Text="{Binding FlvMetadataKeyframeIndexCount,UpdateSourceTrigger=PropertyChanged}"/>
+                    </c:SettingWithDefault>
+                    <TextBlock Text="一组索引的大小为 18 byte，其他信息见网站文档"/>
+                </StackPanel>
+            </GroupBox>
             <GroupBox Header="Timing">
                 <ui:SimpleStackPanel Spacing="10">
                     <c:SettingWithDefault IsSettingNotUsingDefault="{Binding HasTimingStreamRetry}" Header="录制重试间隔">

@@ -215,4 +215,14 @@ export const data: Array<ConfigEntry> = [
         xmlComment: "触发 <see cref=\"System.Xml.XmlWriter.Flush\"/> 的弹幕个数",
         markdown: ""
     },
+    {
+        name: "FlvMetadataKeyframeIndexCount",
+        description: "FLV文件关键帧索引数量",
+        type: "uint",
+        configType: "globalOnly",
+        advancedConfig: true,
+        defaultValue: "6300",
+        xmlComment: "FLV文件关键帧索引数量",
+        markdown: "索引最少 2 秒一个，间隔小于 2 秒的关键帧会被忽略。关键帧间隔是由主播在直播软件里设置的，通常为 1 到 10 秒。  \n默认 6300 组最少能保存 6300 * 2 second = 3.5 hour 的索引。  \n如果按关键帧间隔 5 秒计算则为 8.75 hour\n\n一组关键帧索引的大小是 18 byte，默认 6300 组所占空间大约为 50 KiB。"
+    },
 ];

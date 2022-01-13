@@ -14,14 +14,15 @@ namespace BililiveRecorder.Flv.Writer
     internal class KeyframesScriptDataValue : IScriptDataValue
     {
         /* 
+         * 以默认 6300 组数据计算
          * 最少能保存大约 6300 * 2 second = 3.5 hour 的关键帧索引
          * 如果以 5 秒计算则 6300 * 5 second = 8.75 hour
+         * 
+         * 每组数据的大小为 18 bytes
+         * 6300 * 18 B ~= 49.2 KiB
          */
 
-        private const int MaxDataCount = 6300;
         private const double MinInterval = 1900;
-
-        private const string Keyframes = "keyframes";
         private const string Times = "times";
         private const string FilePositions = "filepositions";
         private const string Spacer = "spacer";
@@ -34,15 +35,24 @@ namespace BililiveRecorder.Flv.Writer
 
         public ScriptDataType Type => ScriptDataType.Object;
 
+        private readonly uint maxKeyframeCount;
         private readonly List<Data> KeyframesData = new();
+
+        public KeyframesScriptDataValue(uint maxKeyframeCount)
+        {
+            this.maxKeyframeCount = maxKeyframeCount;
+        }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void AddData(double time_in_ms, double filePosition)
         {
             var keyframesData = this.KeyframesData;
-            if (keyframesData.Count < MaxDataCount && (keyframesData.Count == 0 || ((time_in_ms - keyframesData[keyframesData.Count - 1].Time) > MinInterval)))
+            if (keyframesData.Count < this.maxKeyframeCount)
             {
-                keyframesData.Add(new Data(time: time_in_ms / 1000d, filePosition: filePosition));
+                if (keyframesData.Count == 0 || ((time_in_ms - keyframesData[keyframesData.Count - 1].Time) > MinInterval))
+                {
+                    keyframesData.Add(new Data(time: time_in_ms / 1000d, filePosition: filePosition));
+                }
             }
         }
 
@@ -96,7 +106,7 @@ namespace BililiveRecorder.Flv.Writer
                 WriteKey(stream, SpacerBytes);
 
                 // array
-                var count = 2u * (uint)(MaxDataCount - keyframesData.Count);
+                var count = 2u * (uint)(this.maxKeyframeCount - keyframesData.Count);
                 WriteStrictArray(stream, count);
 
                 // value

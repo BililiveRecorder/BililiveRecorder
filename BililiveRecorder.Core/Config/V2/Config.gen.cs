@@ -166,6 +166,11 @@ namespace BililiveRecorder.Core.Config.V2
         /// </summary>
         public uint RecordDanmakuFlushInterval => this.GetPropertyValue<uint>();
 
+        /// <summary>
+        /// FLV文件关键帧索引数量
+        /// </summary>
+        public uint FlvMetadataKeyframeIndexCount => this.GetPropertyValue<uint>();
+
     }
 
     [JsonObject(MemberSerialization.OptIn)]
@@ -347,6 +352,14 @@ namespace BililiveRecorder.Core.Config.V2
         [JsonProperty(nameof(RecordDanmakuFlushInterval)), EditorBrowsable(EditorBrowsableState.Never)]
         public Optional<uint> OptionalRecordDanmakuFlushInterval { get => this.GetPropertyValueOptional<uint>(nameof(this.RecordDanmakuFlushInterval)); set => this.SetPropertyValueOptional(value, nameof(this.RecordDanmakuFlushInterval)); }
 
+        /// <summary>
+        /// FLV文件关键帧索引数量
+        /// </summary>
+        public uint FlvMetadataKeyframeIndexCount { get => this.GetPropertyValue<uint>(); set => this.SetPropertyValue(value); }
+        public bool HasFlvMetadataKeyframeIndexCount { get => this.GetPropertyHasValue(nameof(this.FlvMetadataKeyframeIndexCount)); set => this.SetPropertyHasValue<uint>(value, nameof(this.FlvMetadataKeyframeIndexCount)); }
+        [JsonProperty(nameof(FlvMetadataKeyframeIndexCount)), EditorBrowsable(EditorBrowsableState.Never)]
+        public Optional<uint> OptionalFlvMetadataKeyframeIndexCount { get => this.GetPropertyValueOptional<uint>(nameof(this.FlvMetadataKeyframeIndexCount)); set => this.SetPropertyValueOptional(value, nameof(this.FlvMetadataKeyframeIndexCount)); }
+
     }
 
     public sealed partial class DefaultConfig
@@ -397,6 +410,8 @@ namespace BililiveRecorder.Core.Config.V2
         public uint TimingWatchdogTimeout => 10 * 1000;
 
         public uint RecordDanmakuFlushInterval => 20;
+
+        public uint FlvMetadataKeyframeIndexCount => 6300;
 
     }
 

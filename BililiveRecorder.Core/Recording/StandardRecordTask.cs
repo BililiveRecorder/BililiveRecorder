@@ -86,7 +86,7 @@ namespace BililiveRecorder.Core.Recording
 
             this.reader = this.tagGroupReaderFactory.CreateTagGroupReader(this.flvTagReaderFactory.CreateFlvTagReader(pipe.Reader));
 
-            this.writer = this.writerFactory.CreateWriter(this.targetProvider);
+            this.writer = this.writerFactory.CreateWriter(this.targetProvider, this.room.RoomConfig.FlvMetadataKeyframeIndexCount);
             this.writer.BeforeScriptTagWrite = this.Writer_BeforeScriptTagWrite;
             this.writer.FileClosed += (sender, e) =>
             {

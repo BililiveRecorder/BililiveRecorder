@@ -15,12 +15,12 @@ namespace BililiveRecorder.Core.Recording
             this.serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
         }
 
-        public IFlvProcessingContextWriter CreateWriter(IFlvWriterTargetProvider targetProvider) =>
+        public IFlvProcessingContextWriter CreateWriter(IFlvWriterTargetProvider targetProvider, uint maxKeyframeCount) =>
             new FlvProcessingContextWriter(
                 tagWriter: new FlvTagFileWriter(targetProvider: targetProvider,
                                                 memoryStreamProvider: this.serviceProvider.GetRequiredService<IMemoryStreamProvider>(),
                                                 logger: this.serviceProvider.GetService<ILogger>()),
                 allowMissingHeader: false,
-                disableKeyframes: false);
+                maxKeyframeCount: maxKeyframeCount);
     }
 }

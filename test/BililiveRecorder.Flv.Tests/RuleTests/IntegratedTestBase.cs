@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using BililiveRecorder.Flv.Grouping;
@@ -13,11 +12,9 @@ namespace BililiveRecorder.Flv.Tests.RuleTests
 {
     public abstract class IntegratedTestBase
     {
-       
-
         protected static async Task RunPipeline(ITagGroupReader reader, IFlvTagWriter output, List<ProcessingComment> comments)
         {
-            var writer = new FlvProcessingContextWriter(tagWriter: output, allowMissingHeader: true, disableKeyframes: true);
+            var writer = new FlvProcessingContextWriter(tagWriter: output, allowMissingHeader: true, maxKeyframeCount: 0);
             var session = new Dictionary<object, object?>();
             var context = new FlvProcessingContext();
             var pipeline = new ProcessingPipelineBuilder(new ServiceCollection().BuildServiceProvider()).AddDefault().AddRemoveFillerData().Build();

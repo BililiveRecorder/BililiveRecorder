@@ -4,6 +4,6 @@ namespace BililiveRecorder.Core.Recording
 {
     public interface IFlvProcessingContextWriterFactory
     {
-        IFlvProcessingContextWriter CreateWriter(IFlvWriterTargetProvider targetProvider);
+        IFlvProcessingContextWriter CreateWriter(IFlvWriterTargetProvider targetProvider, uint maxKeyframeCount);
     }
 }

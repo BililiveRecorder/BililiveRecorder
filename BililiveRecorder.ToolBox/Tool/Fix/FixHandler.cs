@@ -96,7 +96,7 @@ namespace BililiveRecorder.ToolBox.Tool.Fix
 
                 // Pipeline
                 using var grouping = new TagGroupReader(tagReader);
-                using var writer = new FlvProcessingContextWriter(tagWriter: tagWriter, allowMissingHeader: true, disableKeyframes: false);
+                using var writer = new FlvProcessingContextWriter(tagWriter: tagWriter, allowMissingHeader: true, maxKeyframeCount: 0);
                 var statsRule = new StatsRule();
                 var pipeline = new ProcessingPipelineBuilder(new ServiceCollection().BuildServiceProvider()).Add(statsRule).AddDefault().AddRemoveFillerData().Build();
 

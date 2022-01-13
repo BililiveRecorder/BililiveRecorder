@@ -12,7 +12,7 @@ namespace BililiveRecorder.Flv.Writer
         private readonly SemaphoreSlim semaphoreSlim = new SemaphoreSlim(1, 1);
         private readonly IFlvTagWriter tagWriter;
         private readonly bool allowMissingHeader;
-        private readonly bool disableKeyframes;
+        private readonly uint maxKeyframeCount;
         private bool disposedValue;
 
         private WriterState state = WriterState.EmptyFileOrNotOpen;
@@ -30,11 +30,11 @@ namespace BililiveRecorder.Flv.Writer
         public Action<ScriptTagBody>? BeforeScriptTagWrite { get; set; }
         public Action<ScriptTagBody>? BeforeScriptTagRewrite { get; set; }
 
-        public FlvProcessingContextWriter(IFlvTagWriter tagWriter, bool allowMissingHeader, bool disableKeyframes)
+        public FlvProcessingContextWriter(IFlvTagWriter tagWriter, bool allowMissingHeader, uint maxKeyframeCount)
         {
             this.tagWriter = tagWriter ?? throw new ArgumentNullException(nameof(tagWriter));
             this.allowMissingHeader = allowMissingHeader;
-            this.disableKeyframes = disableKeyframes;
+            this.maxKeyframeCount = maxKeyframeCount;
         }
 
         public async Task WriteAsync(FlvProcessingContext context)
@@ -192,9 +192,9 @@ namespace BililiveRecorder.Flv.Writer
                 {
                     value["duration"] = (ScriptDataNumber)0;
 
-                    if (!this.disableKeyframes)
+                    if (this.maxKeyframeCount > 0)
                     {
-                        var kfv = new KeyframesScriptDataValue();
+                        var kfv = new KeyframesScriptDataValue(this.maxKeyframeCount);
                         value["keyframes"] = kfv;
                         this.keyframesScriptDataValue = kfv;
                     }

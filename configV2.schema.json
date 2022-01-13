@@ -229,6 +229,24 @@
             }
           }
         },
+        "FlvMetadataKeyframeIndexCount": {
+          "description": "FLV文件关键帧索引数量\n默认: 6300",
+          "markdownDescription": "FLV文件关键帧索引数量  \n默认: `6300 `\n\n索引最少 2 秒一个，间隔小于 2 秒的关键帧会被忽略。关键帧间隔是由主播在直播软件里设置的，通常为 1 到 10 秒。  \n默认 6300 组最少能保存 6300 * 2 second = 3.5 hour 的索引。  \n如果按关键帧间隔 5 秒计算则为 8.75 hour\n\n一组关键帧索引的大小是 18 byte，默认 6300 组所占空间大约为 50 KiB。",
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "HasValue": {
+              "type": "boolean",
+              "default": true
+            },
+            "Value": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 4294967295,
+              "default": 6300
+            }
+          }
+        },
         "RecordMode": {
           "description": "录制模式\n默认: RecordMode.Standard",
           "markdownDescription": "录制模式  \n默认: `RecordMode.Standard `\n\n本设置项是一个 enum，键值对应如下：\n\n| 键 | 值 |\n|:--:|:--:|\n| RecordMode.Standard | 0 |\n| RecordMode.RawData | 1 |\n\n关于录制模式的说明见 [录制模式](/docs/basic/record_mode/)",
