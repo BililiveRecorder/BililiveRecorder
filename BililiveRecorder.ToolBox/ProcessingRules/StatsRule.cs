@@ -30,8 +30,7 @@ namespace BililiveRecorder.ToolBox.ProcessingRules
 
                             if (tag.ExtraData is { } extra)
                                 this.frameComposition.Add(extra.CompositionTime);
-                            else if (tag.UpdateExtraData() is { } extra2)
-                                this.frameComposition.Add(extra2.CompositionTime);
+
                         }
                         else if (tag.Type == TagType.Audio && tag.Flag == TagFlag.None)
                         {

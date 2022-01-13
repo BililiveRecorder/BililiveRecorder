@@ -57,7 +57,7 @@ namespace BililiveRecorder.Flv.Parser
         /// 实现二进制数据的解析
         /// </summary>
         /// <returns>解析出的 Flv Tag</returns>
-        private async Task<Tag?> ReadNextTagAsync(CancellationToken cancellationToken = default)
+        private async Task<Tag?> ReadNextTagAsync(CancellationToken cancellationToken)
         {
             while (true)
             {
@@ -291,11 +291,15 @@ namespace BililiveRecorder.Flv.Parser
                     tag.Nalus = nalus;
             }
 
+            tag.BinaryData = tagBodyStream;
+            tag.UpdateExtraData();
+
             // Dispose Stream If Not Needed
-            if (!this.skipData || tag.ShouldSerializeBinaryDataForSerializationUseOnly())
-                tag.BinaryData = tagBodyStream;
-            else
+            if (this.skipData && !tag.ShouldSerializeBinaryDataForSerializationUseOnly())
+            {
+                tag.BinaryData = null;
                 tagBodyStream.Dispose();
+            }
 
             return true;
         }

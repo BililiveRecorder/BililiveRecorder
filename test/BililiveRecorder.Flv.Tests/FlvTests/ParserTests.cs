@@ -11,7 +11,7 @@ namespace BililiveRecorder.Flv.Tests.FlvTests
 {
     [UsesVerify]
     [ExpectationPath("FlvParser")]
-    public class ParserTest
+    public class ParserTests
     {
         [Theory]
         [Expectation("XmlOutput")]

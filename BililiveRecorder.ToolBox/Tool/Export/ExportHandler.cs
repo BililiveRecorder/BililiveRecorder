@@ -73,7 +73,6 @@ namespace BililiveRecorder.ToolBox.Tool.Export
                         if (tag is null)
                             break;
 
-                        tag.UpdateExtraData();
                         tag.UpdateDataHash();
                         if (!tag.ShouldSerializeBinaryDataForSerializationUseOnly())
                             tag.BinaryData?.Dispose();

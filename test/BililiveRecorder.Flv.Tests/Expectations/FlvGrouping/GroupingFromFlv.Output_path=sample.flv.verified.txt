@@ -57,6 +57,9 @@
             }
           }
         ]
+      },
+      ExtraData: {
+        FirstBytes: 0200
       }
     },
     Name: PipelineScriptAction
@@ -68,6 +71,9 @@
         Flag: Header, Keyframe,
         Index: 2,
         Size: 49,
+        ExtraData: {
+          FirstBytes: 1700
+        },
         BinaryDataForSerializationUseOnly: 170000000001640015FFE1001C67640015ACD941B1FE4F016A02020280000003008000001E478B16CB01000568EF82BCB0
       },
       {
@@ -75,6 +81,9 @@
         Flag: Header,
         Index: 3,
         Size: 7,
+        ExtraData: {
+          FirstBytes: AF00
+        },
         BinaryDataForSerializationUseOnly: AF00119056E500
       }
     ],
@@ -87,6 +96,11 @@
         Flag: Keyframe,
         Index: 4,
         Size: 4795,
+        ExtraData: {
+          FirstBytes: 1701,
+          CompositionTime: 67,
+          FinalTime: 67
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -120,6 +134,11 @@
         Index: 5,
         Size: 579,
         Timestamp: 34,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 66,
+          FinalTime: 100
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -133,6 +152,11 @@
         Index: 6,
         Size: 426,
         Timestamp: 67,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 100,
+          FinalTime: 167
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -145,19 +169,30 @@
         Type: Audio,
         Index: 7,
         Size: 8,
-        Timestamp: 67
+        Timestamp: 67,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Audio,
         Index: 8,
         Size: 8,
-        Timestamp: 88
+        Timestamp: 88,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 9,
         Size: 142,
         Timestamp: 100,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 34,
+          FinalTime: 134
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -170,19 +205,30 @@
         Type: Audio,
         Index: 10,
         Size: 8,
-        Timestamp: 110
+        Timestamp: 110,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Audio,
         Index: 11,
         Size: 8,
-        Timestamp: 131
+        Timestamp: 131,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 12,
         Size: 667,
         Timestamp: 134,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 100,
+          FinalTime: 234
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -195,13 +241,21 @@
         Type: Audio,
         Index: 13,
         Size: 8,
-        Timestamp: 152
+        Timestamp: 152,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 14,
         Size: 149,
         Timestamp: 167,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 33,
+          FinalTime: 200
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -214,19 +268,30 @@
         Type: Audio,
         Index: 15,
         Size: 8,
-        Timestamp: 174
+        Timestamp: 174,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Audio,
         Index: 16,
         Size: 8,
-        Timestamp: 195
+        Timestamp: 195,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 17,
         Size: 386,
         Timestamp: 200,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 100,
+          FinalTime: 300
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -239,13 +304,21 @@
         Type: Audio,
         Index: 18,
         Size: 8,
-        Timestamp: 216
+        Timestamp: 216,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 19,
         Size: 145,
         Timestamp: 234,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 33,
+          FinalTime: 267
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -258,19 +331,30 @@
         Type: Audio,
         Index: 20,
         Size: 8,
-        Timestamp: 238
+        Timestamp: 238,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Audio,
         Index: 21,
         Size: 8,
-        Timestamp: 259
+        Timestamp: 259,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 22,
         Size: 1044,
         Timestamp: 267,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 133,
+          FinalTime: 400
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -283,13 +367,21 @@
         Type: Audio,
         Index: 23,
         Size: 8,
-        Timestamp: 280
+        Timestamp: 280,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 24,
         Size: 210,
         Timestamp: 300,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 34,
+          FinalTime: 334
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -302,19 +394,30 @@
         Type: Audio,
         Index: 25,
         Size: 8,
-        Timestamp: 302
+        Timestamp: 302,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Audio,
         Index: 26,
         Size: 8,
-        Timestamp: 323
+        Timestamp: 323,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 27,
         Size: 160,
         Timestamp: 334,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 33,
+          FinalTime: 367
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -327,19 +430,30 @@
         Type: Audio,
         Index: 28,
         Size: 8,
-        Timestamp: 344
+        Timestamp: 344,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Audio,
         Index: 29,
         Size: 8,
-        Timestamp: 366
+        Timestamp: 366,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 30,
         Size: 642,
         Timestamp: 367,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 133,
+          FinalTime: 500
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -352,13 +466,21 @@
         Type: Audio,
         Index: 31,
         Size: 8,
-        Timestamp: 387
+        Timestamp: 387,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 32,
         Size: 345,
         Timestamp: 400,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 34,
+          FinalTime: 434
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -371,19 +493,30 @@
         Type: Audio,
         Index: 33,
         Size: 8,
-        Timestamp: 408
+        Timestamp: 408,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Audio,
         Index: 34,
         Size: 8,
-        Timestamp: 430
+        Timestamp: 430,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 35,
         Size: 217,
         Timestamp: 434,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 33,
+          FinalTime: 467
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -396,13 +529,21 @@
         Type: Audio,
         Index: 36,
         Size: 8,
-        Timestamp: 451
+        Timestamp: 451,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 37,
         Size: 750,
         Timestamp: 467,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 133,
+          FinalTime: 600
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -415,19 +556,30 @@
         Type: Audio,
         Index: 38,
         Size: 8,
-        Timestamp: 472
+        Timestamp: 472,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Audio,
         Index: 39,
         Size: 8,
-        Timestamp: 494
+        Timestamp: 494,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 40,
         Size: 328,
         Timestamp: 500,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 34,
+          FinalTime: 534
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -440,13 +592,21 @@
         Type: Audio,
         Index: 41,
         Size: 8,
-        Timestamp: 515
+        Timestamp: 515,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 42,
         Size: 229,
         Timestamp: 534,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 33,
+          FinalTime: 567
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -459,19 +619,30 @@
         Type: Audio,
         Index: 43,
         Size: 8,
-        Timestamp: 536
+        Timestamp: 536,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Audio,
         Index: 44,
         Size: 8,
-        Timestamp: 558
+        Timestamp: 558,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 45,
         Size: 1191,
         Timestamp: 567,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 100,
+          FinalTime: 667
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -484,13 +655,21 @@
         Type: Audio,
         Index: 46,
         Size: 8,
-        Timestamp: 579
+        Timestamp: 579,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 47,
         Size: 207,
         Timestamp: 600,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 34,
+          FinalTime: 634
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -503,19 +682,30 @@
         Type: Audio,
         Index: 48,
         Size: 8,
-        Timestamp: 600
+        Timestamp: 600,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Audio,
         Index: 49,
         Size: 8,
-        Timestamp: 622
+        Timestamp: 622,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 50,
         Size: 713,
         Timestamp: 634,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 133,
+          FinalTime: 767
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -528,19 +718,30 @@
         Type: Audio,
         Index: 51,
         Size: 8,
-        Timestamp: 643
+        Timestamp: 643,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Audio,
         Index: 52,
         Size: 8,
-        Timestamp: 664
+        Timestamp: 664,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 53,
         Size: 259,
         Timestamp: 667,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 33,
+          FinalTime: 700
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -553,13 +754,21 @@
         Type: Audio,
         Index: 54,
         Size: 8,
-        Timestamp: 686
+        Timestamp: 686,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 55,
         Size: 196,
         Timestamp: 700,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 34,
+          FinalTime: 734
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -572,19 +781,30 @@
         Type: Audio,
         Index: 56,
         Size: 8,
-        Timestamp: 707
+        Timestamp: 707,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Audio,
         Index: 57,
         Size: 8,
-        Timestamp: 728
+        Timestamp: 728,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 58,
         Size: 547,
         Timestamp: 734,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 133,
+          FinalTime: 867
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -597,13 +817,21 @@
         Type: Audio,
         Index: 59,
         Size: 8,
-        Timestamp: 750
+        Timestamp: 750,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 60,
         Size: 263,
         Timestamp: 767,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 33,
+          FinalTime: 800
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -616,19 +844,30 @@
         Type: Audio,
         Index: 61,
         Size: 8,
-        Timestamp: 771
+        Timestamp: 771,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Audio,
         Index: 62,
         Size: 8,
-        Timestamp: 792
+        Timestamp: 792,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 63,
         Size: 200,
         Timestamp: 800,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 34,
+          FinalTime: 834
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -641,13 +880,21 @@
         Type: Audio,
         Index: 64,
         Size: 8,
-        Timestamp: 814
+        Timestamp: 814,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 65,
         Size: 504,
         Timestamp: 834,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 133,
+          FinalTime: 967
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -660,19 +907,30 @@
         Type: Audio,
         Index: 66,
         Size: 8,
-        Timestamp: 835
+        Timestamp: 835,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Audio,
         Index: 67,
         Size: 8,
-        Timestamp: 856
+        Timestamp: 856,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 68,
         Size: 241,
         Timestamp: 867,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 33,
+          FinalTime: 900
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -685,19 +943,30 @@
         Type: Audio,
         Index: 69,
         Size: 8,
-        Timestamp: 878
+        Timestamp: 878,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Audio,
         Index: 70,
         Size: 8,
-        Timestamp: 899
+        Timestamp: 899,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 71,
         Size: 168,
         Timestamp: 900,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 34,
+          FinalTime: 934
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -710,13 +979,21 @@
         Type: Audio,
         Index: 72,
         Size: 8,
-        Timestamp: 920
+        Timestamp: 920,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 73,
         Size: 750,
         Timestamp: 934,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 100,
+          FinalTime: 1034
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -729,19 +1006,30 @@
         Type: Audio,
         Index: 74,
         Size: 8,
-        Timestamp: 942
+        Timestamp: 942,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Audio,
         Index: 75,
         Size: 8,
-        Timestamp: 963
+        Timestamp: 963,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 76,
         Size: 169,
         Timestamp: 967,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 33,
+          FinalTime: 1000
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -754,13 +1042,21 @@
         Type: Audio,
         Index: 77,
         Size: 8,
-        Timestamp: 984
+        Timestamp: 984,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 78,
         Size: 756,
         Timestamp: 1000,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 100,
+          FinalTime: 1100
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -773,19 +1069,30 @@
         Type: Audio,
         Index: 79,
         Size: 8,
-        Timestamp: 1006
+        Timestamp: 1006,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Audio,
         Index: 80,
         Size: 8,
-        Timestamp: 1027
+        Timestamp: 1027,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 81,
         Size: 173,
         Timestamp: 1034,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 33,
+          FinalTime: 1067
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -798,13 +1105,21 @@
         Type: Audio,
         Index: 82,
         Size: 8,
-        Timestamp: 1048
+        Timestamp: 1048,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 83,
         Size: 793,
         Timestamp: 1067,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 133,
+          FinalTime: 1200
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -817,19 +1132,30 @@
         Type: Audio,
         Index: 84,
         Size: 8,
-        Timestamp: 1070
+        Timestamp: 1070,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Audio,
         Index: 85,
         Size: 8,
-        Timestamp: 1091
+        Timestamp: 1091,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 86,
         Size: 270,
         Timestamp: 1100,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 34,
+          FinalTime: 1134
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -842,13 +1168,21 @@
         Type: Audio,
         Index: 87,
         Size: 8,
-        Timestamp: 1112
+        Timestamp: 1112,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 88,
         Size: 160,
         Timestamp: 1134,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 33,
+          FinalTime: 1167
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -861,19 +1195,30 @@
         Type: Audio,
         Index: 89,
         Size: 8,
-        Timestamp: 1134
+        Timestamp: 1134,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Audio,
         Index: 90,
         Size: 8,
-        Timestamp: 1155
+        Timestamp: 1155,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 91,
         Size: 735,
         Timestamp: 1167,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 100,
+          FinalTime: 1267
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -886,19 +1231,30 @@
         Type: Audio,
         Index: 92,
         Size: 8,
-        Timestamp: 1176
+        Timestamp: 1176,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Audio,
         Index: 93,
         Size: 8,
-        Timestamp: 1198
+        Timestamp: 1198,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 94,
         Size: 159,
         Timestamp: 1200,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 34,
+          FinalTime: 1234
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -911,13 +1267,21 @@
         Type: Audio,
         Index: 95,
         Size: 8,
-        Timestamp: 1219
+        Timestamp: 1219,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 96,
         Size: 703,
         Timestamp: 1234,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 100,
+          FinalTime: 1334
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -930,19 +1294,30 @@
         Type: Audio,
         Index: 97,
         Size: 8,
-        Timestamp: 1240
+        Timestamp: 1240,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Audio,
         Index: 98,
         Size: 8,
-        Timestamp: 1262
+        Timestamp: 1262,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 99,
         Size: 132,
         Timestamp: 1267,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 33,
+          FinalTime: 1300
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -955,13 +1330,21 @@
         Type: Audio,
         Index: 100,
         Size: 8,
-        Timestamp: 1283
+        Timestamp: 1283,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 101,
         Size: 738,
         Timestamp: 1300,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 100,
+          FinalTime: 1400
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -974,19 +1357,30 @@
         Type: Audio,
         Index: 102,
         Size: 8,
-        Timestamp: 1304
+        Timestamp: 1304,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Audio,
         Index: 103,
         Size: 8,
-        Timestamp: 1326
+        Timestamp: 1326,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 104,
         Size: 149,
         Timestamp: 1334,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 33,
+          FinalTime: 1367
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -999,13 +1393,21 @@
         Type: Audio,
         Index: 105,
         Size: 8,
-        Timestamp: 1347
+        Timestamp: 1347,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 106,
         Size: 845,
         Timestamp: 1367,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 100,
+          FinalTime: 1467
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -1018,19 +1420,30 @@
         Type: Audio,
         Index: 107,
         Size: 8,
-        Timestamp: 1368
+        Timestamp: 1368,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Audio,
         Index: 108,
         Size: 8,
-        Timestamp: 1390
+        Timestamp: 1390,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 109,
         Size: 141,
         Timestamp: 1400,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 34,
+          FinalTime: 1434
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -1043,19 +1456,30 @@
         Type: Audio,
         Index: 110,
         Size: 8,
-        Timestamp: 1411
+        Timestamp: 1411,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Audio,
         Index: 111,
         Size: 8,
-        Timestamp: 1432
+        Timestamp: 1432,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 112,
         Size: 839,
         Timestamp: 1434,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 100,
+          FinalTime: 1534
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -1068,13 +1492,21 @@
         Type: Audio,
         Index: 113,
         Size: 8,
-        Timestamp: 1454
+        Timestamp: 1454,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 114,
         Size: 215,
         Timestamp: 1467,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 33,
+          FinalTime: 1500
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -1087,19 +1519,30 @@
         Type: Audio,
         Index: 115,
         Size: 8,
-        Timestamp: 1475
+        Timestamp: 1475,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Audio,
         Index: 116,
         Size: 8,
-        Timestamp: 1496
+        Timestamp: 1496,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 117,
         Size: 497,
         Timestamp: 1500,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 134,
+          FinalTime: 1634
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -1112,13 +1555,21 @@
         Type: Audio,
         Index: 118,
         Size: 8,
-        Timestamp: 1518
+        Timestamp: 1518,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 119,
         Size: 277,
         Timestamp: 1534,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 33,
+          FinalTime: 1567
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -1131,19 +1582,30 @@
         Type: Audio,
         Index: 120,
         Size: 8,
-        Timestamp: 1539
+        Timestamp: 1539,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Audio,
         Index: 121,
         Size: 8,
-        Timestamp: 1560
+        Timestamp: 1560,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 122,
         Size: 172,
         Timestamp: 1567,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 33,
+          FinalTime: 1600
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -1156,13 +1618,21 @@
         Type: Audio,
         Index: 123,
         Size: 8,
-        Timestamp: 1582
+        Timestamp: 1582,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 124,
         Size: 995,
         Timestamp: 1600,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 100,
+          FinalTime: 1700
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -1175,19 +1645,30 @@
         Type: Audio,
         Index: 125,
         Size: 8,
-        Timestamp: 1603
+        Timestamp: 1603,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Audio,
         Index: 126,
         Size: 8,
-        Timestamp: 1624
+        Timestamp: 1624,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 127,
         Size: 161,
         Timestamp: 1634,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 33,
+          FinalTime: 1667
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -1200,13 +1681,21 @@
         Type: Audio,
         Index: 128,
         Size: 8,
-        Timestamp: 1646
+        Timestamp: 1646,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 129,
         Size: 674,
         Timestamp: 1667,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 133,
+          FinalTime: 1800
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -1219,19 +1708,30 @@
         Type: Audio,
         Index: 130,
         Size: 8,
-        Timestamp: 1667
+        Timestamp: 1667,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Audio,
         Index: 131,
         Size: 8,
-        Timestamp: 1688
+        Timestamp: 1688,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 132,
         Size: 330,
         Timestamp: 1700,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 34,
+          FinalTime: 1734
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -1244,19 +1744,30 @@
         Type: Audio,
         Index: 133,
         Size: 8,
-        Timestamp: 1710
+        Timestamp: 1710,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Audio,
         Index: 134,
         Size: 8,
-        Timestamp: 1731
+        Timestamp: 1731,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 135,
         Size: 222,
         Timestamp: 1734,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 33,
+          FinalTime: 1767
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -1269,13 +1780,21 @@
         Type: Audio,
         Index: 136,
         Size: 8,
-        Timestamp: 1752
+        Timestamp: 1752,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 137,
         Size: 554,
         Timestamp: 1767,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 133,
+          FinalTime: 1900
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -1288,19 +1807,30 @@
         Type: Audio,
         Index: 138,
         Size: 8,
-        Timestamp: 1774
+        Timestamp: 1774,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Audio,
         Index: 139,
         Size: 8,
-        Timestamp: 1795
+        Timestamp: 1795,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 140,
         Size: 353,
         Timestamp: 1800,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 34,
+          FinalTime: 1834
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -1313,13 +1843,21 @@
         Type: Audio,
         Index: 141,
         Size: 8,
-        Timestamp: 1816
+        Timestamp: 1816,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 142,
         Size: 233,
         Timestamp: 1834,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 33,
+          FinalTime: 1867
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -1332,19 +1870,30 @@
         Type: Audio,
         Index: 143,
         Size: 8,
-        Timestamp: 1838
+        Timestamp: 1838,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Audio,
         Index: 144,
         Size: 8,
-        Timestamp: 1859
+        Timestamp: 1859,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 145,
         Size: 1133,
         Timestamp: 1867,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 100,
+          FinalTime: 1967
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -1357,13 +1906,21 @@
         Type: Audio,
         Index: 146,
         Size: 8,
-        Timestamp: 1880
+        Timestamp: 1880,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 147,
         Size: 237,
         Timestamp: 1900,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 34,
+          FinalTime: 1934
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -1376,19 +1933,30 @@
         Type: Audio,
         Index: 148,
         Size: 8,
-        Timestamp: 1902
+        Timestamp: 1902,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Audio,
         Index: 149,
         Size: 8,
-        Timestamp: 1923
+        Timestamp: 1923,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 150,
         Size: 586,
         Timestamp: 1934,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 133,
+          FinalTime: 2067
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -1401,19 +1969,30 @@
         Type: Audio,
         Index: 151,
         Size: 8,
-        Timestamp: 1944
+        Timestamp: 1944,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Audio,
         Index: 152,
         Size: 8,
-        Timestamp: 1966
+        Timestamp: 1966,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 153,
         Size: 329,
         Timestamp: 1967,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 33,
+          FinalTime: 2000
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -1426,13 +2005,21 @@
         Type: Audio,
         Index: 154,
         Size: 8,
-        Timestamp: 1987
+        Timestamp: 1987,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 155,
         Size: 232,
         Timestamp: 2000,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 34,
+          FinalTime: 2034
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -1445,19 +2032,30 @@
         Type: Audio,
         Index: 156,
         Size: 8,
-        Timestamp: 2008
+        Timestamp: 2008,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Audio,
         Index: 157,
         Size: 8,
-        Timestamp: 2030
+        Timestamp: 2030,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 158,
         Size: 668,
         Timestamp: 2034,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 133,
+          FinalTime: 2167
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -1470,13 +2068,21 @@
         Type: Audio,
         Index: 159,
         Size: 8,
-        Timestamp: 2051
+        Timestamp: 2051,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 160,
         Size: 340,
         Timestamp: 2067,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 33,
+          FinalTime: 2100
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -1489,19 +2095,30 @@
         Type: Audio,
         Index: 161,
         Size: 8,
-        Timestamp: 2072
+        Timestamp: 2072,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Audio,
         Index: 162,
         Size: 8,
-        Timestamp: 2094
+        Timestamp: 2094,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 163,
         Size: 310,
         Timestamp: 2100,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 34,
+          FinalTime: 2134
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -1514,13 +2131,21 @@
         Type: Audio,
         Index: 164,
         Size: 8,
-        Timestamp: 2115
+        Timestamp: 2115,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 165,
         Size: 856,
         Timestamp: 2134,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 133,
+          FinalTime: 2267
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -1533,19 +2158,30 @@
         Type: Audio,
         Index: 166,
         Size: 8,
-        Timestamp: 2136
+        Timestamp: 2136,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Audio,
         Index: 167,
         Size: 8,
-        Timestamp: 2158
+        Timestamp: 2158,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 168,
         Size: 359,
         Timestamp: 2167,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 33,
+          FinalTime: 2200
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -1558,13 +2194,21 @@
         Type: Audio,
         Index: 169,
         Size: 8,
-        Timestamp: 2179
+        Timestamp: 2179,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 170,
         Size: 262,
         Timestamp: 2200,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 34,
+          FinalTime: 2234
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -1577,19 +2221,30 @@
         Type: Audio,
         Index: 171,
         Size: 8,
-        Timestamp: 2200
+        Timestamp: 2200,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Audio,
         Index: 172,
         Size: 8,
-        Timestamp: 2222
+        Timestamp: 2222,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 173,
         Size: 551,
         Timestamp: 2234,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 133,
+          FinalTime: 2367
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -1602,19 +2257,30 @@
         Type: Audio,
         Index: 174,
         Size: 8,
-        Timestamp: 2243
+        Timestamp: 2243,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Audio,
         Index: 175,
         Size: 8,
-        Timestamp: 2264
+        Timestamp: 2264,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 176,
         Size: 314,
         Timestamp: 2267,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 33,
+          FinalTime: 2300
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -1627,13 +2293,21 @@
         Type: Audio,
         Index: 177,
         Size: 8,
-        Timestamp: 2286
+        Timestamp: 2286,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 178,
         Size: 216,
         Timestamp: 2300,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 34,
+          FinalTime: 2334
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -1646,19 +2320,30 @@
         Type: Audio,
         Index: 179,
         Size: 8,
-        Timestamp: 2307
+        Timestamp: 2307,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Audio,
         Index: 180,
         Size: 8,
-        Timestamp: 2328
+        Timestamp: 2328,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 181,
         Size: 864,
         Timestamp: 2334,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 100,
+          FinalTime: 2434
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -1671,13 +2356,21 @@
         Type: Audio,
         Index: 182,
         Size: 8,
-        Timestamp: 2350
+        Timestamp: 2350,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 183,
         Size: 150,
         Timestamp: 2367,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 33,
+          FinalTime: 2400
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -1690,19 +2383,30 @@
         Type: Audio,
         Index: 184,
         Size: 8,
-        Timestamp: 2371
+        Timestamp: 2371,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Audio,
         Index: 185,
         Size: 8,
-        Timestamp: 2392
+        Timestamp: 2392,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 186,
         Size: 623,
         Timestamp: 2400,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 100,
+          FinalTime: 2500
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -1715,13 +2419,21 @@
         Type: Audio,
         Index: 187,
         Size: 8,
-        Timestamp: 2414
+        Timestamp: 2414,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 188,
         Size: 171,
         Timestamp: 2434,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 33,
+          FinalTime: 2467
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -1734,19 +2446,30 @@
         Type: Audio,
         Index: 189,
         Size: 8,
-        Timestamp: 2435
+        Timestamp: 2435,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Audio,
         Index: 190,
         Size: 8,
-        Timestamp: 2456
+        Timestamp: 2456,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 191,
         Size: 750,
         Timestamp: 2467,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 100,
+          FinalTime: 2567
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -1759,19 +2482,30 @@
         Type: Audio,
         Index: 192,
         Size: 8,
-        Timestamp: 2478
+        Timestamp: 2478,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Audio,
         Index: 193,
         Size: 8,
-        Timestamp: 2499
+        Timestamp: 2499,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 194,
         Size: 139,
         Timestamp: 2500,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 34,
+          FinalTime: 2534
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -1784,13 +2518,21 @@
         Type: Audio,
         Index: 195,
         Size: 8,
-        Timestamp: 2520
+        Timestamp: 2520,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 196,
         Size: 739,
         Timestamp: 2534,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 100,
+          FinalTime: 2634
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -1803,19 +2545,30 @@
         Type: Audio,
         Index: 197,
         Size: 8,
-        Timestamp: 2542
+        Timestamp: 2542,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Audio,
         Index: 198,
         Size: 8,
-        Timestamp: 2563
+        Timestamp: 2563,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 199,
         Size: 192,
         Timestamp: 2567,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 33,
+          FinalTime: 2600
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -1828,13 +2581,21 @@
         Type: Audio,
         Index: 200,
         Size: 8,
-        Timestamp: 2584
+        Timestamp: 2584,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 201,
         Size: 696,
         Timestamp: 2600,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 100,
+          FinalTime: 2700
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -1847,19 +2608,30 @@
         Type: Audio,
         Index: 202,
         Size: 8,
-        Timestamp: 2606
+        Timestamp: 2606,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Audio,
         Index: 203,
         Size: 8,
-        Timestamp: 2627
+        Timestamp: 2627,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 204,
         Size: 161,
         Timestamp: 2634,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 33,
+          FinalTime: 2667
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -1872,13 +2644,21 @@
         Type: Audio,
         Index: 205,
         Size: 8,
-        Timestamp: 2648
+        Timestamp: 2648,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 206,
         Size: 343,
         Timestamp: 2667,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 133,
+          FinalTime: 2800
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -1891,19 +2671,30 @@
         Type: Audio,
         Index: 207,
         Size: 8,
-        Timestamp: 2670
+        Timestamp: 2670,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Audio,
         Index: 208,
         Size: 8,
-        Timestamp: 2691
+        Timestamp: 2691,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 209,
         Size: 206,
         Timestamp: 2700,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 34,
+          FinalTime: 2734
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -1916,13 +2707,21 @@
         Type: Audio,
         Index: 210,
         Size: 8,
-        Timestamp: 2712
+        Timestamp: 2712,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 211,
         Size: 173,
         Timestamp: 2734,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 33,
+          FinalTime: 2767
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -1935,19 +2734,30 @@
         Type: Audio,
         Index: 212,
         Size: 8,
-        Timestamp: 2734
+        Timestamp: 2734,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Audio,
         Index: 213,
         Size: 8,
-        Timestamp: 2755
+        Timestamp: 2755,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 214,
         Size: 661,
         Timestamp: 2767,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 100,
+          FinalTime: 2867
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -1960,19 +2770,30 @@
         Type: Audio,
         Index: 215,
         Size: 8,
-        Timestamp: 2776
+        Timestamp: 2776,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Audio,
         Index: 216,
         Size: 8,
-        Timestamp: 2798
+        Timestamp: 2798,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 217,
         Size: 164,
         Timestamp: 2800,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 34,
+          FinalTime: 2834
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -1985,13 +2806,21 @@
         Type: Audio,
         Index: 218,
         Size: 8,
-        Timestamp: 2819
+        Timestamp: 2819,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 219,
         Size: 698,
         Timestamp: 2834,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 100,
+          FinalTime: 2934
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -2004,19 +2833,30 @@
         Type: Audio,
         Index: 220,
         Size: 8,
-        Timestamp: 2840
+        Timestamp: 2840,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Audio,
         Index: 221,
         Size: 8,
-        Timestamp: 2862
+        Timestamp: 2862,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 222,
         Size: 152,
         Timestamp: 2867,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 33,
+          FinalTime: 2900
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -2029,13 +2869,21 @@
         Type: Audio,
         Index: 223,
         Size: 8,
-        Timestamp: 2883
+        Timestamp: 2883,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 224,
         Size: 800,
         Timestamp: 2900,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 100,
+          FinalTime: 3000
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -2048,19 +2896,30 @@
         Type: Audio,
         Index: 225,
         Size: 8,
-        Timestamp: 2904
+        Timestamp: 2904,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Audio,
         Index: 226,
         Size: 8,
-        Timestamp: 2926
+        Timestamp: 2926,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 227,
         Size: 151,
         Timestamp: 2934,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 33,
+          FinalTime: 2967
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -2073,13 +2932,21 @@
         Type: Audio,
         Index: 228,
         Size: 8,
-        Timestamp: 2947
+        Timestamp: 2947,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 229,
         Size: 807,
         Timestamp: 2967,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 100,
+          FinalTime: 3067
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -2092,19 +2959,30 @@
         Type: Audio,
         Index: 230,
         Size: 8,
-        Timestamp: 2968
+        Timestamp: 2968,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Audio,
         Index: 231,
         Size: 8,
-        Timestamp: 2990
+        Timestamp: 2990,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 232,
         Size: 190,
         Timestamp: 3000,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 34,
+          FinalTime: 3034
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -2117,19 +2995,30 @@
         Type: Audio,
         Index: 233,
         Size: 8,
-        Timestamp: 3011
+        Timestamp: 3011,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Audio,
         Index: 234,
         Size: 8,
-        Timestamp: 3032
+        Timestamp: 3032,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 235,
         Size: 800,
         Timestamp: 3034,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 100,
+          FinalTime: 3134
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -2142,13 +3031,21 @@
         Type: Audio,
         Index: 236,
         Size: 8,
-        Timestamp: 3054
+        Timestamp: 3054,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 237,
         Size: 192,
         Timestamp: 3067,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 33,
+          FinalTime: 3100
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -2161,19 +3058,30 @@
         Type: Audio,
         Index: 238,
         Size: 8,
-        Timestamp: 3075
+        Timestamp: 3075,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Audio,
         Index: 239,
         Size: 8,
-        Timestamp: 3096
+        Timestamp: 3096,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 240,
         Size: 757,
         Timestamp: 3100,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 100,
+          FinalTime: 3200
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -2186,13 +3094,21 @@
         Type: Audio,
         Index: 241,
         Size: 8,
-        Timestamp: 3118
+        Timestamp: 3118,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 242,
         Size: 148,
         Timestamp: 3134,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 33,
+          FinalTime: 3167
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -2205,19 +3121,30 @@
         Type: Audio,
         Index: 243,
         Size: 8,
-        Timestamp: 3139
+        Timestamp: 3139,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Audio,
         Index: 244,
         Size: 8,
-        Timestamp: 3160
+        Timestamp: 3160,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 245,
         Size: 591,
         Timestamp: 3167,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 133,
+          FinalTime: 3300
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -2230,13 +3157,21 @@
         Type: Audio,
         Index: 246,
         Size: 8,
-        Timestamp: 3182
+        Timestamp: 3182,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 247,
         Size: 284,
         Timestamp: 3200,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 34,
+          FinalTime: 3234
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -2249,19 +3184,30 @@
         Type: Audio,
         Index: 248,
         Size: 8,
-        Timestamp: 3203
+        Timestamp: 3203,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Audio,
         Index: 249,
         Size: 8,
-        Timestamp: 3224
+        Timestamp: 3224,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 250,
         Size: 173,
         Timestamp: 3234,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 33,
+          FinalTime: 3267
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -2274,13 +3220,21 @@
         Type: Audio,
         Index: 251,
         Size: 8,
-        Timestamp: 3246
+        Timestamp: 3246,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 252,
         Size: 811,
         Timestamp: 3267,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 100,
+          FinalTime: 3367
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -2293,19 +3247,30 @@
         Type: Audio,
         Index: 253,
         Size: 8,
-        Timestamp: 3267
+        Timestamp: 3267,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Audio,
         Index: 254,
         Size: 8,
-        Timestamp: 3288
+        Timestamp: 3288,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 255,
         Size: 153,
         Timestamp: 3300,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 34,
+          FinalTime: 3334
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -2318,19 +3283,30 @@
         Type: Audio,
         Index: 256,
         Size: 8,
-        Timestamp: 3310
+        Timestamp: 3310,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Audio,
         Index: 257,
         Size: 8,
-        Timestamp: 3331
+        Timestamp: 3331,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 258,
         Size: 589,
         Timestamp: 3334,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 133,
+          FinalTime: 3467
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -2343,13 +3319,21 @@
         Type: Audio,
         Index: 259,
         Size: 8,
-        Timestamp: 3352
+        Timestamp: 3352,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 260,
         Size: 290,
         Timestamp: 3367,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 33,
+          FinalTime: 3400
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -2362,19 +3346,30 @@
         Type: Audio,
         Index: 261,
         Size: 8,
-        Timestamp: 3374
+        Timestamp: 3374,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Audio,
         Index: 262,
         Size: 8,
-        Timestamp: 3395
+        Timestamp: 3395,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 263,
         Size: 203,
         Timestamp: 3400,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 34,
+          FinalTime: 3434
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -2387,13 +3382,21 @@
         Type: Audio,
         Index: 264,
         Size: 8,
-        Timestamp: 3416
+        Timestamp: 3416,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 265,
         Size: 831,
         Timestamp: 3434,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 100,
+          FinalTime: 3534
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -2406,19 +3409,30 @@
         Type: Audio,
         Index: 266,
         Size: 8,
-        Timestamp: 3438
+        Timestamp: 3438,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Audio,
         Index: 267,
         Size: 8,
-        Timestamp: 3459
+        Timestamp: 3459,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 268,
         Size: 186,
         Timestamp: 3467,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 33,
+          FinalTime: 3500
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -2431,13 +3445,21 @@
         Type: Audio,
         Index: 269,
         Size: 8,
-        Timestamp: 3480
+        Timestamp: 3480,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 270,
         Size: 626,
         Timestamp: 3500,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 134,
+          FinalTime: 3634
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -2450,19 +3472,30 @@
         Type: Audio,
         Index: 271,
         Size: 8,
-        Timestamp: 3502
+        Timestamp: 3502,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Audio,
         Index: 272,
         Size: 8,
-        Timestamp: 3523
+        Timestamp: 3523,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 273,
         Size: 250,
         Timestamp: 3534,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 33,
+          FinalTime: 3567
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -2475,19 +3508,30 @@
         Type: Audio,
         Index: 274,
         Size: 8,
-        Timestamp: 3544
+        Timestamp: 3544,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Audio,
         Index: 275,
         Size: 8,
-        Timestamp: 3566
+        Timestamp: 3566,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 276,
         Size: 208,
         Timestamp: 3567,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 33,
+          FinalTime: 3600
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -2500,13 +3544,21 @@
         Type: Audio,
         Index: 277,
         Size: 8,
-        Timestamp: 3587
+        Timestamp: 3587,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 278,
         Size: 875,
         Timestamp: 3600,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 100,
+          FinalTime: 3700
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -2519,19 +3571,30 @@
         Type: Audio,
         Index: 279,
         Size: 8,
-        Timestamp: 3608
+        Timestamp: 3608,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Audio,
         Index: 280,
         Size: 8,
-        Timestamp: 3630
+        Timestamp: 3630,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 281,
         Size: 176,
         Timestamp: 3634,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 33,
+          FinalTime: 3667
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -2544,13 +3607,21 @@
         Type: Audio,
         Index: 282,
         Size: 8,
-        Timestamp: 3651
+        Timestamp: 3651,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 283,
         Size: 414,
         Timestamp: 3667,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 133,
+          FinalTime: 3800
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -2563,19 +3634,30 @@
         Type: Audio,
         Index: 284,
         Size: 8,
-        Timestamp: 3672
+        Timestamp: 3672,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Audio,
         Index: 285,
         Size: 8,
-        Timestamp: 3694
+        Timestamp: 3694,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 286,
         Size: 239,
         Timestamp: 3700,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 34,
+          FinalTime: 3734
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -2588,13 +3670,21 @@
         Type: Audio,
         Index: 287,
         Size: 8,
-        Timestamp: 3715
+        Timestamp: 3715,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 288,
         Size: 156,
         Timestamp: 3734,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 33,
+          FinalTime: 3767
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -2607,19 +3697,30 @@
         Type: Audio,
         Index: 289,
         Size: 8,
-        Timestamp: 3736
+        Timestamp: 3736,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Audio,
         Index: 290,
         Size: 8,
-        Timestamp: 3758
+        Timestamp: 3758,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 291,
         Size: 733,
         Timestamp: 3767,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 100,
+          FinalTime: 3867
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -2632,13 +3733,21 @@
         Type: Audio,
         Index: 292,
         Size: 8,
-        Timestamp: 3779
+        Timestamp: 3779,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 293,
         Size: 175,
         Timestamp: 3800,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 34,
+          FinalTime: 3834
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -2651,19 +3760,30 @@
         Type: Audio,
         Index: 294,
         Size: 8,
-        Timestamp: 3800
+        Timestamp: 3800,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Audio,
         Index: 295,
         Size: 8,
-        Timestamp: 3822
+        Timestamp: 3822,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 296,
         Size: 700,
         Timestamp: 3834,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 100,
+          FinalTime: 3934
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -2676,19 +3796,30 @@
         Type: Audio,
         Index: 297,
         Size: 8,
-        Timestamp: 3843
+        Timestamp: 3843,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Audio,
         Index: 298,
         Size: 8,
-        Timestamp: 3864
+        Timestamp: 3864,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 299,
         Size: 157,
         Timestamp: 3867,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 33,
+          FinalTime: 3900
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -2701,13 +3832,21 @@
         Type: Audio,
         Index: 300,
         Size: 8,
-        Timestamp: 3886
+        Timestamp: 3886,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 301,
         Size: 666,
         Timestamp: 3900,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 134,
+          FinalTime: 4034
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -2720,19 +3859,30 @@
         Type: Audio,
         Index: 302,
         Size: 8,
-        Timestamp: 3907
+        Timestamp: 3907,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Audio,
         Index: 303,
         Size: 8,
-        Timestamp: 3928
+        Timestamp: 3928,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 304,
         Size: 262,
         Timestamp: 3934,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 33,
+          FinalTime: 3967
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -2745,13 +3895,21 @@
         Type: Audio,
         Index: 305,
         Size: 8,
-        Timestamp: 3950
+        Timestamp: 3950,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 306,
         Size: 163,
         Timestamp: 3967,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 33,
+          FinalTime: 4000
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -2764,19 +3922,30 @@
         Type: Audio,
         Index: 307,
         Size: 8,
-        Timestamp: 3971
+        Timestamp: 3971,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Audio,
         Index: 308,
         Size: 8,
-        Timestamp: 3992
+        Timestamp: 3992,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 309,
         Size: 853,
         Timestamp: 4000,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 100,
+          FinalTime: 4100
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -2789,13 +3958,21 @@
         Type: Audio,
         Index: 310,
         Size: 8,
-        Timestamp: 4014
+        Timestamp: 4014,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 311,
         Size: 151,
         Timestamp: 4034,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 33,
+          FinalTime: 4067
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -2808,19 +3985,30 @@
         Type: Audio,
         Index: 312,
         Size: 8,
-        Timestamp: 4035
+        Timestamp: 4035,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Audio,
         Index: 313,
         Size: 8,
-        Timestamp: 4056
+        Timestamp: 4056,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 314,
         Size: 654,
         Timestamp: 4067,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 100,
+          FinalTime: 4167
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -2833,19 +4021,30 @@
         Type: Audio,
         Index: 315,
         Size: 8,
-        Timestamp: 4078
+        Timestamp: 4078,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Audio,
         Index: 316,
         Size: 8,
-        Timestamp: 4099
+        Timestamp: 4099,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 317,
         Size: 154,
         Timestamp: 4100,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 34,
+          FinalTime: 4134
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -2858,13 +4057,21 @@
         Type: Audio,
         Index: 318,
         Size: 8,
-        Timestamp: 4120
+        Timestamp: 4120,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 319,
         Size: 785,
         Timestamp: 4134,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 100,
+          FinalTime: 4234
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -2877,19 +4084,30 @@
         Type: Audio,
         Index: 320,
         Size: 8,
-        Timestamp: 4142
+        Timestamp: 4142,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Audio,
         Index: 321,
         Size: 8,
-        Timestamp: 4163
+        Timestamp: 4163,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 322,
         Size: 180,
         Timestamp: 4167,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 33,
+          FinalTime: 4200
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -2902,13 +4120,21 @@
         Type: Audio,
         Index: 323,
         Size: 8,
-        Timestamp: 4184
+        Timestamp: 4184,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 324,
         Size: 646,
         Timestamp: 4200,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 100,
+          FinalTime: 4300
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -2921,19 +4147,30 @@
         Type: Audio,
         Index: 325,
         Size: 8,
-        Timestamp: 4206
+        Timestamp: 4206,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Audio,
         Index: 326,
         Size: 8,
-        Timestamp: 4227
+        Timestamp: 4227,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 327,
         Size: 184,
         Timestamp: 4234,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 33,
+          FinalTime: 4267
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -2946,13 +4183,21 @@
         Type: Audio,
         Index: 328,
         Size: 8,
-        Timestamp: 4248
+        Timestamp: 4248,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 329,
         Size: 599,
         Timestamp: 4267,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 100,
+          FinalTime: 4367
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -2965,19 +4210,30 @@
         Type: Audio,
         Index: 330,
         Size: 8,
-        Timestamp: 4270
+        Timestamp: 4270,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Audio,
         Index: 331,
         Size: 8,
-        Timestamp: 4291
+        Timestamp: 4291,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 332,
         Size: 188,
         Timestamp: 4300,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 34,
+          FinalTime: 4334
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -2990,13 +4246,21 @@
         Type: Audio,
         Index: 333,
         Size: 8,
-        Timestamp: 4312
+        Timestamp: 4312,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 334,
         Size: 675,
         Timestamp: 4334,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 100,
+          FinalTime: 4434
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -3009,19 +4273,30 @@
         Type: Audio,
         Index: 335,
         Size: 8,
-        Timestamp: 4334
+        Timestamp: 4334,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Audio,
         Index: 336,
         Size: 8,
-        Timestamp: 4355
+        Timestamp: 4355,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 337,
         Size: 193,
         Timestamp: 4367,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 33,
+          FinalTime: 4400
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -3034,19 +4309,30 @@
         Type: Audio,
         Index: 338,
         Size: 8,
-        Timestamp: 4376
+        Timestamp: 4376,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Audio,
         Index: 339,
         Size: 8,
-        Timestamp: 4398
+        Timestamp: 4398,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 340,
         Size: 646,
         Timestamp: 4400,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 67,
+          FinalTime: 4467
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -3059,13 +4345,21 @@
         Type: Audio,
         Index: 341,
         Size: 8,
-        Timestamp: 4419
+        Timestamp: 4419,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 342,
         Size: 847,
         Timestamp: 4434,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 100,
+          FinalTime: 4534
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -3078,19 +4372,30 @@
         Type: Audio,
         Index: 343,
         Size: 8,
-        Timestamp: 4440
+        Timestamp: 4440,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Audio,
         Index: 344,
         Size: 8,
-        Timestamp: 4462
+        Timestamp: 4462,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 345,
         Size: 193,
         Timestamp: 4467,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 33,
+          FinalTime: 4500
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -3103,13 +4408,21 @@
         Type: Audio,
         Index: 346,
         Size: 8,
-        Timestamp: 4483
+        Timestamp: 4483,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 347,
         Size: 830,
         Timestamp: 4500,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 100,
+          FinalTime: 4600
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -3122,19 +4435,30 @@
         Type: Audio,
         Index: 348,
         Size: 8,
-        Timestamp: 4504
+        Timestamp: 4504,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Audio,
         Index: 349,
         Size: 8,
-        Timestamp: 4526
+        Timestamp: 4526,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 350,
         Size: 160,
         Timestamp: 4534,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 33,
+          FinalTime: 4567
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -3147,13 +4471,21 @@
         Type: Audio,
         Index: 351,
         Size: 8,
-        Timestamp: 4547
+        Timestamp: 4547,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 352,
         Size: 805,
         Timestamp: 4567,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 100,
+          FinalTime: 4667
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -3166,19 +4498,30 @@
         Type: Audio,
         Index: 353,
         Size: 8,
-        Timestamp: 4568
+        Timestamp: 4568,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Audio,
         Index: 354,
         Size: 8,
-        Timestamp: 4590
+        Timestamp: 4590,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 355,
         Size: 193,
         Timestamp: 4600,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 34,
+          FinalTime: 4634
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -3191,19 +4534,30 @@
         Type: Audio,
         Index: 356,
         Size: 8,
-        Timestamp: 4611
+        Timestamp: 4611,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Audio,
         Index: 357,
         Size: 8,
-        Timestamp: 4632
+        Timestamp: 4632,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 358,
         Size: 523,
         Timestamp: 4634,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 133,
+          FinalTime: 4767
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -3216,13 +4570,21 @@
         Type: Audio,
         Index: 359,
         Size: 8,
-        Timestamp: 4654
+        Timestamp: 4654,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 360,
         Size: 273,
         Timestamp: 4667,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 33,
+          FinalTime: 4700
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -3235,19 +4597,30 @@
         Type: Audio,
         Index: 361,
         Size: 8,
-        Timestamp: 4675
+        Timestamp: 4675,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Audio,
         Index: 362,
         Size: 8,
-        Timestamp: 4696
+        Timestamp: 4696,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 363,
         Size: 174,
         Timestamp: 4700,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 34,
+          FinalTime: 4734
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -3260,13 +4633,21 @@
         Type: Audio,
         Index: 364,
         Size: 8,
-        Timestamp: 4718
+        Timestamp: 4718,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 365,
         Size: 598,
         Timestamp: 4734,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 133,
+          FinalTime: 4867
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -3279,19 +4660,30 @@
         Type: Audio,
         Index: 366,
         Size: 8,
-        Timestamp: 4739
+        Timestamp: 4739,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Audio,
         Index: 367,
         Size: 8,
-        Timestamp: 4760
+        Timestamp: 4760,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 368,
         Size: 284,
         Timestamp: 4767,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 33,
+          FinalTime: 4800
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -3304,13 +4696,21 @@
         Type: Audio,
         Index: 369,
         Size: 8,
-        Timestamp: 4782
+        Timestamp: 4782,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 370,
         Size: 234,
         Timestamp: 4800,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 34,
+          FinalTime: 4834
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -3323,19 +4723,30 @@
         Type: Audio,
         Index: 371,
         Size: 8,
-        Timestamp: 4803
+        Timestamp: 4803,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Audio,
         Index: 372,
         Size: 8,
-        Timestamp: 4824
+        Timestamp: 4824,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 373,
         Size: 788,
         Timestamp: 4834,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 133,
+          FinalTime: 4967
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -3348,13 +4759,21 @@
         Type: Audio,
         Index: 374,
         Size: 8,
-        Timestamp: 4846
+        Timestamp: 4846,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 375,
         Size: 345,
         Timestamp: 4867,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 33,
+          FinalTime: 4900
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -3367,19 +4786,30 @@
         Type: Audio,
         Index: 376,
         Size: 8,
-        Timestamp: 4867
+        Timestamp: 4867,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Audio,
         Index: 377,
         Size: 8,
-        Timestamp: 4888
+        Timestamp: 4888,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 378,
         Size: 220,
         Timestamp: 4900,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 34,
+          FinalTime: 4934
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -3392,19 +4822,30 @@
         Type: Audio,
         Index: 379,
         Size: 8,
-        Timestamp: 4910
+        Timestamp: 4910,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Audio,
         Index: 380,
         Size: 8,
-        Timestamp: 4931
+        Timestamp: 4931,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 381,
         Size: 964,
         Timestamp: 4934,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 100,
+          FinalTime: 5034
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -3417,13 +4858,21 @@
         Type: Audio,
         Index: 382,
         Size: 8,
-        Timestamp: 4952
+        Timestamp: 4952,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 383,
         Size: 146,
         Timestamp: 4967,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 33,
+          FinalTime: 5000
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -3436,19 +4885,30 @@
         Type: Audio,
         Index: 384,
         Size: 8,
-        Timestamp: 4974
+        Timestamp: 4974,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Audio,
         Index: 385,
         Size: 8,
-        Timestamp: 4995
+        Timestamp: 4995,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 386,
         Size: 626,
         Timestamp: 5000,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 134,
+          FinalTime: 5134
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -3461,13 +4921,21 @@
         Type: Audio,
         Index: 387,
         Size: 8,
-        Timestamp: 5016
+        Timestamp: 5016,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 388,
         Size: 347,
         Timestamp: 5034,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 33,
+          FinalTime: 5067
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -3480,19 +4948,30 @@
         Type: Audio,
         Index: 389,
         Size: 8,
-        Timestamp: 5038
+        Timestamp: 5038,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Audio,
         Index: 390,
         Size: 8,
-        Timestamp: 5059
+        Timestamp: 5059,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 391,
         Size: 185,
         Timestamp: 5067,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 33,
+          FinalTime: 5100
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -3505,13 +4984,21 @@
         Type: Audio,
         Index: 392,
         Size: 8,
-        Timestamp: 5080
+        Timestamp: 5080,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 393,
         Size: 604,
         Timestamp: 5100,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 134,
+          FinalTime: 5234
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -3524,19 +5011,30 @@
         Type: Audio,
         Index: 394,
         Size: 8,
-        Timestamp: 5102
+        Timestamp: 5102,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Audio,
         Index: 395,
         Size: 8,
-        Timestamp: 5123
+        Timestamp: 5123,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 396,
         Size: 249,
         Timestamp: 5134,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 33,
+          FinalTime: 5167
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -3549,19 +5047,30 @@
         Type: Audio,
         Index: 397,
         Size: 8,
-        Timestamp: 5144
+        Timestamp: 5144,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Audio,
         Index: 398,
         Size: 8,
-        Timestamp: 5166
+        Timestamp: 5166,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 399,
         Size: 189,
         Timestamp: 5167,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 33,
+          FinalTime: 5200
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -3574,13 +5083,21 @@
         Type: Audio,
         Index: 400,
         Size: 8,
-        Timestamp: 5187
+        Timestamp: 5187,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 401,
         Size: 719,
         Timestamp: 5200,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 100,
+          FinalTime: 5300
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -3593,19 +5110,30 @@
         Type: Audio,
         Index: 402,
         Size: 8,
-        Timestamp: 5208
+        Timestamp: 5208,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Audio,
         Index: 403,
         Size: 8,
-        Timestamp: 5230
+        Timestamp: 5230,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 404,
         Size: 154,
         Timestamp: 5234,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 33,
+          FinalTime: 5267
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -3618,13 +5146,21 @@
         Type: Audio,
         Index: 405,
         Size: 8,
-        Timestamp: 5251
+        Timestamp: 5251,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 406,
         Size: 445,
         Timestamp: 5267,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 133,
+          FinalTime: 5400
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -3637,19 +5173,30 @@
         Type: Audio,
         Index: 407,
         Size: 8,
-        Timestamp: 5272
+        Timestamp: 5272,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Audio,
         Index: 408,
         Size: 8,
-        Timestamp: 5294
+        Timestamp: 5294,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 409,
         Size: 222,
         Timestamp: 5300,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 34,
+          FinalTime: 5334
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -3662,13 +5209,21 @@
         Type: Audio,
         Index: 410,
         Size: 8,
-        Timestamp: 5315
+        Timestamp: 5315,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 411,
         Size: 127,
         Timestamp: 5334,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 33,
+          FinalTime: 5367
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -3681,19 +5236,30 @@
         Type: Audio,
         Index: 412,
         Size: 8,
-        Timestamp: 5336
+        Timestamp: 5336,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Audio,
         Index: 413,
         Size: 8,
-        Timestamp: 5358
+        Timestamp: 5358,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 414,
         Size: 770,
         Timestamp: 5367,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 100,
+          FinalTime: 5467
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -3706,13 +5272,21 @@
         Type: Audio,
         Index: 415,
         Size: 8,
-        Timestamp: 5379
+        Timestamp: 5379,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 416,
         Size: 138,
         Timestamp: 5400,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 34,
+          FinalTime: 5434
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -3725,19 +5299,30 @@
         Type: Audio,
         Index: 417,
         Size: 8,
-        Timestamp: 5400
+        Timestamp: 5400,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Audio,
         Index: 418,
         Size: 8,
-        Timestamp: 5422
+        Timestamp: 5422,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 419,
         Size: 724,
         Timestamp: 5434,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 100,
+          FinalTime: 5534
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -3750,19 +5335,30 @@
         Type: Audio,
         Index: 420,
         Size: 8,
-        Timestamp: 5443
+        Timestamp: 5443,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Audio,
         Index: 421,
         Size: 8,
-        Timestamp: 5464
+        Timestamp: 5464,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 422,
         Size: 195,
         Timestamp: 5467,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 33,
+          FinalTime: 5500
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -3775,13 +5371,21 @@
         Type: Audio,
         Index: 423,
         Size: 8,
-        Timestamp: 5486
+        Timestamp: 5486,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 424,
         Size: 682,
         Timestamp: 5500,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 100,
+          FinalTime: 5600
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -3794,19 +5398,30 @@
         Type: Audio,
         Index: 425,
         Size: 25,
-        Timestamp: 5507
+        Timestamp: 5507,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Audio,
         Index: 426,
         Size: 8,
-        Timestamp: 5528
+        Timestamp: 5528,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 427,
         Size: 185,
         Timestamp: 5534,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 33,
+          FinalTime: 5567
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -3819,13 +5434,21 @@
         Type: Audio,
         Index: 428,
         Size: 8,
-        Timestamp: 5550
+        Timestamp: 5550,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 429,
         Size: 683,
         Timestamp: 5567,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 100,
+          FinalTime: 5667
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -3838,19 +5461,30 @@
         Type: Audio,
         Index: 430,
         Size: 8,
-        Timestamp: 5571
+        Timestamp: 5571,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Audio,
         Index: 431,
         Size: 8,
-        Timestamp: 5592
+        Timestamp: 5592,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 432,
         Size: 159,
         Timestamp: 5600,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 34,
+          FinalTime: 5634
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -3863,13 +5497,21 @@
         Type: Audio,
         Index: 433,
         Size: 8,
-        Timestamp: 5614
+        Timestamp: 5614,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 434,
         Size: 480,
         Timestamp: 5634,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 133,
+          FinalTime: 5767
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -3882,19 +5524,30 @@
         Type: Audio,
         Index: 435,
         Size: 8,
-        Timestamp: 5635
+        Timestamp: 5635,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Audio,
         Index: 436,
         Size: 8,
-        Timestamp: 5656
+        Timestamp: 5656,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 437,
         Size: 289,
         Timestamp: 5667,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 33,
+          FinalTime: 5700
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -3907,19 +5560,30 @@
         Type: Audio,
         Index: 438,
         Size: 8,
-        Timestamp: 5678
+        Timestamp: 5678,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Audio,
         Index: 439,
         Size: 8,
-        Timestamp: 5699
+        Timestamp: 5699,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 440,
         Size: 177,
         Timestamp: 5700,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 34,
+          FinalTime: 5734
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -3932,13 +5596,21 @@
         Type: Audio,
         Index: 441,
         Size: 8,
-        Timestamp: 5720
+        Timestamp: 5720,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 442,
         Size: 748,
         Timestamp: 5734,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 100,
+          FinalTime: 5834
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -3951,19 +5623,30 @@
         Type: Audio,
         Index: 443,
         Size: 8,
-        Timestamp: 5742
+        Timestamp: 5742,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Audio,
         Index: 444,
         Size: 8,
-        Timestamp: 5763
+        Timestamp: 5763,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 445,
         Size: 156,
         Timestamp: 5767,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 33,
+          FinalTime: 5800
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -3976,13 +5659,21 @@
         Type: Audio,
         Index: 446,
         Size: 8,
-        Timestamp: 5784
+        Timestamp: 5784,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 447,
         Size: 515,
         Timestamp: 5800,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 67,
+          FinalTime: 5867
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -3995,19 +5686,30 @@
         Type: Audio,
         Index: 448,
         Size: 8,
-        Timestamp: 5806
+        Timestamp: 5806,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Audio,
         Index: 449,
         Size: 8,
-        Timestamp: 5827
+        Timestamp: 5827,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 450,
         Size: 692,
         Timestamp: 5834,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 66,
+          FinalTime: 5900
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -4020,13 +5722,21 @@
         Type: Audio,
         Index: 451,
         Size: 8,
-        Timestamp: 5848
+        Timestamp: 5848,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 452,
         Size: 697,
         Timestamp: 5867,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 100,
+          FinalTime: 5967
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -4039,19 +5749,30 @@
         Type: Audio,
         Index: 453,
         Size: 8,
-        Timestamp: 5870
+        Timestamp: 5870,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Audio,
         Index: 454,
         Size: 8,
-        Timestamp: 5891
+        Timestamp: 5891,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 455,
         Size: 153,
         Timestamp: 5900,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 34,
+          FinalTime: 5934
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -4064,13 +5785,21 @@
         Type: Audio,
         Index: 456,
         Size: 8,
-        Timestamp: 5912
+        Timestamp: 5912,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 457,
         Size: 618,
         Timestamp: 5934,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 133,
+          FinalTime: 6067
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -4083,19 +5812,30 @@
         Type: Audio,
         Index: 458,
         Size: 8,
-        Timestamp: 5934
+        Timestamp: 5934,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Audio,
         Index: 459,
         Size: 8,
-        Timestamp: 5955
+        Timestamp: 5955,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 460,
         Size: 254,
         Timestamp: 5967,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 33,
+          FinalTime: 6000
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -4108,19 +5848,30 @@
         Type: Audio,
         Index: 461,
         Size: 8,
-        Timestamp: 5976
+        Timestamp: 5976,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Audio,
         Index: 462,
         Size: 8,
-        Timestamp: 5998
+        Timestamp: 5998,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 463,
         Size: 187,
         Timestamp: 6000,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 34,
+          FinalTime: 6034
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -4133,13 +5884,21 @@
         Type: Audio,
         Index: 464,
         Size: 8,
-        Timestamp: 6019
+        Timestamp: 6019,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 465,
         Size: 985,
         Timestamp: 6034,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 166,
+          FinalTime: 6200
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -4152,19 +5911,30 @@
         Type: Audio,
         Index: 466,
         Size: 8,
-        Timestamp: 6040
+        Timestamp: 6040,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Audio,
         Index: 467,
         Size: 8,
-        Timestamp: 6062
+        Timestamp: 6062,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 468,
         Size: 487,
         Timestamp: 6067,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 67,
+          FinalTime: 6134
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -4177,13 +5947,20 @@
         Type: Audio,
         Index: 469,
         Size: 8,
-        Timestamp: 6083
+        Timestamp: 6083,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 470,
         Size: 170,
         Timestamp: 6100,
+        ExtraData: {
+          FirstBytes: 2701,
+          FinalTime: 6100
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -4196,19 +5973,30 @@
         Type: Audio,
         Index: 471,
         Size: 8,
-        Timestamp: 6104
+        Timestamp: 6104,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Audio,
         Index: 472,
         Size: 8,
-        Timestamp: 6126
+        Timestamp: 6126,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 473,
         Size: 204,
         Timestamp: 6134,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 33,
+          FinalTime: 6167
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -4221,13 +6009,21 @@
         Type: Audio,
         Index: 474,
         Size: 8,
-        Timestamp: 6147
+        Timestamp: 6147,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 475,
         Size: 669,
         Timestamp: 6167,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 133,
+          FinalTime: 6300
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -4240,19 +6036,30 @@
         Type: Audio,
         Index: 476,
         Size: 8,
-        Timestamp: 6168
+        Timestamp: 6168,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Audio,
         Index: 477,
         Size: 8,
-        Timestamp: 6190
+        Timestamp: 6190,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 478,
         Size: 295,
         Timestamp: 6200,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 34,
+          FinalTime: 6234
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -4265,19 +6072,30 @@
         Type: Audio,
         Index: 479,
         Size: 8,
-        Timestamp: 6211
+        Timestamp: 6211,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Audio,
         Index: 480,
         Size: 8,
-        Timestamp: 6232
+        Timestamp: 6232,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 481,
         Size: 196,
         Timestamp: 6234,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 33,
+          FinalTime: 6267
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -4290,13 +6108,21 @@
         Type: Audio,
         Index: 482,
         Size: 8,
-        Timestamp: 6254
+        Timestamp: 6254,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 483,
         Size: 1056,
         Timestamp: 6267,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 100,
+          FinalTime: 6367
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -4309,19 +6135,30 @@
         Type: Audio,
         Index: 484,
         Size: 8,
-        Timestamp: 6275
+        Timestamp: 6275,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Audio,
         Index: 485,
         Size: 8,
-        Timestamp: 6296
+        Timestamp: 6296,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 486,
         Size: 172,
         Timestamp: 6300,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 34,
+          FinalTime: 6334
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -4334,13 +6171,21 @@
         Type: Audio,
         Index: 487,
         Size: 8,
-        Timestamp: 6318
+        Timestamp: 6318,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 488,
         Size: 971,
         Timestamp: 6334,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 100,
+          FinalTime: 6434
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -4353,19 +6198,30 @@
         Type: Audio,
         Index: 489,
         Size: 8,
-        Timestamp: 6339
+        Timestamp: 6339,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Audio,
         Index: 490,
         Size: 8,
-        Timestamp: 6360
+        Timestamp: 6360,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 491,
         Size: 170,
         Timestamp: 6367,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 33,
+          FinalTime: 6400
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -4378,13 +6234,21 @@
         Type: Audio,
         Index: 492,
         Size: 8,
-        Timestamp: 6382
+        Timestamp: 6382,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 493,
         Size: 634,
         Timestamp: 6400,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 134,
+          FinalTime: 6534
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -4397,19 +6261,30 @@
         Type: Audio,
         Index: 494,
         Size: 8,
-        Timestamp: 6403
+        Timestamp: 6403,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Audio,
         Index: 495,
         Size: 8,
-        Timestamp: 6424
+        Timestamp: 6424,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 496,
         Size: 332,
         Timestamp: 6434,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 33,
+          FinalTime: 6467
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -4422,13 +6297,21 @@
         Type: Audio,
         Index: 497,
         Size: 8,
-        Timestamp: 6446
+        Timestamp: 6446,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 498,
         Size: 226,
         Timestamp: 6467,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 33,
+          FinalTime: 6500
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -4441,19 +6324,30 @@
         Type: Audio,
         Index: 499,
         Size: 8,
-        Timestamp: 6467
+        Timestamp: 6467,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Audio,
         Index: 500,
         Size: 8,
-        Timestamp: 6488
+        Timestamp: 6488,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 501,
         Size: 431,
         Timestamp: 6500,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 134,
+          FinalTime: 6634
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -4466,19 +6360,30 @@
         Type: Audio,
         Index: 502,
         Size: 8,
-        Timestamp: 6510
+        Timestamp: 6510,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Audio,
         Index: 503,
         Size: 8,
-        Timestamp: 6531
+        Timestamp: 6531,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 504,
         Size: 272,
         Timestamp: 6534,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 33,
+          FinalTime: 6567
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -4491,13 +6396,21 @@
         Type: Audio,
         Index: 505,
         Size: 8,
-        Timestamp: 6552
+        Timestamp: 6552,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 506,
         Size: 153,
         Timestamp: 6567,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 33,
+          FinalTime: 6600
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -4510,19 +6423,30 @@
         Type: Audio,
         Index: 507,
         Size: 8,
-        Timestamp: 6574
+        Timestamp: 6574,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Audio,
         Index: 508,
         Size: 8,
-        Timestamp: 6595
+        Timestamp: 6595,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 509,
         Size: 762,
         Timestamp: 6600,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 100,
+          FinalTime: 6700
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -4535,13 +6459,21 @@
         Type: Audio,
         Index: 510,
         Size: 8,
-        Timestamp: 6616
+        Timestamp: 6616,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 511,
         Size: 140,
         Timestamp: 6634,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 33,
+          FinalTime: 6667
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -4554,19 +6486,30 @@
         Type: Audio,
         Index: 512,
         Size: 8,
-        Timestamp: 6638
+        Timestamp: 6638,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Audio,
         Index: 513,
         Size: 8,
-        Timestamp: 6659
+        Timestamp: 6659,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 514,
         Size: 721,
         Timestamp: 6667,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 100,
+          FinalTime: 6767
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -4579,13 +6522,21 @@
         Type: Audio,
         Index: 515,
         Size: 8,
-        Timestamp: 6680
+        Timestamp: 6680,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 516,
         Size: 150,
         Timestamp: 6700,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 34,
+          FinalTime: 6734
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -4598,19 +6549,30 @@
         Type: Audio,
         Index: 517,
         Size: 8,
-        Timestamp: 6702
+        Timestamp: 6702,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Audio,
         Index: 518,
         Size: 8,
-        Timestamp: 6723
+        Timestamp: 6723,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 519,
         Size: 850,
         Timestamp: 6734,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 100,
+          FinalTime: 6834
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -4623,19 +6585,30 @@
         Type: Audio,
         Index: 520,
         Size: 8,
-        Timestamp: 6744
+        Timestamp: 6744,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Audio,
         Index: 521,
         Size: 8,
-        Timestamp: 6766
+        Timestamp: 6766,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 522,
         Size: 188,
         Timestamp: 6767,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 33,
+          FinalTime: 6800
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -4648,13 +6621,21 @@
         Type: Audio,
         Index: 523,
         Size: 8,
-        Timestamp: 6787
+        Timestamp: 6787,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 524,
         Size: 492,
         Timestamp: 6800,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 134,
+          FinalTime: 6934
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -4667,19 +6648,30 @@
         Type: Audio,
         Index: 525,
         Size: 8,
-        Timestamp: 6808
+        Timestamp: 6808,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Audio,
         Index: 526,
         Size: 8,
-        Timestamp: 6830
+        Timestamp: 6830,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 527,
         Size: 351,
         Timestamp: 6834,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 33,
+          FinalTime: 6867
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -4692,13 +6684,21 @@
         Type: Audio,
         Index: 528,
         Size: 8,
-        Timestamp: 6851
+        Timestamp: 6851,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 529,
         Size: 176,
         Timestamp: 6867,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 33,
+          FinalTime: 6900
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -4711,19 +6711,30 @@
         Type: Audio,
         Index: 530,
         Size: 8,
-        Timestamp: 6872
+        Timestamp: 6872,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Audio,
         Index: 531,
         Size: 8,
-        Timestamp: 6894
+        Timestamp: 6894,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 532,
         Size: 724,
         Timestamp: 6900,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 100,
+          FinalTime: 7000
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -4736,13 +6747,21 @@
         Type: Audio,
         Index: 533,
         Size: 8,
-        Timestamp: 6915
+        Timestamp: 6915,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 534,
         Size: 148,
         Timestamp: 6934,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 33,
+          FinalTime: 6967
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -4755,19 +6774,30 @@
         Type: Audio,
         Index: 535,
         Size: 8,
-        Timestamp: 6936
+        Timestamp: 6936,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Audio,
         Index: 536,
         Size: 8,
-        Timestamp: 6958
+        Timestamp: 6958,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 537,
         Size: 606,
         Timestamp: 6967,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 100,
+          FinalTime: 7067
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -4780,13 +6810,21 @@
         Type: Audio,
         Index: 538,
         Size: 8,
-        Timestamp: 6979
+        Timestamp: 6979,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 539,
         Size: 142,
         Timestamp: 7000,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 34,
+          FinalTime: 7034
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -4799,19 +6837,30 @@
         Type: Audio,
         Index: 540,
         Size: 8,
-        Timestamp: 7000
+        Timestamp: 7000,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Audio,
         Index: 541,
         Size: 8,
-        Timestamp: 7022
+        Timestamp: 7022,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 542,
         Size: 742,
         Timestamp: 7034,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 100,
+          FinalTime: 7134
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -4824,19 +6873,30 @@
         Type: Audio,
         Index: 543,
         Size: 8,
-        Timestamp: 7043
+        Timestamp: 7043,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Audio,
         Index: 544,
         Size: 8,
-        Timestamp: 7064
+        Timestamp: 7064,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 545,
         Size: 146,
         Timestamp: 7067,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 33,
+          FinalTime: 7100
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -4849,13 +6909,21 @@
         Type: Audio,
         Index: 546,
         Size: 8,
-        Timestamp: 7086
+        Timestamp: 7086,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 547,
         Size: 827,
         Timestamp: 7100,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 100,
+          FinalTime: 7200
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -4868,19 +6936,30 @@
         Type: Audio,
         Index: 548,
         Size: 8,
-        Timestamp: 7107
+        Timestamp: 7107,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Audio,
         Index: 549,
         Size: 8,
-        Timestamp: 7128
+        Timestamp: 7128,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 550,
         Size: 141,
         Timestamp: 7134,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 33,
+          FinalTime: 7167
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -4893,13 +6972,21 @@
         Type: Audio,
         Index: 551,
         Size: 8,
-        Timestamp: 7150
+        Timestamp: 7150,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 552,
         Size: 406,
         Timestamp: 7167,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 133,
+          FinalTime: 7300
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -4912,19 +6999,30 @@
         Type: Audio,
         Index: 553,
         Size: 8,
-        Timestamp: 7171
+        Timestamp: 7171,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Audio,
         Index: 554,
         Size: 8,
-        Timestamp: 7192
+        Timestamp: 7192,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 555,
         Size: 258,
         Timestamp: 7200,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 34,
+          FinalTime: 7234
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -4937,13 +7035,21 @@
         Type: Audio,
         Index: 556,
         Size: 8,
-        Timestamp: 7214
+        Timestamp: 7214,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 557,
         Size: 149,
         Timestamp: 7234,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 33,
+          FinalTime: 7267
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -4956,19 +7062,30 @@
         Type: Audio,
         Index: 558,
         Size: 8,
-        Timestamp: 7235
+        Timestamp: 7235,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Audio,
         Index: 559,
         Size: 8,
-        Timestamp: 7256
+        Timestamp: 7256,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 560,
         Size: 812,
         Timestamp: 7267,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 100,
+          FinalTime: 7367
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -4981,19 +7098,30 @@
         Type: Audio,
         Index: 561,
         Size: 8,
-        Timestamp: 7278
+        Timestamp: 7278,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Audio,
         Index: 562,
         Size: 8,
-        Timestamp: 7299
+        Timestamp: 7299,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 563,
         Size: 152,
         Timestamp: 7300,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 34,
+          FinalTime: 7334
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -5006,13 +7134,21 @@
         Type: Audio,
         Index: 564,
         Size: 8,
-        Timestamp: 7320
+        Timestamp: 7320,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 565,
         Size: 843,
         Timestamp: 7334,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 100,
+          FinalTime: 7434
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -5025,19 +7161,30 @@
         Type: Audio,
         Index: 566,
         Size: 8,
-        Timestamp: 7342
+        Timestamp: 7342,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Audio,
         Index: 567,
         Size: 8,
-        Timestamp: 7363
+        Timestamp: 7363,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 568,
         Size: 167,
         Timestamp: 7367,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 33,
+          FinalTime: 7400
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -5050,13 +7197,21 @@
         Type: Audio,
         Index: 569,
         Size: 8,
-        Timestamp: 7384
+        Timestamp: 7384,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 570,
         Size: 1076,
         Timestamp: 7400,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 100,
+          FinalTime: 7500
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -5069,19 +7224,30 @@
         Type: Audio,
         Index: 571,
         Size: 8,
-        Timestamp: 7406
+        Timestamp: 7406,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Audio,
         Index: 572,
         Size: 8,
-        Timestamp: 7427
+        Timestamp: 7427,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 573,
         Size: 145,
         Timestamp: 7434,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 33,
+          FinalTime: 7467
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -5094,13 +7260,21 @@
         Type: Audio,
         Index: 574,
         Size: 8,
-        Timestamp: 7448
+        Timestamp: 7448,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 575,
         Size: 507,
         Timestamp: 7467,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 133,
+          FinalTime: 7600
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -5113,19 +7287,30 @@
         Type: Audio,
         Index: 576,
         Size: 8,
-        Timestamp: 7470
+        Timestamp: 7470,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Audio,
         Index: 577,
         Size: 8,
-        Timestamp: 7491
+        Timestamp: 7491,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 578,
         Size: 350,
         Timestamp: 7500,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 34,
+          FinalTime: 7534
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -5138,13 +7323,21 @@
         Type: Audio,
         Index: 579,
         Size: 8,
-        Timestamp: 7512
+        Timestamp: 7512,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 580,
         Size: 193,
         Timestamp: 7534,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 33,
+          FinalTime: 7567
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -5157,19 +7350,30 @@
         Type: Audio,
         Index: 581,
         Size: 8,
-        Timestamp: 7534
+        Timestamp: 7534,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Audio,
         Index: 582,
         Size: 8,
-        Timestamp: 7555
+        Timestamp: 7555,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 583,
         Size: 674,
         Timestamp: 7567,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 133,
+          FinalTime: 7700
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -5182,19 +7386,30 @@
         Type: Audio,
         Index: 584,
         Size: 8,
-        Timestamp: 7576
+        Timestamp: 7576,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Audio,
         Index: 585,
         Size: 8,
-        Timestamp: 7598
+        Timestamp: 7598,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 586,
         Size: 336,
         Timestamp: 7600,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 34,
+          FinalTime: 7634
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -5207,13 +7422,21 @@
         Type: Audio,
         Index: 587,
         Size: 8,
-        Timestamp: 7619
+        Timestamp: 7619,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 588,
         Size: 260,
         Timestamp: 7634,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 33,
+          FinalTime: 7667
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -5226,19 +7449,30 @@
         Type: Audio,
         Index: 589,
         Size: 8,
-        Timestamp: 7640
+        Timestamp: 7640,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Audio,
         Index: 590,
         Size: 8,
-        Timestamp: 7662
+        Timestamp: 7662,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 591,
         Size: 756,
         Timestamp: 7667,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 133,
+          FinalTime: 7800
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -5251,13 +7485,21 @@
         Type: Audio,
         Index: 592,
         Size: 8,
-        Timestamp: 7683
+        Timestamp: 7683,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 593,
         Size: 368,
         Timestamp: 7700,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 34,
+          FinalTime: 7734
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -5270,19 +7512,30 @@
         Type: Audio,
         Index: 594,
         Size: 8,
-        Timestamp: 7704
+        Timestamp: 7704,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Audio,
         Index: 595,
         Size: 8,
-        Timestamp: 7726
+        Timestamp: 7726,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 596,
         Size: 230,
         Timestamp: 7734,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 33,
+          FinalTime: 7767
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -5295,13 +7548,21 @@
         Type: Audio,
         Index: 597,
         Size: 8,
-        Timestamp: 7747
+        Timestamp: 7747,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 598,
         Size: 892,
         Timestamp: 7767,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 100,
+          FinalTime: 7867
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -5314,19 +7575,30 @@
         Type: Audio,
         Index: 599,
         Size: 8,
-        Timestamp: 7768
+        Timestamp: 7768,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Audio,
         Index: 600,
         Size: 8,
-        Timestamp: 7790
+        Timestamp: 7790,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 601,
         Size: 155,
         Timestamp: 7800,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 34,
+          FinalTime: 7834
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -5339,19 +7611,30 @@
         Type: Audio,
         Index: 602,
         Size: 8,
-        Timestamp: 7811
+        Timestamp: 7811,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Audio,
         Index: 603,
         Size: 8,
-        Timestamp: 7832
+        Timestamp: 7832,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 604,
         Size: 728,
         Timestamp: 7834,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 133,
+          FinalTime: 7967
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -5364,13 +7647,21 @@
         Type: Audio,
         Index: 605,
         Size: 8,
-        Timestamp: 7854
+        Timestamp: 7854,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 606,
         Size: 209,
         Timestamp: 7867,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 33,
+          FinalTime: 7900
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -5383,19 +7674,30 @@
         Type: Audio,
         Index: 607,
         Size: 8,
-        Timestamp: 7875
+        Timestamp: 7875,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Audio,
         Index: 608,
         Size: 8,
-        Timestamp: 7896
+        Timestamp: 7896,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 609,
         Size: 129,
         Timestamp: 7900,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 34,
+          FinalTime: 7934
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -5408,13 +7710,21 @@
         Type: Audio,
         Index: 610,
         Size: 8,
-        Timestamp: 7918
+        Timestamp: 7918,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 611,
         Size: 417,
         Timestamp: 7934,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 133,
+          FinalTime: 8067
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -5427,19 +7737,30 @@
         Type: Audio,
         Index: 612,
         Size: 8,
-        Timestamp: 7939
+        Timestamp: 7939,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Audio,
         Index: 613,
         Size: 8,
-        Timestamp: 7960
+        Timestamp: 7960,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 614,
         Size: 186,
         Timestamp: 7967,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 33,
+          FinalTime: 8000
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -5452,13 +7773,21 @@
         Type: Audio,
         Index: 615,
         Size: 8,
-        Timestamp: 7982
+        Timestamp: 7982,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 616,
         Size: 164,
         Timestamp: 8000,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 34,
+          FinalTime: 8034
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -5471,19 +7800,30 @@
         Type: Audio,
         Index: 617,
         Size: 8,
-        Timestamp: 8003
+        Timestamp: 8003,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Audio,
         Index: 618,
         Size: 8,
-        Timestamp: 8024
+        Timestamp: 8024,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 619,
         Size: 244,
         Timestamp: 8034,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 133,
+          FinalTime: 8167
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -5496,13 +7836,21 @@
         Type: Audio,
         Index: 620,
         Size: 8,
-        Timestamp: 8046
+        Timestamp: 8046,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 621,
         Size: 148,
         Timestamp: 8067,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 33,
+          FinalTime: 8100
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -5515,19 +7863,30 @@
         Type: Audio,
         Index: 622,
         Size: 8,
-        Timestamp: 8067
+        Timestamp: 8067,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Audio,
         Index: 623,
         Size: 8,
-        Timestamp: 8088
+        Timestamp: 8088,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 624,
         Size: 138,
         Timestamp: 8100,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 34,
+          FinalTime: 8134
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -5540,19 +7899,30 @@
         Type: Audio,
         Index: 625,
         Size: 8,
-        Timestamp: 8110
+        Timestamp: 8110,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Audio,
         Index: 626,
         Size: 8,
-        Timestamp: 8131
+        Timestamp: 8131,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 627,
         Size: 449,
         Timestamp: 8134,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 100,
+          FinalTime: 8234
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -5565,13 +7935,21 @@
         Type: Audio,
         Index: 628,
         Size: 8,
-        Timestamp: 8152
+        Timestamp: 8152,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 629,
         Size: 104,
         Timestamp: 8167,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 33,
+          FinalTime: 8200
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -5584,19 +7962,30 @@
         Type: Audio,
         Index: 630,
         Size: 8,
-        Timestamp: 8174
+        Timestamp: 8174,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Audio,
         Index: 631,
         Size: 8,
-        Timestamp: 8195
+        Timestamp: 8195,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 632,
         Size: 293,
         Timestamp: 8200,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 100,
+          FinalTime: 8300
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -5609,13 +7998,21 @@
         Type: Audio,
         Index: 633,
         Size: 8,
-        Timestamp: 8216
+        Timestamp: 8216,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 634,
         Size: 124,
         Timestamp: 8234,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 33,
+          FinalTime: 8267
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -5628,19 +8025,30 @@
         Type: Audio,
         Index: 635,
         Size: 8,
-        Timestamp: 8238
+        Timestamp: 8238,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Audio,
         Index: 636,
         Size: 8,
-        Timestamp: 8259
+        Timestamp: 8259,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 637,
         Size: 446,
         Timestamp: 8267,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 100,
+          FinalTime: 8367
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -5653,13 +8061,21 @@
         Type: Audio,
         Index: 638,
         Size: 8,
-        Timestamp: 8280
+        Timestamp: 8280,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 639,
         Size: 105,
         Timestamp: 8300,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 34,
+          FinalTime: 8334
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -5672,13 +8088,19 @@
         Type: Audio,
         Index: 640,
         Size: 8,
-        Timestamp: 8302
+        Timestamp: 8302,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Audio,
         Index: 641,
         Size: 8,
-        Timestamp: 8323
+        Timestamp: 8323,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       }
     ],
     Name: PipelineDataAction
@@ -5691,6 +8113,11 @@
         Index: 642,
         Size: 3289,
         Timestamp: 8334,
+        ExtraData: {
+          FirstBytes: 1701,
+          CompositionTime: 66,
+          FinalTime: 8400
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -5713,19 +8140,30 @@
         Type: Audio,
         Index: 643,
         Size: 8,
-        Timestamp: 8344
+        Timestamp: 8344,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Audio,
         Index: 644,
         Size: 8,
-        Timestamp: 8366
+        Timestamp: 8366,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 645,
         Size: 447,
         Timestamp: 8367,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 100,
+          FinalTime: 8467
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -5738,13 +8176,21 @@
         Type: Audio,
         Index: 646,
         Size: 8,
-        Timestamp: 8387
+        Timestamp: 8387,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 647,
         Size: 116,
         Timestamp: 8400,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 34,
+          FinalTime: 8434
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -5757,19 +8203,30 @@
         Type: Audio,
         Index: 648,
         Size: 8,
-        Timestamp: 8408
+        Timestamp: 8408,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Audio,
         Index: 649,
         Size: 8,
-        Timestamp: 8430
+        Timestamp: 8430,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 650,
         Size: 590,
         Timestamp: 8434,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 100,
+          FinalTime: 8534
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -5782,13 +8239,21 @@
         Type: Audio,
         Index: 651,
         Size: 8,
-        Timestamp: 8451
+        Timestamp: 8451,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 652,
         Size: 89,
         Timestamp: 8467,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 33,
+          FinalTime: 8500
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -5801,19 +8266,30 @@
         Type: Audio,
         Index: 653,
         Size: 8,
-        Timestamp: 8472
+        Timestamp: 8472,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Audio,
         Index: 654,
         Size: 8,
-        Timestamp: 8494
+        Timestamp: 8494,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 655,
         Size: 472,
         Timestamp: 8500,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 100,
+          FinalTime: 8600
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -5826,13 +8302,21 @@
         Type: Audio,
         Index: 656,
         Size: 8,
-        Timestamp: 8515
+        Timestamp: 8515,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 657,
         Size: 132,
         Timestamp: 8534,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 33,
+          FinalTime: 8567
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -5845,19 +8329,30 @@
         Type: Audio,
         Index: 658,
         Size: 8,
-        Timestamp: 8536
+        Timestamp: 8536,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Audio,
         Index: 659,
         Size: 8,
-        Timestamp: 8558
+        Timestamp: 8558,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 660,
         Size: 908,
         Timestamp: 8567,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 100,
+          FinalTime: 8667
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -5870,13 +8365,21 @@
         Type: Audio,
         Index: 661,
         Size: 8,
-        Timestamp: 8579
+        Timestamp: 8579,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 662,
         Size: 130,
         Timestamp: 8600,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 34,
+          FinalTime: 8634
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -5889,19 +8392,30 @@
         Type: Audio,
         Index: 663,
         Size: 8,
-        Timestamp: 8600
+        Timestamp: 8600,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Audio,
         Index: 664,
         Size: 8,
-        Timestamp: 8622
+        Timestamp: 8622,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 665,
         Size: 718,
         Timestamp: 8634,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 100,
+          FinalTime: 8734
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -5914,19 +8428,30 @@
         Type: Audio,
         Index: 666,
         Size: 8,
-        Timestamp: 8643
+        Timestamp: 8643,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Audio,
         Index: 667,
         Size: 8,
-        Timestamp: 8664
+        Timestamp: 8664,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 668,
         Size: 148,
         Timestamp: 8667,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 33,
+          FinalTime: 8700
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -5939,13 +8464,21 @@
         Type: Audio,
         Index: 669,
         Size: 8,
-        Timestamp: 8686
+        Timestamp: 8686,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 670,
         Size: 717,
         Timestamp: 8700,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 100,
+          FinalTime: 8800
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -5958,19 +8491,30 @@
         Type: Audio,
         Index: 671,
         Size: 8,
-        Timestamp: 8707
+        Timestamp: 8707,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Audio,
         Index: 672,
         Size: 8,
-        Timestamp: 8728
+        Timestamp: 8728,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 673,
         Size: 155,
         Timestamp: 8734,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 33,
+          FinalTime: 8767
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -5983,13 +8527,21 @@
         Type: Audio,
         Index: 674,
         Size: 8,
-        Timestamp: 8750
+        Timestamp: 8750,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 675,
         Size: 732,
         Timestamp: 8767,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 133,
+          FinalTime: 8900
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -6002,19 +8554,30 @@
         Type: Audio,
         Index: 676,
         Size: 8,
-        Timestamp: 8771
+        Timestamp: 8771,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Audio,
         Index: 677,
         Size: 8,
-        Timestamp: 8792
+        Timestamp: 8792,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 678,
         Size: 249,
         Timestamp: 8800,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 34,
+          FinalTime: 8834
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -6027,13 +8590,21 @@
         Type: Audio,
         Index: 679,
         Size: 8,
-        Timestamp: 8814
+        Timestamp: 8814,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 680,
         Size: 151,
         Timestamp: 8834,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 33,
+          FinalTime: 8867
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -6046,19 +8617,30 @@
         Type: Audio,
         Index: 681,
         Size: 8,
-        Timestamp: 8835
+        Timestamp: 8835,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Audio,
         Index: 682,
         Size: 8,
-        Timestamp: 8856
+        Timestamp: 8856,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 683,
         Size: 506,
         Timestamp: 8867,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 133,
+          FinalTime: 9000
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -6071,19 +8653,30 @@
         Type: Audio,
         Index: 684,
         Size: 8,
-        Timestamp: 8878
+        Timestamp: 8878,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Audio,
         Index: 685,
         Size: 8,
-        Timestamp: 8899
+        Timestamp: 8899,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 686,
         Size: 279,
         Timestamp: 8900,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 34,
+          FinalTime: 8934
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -6096,13 +8689,21 @@
         Type: Audio,
         Index: 687,
         Size: 8,
-        Timestamp: 8920
+        Timestamp: 8920,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 688,
         Size: 169,
         Timestamp: 8934,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 33,
+          FinalTime: 8967
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -6115,19 +8716,30 @@
         Type: Audio,
         Index: 689,
         Size: 8,
-        Timestamp: 8942
+        Timestamp: 8942,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Audio,
         Index: 690,
         Size: 8,
-        Timestamp: 8963
+        Timestamp: 8963,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 691,
         Size: 549,
         Timestamp: 8967,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 133,
+          FinalTime: 9100
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -6140,13 +8752,21 @@
         Type: Audio,
         Index: 692,
         Size: 8,
-        Timestamp: 8984
+        Timestamp: 8984,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 693,
         Size: 246,
         Timestamp: 9000,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 34,
+          FinalTime: 9034
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -6159,19 +8779,30 @@
         Type: Audio,
         Index: 694,
         Size: 8,
-        Timestamp: 9006
+        Timestamp: 9006,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Audio,
         Index: 695,
         Size: 8,
-        Timestamp: 9027
+        Timestamp: 9027,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 696,
         Size: 177,
         Timestamp: 9034,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 33,
+          FinalTime: 9067
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -6184,13 +8815,21 @@
         Type: Audio,
         Index: 697,
         Size: 8,
-        Timestamp: 9048
+        Timestamp: 9048,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 698,
         Size: 895,
         Timestamp: 9067,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 100,
+          FinalTime: 9167
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -6203,19 +8842,30 @@
         Type: Audio,
         Index: 699,
         Size: 8,
-        Timestamp: 9070
+        Timestamp: 9070,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Audio,
         Index: 700,
         Size: 8,
-        Timestamp: 9091
+        Timestamp: 9091,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 701,
         Size: 165,
         Timestamp: 9100,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 34,
+          FinalTime: 9134
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -6228,13 +8878,21 @@
         Type: Audio,
         Index: 702,
         Size: 8,
-        Timestamp: 9112
+        Timestamp: 9112,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 703,
         Size: 782,
         Timestamp: 9134,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 133,
+          FinalTime: 9267
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -6247,19 +8905,30 @@
         Type: Audio,
         Index: 704,
         Size: 8,
-        Timestamp: 9134
+        Timestamp: 9134,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Audio,
         Index: 705,
         Size: 8,
-        Timestamp: 9155
+        Timestamp: 9155,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 706,
         Size: 273,
         Timestamp: 9167,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 33,
+          FinalTime: 9200
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -6272,19 +8941,30 @@
         Type: Audio,
         Index: 707,
         Size: 8,
-        Timestamp: 9176
+        Timestamp: 9176,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Audio,
         Index: 708,
         Size: 8,
-        Timestamp: 9198
+        Timestamp: 9198,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 709,
         Size: 181,
         Timestamp: 9200,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 34,
+          FinalTime: 9234
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -6297,13 +8977,21 @@
         Type: Audio,
         Index: 710,
         Size: 8,
-        Timestamp: 9219
+        Timestamp: 9219,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 711,
         Size: 627,
         Timestamp: 9234,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 133,
+          FinalTime: 9367
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -6316,19 +9004,30 @@
         Type: Audio,
         Index: 712,
         Size: 8,
-        Timestamp: 9240
+        Timestamp: 9240,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Audio,
         Index: 713,
         Size: 8,
-        Timestamp: 9262
+        Timestamp: 9262,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 714,
         Size: 236,
         Timestamp: 9267,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 33,
+          FinalTime: 9300
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -6341,13 +9040,21 @@
         Type: Audio,
         Index: 715,
         Size: 8,
-        Timestamp: 9283
+        Timestamp: 9283,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 716,
         Size: 229,
         Timestamp: 9300,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 34,
+          FinalTime: 9334
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -6360,19 +9067,30 @@
         Type: Audio,
         Index: 717,
         Size: 8,
-        Timestamp: 9304
+        Timestamp: 9304,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Audio,
         Index: 718,
         Size: 8,
-        Timestamp: 9326
+        Timestamp: 9326,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 719,
         Size: 573,
         Timestamp: 9334,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 133,
+          FinalTime: 9467
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -6385,13 +9103,21 @@
         Type: Audio,
         Index: 720,
         Size: 8,
-        Timestamp: 9347
+        Timestamp: 9347,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 721,
         Size: 259,
         Timestamp: 9367,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 33,
+          FinalTime: 9400
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -6404,19 +9130,30 @@
         Type: Audio,
         Index: 722,
         Size: 8,
-        Timestamp: 9368
+        Timestamp: 9368,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Audio,
         Index: 723,
         Size: 8,
-        Timestamp: 9390
+        Timestamp: 9390,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 724,
         Size: 166,
         Timestamp: 9400,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 34,
+          FinalTime: 9434
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -6429,19 +9166,30 @@
         Type: Audio,
         Index: 725,
         Size: 8,
-        Timestamp: 9411
+        Timestamp: 9411,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Audio,
         Index: 726,
         Size: 8,
-        Timestamp: 9432
+        Timestamp: 9432,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 727,
         Size: 873,
         Timestamp: 9434,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 100,
+          FinalTime: 9534
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -6454,13 +9202,21 @@
         Type: Audio,
         Index: 728,
         Size: 8,
-        Timestamp: 9454
+        Timestamp: 9454,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 729,
         Size: 174,
         Timestamp: 9467,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 33,
+          FinalTime: 9500
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -6473,19 +9229,30 @@
         Type: Audio,
         Index: 730,
         Size: 8,
-        Timestamp: 9475
+        Timestamp: 9475,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Audio,
         Index: 731,
         Size: 8,
-        Timestamp: 9496
+        Timestamp: 9496,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 732,
         Size: 837,
         Timestamp: 9500,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 100,
+          FinalTime: 9600
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -6498,13 +9265,21 @@
         Type: Audio,
         Index: 733,
         Size: 8,
-        Timestamp: 9518
+        Timestamp: 9518,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 734,
         Size: 187,
         Timestamp: 9534,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 33,
+          FinalTime: 9567
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -6517,19 +9292,30 @@
         Type: Audio,
         Index: 735,
         Size: 8,
-        Timestamp: 9539
+        Timestamp: 9539,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Audio,
         Index: 736,
         Size: 8,
-        Timestamp: 9560
+        Timestamp: 9560,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 737,
         Size: 825,
         Timestamp: 9567,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 100,
+          FinalTime: 9667
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -6542,13 +9328,21 @@
         Type: Audio,
         Index: 738,
         Size: 8,
-        Timestamp: 9582
+        Timestamp: 9582,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 739,
         Size: 199,
         Timestamp: 9600,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 34,
+          FinalTime: 9634
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -6561,19 +9355,30 @@
         Type: Audio,
         Index: 740,
         Size: 8,
-        Timestamp: 9603
+        Timestamp: 9603,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Audio,
         Index: 741,
         Size: 8,
-        Timestamp: 9624
+        Timestamp: 9624,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 742,
         Size: 502,
         Timestamp: 9634,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 133,
+          FinalTime: 9767
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -6586,13 +9391,21 @@
         Type: Audio,
         Index: 743,
         Size: 8,
-        Timestamp: 9646
+        Timestamp: 9646,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 744,
         Size: 261,
         Timestamp: 9667,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 33,
+          FinalTime: 9700
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -6605,19 +9418,30 @@
         Type: Audio,
         Index: 745,
         Size: 8,
-        Timestamp: 9667
+        Timestamp: 9667,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Audio,
         Index: 746,
         Size: 8,
-        Timestamp: 9688
+        Timestamp: 9688,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 747,
         Size: 189,
         Timestamp: 9700,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 34,
+          FinalTime: 9734
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -6630,19 +9454,30 @@
         Type: Audio,
         Index: 748,
         Size: 8,
-        Timestamp: 9710
+        Timestamp: 9710,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Audio,
         Index: 749,
         Size: 8,
-        Timestamp: 9731
+        Timestamp: 9731,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 750,
         Size: 451,
         Timestamp: 9734,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 133,
+          FinalTime: 9867
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -6655,13 +9490,21 @@
         Type: Audio,
         Index: 751,
         Size: 8,
-        Timestamp: 9752
+        Timestamp: 9752,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 752,
         Size: 306,
         Timestamp: 9767,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 33,
+          FinalTime: 9800
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -6674,19 +9517,30 @@
         Type: Audio,
         Index: 753,
         Size: 8,
-        Timestamp: 9774
+        Timestamp: 9774,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Audio,
         Index: 754,
         Size: 8,
-        Timestamp: 9795
+        Timestamp: 9795,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 755,
         Size: 199,
         Timestamp: 9800,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 34,
+          FinalTime: 9834
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -6699,13 +9553,21 @@
         Type: Audio,
         Index: 756,
         Size: 8,
-        Timestamp: 9816
+        Timestamp: 9816,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 757,
         Size: 751,
         Timestamp: 9834,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 100,
+          FinalTime: 9934
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -6718,19 +9580,30 @@
         Type: Audio,
         Index: 758,
         Size: 8,
-        Timestamp: 9838
+        Timestamp: 9838,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Audio,
         Index: 759,
         Size: 8,
-        Timestamp: 9859
+        Timestamp: 9859,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 760,
         Size: 180,
         Timestamp: 9867,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 33,
+          FinalTime: 9900
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -6743,13 +9616,21 @@
         Type: Audio,
         Index: 761,
         Size: 8,
-        Timestamp: 9880
+        Timestamp: 9880,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 762,
         Size: 610,
         Timestamp: 9900,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 100,
+          FinalTime: 10000
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -6762,19 +9643,30 @@
         Type: Audio,
         Index: 763,
         Size: 8,
-        Timestamp: 9902
+        Timestamp: 9902,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Audio,
         Index: 764,
         Size: 8,
-        Timestamp: 9923
+        Timestamp: 9923,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 765,
         Size: 164,
         Timestamp: 9934,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 33,
+          FinalTime: 9967
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -6787,19 +9679,30 @@
         Type: Audio,
         Index: 766,
         Size: 8,
-        Timestamp: 9944
+        Timestamp: 9944,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Audio,
         Index: 767,
         Size: 8,
-        Timestamp: 9966
+        Timestamp: 9966,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 768,
         Size: 712,
         Timestamp: 9967,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 100,
+          FinalTime: 10067
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -6812,13 +9715,21 @@
         Type: Audio,
         Index: 769,
         Size: 8,
-        Timestamp: 9987
+        Timestamp: 9987,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 770,
         Size: 204,
         Timestamp: 10000,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 34,
+          FinalTime: 10034
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -6831,19 +9742,30 @@
         Type: Audio,
         Index: 771,
         Size: 8,
-        Timestamp: 10008
+        Timestamp: 10008,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Audio,
         Index: 772,
         Size: 8,
-        Timestamp: 10030
+        Timestamp: 10030,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 773,
         Size: 695,
         Timestamp: 10034,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 100,
+          FinalTime: 10134
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -6856,13 +9778,21 @@
         Type: Audio,
         Index: 774,
         Size: 8,
-        Timestamp: 10051
+        Timestamp: 10051,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 775,
         Size: 165,
         Timestamp: 10067,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 33,
+          FinalTime: 10100
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -6875,19 +9805,30 @@
         Type: Audio,
         Index: 776,
         Size: 8,
-        Timestamp: 10072
+        Timestamp: 10072,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Audio,
         Index: 777,
         Size: 8,
-        Timestamp: 10094
+        Timestamp: 10094,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 778,
         Size: 794,
         Timestamp: 10100,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 100,
+          FinalTime: 10200
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -6900,13 +9841,21 @@
         Type: Audio,
         Index: 779,
         Size: 8,
-        Timestamp: 10115
+        Timestamp: 10115,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 780,
         Size: 191,
         Timestamp: 10134,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 33,
+          FinalTime: 10167
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -6919,19 +9868,30 @@
         Type: Audio,
         Index: 781,
         Size: 8,
-        Timestamp: 10136
+        Timestamp: 10136,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Audio,
         Index: 782,
         Size: 8,
-        Timestamp: 10158
+        Timestamp: 10158,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 783,
         Size: 900,
         Timestamp: 10167,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 100,
+          FinalTime: 10267
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -6944,13 +9904,21 @@
         Type: Audio,
         Index: 784,
         Size: 8,
-        Timestamp: 10179
+        Timestamp: 10179,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 785,
         Size: 162,
         Timestamp: 10200,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 34,
+          FinalTime: 10234
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -6963,19 +9931,30 @@
         Type: Audio,
         Index: 786,
         Size: 8,
-        Timestamp: 10200
+        Timestamp: 10200,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Audio,
         Index: 787,
         Size: 8,
-        Timestamp: 10222
+        Timestamp: 10222,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 788,
         Size: 847,
         Timestamp: 10234,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 100,
+          FinalTime: 10334
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -6988,19 +9967,30 @@
         Type: Audio,
         Index: 789,
         Size: 8,
-        Timestamp: 10243
+        Timestamp: 10243,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Audio,
         Index: 790,
         Size: 8,
-        Timestamp: 10264
+        Timestamp: 10264,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 791,
         Size: 184,
         Timestamp: 10267,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 33,
+          FinalTime: 10300
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -7013,13 +10003,21 @@
         Type: Audio,
         Index: 792,
         Size: 8,
-        Timestamp: 10286
+        Timestamp: 10286,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 793,
         Size: 476,
         Timestamp: 10300,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 134,
+          FinalTime: 10434
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -7032,19 +10030,30 @@
         Type: Audio,
         Index: 794,
         Size: 8,
-        Timestamp: 10307
+        Timestamp: 10307,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Audio,
         Index: 795,
         Size: 8,
-        Timestamp: 10328
+        Timestamp: 10328,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       },
       {
         Type: Video,
         Index: 796,
         Size: 270,
         Timestamp: 10334,
+        ExtraData: {
+          FirstBytes: 2701,
+          CompositionTime: 33,
+          FinalTime: 10367
+        },
         Nalus: [
           {
             StartPosition: 9,
@@ -7057,7 +10066,10 @@
         Type: Audio,
         Index: 797,
         Size: 8,
-        Timestamp: 10350
+        Timestamp: 10350,
+        ExtraData: {
+          FirstBytes: AF01
+        }
       }
     ],
     Name: PipelineDataAction
@@ -7068,7 +10080,11 @@
       Flag: Keyframe, End,
       Index: 798,
       Size: 5,
-      Timestamp: 10334
+      Timestamp: 10334,
+      ExtraData: {
+        FirstBytes: 1702,
+        FinalTime: 10334
+      }
     },
     Name: PipelineEndAction
   }
