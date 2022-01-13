@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using BililiveRecorder.ToolBox.ProcessingRules;
 using Spectre.Console;
@@ -7,6 +8,8 @@ namespace BililiveRecorder.ToolBox.Tool.Analyze
     public class AnalyzeResponse : IResponseData
     {
         public string InputPath { get; set; } = string.Empty;
+
+        public TimeSpan TimeUsed { get; set; }
 
         public bool NeedFix { get; set; }
         public bool Unrepairable { get; set; }

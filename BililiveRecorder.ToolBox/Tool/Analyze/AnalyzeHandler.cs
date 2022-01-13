@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
 using System.IO.Pipelines;
@@ -86,6 +87,8 @@ namespace BililiveRecorder.ToolBox.Tool.Analyze
                 var pipeline = new ProcessingPipelineBuilder(new ServiceCollection().BuildServiceProvider()).Add(statsRule).AddDefault().AddRemoveFillerData().Build();
 
                 // Run
+                var stopWatch = Stopwatch.StartNew();
+
                 await Task.Run(async () =>
                 {
                     var count = 0;
@@ -116,6 +119,9 @@ namespace BililiveRecorder.ToolBox.Tool.Analyze
                     }
                 }).ConfigureAwait(false);
 
+                stopWatch.Stop();
+
+
                 if (cancellationToken.IsCancellationRequested)
                     return new CommandResponse<AnalyzeResponse> { Status = ResponseStatus.Cancelled };
 
@@ -131,6 +137,8 @@ namespace BililiveRecorder.ToolBox.Tool.Analyze
                     return new AnalyzeResponse
                     {
                         InputPath = inputPath,
+
+                        TimeUsed = stopWatch.Elapsed,
 
                         NeedFix = tagWriter.OutputFileCount != 1 || countableComments.Any(),
                         Unrepairable = countableComments.Any(x => x.T == CommentType.Unrepairable),

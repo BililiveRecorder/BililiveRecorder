@@ -9,6 +9,8 @@ namespace BililiveRecorder.ToolBox.Tool.Fix
     {
         public string InputPath { get; set; } = string.Empty;
 
+        public TimeSpan TimeUsed { get; set; }
+
         public string[] OutputPaths { get; set; } = Array.Empty<string>();
 
         public bool NeedFix { get; set; }

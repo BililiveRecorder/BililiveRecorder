@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
 using System.IO.Pipelines;
@@ -101,6 +102,8 @@ namespace BililiveRecorder.ToolBox.Tool.Fix
                 var pipeline = new ProcessingPipelineBuilder(new ServiceCollection().BuildServiceProvider()).Add(statsRule).AddDefault().AddRemoveFillerData().Build();
 
                 // Run
+                var stopWatch = Stopwatch.StartNew();
+
                 await Task.Run(async () =>
                 {
                     var count = 0;
@@ -130,6 +133,9 @@ namespace BililiveRecorder.ToolBox.Tool.Fix
                             await progress((double)flvFileStream.Position / flvFileStream.Length);
                     }
                 }).ConfigureAwait(false);
+
+                stopWatch.Stop();
+
 
                 if (cancellationToken.IsCancellationRequested)
                     return new CommandResponse<FixResponse> { Status = ResponseStatus.Cancelled };
@@ -176,6 +182,9 @@ namespace BililiveRecorder.ToolBox.Tool.Fix
                     return new FixResponse
                     {
                         InputPath = inputPath,
+
+                        TimeUsed = stopWatch.Elapsed,
+
                         OutputPaths = outputPaths.ToArray(),
                         OutputFileCount = outputPaths.Count,
 
