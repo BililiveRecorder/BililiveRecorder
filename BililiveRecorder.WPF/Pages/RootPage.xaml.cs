@@ -189,7 +189,7 @@ namespace BililiveRecorder.WPF.Pages
                         error = WorkDirectorySelectorDialog.WorkDirectorySelectorDialogError.PathDoesNotExist;
                         continue;
                     }
-                    else if (!Directory.EnumerateFiles(path).Any())
+                    else if (!Directory.EnumerateFiles(path).Any(x => Path.GetFileName(x) != "desktop.ini"))
                     {
                         // 可用的空文件夹
                     }
