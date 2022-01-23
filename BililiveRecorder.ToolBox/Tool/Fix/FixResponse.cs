@@ -52,7 +52,7 @@ namespace BililiveRecorder.ToolBox.Tool.Fix
                             .AddColumns("Output");
 
             for (var i = 0; i < this.OutputPaths.Length; i++)
-                table_output.AddRow(this.OutputPaths[i]);
+                table_output.AddRow(this.OutputPaths[i].EscapeMarkup());
 
             AnsiConsole.Render(table_output);
 
