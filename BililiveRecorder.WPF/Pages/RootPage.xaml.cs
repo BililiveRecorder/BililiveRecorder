@@ -93,6 +93,21 @@ namespace BililiveRecorder.WPF.Pages
         private async void RootPage_Loaded(object sender, RoutedEventArgs e)
 #pragma warning restore VSTHRD100 // Avoid async void methods
         {
+            if (CommandArgumentFirstRun)
+            {
+                _ = Task.Run(() =>
+                  {
+                      MessageBox.Show(@"B站录播姬 安装成功！
+之后再运行请使用桌面或开始菜单里的快捷方式。
+如需卸载，可在系统设置里操作。
+
+BililiveRecorder Installed!
+Please use the shortcut on the desktop or
+in the start menu to launch.
+You can uninstall me in system settings.", "安装成功 Installed", MessageBoxButton.OK, MessageBoxImage.Information);
+                  });
+            }
+
             // 上次选择的路径信息
             var pathInfo = this.workDirectoryLoader.Read();
             // 第一次尝试从命令行和配置文件自动选择路径
