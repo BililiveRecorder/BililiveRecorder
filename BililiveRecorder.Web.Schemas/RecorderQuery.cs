@@ -21,6 +21,8 @@ namespace BililiveRecorder.Web.Schemas
 
         private void SetupFields()
         {
+            this.Field<RecorderVersionType>("version", resolve: context => RecorderVersion.Instance);
+
             this.Field<GlobalConfigType>("config", resolve: context => this.recorder.Config.Global);
 
             this.Field<DefaultConfigType>("defaultConfig", resolve: context => DefaultConfig.Instance);

@@ -30,6 +30,15 @@ namespace BililiveRecorder.Web.Schemas
                     var roomid = context.GetArgument<int>("roomId");
                     var enabled = context.GetArgument<bool>("autoRecord");
 
+                    if (roomid <= 0)
+                    {
+                        context.Errors.Add(new ExecutionError("Roomid out of range")
+                        {
+                            Code = "BREC_ROOMID_OUT_OF_RANGE"
+                        });
+                        return null;
+                    }
+
                     var room = this.recorder.Rooms.FirstOrDefault(x => x.RoomConfig.RoomId == roomid || x.ShortId == roomid);
 
                     if (room is not null)

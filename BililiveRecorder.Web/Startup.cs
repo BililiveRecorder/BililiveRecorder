@@ -70,7 +70,8 @@ namespace BililiveRecorder.Web
             {
                 if (context.Request.Path == "/")
                 {
-                    await context.Response.WriteAsync(@"<h1>to be done</h1><style>a{margin:5px}</style><a href=""/ui/playground"">Playground</a><a href=""/ui/graphiql"">GraphiQL</a><a href=""/ui/altair"">Altair</a><a href=""/ui/voyager"">Voyager</a>").ConfigureAwait(false);
+                    context.Response.ContentType = "text/html";
+                    await context.Response.WriteAsync(ConstStrings.HOME_PAGE_HTML, encoding: System.Text.Encoding.UTF8).ConfigureAwait(false);
                 }
                 else
                 {
