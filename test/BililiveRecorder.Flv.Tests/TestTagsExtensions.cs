@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.IO;
+using System.Xml;
 using BililiveRecorder.Flv.Xml;
 
 namespace BililiveRecorder.Flv.Tests
@@ -9,7 +10,13 @@ namespace BililiveRecorder.Flv.Tests
         public static string SerializeXml(this List<Tag> tags)
         {
             using var sw = new StringWriter();
-            XmlFlvFile.Serializer.Serialize(sw, new XmlFlvFile { Tags = tags });
+            using var writer = XmlWriter.Create(sw, new()
+            {
+                Indent = true
+            });
+
+            XmlFlvFile.Serializer.Serialize(writer, new XmlFlvFile { Tags = tags });
+            writer.Flush();
             return sw.ToString();
         }
     }

@@ -4,8 +4,10 @@ using System.IO;
 using System.IO.Compression;
 using System.IO.Pipelines;
 using System.Linq;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Xml;
 using BililiveRecorder.Flv;
 using BililiveRecorder.Flv.Grouping;
 using BililiveRecorder.Flv.Parser;
@@ -147,7 +149,12 @@ namespace BililiveRecorder.ToolBox.Tool.Fix
                         {
                             var path = Path.ChangeExtension(request.OutputBase, $"fix_p{i + 1:D3}.brec.xml");
                             outputPaths.Add(path);
-                            using var file = new StreamWriter(File.Create(path));
+
+                            using var file = XmlWriter.Create(File.Create(path), new()
+                            {
+                                Encoding = Encoding.UTF8,
+                                Indent = true
+                            });
                             XmlFlvFile.Serializer.Serialize(file, new XmlFlvFile { Tags = w.Files[i] });
                         }
 

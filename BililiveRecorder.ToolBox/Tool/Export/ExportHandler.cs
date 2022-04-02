@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.IO.Pipelines;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Xml;
 using BililiveRecorder.Flv;
 using BililiveRecorder.Flv.Parser;
 using BililiveRecorder.Flv.Xml;
@@ -91,7 +93,12 @@ namespace BililiveRecorder.ToolBox.Tool.Export
 
                 await Task.Run(() =>
                 {
-                    using var writer = new StreamWriter(new GZipStream(outputStream, CompressionLevel.Optimal));
+                    using var writer = XmlWriter.Create(new GZipStream(outputStream, CompressionLevel.Optimal), new()
+                    {
+                        Encoding = Encoding.UTF8,
+                        Indent = true
+                    });
+
                     XmlFlvFile.Serializer.Serialize(writer, new XmlFlvFile
                     {
                         Tags = tags,
