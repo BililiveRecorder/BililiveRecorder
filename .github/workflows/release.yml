@@ -22,8 +22,9 @@ jobs:
         uses: actions/checkout@v2
         with:
           fetch-depth: 0
+      - uses: actions/setup-dotnet@v2
       - name: Restore Packages
-        run: dotnet restore -v m
+        run: dotnet restore -v m --disable-parallel
       - name: Run Tests
         run: dotnet test -v m
 
@@ -80,8 +81,9 @@ jobs:
         uses: actions/checkout@v2
         with:
           fetch-depth: 0
+      - uses: actions/setup-dotnet@v2
       - name: Restore Packages
-        run: dotnet restore -v m
+        run: dotnet restore -v m --disable-parallel
       - name: Build CLI
         if: ${{ matrix.rid == 'any' }}
         run: dotnet publish -c ${{ matrix.build_configuration }} BililiveRecorder.Cli/BililiveRecorder.Cli.csproj
