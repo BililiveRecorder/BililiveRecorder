@@ -2,7 +2,8 @@ import { ConfigEntry, ConfigEntryType } from "../types"
 import { trimEnd } from "../utils";
 
 export default function (data: ConfigEntry[]): string {
-    let result = `using BililiveRecorder.Core.Config.V2;
+    let result = `using BililiveRecorder.Core.Config;
+using BililiveRecorder.Core.Config.V3;
 using GraphQL.Types;
 using HierarchicalPropertyDefault;
 #nullable enable

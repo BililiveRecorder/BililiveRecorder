@@ -3,7 +3,8 @@
 //  SEE /config_gen/README.md
 // ******************************
 
-using BililiveRecorder.Core.Config.V2;
+using BililiveRecorder.Core.Config;
+using BililiveRecorder.Core.Config.V3;
 using GraphQL.Types;
 using HierarchicalPropertyDefault;
 #nullable enable

@@ -2,7 +2,7 @@ using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using BililiveRecorder.Core;
-using BililiveRecorder.Core.Config.V2;
+using BililiveRecorder.Core.Config.V3;
 using BililiveRecorder.Core.Event;
 
 namespace BililiveRecorder.Web
@@ -11,7 +11,7 @@ namespace BililiveRecorder.Web
     {
         private bool disposedValue;
 
-        public ConfigV2 Config { get; } = new ConfigV2();
+        public ConfigV3 Config { get; } = new ConfigV3();
 
         public ReadOnlyObservableCollection<IRoom> Rooms { get; } = new ReadOnlyObservableCollection<IRoom>(new ObservableCollection<IRoom>());
 
