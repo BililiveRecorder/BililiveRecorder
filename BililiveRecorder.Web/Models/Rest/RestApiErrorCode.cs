@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace BililiveRecorder.Web.Models
+namespace BililiveRecorder.Web.Models.Rest
 {
     [JsonConverter(typeof(JsonStringEnumConverter))]
     public enum RestApiErrorCode

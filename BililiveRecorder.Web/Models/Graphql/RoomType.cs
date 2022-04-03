@@ -1,7 +1,7 @@
 using BililiveRecorder.Core;
 using GraphQL.Types;
 
-namespace BililiveRecorder.Web.Schemas.Types
+namespace BililiveRecorder.Web.Models.Graphql
 {
     internal class RoomType : ObjectGraphType<IRoom>
     {

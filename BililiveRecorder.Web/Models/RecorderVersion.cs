@@ -1,4 +1,4 @@
-namespace BililiveRecorder.Web.Schemas.Types
+namespace BililiveRecorder.Web.Models
 {
     public class RecorderVersion
     {

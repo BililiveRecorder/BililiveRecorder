@@ -3,7 +3,7 @@ using AutoMapper;
 using BililiveRecorder.Core;
 using BililiveRecorder.Core.Config.V2;
 using BililiveRecorder.Web.Models;
-using BililiveRecorder.Web.Schemas.Types;
+using BililiveRecorder.Web.Models.Rest;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BililiveRecorder.Web.Api

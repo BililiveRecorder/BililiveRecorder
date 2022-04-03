@@ -3,7 +3,7 @@ using System.Diagnostics;
 using System.IO;
 using BililiveRecorder.Core;
 using BililiveRecorder.Web.Api;
-using BililiveRecorder.Web.Schemas;
+using BililiveRecorder.Web.Graphql;
 using GraphQL;
 using GraphQL.Server;
 using GraphQL.Types;
@@ -89,7 +89,8 @@ namespace BililiveRecorder.Web
                 {
 
                 })
-                .AddApiExplorer();
+                .AddApiExplorer()
+                .AddNewtonsoftJson();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

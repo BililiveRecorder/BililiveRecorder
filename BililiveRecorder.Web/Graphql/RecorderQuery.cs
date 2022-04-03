@@ -2,11 +2,12 @@ using System;
 using System.Linq;
 using BililiveRecorder.Core;
 using BililiveRecorder.Core.Config.V2;
-using BililiveRecorder.Web.Schemas.Types;
+using BililiveRecorder.Web.Models;
+using BililiveRecorder.Web.Models.Graphql;
 using GraphQL;
 using GraphQL.Types;
 
-namespace BililiveRecorder.Web.Schemas
+namespace BililiveRecorder.Web.Graphql
 {
     internal class RecorderQuery : ObjectGraphType
     {

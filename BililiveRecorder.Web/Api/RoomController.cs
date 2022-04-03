@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using BililiveRecorder.Core;
 using BililiveRecorder.Web.Models;
-using BililiveRecorder.Web.Schemas.Types;
+using BililiveRecorder.Web.Models.Rest;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 

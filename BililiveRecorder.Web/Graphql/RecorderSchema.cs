@@ -2,7 +2,7 @@ using System;
 using BililiveRecorder.Core;
 using GraphQL.Types;
 
-namespace BililiveRecorder.Web.Schemas
+namespace BililiveRecorder.Web.Graphql
 {
     public class RecorderSchema : Schema
     {

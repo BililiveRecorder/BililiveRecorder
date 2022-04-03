@@ -1,13 +1,13 @@
 using GraphQL.Types;
 using HierarchicalPropertyDefault;
 
-namespace BililiveRecorder.Web.Schemas.Types
+namespace BililiveRecorder.Web.Models.Graphql
 {
-    public class HierarchicalOptionalType<TValue> : ObjectGraphType<Optional<TValue>>
+    public class HierarchicalOptionalInputType<TValue> : InputObjectGraphType<Optional<TValue>>
     {
-        public HierarchicalOptionalType()
+        public HierarchicalOptionalInputType()
         {
-            this.Name = "HierarchicalOptional_" + typeof(TValue).Name + "_Type";
+            this.Name = "HierarchicalOptionalInput_" + typeof(TValue).Name + "_Type";
 
             this.Field(x => x.HasValue)
                 .Description("Use 'value' when 'hasValue' is true, or use the value from parent object when 'hasValue' is false.");

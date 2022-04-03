@@ -1,3 +1,4 @@
+using BililiveRecorder.Web.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BililiveRecorder.Web.Api
@@ -10,6 +11,6 @@ namespace BililiveRecorder.Web.Api
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        public Schemas.Types.RecorderVersion GetVersion() => Schemas.Types.RecorderVersion.Instance;
+        public RecorderVersion GetVersion() => RecorderVersion.Instance;
     }
 }

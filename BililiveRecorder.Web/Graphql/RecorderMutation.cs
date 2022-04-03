@@ -1,11 +1,12 @@
 using System;
 using System.Linq;
 using BililiveRecorder.Core;
-using BililiveRecorder.Web.Schemas.Types;
+using BililiveRecorder.Web.Models;
+using BililiveRecorder.Web.Models.Graphql;
 using GraphQL;
 using GraphQL.Types;
 
-namespace BililiveRecorder.Web.Schemas
+namespace BililiveRecorder.Web.Graphql
 {
     internal class RecorderMutation : ObjectGraphType
     {
@@ -50,9 +51,7 @@ namespace BililiveRecorder.Web.Schemas
                         return null;
                     }
                     else
-                    {
                         return this.recorder.AddRoom(roomid, enabled);
-                    }
                 });
 
             this.Field<RoomType>("removeRoom",

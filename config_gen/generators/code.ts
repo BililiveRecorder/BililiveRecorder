@@ -34,7 +34,7 @@ const map: SectionInfoMap = {
         build: builderCli
     },
     web: {
-        path: './BililiveRecorder.Web.Schemas/Types/Config.gen.cs',
+        path: './BililiveRecorder.Web/Models/Config.gen.cs',
         format: true,
         header: true,
         build: builderWeb

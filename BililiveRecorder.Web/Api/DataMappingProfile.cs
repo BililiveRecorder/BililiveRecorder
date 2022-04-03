@@ -2,6 +2,7 @@ using AutoMapper;
 using BililiveRecorder.Core;
 using BililiveRecorder.Core.Config.V2;
 using BililiveRecorder.Web.Models;
+using BililiveRecorder.Web.Models.Rest;
 
 namespace BililiveRecorder.Web.Api
 {

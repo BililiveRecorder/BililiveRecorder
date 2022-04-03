@@ -1,6 +1,6 @@
 using GraphQL.Types;
 
-namespace BililiveRecorder.Web.Schemas.Types
+namespace BililiveRecorder.Web.Models.Graphql
 {
     public class RecorderVersionType : ObjectGraphType<RecorderVersion>
     {

@@ -1,4 +1,4 @@
-namespace BililiveRecorder.Web.Models
+namespace BililiveRecorder.Web.Models.Rest
 {
     public class CreateRoomDto
     {
