@@ -9,14 +9,15 @@
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="11.0.1" />
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="11.0.0" />
-    <PackageReference Include="GraphQL.Server.Core" Version="5.0.2" />
-    <PackageReference Include="GraphQL.Server.Transports.AspNetCore.NewtonsoftJson" Version="5.0.2" />
-    <PackageReference Include="GraphQL.Server.Transports.Subscriptions.WebSockets" Version="5.0.2" />
-    <PackageReference Include="GraphQL.Server.Ui.Altair" Version="5.0.2" />
-    <PackageReference Include="GraphQL.Server.Ui.GraphiQL" Version="5.0.2" />
-    <PackageReference Include="GraphQL.Server.Ui.Playground" Version="5.0.2" />
-    <PackageReference Include="GraphQL.Server.Ui.Voyager" Version="5.0.2" />
-    <PackageReference Include="GraphQL.SystemReactive" Version="4.5.0" />
+    <PackageReference Include="GraphQL.MicrosoftDI" Version="4.8.0" />
+    <PackageReference Include="GraphQL.Server.Core" Version="5.2.1" />
+    <PackageReference Include="GraphQL.Server.Transports.AspNetCore.NewtonsoftJson" Version="5.2.1" />
+    <PackageReference Include="GraphQL.Server.Transports.Subscriptions.WebSockets" Version="5.2.1" />
+    <PackageReference Include="GraphQL.Server.Ui.Altair" Version="5.2.1" />
+    <PackageReference Include="GraphQL.Server.Ui.GraphiQL" Version="5.2.1" />
+    <PackageReference Include="GraphQL.Server.Ui.Playground" Version="5.2.1" />
+    <PackageReference Include="GraphQL.Server.Ui.Voyager" Version="5.2.1" />
+    <PackageReference Include="GraphQL.SystemReactive" Version="4.8.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="6.0.3" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.3.0" />
   </ItemGroup>

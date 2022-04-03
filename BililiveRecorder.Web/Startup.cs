@@ -5,8 +5,9 @@ using BililiveRecorder.Core;
 using BililiveRecorder.Web.Api;
 using BililiveRecorder.Web.Graphql;
 using GraphQL;
+using GraphQL.Execution;
 using GraphQL.Server;
-using GraphQL.Types;
+using GraphQL.SystemReactive;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -42,28 +43,30 @@ namespace BililiveRecorder.Web
 
             services.TryAddSingleton<IRecorder>(new FakeRecorderForWeb());
 
-            services.AddAutoMapper(c =>
-            {
-                c.AddProfile<DataMappingProfile>();
-            });
+            services
+                .AddAutoMapper(c =>
+                {
+                    c.AddProfile<DataMappingProfile>();
+                })
+                .AddCors(o => o.AddDefaultPolicy(p => p.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader()))
+                ;
 
             // Graphql API
-            services
-                .AddCors(o => o.AddDefaultPolicy(p => p.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader()))
-                .AddSingleton<RecorderSchema>()
-                .AddSingleton(typeof(EnumerationGraphType<>))
-                .AddSingleton<IDocumentExecuter, SubscriptionDocumentExecuter>()
-                .AddGraphQL((options, provider) =>
+            GraphQL.MicrosoftDI.GraphQLBuilderExtensions.AddGraphQL(services)
+                .AddServer(true)
+                .AddWebSockets()
+                .AddNewtonsoftJson()
+                .AddSchema<RecorderSchema>()
+                .AddSubscriptionDocumentExecuter()
+                .AddDefaultEndpointSelectorPolicy()
+                .AddGraphTypes(typeof(RecorderSchema).Assembly)
+                .Configure<ErrorInfoProviderOptions>(opt => opt.ExposeExceptionStackTrace = this.Environment.IsDevelopment() || Debugger.IsAttached)
+                .ConfigureExecution(options =>
                 {
                     options.EnableMetrics = this.Environment.IsDevelopment() || Debugger.IsAttached;
-                    var logger = provider.GetRequiredService<ILogger<Startup>>();
-                    options.UnhandledExceptionDelegate = ctx => logger.LogWarning(ctx.OriginalException, "Unhandled GraphQL Exception");
+                    var logger = options.RequestServices?.GetRequiredService<ILogger<Startup>>();
+                    options.UnhandledExceptionDelegate = ctx => logger?.LogError(ctx.OriginalException, "Graphql Error: {Error}");
                 })
-                .AddDefaultEndpointSelectorPolicy()
-                //.AddSystemTextJson()
-                .AddNewtonsoftJson()
-                .AddWebSockets()
-                .AddGraphTypes(typeof(RecorderSchema))
                 ;
 
             // REST API
@@ -73,7 +76,9 @@ namespace BililiveRecorder.Web
                     c.SwaggerDoc("brec", new OpenApiInfo
                     {
                         Title = "录播姬 REST API",
-                        Description = "录播姬网站 [rec.danmuji.org](https://rec.danmuji.org/)  \n录播姬 GitHub [Bililive/BililiveRecorder](https://github.com/Bililive/BililiveRecorder)  \n\n除了 REST API 以外，录播姬还有 Graphql API 可以使用。",
+                        Description = "录播姬网站 [rec.danmuji.org](https://rec.danmuji.org/)  \n录播姬 GitHub [Bililive/BililiveRecorder](https://github.com/Bililive/BililiveRecorder)  \n\n" +
+                        "除了 REST API 以外，录播姬还有 Graphql API 可以使用。\n\n" +
+                        "API 中的 objectId 在重启后会重新生成，不保存到配置文件。",
                         Version = "v1"
                     });
 
