@@ -16,5 +16,6 @@ namespace BililiveRecorder.Web.Models.Rest
         public bool Streaming { get; set; }
         public bool DanmakuConnected { get; set; }
         public bool AutoRecordForThisSession { get; set; }
+        public RoomStatsDto Stats { get; set; } = default!;
     }
 }

@@ -1,25 +1,22 @@
-using System.Text.Json.Serialization;
-
 namespace BililiveRecorder.Web.Models.Rest
 {
-    [JsonConverter(typeof(JsonStringEnumConverter))]
-    public enum RestApiErrorCode
+    public enum RestApiErrorCode : int
     {
         /// <summary>
         /// 错误
         /// </summary>
-        Unknown,
+        Unknown = -1,
         /// <summary>
         /// 房间号不在允许的范围内
         /// </summary>
-        RoomidOutOfRange,
+        RoomidOutOfRange = -2,
         /// <summary>
         /// 房间已存在
         /// </summary>
-        RoomExist,
+        RoomExist = -3,
         /// <summary>
         /// 房间不存在
         /// </summary>
-        RoomNotFound,
+        RoomNotFound = -4,
     }
 }
