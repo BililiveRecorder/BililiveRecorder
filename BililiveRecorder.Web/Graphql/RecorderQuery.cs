@@ -1,7 +1,7 @@
 using System;
 using System.Linq;
 using BililiveRecorder.Core;
-using BililiveRecorder.Core.Config.V2;
+using BililiveRecorder.Core.Config.V3;
 using BililiveRecorder.Web.Models;
 using BililiveRecorder.Web.Models.Graphql;
 using GraphQL;
