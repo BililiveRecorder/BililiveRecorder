@@ -2,7 +2,7 @@ namespace BililiveRecorder.Web.Schemas.Types
 {
     public class RecorderVersion
     {
-        internal static readonly RecorderVersion Instance = new();
+        public static readonly RecorderVersion Instance = new();
 
         public string Major { get; } = GitVersionInformation.Major;
         public string Minor { get; } = GitVersionInformation.Minor;

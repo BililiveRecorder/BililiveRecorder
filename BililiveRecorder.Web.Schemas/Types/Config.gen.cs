@@ -85,7 +85,7 @@ namespace BililiveRecorder.Web.Schemas.Types
         }
     }
 
-    internal class SetRoomConfig
+    public class SetRoomConfig // TODO MOVE THIS TYPE
     {
         public bool? AutoRecord { get; set; }
         public Optional<RecordMode>? OptionalRecordMode { get; set; }
@@ -130,7 +130,7 @@ namespace BililiveRecorder.Web.Schemas.Types
         }
     }
 
-    internal class SetGlobalConfig
+    public class SetGlobalConfig // TODO MOVE THIS TYPE
     {
         public Optional<RecordMode>? OptionalRecordMode { get; set; }
         public Optional<CuttingMode>? OptionalCuttingMode { get; set; }

@@ -2,10 +2,15 @@
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
+    <GenerateDocumentationFile>True</GenerateDocumentationFile>
+    <NoWarn>1701;1702;1591</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="11.0.1" />
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="11.0.0" />
     <PackageReference Include="GraphQL.Server.Transports.AspNetCore.NewtonsoftJson" Version="5.0.2" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.3.0" />
   </ItemGroup>
 
   <ItemGroup>

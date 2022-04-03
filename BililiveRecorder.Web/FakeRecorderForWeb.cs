@@ -15,6 +15,7 @@ namespace BililiveRecorder.Web
 
         public ReadOnlyObservableCollection<IRoom> Rooms { get; } = new ReadOnlyObservableCollection<IRoom>(new ObservableCollection<IRoom>());
 
+#pragma warning disable CS0067
         public event EventHandler<AggregatedRoomEventArgs<RecordSessionStartedEventArgs>>? RecordSessionStarted;
         public event EventHandler<AggregatedRoomEventArgs<RecordSessionEndedEventArgs>>? RecordSessionEnded;
         public event EventHandler<AggregatedRoomEventArgs<RecordFileOpeningEventArgs>>? RecordFileOpening;
@@ -22,6 +23,7 @@ namespace BililiveRecorder.Web
         public event EventHandler<AggregatedRoomEventArgs<NetworkingStatsEventArgs>>? NetworkingStats;
         public event EventHandler<AggregatedRoomEventArgs<RecordingStatsEventArgs>>? RecordingStats;
         public event PropertyChangedEventHandler? PropertyChanged;
+#pragma warning restore CS0067
 
         public IRoom AddRoom(int roomid) => null!;
 
