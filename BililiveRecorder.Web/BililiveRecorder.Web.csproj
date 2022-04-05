@@ -1,11 +1,12 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
-
+  
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
     <NoWarn>1701;1702;1591</NoWarn>
+    <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
   </PropertyGroup>
-
+  
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="11.0.1" />
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="11.0.0" />
@@ -19,11 +20,34 @@
     <PackageReference Include="GraphQL.Server.Ui.Voyager" Version="5.2.1" />
     <PackageReference Include="GraphQL.SystemReactive" Version="4.8.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="6.0.3" />
+    <PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="6.0.3" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.3.0" />
   </ItemGroup>
-
+  
   <ItemGroup>
     <ProjectReference Include="..\BililiveRecorder.Core\BililiveRecorder.Core.csproj" />
   </ItemGroup>
-
+  
+  <ItemGroup>
+    <EmbeddedResource Include="embeded\**\*">
+      <TargetPath>%(RecursiveDir)%(Filename)%(Extension)</TargetPath>
+    </EmbeddedResource>
+  </ItemGroup>
+  
+  <Target Name="_RemoveManifestItSelfFromTheManifest" AfterTargets="PrepareResourceNames" BeforeTargets="_GenerateEmbeddedFilesManifest">
+    <!--
+         保留以后万一调试用。
+         <Message Importance="high" Text="AAAAAAAAAAAAAAAAAA: %(EmbeddedResource.ManifestResourceName)&#xD;&#xA;   LogicalName: %(EmbeddedResource.LogicalName)&#xD;&#xA;   ExcludeFromManifest: %(EmbeddedResource.AAAAAAAAExcludeFromManifest)" />
+    -->    
+    <ItemGroup>
+      <EmbeddedResource>
+        <ExcludeFromManifest Condition="'%(LogicalName)' == '$(EmbeddedFilesManifestFileName)'">true</ExcludeFromManifest>
+      </EmbeddedResource>
+    </ItemGroup>
+    <!--         
+         <Message Importance="high" Text="DEBUG: @(EmbeddedResource->WithMetadataValue('LogicalName',$(EmbeddedFilesManifestFileName)))"/>
+         <Message Importance="high" Text="BBBBBBBBBBBBBBBBBB: %(EmbeddedResource.ManifestResourceName)&#xD;&#xA;   LogicalName: %(EmbeddedResource.LogicalName)&#xD;&#xA;   ExcludeFromManifest: %(EmbeddedResource.AAAAAAAAExcludeFromManifest)" />
+    -->
+  </Target>
+  
 </Project>

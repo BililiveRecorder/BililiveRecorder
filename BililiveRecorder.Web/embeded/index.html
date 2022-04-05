@@ -1,0 +1,115 @@
+
+<meta charset=utf-8><meta content="width=device-width,initial-scale=1"name=viewport><title>录播姬</title><style>a{margin:5px}textarea{width:300px;height:200px}</style><h1>录播姬，以后再写管理界面</h1><p><span style=color:red;font-weight:700>API 界面</span>： <a href=/ui/graphiql>GraphiQL</a> <a href=/ui/playground>Playground</a> <a href=/ui/altair>Altair</a> <a href=/ui/voyager>Voyager</a><p>说明：录播姬 API 里的 objectId 在重启后会重新生成，是不保存到配置文件里的<div><h2>API 用法示例</h2><p>graphql 的<b>语法</b>请查看官方文档 <a href=https://graphql.org/learn/ >https://graphql.org/learn/</a> ，或中文翻译镜像 <a href=https://graphql.cn/learn/ >https://graphql.cn/learn/</a><div><h3>列出所有直播间和基本信息</h3><textarea>
+query {
+  rooms {
+    objectId
+    roomConfig {
+      roomId
+      autoRecord
+    }
+    shortId
+    name
+    streaming
+    title
+    areaNameParent
+    areaNameChild
+  }
+}</textarea></div><div><h3>列出所有直播间的所有信息（截至编写此页面时，具体最新属性见API界面的文档）</h3><textarea>
+query {
+  rooms {
+    objectId
+    shortId
+    recording
+    roomConfig {
+      roomId
+      autoRecord
+      optionalRecordingQuality {
+        value
+        hasValue
+      }
+      optionalRecordMode {
+        value
+        hasValue
+      }
+      optionalRecordDanmakuSuperChat {
+        value
+        hasValue
+      }
+      optionalRecordDanmakuRaw {
+        value
+        hasValue
+      }
+      optionalRecordDanmakuGuard {
+        value
+        hasValue
+      }
+      optionalRecordDanmakuGift {
+        value
+        hasValue
+      }
+      optionalRecordDanmaku {
+        value
+        hasValue
+      }
+      optionalCuttingNumber {
+        value
+        hasValue
+      }
+      optionalCuttingMode {
+        value
+        hasValue
+      }
+    }
+    stats {
+      durationRatio
+      fileMaxTimestamp
+      networkMbps
+      sessionDuration
+      totalInputBytes
+      sessionMaxTimestamp
+      totalOutputBytes
+    }
+    streaming
+    title
+    name
+    danmakuConnected
+    autoRecordForThisSession
+    areaNameParent
+    areaNameChild
+  }
+}  
+</textarea></div><div><h3>添加一个房间</h3><textarea>
+mutation {
+  addRoom(roomId: 3, autoRecord: false) {
+    objectId
+    shortId
+    roomConfig {
+      roomId
+      autoRecord
+    }
+  }
+}
+</textarea></div><div><h3>添加一个房间，用变量传参版</h3><textarea>
+mutation AddRoom($roomid: Int, $autoRecord: Boolean) {
+  addRoom(roomId: $roomid, autoRecord: $autoRecord) {
+    objectId
+    shortId
+    roomConfig {
+      roomId
+      autoRecord
+    }
+  }
+}
+</textarea> <textarea>{'roomid': 4, 'autoRecord': false}</textarea></div><div><h3>启用自动录制</h3><textarea>
+mutation {
+  setRoomConfig(roomId: 3, config: { autoRecord: true }) {
+    objectId
+    shortId
+    recording
+    roomConfig {
+      roomId
+      autoRecord
+    }
+  }
+}
+</textarea></div><div>开始录制、结束录制、手动切分，都是 mutation，在 graphql 文档页面里可以看到</div></div>
