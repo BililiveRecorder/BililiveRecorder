@@ -161,7 +161,7 @@ namespace BililiveRecorder.Web
             ctp.Mappings[".mjs"] = "text/javascript; charset=utf-8";
             ctp.Mappings[".json"] = "application/json; charset=utf-8";
 
-            var shared = new SharedOptions()
+            var sharedStaticFiles = new SharedOptions()
             {
                 // 在运行的 exe 旁边新建一个 wwwroot 文件夹，会优先使用里面的内容，然后 fallback 到打包的资源文件
                 FileProvider = new CompositeFileProvider(env.WebRootFileProvider, new ManifestEmbeddedFileProvider(typeof(Startup).Assembly)),
@@ -169,14 +169,26 @@ namespace BililiveRecorder.Web
             };
 
             app
-                .UseDefaultFiles(new DefaultFilesOptions(shared))
-                .UseStaticFiles(new StaticFileOptions(shared)
+                .UseDefaultFiles(new DefaultFilesOptions(sharedStaticFiles))
+                .UseStaticFiles(new StaticFileOptions(sharedStaticFiles)
                 {
                     ContentTypeProvider = ctp,
                     OnPrepareResponse = OnPrepareResponse
                 })
                 //.UseDirectoryBrowser(new DirectoryBrowserOptions(shared))
                 ;
+
+            try
+            {
+                var sharedRecordingFiles = new SharedOptions
+                {
+                    FileProvider = new PhysicalFileProvider(app.ApplicationServices.GetRequiredService<IRecorder>().Config.Global.WorkDirectory),
+                    RequestPath = "/file",
+                    RedirectToAppendTrailingSlash = true,
+                };
+                app.UseStaticFiles(new StaticFileOptions(sharedRecordingFiles)).UseDirectoryBrowser(new DirectoryBrowserOptions(sharedRecordingFiles));
+            }
+            catch (Exception) { }
 
             app
                 .UseEndpoints(endpoints =>
