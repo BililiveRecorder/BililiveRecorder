@@ -85,25 +85,20 @@ namespace BililiveRecorder.Core.Recording
                 this.timer.Stop();
                 this.RequestStop();
 
-                try
-                {
-                    var openingEventArgs = this.fileOpeningEventArgs;
-                    if (openingEventArgs is not null)
-                        this.OnRecordFileClosed(new RecordFileClosedEventArgs(this.room)
-                        {
-                            SessionId = this.SessionId,
-                            FullPath = openingEventArgs.FullPath,
-                            RelativePath = openingEventArgs.RelativePath,
-                            FileOpenTime = openingEventArgs.FileOpenTime,
-                            FileCloseTime = DateTimeOffset.Now,
-                            Duration = 0,
-                            FileSize = file.Length,
-                        });
-                }
-                catch (Exception ex)
-                {
-                    this.logger.Warning(ex, "Error calling OnRecordFileClosed");
-                }
+                RecordFileClosedEventArgs recordFileClosedEvent;
+                if (this.fileOpeningEventArgs is { } openingEventArgs)
+                    recordFileClosedEvent = new RecordFileClosedEventArgs(this.room)
+                    {
+                        SessionId = this.SessionId,
+                        FullPath = openingEventArgs.FullPath,
+                        RelativePath = openingEventArgs.RelativePath,
+                        FileOpenTime = openingEventArgs.FileOpenTime,
+                        FileCloseTime = DateTimeOffset.Now,
+                        Duration = 0,
+                        FileSize = file.Length,
+                    };
+                else
+                    recordFileClosedEvent = null;
 
                 try
                 { file.Dispose(); }
@@ -113,6 +108,16 @@ namespace BililiveRecorder.Core.Recording
                 try
                 { stream.Dispose(); }
                 catch (Exception) { }
+
+                try
+                {
+                    if (recordFileClosedEvent is not null)
+                        this.OnRecordFileClosed(recordFileClosedEvent);
+                }
+                catch (Exception ex)
+                {
+                    this.logger.Warning(ex, "Error calling OnRecordFileClosed");
+                }
 
                 this.OnRecordSessionEnded(EventArgs.Empty);
 
