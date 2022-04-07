@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using AutoMapper;
 using BililiveRecorder.Core;
@@ -22,8 +23,10 @@ namespace BililiveRecorder.Web.Api
             this.recorder = recorder ?? throw new ArgumentNullException(nameof(recorder));
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private IRoom? FetchRoom(int roomId) => this.recorder.Rooms.FirstOrDefault(x => x.ShortId == roomId || x.RoomConfig.RoomId == roomId);
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private IRoom? FetchRoom(Guid objectId) => this.recorder.Rooms.FirstOrDefault(x => x.ObjectId == objectId);
 
         /// <summary>
@@ -51,9 +54,14 @@ namespace BililiveRecorder.Web.Api
             var room = this.FetchRoom(createRoom.RoomId);
 
             if (room is not null)
-                return this.BadRequest(new RestApiError { Code = RestApiErrorCode.RoomExist, Message = "Can not add the same room multiple times." });
-
-            room = this.recorder.AddRoom(createRoom.RoomId, createRoom.AutoRecord);
+            {
+                if (room.RoomConfig.AutoRecord != createRoom.AutoRecord)
+                    room.RoomConfig.AutoRecord = createRoom.AutoRecord;
+            }
+            else
+            {
+                room = this.recorder.AddRoom(createRoom.RoomId, createRoom.AutoRecord);
+            }
 
             return this.mapper.Map<RoomDto>(room);
         }
