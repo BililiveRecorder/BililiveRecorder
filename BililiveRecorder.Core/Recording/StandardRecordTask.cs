@@ -177,7 +177,7 @@ namespace BililiveRecorder.Core.Recording
 
                     lock (this.ioDiskStatsLock)
                     {
-                        this.ioDiskWriteTime += this.ioDiskStopwatch.Elapsed;
+                        this.ioDiskWriteDuration += this.ioDiskStopwatch.Elapsed;
                         this.ioDiskWrittenBytes += bytesWritten;
                     }
                     this.ioDiskStopwatch.Reset();
@@ -257,7 +257,7 @@ namespace BililiveRecorder.Core.Recording
                         this.splitFileRule.SetSplitBeforeFlag();
                     break;
                 case CuttingMode.BySize:
-                    if ((e.CurrentFileSize + (e.OutputVideoByteCount * 1.1) + e.OutputAudioByteCount) / (1024d * 1024d) > this.room.RoomConfig.CuttingNumber)
+                    if ((e.CurrentFileSize + (e.OutputVideoBytes * 1.1) + e.OutputAudioBytes) / (1024d * 1024d) > this.room.RoomConfig.CuttingNumber)
                         this.splitFileRule.SetSplitBeforeFlag();
                     break;
             }

@@ -94,7 +94,7 @@ namespace BililiveRecorder.Core
         public bool Recording => this.recordTask != null;
 
         public RoomConfig RoomConfig { get; }
-        public RecordingStats Stats { get; } = new RecordingStats();
+        public RoomStats Stats { get; } = new RoomStats();
 
         public Guid ObjectId { get; } = Guid.NewGuid();
 
@@ -353,7 +353,14 @@ namespace BililiveRecorder.Core
         {
             this.logger.Verbose("IO stats: {@stats}", e);
 
+            this.Stats.StartTime = e.StartTime;
+            this.Stats.EndTime = e.EndTime;
+            this.Stats.Duration = e.Duration;
+            this.Stats.NetworkBytesDownloaded = e.NetworkBytesDownloaded;
             this.Stats.NetworkMbps = e.NetworkMbps;
+            this.Stats.DiskWriteDuration = e.DiskWriteDuration;
+            this.Stats.DiskBytesWritten = e.DiskBytesWritten;
+            this.Stats.DiskMBps = e.DiskMBps;
 
             IOStats?.Invoke(this, e);
         }
@@ -363,14 +370,31 @@ namespace BililiveRecorder.Core
         {
             this.logger.Verbose("Recording stats: {@stats}", e);
 
-            var diff = DateTimeOffset.UtcNow - this.recordTaskStartTime;
-            this.Stats.SessionDuration = TimeSpan.FromSeconds(Math.Round(diff.TotalSeconds));
-            this.Stats.FileMaxTimestamp = TimeSpan.FromMilliseconds(e.FileMaxTimestamp);
+            this.Stats.SessionDuration = TimeSpan.FromMilliseconds(e.SessionDuration);
+            this.Stats.TotalInputBytes = e.TotalInputBytes;
+            this.Stats.TotalOutputBytes = e.TotalOutputBytes;
+            this.Stats.CurrentFileSize = e.CurrentFileSize;
             this.Stats.SessionMaxTimestamp = TimeSpan.FromMilliseconds(e.SessionMaxTimestamp);
+            this.Stats.FileMaxTimestamp = TimeSpan.FromMilliseconds(e.FileMaxTimestamp);
+            this.Stats.AddedDuration = e.AddedDuration;
+            this.Stats.PassedTime = e.PassedTime;
             this.Stats.DurationRatio = e.DurationRatio;
 
-            this.Stats.TotalInputBytes = e.TotalInputVideoByteCount + e.TotalInputAudioByteCount;
-            this.Stats.TotalOutputBytes = e.TotalOutputVideoByteCount + e.TotalOutputAudioByteCount;
+            this.Stats.InputVideoBytes = e.InputVideoBytes;
+            this.Stats.InputAudioBytes = e.InputAudioBytes;
+
+            this.Stats.OutputVideoFrames = e.OutputVideoFrames;
+            this.Stats.OutputAudioFrames = e.OutputAudioFrames;
+            this.Stats.OutputVideoBytes = e.OutputVideoBytes;
+            this.Stats.OutputAudioBytes = e.OutputAudioBytes;
+
+            this.Stats.TotalInputVideoBytes = e.TotalInputVideoBytes;
+            this.Stats.TotalInputAudioBytes = e.TotalInputAudioBytes;
+
+            this.Stats.TotalOutputVideoFrames = e.TotalOutputVideoFrames;
+            this.Stats.TotalOutputAudioFrames = e.TotalOutputAudioFrames;
+            this.Stats.TotalOutputVideoBytes = e.TotalOutputVideoBytes;
+            this.Stats.TotalOutputAudioBytes = e.TotalOutputAudioBytes;
 
             RecordingStats?.Invoke(this, e);
         }

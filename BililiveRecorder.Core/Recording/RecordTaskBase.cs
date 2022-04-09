@@ -42,7 +42,7 @@ namespace BililiveRecorder.Core.Recording
 
         protected Stopwatch ioDiskStopwatch = new();
         protected object ioDiskStatsLock = new();
-        protected TimeSpan ioDiskWriteTime;
+        protected TimeSpan ioDiskWriteDuration;
         protected int ioDiskWrittenBytes;
         private DateTimeOffset ioDiskWarningTimeout;
 
@@ -130,7 +130,7 @@ namespace BililiveRecorder.Core.Recording
         private void Timer_Elapsed_TriggerIOStats(object sender, ElapsedEventArgs e)
         {
             int networkDownloadBytes, diskWriteBytes;
-            TimeSpan durationDiff, diskWriteTime;
+            TimeSpan durationDiff, diskWriteDuration;
             DateTimeOffset startTime, endTime;
 
 
@@ -148,15 +148,15 @@ namespace BililiveRecorder.Core.Recording
                 // disks
                 lock (this.ioDiskStatsLock) // 锁硬盘统计
                 {
-                    diskWriteTime = this.ioDiskWriteTime;
+                    diskWriteDuration = this.ioDiskWriteDuration;
                     diskWriteBytes = this.ioDiskWrittenBytes;
-                    this.ioDiskWriteTime = TimeSpan.Zero;
+                    this.ioDiskWriteDuration = TimeSpan.Zero;
                     this.ioDiskWrittenBytes = 0;
                 }
             }
 
             var netMbps = networkDownloadBytes * (8d / 1024d / 1024d) / durationDiff.TotalSeconds;
-            var diskMBps = diskWriteBytes / (1024d * 1024d) / diskWriteTime.TotalSeconds;
+            var diskMBps = diskWriteBytes / (1024d * 1024d) / diskWriteDuration.TotalSeconds;
 
             this.OnIOStats(new IOStatsEventArgs
             {
@@ -166,12 +166,12 @@ namespace BililiveRecorder.Core.Recording
                 EndTime = endTime,
                 NetworkMbps = netMbps,
                 DiskBytesWritten = diskWriteBytes,
-                DiskWriteTime = diskWriteTime,
+                DiskWriteDuration = diskWriteDuration,
                 DiskMBps = diskMBps,
             });
 
             var now = DateTimeOffset.Now;
-            if (diskWriteBytes > 0 && this.ioDiskWarningTimeout < now && (diskWriteTime.TotalSeconds > 1d || diskMBps < 2d))
+            if (diskWriteBytes > 0 && this.ioDiskWarningTimeout < now && (diskWriteDuration.TotalSeconds > 1d || diskMBps < 2d))
             {
                 // 硬盘 IO 可能不能满足录播
                 this.ioDiskWarningTimeout = now + TimeSpan.FromMinutes(2); // 最多每 2 分钟提醒一次

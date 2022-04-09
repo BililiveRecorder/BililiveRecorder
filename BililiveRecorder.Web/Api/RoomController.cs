@@ -152,12 +152,12 @@ namespace BililiveRecorder.Web.Api
         [HttpGet("{roomId:int}/stats")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(RestApiError), StatusCodes.Status404NotFound)]
-        public ActionResult<RoomStatsDto> GetRoomStats(int roomId)
+        public ActionResult<RoomRecordingStatsDto> GetRoomStats(int roomId)
         {
             var room = this.FetchRoom(roomId);
             if (room is null)
                 return this.NotFound(new RestApiError { Code = RestApiErrorCode.RoomNotFound, Message = "Room not found" });
-            return this.mapper.Map<RoomStatsDto>(room.Stats);
+            return this.mapper.Map<RoomRecordingStatsDto>(room.Stats);
         }
 
         /// <summary>
@@ -168,12 +168,12 @@ namespace BililiveRecorder.Web.Api
         [HttpGet("{objectId:guid}/stats")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(RestApiError), StatusCodes.Status404NotFound)]
-        public ActionResult<RoomStatsDto> GetRoomStats(Guid objectId)
+        public ActionResult<RoomRecordingStatsDto> GetRoomStats(Guid objectId)
         {
             var room = this.FetchRoom(objectId);
             if (room is null)
                 return this.NotFound(new RestApiError { Code = RestApiErrorCode.RoomNotFound, Message = "Room not found" });
-            return this.mapper.Map<RoomStatsDto>(room.Stats);
+            return this.mapper.Map<RoomRecordingStatsDto>(room.Stats);
         }
 
         #endregion

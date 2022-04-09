@@ -71,7 +71,7 @@ namespace BililiveRecorder.Core.Recording
 
                     lock (this.ioDiskStatsLock)
                     {
-                        this.ioDiskWriteTime += this.ioDiskStopwatch.Elapsed;
+                        this.ioDiskWriteDuration += this.ioDiskStopwatch.Elapsed;
                         this.ioDiskWrittenBytes += bytesRead;
                     }
                     this.ioDiskStopwatch.Reset();

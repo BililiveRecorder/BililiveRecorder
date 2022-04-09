@@ -13,6 +13,11 @@ namespace BililiveRecorder.Core.ProcessingRules
     {
         public const string SkipStatsKey = nameof(SkipStatsKey);
 
+        public StatsRule(DateTimeOffset? RecordingStart = null)
+        {
+            this.RecordingStart = RecordingStart ?? DateTimeOffset.Now;
+        }
+
         public event EventHandler<RecordingStatsEventArgs>? StatsUpdated;
 
         public long TotalInputVideoByteCount { get; private set; }
@@ -29,10 +34,14 @@ namespace BililiveRecorder.Core.ProcessingRules
         public int CurrentFileMaxTimestamp { get; private set; }
 
         public DateTimeOffset LastWriteTime { get; private set; }
+        public DateTimeOffset RecordingStart { get; }
 
         public void Run(FlvProcessingContext context, Action next)
         {
-            var e = new RecordingStatsEventArgs();
+            var e = new RecordingStatsEventArgs
+            {
+                SessionDuration = (DateTimeOffset.Now - this.RecordingStart).TotalMilliseconds
+            };
 
             {
                 static IEnumerable<PipelineDataAction> FilterDataActions(IEnumerable<PipelineAction> actions)
@@ -42,11 +51,13 @@ namespace BililiveRecorder.Core.ProcessingRules
                             yield return dataAction;
                 }
 
-                e.TotalInputVideoByteCount = this.TotalInputVideoByteCount += e.InputVideoByteCount =
+                e.TotalInputVideoBytes = this.TotalInputVideoByteCount += e.InputVideoBytes =
                     FilterDataActions(context.Actions).ToStructEnumerable().Sum(ref LinqFunctions.SumSizeOfVideoData, x => x, x => x);
 
-                e.TotalInputAudioByteCount = this.TotalInputAudioByteCount += e.InputAudioByteCount =
+                e.TotalInputAudioBytes = this.TotalInputAudioByteCount += e.InputAudioBytes =
                     FilterDataActions(context.Actions).ToStructEnumerable().Sum(ref LinqFunctions.SumSizeOfAudioData, x => x, x => x);
+
+                e.TotalInputBytes = e.TotalInputVideoBytes + e.TotalInputAudioBytes;
             }
 
             next();
@@ -82,7 +93,7 @@ namespace BililiveRecorder.Core.ProcessingRules
             }
 
             var now = DateTimeOffset.UtcNow;
-            e.PassedTime = (now - this.LastWriteTime).TotalSeconds;
+            e.PassedTime = (now - this.LastWriteTime).TotalMilliseconds;
             this.LastWriteTime = now;
             e.DurationRatio = e.AddedDuration / e.PassedTime;
 
@@ -93,26 +104,28 @@ namespace BililiveRecorder.Core.ProcessingRules
             {
                 if (dataActions.Count > 0)
                 {
-                    e.TotalOutputVideoFrameCount = this.TotalOutputVideoFrameCount += e.OutputVideoFrameCount =
+                    e.TotalOutputVideoFrames = this.TotalOutputVideoFrameCount += e.OutputVideoFrames =
                         dataActions.ToStructEnumerable().Sum(ref LinqFunctions.CountVideoTags, x => x, x => x);
 
-                    e.TotalOutputAudioFrameCount = this.TotalOutputAudioFrameCount += e.OutputAudioFrameCount =
+                    e.TotalOutputAudioFrames = this.TotalOutputAudioFrameCount += e.OutputAudioFrames =
                         dataActions.ToStructEnumerable().Sum(ref LinqFunctions.CountAudioTags, x => x, x => x);
 
-                    e.TotalOutputVideoByteCount = this.TotalOutputVideoByteCount += e.OutputVideoByteCount =
+                    e.TotalOutputVideoBytes = this.TotalOutputVideoByteCount += e.OutputVideoBytes =
                         dataActions.ToStructEnumerable().Sum(ref LinqFunctions.SumSizeOfVideoDataByNalu, x => x, x => x);
 
-                    e.TotalOutputAudioByteCount = this.TotalOutputAudioByteCount += e.OutputAudioByteCount =
+                    e.TotalOutputAudioBytes = this.TotalOutputAudioByteCount += e.OutputAudioBytes =
                         dataActions.ToStructEnumerable().Sum(ref LinqFunctions.SumSizeOfAudioData, x => x, x => x);
 
-                    e.CurrentFileSize = this.CurrentFileSize += e.OutputVideoByteCount + e.OutputAudioByteCount;
+                    e.TotalOutputBytes = e.TotalOutputAudioBytes + e.TotalOutputVideoBytes;
+
+                    e.CurrentFileSize = this.CurrentFileSize += e.OutputVideoBytes + e.OutputAudioBytes;
 
                     foreach (var action in dataActions)
                     {
                         var tags = action.Tags;
                         if (tags.Count > 0)
                         {
-                            e.AddedDuration += (tags[tags.Count - 1].Timestamp - tags[0].Timestamp) / 1000d;
+                            e.AddedDuration += (tags[tags.Count - 1].Timestamp - tags[0].Timestamp);
                             this.CurrentFileMaxTimestamp = e.FileMaxTimestamp = tags[tags.Count - 1].Timestamp;
                         }
                     }

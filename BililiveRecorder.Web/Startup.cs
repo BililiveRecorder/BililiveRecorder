@@ -2,6 +2,7 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
+using AutoMapper;
 using BililiveRecorder.Core;
 using BililiveRecorder.Web.Graphql;
 using BililiveRecorder.Web.Models.Rest;
@@ -52,6 +53,15 @@ namespace BililiveRecorder.Web
             // 如果 IRecorder 没有被注册过才会添加，模拟调试用
             // 实际运行时在 BililiveRecorder.Web.Program 里会加上真的 IRecorder
             services.TryAddSingleton<IRecorder>(new FakeRecorderForWeb());
+
+#if DEBUG
+            // TODO 移动到一个单独的测试项目里
+            if (Debugger.IsAttached)
+            {
+                var configuration = new MapperConfiguration(cfg => cfg.AddProfile<DataMappingProfile>());
+                configuration.AssertConfigurationIsValid();
+            }
+#endif
 
             services
                 .AddAutoMapper(c => c.AddProfile<DataMappingProfile>())

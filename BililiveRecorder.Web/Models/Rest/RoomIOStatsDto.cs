@@ -1,8 +1,8 @@
 using System;
 
-namespace BililiveRecorder.Core.Event
+namespace BililiveRecorder.Web.Models.Rest
 {
-    public class IOStatsEventArgs : EventArgs
+    public class RoomIOStatsDto
     {
         /// <summary>
         /// 当前统计区间的开始时间
@@ -15,9 +15,9 @@ namespace BililiveRecorder.Core.Event
         public DateTimeOffset EndTime { get; set; }
 
         /// <summary>
-        /// 当前统计区间的时长
+        /// 当前统计区间的时长，毫秒
         /// </summary>
-        public TimeSpan Duration { get; set; }
+        public double Duration { get; set; }
 
         /// <summary>
         /// 下载了的数据量
@@ -30,9 +30,9 @@ namespace BililiveRecorder.Core.Event
         public double NetworkMbps { get; set; }
 
         /// <summary>
-        /// 统计区间内的磁盘写入耗时
+        /// 统计区间内的磁盘写入耗时，毫秒
         /// </summary>
-        public TimeSpan DiskWriteDuration { get; set; }
+        public double DiskWriteDuration { get; set; }
 
         /// <summary>
         /// 统计区间内写入磁盘的数据量

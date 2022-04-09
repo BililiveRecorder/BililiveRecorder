@@ -1,8 +1,6 @@
-using System;
-
-namespace BililiveRecorder.Core.Event
+namespace BililiveRecorder.Web.Models.Rest
 {
-    public class RecordingStatsEventArgs : EventArgs
+    public class RoomRecordingStatsDto
     {
         /// <summary>
         /// 从录制开始到现在一共经过的时间，毫秒

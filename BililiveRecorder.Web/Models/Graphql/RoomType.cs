@@ -18,7 +18,8 @@ namespace BililiveRecorder.Web.Models.Graphql
             this.Field(x => x.Streaming);
             this.Field(x => x.AutoRecordForThisSession);
             this.Field(x => x.DanmakuConnected);
-            this.Field(x => x.Stats, type: typeof(RecordingStatsType));
+            this.Field("ioStats", x => x.Stats, type: typeof(IOStatsType));
+            this.Field("recordingStats", x => x.Stats, type: typeof(RecordingStatsType));
         }
     }
 }
