@@ -5,4 +5,4 @@ COPY ./BililiveRecorder.Cli/bin/docker_out /app
 VOLUME [ "/rec" ]
 WORKDIR /app
 ENTRYPOINT [ "dotnet", "/app/BililiveRecorder.Cli.dll" ]
-CMD [ "-h" ]
+CMD [ "run", "/rec" ]

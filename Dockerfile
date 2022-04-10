@@ -9,4 +9,4 @@ COPY --from=0 /output /app
 VOLUME [ "/rec" ]
 WORKDIR /app
 ENTRYPOINT [ "/app/BililiveRecorder.Cli" ]
-CMD [ "-h" ]
+CMD [ "run", "/rec" ]
