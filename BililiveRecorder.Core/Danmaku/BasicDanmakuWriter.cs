@@ -130,7 +130,7 @@ namespace BililiveRecorder.Core.Danmaku
                                 await this.xmlWriter.WriteAttributeStringAsync(null, "p", null, $"{ts:F3},{type},{size},{color},{st},0,{danmakuModel.UserID},0").ConfigureAwait(false);
                                 await this.xmlWriter.WriteAttributeStringAsync(null, "user", null, RemoveInvalidXMLChars(danmakuModel.UserName)).ConfigureAwait(false);
                                 if (recordDanmakuRaw)
-                                    await this.xmlWriter.WriteAttributeStringAsync(null, "raw", null, danmakuModel.RawObject?["info"]?.ToString(Newtonsoft.Json.Formatting.None)).ConfigureAwait(false);
+                                    await this.xmlWriter.WriteAttributeStringAsync(null, "raw", null, RemoveInvalidXMLChars(danmakuModel.RawObject?["info"]?.ToString(Newtonsoft.Json.Formatting.None))).ConfigureAwait(false);
                                 this.xmlWriter.WriteValue(RemoveInvalidXMLChars(danmakuModel.CommentText));
                                 await this.xmlWriter.WriteEndElementAsync().ConfigureAwait(false);
                             }
@@ -145,7 +145,7 @@ namespace BililiveRecorder.Core.Danmaku
                                 await this.xmlWriter.WriteAttributeStringAsync(null, "price", null, danmakuModel.Price.ToString()).ConfigureAwait(false);
                                 await this.xmlWriter.WriteAttributeStringAsync(null, "time", null, danmakuModel.SCKeepTime.ToString()).ConfigureAwait(false);
                                 if (recordDanmakuRaw)
-                                    await this.xmlWriter.WriteAttributeStringAsync(null, "raw", null, danmakuModel.RawObject?["data"]?.ToString(Newtonsoft.Json.Formatting.None)).ConfigureAwait(false);
+                                    await this.xmlWriter.WriteAttributeStringAsync(null, "raw", null, RemoveInvalidXMLChars(danmakuModel.RawObject?["data"]?.ToString(Newtonsoft.Json.Formatting.None))).ConfigureAwait(false);
                                 this.xmlWriter.WriteValue(RemoveInvalidXMLChars(danmakuModel.CommentText));
                                 await this.xmlWriter.WriteEndElementAsync().ConfigureAwait(false);
                             }
@@ -160,7 +160,7 @@ namespace BililiveRecorder.Core.Danmaku
                                 await this.xmlWriter.WriteAttributeStringAsync(null, "giftname", null, RemoveInvalidXMLChars(danmakuModel.GiftName)).ConfigureAwait(false);
                                 await this.xmlWriter.WriteAttributeStringAsync(null, "giftcount", null, danmakuModel.GiftCount.ToString()).ConfigureAwait(false);
                                 if (recordDanmakuRaw)
-                                    await this.xmlWriter.WriteAttributeStringAsync(null, "raw", null, danmakuModel.RawObject?["data"]?.ToString(Newtonsoft.Json.Formatting.None)).ConfigureAwait(false);
+                                    await this.xmlWriter.WriteAttributeStringAsync(null, "raw", null, RemoveInvalidXMLChars(danmakuModel.RawObject?["data"]?.ToString(Newtonsoft.Json.Formatting.None))).ConfigureAwait(false);
                                 await this.xmlWriter.WriteEndElementAsync().ConfigureAwait(false);
                             }
                             break;
@@ -174,7 +174,7 @@ namespace BililiveRecorder.Core.Danmaku
                                 await this.xmlWriter.WriteAttributeStringAsync(null, "level", null, danmakuModel.UserGuardLevel.ToString()).ConfigureAwait(false); ;
                                 await this.xmlWriter.WriteAttributeStringAsync(null, "count", null, danmakuModel.GiftCount.ToString()).ConfigureAwait(false);
                                 if (recordDanmakuRaw)
-                                    await this.xmlWriter.WriteAttributeStringAsync(null, "raw", null, danmakuModel.RawObject?["data"]?.ToString(Newtonsoft.Json.Formatting.None)).ConfigureAwait(false);
+                                    await this.xmlWriter.WriteAttributeStringAsync(null, "raw", null, RemoveInvalidXMLChars(danmakuModel.RawObject?["data"]?.ToString(Newtonsoft.Json.Formatting.None))).ConfigureAwait(false);
                                 await this.xmlWriter.WriteEndElementAsync().ConfigureAwait(false);
                             }
                             break;
