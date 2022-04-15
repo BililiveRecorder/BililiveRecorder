@@ -13,6 +13,7 @@ using BililiveRecorder.DependencyInjection;
 using BililiveRecorder.WPF.Controls;
 using BililiveRecorder.WPF.Models;
 using Microsoft.Extensions.DependencyInjection;
+using ModernWpf;
 using ModernWpf.Controls;
 using ModernWpf.Media.Animation;
 using Serilog;
@@ -337,6 +338,22 @@ You can uninstall me in system settings.", "安装成功 Installed", MessageBoxB
             catch (Exception)
             {
             }
+        }
+
+        private void SwitchLightDarkTheme_Click(object sender, RoutedEventArgs e)
+        {
+            if (this.Dispatcher.CheckAccess())
+                changeTheme();
+            else
+                _ = this.Dispatcher.BeginInvoke(changeTheme);
+
+            static void changeTheme()
+            {
+                ThemeManager.Current.ApplicationTheme =
+                    ThemeManager.Current.ActualApplicationTheme == ApplicationTheme.Dark
+                    ? ApplicationTheme.Light
+                    : ApplicationTheme.Dark;
+            };
         }
     }
 }
