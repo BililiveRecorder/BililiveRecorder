@@ -157,7 +157,9 @@
     <value>ルーム番号/URL</value>
     <comment>id or link</comment>
   </data>
-  
+  <data name="AddRoomCard_PlaceholderText_FontSize" xml:space="preserve">
+    <value>14</value>
+  </data>
   <data name="AddRoomCard_Title" xml:space="preserve">
     <value>チャンネル追加</value>
   </data>
@@ -239,7 +241,9 @@
   <data name="LogPanel_Level_Verbose" xml:space="preserve">
     <value>詳細</value>
   </data>
-  
+  <data name="LogPanel_Level_Warning" xml:space="preserve">
+    <value>警告</value>
+  </data>
   <data name="RoomCard_ClipButton_Tooltip" xml:space="preserve">
     <value>プレーバッククリップ（処理途中のファイル数）</value>
     <comment>This feature is off by default, and will be removed in the future.</comment>
@@ -272,7 +276,9 @@
   <data name="RoomCard_Menu_Tooltip" xml:space="preserve">
     <value>設定</value>
   </data>
-  
+  <data name="RoomCard_SplitButton_Tooltip" xml:space="preserve">
+    <value>出力ファイルを切断します。</value>
+  </data>
   <data name="RoomCard_Status_AutoRecordForThisSessionDisabled_Tooltip" xml:space="preserve">
     <value>今回の配信の自動録画が停止しました。配信終了後に再開されます</value>
   </data>
@@ -312,7 +318,10 @@
   <data name="RoomCard_Status_SpeedIndicator_SessionDuration" xml:space="preserve">
     <value>経過時間: {0:g}</value>
   </data>
-  
+  <data name="RoomCard_Status_SpeedIndicator_SpeedInMbps" xml:space="preserve">
+    <value>{0:F2} Mbps</value>
+    <comment>Should not translate</comment>
+  </data>
   <data name="RoomCard_Status_SpeedIndicator_SpeedInPercentage" xml:space="preserve">
     <value>現在の速度比：{0:P2}</value>
     <comment>Speed percentage relative to upload speed of the streamer</comment>
@@ -347,7 +356,9 @@
   <data name="RoomListPage_Menu_File_SaveConfig" xml:space="preserve">
     <value>設定を保存</value>
   </data>
-  
+  <data name="RoomListPage_Menu_File_ShowLogFilesInExplorer" xml:space="preserve">
+    <value>ログ ファイルを表示</value>
+  </data>
   <data name="RoomListPage_Menu_Links" xml:space="preserve">
     <value>リンク</value>
   </data>
@@ -487,15 +498,21 @@ FLV フォーマットのみサポートされています。</value>
   <data name="Settings_Splitting_TextBox_Right" xml:space="preserve">
     <value>ごとにファイルを分割する</value>
   </data>
-  
-  
+  <data name="Settings_Splitting_TextBox_SizeUnit" xml:space="preserve">
+    <value>MiB</value>
+  </data>
+  <data name="Settings_Splitting_TextBox_TimeUnit" xml:space="preserve">
+    <value>分</value>
+  </data>
   <data name="Settings_Splitting_Title" xml:space="preserve">
     <value>自動分割</value>
   </data>
   <data name="Settings_Webhook_Address" xml:space="preserve">
     <value>Webhookアドレス、１行に１つずつ</value>
   </data>
-  
+  <data name="Settings_Webhook_Title" xml:space="preserve">
+    <value>Webhook</value>
+  </data>
   <data name="SettingWithDefault_Default" xml:space="preserve">
     <value>デフォルト</value>
     <comment>Text of the checkbox in the reuseable control for setting items.
@@ -524,7 +541,9 @@ Will use default setting and disable user input when checked.</comment>
   </data>
   
   
-  
+  <data name="Toolbox_AutoFix_AnalyzeResult_IssueTypeUnrepairable" xml:space="preserve">
+    <value>{0} つの問題が復原できませんでした</value>
+  </data>
   <data name="Toolbox_AutoFix_AnalyzeResult_NoDataNote" xml:space="preserve">
     <value>備考：解析しなくても修復することができます</value>
   </data>
@@ -538,7 +557,9 @@ Will use default setting and disable user input when checked.</comment>
     <value>音声</value>
   </data>
   
-  
+  <data name="Toolbox_AutoFix_AnalyzeResult_Stats_Disclaimer" xml:space="preserve">
+    <value>参考用、問題ファイルの統計が不正確である可能性があります</value>
+  </data>
   
   
   
@@ -548,7 +569,9 @@ Will use default setting and disable user input when checked.</comment>
   <data name="Toolbox_AutoFix_AnalyzeResult_Stats_Video" xml:space="preserve">
     <value>ビデオ</value>
   </data>
-  
+  <data name="Toolbox_AutoFix_ButtonAnalyze" xml:space="preserve">
+    <value>分析</value>
+  </data>
   <data name="Toolbox_AutoFix_ButtonFix" xml:space="preserve">
     <value>修復</value>
   </data>
@@ -580,7 +603,9 @@ Will use default setting and disable user input when checked.</comment>
   <data name="Toolbox_AutoFix_InputPathPlaceholder" xml:space="preserve">
     <value>FLV ファイル</value>
   </data>
-  
+  <data name="Toolbox_AutoFix_NotFixed_ButtonExportData" xml:space="preserve">
+    <value>元の分析データをエクスポート</value>
+  </data>
   
   <data name="Toolbox_AutoFix_NotFixed_LearnMore" xml:space="preserve">
     <value>詳細はこちらをクリック</value>
@@ -594,18 +619,40 @@ Will use default setting and disable user input when checked.</comment>
   <data name="Toolbox_AutoFix_Title" xml:space="preserve">
     <value>録画の修復</value>
   </data>
+  <data name="Toolbox_Merge_Button_AddFile" xml:space="preserve">
+    <value>ファイルの添付</value>
+  </data>
+  <data name="Toolbox_Merge_Button_Merge" xml:space="preserve">
+    <value>マージ</value>
+  </data>
+  <data name="Toolbox_Merge_Button_Remove" xml:space="preserve">
+    <value>削除</value>
+  </data>
+  <data name="Toolbox_Merge_Error_AtLeastTwo" xml:space="preserve">
+    <value>マージするには2つのファイルが必要です。</value>
+  </data>
+  <data name="Toolbox_Merge_OpenFileDialogTitle" xml:space="preserve">
+    <value>マージする XML 弾幕ファイルを選択してください</value>
+  </data>
   
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
+  <data name="Toolbox_Merge_Title" xml:space="preserve">
+    <value>弾幕マージ</value>
+  </data>
+  <data name="Toolbox_Merge_Title_Long" xml:space="preserve">
+    <value>XML ファイルの統合</value>
+  </data>
+  <data name="Toolbox_Merge_XmlDanmakuFiles" xml:space="preserve">
+    <value>XML 弾幕ファイル</value>
+  </data>
+  <data name="Toolbox_Remux_OpenFileTitle" xml:space="preserve">
+    <value>コンテナ変更するFLVファイルを選択</value>
+  </data>
+  <data name="Toolbox_Remux_SaveFileTitle" xml:space="preserve">
+    <value>MP4の保存先を選択</value>
+  </data>
+  <data name="Toolbox_Remux_Title" xml:space="preserve">
+    <value>コンテナ変更</value>
+  </data>
   <data name="Toolbox_Title" xml:space="preserve">
     <value>ツールボックス</value>
   </data>
