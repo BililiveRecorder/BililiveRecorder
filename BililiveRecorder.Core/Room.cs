@@ -47,6 +47,8 @@ namespace BililiveRecorder.Core
 
         private IRecordTask? recordTask;
         private DateTimeOffset recordTaskStartTime;
+        private DateTimeOffset danmakuClientConnectTime;
+        private static readonly TimeSpan danmakuClientReconnectNoDelay = TimeSpan.FromMinutes(1);
 
         public Room(IServiceScope scope, RoomConfig roomConfig, int initDelayFactor, ILogger logger, IDanmakuClient danmakuClient, IApiClient apiClient, IBasicDanmakuWriter basicDanmakuWriter, IRecordTaskFactory recordTaskFactory)
         {
@@ -489,13 +491,19 @@ namespace BililiveRecorder.Core
             if (e.Connected)
             {
                 this.DanmakuConnected = true;
+                this.danmakuClientConnectTime = DateTimeOffset.UtcNow;
                 this.logger.Information("弹幕服务器已连接");
             }
             else
             {
                 this.DanmakuConnected = false;
                 this.logger.Information("与弹幕服务器的连接被断开");
-                this.StartDamakuConnection(delay: true);
+
+                // 如果连接弹幕服务器的时间在至少 1 分钟之前，重连时不需要等待
+                // 针对偶尔的网络波动的优化，如果偶尔断开了尽快重连，减少漏录的弹幕量
+                this.StartDamakuConnection(delay: !((DateTimeOffset.UtcNow - this.danmakuClientConnectTime) > danmakuClientReconnectNoDelay));
+
+                this.danmakuClientConnectTime = DateTimeOffset.MaxValue;
             }
         }
 
