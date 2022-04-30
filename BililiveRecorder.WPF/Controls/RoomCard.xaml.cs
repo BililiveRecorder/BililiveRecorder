@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 using BililiveRecorder.Core;
+using BililiveRecorder.WPF.Pages;
 
 #nullable enable
 namespace BililiveRecorder.WPF.Controls
@@ -58,6 +59,14 @@ namespace BililiveRecorder.WPF.Controls
                     Process.Start("https://live.bilibili.com/" + r.RoomConfig.RoomId);
                 }
                 catch (Exception) { }
+            }
+        }
+
+        private void MenuItem_ShowGlobalSettings_Click(object sender, RoutedEventArgs e)
+        {
+            if (RootPage.SwitchToSettingsPage is Action change)
+            {
+                change();
             }
         }
     }

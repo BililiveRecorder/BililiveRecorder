@@ -44,6 +44,8 @@ namespace BililiveRecorder.WPF.Pages
         private ServiceProvider serviceProvider;
         internal RootModel Model { get; private set; }
 
+        internal static Action? SwitchToSettingsPage { get; private set; }
+
         public RootPage()
         {
             void AddType(Type t) => this.PageMap.Add(t.Name, t);
@@ -82,6 +84,11 @@ namespace BililiveRecorder.WPF.Pages
                 mw.NativeBeforeWindowClose += this.RootPage_NativeBeforeWindowClose;
 
             Loaded += this.RootPage_Loaded;
+
+            SwitchToSettingsPage = () =>
+            {
+                this.SettingsPageNavigationViewItem.IsSelected = true;
+            };
         }
 
         private void RootPage_NativeBeforeWindowClose(object sender, EventArgs e)
@@ -96,9 +103,7 @@ namespace BililiveRecorder.WPF.Pages
         {
             if (CommandArgumentFirstRun)
             {
-                _ = Task.Run(() =>
-                  {
-                      MessageBox.Show(@"B站录播姬 安装成功！
+                MessageBox.Show(Window.GetWindow(this), @"B站录播姬 安装成功！
 之后再运行请使用桌面或开始菜单里的快捷方式。
 如需卸载，可在系统设置里操作。
 
@@ -106,7 +111,6 @@ BililiveRecorder Installed!
 Please use the shortcut on the desktop or
 in the start menu to launch.
 You can uninstall me in system settings.", "安装成功 Installed", MessageBoxButton.OK, MessageBoxImage.Information);
-                  });
             }
 
             // 上次选择的路径信息

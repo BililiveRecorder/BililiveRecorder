@@ -97,6 +97,11 @@
                                 <ui:PathIcon Style="{StaticResource PathIconDataCogOutline}"/>
                             </MenuItem.Icon>
                         </MenuItem>
+                        <MenuItem Header="全局设置" Click="MenuItem_ShowGlobalSettings_Click">
+                            <MenuItem.Icon>
+                                <ui:PathIcon Style="{StaticResource PathIconDataCogOutline}"/>
+                            </MenuItem.Icon>
+                        </MenuItem>
                         <Separator/>
                         <ui:RadioMenuItem Header="{l:Loc RoomCard_Menu_EnableAutoRecord}" GroupName="AutoRecord" IsChecked="{Binding RoomConfig.AutoRecord,Mode=OneWay}" Click="MenuItem_StartMonitor_Click">
                             <ui:RadioMenuItem.Icon>
