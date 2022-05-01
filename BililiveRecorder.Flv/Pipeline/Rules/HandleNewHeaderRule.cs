@@ -8,14 +8,8 @@ using StructLinq.Where;
 namespace BililiveRecorder.Flv.Pipeline.Rules
 {
     /// <summary>
-    /// 处理收到音视频 Header 的情况
+    /// 处理音视频 Header。收到音视频 Header 时检查与上一组是否相同，并根据情况删除重复的 Header 或新建文件。<br/>
     /// </summary>
-    /// <remarks>
-    /// 当收到音视频 Header 时检查与上一组是否相同<br/>
-    /// 并根据情况删除重复的 Header 或新建文件写入<br/>
-    /// <br/>
-    /// 本规则为一般规则
-    /// </remarks>
     public class HandleNewHeaderRule : ISimpleProcessingRule
     {
         private const string VIDEO_HEADER_KEY = "HandleNewHeaderRule_VideoHeader";

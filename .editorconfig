@@ -127,6 +127,8 @@ csharp_style_var_elsewhere = true:suggestion
 csharp_style_var_for_built_in_types = true:suggestion
 #prefer var when the type is already mentioned on the right-hand side of a declaration expression
 csharp_style_var_when_type_is_apparent = true:suggestion
+# IDE0090: Use 'new(...)'
+csharp_style_implicit_object_creation_when_type_is_apparent = false:suggestion
 
 #Style - language keyword and framework type options
 

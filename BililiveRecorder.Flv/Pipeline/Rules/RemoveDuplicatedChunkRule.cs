@@ -8,13 +8,8 @@ using StructLinq;
 namespace BililiveRecorder.Flv.Pipeline.Rules
 {
     /// <summary>
-    /// 删除重复的直播数据
+    /// 删除重复的直播数据。
     /// </summary>
-    /// <remarks>
-    /// 通过对比直播数据的特征，删除重复的直播数据<br/>
-    /// <br/>
-    /// 本规则为一般规则
-    /// </remarks>
     public class RemoveDuplicatedChunkRule : ISimpleProcessingRule
     {
         private const int MAX_HISTORY = 8;
@@ -39,6 +34,7 @@ namespace BililiveRecorder.Flv.Pipeline.Rules
 
                 unchecked
                 {
+                    // TODO: 改成用 Hash 判断
                     // 计算一个特征码
                     // 此处并没有遵循什么特定的算法，只是随便取了一些代表性比较强的值，用简单又尽量可靠的方式糅合到一起而已
                     foreach (var tag in data.Tags)

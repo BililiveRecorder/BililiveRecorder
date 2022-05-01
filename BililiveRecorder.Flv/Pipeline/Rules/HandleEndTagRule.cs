@@ -5,7 +5,7 @@ using BililiveRecorder.Flv.Pipeline.Actions;
 namespace BililiveRecorder.Flv.Pipeline.Rules
 {
     /// <summary>
-    /// 处理 end tag
+    /// 处理 End Tag，遇到的时候对文件进行分段
     /// </summary>
     public class HandleEndTagRule : ISimpleProcessingRule
     {

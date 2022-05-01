@@ -4,14 +4,8 @@ using BililiveRecorder.Flv.Pipeline.Actions;
 namespace BililiveRecorder.Flv.Pipeline.Rules
 {
     /// <summary>
-    /// 删除 H.264 Filler Data
+    /// 删除 H.264 Filler Data，节省硬盘空间。
     /// </summary>
-    /// <remarks>
-    /// 部分直播码率瞎填的主播的直播数据中存在大量无用的 Filler Data<br/>
-    /// 录制这些主播时删除这些数据可以节省硬盘空间<br/>
-    /// <br/>
-    /// 本规则应该放在一般规则前面
-    /// </remarks>
     public class RemoveFillerDataRule : ISimpleProcessingRule
     {
         public void Run(FlvProcessingContext context, Action next)

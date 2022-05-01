@@ -6,11 +6,8 @@ using BililiveRecorder.Flv.Pipeline.Actions;
 namespace BililiveRecorder.Flv.Pipeline.Rules
 {
     /// <summary>
-    /// 处理收到 Script Tag 的情况
+    /// 处理 Script Tag
     /// </summary>
-    /// <remarks>
-    /// 本规则为一般规则
-    /// </remarks>
     public class HandleNewScriptRule : ISimpleProcessingRule
     {
         private const string onMetaData = "onMetaData";

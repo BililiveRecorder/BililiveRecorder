@@ -7,6 +7,9 @@ using StructLinq;
 
 namespace BililiveRecorder.Flv.Pipeline.Rules
 {
+    /// <summary>
+    /// 修复时间戳跳变
+    /// </summary>
     public class UpdateTimestampJumpRule : ISimpleProcessingRule
     {
         private const string TS_STORE_KEY = "Timestamp_Store_Key";
@@ -25,12 +28,14 @@ namespace BililiveRecorder.Flv.Pipeline.Rules
         {
             next();
 
+            // 之前直播流的时间戳信息保存在 SessionItems 里
             var ts = context.SessionItems.ContainsKey(TS_STORE_KEY) ? context.SessionItems[TS_STORE_KEY] as TimestampStore ?? new TimestampStore() : new TimestampStore();
             context.SessionItems[TS_STORE_KEY] = ts;
 
+            // 按顺序处理每个 Action
             foreach (var action in context.Actions)
             {
-                if (action is PipelineDataAction dataAction)
+                if (action is PipelineDataAction dataAction) // 如果是直播数据，计算并调整时间戳
                 {   // SetDataTimestamp
                     var tags = dataAction.Tags;
                     var currentTimestamp = tags[0].Timestamp;
@@ -53,7 +58,7 @@ namespace BililiveRecorder.Flv.Pipeline.Rules
 
                     ts.NextTimestampTarget = this.CalculateNewTarget(tags);
                 }
-                else if (action is PipelineEndAction endAction)
+                else if (action is PipelineEndAction endAction) // End Tag 其实怎么处理都无所谓
                 {
                     var tag = endAction.Tag;
                     var diff = tag.Timestamp - ts.LastOriginal;
@@ -66,16 +71,16 @@ namespace BililiveRecorder.Flv.Pipeline.Rules
                         tag.Timestamp -= ts.CurrentOffset;
                     }
                 }
-                else if (action is PipelineNewFileAction)
+                else if (action is PipelineNewFileAction) // 如果新建文件分段了，重设时间戳信息重新从 0 开始
                 {
                     ts.Reset();
                 }
-                else if (action is PipelineScriptAction s)
+                else if (action is PipelineScriptAction s) // Script Tag 时间戳永远为 0
                 {
                     s.Tag.Timestamp = 0;
                     ts.Reset();
                 }
-                else if (action is PipelineHeaderAction h)
+                else if (action is PipelineHeaderAction h) // Header Tag 时间戳永远为 0
                 {
                     if (h.VideoHeader != null)
                         h.VideoHeader.Timestamp = 0;
@@ -86,6 +91,7 @@ namespace BililiveRecorder.Flv.Pipeline.Rules
             }
         }
 
+        // 计算理想情况下这段数据后面下一个 Tag 的时间戳应该是多少
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private int CalculateNewTarget(IReadOnlyList<Tag> tags)
         {
@@ -123,10 +129,19 @@ namespace BililiveRecorder.Flv.Pipeline.Rules
 
         private class TimestampStore
         {
+            /// <summary>
+            /// 下一个 Tag 的目标时间戳
+            /// </summary>
             public int NextTimestampTarget;
 
+            /// <summary>
+            /// 上一个 Tag 的原始时间戳
+            /// </summary>
             public int LastOriginal;
 
+            /// <summary>
+            /// 当前时间戳偏移量
+            /// </summary>
             public int CurrentOffset;
 
             public void Reset()

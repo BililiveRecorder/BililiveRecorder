@@ -7,10 +7,13 @@ using StructLinq;
 
 namespace BililiveRecorder.Flv.Pipeline.Rules
 {
+    /// <summary>
+    /// 修复时间戳错位
+    /// </summary>
     public class UpdateTimestampOffsetRule : ISimpleProcessingRule
     {
-        private static readonly ProcessingComment comment1 = new ProcessingComment(CommentType.Unrepairable, "GOP 内音频或视频时间戳不连续");
-        private static readonly ProcessingComment comment2 = new ProcessingComment(CommentType.Unrepairable, "出现了无法计算偏移量的音视频偏移");
+        private static readonly ProcessingComment COMMENT_JumpedWithinGOP = new ProcessingComment(CommentType.Unrepairable, "GOP 内音频或视频时间戳不连续");
+        private static readonly ProcessingComment COMMENT_CantSolve = new ProcessingComment(CommentType.Unrepairable, "出现了无法计算偏移量的音视频偏移");
 
         public void Run(FlvProcessingContext context, Action next)
         {
@@ -18,9 +21,12 @@ namespace BililiveRecorder.Flv.Pipeline.Rules
             next();
         }
 
-        private readonly struct IsNotNormal : ITwoInputFunction<Tag, bool>
+        /// <summary>
+        /// 检查 Tag 时间戳是否有变小的情况
+        /// </summary>
+        private readonly struct IsNextTimestampSmaller : ITwoInputFunction<Tag, bool>
         {
-            public static IsNotNormal Instance;
+            public static IsNextTimestampSmaller Instance;
             public bool Eval(Tag a, Tag b) => a.Timestamp > b.Timestamp;
         }
 
@@ -28,19 +34,19 @@ namespace BililiveRecorder.Flv.Pipeline.Rules
         {
             if (action is PipelineDataAction data)
             {
-                var isNotNormal = data.Tags.Any2(ref IsNotNormal.Instance);
+                var isNotNormal = data.Tags.Any2(ref IsNextTimestampSmaller.Instance);
                 if (!isNotNormal)
                 {
-                    // 没有问题
+                    // 没有问题，每个 tag 的时间戳都 >= 上一个 tag 的时间戳。
                     yield return data;
                     yield break;
                 }
 
-                if (data.Tags.Where(x => x.Type == TagType.Audio).Any2(ref IsNotNormal.Instance) || data.Tags.Where(x => x.Type == TagType.Video).Any2(ref IsNotNormal.Instance))
+                if (data.Tags.Where(x => x.Type == TagType.Audio).Any2(ref IsNextTimestampSmaller.Instance) || data.Tags.Where(x => x.Type == TagType.Video).Any2(ref IsNextTimestampSmaller.Instance))
                 {
                     // 音频或视频自身就有问题，没救了
                     yield return PipelineDisconnectAction.Instance;
-                    context.AddComment(comment1);
+                    context.AddComment(COMMENT_JumpedWithinGOP);
                     yield break;
                 }
                 else
@@ -150,7 +156,7 @@ namespace BililiveRecorder.Flv.Pipeline.Rules
                     yield break;
 
                 invalidOffset:
-                    context.AddComment(comment2);
+                    context.AddComment(COMMENT_CantSolve);
                     yield return PipelineDisconnectAction.Instance;
                     yield break;
                 }

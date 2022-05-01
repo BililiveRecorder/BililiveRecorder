@@ -7,11 +7,8 @@ using StructLinq;
 namespace BililiveRecorder.Flv.Pipeline.Rules
 {
     /// <summary>
-    /// 处理延后收到的音频头
+    /// 处理延后收到的音频头，移动到音视频数据的前面。
     /// </summary>
-    /// <remarks>
-    /// 本规则应该放在所有规则前面
-    /// </remarks>
     public class HandleDelayedAudioHeaderRule : ISimpleProcessingRule
     {
         private static readonly ProcessingComment comment1 = new ProcessingComment(CommentType.Unrepairable, "音频数据出现在音频头之前");
