@@ -18,7 +18,9 @@ namespace BililiveRecorder.Core.SimpleWebhook
 
         public BasicWebhookV1(ConfigV3 config)
         {
-            this.config = config ?? throw new ArgumentNullException(nameof(config)); this.client = new HttpClient();
+            this.config = config ?? throw new ArgumentNullException(nameof(config));
+
+            this.client = new HttpClient();
             this.client.DefaultRequestHeaders.Add("User-Agent", $"BililiveRecorder/{GitVersionInformation.FullSemVer}");
         }
 
