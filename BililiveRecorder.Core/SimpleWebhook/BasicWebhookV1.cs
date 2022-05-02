@@ -12,51 +12,55 @@ namespace BililiveRecorder.Core.SimpleWebhook
     public class BasicWebhookV1
     {
         private static readonly ILogger logger = Log.ForContext<BasicWebhookV1>();
-        private static readonly HttpClient client;
 
-        private readonly ConfigV3 Config;
-
-        static BasicWebhookV1()
-        {
-            client = new HttpClient();
-            client.DefaultRequestHeaders.Add("User-Agent", $"BililiveRecorder/{GitVersionInformation.FullSemVer}");
-        }
+        private readonly HttpClient client;
+        private readonly ConfigV3 config;
 
         public BasicWebhookV1(ConfigV3 config)
         {
-            this.Config = config ?? throw new ArgumentNullException(nameof(config));
+            this.config = config ?? throw new ArgumentNullException(nameof(config)); this.client = new HttpClient();
+            this.client.DefaultRequestHeaders.Add("User-Agent", $"BililiveRecorder/{GitVersionInformation.FullSemVer}");
         }
 
         public async Task SendAsync(RecordEndData data)
         {
-            var urls = this.Config.Global.WebHookUrls;
-            if (string.IsNullOrWhiteSpace(urls)) return;
+            var urls = this.config.Global.WebHookUrls;
+            if (string.IsNullOrWhiteSpace(urls))
+                return;
 
             var dataStr = JsonConvert.SerializeObject(data, Formatting.None);
-            using var body = new ByteArrayContent(Encoding.UTF8.GetBytes(dataStr));
-            body.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/json");
+
+            logger.Debug("尝试发送 WebhookV1 数据 {WebhookData}, 地址 {Urls}", dataStr, urls);
+
+            var bytes = Encoding.UTF8.GetBytes(dataStr);
 
             var tasks = urls!
                 .Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries)
                 .Select(x => x.Trim())
                 .Where(x => !string.IsNullOrWhiteSpace(x))
-                .Select(x => this.SendImplAsync(x, body));
+                .Select(x => this.SendImplAsync(x, bytes));
 
             await Task.WhenAll(tasks).ConfigureAwait(false);
         }
 
-        private async Task SendImplAsync(string url, HttpContent data)
+        private async Task SendImplAsync(string url, byte[] data)
         {
             for (var i = 0; i < 3; i++)
                 try
                 {
-                    var result = await client.PostAsync(url, data).ConfigureAwait(false);
+                    if (i > 0)
+                        await Task.Delay(i * 1000);
+
+                    using var body = new ByteArrayContent(data);
+                    body.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/json");
+                    var result = await this.client.PostAsync(url, body).ConfigureAwait(false);
                     result.EnsureSuccessStatusCode();
+                    logger.Debug("发送 WebhookV1 到 {Url} 成功", url);
                     return;
                 }
                 catch (Exception ex)
                 {
-                    logger.Warning(ex, "发送 Webhook 到 {Url} 失败", url);
+                    logger.Warning(ex, "发送 WebhookV1 到 {Url} 失败", url);
                 }
         }
     }
