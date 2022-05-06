@@ -1,8 +1,11 @@
 using System;
 using System.IO;
+using System.Threading.Tasks;
 using BililiveRecorder.Core.Config.V3;
 using Fluid;
 using Fluid.Ast;
+using Fluid.Values;
+using Newtonsoft.Json.Linq;
 using Serilog;
 
 namespace BililiveRecorder.Core.Templating
@@ -98,6 +101,8 @@ namespace BililiveRecorder.Core.Templating
                 Now = () => now,
             };
             templateOptions.MemberAccessStrategy.MemberNameStrategy = MemberNameStrategies.CamelCase;
+            templateOptions.ValueConverters.Add(o => o is JContainer j ? new JContainerValue(j) : null);
+
             var context = new TemplateContext(data, templateOptions);
 
             var workDirectory = this.config.WorkDirectory!;
@@ -121,7 +126,7 @@ namespace BililiveRecorder.Core.Templating
             var ext = Path.GetExtension(fullPath);
             if (!ext.Equals(".flv", StringComparison.OrdinalIgnoreCase))
             {
-                logger.ForContext(LoggingContext.RoomId, data.RoomId).Warning("录播姬只支持FLV文件格式，将在录制文件后缀名 {ExtensionName} 后添加 .flv。", ext);
+                logger.ForContext(LoggingContext.RoomId, data.RoomId).Warning("录播姬只支持 FLV 文件格式，将在录制文件后缀名 {ExtensionName} 后添加 .flv。", ext);
                 relativePath += ".flv";
                 fullPath += ".flv";
             }
@@ -152,6 +157,88 @@ namespace BililiveRecorder.Core.Templating
             public string AreaParent { get; set; } = string.Empty;
 
             public string AreaChild { get; set; } = string.Empty;
+
+            public JObject? Json { get; set; }
+        }
+
+        private class JContainerValue : ObjectValueBase
+        {
+            public JContainerValue(JContainer value) : base(value)
+            {
+            }
+
+            public override ValueTask<FluidValue> GetValueAsync(string name, TemplateContext context)
+            {
+                var j = (JContainer)this.Value;
+                JToken? value;
+
+                if (j is JObject jobject)
+                {
+                    value = jobject[name];
+                }
+                else
+                {
+                    return NilValue.Instance;
+                }
+
+                if (value is null)
+                {
+                    return NilValue.Instance;
+                }
+                else if (value is JContainer)
+                {
+                    return Create(value, context.Options);
+                }
+                else if (value is JValue jValue)
+                {
+                    return Create(jValue.Value, context.Options);
+                }
+                else
+                {
+                    // WHAT ARE YOU !?
+                    return NilValue.Instance;
+                }
+            }
+
+            public override ValueTask<FluidValue> GetIndexAsync(FluidValue index, TemplateContext context)
+            {
+                var j = (JContainer)this.Value;
+                JToken? value;
+
+                try
+                {
+                    if (index.Type == FluidValues.Number)
+                    {
+                        value = j[(int)index.ToNumberValue()];
+                    }
+                    else
+                    {
+                        value = j[index.ToStringValue()];
+                    }
+                }
+                catch (Exception)
+                {
+                    return NilValue.Instance;
+                }
+
+                if (value is null)
+                {
+                    return NilValue.Instance;
+                }
+                else if (value is JContainer)
+                {
+                    return Create(value, context.Options);
+                }
+                else if (value is JValue jValue)
+                {
+                    return Create(jValue.Value, context.Options);
+                }
+                else
+                {
+                    // WHAT ARE YOU !?
+                    return NilValue.Instance;
+                }
+            }
         }
 
         internal static string RemoveInvalidFileName(string input, bool ignore_slash = true)

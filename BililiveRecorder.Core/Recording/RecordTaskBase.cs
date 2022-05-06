@@ -188,12 +188,13 @@ namespace BililiveRecorder.Core.Recording
 
         protected (string fullPath, string relativePath) CreateFileName() => this.fileNameGenerator.CreateFilePath(new FileNameGenerator.FileNameContextData
         {
-            Name = this.room.Name,
-            Title = this.room.Title,
+            Name = FileNameGenerator.RemoveInvalidFileName(this.room.Name, ignore_slash: false),
+            Title = FileNameGenerator.RemoveInvalidFileName(this.room.Title, ignore_slash: false),
             RoomId = this.room.RoomConfig.RoomId,
             ShortId = this.room.ShortId,
-            AreaParent = this.room.AreaNameParent,
-            AreaChild = this.room.AreaNameChild,
+            AreaParent = FileNameGenerator.RemoveInvalidFileName(this.room.AreaNameParent, ignore_slash: false),
+            AreaChild = FileNameGenerator.RemoveInvalidFileName(this.room.AreaNameChild, ignore_slash: false),
+            Json = this.room.RawBilibiliApiJsonData,
         });
 
         #region Api Requests

@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using BililiveRecorder.Core.Api.Model;
 using BililiveRecorder.Core.Config.V3;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace BililiveRecorder.Core.Api.Http
 {
@@ -77,6 +78,8 @@ namespace BililiveRecorder.Core.Api.Http
 
         private static async Task<BilibiliApiResponse<T>> FetchAsync<T>(HttpClient client, string url) where T : class
         {
+            // 记得 GetRoomInfoAsync 里复制了一份这里的代码，以后修改记得一起改了
+
             var resp = await client.GetAsync(url).ConfigureAwait(false);
 
             if (resp.StatusCode == (HttpStatusCode)412)
@@ -92,22 +95,35 @@ namespace BililiveRecorder.Core.Api.Http
             return obj;
         }
 
-        public Task<BilibiliApiResponse<RoomInfo>> GetRoomInfoAsync(int roomid)
+        public async Task<BilibiliApiResponse<RoomInfo>> GetRoomInfoAsync(int roomid)
         {
             if (this.disposedValue)
                 throw new ObjectDisposedException(nameof(HttpApiClient));
 
-            var url = $@"{this.config.LiveApiHost}/room/v1/Room/get_info?id={roomid}";
-            return FetchAsync<RoomInfo>(this.mainClient, url);
-        }
+            var url = $@"{this.config.LiveApiHost}/xlive/web-room/v1/index/getInfoByRoom?room_id={roomid}";
 
-        public Task<BilibiliApiResponse<UserInfo>> GetUserInfoAsync(int roomid)
-        {
-            if (this.disposedValue)
-                throw new ObjectDisposedException(nameof(HttpApiClient));
+            // return FetchAsync<RoomInfo>(this.mainClient, url);
+            // 下面的代码是从 FetchAsync 里复制修改的
+            // 以后如果修改 FetchAsync 记得把这里也跟着改了
 
-            var url = $@"{this.config.LiveApiHost}/live_user/v1/UserInfo/get_anchor_in_room?roomid={roomid}";
-            return FetchAsync<UserInfo>(this.mainClient, url);
+            var resp = await this.mainClient.GetAsync(url).ConfigureAwait(false);
+
+            if (resp.StatusCode == (HttpStatusCode)412)
+                throw new Http412Exception("Got HTTP Status 412 when requesting " + url);
+
+            resp.EnsureSuccessStatusCode();
+
+            var text = await resp.Content.ReadAsStringAsync().ConfigureAwait(false);
+
+            var jobject = JObject.Parse(text);
+
+            var obj = jobject.ToObject<BilibiliApiResponse<RoomInfo>>();
+            if (obj?.Code != 0)
+                throw new BilibiliApiResponseCodeNotZeroException("Bilibili api code: " + (obj?.Code?.ToString() ?? "(null)") + "\n" + text);
+
+            obj.Data!.RawBilibiliApiJsonData = jobject["data"] as JObject;
+
+            return obj;
         }
 
         public Task<BilibiliApiResponse<RoomPlayInfo>> GetStreamUrlAsync(int roomid, int qn)

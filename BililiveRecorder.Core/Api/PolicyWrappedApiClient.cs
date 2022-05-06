@@ -32,11 +32,6 @@ namespace BililiveRecorder.Core.Api
             .ExecuteAsync(_ => this.client.GetStreamUrlAsync(roomid, qn), new Context(PolicyNames.CacheKeyStream + ":" + roomid + ":" + qn))
             .ConfigureAwait(false);
 
-        public async Task<BilibiliApiResponse<UserInfo>> GetUserInfoAsync(int roomid) => await this.policies
-            .Get<IAsyncPolicy>(PolicyNames.PolicyRoomInfoApiRequestAsync)
-            .ExecuteAsync(_ => this.client.GetUserInfoAsync(roomid), new Context(PolicyNames.CacheKeyUserInfo + ":" + roomid))
-            .ConfigureAwait(false);
-
         public void Dispose() => this.client.Dispose();
     }
 }

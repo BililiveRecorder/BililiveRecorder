@@ -11,6 +11,7 @@ using BililiveRecorder.Core.Danmaku;
 using BililiveRecorder.Core.Event;
 using BililiveRecorder.Core.Recording;
 using Microsoft.Extensions.DependencyInjection;
+using Newtonsoft.Json.Linq;
 using Polly;
 using Serilog;
 using Serilog.Events;
@@ -86,6 +87,8 @@ namespace BililiveRecorder.Core
         public string Title { get => this.title; private set => this.SetField(ref this.title, value); }
         public string AreaNameParent { get => this.areaNameParent; private set => this.SetField(ref this.areaNameParent, value); }
         public string AreaNameChild { get => this.areaNameChild; private set => this.SetField(ref this.areaNameChild, value); }
+
+        public JObject? RawBilibiliApiJsonData { get; private set; }
 
         public bool Streaming { get => this.streaming; private set => this.SetField(ref this.streaming, value); }
 
@@ -165,8 +168,8 @@ namespace BililiveRecorder.Core
 
             try
             {
-                await this.FetchUserInfoAsync().ConfigureAwait(false);
                 await this.FetchRoomInfoAsync().ConfigureAwait(false);
+
                 this.StartDamakuConnection(delay: false);
 
                 if (this.Streaming && this.AutoRecordForThisSession && this.RoomConfig.AutoRecord)
@@ -188,22 +191,17 @@ namespace BililiveRecorder.Core
             var room = (await this.apiClient.GetRoomInfoAsync(this.RoomConfig.RoomId).ConfigureAwait(false)).Data;
             if (room != null)
             {
-                this.RoomConfig.RoomId = room.RoomId;
-                this.ShortId = room.ShortId;
-                this.Title = room.Title;
-                this.AreaNameParent = room.ParentAreaName;
-                this.AreaNameChild = room.AreaName;
-                this.Streaming = room.LiveStatus == 1;
-            }
-        }
+                this.RoomConfig.RoomId = room.Room.RoomId;
+                this.ShortId = room.Room.ShortId;
+                this.Title = room.Room.Title;
+                this.AreaNameParent = room.Room.ParentAreaName;
+                this.AreaNameChild = room.Room.AreaName;
+                this.Streaming = room.Room.LiveStatus == 1;
 
-        /// <exception cref="Exception"/>
-        private async Task FetchUserInfoAsync()
-        {
-            if (this.disposedValue)
-                return;
-            var user = await this.apiClient.GetUserInfoAsync(this.RoomConfig.RoomId).ConfigureAwait(false);
-            this.Name = user.Data?.Info?.Name ?? this.Name;
+                this.Name = room.User.BaseInfo.Name;
+
+                this.RawBilibiliApiJsonData = room.RawBilibiliApiJsonData;
+            }
         }
 
         ///

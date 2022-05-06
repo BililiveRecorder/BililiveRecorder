@@ -103,7 +103,12 @@ namespace BililiveRecorder.WPF.Pages
         {
             if (CommandArgumentFirstRun)
             {
-                MessageBox.Show(Window.GetWindow(this), @"B站录播姬 安装成功！
+                _ = Task.Run(async () =>
+                {
+                    await Task.Delay(1000);
+                    _ = this.Dispatcher.BeginInvoke(DispatcherPriority.Normal, (Action)(() =>
+                    {
+                        MessageBox.Show(Window.GetWindow(this), @"B站录播姬 安装成功！
 之后再运行请使用桌面或开始菜单里的快捷方式。
 如需卸载，可在系统设置里操作。
 
@@ -111,6 +116,8 @@ BililiveRecorder Installed!
 Please use the shortcut on the desktop or
 in the start menu to launch.
 You can uninstall me in system settings.", "安装成功 Installed", MessageBoxButton.OK, MessageBoxImage.Information);
+                    }));
+                });
             }
 
             // 上次选择的路径信息

@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.Threading.Tasks;
 using BililiveRecorder.Core.Config.V3;
 using BililiveRecorder.Core.Event;
+using Newtonsoft.Json.Linq;
 
 namespace BililiveRecorder.Core
 {
@@ -17,6 +18,8 @@ namespace BililiveRecorder.Core
         string Title { get; }
         string AreaNameParent { get; }
         string AreaNameChild { get; }
+
+        JObject? RawBilibiliApiJsonData { get; }
 
         bool Recording { get; }
         bool Streaming { get; }
