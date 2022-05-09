@@ -4,9 +4,10 @@ using System.CommandLine;
 using System.CommandLine.Invocation;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Threading;
-using BililiveRecorder.Cli.Configure;
 using System.Threading.Tasks;
+using BililiveRecorder.Cli.Configure;
 using BililiveRecorder.Core;
 using BililiveRecorder.Core.Config;
 using BililiveRecorder.Core.Config.V3;
@@ -217,6 +218,7 @@ namespace BililiveRecorder.Cli
             .Enrich.WithThreadName()
             .Enrich.FromLogContext()
             .Enrich.WithExceptionDetails()
+            .Destructure.AsScalar<IPAddress>()
             .Destructure.ByTransforming<Flv.Xml.XmlFlvFile.XmlFlvFileMeta>(x => new
             {
                 x.Version,

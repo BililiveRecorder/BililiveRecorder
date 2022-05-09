@@ -229,6 +229,38 @@
             }
           }
         },
+        "NetworkTransportUseSystemProxy": {
+          "description": "是否使用系统代理\n默认: false",
+          "markdownDescription": "是否使用系统代理  \n默认: `false `\n\n",
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "HasValue": {
+              "type": "boolean",
+              "default": true
+            },
+            "Value": {
+              "type": "boolean",
+              "default": false
+            }
+          }
+        },
+        "NetworkTransportAllowedAddressFamily": {
+          "description": "允许使用的 IP 网络类型\n默认: AllowedAddressFamily.Any",
+          "markdownDescription": "允许使用的 IP 网络类型  \n默认: `AllowedAddressFamily.Any `\n\n",
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "HasValue": {
+              "type": "boolean",
+              "default": true
+            },
+            "Value": {
+              "type": "AllowedAddressFamily",
+              "default": "AllowedAddressFamily.Any"
+            }
+          }
+        },
         "RecordMode": {
           "description": "录制模式\n默认: RecordMode.Standard",
           "markdownDescription": "录制模式  \n默认: `RecordMode.Standard `\n\n本设置项是一个 enum，键值对应如下：\n\n| 键 | 值 |\n|:--:|:--:|\n| RecordMode.Standard | 0 |\n| RecordMode.RawData | 1 |\n\n关于录制模式的说明见 [录制模式](/docs/basic/record_mode/)",

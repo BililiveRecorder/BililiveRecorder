@@ -216,4 +216,22 @@ export const data: Array<ConfigEntry> = [
         xmlComment: "触发 <see cref=\"System.Xml.XmlWriter.Flush\"/> 的弹幕个数",
         markdown: ""
     },
+    {
+        name: "NetworkTransportUseSystemProxy",
+        description: "是否使用系统代理",
+        type: "bool",
+        defaultValue: "false",
+        configType: "globalOnly",
+        advancedConfig: true,
+        markdown: ""
+    },
+    {
+        name: "NetworkTransportAllowedAddressFamily",
+        description: "允许使用的 IP 网络类型",
+        type: "AllowedAddressFamily",
+        defaultValue: "AllowedAddressFamily.Any",
+        configType: "globalOnly",
+        advancedConfig: true,
+        markdown: ""
+    },
 ];

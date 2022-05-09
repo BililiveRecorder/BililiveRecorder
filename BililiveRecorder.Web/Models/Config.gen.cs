@@ -62,6 +62,8 @@ namespace BililiveRecorder.Web.Models
         public Optional<uint>? OptionalTimingDanmakuRetry { get; set; }
         public Optional<uint>? OptionalTimingWatchdogTimeout { get; set; }
         public Optional<uint>? OptionalRecordDanmakuFlushInterval { get; set; }
+        public Optional<bool>? OptionalNetworkTransportUseSystemProxy { get; set; }
+        public Optional<AllowedAddressFamily>? OptionalNetworkTransportAllowedAddressFamily { get; set; }
 
         public void ApplyTo(GlobalConfig config)
         {
@@ -87,6 +89,8 @@ namespace BililiveRecorder.Web.Models
             if (this.OptionalTimingDanmakuRetry.HasValue) config.OptionalTimingDanmakuRetry = this.OptionalTimingDanmakuRetry.Value;
             if (this.OptionalTimingWatchdogTimeout.HasValue) config.OptionalTimingWatchdogTimeout = this.OptionalTimingWatchdogTimeout.Value;
             if (this.OptionalRecordDanmakuFlushInterval.HasValue) config.OptionalRecordDanmakuFlushInterval = this.OptionalRecordDanmakuFlushInterval.Value;
+            if (this.OptionalNetworkTransportUseSystemProxy.HasValue) config.OptionalNetworkTransportUseSystemProxy = this.OptionalNetworkTransportUseSystemProxy.Value;
+            if (this.OptionalNetworkTransportAllowedAddressFamily.HasValue) config.OptionalNetworkTransportAllowedAddressFamily = this.OptionalNetworkTransportAllowedAddressFamily.Value;
         }
     }
 
@@ -132,6 +136,8 @@ namespace BililiveRecorder.Web.Models.Rest
         public Optional<uint> OptionalTimingDanmakuRetry { get; set; }
         public Optional<uint> OptionalTimingWatchdogTimeout { get; set; }
         public Optional<uint> OptionalRecordDanmakuFlushInterval { get; set; }
+        public Optional<bool> OptionalNetworkTransportUseSystemProxy { get; set; }
+        public Optional<AllowedAddressFamily> OptionalNetworkTransportAllowedAddressFamily { get; set; }
     }
 
 }
@@ -182,6 +188,8 @@ namespace BililiveRecorder.Web.Models.Graphql
             this.Field(x => x.OptionalTimingDanmakuRetry, type: typeof(HierarchicalOptionalType<uint>));
             this.Field(x => x.OptionalTimingWatchdogTimeout, type: typeof(HierarchicalOptionalType<uint>));
             this.Field(x => x.OptionalRecordDanmakuFlushInterval, type: typeof(HierarchicalOptionalType<uint>));
+            this.Field(x => x.OptionalNetworkTransportUseSystemProxy, type: typeof(HierarchicalOptionalType<bool>));
+            this.Field(x => x.OptionalNetworkTransportAllowedAddressFamily, type: typeof(HierarchicalOptionalType<AllowedAddressFamily>));
         }
     }
 
@@ -211,6 +219,8 @@ namespace BililiveRecorder.Web.Models.Graphql
             this.Field(x => x.TimingDanmakuRetry);
             this.Field(x => x.TimingWatchdogTimeout);
             this.Field(x => x.RecordDanmakuFlushInterval);
+            this.Field(x => x.NetworkTransportUseSystemProxy);
+            this.Field(x => x.NetworkTransportAllowedAddressFamily);
         }
     }
 
@@ -257,6 +267,8 @@ namespace BililiveRecorder.Web.Models.Graphql
             this.Field(x => x.OptionalTimingDanmakuRetry, nullable: true, type: typeof(HierarchicalOptionalInputType<uint>));
             this.Field(x => x.OptionalTimingWatchdogTimeout, nullable: true, type: typeof(HierarchicalOptionalInputType<uint>));
             this.Field(x => x.OptionalRecordDanmakuFlushInterval, nullable: true, type: typeof(HierarchicalOptionalInputType<uint>));
+            this.Field(x => x.OptionalNetworkTransportUseSystemProxy, nullable: true, type: typeof(HierarchicalOptionalInputType<bool>));
+            this.Field(x => x.OptionalNetworkTransportAllowedAddressFamily, nullable: true, type: typeof(HierarchicalOptionalInputType<AllowedAddressFamily>));
         }
     }
 

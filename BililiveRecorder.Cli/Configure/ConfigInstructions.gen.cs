@@ -35,7 +35,9 @@ namespace BililiveRecorder.Cli.Configure
         TimingStreamConnect,
         TimingDanmakuRetry,
         TimingWatchdogTimeout,
-        RecordDanmakuFlushInterval
+        RecordDanmakuFlushInterval,
+        NetworkTransportUseSystemProxy,
+        NetworkTransportAllowedAddressFamily
     }
     public enum RoomConfigProperties
     {
@@ -82,6 +84,8 @@ namespace BililiveRecorder.Cli.Configure
             GlobalConfig.Add(GlobalConfigProperties.TimingDanmakuRetry, new ConfigInstruction<GlobalConfig, uint>(config => config.HasTimingDanmakuRetry = false, (config, value) => config.TimingDanmakuRetry = value) { Name = "TimingDanmakuRetry", CanBeOptional = true });
             GlobalConfig.Add(GlobalConfigProperties.TimingWatchdogTimeout, new ConfigInstruction<GlobalConfig, uint>(config => config.HasTimingWatchdogTimeout = false, (config, value) => config.TimingWatchdogTimeout = value) { Name = "TimingWatchdogTimeout", CanBeOptional = true });
             GlobalConfig.Add(GlobalConfigProperties.RecordDanmakuFlushInterval, new ConfigInstruction<GlobalConfig, uint>(config => config.HasRecordDanmakuFlushInterval = false, (config, value) => config.RecordDanmakuFlushInterval = value) { Name = "RecordDanmakuFlushInterval", CanBeOptional = true });
+            GlobalConfig.Add(GlobalConfigProperties.NetworkTransportUseSystemProxy, new ConfigInstruction<GlobalConfig, bool>(config => config.HasNetworkTransportUseSystemProxy = false, (config, value) => config.NetworkTransportUseSystemProxy = value) { Name = "NetworkTransportUseSystemProxy", CanBeOptional = true });
+            GlobalConfig.Add(GlobalConfigProperties.NetworkTransportAllowedAddressFamily, new ConfigInstruction<GlobalConfig, AllowedAddressFamily>(config => config.HasNetworkTransportAllowedAddressFamily = false, (config, value) => config.NetworkTransportAllowedAddressFamily = value) { Name = "NetworkTransportAllowedAddressFamily", CanBeOptional = true });
 
             RoomConfig.Add(RoomConfigProperties.RoomId, new ConfigInstruction<RoomConfig, int>(config => config.HasRoomId = false, (config, value) => config.RoomId = value) { Name = "RoomId", CanBeOptional = false });
             RoomConfig.Add(RoomConfigProperties.AutoRecord, new ConfigInstruction<RoomConfig, bool>(config => config.HasAutoRecord = false, (config, value) => config.AutoRecord = value) { Name = "AutoRecord", CanBeOptional = false });

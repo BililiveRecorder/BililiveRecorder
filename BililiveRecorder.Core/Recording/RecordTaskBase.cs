@@ -2,11 +2,13 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Timers;
 using BililiveRecorder.Core.Api;
+using BililiveRecorder.Core.Config;
 using BililiveRecorder.Core.Event;
 using BililiveRecorder.Core.Templating;
 using Serilog;
@@ -19,7 +21,7 @@ namespace BililiveRecorder.Core.Recording
         private const string HttpHeaderAccept = "*/*";
         private const string HttpHeaderOrigin = "https://live.bilibili.com";
         private const string HttpHeaderReferer = "https://live.bilibili.com/";
-        private const string HttpHeaderUserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.141 Safari/537.36";
+        private const string HttpHeaderUserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.4951.54 Safari/537.36";
 
         private const int timer_inverval = 2;
         protected readonly Timer timer = new Timer(1000 * timer_inverval);
@@ -199,11 +201,12 @@ namespace BililiveRecorder.Core.Recording
 
         #region Api Requests
 
-        private static HttpClient CreateHttpClient()
+        private HttpClient CreateHttpClient()
         {
             var httpClient = new HttpClient(new HttpClientHandler
             {
-                AllowAutoRedirect = false
+                AllowAutoRedirect = false,
+                UseProxy = this.room.RoomConfig.NetworkTransportUseSystemProxy,
             });
             var headers = httpClient.DefaultRequestHeaders;
             headers.Add("Accept", HttpHeaderAccept);
@@ -273,25 +276,64 @@ namespace BililiveRecorder.Core.Recording
 
         protected async Task<Stream> GetStreamAsync(string fullUrl, int timeout)
         {
-            var client = CreateHttpClient();
+            var client = this.CreateHttpClient();
 
             while (true)
             {
-                var resp = await client.GetAsync(fullUrl,
+                var originalUri = new Uri(fullUrl);
+                var allowedAddressFamily = this.room.RoomConfig.NetworkTransportAllowedAddressFamily;
+                HttpRequestMessage request;
+
+                if (allowedAddressFamily == AllowedAddressFamily.System)
+                {
+                    this.logger.Debug("NetworkTransportAllowedAddressFamily is System");
+                    request = new HttpRequestMessage(HttpMethod.Get, originalUri);
+                }
+                else
+                {
+                    var ips = await Dns.GetHostAddressesAsync(originalUri.DnsSafeHost);
+
+                    var filtered = ips.Where(x => allowedAddressFamily switch
+                    {
+                        AllowedAddressFamily.Ipv4 => x.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork,
+                        AllowedAddressFamily.Ipv6 => x.AddressFamily == System.Net.Sockets.AddressFamily.InterNetworkV6,
+                        AllowedAddressFamily.Any => true,
+                        _ => false
+                    }).ToArray();
+
+                    var selected = filtered[this.random.Next(filtered.Length)];
+
+                    this.logger.Debug("指定直播服务器地址 {DnsHost}: {SelectedIp}, Allowed: {AllowedAddressFamily}, {IPAddresses}", originalUri.DnsSafeHost, selected, allowedAddressFamily, ips);
+
+                    if (selected is null)
+                    {
+                        throw new Exception("DNS 没有返回符合要求的 IP 地址");
+                    }
+
+                    var builder = new UriBuilder(originalUri)
+                    {
+                        Host = selected.ToString()
+                    };
+
+                    request = new HttpRequestMessage(HttpMethod.Get, builder.Uri);
+                    request.Headers.Host = originalUri.IsDefaultPort ? originalUri.Host : originalUri.Host + ":" + originalUri.Port;
+                }
+
+                var resp = await client.SendAsync(request,
                     HttpCompletionOption.ResponseHeadersRead,
                     new CancellationTokenSource(timeout).Token)
                     .ConfigureAwait(false);
 
                 switch (resp.StatusCode)
                 {
-                    case System.Net.HttpStatusCode.OK:
+                    case HttpStatusCode.OK:
                         {
                             this.logger.Information("开始接收直播流");
                             var stream = await resp.Content.ReadAsStreamAsync().ConfigureAwait(false);
                             return stream;
                         }
-                    case System.Net.HttpStatusCode.Moved:
-                    case System.Net.HttpStatusCode.Redirect:
+                    case HttpStatusCode.Moved:
+                    case HttpStatusCode.Redirect:
                         {
                             fullUrl = resp.Headers.Location.OriginalString;
                             this.logger.Debug("跳转到 {Url}", fullUrl);
@@ -303,7 +345,6 @@ namespace BililiveRecorder.Core.Recording
                 }
             }
         }
-
         #endregion
     }
 }

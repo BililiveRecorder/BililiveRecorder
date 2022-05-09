@@ -213,6 +213,7 @@ namespace BililiveRecorder.WPF
             .Enrich.WithThreadName()
             .Enrich.FromLogContext()
             .Enrich.WithExceptionDetails()
+            .Destructure.AsScalar<IPAddress>()
             .Destructure.ByTransforming<Flv.Xml.XmlFlvFile.XmlFlvFileMeta>(x => new
             {
                 x.Version,
@@ -221,7 +222,6 @@ namespace BililiveRecorder.WPF
                 x.FileCreationTime,
                 x.FileModificationTime,
             })
-            .Destructure.AsScalar<IPAddress>()
             .WriteTo.Console(levelSwitch: levelSwitchConsole)
 #if DEBUG
             .WriteTo.Debug()

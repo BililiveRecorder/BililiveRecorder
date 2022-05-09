@@ -166,6 +166,16 @@ namespace BililiveRecorder.Core.Config.V3
         /// </summary>
         public uint RecordDanmakuFlushInterval => this.GetPropertyValue<uint>();
 
+        /// <summary>
+        /// 是否使用系统代理
+        /// </summary>
+        public bool NetworkTransportUseSystemProxy => this.GetPropertyValue<bool>();
+
+        /// <summary>
+        /// 允许使用的 IP 网络类型
+        /// </summary>
+        public AllowedAddressFamily NetworkTransportAllowedAddressFamily => this.GetPropertyValue<AllowedAddressFamily>();
+
     }
 
     [JsonObject(MemberSerialization.OptIn)]
@@ -347,6 +357,22 @@ namespace BililiveRecorder.Core.Config.V3
         [JsonProperty(nameof(RecordDanmakuFlushInterval)), EditorBrowsable(EditorBrowsableState.Never)]
         public Optional<uint> OptionalRecordDanmakuFlushInterval { get => this.GetPropertyValueOptional<uint>(nameof(this.RecordDanmakuFlushInterval)); set => this.SetPropertyValueOptional(value, nameof(this.RecordDanmakuFlushInterval)); }
 
+        /// <summary>
+        /// 是否使用系统代理
+        /// </summary>
+        public bool NetworkTransportUseSystemProxy { get => this.GetPropertyValue<bool>(); set => this.SetPropertyValue(value); }
+        public bool HasNetworkTransportUseSystemProxy { get => this.GetPropertyHasValue(nameof(this.NetworkTransportUseSystemProxy)); set => this.SetPropertyHasValue<bool>(value, nameof(this.NetworkTransportUseSystemProxy)); }
+        [JsonProperty(nameof(NetworkTransportUseSystemProxy)), EditorBrowsable(EditorBrowsableState.Never)]
+        public Optional<bool> OptionalNetworkTransportUseSystemProxy { get => this.GetPropertyValueOptional<bool>(nameof(this.NetworkTransportUseSystemProxy)); set => this.SetPropertyValueOptional(value, nameof(this.NetworkTransportUseSystemProxy)); }
+
+        /// <summary>
+        /// 允许使用的 IP 网络类型
+        /// </summary>
+        public AllowedAddressFamily NetworkTransportAllowedAddressFamily { get => this.GetPropertyValue<AllowedAddressFamily>(); set => this.SetPropertyValue(value); }
+        public bool HasNetworkTransportAllowedAddressFamily { get => this.GetPropertyHasValue(nameof(this.NetworkTransportAllowedAddressFamily)); set => this.SetPropertyHasValue<AllowedAddressFamily>(value, nameof(this.NetworkTransportAllowedAddressFamily)); }
+        [JsonProperty(nameof(NetworkTransportAllowedAddressFamily)), EditorBrowsable(EditorBrowsableState.Never)]
+        public Optional<AllowedAddressFamily> OptionalNetworkTransportAllowedAddressFamily { get => this.GetPropertyValueOptional<AllowedAddressFamily>(nameof(this.NetworkTransportAllowedAddressFamily)); set => this.SetPropertyValueOptional(value, nameof(this.NetworkTransportAllowedAddressFamily)); }
+
     }
 
     public sealed partial class DefaultConfig
@@ -397,6 +423,10 @@ namespace BililiveRecorder.Core.Config.V3
         public uint TimingWatchdogTimeout => 10 * 1000;
 
         public uint RecordDanmakuFlushInterval => 20;
+
+        public bool NetworkTransportUseSystemProxy => false;
+
+        public AllowedAddressFamily NetworkTransportAllowedAddressFamily => AllowedAddressFamily.Any;
 
     }
 
