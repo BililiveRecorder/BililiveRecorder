@@ -261,6 +261,22 @@
             }
           }
         },
+        "UserScript": {
+          "description": "自定义脚本\n默认: ",
+          "markdownDescription": "自定义脚本  \n默认: ` `\n\n",
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "HasValue": {
+              "type": "boolean",
+              "default": true
+            },
+            "Value": {
+              "type": "string",
+              "default": ""
+            }
+          }
+        },
         "RecordMode": {
           "description": "录制模式\n默认: RecordMode.Standard",
           "markdownDescription": "录制模式  \n默认: `RecordMode.Standard `\n\n本设置项是一个 enum，键值对应如下：\n\n| 键 | 值 |\n|:--:|:--:|\n| RecordMode.Standard | 0 |\n| RecordMode.RawData | 1 |\n\n关于录制模式的说明见 [录制模式](/docs/basic/record_mode/)",

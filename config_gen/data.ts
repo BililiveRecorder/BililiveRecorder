@@ -234,4 +234,13 @@ export const data: Array<ConfigEntry> = [
         advancedConfig: true,
         markdown: ""
     },
+    {
+        name: "UserScript",
+        description: "自定义脚本",
+        type: "string",
+        defaultValue: "string.Empty",
+        configType: "globalOnly",
+        advancedConfig: true,
+        markdown: ""
+    },
 ];

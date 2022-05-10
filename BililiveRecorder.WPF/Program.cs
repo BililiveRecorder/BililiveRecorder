@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using System.Windows.Threading;
 using BililiveRecorder.ToolBox;
 using Sentry;
+using Sentry.Extensibility;
 using Serilog;
 using Serilog.Core;
 using Serilog.Exceptions;
@@ -238,6 +239,8 @@ namespace BililiveRecorder.WPF
                 o.DisableAppDomainUnhandledExceptionCapture();
                 o.DisableTaskUnobservedTaskExceptionCapture();
                 o.AddExceptionFilterForType<System.Net.Http.HttpRequestException>();
+                o.AddExceptionFilterForType<OutOfMemoryException>();
+                o.AddEventProcessor(new SentryEventProcessor());
 
                 o.TextFormatter = new MessageTemplateTextFormatter("[{RoomId}] {Message}{NewLine}{Exception}{@ExceptionDetail:j}");
 
@@ -269,5 +272,11 @@ namespace BililiveRecorder.WPF
         [HandleProcessCorruptedStateExceptions, SecurityCritical]
         private static void App_DispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e) =>
             logger.Fatal(e.Exception, "Unhandled exception from Application.DispatcherUnhandledException");
+
+        private class SentryEventProcessor : ISentryEventProcessor
+        {
+            private static readonly string NameOfJintConsole = typeof(Core.Scripting.Runtime.JintConsole).FullName;
+            public SentryEvent? Process(SentryEvent e) => e?.Logger == NameOfJintConsole ? null : e;
+        }
     }
 }
