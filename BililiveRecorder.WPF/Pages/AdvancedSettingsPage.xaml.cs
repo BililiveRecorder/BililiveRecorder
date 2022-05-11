@@ -3,6 +3,7 @@ using System.Runtime.Serialization;
 using System.Threading.Tasks;
 using System.Windows;
 using BililiveRecorder.Core.Api.Http;
+using BililiveRecorder.Core.Scripting;
 using Newtonsoft.Json.Linq;
 using Serilog;
 
@@ -16,16 +17,21 @@ namespace BililiveRecorder.WPF.Pages
     {
         private static readonly ILogger logger = Log.ForContext<AdvancedSettingsPage>();
         private readonly HttpApiClient? httpApiClient;
+        private readonly UserScriptRunner? userScriptRunner;
 
-        public AdvancedSettingsPage(HttpApiClient? httpApiClient)
+        public AdvancedSettingsPage(HttpApiClient? httpApiClient, UserScriptRunner? userScriptRunner)
         {
             this.InitializeComponent();
             this.httpApiClient = httpApiClient;
+            this.userScriptRunner = userScriptRunner;
         }
 
-        public AdvancedSettingsPage() : this((HttpApiClient?)(RootPage.ServiceProvider?.GetService(typeof(HttpApiClient))))
-        {
-        }
+        public AdvancedSettingsPage()
+            : this(
+                  (HttpApiClient?)(RootPage.ServiceProvider?.GetService(typeof(HttpApiClient))),
+                  (UserScriptRunner?)(RootPage.ServiceProvider?.GetService(typeof(UserScriptRunner)))
+                  )
+        { }
 
         private void Crash_Click(object sender, RoutedEventArgs e) => throw new TestException("test crash triggered");
 
@@ -74,6 +80,11 @@ namespace BililiveRecorder.WPF.Pages
             }
 
             MessageBox.Show("User: " + jo["data"]?["uname"]?.ToObject<string>(), "Cookie Test - Successed", MessageBoxButton.OK, MessageBoxImage.Information);
+        }
+
+        private void TestScript_Click(object sender, RoutedEventArgs e)
+        {
+            _ = Task.Run(() => this.userScriptRunner?.CallOnTest(Log.Logger, str => MessageBox.Show(str)));
         }
     }
 }

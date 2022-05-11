@@ -48,6 +48,14 @@
                     <ui:NumberBox Minimum="0" SmallChange="1" Text="{Binding RecordDanmakuFlushInterval,UpdateSourceTrigger=PropertyChanged}"/>
                 </c:SettingWithDefault>
             </GroupBox>
+            <GroupBox Header="Scripting">
+                <StackPanel>
+                    <Button Click="TestScript_Click" Content="Test"/>
+                    <c:SettingWithDefault IsSettingNotUsingDefault="{Binding HasUserScript}" Header="请自由发挥((">
+                        <TextBox Text="{Binding UserScript, UpdateSourceTrigger=LostFocus}" AcceptsReturn="True" MinHeight="70" MaxHeight="130"/>
+                    </c:SettingWithDefault>
+                </StackPanel>
+            </GroupBox>
             <GroupBox Header="Timing">
                 <ui:SimpleStackPanel Spacing="10">
                     <c:SettingWithDefault IsSettingNotUsingDefault="{Binding HasTimingStreamRetry}" Header="录制重试间隔">

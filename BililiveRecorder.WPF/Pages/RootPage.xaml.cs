@@ -62,16 +62,6 @@ namespace BililiveRecorder.WPF.Pages
             this.Model = new RootModel();
             this.DataContext = this.Model;
 
-            {
-                var services = new ServiceCollection();
-                services
-                    .AddFlv()
-                    .AddRecorder()
-                    ;
-
-                this.serviceProvider = services.BuildServiceProvider();
-            }
-
             this.InitializeComponent();
             this.AdvancedSettingsPageItem.Visibility = Visibility.Hidden;
 
