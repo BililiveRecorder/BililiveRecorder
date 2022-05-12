@@ -666,13 +666,13 @@ rec@danmuji.orgまでフィードバック受け付けます。
     <value>「ファイル追加」をクリック、またはファイルをここまでドラッグ</value>
   </data>
   <data name="Toolbox_Merge_Title" xml:space="preserve">
-    <value>弾幕マージ</value>
+    <value>コメント統合</value>
   </data>
   <data name="Toolbox_Merge_Title_Long" xml:space="preserve">
-    <value>XML ファイルの統合</value>
+    <value>XMLコメントファイルの統合</value>
   </data>
   <data name="Toolbox_Merge_XmlDanmakuFiles" xml:space="preserve">
-    <value>XML 弾幕ファイル</value>
+    <value>XMLコメントファイル</value>
   </data>
   <data name="Toolbox_Remux_OpenFileTitle" xml:space="preserve">
     <value>コンテナ変更するFLVファイルを選択</value>
