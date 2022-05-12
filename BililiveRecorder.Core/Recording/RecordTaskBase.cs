@@ -98,6 +98,7 @@ namespace BililiveRecorder.Core.Recording
             this.streamHost = new Uri(fullUrl).Host;
             var qnDesc = qn switch
             {
+                30000 => "杜比",
                 20000 => "4K",
                 10000 => "原画",
                 401 => "蓝光(杜比)",
@@ -105,6 +106,7 @@ namespace BililiveRecorder.Core.Recording
                 250 => "超清",
                 150 => "高清",
                 80 => "流畅",
+                -1 => "录播姬用户脚本",
                 _ => "未知"
             };
             this.logger.Information("连接直播服务器 {Host} 录制画质 {Qn} ({QnDescription})", this.streamHost, qn, qnDesc);
@@ -231,7 +233,7 @@ namespace BililiveRecorder.Core.Recording
             if (this.userScriptRunner.CallOnFetchStreamUrl(this.logger, roomid, qns) is { } urlFromScript)
             {
                 this.logger.Information("使用用户脚本返回的直播流地址 {Url}", urlFromScript);
-                return (urlFromScript, 0);
+                return (urlFromScript, -1);
             }
 
             const int DefaultQn = 10000;
