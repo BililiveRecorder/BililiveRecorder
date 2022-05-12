@@ -118,7 +118,7 @@ namespace BililiveRecorder.Core.Scripting.Runtime
 
         private JsValue Assert(JsValue thisObject, JsValue[] arguments)
         {
-            if (arguments.At(0).IsLooselyEqual(0))
+            if (!arguments.At(0).IsLooselyEqual(true))
             {
                 string[] messages;
 

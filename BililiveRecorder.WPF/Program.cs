@@ -4,6 +4,7 @@ using System.CommandLine.Invocation;
 using System.Diagnostics;
 using System.IO;
 using System.Net;
+using System.Net.Http;
 using System.Runtime.ExceptionServices;
 using System.Runtime.InteropServices;
 using System.Security;
@@ -11,6 +12,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Threading;
 using BililiveRecorder.ToolBox;
+using Jint.Runtime;
 using Sentry;
 using Sentry.Extensibility;
 using Serilog;
@@ -238,8 +240,9 @@ namespace BililiveRecorder.WPF
                 o.IsGlobalModeEnabled = true;
                 o.DisableAppDomainUnhandledExceptionCapture();
                 o.DisableTaskUnobservedTaskExceptionCapture();
-                o.AddExceptionFilterForType<System.Net.Http.HttpRequestException>();
+                o.AddExceptionFilterForType<HttpRequestException>();
                 o.AddExceptionFilterForType<OutOfMemoryException>();
+                o.AddExceptionFilterForType<JintException>();
                 o.AddEventProcessor(new SentryEventProcessor());
 
                 o.TextFormatter = new MessageTemplateTextFormatter("[{RoomId}] {Message}{NewLine}{Exception}{@ExceptionDetail:j}");
@@ -275,8 +278,9 @@ namespace BililiveRecorder.WPF
 
         private class SentryEventProcessor : ISentryEventProcessor
         {
-            private static readonly string NameOfJintConsole = typeof(Core.Scripting.Runtime.JintConsole).FullName;
-            public SentryEvent? Process(SentryEvent e) => e?.Logger == NameOfJintConsole ? null : e;
+            private static readonly string JintConsole = typeof(Core.Scripting.Runtime.JintConsole).FullName;
+            private static readonly string UserScriptRunner = typeof(Core.Scripting.UserScriptRunner).FullName;
+            public SentryEvent? Process(SentryEvent e) => (e?.Logger == JintConsole || e?.Logger == UserScriptRunner) ? null : e;
         }
     }
 }
