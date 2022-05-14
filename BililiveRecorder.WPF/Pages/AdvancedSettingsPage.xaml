@@ -11,6 +11,7 @@
     l:ResxLocalizationProvider.DefaultDictionary="Strings"
     xmlns:c="clr-namespace:BililiveRecorder.WPF.Controls"
     xmlns:local="clr-namespace:BililiveRecorder.WPF.Pages"
+    xmlns:config="clr-namespace:BililiveRecorder.Core.Config;assembly=BililiveRecorder.Core"
     xmlns:configv3="clr-namespace:BililiveRecorder.Core.Config.V3;assembly=BililiveRecorder.Core"
     xmlns:model="clr-namespace:BililiveRecorder.WPF.Models"
     mc:Ignorable="d" 
@@ -53,6 +54,27 @@
                     <Button Click="TestScript_Click" Content="Test"/>
                     <c:SettingWithDefault IsSettingNotUsingDefault="{Binding HasUserScript}" Header="请自由发挥((">
                         <TextBox Text="{Binding UserScript, UpdateSourceTrigger=LostFocus}" AcceptsReturn="True" MinHeight="70" MaxHeight="130"/>
+                    </c:SettingWithDefault>
+                </StackPanel>
+            </GroupBox>
+            <GroupBox Header="Network">
+                <StackPanel>
+                    <CheckBox IsChecked="{Binding Path=NetworkTransportUseSystemProxy}" Content="使用系统代理"/>
+                    <TextBlock Margin="0,10" Text="允许使用的网络类型："/>
+                    <RadioButton GroupName="NetworkTransportAllowedAddressFamily" Content="系统 (禁用录播姬的 IP 随机选择)"
+                                 IsChecked="{Binding Path=NetworkTransportAllowedAddressFamily, Converter={StaticResource EnumToBooleanConverter},
+                        ConverterParameter={x:Static config:AllowedAddressFamily.System}}" />
+                    <RadioButton GroupName="NetworkTransportAllowedAddressFamily" Content="IPv4 和 IPv6"
+                                 IsChecked="{Binding Path=NetworkTransportAllowedAddressFamily, Converter={StaticResource EnumToBooleanConverter},
+                        ConverterParameter={x:Static config:AllowedAddressFamily.Any}}" />
+                    <RadioButton GroupName="NetworkTransportAllowedAddressFamily" Content="仅限 IPv4"
+                                 IsChecked="{Binding Path=NetworkTransportAllowedAddressFamily, Converter={StaticResource EnumToBooleanConverter},
+                        ConverterParameter={x:Static config:AllowedAddressFamily.Ipv4}}" />
+                    <RadioButton GroupName="NetworkTransportAllowedAddressFamily" Content="仅限 IPv6"
+                                 IsChecked="{Binding Path=NetworkTransportAllowedAddressFamily, Converter={StaticResource EnumToBooleanConverter},
+                        ConverterParameter={x:Static config:AllowedAddressFamily.Ipv6}}" />
+                    <c:SettingWithDefault IsSettingNotUsingDefault="{Binding HasLiveApiHost}" Header="B站直播 API Host">
+                        <TextBox ui:TextBoxHelper.IsDeleteButtonVisible="False" Text="{Binding LiveApiHost,UpdateSourceTrigger=LostFocus}"/>
                     </c:SettingWithDefault>
                 </StackPanel>
             </GroupBox>
