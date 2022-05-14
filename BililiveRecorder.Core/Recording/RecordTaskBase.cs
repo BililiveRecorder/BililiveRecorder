@@ -39,7 +39,7 @@ namespace BililiveRecorder.Core.Recording
         protected string? streamHost;
         protected bool started = false;
         protected bool timeoutTriggered = false;
-
+        protected int qn;
 
         private readonly object ioStatsLock = new();
         protected int ioNetworkDownloadedBytes;
@@ -95,20 +95,10 @@ namespace BililiveRecorder.Core.Recording
 
             var (fullUrl, qn) = await this.FetchStreamUrlAsync(this.room.RoomConfig.RoomId).ConfigureAwait(false);
 
+            this.qn = qn;
             this.streamHost = new Uri(fullUrl).Host;
-            var qnDesc = qn switch
-            {
-                30000 => "杜比",
-                20000 => "4K",
-                10000 => "原画",
-                401 => "蓝光(杜比)",
-                400 => "蓝光",
-                250 => "超清",
-                150 => "高清",
-                80 => "流畅",
-                -1 => "录播姬用户脚本",
-                _ => "未知"
-            };
+            var qnDesc = StreamQualityNumber.MapToString(qn);
+
             this.logger.Information("连接直播服务器 {Host} 录制画质 {Qn} ({QnDescription})", this.streamHost, qn, qnDesc);
             this.logger.Debug("直播流地址 {Url}", fullUrl);
 
@@ -201,6 +191,7 @@ namespace BililiveRecorder.Core.Recording
             ShortId = this.room.ShortId,
             AreaParent = FileNameGenerator.RemoveInvalidFileName(this.room.AreaNameParent, ignore_slash: false),
             AreaChild = FileNameGenerator.RemoveInvalidFileName(this.room.AreaNameChild, ignore_slash: false),
+            Qn = this.qn,
             Json = this.room.RawBilibiliApiJsonData,
         });
 

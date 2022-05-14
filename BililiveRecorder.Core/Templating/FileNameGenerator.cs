@@ -102,6 +102,7 @@ namespace BililiveRecorder.Core.Templating
             };
             templateOptions.MemberAccessStrategy.MemberNameStrategy = MemberNameStrategies.CamelCase;
             templateOptions.ValueConverters.Add(o => o is JContainer j ? new JContainerValue(j) : null);
+            templateOptions.Filters.AddFilter("format_qn", StreamQualityNumber.MapToStringFilterDelegateAsync);
 
             var context = new TemplateContext(data, templateOptions);
 
@@ -157,6 +158,8 @@ namespace BililiveRecorder.Core.Templating
             public string AreaParent { get; set; } = string.Empty;
 
             public string AreaChild { get; set; } = string.Empty;
+
+            public int Qn { get; set; }
 
             public JObject? Json { get; set; }
         }
