@@ -176,6 +176,11 @@ namespace BililiveRecorder.Core.Config.V3
         /// </summary>
         public AllowedAddressFamily NetworkTransportAllowedAddressFamily => this.GetPropertyValue<AllowedAddressFamily>();
 
+        /// <summary>
+        /// 自定义脚本
+        /// </summary>
+        public string UserScript => this.GetPropertyValue<string>();
+
     }
 
     [JsonObject(MemberSerialization.OptIn)]
@@ -373,6 +378,14 @@ namespace BililiveRecorder.Core.Config.V3
         [JsonProperty(nameof(NetworkTransportAllowedAddressFamily)), EditorBrowsable(EditorBrowsableState.Never)]
         public Optional<AllowedAddressFamily> OptionalNetworkTransportAllowedAddressFamily { get => this.GetPropertyValueOptional<AllowedAddressFamily>(nameof(this.NetworkTransportAllowedAddressFamily)); set => this.SetPropertyValueOptional(value, nameof(this.NetworkTransportAllowedAddressFamily)); }
 
+        /// <summary>
+        /// 自定义脚本
+        /// </summary>
+        public string UserScript { get => this.GetPropertyValue<string>(); set => this.SetPropertyValue(value); }
+        public bool HasUserScript { get => this.GetPropertyHasValue(nameof(this.UserScript)); set => this.SetPropertyHasValue<string>(value, nameof(this.UserScript)); }
+        [JsonProperty(nameof(UserScript)), EditorBrowsable(EditorBrowsableState.Never)]
+        public Optional<string> OptionalUserScript { get => this.GetPropertyValueOptional<string>(nameof(this.UserScript)); set => this.SetPropertyValueOptional(value, nameof(this.UserScript)); }
+
     }
 
     public sealed partial class DefaultConfig
@@ -427,6 +440,8 @@ namespace BililiveRecorder.Core.Config.V3
         public bool NetworkTransportUseSystemProxy => false;
 
         public AllowedAddressFamily NetworkTransportAllowedAddressFamily => AllowedAddressFamily.Any;
+
+        public string UserScript => string.Empty;
 
     }
 

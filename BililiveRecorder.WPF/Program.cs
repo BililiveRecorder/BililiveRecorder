@@ -4,6 +4,7 @@ using System.CommandLine.Invocation;
 using System.Diagnostics;
 using System.IO;
 using System.Net;
+using System.Net.Http;
 using System.Runtime.ExceptionServices;
 using System.Runtime.InteropServices;
 using System.Security;
@@ -11,7 +12,10 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Threading;
 using BililiveRecorder.ToolBox;
+using Esprima;
+using Jint.Runtime;
 using Sentry;
+using Sentry.Extensibility;
 using Serilog;
 using Serilog.Core;
 using Serilog.Exceptions;
@@ -237,7 +241,11 @@ namespace BililiveRecorder.WPF
                 o.IsGlobalModeEnabled = true;
                 o.DisableAppDomainUnhandledExceptionCapture();
                 o.DisableTaskUnobservedTaskExceptionCapture();
-                o.AddExceptionFilterForType<System.Net.Http.HttpRequestException>();
+                o.AddExceptionFilterForType<HttpRequestException>();
+                o.AddExceptionFilterForType<OutOfMemoryException>();
+                o.AddExceptionFilterForType<JintException>();
+                o.AddExceptionFilterForType<ParserException>();
+                o.AddEventProcessor(new SentryEventProcessor());
 
                 o.TextFormatter = new MessageTemplateTextFormatter("[{RoomId}] {Message}{NewLine}{Exception}{@ExceptionDetail:j}");
 
@@ -269,5 +277,12 @@ namespace BililiveRecorder.WPF
         [HandleProcessCorruptedStateExceptions, SecurityCritical]
         private static void App_DispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e) =>
             logger.Fatal(e.Exception, "Unhandled exception from Application.DispatcherUnhandledException");
+
+        private class SentryEventProcessor : ISentryEventProcessor
+        {
+            private static readonly string JintConsole = typeof(Core.Scripting.Runtime.JintConsole).FullName;
+            private static readonly string UserScriptRunner = typeof(Core.Scripting.UserScriptRunner).FullName;
+            public SentryEvent? Process(SentryEvent e) => (e?.Logger == JintConsole || e?.Logger == UserScriptRunner) ? null : e;
+        }
     }
 }

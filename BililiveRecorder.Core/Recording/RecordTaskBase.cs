@@ -10,6 +10,7 @@ using System.Timers;
 using BililiveRecorder.Core.Api;
 using BililiveRecorder.Core.Config;
 using BililiveRecorder.Core.Event;
+using BililiveRecorder.Core.Scripting;
 using BililiveRecorder.Core.Templating;
 using Serilog;
 using Timer = System.Timers.Timer;
@@ -33,6 +34,7 @@ namespace BililiveRecorder.Core.Recording
         protected readonly ILogger logger;
         protected readonly IApiClient apiClient;
         private readonly FileNameGenerator fileNameGenerator;
+        private readonly UserScriptRunner userScriptRunner;
 
         protected string? streamHost;
         protected bool started = false;
@@ -51,12 +53,13 @@ namespace BililiveRecorder.Core.Recording
         private DateTimeOffset ioStatsLastTrigger;
         private TimeSpan durationSinceNoDataReceived;
 
-        protected RecordTaskBase(IRoom room, ILogger logger, IApiClient apiClient, FileNameGenerator fileNameGenerator)
+        protected RecordTaskBase(IRoom room, ILogger logger, IApiClient apiClient, FileNameGenerator fileNameGenerator, UserScriptRunner userScriptRunner)
         {
             this.room = room ?? throw new ArgumentNullException(nameof(room));
             this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
             this.apiClient = apiClient ?? throw new ArgumentNullException(nameof(apiClient));
             this.fileNameGenerator = fileNameGenerator ?? throw new ArgumentNullException(nameof(fileNameGenerator));
+            this.userScriptRunner = userScriptRunner ?? throw new ArgumentNullException(nameof(userScriptRunner));
             this.ct = this.cts.Token;
 
             this.timer.Elapsed += this.Timer_Elapsed_TriggerIOStats;
@@ -95,6 +98,7 @@ namespace BililiveRecorder.Core.Recording
             this.streamHost = new Uri(fullUrl).Host;
             var qnDesc = qn switch
             {
+                30000 => "杜比",
                 20000 => "4K",
                 10000 => "原画",
                 401 => "蓝光(杜比)",
@@ -102,6 +106,7 @@ namespace BililiveRecorder.Core.Recording
                 250 => "超清",
                 150 => "高清",
                 80 => "流畅",
+                -1 => "录播姬用户脚本",
                 _ => "未知"
             };
             this.logger.Information("连接直播服务器 {Host} 录制画质 {Qn} ({QnDescription})", this.streamHost, qn, qnDesc);
@@ -218,18 +223,25 @@ namespace BililiveRecorder.Core.Recording
 
         protected async Task<(string url, int qn)> FetchStreamUrlAsync(int roomid)
         {
+            var qns = this.room.RoomConfig.RecordingQuality?.Split(new[] { ',', '，', '、', ' ' }, StringSplitOptions.RemoveEmptyEntries)
+                .Select(x => int.TryParse(x, out var num) ? num : -1)
+                .Where(x => x > 0)
+                .ToArray()
+                ?? Array.Empty<int>();
+
+            // 优先使用用户脚本获取直播流地址
+            if (this.userScriptRunner.CallOnFetchStreamUrl(this.logger, roomid, qns) is { } urlFromScript)
+            {
+                this.logger.Information("使用用户脚本返回的直播流地址 {Url}", urlFromScript);
+                return (urlFromScript, -1);
+            }
+
             const int DefaultQn = 10000;
             var selected_qn = DefaultQn;
             var codecItem = await this.apiClient.GetCodecItemInStreamUrlAsync(roomid: roomid, qn: DefaultQn).ConfigureAwait(false);
 
             if (codecItem is null)
                 throw new Exception("no supported stream url, qn: " + DefaultQn);
-
-            var qns = this.room.RoomConfig.RecordingQuality?.Split(new[] { ',', '，', '、', ' ' }, StringSplitOptions.RemoveEmptyEntries)
-                .Select(x => int.TryParse(x, out var num) ? num : -1)
-                .Where(x => x > 0)
-                .ToArray()
-                ?? Array.Empty<int>();
 
             // Select first avaiable qn
             foreach (var qn in qns)
@@ -280,10 +292,37 @@ namespace BililiveRecorder.Core.Recording
 
             while (true)
             {
-                var originalUri = new Uri(fullUrl);
                 var allowedAddressFamily = this.room.RoomConfig.NetworkTransportAllowedAddressFamily;
                 HttpRequestMessage request;
 
+                if (this.userScriptRunner.CallOnTransformStreamUrl(this.logger, fullUrl) is { } scriptResult)
+                {
+                    var (scriptUrl, scriptIp) = scriptResult;
+
+                    this.logger.Debug("用户脚本重定向了直播流地址 {NewUrl}, 旧地址 {OldUrl}", scriptUrl, fullUrl);
+
+                    fullUrl = scriptUrl;
+
+                    if (scriptIp is not null)
+                    {
+                        this.logger.Debug("用户脚本指定了服务器 IP {IP}", scriptIp);
+
+                        request = new HttpRequestMessage(HttpMethod.Get, fullUrl);
+
+                        var uri = new Uri(fullUrl);
+                        var builder = new UriBuilder(uri)
+                        {
+                            Host = scriptIp
+                        };
+
+                        request = new HttpRequestMessage(HttpMethod.Get, builder.Uri);
+                        request.Headers.Host = uri.IsDefaultPort ? uri.Host : uri.Host + ":" + uri.Port;
+
+                        goto sendRequest;
+                    }
+                }
+
+                var originalUri = new Uri(fullUrl);
                 if (allowedAddressFamily == AllowedAddressFamily.System)
                 {
                     this.logger.Debug("NetworkTransportAllowedAddressFamily is System");
@@ -318,6 +357,8 @@ namespace BililiveRecorder.Core.Recording
                     request = new HttpRequestMessage(HttpMethod.Get, builder.Uri);
                     request.Headers.Host = originalUri.IsDefaultPort ? originalUri.Host : originalUri.Host + ":" + originalUri.Port;
                 }
+
+            sendRequest:
 
                 var resp = await client.SendAsync(request,
                     HttpCompletionOption.ResponseHeadersRead,

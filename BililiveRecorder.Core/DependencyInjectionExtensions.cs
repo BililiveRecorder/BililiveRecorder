@@ -5,6 +5,7 @@ using BililiveRecorder.Core.Api.Http;
 using BililiveRecorder.Core.Config.V3;
 using BililiveRecorder.Core.Danmaku;
 using BililiveRecorder.Core.Recording;
+using BililiveRecorder.Core.Scripting;
 using BililiveRecorder.Core.Templating;
 using BililiveRecorder.Flv;
 using Microsoft.Extensions.DependencyInjection;
@@ -27,6 +28,7 @@ namespace BililiveRecorder.DependencyInjection
             .AddSingleton<IRecorder, Recorder>()
             .AddSingleton<IRoomFactory, RoomFactory>()
             .AddScoped<IBasicDanmakuWriter, BasicDanmakuWriter>()
+            .AddSingleton<UserScriptRunner>()
             ;
 
         private static IServiceCollection AddRecorderPollyPolicy(this IServiceCollection services) => services
