@@ -5,6 +5,8 @@
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
     <NoWarn>1701;1702;1591</NoWarn>
     <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
+    <SelfContained Condition=" '$(RuntimeIdentifier)' == '' ">false</SelfContained>
+    <SelfContained Condition=" '$(SelfContained)' == '' ">true</SelfContained>
   </PropertyGroup>
   
   <ItemGroup>

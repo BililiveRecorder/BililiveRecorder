@@ -6,14 +6,6 @@
         <LangVersion>9.0</LangVersion>
         <Nullable>enable</Nullable>
     </PropertyGroup>
-    <PropertyGroup Condition="'$(TargetFrameworkIdentifier)' == '.NETCoreApp'">
-        <RuntimeIdentifiers>win-x64;osx-x64;osx.10.11-x64;linux-arm64;linux-arm;linux-x64</RuntimeIdentifiers>
-        <RuntimeIdentifier Condition=" '$(RuntimeIdentifier)' == 'any' "></RuntimeIdentifier>
-        <PublishDir Condition=" '$(RuntimeIdentifier)' == '' ">publish\any</PublishDir>
-        <PublishDir Condition=" '$(RuntimeIdentifier)' != '' ">publish\$(RuntimeIdentifier)</PublishDir>
-        <SelfContained Condition=" '$(RuntimeIdentifier)' == '' ">false</SelfContained>
-        <SelfContained Condition=" '$(SelfContained)' == '' ">true</SelfContained>
-    </PropertyGroup>
     <Target Name="_DisableCommandLineWarnings" BeforeTargets="ValidateCommandLineProperties">
         <!-- Disable warning message -->
         <!-- warning NETSDK1179: One of '- -self-contained' or '- -no-self-contained' options are required when '- -runtime' is used. -->
