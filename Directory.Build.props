@@ -1,22 +1,42 @@
 <Project>
-  <PropertyGroup>
-    <Copyright>Copyright © 2018 - 2021 Genteure</Copyright>
-    <Authors>Genteure</Authors>
-    <Company>$(Authors)</Company>
-    <LangVersion>9.0</LangVersion>
-    <Nullable>enable</Nullable>
-  </PropertyGroup>
-  <ItemGroup>
-    <PackageReference Include="Microsoft.CodeAnalysis.BannedApiAnalyzers" Version="3.3.3">
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-      <PrivateAssets>all</PrivateAssets>
-    </PackageReference>
-    <PackageReference Include="GitVersion.MsBuild" Version="5.6.10">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-  </ItemGroup>
-  <ItemGroup>
-    <AdditionalFiles Include="$(MSBuildThisFileDirectory)BannedSymbols.txt" Link="BannedSymbols.txt"/>
-  </ItemGroup>
+    <PropertyGroup>
+        <Copyright>Copyright © 2018 - 2022 Genteure</Copyright>
+        <Authors>Genteure</Authors>
+        <Company>$(Authors)</Company>
+        <LangVersion>9.0</LangVersion>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(TargetFrameworkIdentifier)' == '.NETCoreApp'">
+        <RuntimeIdentifiers>win-x64;osx-x64;osx.10.11-x64;linux-arm64;linux-arm;linux-x64</RuntimeIdentifiers>
+        <RuntimeIdentifier Condition=" '$(RuntimeIdentifier)' == 'any' "></RuntimeIdentifier>
+        <PublishDir Condition=" '$(RuntimeIdentifier)' == '' ">publish\any</PublishDir>
+        <PublishDir Condition=" '$(RuntimeIdentifier)' != '' ">publish\$(RuntimeIdentifier)</PublishDir>
+        <SelfContained Condition=" '$(RuntimeIdentifier)' == '' ">false</SelfContained>
+        <SelfContained Condition=" '$(SelfContained)' == '' ">true</SelfContained>
+    </PropertyGroup>
+    <Target Name="_DisableCommandLineWarnings" BeforeTargets="ValidateCommandLineProperties">
+        <!-- Disable warning message -->
+        <!-- warning NETSDK1179: One of '- -self-contained' or '- -no-self-contained' options are required when '- -runtime' is used. -->
+        <!--<Message Importance="High" Text="DEBUG1: $(_CommandLineDefinedRuntimeIdentifier) $(_CommandLineDefinedSelfContained) $(TargetFrameworkIdentifier) $([MSBuild]::VersionGreaterThanOrEquals($(TargetFrameworkVersion), '6.0'))"/>-->
+        <PropertyGroup 
+            Condition="'$(_CommandLineDefinedRuntimeIdentifier)' == 'true' and
+                   '$(TargetFrameworkIdentifier)' == '.NETCoreApp' and
+                   $([MSBuild]::VersionGreaterThanOrEquals($(TargetFrameworkVersion), '6.0'))">
+            <_CommandLineDefinedSelfContained>true</_CommandLineDefinedSelfContained>
+        </PropertyGroup>
+        <!--<Message Importance="High" Text="DEBUG12 $(_CommandLineDefinedRuntimeIdentifier) $(_CommandLineDefinedSelfContained) $(TargetFrameworkIdentifier) $([MSBuild]::VersionGreaterThanOrEquals($(TargetFrameworkVersion), '6.0'))"/>-->
+    </Target>
+    <ItemGroup>
+        <PackageReference Include="Microsoft.CodeAnalysis.BannedApiAnalyzers" Version="3.3.3">
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+            <PrivateAssets>all</PrivateAssets>
+        </PackageReference>
+        <PackageReference Include="GitVersion.MsBuild" Version="5.6.10">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+    </ItemGroup>
+    <ItemGroup>
+        <AdditionalFiles Include="$(MSBuildThisFileDirectory)BannedSymbols.txt" Link="BannedSymbols.txt"/>
+    </ItemGroup>
 </Project>
