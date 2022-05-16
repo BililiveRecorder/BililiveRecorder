@@ -1,0 +1,879 @@
+﻿[assembly: System.Runtime.Versioning.TargetFramework(".NETStandard,Version=v2.0", FrameworkDisplayName="")]
+namespace BililiveRecorder.DependencyInjection
+{
+    public static class DependencyInjectionExtensions
+    {
+        public static Microsoft.Extensions.DependencyInjection.IServiceCollection AddFlv(this Microsoft.Extensions.DependencyInjection.IServiceCollection services) { }
+    }
+}
+namespace BililiveRecorder.Flv.Amf
+{
+    public class AmfException : System.Exception
+    {
+        public AmfException() { }
+        public AmfException(string message) { }
+        protected AmfException(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context) { }
+        public AmfException(string message, System.Exception innerException) { }
+    }
+    [Newtonsoft.Json.JsonConverter(typeof(JsonSubTypes.JsonSubtypes), new object[] {
+            "Type"})]
+    [Newtonsoft.Json.JsonObject(MemberSerialization=Newtonsoft.Json.MemberSerialization.OptIn)]
+    public interface IScriptDataValue
+    {
+        [Newtonsoft.Json.JsonProperty]
+        BililiveRecorder.Flv.Amf.ScriptDataType Type { get; }
+        void WriteTo(System.IO.Stream stream);
+    }
+    [System.Diagnostics.DebuggerDisplay("AmfBoolean, {Value}")]
+    public class ScriptDataBoolean : BililiveRecorder.Flv.Amf.IScriptDataValue
+    {
+        public ScriptDataBoolean() { }
+        public BililiveRecorder.Flv.Amf.ScriptDataType Type { get; }
+        [Newtonsoft.Json.JsonProperty]
+        public bool Value { get; set; }
+        public override bool Equals(object? obj) { }
+        public override int GetHashCode() { }
+        public void WriteTo(System.IO.Stream stream) { }
+        public static bool op_Implicit(BililiveRecorder.Flv.Amf.ScriptDataBoolean boolean) { }
+        public static BililiveRecorder.Flv.Amf.ScriptDataBoolean op_Implicit(bool boolean) { }
+        public static bool operator !=(BililiveRecorder.Flv.Amf.ScriptDataBoolean left, BililiveRecorder.Flv.Amf.ScriptDataBoolean right) { }
+        public static bool operator ==(BililiveRecorder.Flv.Amf.ScriptDataBoolean left, BililiveRecorder.Flv.Amf.ScriptDataBoolean right) { }
+    }
+    [System.Diagnostics.DebuggerDisplay("AmfDate, {Value}")]
+    public class ScriptDataDate : BililiveRecorder.Flv.Amf.IScriptDataValue
+    {
+        public ScriptDataDate() { }
+        public ScriptDataDate(System.DateTimeOffset value) { }
+        public ScriptDataDate(double dateTime, short localDateTimeOffset) { }
+        public BililiveRecorder.Flv.Amf.ScriptDataType Type { get; }
+        [Newtonsoft.Json.JsonProperty]
+        public System.DateTimeOffset Value { get; set; }
+        public override bool Equals(object? obj) { }
+        public override int GetHashCode() { }
+        public void WriteTo(System.IO.Stream stream) { }
+        public static System.DateTimeOffset op_Implicit(BililiveRecorder.Flv.Amf.ScriptDataDate date) { }
+        public static System.DateTime op_Implicit(BililiveRecorder.Flv.Amf.ScriptDataDate date) { }
+        public static BililiveRecorder.Flv.Amf.ScriptDataDate op_Implicit(System.DateTime date) { }
+        public static BililiveRecorder.Flv.Amf.ScriptDataDate op_Implicit(System.DateTimeOffset date) { }
+        public static bool operator !=(BililiveRecorder.Flv.Amf.ScriptDataDate left, BililiveRecorder.Flv.Amf.ScriptDataDate right) { }
+        public static bool operator ==(BililiveRecorder.Flv.Amf.ScriptDataDate left, BililiveRecorder.Flv.Amf.ScriptDataDate right) { }
+    }
+    [System.Diagnostics.DebuggerDisplay("AmfEcmaArray, Count = {Count}")]
+    [System.Diagnostics.DebuggerTypeProxy(typeof(BililiveRecorder.Flv.Amf.AmfDictionaryDebugView))]
+    public class ScriptDataEcmaArray : BililiveRecorder.Flv.Amf.IScriptDataValue, System.Collections.Generic.ICollection<System.Collections.Generic.KeyValuePair<string, BililiveRecorder.Flv.Amf.IScriptDataValue>>, System.Collections.Generic.IDictionary<string, BililiveRecorder.Flv.Amf.IScriptDataValue>, System.Collections.Generic.IEnumerable<System.Collections.Generic.KeyValuePair<string, BililiveRecorder.Flv.Amf.IScriptDataValue>>, System.Collections.Generic.IReadOnlyCollection<System.Collections.Generic.KeyValuePair<string, BililiveRecorder.Flv.Amf.IScriptDataValue>>, System.Collections.Generic.IReadOnlyDictionary<string, BililiveRecorder.Flv.Amf.IScriptDataValue>, System.Collections.IEnumerable
+    {
+        public ScriptDataEcmaArray() { }
+        public int Count { get; }
+        public bool IsReadOnly { get; }
+        public BililiveRecorder.Flv.Amf.IScriptDataValue this[string key] { get; set; }
+        public System.Collections.Generic.ICollection<string> Keys { get; }
+        public BililiveRecorder.Flv.Amf.ScriptDataType Type { get; }
+        [Newtonsoft.Json.JsonProperty]
+        public System.Collections.Generic.Dictionary<string, BililiveRecorder.Flv.Amf.IScriptDataValue> Value { get; set; }
+        public System.Collections.Generic.ICollection<BililiveRecorder.Flv.Amf.IScriptDataValue> Values { get; }
+        public void Add(System.Collections.Generic.KeyValuePair<string, BililiveRecorder.Flv.Amf.IScriptDataValue> item) { }
+        public void Add(string key, BililiveRecorder.Flv.Amf.IScriptDataValue value) { }
+        public void Clear() { }
+        public bool Contains(System.Collections.Generic.KeyValuePair<string, BililiveRecorder.Flv.Amf.IScriptDataValue> item) { }
+        public bool ContainsKey(string key) { }
+        public void CopyTo(System.Collections.Generic.KeyValuePair<string, BililiveRecorder.Flv.Amf.IScriptDataValue>[] array, int arrayIndex) { }
+        public System.Collections.Generic.IEnumerator<System.Collections.Generic.KeyValuePair<string, BililiveRecorder.Flv.Amf.IScriptDataValue>> GetEnumerator() { }
+        public bool Remove(System.Collections.Generic.KeyValuePair<string, BililiveRecorder.Flv.Amf.IScriptDataValue> item) { }
+        public bool Remove(string key) { }
+        public bool TryGetValue(string key, [System.Diagnostics.CodeAnalysis.MaybeNullWhen(false)] out BililiveRecorder.Flv.Amf.IScriptDataValue value) { }
+        public void WriteTo(System.IO.Stream stream) { }
+        public static System.Collections.Generic.Dictionary<string, BililiveRecorder.Flv.Amf.IScriptDataValue> op_Implicit(BililiveRecorder.Flv.Amf.ScriptDataEcmaArray ecmaArray) { }
+        public static BililiveRecorder.Flv.Amf.ScriptDataEcmaArray op_Implicit(BililiveRecorder.Flv.Amf.ScriptDataObject @object) { }
+        public static BililiveRecorder.Flv.Amf.ScriptDataEcmaArray op_Implicit(System.Collections.Generic.Dictionary<string, BililiveRecorder.Flv.Amf.IScriptDataValue> ecmaArray) { }
+    }
+    [System.Diagnostics.DebuggerDisplay("AmfLongString, {Value}")]
+    public class ScriptDataLongString : BililiveRecorder.Flv.Amf.IScriptDataValue
+    {
+        public ScriptDataLongString() { }
+        public BililiveRecorder.Flv.Amf.ScriptDataType Type { get; }
+        [Newtonsoft.Json.JsonProperty(Required=Newtonsoft.Json.Required.Always)]
+        public string Value { get; set; }
+        public override bool Equals(object? obj) { }
+        public override int GetHashCode() { }
+        public void WriteTo(System.IO.Stream stream) { }
+        public static string op_Implicit(BililiveRecorder.Flv.Amf.ScriptDataLongString @string) { }
+        public static BililiveRecorder.Flv.Amf.ScriptDataLongString op_Implicit(BililiveRecorder.Flv.Amf.ScriptDataString @string) { }
+        public static BililiveRecorder.Flv.Amf.ScriptDataLongString op_Implicit(string @string) { }
+        public static bool operator !=(BililiveRecorder.Flv.Amf.ScriptDataLongString left, BililiveRecorder.Flv.Amf.ScriptDataLongString right) { }
+        public static bool operator ==(BililiveRecorder.Flv.Amf.ScriptDataLongString left, BililiveRecorder.Flv.Amf.ScriptDataLongString right) { }
+    }
+    [System.Diagnostics.DebuggerDisplay("AmfNull")]
+    public class ScriptDataNull : BililiveRecorder.Flv.Amf.IScriptDataValue
+    {
+        public ScriptDataNull() { }
+        public BililiveRecorder.Flv.Amf.ScriptDataType Type { get; }
+        public override bool Equals(object? obj) { }
+        public override int GetHashCode() { }
+        public void WriteTo(System.IO.Stream stream) { }
+        public static bool operator !=(BililiveRecorder.Flv.Amf.ScriptDataNull left, BililiveRecorder.Flv.Amf.ScriptDataNull right) { }
+        public static bool operator ==(BililiveRecorder.Flv.Amf.ScriptDataNull left, BililiveRecorder.Flv.Amf.ScriptDataNull right) { }
+    }
+    [System.Diagnostics.DebuggerDisplay("AmfNumber, {Value}")]
+    public class ScriptDataNumber : BililiveRecorder.Flv.Amf.IScriptDataValue
+    {
+        public ScriptDataNumber() { }
+        public BililiveRecorder.Flv.Amf.ScriptDataType Type { get; }
+        [Newtonsoft.Json.JsonProperty]
+        public double Value { get; set; }
+        public override bool Equals(object? obj) { }
+        public override int GetHashCode() { }
+        public void WriteTo(System.IO.Stream stream) { }
+        public static int op_Explicit(BililiveRecorder.Flv.Amf.ScriptDataNumber number) { }
+        public static BililiveRecorder.Flv.Amf.ScriptDataNumber op_Explicit(int number) { }
+        public static double op_Implicit(BililiveRecorder.Flv.Amf.ScriptDataNumber number) { }
+        public static BililiveRecorder.Flv.Amf.ScriptDataNumber op_Implicit(double number) { }
+        public static bool operator !=(BililiveRecorder.Flv.Amf.ScriptDataNumber left, BililiveRecorder.Flv.Amf.ScriptDataNumber right) { }
+        public static bool operator ==(BililiveRecorder.Flv.Amf.ScriptDataNumber left, BililiveRecorder.Flv.Amf.ScriptDataNumber right) { }
+    }
+    [System.Diagnostics.DebuggerDisplay("AmfObject, Count = {Count}")]
+    [System.Diagnostics.DebuggerTypeProxy(typeof(BililiveRecorder.Flv.Amf.AmfDictionaryDebugView))]
+    public class ScriptDataObject : BililiveRecorder.Flv.Amf.IScriptDataValue, System.Collections.Generic.ICollection<System.Collections.Generic.KeyValuePair<string, BililiveRecorder.Flv.Amf.IScriptDataValue>>, System.Collections.Generic.IDictionary<string, BililiveRecorder.Flv.Amf.IScriptDataValue>, System.Collections.Generic.IEnumerable<System.Collections.Generic.KeyValuePair<string, BililiveRecorder.Flv.Amf.IScriptDataValue>>, System.Collections.Generic.IReadOnlyCollection<System.Collections.Generic.KeyValuePair<string, BililiveRecorder.Flv.Amf.IScriptDataValue>>, System.Collections.Generic.IReadOnlyDictionary<string, BililiveRecorder.Flv.Amf.IScriptDataValue>, System.Collections.IEnumerable
+    {
+        public ScriptDataObject() { }
+        public int Count { get; }
+        public bool IsReadOnly { get; }
+        public BililiveRecorder.Flv.Amf.IScriptDataValue this[string key] { get; set; }
+        public System.Collections.Generic.ICollection<string> Keys { get; }
+        public BililiveRecorder.Flv.Amf.ScriptDataType Type { get; }
+        [Newtonsoft.Json.JsonProperty]
+        public System.Collections.Generic.Dictionary<string, BililiveRecorder.Flv.Amf.IScriptDataValue> Value { get; set; }
+        public System.Collections.Generic.ICollection<BililiveRecorder.Flv.Amf.IScriptDataValue> Values { get; }
+        public void Add(System.Collections.Generic.KeyValuePair<string, BililiveRecorder.Flv.Amf.IScriptDataValue> item) { }
+        public void Add(string key, BililiveRecorder.Flv.Amf.IScriptDataValue value) { }
+        public void Clear() { }
+        public bool Contains(System.Collections.Generic.KeyValuePair<string, BililiveRecorder.Flv.Amf.IScriptDataValue> item) { }
+        public bool ContainsKey(string key) { }
+        public void CopyTo(System.Collections.Generic.KeyValuePair<string, BililiveRecorder.Flv.Amf.IScriptDataValue>[] array, int arrayIndex) { }
+        public System.Collections.Generic.IEnumerator<System.Collections.Generic.KeyValuePair<string, BililiveRecorder.Flv.Amf.IScriptDataValue>> GetEnumerator() { }
+        public bool Remove(System.Collections.Generic.KeyValuePair<string, BililiveRecorder.Flv.Amf.IScriptDataValue> item) { }
+        public bool Remove(string key) { }
+        public bool TryGetValue(string key, [System.Diagnostics.CodeAnalysis.MaybeNullWhen(false)] out BililiveRecorder.Flv.Amf.IScriptDataValue value) { }
+        public void WriteTo(System.IO.Stream stream) { }
+        public static BililiveRecorder.Flv.Amf.ScriptDataObject op_Implicit(BililiveRecorder.Flv.Amf.ScriptDataEcmaArray ecmaArray) { }
+        public static System.Collections.Generic.Dictionary<string, BililiveRecorder.Flv.Amf.IScriptDataValue> op_Implicit(BililiveRecorder.Flv.Amf.ScriptDataObject @object) { }
+        public static BililiveRecorder.Flv.Amf.ScriptDataObject op_Implicit(System.Collections.Generic.Dictionary<string, BililiveRecorder.Flv.Amf.IScriptDataValue> @object) { }
+    }
+    [System.Diagnostics.DebuggerDisplay("AmfReference, {Value}")]
+    public class ScriptDataReference : BililiveRecorder.Flv.Amf.IScriptDataValue
+    {
+        public ScriptDataReference() { }
+        public BililiveRecorder.Flv.Amf.ScriptDataType Type { get; }
+        [Newtonsoft.Json.JsonProperty]
+        public ushort Value { get; set; }
+        public override bool Equals(object? obj) { }
+        public override int GetHashCode() { }
+        public void WriteTo(System.IO.Stream stream) { }
+        public static ushort op_Implicit(BililiveRecorder.Flv.Amf.ScriptDataReference reference) { }
+        public static BililiveRecorder.Flv.Amf.ScriptDataReference op_Implicit(ushort number) { }
+        public static bool operator !=(BililiveRecorder.Flv.Amf.ScriptDataReference left, BililiveRecorder.Flv.Amf.ScriptDataReference right) { }
+        public static bool operator ==(BililiveRecorder.Flv.Amf.ScriptDataReference left, BililiveRecorder.Flv.Amf.ScriptDataReference right) { }
+    }
+    [System.Diagnostics.DebuggerDisplay("AmfStrictArray, Count = {Count}")]
+    [System.Diagnostics.DebuggerTypeProxy(typeof(BililiveRecorder.Flv.Amf.AmfCollectionDebugView))]
+    public class ScriptDataStrictArray : BililiveRecorder.Flv.Amf.IScriptDataValue, System.Collections.Generic.ICollection<BililiveRecorder.Flv.Amf.IScriptDataValue>, System.Collections.Generic.IEnumerable<BililiveRecorder.Flv.Amf.IScriptDataValue>, System.Collections.Generic.IList<BililiveRecorder.Flv.Amf.IScriptDataValue>, System.Collections.Generic.IReadOnlyCollection<BililiveRecorder.Flv.Amf.IScriptDataValue>, System.Collections.Generic.IReadOnlyList<BililiveRecorder.Flv.Amf.IScriptDataValue>, System.Collections.IEnumerable
+    {
+        public ScriptDataStrictArray() { }
+        public int Count { get; }
+        public bool IsReadOnly { get; }
+        public BililiveRecorder.Flv.Amf.IScriptDataValue this[int index] { get; set; }
+        public BililiveRecorder.Flv.Amf.ScriptDataType Type { get; }
+        [Newtonsoft.Json.JsonProperty]
+        public System.Collections.Generic.List<BililiveRecorder.Flv.Amf.IScriptDataValue> Value { get; set; }
+        public void Add(BililiveRecorder.Flv.Amf.IScriptDataValue item) { }
+        public void Clear() { }
+        public bool Contains(BililiveRecorder.Flv.Amf.IScriptDataValue item) { }
+        public void CopyTo(BililiveRecorder.Flv.Amf.IScriptDataValue[] array, int arrayIndex) { }
+        public System.Collections.Generic.IEnumerator<BililiveRecorder.Flv.Amf.IScriptDataValue> GetEnumerator() { }
+        public int IndexOf(BililiveRecorder.Flv.Amf.IScriptDataValue item) { }
+        public void Insert(int index, BililiveRecorder.Flv.Amf.IScriptDataValue item) { }
+        public bool Remove(BililiveRecorder.Flv.Amf.IScriptDataValue item) { }
+        public void RemoveAt(int index) { }
+        public void WriteTo(System.IO.Stream stream) { }
+        public static System.Collections.Generic.List<BililiveRecorder.Flv.Amf.IScriptDataValue> op_Implicit(BililiveRecorder.Flv.Amf.ScriptDataStrictArray strictArray) { }
+        public static BililiveRecorder.Flv.Amf.ScriptDataStrictArray op_Implicit(System.Collections.Generic.List<BililiveRecorder.Flv.Amf.IScriptDataValue> values) { }
+    }
+    [System.Diagnostics.DebuggerDisplay("AmfString, {Value}")]
+    public class ScriptDataString : BililiveRecorder.Flv.Amf.IScriptDataValue
+    {
+        public ScriptDataString() { }
+        public BililiveRecorder.Flv.Amf.ScriptDataType Type { get; }
+        [Newtonsoft.Json.JsonProperty(Required=Newtonsoft.Json.Required.Always)]
+        public string Value { get; set; }
+        public override bool Equals(object? obj) { }
+        public override int GetHashCode() { }
+        public void WriteTo(System.IO.Stream stream) { }
+        public static BililiveRecorder.Flv.Amf.ScriptDataString op_Implicit(BililiveRecorder.Flv.Amf.ScriptDataLongString @string) { }
+        public static string op_Implicit(BililiveRecorder.Flv.Amf.ScriptDataString @string) { }
+        public static BililiveRecorder.Flv.Amf.ScriptDataString op_Implicit(string @string) { }
+        public static bool operator !=(BililiveRecorder.Flv.Amf.ScriptDataString left, BililiveRecorder.Flv.Amf.ScriptDataString right) { }
+        public static bool operator ==(BililiveRecorder.Flv.Amf.ScriptDataString left, BililiveRecorder.Flv.Amf.ScriptDataString right) { }
+    }
+    [Newtonsoft.Json.JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
+    public enum ScriptDataType : byte
+    {
+        Number = 0,
+        Boolean = 1,
+        String = 2,
+        Object = 3,
+        MovieClip = 4,
+        Null = 5,
+        Undefined = 6,
+        Reference = 7,
+        EcmaArray = 8,
+        ObjectEndMarker = 9,
+        StrictArray = 10,
+        Date = 11,
+        LongString = 12,
+    }
+    [System.Diagnostics.DebuggerDisplay("AmfUndefined")]
+    public class ScriptDataUndefined : BililiveRecorder.Flv.Amf.IScriptDataValue
+    {
+        public ScriptDataUndefined() { }
+        public BililiveRecorder.Flv.Amf.ScriptDataType Type { get; }
+        public override bool Equals(object? obj) { }
+        public override int GetHashCode() { }
+        public void WriteTo(System.IO.Stream stream) { }
+        public static bool operator !=(BililiveRecorder.Flv.Amf.ScriptDataUndefined left, BililiveRecorder.Flv.Amf.ScriptDataUndefined right) { }
+        public static bool operator ==(BililiveRecorder.Flv.Amf.ScriptDataUndefined left, BililiveRecorder.Flv.Amf.ScriptDataUndefined right) { }
+    }
+    public class ScriptTagBody : System.Xml.Serialization.IXmlSerializable
+    {
+        public ScriptTagBody() { }
+        public ScriptTagBody(System.Collections.Generic.List<BililiveRecorder.Flv.Amf.IScriptDataValue> values) { }
+        public System.Collections.Generic.List<BililiveRecorder.Flv.Amf.IScriptDataValue> Values { get; set; }
+        public byte[] ToBytes() { }
+        public string ToJson() { }
+        public void WriteTo(System.IO.Stream stream) { }
+        public static BililiveRecorder.Flv.Amf.ScriptTagBody Parse(BililiveRecorder.Flv.Parser.BigEndianBinaryReader binaryReader) { }
+        public static BililiveRecorder.Flv.Amf.ScriptTagBody Parse(byte[] bytes) { }
+        public static BililiveRecorder.Flv.Amf.ScriptTagBody Parse(System.IO.Stream stream) { }
+        public static BililiveRecorder.Flv.Amf.ScriptTagBody Parse(string json) { }
+        public static BililiveRecorder.Flv.Amf.IScriptDataValue ParseValue(BililiveRecorder.Flv.Parser.BigEndianBinaryReader binaryReader) { }
+    }
+    public static class ScriptTagBodyExtensions
+    {
+        public static BililiveRecorder.Flv.Amf.ScriptDataEcmaArray? GetMetadataValue(this BililiveRecorder.Flv.Amf.ScriptTagBody body) { }
+    }
+}
+namespace BililiveRecorder.Flv
+{
+    public class DefaultMemoryStreamProvider : BililiveRecorder.Flv.IMemoryStreamProvider
+    {
+        public DefaultMemoryStreamProvider() { }
+        public System.IO.MemoryStream CreateMemoryStream(string tag) { }
+    }
+    public class FileClosedEventArgs : System.EventArgs
+    {
+        public FileClosedEventArgs() { }
+        public double Duration { get; set; }
+        public long FileSize { get; set; }
+        public object? State { get; set; }
+    }
+    public sealed class H264Nalu
+    {
+        public H264Nalu(int startPosition, uint fullSize, BililiveRecorder.Flv.H264NaluType type) { }
+        [System.Xml.Serialization.XmlAttribute]
+        public uint FullSize { get; set; }
+        [System.Xml.Serialization.XmlAttribute]
+        public string? NaluHash { get; set; }
+        [System.Xml.Serialization.XmlAttribute]
+        public int StartPosition { get; set; }
+        [System.Xml.Serialization.XmlAttribute]
+        public BililiveRecorder.Flv.H264NaluType Type { get; set; }
+        public static bool TryParseNalu(System.IO.Stream data, [System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out System.Collections.Generic.List<BililiveRecorder.Flv.H264Nalu>? h264Nalus) { }
+        public static bool TryParseNaluType(byte firstByte, out BililiveRecorder.Flv.H264NaluType h264NaluType) { }
+    }
+    public enum H264NaluType : byte
+    {
+        Unspecified0 = 0,
+        CodedSliceOfANonIdrPicture = 1,
+        CodedSliceDataPartitionA = 2,
+        CodedSliceDataPartitionB = 3,
+        CodedSliceDataPartitionC = 4,
+        CodedSliceOfAnIdrPicture = 5,
+        Sei = 6,
+        Sps = 7,
+        Pps = 8,
+        AccessUnitDelimiter = 9,
+        EndOfSequence = 10,
+        EndOfStream = 11,
+        FillerData = 12,
+        SpsExtension = 13,
+        PrefixNalUnit = 14,
+        SubsetSps = 15,
+        DepthParameterSet = 16,
+        Reserved17 = 17,
+        Reserved18 = 18,
+        SliceLayerWithoutPartitioning = 19,
+        SliceLayerExtension20 = 20,
+        SliceLayerExtension21 = 21,
+        Reserved22 = 22,
+        Reserved23 = 23,
+        Unspecified24 = 24,
+        Unspecified25 = 25,
+        Unspecified23 = 23,
+        Unspecified27 = 27,
+        Unspecified28 = 28,
+        Unspecified29 = 29,
+        Unspecified30 = 30,
+        Unspecified31 = 31,
+    }
+    public interface IFlvProcessingContextWriter : System.IDisposable
+    {
+        System.Action<BililiveRecorder.Flv.Amf.ScriptTagBody>? BeforeScriptTagRewrite { get; set; }
+        System.Action<BililiveRecorder.Flv.Amf.ScriptTagBody>? BeforeScriptTagWrite { get; set; }
+        event System.EventHandler<BililiveRecorder.Flv.FileClosedEventArgs> FileClosed;
+        System.Threading.Tasks.Task<int> WriteAsync(BililiveRecorder.Flv.Pipeline.FlvProcessingContext context);
+    }
+    public interface IFlvTagReader : System.IDisposable
+    {
+        System.Threading.Tasks.Task<BililiveRecorder.Flv.Tag?> PeekTagAsync(System.Threading.CancellationToken token);
+        System.Threading.Tasks.Task<BililiveRecorder.Flv.Tag?> ReadTagAsync(System.Threading.CancellationToken token);
+    }
+    public interface IFlvTagWriter : System.IDisposable
+    {
+        long FileSize { get; }
+        object? State { get; }
+        bool CloseCurrentFile();
+        System.Threading.Tasks.Task CreateNewFile();
+        System.Threading.Tasks.Task OverwriteMetadata(BililiveRecorder.Flv.Amf.ScriptTagBody metadata);
+        System.Threading.Tasks.Task WriteAlternativeHeaders(System.Collections.Generic.IEnumerable<BililiveRecorder.Flv.Tag> tags);
+        System.Threading.Tasks.Task WriteTag(BililiveRecorder.Flv.Tag tag);
+    }
+    public interface IFlvWriterTargetProvider
+    {
+        System.IO.Stream CreateAlternativeHeaderStream();
+        [return: System.Runtime.CompilerServices.TupleElementNames(new string[] {
+                "stream",
+                "state"})]
+        System.ValueTuple<System.IO.Stream, object?> CreateOutputStream();
+    }
+    public interface IGroupingRule
+    {
+        bool CanAppendWith(BililiveRecorder.Flv.Tag tag, System.Collections.Generic.List<BililiveRecorder.Flv.Tag> tags);
+        bool CanStartWith(BililiveRecorder.Flv.Tag tag);
+        BililiveRecorder.Flv.Pipeline.Actions.PipelineAction CreatePipelineAction(System.Collections.Generic.List<BililiveRecorder.Flv.Tag> tags);
+    }
+    public interface IMemoryStreamProvider
+    {
+        System.IO.MemoryStream CreateMemoryStream(string tag);
+    }
+    public interface ITagGroupReader : System.IDisposable
+    {
+        System.Threading.Tasks.Task<BililiveRecorder.Flv.Pipeline.Actions.PipelineAction?> ReadGroupAsync(System.Threading.CancellationToken token);
+    }
+    public interface ITwoInputFunction<in TIn, out TOut>
+    {
+        TOut Eval(TIn a, TIn b);
+    }
+    public static class LinqExtensions
+    {
+        public static bool Any2<TSource>(this System.Collections.Generic.IEnumerable<TSource> source, System.Func<TSource, TSource, bool> predicate) { }
+        public static bool Any2<TIn, TFunction>(this System.Collections.Generic.IEnumerable<TIn> source, ref TFunction function)
+            where TFunction : BililiveRecorder.Flv.ITwoInputFunction<TIn, bool> { }
+    }
+    public static class LinqFunctions
+    {
+        public static BililiveRecorder.Flv.LinqFunctions.CountAudioTagsStruct CountAudioTags;
+        public static BililiveRecorder.Flv.LinqFunctions.CountVideoTagsStruct CountVideoTags;
+        public static BililiveRecorder.Flv.LinqFunctions.SumSizeOfAudioDataStruct SumSizeOfAudioData;
+        public static BililiveRecorder.Flv.LinqFunctions.SumSizeOfNaluStruct SumSizeOfNalu;
+        public static BililiveRecorder.Flv.LinqFunctions.SumSizeOfTagByPropertyStruct SumSizeOfTagByProperty;
+        public static BililiveRecorder.Flv.LinqFunctions.SumSizeOfTagByPropertyOrNaluStruct SumSizeOfTagByPropertyOrNalu;
+        public static BililiveRecorder.Flv.LinqFunctions.SumSizeOfVideoDataStruct SumSizeOfVideoData;
+        public static BililiveRecorder.Flv.LinqFunctions.SumSizeOfVideoDataByNaluStruct SumSizeOfVideoDataByNalu;
+        public static BililiveRecorder.Flv.LinqFunctions.TagIsAudioStruct TagIsAudio;
+        public static BililiveRecorder.Flv.LinqFunctions.TagIsDataStruct TagIsData;
+        public static BililiveRecorder.Flv.LinqFunctions.TagIsHeaderStruct TagIsHeader;
+        public static BililiveRecorder.Flv.LinqFunctions.TagIsVideoStruct TagIsVideo;
+        public readonly struct CountAudioTagsStruct : StructLinq.IFunction<BililiveRecorder.Flv.Pipeline.Actions.PipelineDataAction, int>, StructLinq.IInFunction<BililiveRecorder.Flv.Pipeline.Actions.PipelineDataAction, int>
+        {
+            public int Eval(BililiveRecorder.Flv.Pipeline.Actions.PipelineDataAction element) { }
+            public int Eval(in BililiveRecorder.Flv.Pipeline.Actions.PipelineDataAction element) { }
+        }
+        public readonly struct CountVideoTagsStruct : StructLinq.IFunction<BililiveRecorder.Flv.Pipeline.Actions.PipelineDataAction, int>, StructLinq.IInFunction<BililiveRecorder.Flv.Pipeline.Actions.PipelineDataAction, int>
+        {
+            public int Eval(BililiveRecorder.Flv.Pipeline.Actions.PipelineDataAction element) { }
+            public int Eval(in BililiveRecorder.Flv.Pipeline.Actions.PipelineDataAction element) { }
+        }
+        public readonly struct SumSizeOfAudioDataStruct : StructLinq.IFunction<BililiveRecorder.Flv.Pipeline.Actions.PipelineDataAction, long>, StructLinq.IInFunction<BililiveRecorder.Flv.Pipeline.Actions.PipelineDataAction, long>
+        {
+            public long Eval(BililiveRecorder.Flv.Pipeline.Actions.PipelineDataAction element) { }
+            public long Eval(in BililiveRecorder.Flv.Pipeline.Actions.PipelineDataAction element) { }
+        }
+        public readonly struct SumSizeOfNaluStruct : StructLinq.IFunction<BililiveRecorder.Flv.H264Nalu, long>, StructLinq.IInFunction<BililiveRecorder.Flv.H264Nalu, long>
+        {
+            public long Eval(BililiveRecorder.Flv.H264Nalu element) { }
+            public long Eval(in BililiveRecorder.Flv.H264Nalu element) { }
+        }
+        public readonly struct SumSizeOfTagByPropertyOrNaluStruct : StructLinq.IFunction<BililiveRecorder.Flv.Tag, long>, StructLinq.IInFunction<BililiveRecorder.Flv.Tag, long>
+        {
+            public long Eval(BililiveRecorder.Flv.Tag element) { }
+            public long Eval(in BililiveRecorder.Flv.Tag element) { }
+        }
+        public readonly struct SumSizeOfTagByPropertyStruct : StructLinq.IFunction<BililiveRecorder.Flv.Tag, long>, StructLinq.IInFunction<BililiveRecorder.Flv.Tag, long>
+        {
+            public long Eval(BililiveRecorder.Flv.Tag element) { }
+            public long Eval(in BililiveRecorder.Flv.Tag element) { }
+        }
+        public readonly struct SumSizeOfVideoDataByNaluStruct : StructLinq.IFunction<BililiveRecorder.Flv.Pipeline.Actions.PipelineDataAction, long>, StructLinq.IInFunction<BililiveRecorder.Flv.Pipeline.Actions.PipelineDataAction, long>
+        {
+            public long Eval(BililiveRecorder.Flv.Pipeline.Actions.PipelineDataAction element) { }
+            public long Eval(in BililiveRecorder.Flv.Pipeline.Actions.PipelineDataAction element) { }
+        }
+        public readonly struct SumSizeOfVideoDataStruct : StructLinq.IFunction<BililiveRecorder.Flv.Pipeline.Actions.PipelineDataAction, long>, StructLinq.IInFunction<BililiveRecorder.Flv.Pipeline.Actions.PipelineDataAction, long>
+        {
+            public long Eval(BililiveRecorder.Flv.Pipeline.Actions.PipelineDataAction element) { }
+            public long Eval(in BililiveRecorder.Flv.Pipeline.Actions.PipelineDataAction element) { }
+        }
+        public readonly struct TagIsAudioStruct : StructLinq.IFunction<BililiveRecorder.Flv.Tag, bool>, StructLinq.IInFunction<BililiveRecorder.Flv.Tag, bool>
+        {
+            public bool Eval(BililiveRecorder.Flv.Tag element) { }
+            public bool Eval(in BililiveRecorder.Flv.Tag element) { }
+        }
+        public readonly struct TagIsDataStruct : StructLinq.IFunction<BililiveRecorder.Flv.Tag, bool>, StructLinq.IInFunction<BililiveRecorder.Flv.Tag, bool>
+        {
+            public bool Eval(BililiveRecorder.Flv.Tag element) { }
+            public bool Eval(in BililiveRecorder.Flv.Tag element) { }
+        }
+        public readonly struct TagIsHeaderStruct : StructLinq.IFunction<BililiveRecorder.Flv.Tag, bool>, StructLinq.IInFunction<BililiveRecorder.Flv.Tag, bool>
+        {
+            public bool Eval(BililiveRecorder.Flv.Tag element) { }
+            public bool Eval(in BililiveRecorder.Flv.Tag element) { }
+        }
+        public readonly struct TagIsVideoStruct : StructLinq.IFunction<BililiveRecorder.Flv.Tag, bool>, StructLinq.IInFunction<BililiveRecorder.Flv.Tag, bool>
+        {
+            public bool Eval(BililiveRecorder.Flv.Tag element) { }
+            public bool Eval(in BililiveRecorder.Flv.Tag element) { }
+        }
+    }
+    [System.Diagnostics.DebuggerDisplay("{DebuggerDisplay,nq}")]
+    public sealed class Tag : System.ICloneable
+    {
+        public Tag() { }
+        [System.Xml.Serialization.XmlIgnore]
+        public System.IO.MemoryStream? BinaryData { get; set; }
+        [System.Xml.Serialization.XmlElement("BinaryData")]
+        public string? BinaryDataForSerializationUseOnly { get; set; }
+        [System.Xml.Serialization.XmlAttribute]
+        public string? DataHash { get; set; }
+        [System.Xml.Serialization.XmlElement]
+        public BililiveRecorder.Flv.TagExtraData? ExtraData { get; set; }
+        [System.ComponentModel.DefaultValue(BililiveRecorder.Flv.TagFlag.None)]
+        [System.Xml.Serialization.XmlAttribute]
+        public BililiveRecorder.Flv.TagFlag Flag { get; set; }
+        [System.Xml.Serialization.XmlIgnore]
+        public long Index { get; set; }
+        [System.Xml.Serialization.XmlElement]
+        public System.Collections.Generic.List<BililiveRecorder.Flv.H264Nalu>? Nalus { get; set; }
+        [System.Xml.Serialization.XmlElement]
+        public BililiveRecorder.Flv.Amf.ScriptTagBody? ScriptData { get; set; }
+        [System.Xml.Serialization.XmlAttribute]
+        public uint Size { get; set; }
+        [System.Xml.Serialization.XmlAttribute]
+        public int Timestamp { get; set; }
+        [System.Xml.Serialization.XmlAttribute]
+        public BililiveRecorder.Flv.TagType Type { get; set; }
+        public BililiveRecorder.Flv.Tag Clone() { }
+        public BililiveRecorder.Flv.Tag Clone(BililiveRecorder.Flv.IMemoryStreamProvider? provider = null) { }
+        public bool ShouldSerializeBinaryDataForSerializationUseOnly() { }
+        public bool ShouldSerializeNalus() { }
+        public bool ShouldSerializeScriptData() { }
+        public override string ToString() { }
+        public string? UpdateDataHash() { }
+        public BililiveRecorder.Flv.TagExtraData? UpdateExtraData() { }
+    }
+    public static class TagExtentions
+    {
+        public static bool IsData(this BililiveRecorder.Flv.Tag tag) { }
+        public static bool IsEnd(this BililiveRecorder.Flv.Tag tag) { }
+        public static bool IsHeader(this BililiveRecorder.Flv.Tag tag) { }
+        public static bool IsKeyframeData(this BililiveRecorder.Flv.Tag tag) { }
+        public static bool IsNonKeyframeData(this BililiveRecorder.Flv.Tag tag) { }
+        public static bool IsScript(this BililiveRecorder.Flv.Tag tag) { }
+        public static System.Threading.Tasks.Task WriteTo(this BililiveRecorder.Flv.Tag tag, System.IO.Stream target, int timestamp, BililiveRecorder.Flv.IMemoryStreamProvider? memoryStreamProvider = null) { }
+    }
+    public sealed class TagExtraData
+    {
+        public TagExtraData() { }
+        [System.Xml.Serialization.XmlAttribute]
+        public int CompositionTime { get; set; }
+        [System.Xml.Serialization.XmlAttribute]
+        public int FinalTime { get; set; }
+        [System.Xml.Serialization.XmlAttribute]
+        public string FirstBytes { get; set; }
+        public bool ShouldSerializeCompositionTime() { }
+        public bool ShouldSerializeFinalTime() { }
+    }
+    [System.Flags]
+    public enum TagFlag
+    {
+        None = 0,
+        Header = 1,
+        Keyframe = 2,
+        End = 4,
+    }
+    public enum TagType
+    {
+        Unknown = 0,
+        Audio = 8,
+        Video = 9,
+        Script = 18,
+    }
+}
+namespace BililiveRecorder.Flv.Grouping.Rules
+{
+    public class DataGroupingRule : BililiveRecorder.Flv.IGroupingRule
+    {
+        public DataGroupingRule() { }
+        public bool CanAppendWith(BililiveRecorder.Flv.Tag tag, System.Collections.Generic.List<BililiveRecorder.Flv.Tag> tags) { }
+        public bool CanStartWith(BililiveRecorder.Flv.Tag tag) { }
+        public BililiveRecorder.Flv.Pipeline.Actions.PipelineAction CreatePipelineAction(System.Collections.Generic.List<BililiveRecorder.Flv.Tag> tags) { }
+    }
+    public class EndGroupingRule : BililiveRecorder.Flv.IGroupingRule
+    {
+        public EndGroupingRule() { }
+        public bool CanAppendWith(BililiveRecorder.Flv.Tag tag, System.Collections.Generic.List<BililiveRecorder.Flv.Tag> tags) { }
+        public bool CanStartWith(BililiveRecorder.Flv.Tag tag) { }
+        public BililiveRecorder.Flv.Pipeline.Actions.PipelineAction CreatePipelineAction(System.Collections.Generic.List<BililiveRecorder.Flv.Tag> tags) { }
+    }
+    public class HeaderGroupingRule : BililiveRecorder.Flv.IGroupingRule
+    {
+        public HeaderGroupingRule() { }
+        public bool CanAppendWith(BililiveRecorder.Flv.Tag tag, System.Collections.Generic.List<BililiveRecorder.Flv.Tag> tags) { }
+        public bool CanStartWith(BililiveRecorder.Flv.Tag tag) { }
+        public BililiveRecorder.Flv.Pipeline.Actions.PipelineAction CreatePipelineAction(System.Collections.Generic.List<BililiveRecorder.Flv.Tag> tags) { }
+    }
+    public class ScriptGroupingRule : BililiveRecorder.Flv.IGroupingRule
+    {
+        public ScriptGroupingRule() { }
+        public bool CanAppendWith(BililiveRecorder.Flv.Tag tag, System.Collections.Generic.List<BililiveRecorder.Flv.Tag> tags) { }
+        public bool CanStartWith(BililiveRecorder.Flv.Tag tag) { }
+        public BililiveRecorder.Flv.Pipeline.Actions.PipelineAction CreatePipelineAction(System.Collections.Generic.List<BililiveRecorder.Flv.Tag> tags) { }
+    }
+}
+namespace BililiveRecorder.Flv.Grouping
+{
+    public class TagGroupReader : BililiveRecorder.Flv.ITagGroupReader, System.IDisposable
+    {
+        public TagGroupReader(BililiveRecorder.Flv.IFlvTagReader tagReader) { }
+        public TagGroupReader(BililiveRecorder.Flv.IFlvTagReader flvTagReader, bool leaveOpen = false) { }
+        public System.Collections.Generic.IList<BililiveRecorder.Flv.IGroupingRule> GroupingRules { get; }
+        public BililiveRecorder.Flv.IFlvTagReader TagReader { get; }
+        public void Dispose() { }
+        protected virtual void Dispose(bool disposing) { }
+        public System.Threading.Tasks.Task<BililiveRecorder.Flv.Pipeline.Actions.PipelineAction?> ReadGroupAsync(System.Threading.CancellationToken token) { }
+    }
+}
+namespace BililiveRecorder.Flv.Parser
+{
+    public class BigEndianBinaryReader : System.IO.BinaryReader
+    {
+        public BigEndianBinaryReader(System.IO.Stream input) { }
+        public BigEndianBinaryReader(System.IO.Stream input, System.Text.Encoding encoding) { }
+        public BigEndianBinaryReader(System.IO.Stream input, System.Text.Encoding encoding, bool leaveOpen) { }
+        public override System.IO.Stream BaseStream { get; }
+        public override void Close() { }
+        protected override void Dispose(bool disposing) { }
+        public override bool Equals(object? obj) { }
+        protected override void FillBuffer(int numBytes) { }
+        public override int GetHashCode() { }
+        public override int PeekChar() { }
+        public override int Read() { }
+        public override int Read(byte[] buffer, int index, int count) { }
+        public override int Read(char[] buffer, int index, int count) { }
+        public override bool ReadBoolean() { }
+        public override byte ReadByte() { }
+        public override byte[] ReadBytes(int count) { }
+        public override char ReadChar() { }
+        public override char[] ReadChars(int count) { }
+        public override decimal ReadDecimal() { }
+        public override double ReadDouble() { }
+        public override short ReadInt16() { }
+        public override int ReadInt32() { }
+        public override long ReadInt64() { }
+        public override sbyte ReadSByte() { }
+        public override float ReadSingle() { }
+        public override string ReadString() { }
+        public override ushort ReadUInt16() { }
+        public override uint ReadUInt32() { }
+        public override ulong ReadUInt64() { }
+        public override string? ToString() { }
+    }
+    public class FlvException : System.Exception
+    {
+        public FlvException() { }
+        public FlvException(string message) { }
+        protected FlvException(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context) { }
+        public FlvException(string message, System.Exception innerException) { }
+    }
+    public class FlvTagPipeReader : BililiveRecorder.Flv.IFlvTagReader, System.IDisposable
+    {
+        public FlvTagPipeReader(System.IO.Pipelines.PipeReader reader, BililiveRecorder.Flv.IMemoryStreamProvider memoryStreamProvider, Serilog.ILogger? logger = null) { }
+        public FlvTagPipeReader(System.IO.Pipelines.PipeReader reader, BililiveRecorder.Flv.IMemoryStreamProvider memoryStreamProvider, bool skipData = false, Serilog.ILogger? logger = null) { }
+        public FlvTagPipeReader(System.IO.Pipelines.PipeReader reader, BililiveRecorder.Flv.IMemoryStreamProvider memoryStreamProvider, bool skipData = false, bool leaveOpen = false, Serilog.ILogger? logger = null) { }
+        public System.IO.Pipelines.PipeReader Reader { get; }
+        public void Dispose() { }
+        public System.Threading.Tasks.Task<BililiveRecorder.Flv.Tag?> PeekTagAsync(System.Threading.CancellationToken token) { }
+        public System.Threading.Tasks.Task<BililiveRecorder.Flv.Tag?> ReadTagAsync(System.Threading.CancellationToken token) { }
+    }
+    public class NotFlvFileException : BililiveRecorder.Flv.Parser.FlvException
+    {
+        public NotFlvFileException() { }
+        public NotFlvFileException(string message) { }
+        protected NotFlvFileException(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context) { }
+        public NotFlvFileException(string message, System.Exception innerException) { }
+    }
+    public class UnknownFlvTagTypeException : BililiveRecorder.Flv.Parser.FlvException
+    {
+        public UnknownFlvTagTypeException() { }
+        public UnknownFlvTagTypeException(string message) { }
+        protected UnknownFlvTagTypeException(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context) { }
+        public UnknownFlvTagTypeException(string message, System.Exception innerException) { }
+    }
+}
+namespace BililiveRecorder.Flv.Pipeline.Actions
+{
+    public abstract class PipelineAction
+    {
+        protected PipelineAction() { }
+        public string Name { get; }
+        public abstract BililiveRecorder.Flv.Pipeline.Actions.PipelineAction Clone();
+    }
+    public class PipelineDataAction : BililiveRecorder.Flv.Pipeline.Actions.PipelineAction
+    {
+        public PipelineDataAction(System.Collections.Generic.IReadOnlyList<BililiveRecorder.Flv.Tag> tags) { }
+        public System.Collections.Generic.IReadOnlyList<BililiveRecorder.Flv.Tag> Tags { get; set; }
+        public override BililiveRecorder.Flv.Pipeline.Actions.PipelineAction Clone() { }
+    }
+    public class PipelineDisconnectAction : BililiveRecorder.Flv.Pipeline.Actions.PipelineAction
+    {
+        public static readonly BililiveRecorder.Flv.Pipeline.Actions.PipelineDisconnectAction Instance;
+        public PipelineDisconnectAction() { }
+        public override BililiveRecorder.Flv.Pipeline.Actions.PipelineAction Clone() { }
+    }
+    public class PipelineEndAction : BililiveRecorder.Flv.Pipeline.Actions.PipelineAction
+    {
+        public PipelineEndAction(BililiveRecorder.Flv.Tag tag) { }
+        public BililiveRecorder.Flv.Tag Tag { get; set; }
+        public override BililiveRecorder.Flv.Pipeline.Actions.PipelineAction Clone() { }
+    }
+    public class PipelineHeaderAction : BililiveRecorder.Flv.Pipeline.Actions.PipelineAction
+    {
+        public PipelineHeaderAction(System.Collections.Generic.IReadOnlyList<BililiveRecorder.Flv.Tag> allTags) { }
+        public System.Collections.Generic.IReadOnlyList<BililiveRecorder.Flv.Tag> AllTags { get; set; }
+        public BililiveRecorder.Flv.Tag? AudioHeader { get; set; }
+        public BililiveRecorder.Flv.Tag? VideoHeader { get; set; }
+        public override BililiveRecorder.Flv.Pipeline.Actions.PipelineAction Clone() { }
+    }
+    public class PipelineLogAlternativeHeaderAction : BililiveRecorder.Flv.Pipeline.Actions.PipelineAction
+    {
+        public PipelineLogAlternativeHeaderAction(System.Collections.Generic.IReadOnlyList<BililiveRecorder.Flv.Tag> tags) { }
+        public System.Collections.Generic.IReadOnlyList<BililiveRecorder.Flv.Tag> Tags { get; set; }
+        public override BililiveRecorder.Flv.Pipeline.Actions.PipelineAction Clone() { }
+    }
+    public class PipelineNewFileAction : BililiveRecorder.Flv.Pipeline.Actions.PipelineAction
+    {
+        public static readonly BililiveRecorder.Flv.Pipeline.Actions.PipelineNewFileAction Instance;
+        public PipelineNewFileAction() { }
+        public override BililiveRecorder.Flv.Pipeline.Actions.PipelineAction Clone() { }
+    }
+    public class PipelineScriptAction : BililiveRecorder.Flv.Pipeline.Actions.PipelineAction
+    {
+        public PipelineScriptAction(BililiveRecorder.Flv.Tag tag) { }
+        public BililiveRecorder.Flv.Tag Tag { get; set; }
+        public override BililiveRecorder.Flv.Pipeline.Actions.PipelineAction Clone() { }
+    }
+}
+namespace BililiveRecorder.Flv.Pipeline
+{
+    public enum CommentType
+    {
+        Other = 0,
+        Logging = 1,
+        Unrepairable = 2,
+        TimestampJump = 3,
+        TimestampOffset = 4,
+        DecodingHeader = 5,
+        RepeatingData = 6,
+    }
+    public class FlvProcessingContext
+    {
+        public FlvProcessingContext() { }
+        public FlvProcessingContext(BililiveRecorder.Flv.Pipeline.Actions.PipelineAction data, System.Collections.Generic.IDictionary<object, object?> sessionItems) { }
+        public System.Collections.Generic.List<BililiveRecorder.Flv.Pipeline.Actions.PipelineAction> Actions { get; set; }
+        public System.Collections.Generic.List<BililiveRecorder.Flv.Pipeline.ProcessingComment> Comments { get; }
+        public System.Collections.Generic.IDictionary<object, object?> LocalItems { get; }
+        public System.Collections.Generic.IDictionary<object, object?> SessionItems { get; }
+        public void Reset(BililiveRecorder.Flv.Pipeline.Actions.PipelineAction action, System.Collections.Generic.IDictionary<object, object?> sessionItems) { }
+        public void Reset(System.Collections.Generic.List<BililiveRecorder.Flv.Pipeline.Actions.PipelineAction> actions, System.Collections.Generic.IDictionary<object, object?> sessionItems) { }
+    }
+    public static class FlvProcessingContextExtensions
+    {
+        public static void AddComment(this BililiveRecorder.Flv.Pipeline.FlvProcessingContext context, BililiveRecorder.Flv.Pipeline.ProcessingComment comment) { }
+        public static bool PerActionRun(this BililiveRecorder.Flv.Pipeline.FlvProcessingContext context, System.Func<BililiveRecorder.Flv.Pipeline.FlvProcessingContext, BililiveRecorder.Flv.Pipeline.Actions.PipelineAction, System.Collections.Generic.IEnumerable<BililiveRecorder.Flv.Pipeline.Actions.PipelineAction?>> func) { }
+    }
+    public interface IFullProcessingRule : BililiveRecorder.Flv.Pipeline.IProcessingRule
+    {
+        void Run(BililiveRecorder.Flv.Pipeline.FlvProcessingContext context, BililiveRecorder.Flv.Pipeline.ProcessingDelegate next);
+    }
+    public interface IProcessingPipelineBuilder
+    {
+        System.IServiceProvider ServiceProvider { get; }
+        BililiveRecorder.Flv.Pipeline.IProcessingPipelineBuilder Add(System.Func<BililiveRecorder.Flv.Pipeline.ProcessingDelegate, BililiveRecorder.Flv.Pipeline.ProcessingDelegate> rule);
+        BililiveRecorder.Flv.Pipeline.ProcessingDelegate Build();
+    }
+    public static class IProcessingPipelineBuilderExtensions
+    {
+        public static BililiveRecorder.Flv.Pipeline.IProcessingPipelineBuilder Add<T>(this BililiveRecorder.Flv.Pipeline.IProcessingPipelineBuilder builder)
+            where T : BililiveRecorder.Flv.Pipeline.IProcessingRule { }
+        public static BililiveRecorder.Flv.Pipeline.IProcessingPipelineBuilder Add<T>(this BililiveRecorder.Flv.Pipeline.IProcessingPipelineBuilder builder, T instance)
+            where T : BililiveRecorder.Flv.Pipeline.IProcessingRule { }
+        public static BililiveRecorder.Flv.Pipeline.IProcessingPipelineBuilder AddDefault(this BililiveRecorder.Flv.Pipeline.IProcessingPipelineBuilder builder) { }
+        public static BililiveRecorder.Flv.Pipeline.IProcessingPipelineBuilder AddRemoveFillerData(this BililiveRecorder.Flv.Pipeline.IProcessingPipelineBuilder builder) { }
+    }
+    public interface IProcessingRule { }
+    public interface ISimpleProcessingRule : BililiveRecorder.Flv.Pipeline.IProcessingRule
+    {
+        void Run(BililiveRecorder.Flv.Pipeline.FlvProcessingContext context, System.Action next);
+    }
+    public class ProcessingComment
+    {
+        public ProcessingComment(BililiveRecorder.Flv.Pipeline.CommentType t, string c) { }
+        public string C { get; }
+        public BililiveRecorder.Flv.Pipeline.CommentType T { get; }
+        public override string ToString() { }
+    }
+    public delegate void ProcessingDelegate(BililiveRecorder.Flv.Pipeline.FlvProcessingContext context);
+    public class ProcessingPipelineBuilder : BililiveRecorder.Flv.Pipeline.IProcessingPipelineBuilder
+    {
+        public ProcessingPipelineBuilder(System.IServiceProvider serviceProvider) { }
+        public System.IServiceProvider ServiceProvider { get; }
+        public BililiveRecorder.Flv.Pipeline.IProcessingPipelineBuilder Add(System.Func<BililiveRecorder.Flv.Pipeline.ProcessingDelegate, BililiveRecorder.Flv.Pipeline.ProcessingDelegate> rule) { }
+        public BililiveRecorder.Flv.Pipeline.ProcessingDelegate Build() { }
+    }
+}
+namespace BililiveRecorder.Flv.Pipeline.Rules
+{
+    public class HandleDelayedAudioHeaderRule : BililiveRecorder.Flv.Pipeline.IProcessingRule, BililiveRecorder.Flv.Pipeline.ISimpleProcessingRule
+    {
+        public HandleDelayedAudioHeaderRule() { }
+        public void Run(BililiveRecorder.Flv.Pipeline.FlvProcessingContext context, System.Action next) { }
+    }
+    public class HandleEndTagRule : BililiveRecorder.Flv.Pipeline.IProcessingRule, BililiveRecorder.Flv.Pipeline.ISimpleProcessingRule
+    {
+        public HandleEndTagRule() { }
+        public void Run(BililiveRecorder.Flv.Pipeline.FlvProcessingContext context, System.Action next) { }
+    }
+    public class HandleNewHeaderRule : BililiveRecorder.Flv.Pipeline.IProcessingRule, BililiveRecorder.Flv.Pipeline.ISimpleProcessingRule
+    {
+        public HandleNewHeaderRule() { }
+        public void Run(BililiveRecorder.Flv.Pipeline.FlvProcessingContext context, System.Action next) { }
+    }
+    public class HandleNewScriptRule : BililiveRecorder.Flv.Pipeline.IProcessingRule, BililiveRecorder.Flv.Pipeline.ISimpleProcessingRule
+    {
+        public HandleNewScriptRule() { }
+        public void Run(BililiveRecorder.Flv.Pipeline.FlvProcessingContext context, System.Action next) { }
+    }
+    public class RemoveDuplicatedChunkRule : BililiveRecorder.Flv.Pipeline.IProcessingRule, BililiveRecorder.Flv.Pipeline.ISimpleProcessingRule
+    {
+        public RemoveDuplicatedChunkRule() { }
+        public void Run(BililiveRecorder.Flv.Pipeline.FlvProcessingContext context, System.Action next) { }
+    }
+    public class RemoveFillerDataRule : BililiveRecorder.Flv.Pipeline.IProcessingRule, BililiveRecorder.Flv.Pipeline.ISimpleProcessingRule
+    {
+        public RemoveFillerDataRule() { }
+        public void Run(BililiveRecorder.Flv.Pipeline.FlvProcessingContext context, System.Action next) { }
+    }
+    public class UpdateTimestampJumpRule : BililiveRecorder.Flv.Pipeline.IProcessingRule, BililiveRecorder.Flv.Pipeline.ISimpleProcessingRule
+    {
+        public UpdateTimestampJumpRule() { }
+        public void Run(BililiveRecorder.Flv.Pipeline.FlvProcessingContext context, System.Action next) { }
+    }
+    public class UpdateTimestampOffsetRule : BililiveRecorder.Flv.Pipeline.IProcessingRule, BililiveRecorder.Flv.Pipeline.ISimpleProcessingRule
+    {
+        public UpdateTimestampOffsetRule() { }
+        public void Run(BililiveRecorder.Flv.Pipeline.FlvProcessingContext context, System.Action next) { }
+    }
+}
+namespace BililiveRecorder.Flv.Writer
+{
+    public class FlvProcessingContextWriter : BililiveRecorder.Flv.IFlvProcessingContextWriter, System.IDisposable
+    {
+        public FlvProcessingContextWriter(BililiveRecorder.Flv.IFlvTagWriter tagWriter, bool allowMissingHeader, bool disableKeyframes) { }
+        public System.Action<BililiveRecorder.Flv.Amf.ScriptTagBody>? BeforeScriptTagRewrite { get; set; }
+        public System.Action<BililiveRecorder.Flv.Amf.ScriptTagBody>? BeforeScriptTagWrite { get; set; }
+        public event System.EventHandler<BililiveRecorder.Flv.FileClosedEventArgs>? FileClosed;
+        public void Dispose() { }
+        protected virtual void Dispose(bool disposing) { }
+        public System.Threading.Tasks.Task<int> WriteAsync(BililiveRecorder.Flv.Pipeline.FlvProcessingContext context) { }
+    }
+    public class FlvTagFileWriter : BililiveRecorder.Flv.IFlvTagWriter, System.IDisposable
+    {
+        public FlvTagFileWriter(BililiveRecorder.Flv.IFlvWriterTargetProvider targetProvider, BililiveRecorder.Flv.IMemoryStreamProvider memoryStreamProvider, Serilog.ILogger? logger) { }
+        public long FileSize { get; }
+        public object? State { get; }
+        public bool CloseCurrentFile() { }
+        public System.Threading.Tasks.Task CreateNewFile() { }
+        public void Dispose() { }
+        protected virtual void Dispose(bool disposing) { }
+        public System.Threading.Tasks.Task OverwriteMetadata(BililiveRecorder.Flv.Amf.ScriptTagBody metadata) { }
+        public System.Threading.Tasks.Task WriteAlternativeHeaders(System.Collections.Generic.IEnumerable<BililiveRecorder.Flv.Tag> tags) { }
+        public System.Threading.Tasks.Task WriteTag(BililiveRecorder.Flv.Tag tag) { }
+    }
+    public class FlvTagListWriter : BililiveRecorder.Flv.IFlvTagWriter, System.IDisposable
+    {
+        public FlvTagListWriter() { }
+        public System.Collections.Generic.List<BililiveRecorder.Flv.Tag> AlternativeHeaders { get; }
+        public long FileSize { get; }
+        public System.Collections.Generic.List<System.Collections.Generic.List<BililiveRecorder.Flv.Tag>> Files { get; }
+        public object? State { get; }
+        public bool CloseCurrentFile() { }
+        public System.Threading.Tasks.Task CreateNewFile() { }
+        public void Dispose() { }
+        public System.Threading.Tasks.Task OverwriteMetadata(BililiveRecorder.Flv.Amf.ScriptTagBody metadata) { }
+        public System.Threading.Tasks.Task WriteAlternativeHeaders(System.Collections.Generic.IEnumerable<BililiveRecorder.Flv.Tag> tags) { }
+        public System.Threading.Tasks.Task WriteTag(BililiveRecorder.Flv.Tag tag) { }
+    }
+}
+namespace BililiveRecorder.Flv.Xml
+{
+    public class FlvTagListReader : BililiveRecorder.Flv.IFlvTagReader, System.IDisposable
+    {
+        public FlvTagListReader(System.Collections.Generic.IReadOnlyList<BililiveRecorder.Flv.Tag> tags) { }
+        public void Dispose() { }
+        public System.Threading.Tasks.Task<BililiveRecorder.Flv.Tag?> PeekTagAsync(System.Threading.CancellationToken token) { }
+        public System.Threading.Tasks.Task<BililiveRecorder.Flv.Tag?> ReadTagAsync(System.Threading.CancellationToken token) { }
+    }
+    [System.Xml.Serialization.XmlRoot("BililiveRecorderFlv")]
+    public class XmlFlvFile
+    {
+        public XmlFlvFile() { }
+        public BililiveRecorder.Flv.Xml.XmlFlvFile.XmlFlvFileMeta? Meta { get; set; }
+        public System.Collections.Generic.List<BililiveRecorder.Flv.Tag> Tags { get; set; }
+        public static System.Xml.Serialization.XmlSerializer Serializer { get; }
+        public class XmlFlvFileMeta
+        {
+            public XmlFlvFileMeta() { }
+            [System.Xml.Serialization.XmlIgnore]
+            public System.DateTimeOffset ExportTime { get; set; }
+            [System.Xml.Serialization.XmlElement("ExportTime")]
+            public string ExportTimeForXml { get; set; }
+            [System.Xml.Serialization.XmlIgnore]
+            public System.DateTimeOffset FileCreationTime { get; set; }
+            [System.Xml.Serialization.XmlElement("FileCreationTime")]
+            public string FileCreationTimeForXml { get; set; }
+            [System.Xml.Serialization.XmlIgnore]
+            public System.DateTimeOffset FileModificationTime { get; set; }
+            [System.Xml.Serialization.XmlElement("FileModificationTime")]
+            public string FileModificationTimeForXml { get; set; }
+            public long FileSize { get; set; }
+            public string? Version { get; set; }
+        }
+    }
+}
