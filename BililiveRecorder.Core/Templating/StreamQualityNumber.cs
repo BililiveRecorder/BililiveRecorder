@@ -1,7 +1,4 @@
 using System.Runtime.CompilerServices;
-using System.Threading.Tasks;
-using Fluid;
-using Fluid.Values;
 
 namespace BililiveRecorder.Core.Templating
 {
@@ -21,8 +18,5 @@ namespace BililiveRecorder.Core.Templating
             -1 => "录播姬脚本",
             _ => $"未知({qn})"
         };
-
-        public static ValueTask<FluidValue> MapToStringFilterDelegateAsync(FluidValue input, FilterArguments arguments, TemplateContext context)
-            => new StringValue(MapToString((int)input.ToNumberValue()));
     }
 }
