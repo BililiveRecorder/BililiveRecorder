@@ -285,6 +285,7 @@ namespace BililiveRecorder.Core.Recording
             {
                 var allowedAddressFamily = this.room.RoomConfig.NetworkTransportAllowedAddressFamily;
                 HttpRequestMessage request;
+                Uri originalUri;
 
                 if (this.userScriptRunner.CallOnTransformStreamUrl(this.logger, fullUrl) is { } scriptResult)
                 {
@@ -293,6 +294,7 @@ namespace BililiveRecorder.Core.Recording
                     this.logger.Debug("用户脚本重定向了直播流地址 {NewUrl}, 旧地址 {OldUrl}", scriptUrl, fullUrl);
 
                     fullUrl = scriptUrl;
+                    originalUri = new Uri(fullUrl);
 
                     if (scriptIp is not null)
                     {
@@ -312,8 +314,11 @@ namespace BililiveRecorder.Core.Recording
                         goto sendRequest;
                     }
                 }
+                else
+                {
+                    originalUri = new Uri(fullUrl);
+                }
 
-                var originalUri = new Uri(fullUrl);
                 if (allowedAddressFamily == AllowedAddressFamily.System)
                 {
                     this.logger.Debug("NetworkTransportAllowedAddressFamily is System");
@@ -367,8 +372,8 @@ namespace BililiveRecorder.Core.Recording
                     case HttpStatusCode.Moved:
                     case HttpStatusCode.Redirect:
                         {
-                            fullUrl = resp.Headers.Location.OriginalString;
-                            this.logger.Debug("跳转到 {Url}", fullUrl);
+                            fullUrl = new Uri(originalUri, resp.Headers.Location).ToString();
+                            this.logger.Debug("跳转到 {Url}, 原文本 {Location}", fullUrl, resp.Headers.Location.OriginalString);
                             resp.Dispose();
                             break;
                         }
