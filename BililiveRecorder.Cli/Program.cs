@@ -70,7 +70,7 @@ namespace BililiveRecorder.Cli
 
         private static async Task<int> RunConfigModeAsync(RunModeArguments args)
         {
-            var path = args.Path;
+            var path = Path.GetFullPath(args.Path);
 
             using var logger = BuildLogger(args.LogLevel, args.LogFileLevel);
             Log.Logger = logger;
@@ -124,12 +124,11 @@ namespace BililiveRecorder.Cli
                 global.RecordDanmakuGift = danmaku.HasFlag(PortableModeArguments.PortableDanmakuMode.Gift);
                 global.RecordDanmakuRaw = danmaku.HasFlag(PortableModeArguments.PortableDanmakuMode.RawData);
 
-                global.WorkDirectory = args.OutputPath;
+                global.WorkDirectory = Path.GetFullPath(args.OutputPath);
                 config.Rooms = args.RoomIds.Select(x => new RoomConfig { RoomId = x, AutoRecord = true }).ToList();
             }
 
             var serviceProvider = BuildServiceProvider(config, logger);
-
 
             return await RunRecorderAsync(serviceProvider, args.WebBind);
         }
