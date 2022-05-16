@@ -151,6 +151,7 @@ namespace BililiveRecorder.Cli
                 logger.Information("Creating web server on {BindAddress}", bind);
 
                 host = new HostBuilder()
+                    .UseSerilog(logger: logger)
                     .ConfigureServices(services =>
                     {
                         services.AddSingleton(recorderAccessProxy);
@@ -163,7 +164,6 @@ namespace BililiveRecorder.Cli
                         {
 
                         })
-                        .UseSerilog(logger: logger)
                         .UseStartup<Startup>();
                     })
                     .Build();
