@@ -64,7 +64,7 @@ namespace BililiveRecorder.Web.Models
         public Optional<uint>? OptionalRecordDanmakuFlushInterval { get; set; }
         public Optional<bool>? OptionalNetworkTransportUseSystemProxy { get; set; }
         public Optional<AllowedAddressFamily>? OptionalNetworkTransportAllowedAddressFamily { get; set; }
-        public Optional<string>? OptionalUserScript { get; set; }
+        public Optional<string?>? OptionalUserScript { get; set; }
 
         public void ApplyTo(GlobalConfig config)
         {
@@ -140,7 +140,7 @@ namespace BililiveRecorder.Web.Models.Rest
         public Optional<uint> OptionalRecordDanmakuFlushInterval { get; set; }
         public Optional<bool> OptionalNetworkTransportUseSystemProxy { get; set; }
         public Optional<AllowedAddressFamily> OptionalNetworkTransportAllowedAddressFamily { get; set; }
-        public Optional<string> OptionalUserScript { get; set; }
+        public Optional<string?> OptionalUserScript { get; set; }
     }
 
 }

@@ -86,7 +86,9 @@ namespace BililiveRecorder.ToolBox
                     {
                         var t = ctx.AddTask(handler.Name);
                         t.MaxValue = 1d;
+#pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
                         var r = await handler.Handle(request, default, async p => t.Value = p).ConfigureAwait(false);
+#pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
                         t.Value = 1d;
                         return r;
                     })
@@ -107,7 +109,7 @@ namespace BililiveRecorder.ToolBox
                 }
                 else
                 {
-                    AnsiConsole.Render(new FigletText("Error").Color(Color.Red));
+                    AnsiConsole.Write(new FigletText("Error").Color(Color.Red));
 
                     var errorInfo = new Table
                     {
@@ -116,10 +118,10 @@ namespace BililiveRecorder.ToolBox
                     errorInfo.AddColumn(new TableColumn("Error Code").Centered());
                     errorInfo.AddColumn(new TableColumn("Error Message").Centered());
                     errorInfo.AddRow("[red]" + response.Status.ToString().EscapeMarkup() + "[/]", "[red]" + (response.ErrorMessage ?? string.Empty) + "[/]");
-                    AnsiConsole.Render(errorInfo);
+                    AnsiConsole.Write(errorInfo);
 
                     if (response.Exception is not null)
-                        AnsiConsole.Render(new Panel(response.Exception.GetRenderable(ExceptionFormats.ShortenPaths | ExceptionFormats.ShowLinks))
+                        AnsiConsole.Write(new Panel(response.Exception.GetRenderable(ExceptionFormats.ShortenPaths | ExceptionFormats.ShowLinks))
                         {
                             Header = new PanelHeader("Exception Info"),
                             Border = BoxBorder.Rounded

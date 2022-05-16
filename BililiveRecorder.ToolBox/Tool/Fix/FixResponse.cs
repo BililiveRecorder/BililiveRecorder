@@ -27,11 +27,11 @@ namespace BililiveRecorder.ToolBox.Tool.Fix
 
         public void PrintToConsole()
         {
-            AnsiConsole.Render(new FigletText("Done").Color(Color.Green));
+            AnsiConsole.Write(new FigletText("Done").Color(Color.Green));
 
             if (this.Unrepairable)
             {
-                AnsiConsole.Render(new Panel("This file contains error(s) that are identified as unrepairable (yet).\n" +
+                AnsiConsole.Write(new Panel("This file contains error(s) that are identified as unrepairable (yet).\n" +
                     "Please check if you're using the newest version.\n" +
                     "Please consider send a sample file to the developer.")
                 {
@@ -41,7 +41,7 @@ namespace BililiveRecorder.ToolBox.Tool.Fix
                 });
             }
 
-            AnsiConsole.Render(new Panel(this.InputPath.EscapeMarkup())
+            AnsiConsole.Write(new Panel(this.InputPath.EscapeMarkup())
             {
                 Header = new PanelHeader("Input"),
                 Border = BoxBorder.Rounded
@@ -54,9 +54,9 @@ namespace BililiveRecorder.ToolBox.Tool.Fix
             for (var i = 0; i < this.OutputPaths.Length; i++)
                 table_output.AddRow(this.OutputPaths[i].EscapeMarkup());
 
-            AnsiConsole.Render(table_output);
+            AnsiConsole.Write(table_output);
 
-            AnsiConsole.Render(new Table()
+            AnsiConsole.Write(new Table()
                 .Border(TableBorder.Rounded)
                 .AddColumns("Category", "Count")
                 .AddRow("Unrepairable", this.IssueTypeUnrepairable.ToString())

@@ -12,7 +12,9 @@ namespace BililiveRecorder.ToolBox.Tool.DanmakuStartTime
     {
         public string Name => "Read Danmaku start_time";
 
+#pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
         public async Task<CommandResponse<DanmakuStartTimeResponse>> Handle(DanmakuStartTimeRequest request, CancellationToken cancellationToken, ProgressCallback? progress)
+#pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
         {
             List<DanmakuStartTimeResponse.DanmakuStartTime> result = new();
 

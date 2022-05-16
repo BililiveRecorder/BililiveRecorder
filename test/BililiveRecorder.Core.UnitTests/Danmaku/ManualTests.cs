@@ -1,11 +1,7 @@
 using System;
-using System.Collections.Generic;
-using System.Net.Http;
 using System.Threading.Tasks;
-using BililiveRecorder.Core.Api;
 using BililiveRecorder.Core.Api.Danmaku;
 using BililiveRecorder.Core.Api.Http;
-using Newtonsoft.Json.Linq;
 using Xunit;
 
 namespace BililiveRecorder.Core.UnitTests.Danmaku
@@ -15,7 +11,7 @@ namespace BililiveRecorder.Core.UnitTests.Danmaku
         [Fact(Skip = "skip")]
         public async Task TestAsync()
         {
-            var client = new DanmakuClient(new HttpApiClient(null!), null);
+            var client = new DanmakuClient(new HttpApiClient(null!), null!);
 
             client.StatusChanged += this.Client_StatusChanged;
             client.DanmakuReceived += this.Client_DanmakuReceived;
@@ -28,11 +24,11 @@ namespace BililiveRecorder.Core.UnitTests.Danmaku
             // await Task.Delay(TimeSpan.FromMinutes(5)).ConfigureAwait(false);
         }
 
-        private void Client_DanmakuReceived(object sender, DanmakuReceivedEventArgs e)
+        private void Client_DanmakuReceived(object? sender, DanmakuReceivedEventArgs e)
         {
         }
 
-        private void Client_StatusChanged(object sender, StatusChangedEventArgs e)
+        private void Client_StatusChanged(object? sender, StatusChangedEventArgs e)
         {
         }
     }

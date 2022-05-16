@@ -16,7 +16,9 @@ namespace BililiveRecorder.ToolBox.Tool.DanmakuMerger
 
         public string Name => "Merge Danmaku";
 
+#pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
         public async Task<CommandResponse<DanmakuMergerResponse>> Handle(DanmakuMergerRequest request, CancellationToken cancellationToken, ProgressCallback? progress)
+#pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
         {
             var inputLength = request.Inputs.Length;
 
@@ -90,16 +92,16 @@ namespace BililiveRecorder.ToolBox.Tool.DanmakuMerger
                     {
                         // 使用传递进来的参数作为时间差
                         timeDiff = request.Offsets.Select(x => TimeSpan.FromSeconds(x)).ToArray();
-                        var b = startTimes[Array.IndexOf(timeDiff, timeDiff.Min())];
-                        recordInfo = b.element;
-                        baseTime = b.time;
+                        var (time, element) = startTimes[Array.IndexOf(timeDiff, timeDiff.Min())];
+                        recordInfo = element;
+                        baseTime = time;
                     }
                     else
                     {
                         // 使用文件内的开始时间作为时间差
-                        var b = startTimes.OrderBy(x => x.time).First();
-                        recordInfo = b.element;
-                        baseTime = b.time;
+                        var (time, element) = startTimes.OrderBy(x => x.time).First();
+                        recordInfo = element;
+                        baseTime = time;
                         timeDiff = startTimes.Select(x => x.time - baseTime).ToArray();
                     }
                 }

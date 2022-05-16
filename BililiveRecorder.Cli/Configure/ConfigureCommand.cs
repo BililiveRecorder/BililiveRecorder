@@ -147,7 +147,7 @@ namespace BililiveRecorder.Cli.Configure
                 table.AddRow(room.RoomId.ToString(), room.AutoRecord ? "[green]Enabled[/]" : "[red]Disabled[/]");
             }
 
-            AnsiConsole.Render(table);
+            AnsiConsole.Write(table);
         }
 
         private static void AddRoom(ConfigV3 config)

@@ -31,10 +31,10 @@ namespace BililiveRecorder.Core.Scripting.Runtime
                     ? throw new JavaScriptException(this._engine.Realm.Intrinsics.Error, "The provided value is not of type 'RequestInit'.")
                     : arg1;
 
-            HttpClientHandler handler = new HttpClientHandler();
-            HttpClient? httpClient = new HttpClient(handler);
+            var handler = new HttpClientHandler();
+            var httpClient = new HttpClient(handler);
             var requestMessage = new HttpRequestMessage(HttpMethod.Get, urlString.ToString());
-            bool throwOnRedirect = false;
+            var throwOnRedirect = false;
 
             if (initObject is not null)
             {
@@ -101,7 +101,6 @@ namespace BililiveRecorder.Core.Scripting.Runtime
             }
 
 #pragma warning disable VSTHRD002 // Avoid problematic synchronous waits
-#pragma warning disable VSTHRD104 // Offer async methods
             var resp = httpClient.SendAsync(requestMessage).Result;
 
             if (throwOnRedirect && (resp.StatusCode is (HttpStatusCode)301 or (HttpStatusCode)302 or (HttpStatusCode)303 or (HttpStatusCode)307 or (HttpStatusCode)308))
@@ -110,7 +109,6 @@ namespace BililiveRecorder.Core.Scripting.Runtime
             }
 
             var respString = resp.Content.ReadAsStringAsync().Result;
-#pragma warning restore VSTHRD104 // Offer async methods
 #pragma warning restore VSTHRD002 // Avoid problematic synchronous waits
 
             var respHeaders = new ObjectInstance(this._engine);

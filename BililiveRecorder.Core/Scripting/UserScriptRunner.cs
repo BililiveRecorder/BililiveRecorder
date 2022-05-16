@@ -73,7 +73,7 @@ globalThis.recorderEvents = {};
                 return null;
             }
 
-            var parser = new JavaScriptParser(source, new ParserOptions("userscript.js"));
+            var parser = new JavaScriptParser(source!, new ParserOptions("userscript.js"));
             var script = parser.ParseScript();
 
             this.cachedScript = script;

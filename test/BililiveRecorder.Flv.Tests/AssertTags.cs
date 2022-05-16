@@ -6,10 +6,8 @@ namespace BililiveRecorder.Flv.Tests
 {
     public static class AssertTags
     {
-        public static void ShouldHaveLinearTimestamps(List<Tag> tags)
-        {
+        public static void ShouldHaveLinearTimestamps(List<Tag> tags) =>
             Assert.True(tags.Any2((a, b) => (a.Timestamp <= b.Timestamp) && (b.Timestamp - a.Timestamp < 50)));
-        }
 
         public static void ShouldHaveFullHeaderTags(List<Tag> tags)
         {

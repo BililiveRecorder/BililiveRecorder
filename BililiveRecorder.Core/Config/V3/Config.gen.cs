@@ -179,7 +179,7 @@ namespace BililiveRecorder.Core.Config.V3
         /// <summary>
         /// 自定义脚本
         /// </summary>
-        public string UserScript => this.GetPropertyValue<string>();
+        public string? UserScript => this.GetPropertyValue<string>();
 
     }
 
@@ -381,10 +381,10 @@ namespace BililiveRecorder.Core.Config.V3
         /// <summary>
         /// 自定义脚本
         /// </summary>
-        public string UserScript { get => this.GetPropertyValue<string>(); set => this.SetPropertyValue(value); }
+        public string? UserScript { get => this.GetPropertyValue<string>(); set => this.SetPropertyValue(value); }
         public bool HasUserScript { get => this.GetPropertyHasValue(nameof(this.UserScript)); set => this.SetPropertyHasValue<string>(value, nameof(this.UserScript)); }
         [JsonProperty(nameof(UserScript)), EditorBrowsable(EditorBrowsableState.Never)]
-        public Optional<string> OptionalUserScript { get => this.GetPropertyValueOptional<string>(nameof(this.UserScript)); set => this.SetPropertyValueOptional(value, nameof(this.UserScript)); }
+        public Optional<string?> OptionalUserScript { get => this.GetPropertyValueOptional<string>(nameof(this.UserScript)); set => this.SetPropertyValueOptional(value, nameof(this.UserScript)); }
 
     }
 

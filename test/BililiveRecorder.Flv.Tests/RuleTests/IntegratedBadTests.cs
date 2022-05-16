@@ -84,17 +84,12 @@ namespace BililiveRecorder.Flv.Tests.RuleTests
                 this.Count = count;
             }
 
-            public override bool Equals(object? obj)
-            {
-                return obj is CommentCount other &&
-                       this.Type == other.Type &&
-                       this.Count == other.Count;
-            }
+            public override bool Equals(object? obj) =>
+                obj is CommentCount other &&
+                this.Type == other.Type &&
+                this.Count == other.Count;
 
-            public override int GetHashCode()
-            {
-                return HashCode.Combine(this.Type, this.Count);
-            }
+            public override int GetHashCode() => HashCode.Combine(this.Type, this.Count);
 
             public void Deconstruct(out CommentType type, out int count)
             {
@@ -110,6 +105,16 @@ namespace BililiveRecorder.Flv.Tests.RuleTests
             public static implicit operator CommentCount((CommentType, int) value)
             {
                 return new CommentCount(value.Item1, value.Item2);
+            }
+
+            public static bool operator ==(CommentCount left, CommentCount right)
+            {
+                return left.Equals(right);
+            }
+
+            public static bool operator !=(CommentCount left, CommentCount right)
+            {
+                return !(left == right);
             }
         }
     }

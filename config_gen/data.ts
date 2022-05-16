@@ -237,7 +237,7 @@ export const data: Array<ConfigEntry> = [
     {
         name: "UserScript",
         description: "自定义脚本",
-        type: "string",
+        type: "string?",
         defaultValue: "string.Empty",
         configType: "globalOnly",
         advancedConfig: true,

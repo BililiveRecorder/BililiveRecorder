@@ -41,7 +41,7 @@ namespace BililiveRecorder.WPF.Pages
         private int SettingsClickCount = 0;
 
         internal static IServiceProvider? ServiceProvider { get; private set; }
-        private ServiceProvider serviceProvider;
+        private ServiceProvider serviceProvider = null!;
         internal RootModel Model { get; private set; }
 
         internal static Action? SwitchToSettingsPage { get; private set; }

@@ -44,7 +44,9 @@ namespace BililiveRecorder.WPF.Pages
             this.CalculateOffsets();
         }
 
+#pragma warning disable VSTHRD100 // Avoid async void methods
         private async void DragDrop(object sender, DragEventArgs e)
+#pragma warning restore VSTHRD100 // Avoid async void methods
         {
             try
             {
@@ -58,7 +60,9 @@ namespace BililiveRecorder.WPF.Pages
             { }
         }
 
+#pragma warning disable VSTHRD100 // Avoid async void methods
         private async void AddFile_Click(object sender, RoutedEventArgs e)
+#pragma warning restore VSTHRD100 // Avoid async void methods
         {
             var d = new CommonOpenFileDialog
             {
@@ -112,7 +116,9 @@ namespace BililiveRecorder.WPF.Pages
             this.listView.DataContext = this.Files;
         }
 
+#pragma warning disable VSTHRD100 // Avoid async void methods
         private async void Merge_Click(object sender, RoutedEventArgs e)
+#pragma warning restore VSTHRD100 // Avoid async void methods
         {
             AutoFixProgressDialog? progressDialog = null;
 

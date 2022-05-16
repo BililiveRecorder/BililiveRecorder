@@ -45,7 +45,7 @@ namespace BililiveRecorder.WPF
         internal void CloseWithoutConfirmAction()
         {
             this.CloseConfirmed = true;
-            this.Dispatcher.BeginInvoke(this.Close, DispatcherPriority.Normal);
+            _ = this.Dispatcher.BeginInvoke(this.Close, DispatcherPriority.Normal);
         }
 
         internal void SuperActivateAction()

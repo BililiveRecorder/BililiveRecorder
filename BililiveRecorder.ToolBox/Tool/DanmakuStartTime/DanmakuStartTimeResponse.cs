@@ -18,7 +18,7 @@ namespace BililiveRecorder.ToolBox.Tool.DanmakuStartTime
                 t.AddRow(item.StartTime.ToString().EscapeMarkup(), item.Path.EscapeMarkup());
             }
 
-            AnsiConsole.Render(t);
+            AnsiConsole.Write(t);
         }
 
         public class DanmakuStartTime

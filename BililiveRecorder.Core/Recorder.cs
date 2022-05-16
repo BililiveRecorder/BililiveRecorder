@@ -52,7 +52,9 @@ namespace BililiveRecorder.Core
         public event EventHandler<AggregatedRoomEventArgs<RecordFileClosedEventArgs>>? RecordFileClosed;
         public event EventHandler<AggregatedRoomEventArgs<IOStatsEventArgs>>? IOStats;
         public event EventHandler<AggregatedRoomEventArgs<RecordingStatsEventArgs>>? RecordingStats;
+#pragma warning disable CS0067 // The event 'Recorder.PropertyChanged' is never used
         public event PropertyChangedEventHandler? PropertyChanged;
+#pragma warning restore CS0067 // The event 'Recorder.PropertyChanged' is never used
 
         public ConfigV3 Config { get; }
 

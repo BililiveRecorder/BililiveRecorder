@@ -97,7 +97,7 @@ namespace BililiveRecorder.Core.Recording
                 this.timer.Stop();
                 this.RequestStop();
 
-                RecordFileClosedEventArgs recordFileClosedEvent;
+                RecordFileClosedEventArgs? recordFileClosedEvent;
                 if (this.fileOpeningEventArgs is { } openingEventArgs)
                     recordFileClosedEvent = new RecordFileClosedEventArgs(this.room)
                     {

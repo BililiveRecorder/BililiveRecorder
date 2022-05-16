@@ -169,7 +169,7 @@ namespace BililiveRecorder.Core.Config.V3
         [Newtonsoft.Json.JsonProperty("TimingWatchdogTimeout")]
         public HierarchicalPropertyDefault.Optional<uint> OptionalTimingWatchdogTimeout { get; set; }
         [Newtonsoft.Json.JsonProperty("UserScript")]
-        public HierarchicalPropertyDefault.Optional<string> OptionalUserScript { get; set; }
+        public HierarchicalPropertyDefault.Optional<string?> OptionalUserScript { get; set; }
         [Newtonsoft.Json.JsonProperty("WebHookUrls")]
         public HierarchicalPropertyDefault.Optional<string?> OptionalWebHookUrls { get; set; }
         [Newtonsoft.Json.JsonProperty("WebHookUrlsV2")]
@@ -190,7 +190,7 @@ namespace BililiveRecorder.Core.Config.V3
         public uint TimingStreamRetry { get; set; }
         public uint TimingStreamRetryNoQn { get; set; }
         public uint TimingWatchdogTimeout { get; set; }
-        public string UserScript { get; set; }
+        public string? UserScript { get; set; }
         public string? WebHookUrls { get; set; }
         public string? WebHookUrlsV2 { get; set; }
         public string? WorkDirectory { get; set; }
@@ -256,7 +256,7 @@ namespace BililiveRecorder.Core.Config.V3
         public uint TimingStreamRetry { get; }
         public uint TimingStreamRetryNoQn { get; }
         public uint TimingWatchdogTimeout { get; }
-        public string UserScript { get; }
+        public string? UserScript { get; }
         public string? WebHookUrls { get; }
         public string? WebHookUrlsV2 { get; }
         public string? WorkDirectory { get; }
