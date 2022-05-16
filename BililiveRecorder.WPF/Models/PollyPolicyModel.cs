@@ -24,10 +24,11 @@ namespace BililiveRecorder.WPF.Models
             {
                 ExecuteDelegate = _ =>
                 {
-                    if (this.policy != null)
+                    if (this.policy is { } p)
                     {
-                        this.policy.IpBlockedHttp412CircuitBreakerPolicy.Reset();
-                        this.policy.RequestFailedCircuitBreakerPolicy.Reset();
+                        p.IpBlockedHttp412CircuitBreakerPolicy.Reset();
+                        p.RequestFailedCircuitBreakerPolicy.Reset();
+                        p.memoryCache.Compact(1);
                     }
                 }
             };

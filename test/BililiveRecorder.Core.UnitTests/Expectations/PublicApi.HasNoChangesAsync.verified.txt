@@ -1,0 +1,491 @@
+﻿[assembly: System.Runtime.CompilerServices.InternalsVisibleTo("BililiveRecorder.Core.UnitTests")]
+[assembly: System.Runtime.Versioning.TargetFramework(".NETStandard,Version=v2.0", FrameworkDisplayName="")]
+namespace BililiveRecorder.Core.Api
+{
+    public interface IHttpClientAccessor
+    {
+        System.Net.Http.HttpClient MainHttpClient { get; }
+    }
+}
+namespace BililiveRecorder.Core.Config
+{
+    public enum AllowedAddressFamily
+    {
+        System = -1,
+        Any = 0,
+        Ipv4 = 1,
+        Ipv6 = 2,
+    }
+    [Newtonsoft.Json.JsonConverter(typeof(JsonSubTypes.JsonSubtypes?), new object?[]?[] {
+            "Version"})]
+    public abstract class ConfigBase
+    {
+        protected ConfigBase() { }
+        [Newtonsoft.Json.JsonProperty("$schema", Order=-2)]
+        public string? DollarSignSchema { get; set; }
+        [Newtonsoft.Json.JsonProperty("version")]
+        public virtual int Version { get; set; }
+    }
+    public class ConfigParser
+    {
+        public const string CONFIG_FILE_NAME = "config.json";
+        public ConfigParser() { }
+        public static BililiveRecorder.Core.Config.V3.ConfigV3? LoadFrom(string directory) { }
+        public static BililiveRecorder.Core.Config.V3.ConfigV3? LoadJson(string json) { }
+        public static string? SaveJson(BililiveRecorder.Core.Config.V3.ConfigV3 config) { }
+        public static bool SaveTo(string directory, BililiveRecorder.Core.Config.V3.ConfigV3 config) { }
+        public static void WriteAllTextWithBackup(string path, string contents) { }
+    }
+    public enum CuttingMode
+    {
+        Disabled = 0,
+        ByTime = 1,
+        BySize = 2,
+    }
+    public enum RecordMode
+    {
+        Standard = 0,
+        RawData = 1,
+    }
+}
+namespace BililiveRecorder.Core.Config.V3
+{
+    public sealed class ConfigV3 : BililiveRecorder.Core.Config.ConfigBase
+    {
+        public ConfigV3() { }
+        [Newtonsoft.Json.JsonIgnore]
+        public bool DisableConfigSave { get; set; }
+        [Newtonsoft.Json.JsonProperty("global")]
+        public BililiveRecorder.Core.Config.V3.GlobalConfig Global { get; set; }
+        [Newtonsoft.Json.JsonProperty("rooms")]
+        public System.Collections.Generic.List<BililiveRecorder.Core.Config.V3.RoomConfig> Rooms { get; set; }
+        public override int Version { get; }
+    }
+    public sealed class DefaultConfig
+    {
+        public static readonly BililiveRecorder.Core.Config.V3.DefaultConfig Instance;
+        public string Cookie { get; }
+        public BililiveRecorder.Core.Config.CuttingMode CuttingMode { get; }
+        public uint CuttingNumber { get; }
+        public string FileNameRecordTemplate { get; }
+        public string LiveApiHost { get; }
+        public BililiveRecorder.Core.Config.AllowedAddressFamily NetworkTransportAllowedAddressFamily { get; }
+        public bool NetworkTransportUseSystemProxy { get; }
+        public bool RecordDanmaku { get; }
+        public uint RecordDanmakuFlushInterval { get; }
+        public bool RecordDanmakuGift { get; }
+        public bool RecordDanmakuGuard { get; }
+        public bool RecordDanmakuRaw { get; }
+        public bool RecordDanmakuSuperChat { get; }
+        public BililiveRecorder.Core.Config.RecordMode RecordMode { get; }
+        public string RecordingQuality { get; }
+        public uint TimingCheckInterval { get; }
+        public uint TimingDanmakuRetry { get; }
+        public uint TimingStreamConnect { get; }
+        public uint TimingStreamRetry { get; }
+        public uint TimingStreamRetryNoQn { get; }
+        public uint TimingWatchdogTimeout { get; }
+        public string UserScript { get; }
+        public string WebHookUrls { get; }
+        public string WebHookUrlsV2 { get; }
+        public bool WpfShowTitleAndArea { get; }
+    }
+    [Newtonsoft.Json.JsonObject(Newtonsoft.Json.MemberSerialization.OptIn)]
+    public sealed class GlobalConfig : HierarchicalPropertyDefault.HierarchicalObject<BililiveRecorder.Core.Config.V3.DefaultConfig, BililiveRecorder.Core.Config.V3.GlobalConfig>
+    {
+        public GlobalConfig() { }
+        public string? Cookie { get; set; }
+        public BililiveRecorder.Core.Config.CuttingMode CuttingMode { get; set; }
+        public uint CuttingNumber { get; set; }
+        public string? FileNameRecordTemplate { get; set; }
+        public bool HasCookie { get; set; }
+        public bool HasCuttingMode { get; set; }
+        public bool HasCuttingNumber { get; set; }
+        public bool HasFileNameRecordTemplate { get; set; }
+        public bool HasLiveApiHost { get; set; }
+        public bool HasNetworkTransportAllowedAddressFamily { get; set; }
+        public bool HasNetworkTransportUseSystemProxy { get; set; }
+        public bool HasRecordDanmaku { get; set; }
+        public bool HasRecordDanmakuFlushInterval { get; set; }
+        public bool HasRecordDanmakuGift { get; set; }
+        public bool HasRecordDanmakuGuard { get; set; }
+        public bool HasRecordDanmakuRaw { get; set; }
+        public bool HasRecordDanmakuSuperChat { get; set; }
+        public bool HasRecordMode { get; set; }
+        public bool HasRecordingQuality { get; set; }
+        public bool HasTimingCheckInterval { get; set; }
+        public bool HasTimingDanmakuRetry { get; set; }
+        public bool HasTimingStreamConnect { get; set; }
+        public bool HasTimingStreamRetry { get; set; }
+        public bool HasTimingStreamRetryNoQn { get; set; }
+        public bool HasTimingWatchdogTimeout { get; set; }
+        public bool HasUserScript { get; set; }
+        public bool HasWebHookUrls { get; set; }
+        public bool HasWebHookUrlsV2 { get; set; }
+        public bool HasWpfShowTitleAndArea { get; set; }
+        public string? LiveApiHost { get; set; }
+        public BililiveRecorder.Core.Config.AllowedAddressFamily NetworkTransportAllowedAddressFamily { get; set; }
+        public bool NetworkTransportUseSystemProxy { get; set; }
+        [Newtonsoft.Json.JsonProperty("Cookie")]
+        public HierarchicalPropertyDefault.Optional<string?> OptionalCookie { get; set; }
+        [Newtonsoft.Json.JsonProperty("CuttingMode")]
+        public HierarchicalPropertyDefault.Optional<BililiveRecorder.Core.Config.CuttingMode> OptionalCuttingMode { get; set; }
+        [Newtonsoft.Json.JsonProperty("CuttingNumber")]
+        public HierarchicalPropertyDefault.Optional<uint> OptionalCuttingNumber { get; set; }
+        [Newtonsoft.Json.JsonProperty("FileNameRecordTemplate")]
+        public HierarchicalPropertyDefault.Optional<string?> OptionalFileNameRecordTemplate { get; set; }
+        [Newtonsoft.Json.JsonProperty("LiveApiHost")]
+        public HierarchicalPropertyDefault.Optional<string?> OptionalLiveApiHost { get; set; }
+        [Newtonsoft.Json.JsonProperty("NetworkTransportAllowedAddressFamily")]
+        public HierarchicalPropertyDefault.Optional<BililiveRecorder.Core.Config.AllowedAddressFamily> OptionalNetworkTransportAllowedAddressFamily { get; set; }
+        [Newtonsoft.Json.JsonProperty("NetworkTransportUseSystemProxy")]
+        public HierarchicalPropertyDefault.Optional<bool> OptionalNetworkTransportUseSystemProxy { get; set; }
+        [Newtonsoft.Json.JsonProperty("RecordDanmaku")]
+        public HierarchicalPropertyDefault.Optional<bool> OptionalRecordDanmaku { get; set; }
+        [Newtonsoft.Json.JsonProperty("RecordDanmakuFlushInterval")]
+        public HierarchicalPropertyDefault.Optional<uint> OptionalRecordDanmakuFlushInterval { get; set; }
+        [Newtonsoft.Json.JsonProperty("RecordDanmakuGift")]
+        public HierarchicalPropertyDefault.Optional<bool> OptionalRecordDanmakuGift { get; set; }
+        [Newtonsoft.Json.JsonProperty("RecordDanmakuGuard")]
+        public HierarchicalPropertyDefault.Optional<bool> OptionalRecordDanmakuGuard { get; set; }
+        [Newtonsoft.Json.JsonProperty("RecordDanmakuRaw")]
+        public HierarchicalPropertyDefault.Optional<bool> OptionalRecordDanmakuRaw { get; set; }
+        [Newtonsoft.Json.JsonProperty("RecordDanmakuSuperChat")]
+        public HierarchicalPropertyDefault.Optional<bool> OptionalRecordDanmakuSuperChat { get; set; }
+        [Newtonsoft.Json.JsonProperty("RecordMode")]
+        public HierarchicalPropertyDefault.Optional<BililiveRecorder.Core.Config.RecordMode> OptionalRecordMode { get; set; }
+        [Newtonsoft.Json.JsonProperty("RecordingQuality")]
+        public HierarchicalPropertyDefault.Optional<string?> OptionalRecordingQuality { get; set; }
+        [Newtonsoft.Json.JsonProperty("TimingCheckInterval")]
+        public HierarchicalPropertyDefault.Optional<uint> OptionalTimingCheckInterval { get; set; }
+        [Newtonsoft.Json.JsonProperty("TimingDanmakuRetry")]
+        public HierarchicalPropertyDefault.Optional<uint> OptionalTimingDanmakuRetry { get; set; }
+        [Newtonsoft.Json.JsonProperty("TimingStreamConnect")]
+        public HierarchicalPropertyDefault.Optional<uint> OptionalTimingStreamConnect { get; set; }
+        [Newtonsoft.Json.JsonProperty("TimingStreamRetry")]
+        public HierarchicalPropertyDefault.Optional<uint> OptionalTimingStreamRetry { get; set; }
+        [Newtonsoft.Json.JsonProperty("TimingStreamRetryNoQn")]
+        public HierarchicalPropertyDefault.Optional<uint> OptionalTimingStreamRetryNoQn { get; set; }
+        [Newtonsoft.Json.JsonProperty("TimingWatchdogTimeout")]
+        public HierarchicalPropertyDefault.Optional<uint> OptionalTimingWatchdogTimeout { get; set; }
+        [Newtonsoft.Json.JsonProperty("UserScript")]
+        public HierarchicalPropertyDefault.Optional<string> OptionalUserScript { get; set; }
+        [Newtonsoft.Json.JsonProperty("WebHookUrls")]
+        public HierarchicalPropertyDefault.Optional<string?> OptionalWebHookUrls { get; set; }
+        [Newtonsoft.Json.JsonProperty("WebHookUrlsV2")]
+        public HierarchicalPropertyDefault.Optional<string?> OptionalWebHookUrlsV2 { get; set; }
+        [Newtonsoft.Json.JsonProperty("WpfShowTitleAndArea")]
+        public HierarchicalPropertyDefault.Optional<bool> OptionalWpfShowTitleAndArea { get; set; }
+        public bool RecordDanmaku { get; set; }
+        public uint RecordDanmakuFlushInterval { get; set; }
+        public bool RecordDanmakuGift { get; set; }
+        public bool RecordDanmakuGuard { get; set; }
+        public bool RecordDanmakuRaw { get; set; }
+        public bool RecordDanmakuSuperChat { get; set; }
+        public BililiveRecorder.Core.Config.RecordMode RecordMode { get; set; }
+        public string? RecordingQuality { get; set; }
+        public uint TimingCheckInterval { get; set; }
+        public uint TimingDanmakuRetry { get; set; }
+        public uint TimingStreamConnect { get; set; }
+        public uint TimingStreamRetry { get; set; }
+        public uint TimingStreamRetryNoQn { get; set; }
+        public uint TimingWatchdogTimeout { get; set; }
+        public string UserScript { get; set; }
+        public string? WebHookUrls { get; set; }
+        public string? WebHookUrlsV2 { get; set; }
+        public string? WorkDirectory { get; set; }
+        public bool WpfShowTitleAndArea { get; set; }
+    }
+    [Newtonsoft.Json.JsonObject(Newtonsoft.Json.MemberSerialization.OptIn)]
+    public sealed class RoomConfig : HierarchicalPropertyDefault.HierarchicalObject<BililiveRecorder.Core.Config.V3.GlobalConfig, BililiveRecorder.Core.Config.V3.RoomConfig>
+    {
+        public RoomConfig() { }
+        public bool AutoRecord { get; set; }
+        public string? Cookie { get; }
+        public BililiveRecorder.Core.Config.CuttingMode CuttingMode { get; set; }
+        public uint CuttingNumber { get; set; }
+        public string? FileNameRecordTemplate { get; }
+        public bool HasAutoRecord { get; set; }
+        public bool HasCuttingMode { get; set; }
+        public bool HasCuttingNumber { get; set; }
+        public bool HasRecordDanmaku { get; set; }
+        public bool HasRecordDanmakuGift { get; set; }
+        public bool HasRecordDanmakuGuard { get; set; }
+        public bool HasRecordDanmakuRaw { get; set; }
+        public bool HasRecordDanmakuSuperChat { get; set; }
+        public bool HasRecordMode { get; set; }
+        public bool HasRecordingQuality { get; set; }
+        public bool HasRoomId { get; set; }
+        public string? LiveApiHost { get; }
+        public BililiveRecorder.Core.Config.AllowedAddressFamily NetworkTransportAllowedAddressFamily { get; }
+        public bool NetworkTransportUseSystemProxy { get; }
+        [Newtonsoft.Json.JsonProperty("AutoRecord")]
+        public HierarchicalPropertyDefault.Optional<bool> OptionalAutoRecord { get; set; }
+        [Newtonsoft.Json.JsonProperty("CuttingMode")]
+        public HierarchicalPropertyDefault.Optional<BililiveRecorder.Core.Config.CuttingMode> OptionalCuttingMode { get; set; }
+        [Newtonsoft.Json.JsonProperty("CuttingNumber")]
+        public HierarchicalPropertyDefault.Optional<uint> OptionalCuttingNumber { get; set; }
+        [Newtonsoft.Json.JsonProperty("RecordDanmaku")]
+        public HierarchicalPropertyDefault.Optional<bool> OptionalRecordDanmaku { get; set; }
+        [Newtonsoft.Json.JsonProperty("RecordDanmakuGift")]
+        public HierarchicalPropertyDefault.Optional<bool> OptionalRecordDanmakuGift { get; set; }
+        [Newtonsoft.Json.JsonProperty("RecordDanmakuGuard")]
+        public HierarchicalPropertyDefault.Optional<bool> OptionalRecordDanmakuGuard { get; set; }
+        [Newtonsoft.Json.JsonProperty("RecordDanmakuRaw")]
+        public HierarchicalPropertyDefault.Optional<bool> OptionalRecordDanmakuRaw { get; set; }
+        [Newtonsoft.Json.JsonProperty("RecordDanmakuSuperChat")]
+        public HierarchicalPropertyDefault.Optional<bool> OptionalRecordDanmakuSuperChat { get; set; }
+        [Newtonsoft.Json.JsonProperty("RecordMode")]
+        public HierarchicalPropertyDefault.Optional<BililiveRecorder.Core.Config.RecordMode> OptionalRecordMode { get; set; }
+        [Newtonsoft.Json.JsonProperty("RecordingQuality")]
+        public HierarchicalPropertyDefault.Optional<string?> OptionalRecordingQuality { get; set; }
+        [Newtonsoft.Json.JsonProperty("RoomId")]
+        public HierarchicalPropertyDefault.Optional<int> OptionalRoomId { get; set; }
+        public bool RecordDanmaku { get; set; }
+        public uint RecordDanmakuFlushInterval { get; }
+        public bool RecordDanmakuGift { get; set; }
+        public bool RecordDanmakuGuard { get; set; }
+        public bool RecordDanmakuRaw { get; set; }
+        public bool RecordDanmakuSuperChat { get; set; }
+        public BililiveRecorder.Core.Config.RecordMode RecordMode { get; set; }
+        public string? RecordingQuality { get; set; }
+        public int RoomId { get; set; }
+        public uint TimingCheckInterval { get; }
+        public uint TimingDanmakuRetry { get; }
+        public uint TimingStreamConnect { get; }
+        public uint TimingStreamRetry { get; }
+        public uint TimingStreamRetryNoQn { get; }
+        public uint TimingWatchdogTimeout { get; }
+        public string UserScript { get; }
+        public string? WebHookUrls { get; }
+        public string? WebHookUrlsV2 { get; }
+        public string? WorkDirectory { get; }
+        public bool WpfShowTitleAndArea { get; }
+    }
+}
+namespace BililiveRecorder.Core.Event
+{
+    public sealed class AggregatedRoomEventArgs<T>
+    {
+        public AggregatedRoomEventArgs(BililiveRecorder.Core.IRoom room, T @event) { }
+        public T Event { get; }
+        public BililiveRecorder.Core.IRoom Room { get; }
+    }
+    public sealed class IOStatsEventArgs : System.EventArgs
+    {
+        public IOStatsEventArgs() { }
+        public int DiskBytesWritten { get; set; }
+        public double DiskMBps { get; set; }
+        public System.TimeSpan DiskWriteDuration { get; set; }
+        public System.TimeSpan Duration { get; set; }
+        public System.DateTimeOffset EndTime { get; set; }
+        public int NetworkBytesDownloaded { get; set; }
+        public double NetworkMbps { get; set; }
+        public System.DateTimeOffset StartTime { get; set; }
+    }
+    public abstract class RecordEventArgsBase : System.EventArgs
+    {
+        public RecordEventArgsBase() { }
+        public RecordEventArgsBase(BililiveRecorder.Core.IRoom room) { }
+        public string AreaNameChild { get; set; }
+        public string AreaNameParent { get; set; }
+        public string Name { get; set; }
+        public int RoomId { get; set; }
+        public System.Guid SessionId { get; set; }
+        public int ShortId { get; set; }
+        public string Title { get; set; }
+    }
+    public sealed class RecordFileClosedEventArgs : BililiveRecorder.Core.Event.RecordEventArgsBase
+    {
+        public RecordFileClosedEventArgs() { }
+        public RecordFileClosedEventArgs(BililiveRecorder.Core.IRoom room) { }
+        public double Duration { get; set; }
+        public System.DateTimeOffset FileCloseTime { get; set; }
+        public System.DateTimeOffset FileOpenTime { get; set; }
+        public long FileSize { get; set; }
+        [Newtonsoft.Json.JsonIgnore]
+        public string FullPath { get; set; }
+        public string RelativePath { get; set; }
+    }
+    public sealed class RecordFileOpeningEventArgs : BililiveRecorder.Core.Event.RecordEventArgsBase
+    {
+        public RecordFileOpeningEventArgs() { }
+        public RecordFileOpeningEventArgs(BililiveRecorder.Core.IRoom room) { }
+        public System.DateTimeOffset FileOpenTime { get; set; }
+        [Newtonsoft.Json.JsonIgnore]
+        public string FullPath { get; set; }
+        public string RelativePath { get; set; }
+    }
+    public sealed class RecordSessionEndedEventArgs : BililiveRecorder.Core.Event.RecordEventArgsBase
+    {
+        public RecordSessionEndedEventArgs() { }
+        public RecordSessionEndedEventArgs(BililiveRecorder.Core.IRoom room) { }
+    }
+    public sealed class RecordSessionStartedEventArgs : BililiveRecorder.Core.Event.RecordEventArgsBase
+    {
+        public RecordSessionStartedEventArgs() { }
+        public RecordSessionStartedEventArgs(BililiveRecorder.Core.IRoom room) { }
+    }
+    public sealed class RecordingStatsEventArgs : System.EventArgs
+    {
+        public RecordingStatsEventArgs() { }
+        public double AddedDuration { get; set; }
+        public long CurrentFileSize { get; set; }
+        public double DurationRatio { get; set; }
+        public int FileMaxTimestamp { get; set; }
+        public long InputAudioBytes { get; set; }
+        public long InputVideoBytes { get; set; }
+        public long OutputAudioBytes { get; set; }
+        public int OutputAudioFrames { get; set; }
+        public long OutputVideoBytes { get; set; }
+        public int OutputVideoFrames { get; set; }
+        public double PassedTime { get; set; }
+        public double SessionDuration { get; set; }
+        public int SessionMaxTimestamp { get; set; }
+        public long TotalInputAudioBytes { get; set; }
+        public long TotalInputBytes { get; set; }
+        public long TotalInputVideoBytes { get; set; }
+        public long TotalOutputAudioBytes { get; set; }
+        public int TotalOutputAudioFrames { get; set; }
+        public long TotalOutputBytes { get; set; }
+        public long TotalOutputVideoBytes { get; set; }
+        public int TotalOutputVideoFrames { get; set; }
+    }
+}
+namespace BililiveRecorder.Core
+{
+    public interface IRecorder : System.ComponentModel.INotifyPropertyChanged, System.IDisposable
+    {
+        BililiveRecorder.Core.Config.V3.ConfigV3 Config { get; }
+        System.Collections.ObjectModel.ReadOnlyObservableCollection<BililiveRecorder.Core.IRoom> Rooms { get; }
+        event System.EventHandler<BililiveRecorder.Core.Event.AggregatedRoomEventArgs<BililiveRecorder.Core.Event.IOStatsEventArgs>>? IOStats;
+        event System.EventHandler<BililiveRecorder.Core.Event.AggregatedRoomEventArgs<BililiveRecorder.Core.Event.RecordFileClosedEventArgs>>? RecordFileClosed;
+        event System.EventHandler<BililiveRecorder.Core.Event.AggregatedRoomEventArgs<BililiveRecorder.Core.Event.RecordFileOpeningEventArgs>>? RecordFileOpening;
+        event System.EventHandler<BililiveRecorder.Core.Event.AggregatedRoomEventArgs<BililiveRecorder.Core.Event.RecordSessionEndedEventArgs>>? RecordSessionEnded;
+        event System.EventHandler<BililiveRecorder.Core.Event.AggregatedRoomEventArgs<BililiveRecorder.Core.Event.RecordSessionStartedEventArgs>>? RecordSessionStarted;
+        event System.EventHandler<BililiveRecorder.Core.Event.AggregatedRoomEventArgs<BililiveRecorder.Core.Event.RecordingStatsEventArgs>>? RecordingStats;
+        BililiveRecorder.Core.IRoom AddRoom(int roomid);
+        BililiveRecorder.Core.IRoom AddRoom(int roomid, bool enabled);
+        void RemoveRoom(BililiveRecorder.Core.IRoom room);
+        void SaveConfig();
+    }
+    public interface IRoom : System.ComponentModel.INotifyPropertyChanged, System.IDisposable
+    {
+        string AreaNameChild { get; }
+        string AreaNameParent { get; }
+        bool AutoRecordForThisSession { get; }
+        bool DanmakuConnected { get; }
+        string Name { get; }
+        System.Guid ObjectId { get; }
+        Newtonsoft.Json.Linq.JObject? RawBilibiliApiJsonData { get; }
+        bool Recording { get; }
+        BililiveRecorder.Core.Config.V3.RoomConfig RoomConfig { get; }
+        int ShortId { get; }
+        BililiveRecorder.Core.RoomStats Stats { get; }
+        bool Streaming { get; }
+        string Title { get; }
+        event System.EventHandler<BililiveRecorder.Core.Event.IOStatsEventArgs>? IOStats;
+        event System.EventHandler<BililiveRecorder.Core.Event.RecordFileClosedEventArgs>? RecordFileClosed;
+        event System.EventHandler<BililiveRecorder.Core.Event.RecordFileOpeningEventArgs>? RecordFileOpening;
+        event System.EventHandler<BililiveRecorder.Core.Event.RecordSessionEndedEventArgs>? RecordSessionEnded;
+        event System.EventHandler<BililiveRecorder.Core.Event.RecordSessionStartedEventArgs>? RecordSessionStarted;
+        event System.EventHandler<BililiveRecorder.Core.Event.RecordingStatsEventArgs>? RecordingStats;
+        System.Threading.Tasks.Task RefreshRoomInfoAsync();
+        void SplitOutput();
+        void StartRecord();
+        void StopRecord();
+    }
+    public static class LoggingContext
+    {
+        public const string RoomId = "RoomId";
+    }
+    public class PollyPolicy : Polly.Registry.PolicyRegistry
+    {
+        public readonly Polly.CircuitBreaker.AsyncCircuitBreakerPolicy IpBlockedHttp412CircuitBreakerPolicy;
+        public readonly Polly.CircuitBreaker.AsyncCircuitBreakerPolicy RequestFailedCircuitBreakerPolicy;
+        public readonly Microsoft.Extensions.Caching.Memory.MemoryCache memoryCache;
+    }
+    public class RoomStats : System.ComponentModel.INotifyPropertyChanged
+    {
+        public RoomStats() { }
+        public double AddedDuration { get; set; }
+        public long CurrentFileSize { get; set; }
+        public int DiskBytesWritten { get; set; }
+        public double DiskMBps { get; set; }
+        public System.TimeSpan DiskWriteDuration { get; set; }
+        public System.TimeSpan Duration { get; set; }
+        public double DurationRatio { get; set; }
+        public System.DateTimeOffset EndTime { get; set; }
+        public System.TimeSpan FileMaxTimestamp { get; set; }
+        public long InputAudioBytes { get; set; }
+        public long InputVideoBytes { get; set; }
+        public int NetworkBytesDownloaded { get; set; }
+        public double NetworkMbps { get; set; }
+        public long OutputAudioBytes { get; set; }
+        public int OutputAudioFrames { get; set; }
+        public long OutputVideoBytes { get; set; }
+        public int OutputVideoFrames { get; set; }
+        public double PassedTime { get; set; }
+        public System.TimeSpan SessionDuration { get; set; }
+        public System.TimeSpan SessionMaxTimestamp { get; set; }
+        public System.DateTimeOffset StartTime { get; set; }
+        public long TotalInputAudioBytes { get; set; }
+        public long TotalInputBytes { get; set; }
+        public long TotalInputVideoBytes { get; set; }
+        public long TotalOutputAudioBytes { get; set; }
+        public int TotalOutputAudioFrames { get; set; }
+        public long TotalOutputBytes { get; set; }
+        public long TotalOutputVideoBytes { get; set; }
+        public int TotalOutputVideoFrames { get; set; }
+        public event System.ComponentModel.PropertyChangedEventHandler? PropertyChanged;
+        protected virtual void OnPropertyChanged(string propertyName) { }
+        public void Reset() { }
+        protected bool SetField<T>(ref T location, T value, [System.Runtime.CompilerServices.CallerMemberName] string propertyName = "") { }
+    }
+}
+namespace BililiveRecorder.Core.Scripting
+{
+    public class UserScriptRunner
+    {
+        public UserScriptRunner(BililiveRecorder.Core.Config.V3.GlobalConfig config) { }
+        public string? CallOnFetchStreamUrl(Serilog.ILogger logger, int roomid, int[] qnSetting) { }
+        public void CallOnTest(Serilog.ILogger logger, System.Action<string>? alert) { }
+        [return: System.Runtime.CompilerServices.TupleElementNames(new string[] {
+                "url",
+                "ip"})]
+        public System.ValueTuple<string, string?>? CallOnTransformStreamUrl(Serilog.ILogger logger, string originalUrl) { }
+    }
+}
+namespace BililiveRecorder.Core.Templating
+{
+    public class FileNameGenerator
+    {
+        public FileNameGenerator(BililiveRecorder.Core.Config.V3.GlobalConfig config) { }
+        [return: System.Runtime.CompilerServices.TupleElementNames(new string[] {
+                "fullPath",
+                "relativePath"})]
+        public System.ValueTuple<string, string> CreateFilePath(BililiveRecorder.Core.Templating.FileNameGenerator.FileNameContextData data) { }
+        public class FileNameContextData
+        {
+            public FileNameContextData() { }
+            public string AreaChild { get; set; }
+            public string AreaParent { get; set; }
+            public Newtonsoft.Json.Linq.JObject? Json { get; set; }
+            public string Name { get; set; }
+            public int Qn { get; set; }
+            public int RoomId { get; set; }
+            public int ShortId { get; set; }
+            public string Title { get; set; }
+        }
+    }
+}
+namespace BililiveRecorder.DependencyInjection
+{
+    public static class DependencyInjectionExtensions
+    {
+        public static Microsoft.Extensions.DependencyInjection.IServiceCollection AddRecorder(this Microsoft.Extensions.DependencyInjection.IServiceCollection services) { }
+        public static Microsoft.Extensions.DependencyInjection.IServiceCollection AddRecorderApiClients(this Microsoft.Extensions.DependencyInjection.IServiceCollection services) { }
+        public static Microsoft.Extensions.DependencyInjection.IServiceCollection AddRecorderConfig(this Microsoft.Extensions.DependencyInjection.IServiceCollection services, BililiveRecorder.Core.Config.V3.ConfigV3 config) { }
+        public static Microsoft.Extensions.DependencyInjection.IServiceCollection AddRecorderRecording(this Microsoft.Extensions.DependencyInjection.IServiceCollection services) { }
+    }
+}

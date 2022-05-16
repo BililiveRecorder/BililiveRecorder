@@ -1,8 +1,8 @@
-﻿using System;
+using System;
 
 namespace BililiveRecorder.Core.Api.Danmaku
 {
-    public class StatusChangedEventArgs : EventArgs
+    internal class StatusChangedEventArgs : EventArgs
     {
         public static readonly StatusChangedEventArgs True = new StatusChangedEventArgs
         {

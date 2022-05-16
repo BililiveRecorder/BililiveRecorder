@@ -2,7 +2,7 @@ using System;
 
 namespace BililiveRecorder.Core.Event
 {
-    public class IOStatsEventArgs : EventArgs
+    public sealed class IOStatsEventArgs : EventArgs
     {
         /// <summary>
         /// 当前统计区间的开始时间

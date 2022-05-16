@@ -3,7 +3,7 @@ using BililiveRecorder.Flv;
 
 namespace BililiveRecorder.Core.Recording
 {
-    public interface IFlvTagReaderFactory
+    internal interface IFlvTagReaderFactory
     {
         IFlvTagReader CreateFlvTagReader(PipeReader pipeReader);
     }

@@ -2,7 +2,7 @@ using BililiveRecorder.Flv;
 
 namespace BililiveRecorder.Core.Recording
 {
-    public interface ITagGroupReaderFactory
+    internal interface ITagGroupReaderFactory
     {
         ITagGroupReader CreateTagGroupReader(IFlvTagReader flvTagReader);
     }

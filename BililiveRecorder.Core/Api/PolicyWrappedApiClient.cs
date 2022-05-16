@@ -6,7 +6,7 @@ using Polly.Registry;
 
 namespace BililiveRecorder.Core.Api
 {
-    public class PolicyWrappedApiClient<T> : IApiClient, IDanmakuServerApiClient, IDisposable where T : class, IApiClient, IDanmakuServerApiClient, IDisposable
+    internal class PolicyWrappedApiClient<T> : IApiClient, IDanmakuServerApiClient, IDisposable where T : class, IApiClient, IDanmakuServerApiClient, IDisposable
     {
         private readonly T client;
         private readonly IReadOnlyPolicyRegistry<string> policies;

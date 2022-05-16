@@ -4,7 +4,7 @@ using BililiveRecorder.Core.Api.Model;
 
 namespace BililiveRecorder.Core.Api
 {
-    public interface IDanmakuServerApiClient : IDisposable
+    internal interface IDanmakuServerApiClient : IDisposable
     {
         Task<BilibiliApiResponse<DanmuInfo>> GetDanmakuServerAsync(int roomid);
     }

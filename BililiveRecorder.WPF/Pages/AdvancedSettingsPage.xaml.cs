@@ -2,7 +2,7 @@ using System;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
 using System.Windows;
-using BililiveRecorder.Core.Api.Http;
+using BililiveRecorder.Core.Api;
 using BililiveRecorder.Core.Scripting;
 using Newtonsoft.Json.Linq;
 using Serilog;
@@ -16,10 +16,10 @@ namespace BililiveRecorder.WPF.Pages
     public partial class AdvancedSettingsPage
     {
         private static readonly ILogger logger = Log.ForContext<AdvancedSettingsPage>();
-        private readonly HttpApiClient? httpApiClient;
+        private readonly IHttpClientAccessor? httpApiClient;
         private readonly UserScriptRunner? userScriptRunner;
 
-        public AdvancedSettingsPage(HttpApiClient? httpApiClient, UserScriptRunner? userScriptRunner)
+        public AdvancedSettingsPage(IHttpClientAccessor? httpApiClient, UserScriptRunner? userScriptRunner)
         {
             this.InitializeComponent();
             this.httpApiClient = httpApiClient;
@@ -28,7 +28,7 @@ namespace BililiveRecorder.WPF.Pages
 
         public AdvancedSettingsPage()
             : this(
-                  (HttpApiClient?)(RootPage.ServiceProvider?.GetService(typeof(HttpApiClient))),
+                  (IHttpClientAccessor?)(RootPage.ServiceProvider?.GetService(typeof(IHttpClientAccessor))),
                   (UserScriptRunner?)(RootPage.ServiceProvider?.GetService(typeof(UserScriptRunner)))
                   )
         { }

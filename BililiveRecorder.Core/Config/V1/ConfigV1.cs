@@ -9,7 +9,7 @@ namespace BililiveRecorder.Core.Config.V1
 {
     [Obsolete]
     [JsonObject(memberSerialization: MemberSerialization.OptIn)]
-    public class ConfigV1 : INotifyPropertyChanged
+    internal class ConfigV1 : INotifyPropertyChanged
     {
         //private static readonly Logger logger = LogManager.GetCurrentClassLogger();
 

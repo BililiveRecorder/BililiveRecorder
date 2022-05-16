@@ -3,7 +3,7 @@ using System.Runtime.Serialization;
 
 namespace BililiveRecorder.Core.Api
 {
-    public class BilibiliApiResponseCodeNotZeroException : Exception
+    internal class BilibiliApiResponseCodeNotZeroException : Exception
     {
         public BilibiliApiResponseCodeNotZeroException() { }
         public BilibiliApiResponseCodeNotZeroException(string message) : base(message) { }

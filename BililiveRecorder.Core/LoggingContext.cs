@@ -1,6 +1,6 @@
 namespace BililiveRecorder.Core
 {
-    public class LoggingContext
+    public static class LoggingContext
     {
         public const string RoomId = nameof(RoomId);
     }

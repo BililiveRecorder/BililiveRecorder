@@ -4,7 +4,7 @@ using BililiveRecorder.Flv.Pipeline.Actions;
 
 namespace BililiveRecorder.Core.ProcessingRules
 {
-    public class SplitRule : ISimpleProcessingRule
+    internal class SplitRule : ISimpleProcessingRule
     {
         // 0 = none, 1 = after, 2 = before
         private int splitFlag = 0;

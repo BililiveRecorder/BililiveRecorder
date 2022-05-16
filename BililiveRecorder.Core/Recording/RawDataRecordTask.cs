@@ -10,7 +10,7 @@ using Serilog;
 
 namespace BililiveRecorder.Core.Recording
 {
-    public class RawDataRecordTask : RecordTaskBase
+    internal class RawDataRecordTask : RecordTaskBase
     {
         private RecordFileOpeningEventArgs? fileOpeningEventArgs;
 

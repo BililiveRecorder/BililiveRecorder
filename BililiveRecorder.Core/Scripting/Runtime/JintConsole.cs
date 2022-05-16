@@ -15,7 +15,7 @@ using Serilog.Events;
 
 namespace BililiveRecorder.Core.Scripting.Runtime
 {
-    public class JintConsole : ObjectInstance
+    internal class JintConsole : ObjectInstance
     {
         private readonly ILogger logger;
 

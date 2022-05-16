@@ -2,7 +2,7 @@ using System;
 
 namespace BililiveRecorder.Core.Event
 {
-    public class RecordingStatsEventArgs : EventArgs
+    public sealed class RecordingStatsEventArgs : EventArgs
     {
         /// <summary>
         /// 从录制开始到现在一共经过的时间，毫秒

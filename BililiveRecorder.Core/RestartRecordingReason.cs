@@ -1,6 +1,6 @@
 namespace BililiveRecorder.Core
 {
-    public enum RestartRecordingReason
+    internal enum RestartRecordingReason
     {
         /// <summary>
         /// 普通重试

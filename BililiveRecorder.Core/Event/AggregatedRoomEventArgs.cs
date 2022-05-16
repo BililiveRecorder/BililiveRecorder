@@ -2,7 +2,7 @@ using System;
 
 namespace BililiveRecorder.Core.Event
 {
-    public class AggregatedRoomEventArgs<T>
+    public sealed class AggregatedRoomEventArgs<T>
     {
         public AggregatedRoomEventArgs(IRoom room, T @event)
         {

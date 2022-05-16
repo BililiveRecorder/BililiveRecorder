@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 
 namespace BililiveRecorder.Core.Api.Model
 {
-    public class RoomPlayInfo
+    internal class RoomPlayInfo
     {
         [JsonProperty("live_status")]
         public int LiveStatus { get; set; }

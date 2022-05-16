@@ -17,7 +17,7 @@ using Timer = System.Timers.Timer;
 
 namespace BililiveRecorder.Core.Api.Danmaku
 {
-    public class DanmakuClient : IDanmakuClient, IDisposable
+    internal class DanmakuClient : IDanmakuClient, IDisposable
     {
         private readonly ILogger logger;
         private readonly IDanmakuServerApiClient apiClient;

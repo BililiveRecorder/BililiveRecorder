@@ -9,7 +9,7 @@ using Jint.Runtime;
 
 namespace BililiveRecorder.Core.Scripting.Runtime
 {
-    public class JintFetchSync : FunctionInstance
+    internal class JintFetchSync : FunctionInstance
     {
         private static readonly JsString functionName = new JsString("fetchSync");
 

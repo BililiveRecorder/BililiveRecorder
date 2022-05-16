@@ -12,7 +12,7 @@ using Serilog;
 #nullable enable
 namespace BililiveRecorder.Core.Danmaku
 {
-    public class BasicDanmakuWriter : IBasicDanmakuWriter
+    internal class BasicDanmakuWriter : IBasicDanmakuWriter
     {
         private static readonly XmlWriterSettings xmlWriterSettings = new XmlWriterSettings
         {

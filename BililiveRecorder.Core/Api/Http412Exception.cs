@@ -3,7 +3,7 @@ using System.Runtime.Serialization;
 
 namespace BililiveRecorder.Core.Api
 {
-    public class Http412Exception : Exception
+    internal class Http412Exception : Exception
     {
         public Http412Exception() { }
         public Http412Exception(string message) : base(message) { }

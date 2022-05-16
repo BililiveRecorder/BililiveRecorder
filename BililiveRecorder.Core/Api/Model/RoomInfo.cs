@@ -3,7 +3,7 @@ using Newtonsoft.Json.Linq;
 
 namespace BililiveRecorder.Core.Api.Model
 {
-    public class RoomInfo
+    internal class RoomInfo
     {
         [JsonProperty("room_info")]
         public InnerRoomInfo Room { get; set; } = new InnerRoomInfo();

@@ -11,7 +11,7 @@ using Serilog;
 
 namespace BililiveRecorder.Core
 {
-    public class Recorder : IRecorder
+    internal class Recorder : IRecorder
     {
         private readonly object lockObject = new object();
         private readonly ObservableCollection<IRoom> roomCollection;

@@ -1,8 +1,8 @@
-﻿using System;
+using System;
 
 namespace BililiveRecorder.Core.Api.Danmaku
 {
-    public class DanmakuReceivedEventArgs : EventArgs
+    internal class DanmakuReceivedEventArgs : EventArgs
     {
         public readonly DanmakuModel Danmaku;
 

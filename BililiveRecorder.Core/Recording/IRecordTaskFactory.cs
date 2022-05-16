@@ -1,6 +1,6 @@
 namespace BililiveRecorder.Core.Recording
 {
-    public interface IRecordTaskFactory
+    internal interface IRecordTaskFactory
     {
         IRecordTask CreateRecordTask(IRoom room);
     }

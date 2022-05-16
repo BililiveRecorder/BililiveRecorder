@@ -10,7 +10,7 @@ using Jint.Runtime.Interop;
 
 namespace BililiveRecorder.Core.Scripting.Runtime
 {
-    public class JintDns : ObjectInstance
+    internal class JintDns : ObjectInstance
     {
         public JintDns(Engine engine) : base(engine)
         {

@@ -4,7 +4,7 @@ using BililiveRecorder.Core.Api.Model;
 
 namespace BililiveRecorder.Core.Api
 {
-    public static class ModelExtensions
+    internal static class ModelExtensions
     {
         private static readonly Random random = new Random();
 

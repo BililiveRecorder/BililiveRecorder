@@ -11,7 +11,7 @@ using Newtonsoft.Json;
 namespace BililiveRecorder.Core.Config.V2
 {
     [JsonObject(MemberSerialization.OptIn)]
-    public sealed partial class RoomConfig : HierarchicalObject<GlobalConfig, RoomConfig>
+    internal sealed partial class RoomConfig : HierarchicalObject<GlobalConfig, RoomConfig>
     {
         /// <summary>
         /// 房间号
@@ -169,7 +169,7 @@ namespace BililiveRecorder.Core.Config.V2
     }
 
     [JsonObject(MemberSerialization.OptIn)]
-    public sealed partial class GlobalConfig : HierarchicalObject<DefaultConfig, GlobalConfig>
+    internal sealed partial class GlobalConfig : HierarchicalObject<DefaultConfig, GlobalConfig>
     {
         /// <summary>
         /// 录制模式
@@ -349,7 +349,7 @@ namespace BililiveRecorder.Core.Config.V2
 
     }
 
-    public sealed partial class DefaultConfig
+    internal sealed partial class DefaultConfig
     {
         public static readonly DefaultConfig Instance = new DefaultConfig();
         private DefaultConfig() { }

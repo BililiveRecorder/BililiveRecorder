@@ -9,7 +9,7 @@ using StructLinq;
 
 namespace BililiveRecorder.Core.ProcessingRules
 {
-    public class StatsRule : ISimpleProcessingRule
+    internal class StatsRule : ISimpleProcessingRule
     {
         public const string SkipStatsKey = nameof(SkipStatsKey);
 

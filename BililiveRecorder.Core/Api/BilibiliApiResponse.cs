@@ -2,7 +2,7 @@ using Newtonsoft.Json;
 
 namespace BililiveRecorder.Core.Api
 {
-    public class BilibiliApiResponse<T> where T : class
+    internal class BilibiliApiResponse<T> where T : class
     {
         [JsonProperty("code")]
         public int? Code { get; set; }

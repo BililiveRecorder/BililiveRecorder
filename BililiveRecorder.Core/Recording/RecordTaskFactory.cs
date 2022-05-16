@@ -5,7 +5,7 @@ using Serilog;
 
 namespace BililiveRecorder.Core.Recording
 {
-    public class RecordTaskFactory : IRecordTaskFactory
+    internal class RecordTaskFactory : IRecordTaskFactory
     {
         private readonly ILogger logger;
         private readonly IServiceProvider serviceProvider;

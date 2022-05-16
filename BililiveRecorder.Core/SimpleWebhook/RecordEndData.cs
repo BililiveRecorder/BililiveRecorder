@@ -4,7 +4,7 @@ using BililiveRecorder.Core.Event;
 #nullable enable
 namespace BililiveRecorder.Core.SimpleWebhook
 {
-    public class RecordEndData
+    internal class RecordEndData
     {
         public RecordEndData(RecordFileClosedEventArgs args)
         {

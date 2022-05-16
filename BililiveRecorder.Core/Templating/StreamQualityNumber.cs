@@ -5,7 +5,7 @@ using Fluid.Values;
 
 namespace BililiveRecorder.Core.Templating
 {
-    public static class StreamQualityNumber
+    internal static class StreamQualityNumber
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static string MapToString(int qn) => qn switch
@@ -21,7 +21,6 @@ namespace BililiveRecorder.Core.Templating
             -1 => "录播姬脚本",
             _ => $"未知({qn})"
         };
-
 
         public static ValueTask<FluidValue> MapToStringFilterDelegateAsync(FluidValue input, FilterArguments arguments, TemplateContext context)
             => new StringValue(MapToString((int)input.ToNumberValue()));

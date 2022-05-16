@@ -5,7 +5,7 @@ using BililiveRecorder.Core.Api.Danmaku;
 
 namespace BililiveRecorder.Core.Api
 {
-    public interface IDanmakuClient : IDisposable
+    internal interface IDanmakuClient : IDisposable
     {
         bool Connected { get; }
 

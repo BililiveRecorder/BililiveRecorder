@@ -7,7 +7,7 @@ using Serilog;
 
 namespace BililiveRecorder.Core.Recording
 {
-    public class FlvTagReaderFactory : IFlvTagReaderFactory
+    internal class FlvTagReaderFactory : IFlvTagReaderFactory
     {
         private readonly IServiceProvider serviceProvider;
 

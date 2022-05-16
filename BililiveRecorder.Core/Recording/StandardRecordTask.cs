@@ -19,7 +19,7 @@ using Serilog;
 
 namespace BililiveRecorder.Core.Recording
 {
-    public class StandardRecordTask : RecordTaskBase
+    internal class StandardRecordTask : RecordTaskBase
     {
         private readonly IFlvTagReaderFactory flvTagReaderFactory;
         private readonly ITagGroupReaderFactory tagGroupReaderFactory;

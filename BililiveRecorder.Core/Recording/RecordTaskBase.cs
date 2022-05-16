@@ -17,7 +17,7 @@ using Timer = System.Timers.Timer;
 
 namespace BililiveRecorder.Core.Recording
 {
-    public abstract class RecordTaskBase : IRecordTask
+    internal abstract class RecordTaskBase : IRecordTask
     {
         private const string HttpHeaderAccept = "*/*";
         private const string HttpHeaderOrigin = "https://live.bilibili.com";

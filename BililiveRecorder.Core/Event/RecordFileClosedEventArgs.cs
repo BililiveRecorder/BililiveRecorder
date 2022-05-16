@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 
 namespace BililiveRecorder.Core.Event
 {
-    public class RecordFileClosedEventArgs : RecordEventArgsBase
+    public sealed class RecordFileClosedEventArgs : RecordEventArgsBase
     {
         public RecordFileClosedEventArgs() { }
 

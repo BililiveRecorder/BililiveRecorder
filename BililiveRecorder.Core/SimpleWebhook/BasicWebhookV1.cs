@@ -9,7 +9,7 @@ using Serilog;
 
 namespace BililiveRecorder.Core.SimpleWebhook
 {
-    public class BasicWebhookV1
+    internal class BasicWebhookV1
     {
         private static readonly ILogger logger = Log.ForContext<BasicWebhookV1>();
 

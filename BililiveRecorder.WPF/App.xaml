@@ -28,7 +28,7 @@
             </ContextMenu>
             <DataTemplate x:Key="RoomCardStatsPopup" 
                           xmlns:core="clr-namespace:BililiveRecorder.Core;assembly=BililiveRecorder.Core"
-                          DataType="{x:Type core:Room}">
+                          DataType="{x:Type core:IRoom}">
                 <Grid l:ResxLocalizationProvider.DefaultDictionary="Strings">
                     <TextBlock Visibility="{Binding Stats.DurationRatio,Converter={StaticResource IsNaNToVisibilityCollapsedConverter}}" 
                                TextAlignment="Center" Text="{l:Loc RoomCard_Status_SpeedIndicator_NoData}"/>

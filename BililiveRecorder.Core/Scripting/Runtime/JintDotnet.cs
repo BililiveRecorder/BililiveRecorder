@@ -9,7 +9,7 @@ using Jint.Runtime.Interop;
 
 namespace BililiveRecorder.Core.Scripting.Runtime
 {
-    public class JintDotnet : ObjectInstance
+    internal class JintDotnet : ObjectInstance
     {
         public JintDotnet(Engine engine) : base(engine)
         {

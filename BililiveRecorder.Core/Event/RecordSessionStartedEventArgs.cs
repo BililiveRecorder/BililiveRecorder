@@ -1,6 +1,6 @@
 namespace BililiveRecorder.Core.Event
 {
-    public class RecordSessionStartedEventArgs : RecordEventArgsBase
+    public sealed class RecordSessionStartedEventArgs : RecordEventArgsBase
     {
         public RecordSessionStartedEventArgs() { }
 

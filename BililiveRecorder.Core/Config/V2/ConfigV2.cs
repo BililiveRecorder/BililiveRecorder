@@ -6,7 +6,7 @@ using Newtonsoft.Json;
 namespace BililiveRecorder.Core.Config.V2
 {
     [Obsolete("Use Config v3")]
-    public class ConfigV2 : ConfigBase
+    internal class ConfigV2 : ConfigBase
     {
         public override int Version => 2;
 
@@ -21,7 +21,7 @@ namespace BililiveRecorder.Core.Config.V2
     }
 
     [Obsolete("Use Config v3")]
-    public partial class RoomConfig
+    internal partial class RoomConfig
     {
         public RoomConfig() : base(x => x.AutoMap(p => new[] { "Has" + p.Name }))
         { }
@@ -32,7 +32,7 @@ namespace BililiveRecorder.Core.Config.V2
     }
 
     [Obsolete("Use Config v3")]
-    public partial class GlobalConfig
+    internal partial class GlobalConfig
     {
         public GlobalConfig() : base(x => x.AutoMap(p => new[] { "Has" + p.Name }))
         {

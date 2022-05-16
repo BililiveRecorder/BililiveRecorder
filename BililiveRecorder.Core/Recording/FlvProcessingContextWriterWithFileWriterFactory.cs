@@ -6,7 +6,7 @@ using Serilog;
 
 namespace BililiveRecorder.Core.Recording
 {
-    public class FlvProcessingContextWriterWithFileWriterFactory : IFlvProcessingContextWriterFactory
+    internal class FlvProcessingContextWriterWithFileWriterFactory : IFlvProcessingContextWriterFactory
     {
         private readonly IServiceProvider serviceProvider;
 

@@ -2,7 +2,7 @@ using System;
 
 namespace BililiveRecorder.Core.SimpleWebhook
 {
-    public class EventWrapper<T> where T : class
+    internal class EventWrapper<T> where T : class
     {
         public EventWrapper()
         {

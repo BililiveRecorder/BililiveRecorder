@@ -19,7 +19,7 @@ using Timer = System.Timers.Timer;
 
 namespace BililiveRecorder.Core
 {
-    public class Room : IRoom
+    internal class Room : IRoom
     {
         private readonly object recordStartLock = new object();
         private readonly SemaphoreSlim recordRetryDelaySemaphoreSlim = new SemaphoreSlim(1, 1);
@@ -51,7 +51,7 @@ namespace BililiveRecorder.Core
         private DateTimeOffset danmakuClientConnectTime;
         private static readonly TimeSpan danmakuClientReconnectNoDelay = TimeSpan.FromMinutes(1);
 
-        public Room(IServiceScope scope, RoomConfig roomConfig, int initDelayFactor, ILogger logger, IDanmakuClient danmakuClient, IApiClient apiClient, IBasicDanmakuWriter basicDanmakuWriter, IRecordTaskFactory recordTaskFactory)
+        internal Room(IServiceScope scope, RoomConfig roomConfig, int initDelayFactor, ILogger logger, IDanmakuClient danmakuClient, IApiClient apiClient, IBasicDanmakuWriter basicDanmakuWriter, IRecordTaskFactory recordTaskFactory)
         {
             this.scope = scope ?? throw new ArgumentNullException(nameof(scope));
             this.RoomConfig = roomConfig ?? throw new ArgumentNullException(nameof(roomConfig));

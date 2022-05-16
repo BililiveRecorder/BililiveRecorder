@@ -3,7 +3,7 @@ using Newtonsoft.Json.Linq;
 #nullable enable
 namespace BililiveRecorder.Core.Api.Danmaku
 {
-    public enum DanmakuMsgType
+    internal enum DanmakuMsgType
     {
         /// <summary>
         /// 彈幕
@@ -39,7 +39,7 @@ namespace BililiveRecorder.Core.Api.Danmaku
         RoomChange
     }
 
-    public class DanmakuModel
+    internal class DanmakuModel
     {
         /// <summary>
         /// 消息類型

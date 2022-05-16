@@ -15,7 +15,7 @@ namespace BililiveRecorder.Core
     {
         private static readonly ILogger logger = Log.ForContext<PollyPolicy>();
 
-        public PollyPolicy()
+        internal PollyPolicy()
         {
             this.IpBlockedHttp412CircuitBreakerPolicy = Policy
                 .Handle<Http412Exception>()

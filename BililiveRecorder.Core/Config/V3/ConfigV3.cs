@@ -4,7 +4,7 @@ using Newtonsoft.Json;
 #nullable enable
 namespace BililiveRecorder.Core.Config.V3
 {
-    public class ConfigV3 : ConfigBase
+    public sealed class ConfigV3 : ConfigBase
     {
         public override int Version => 3;
 

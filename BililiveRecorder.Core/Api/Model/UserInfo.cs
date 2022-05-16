@@ -2,7 +2,7 @@ using Newtonsoft.Json;
 
 namespace BililiveRecorder.Core.Api.Model
 {
-    public class UserInfo
+    internal class UserInfo
     {
         [JsonProperty("info")]
         public InfoClass? Info { get; set; }

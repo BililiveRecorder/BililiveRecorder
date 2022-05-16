@@ -4,7 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace BililiveRecorder.Core
 {
-    public class RoomFactory : IRoomFactory
+    internal class RoomFactory : IRoomFactory
     {
         private readonly IServiceProvider serviceProvider;
 

@@ -5,7 +5,7 @@ using static BililiveRecorder.Core.Api.Model.RoomPlayInfo;
 
 namespace BililiveRecorder.Core.Api
 {
-    public static class IApiClientExtensions
+    internal static class IApiClientExtensions
     {
         public static async Task<CodecItem?> GetCodecItemInStreamUrlAsync(this IApiClient apiClient, int roomid, int qn)
         {

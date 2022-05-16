@@ -11,7 +11,7 @@ using Newtonsoft.Json.Linq;
 
 namespace BililiveRecorder.Core.Api.Http
 {
-    public class HttpApiClient : IApiClient, IDanmakuServerApiClient
+    internal class HttpApiClient : IApiClient, IDanmakuServerApiClient, IHttpClientAccessor
     {
         private const string HttpHeaderAccept = "application/json, text/javascript, */*; q=0.01";
         private const string HttpHeaderOrigin = "https://live.bilibili.com";

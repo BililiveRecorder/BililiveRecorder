@@ -4,7 +4,7 @@ using BililiveRecorder.Core.Event;
 
 namespace BililiveRecorder.Core.Recording
 {
-    public interface IRecordTask
+    internal interface IRecordTask
     {
         Guid SessionId { get; }
 

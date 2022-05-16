@@ -4,7 +4,7 @@ using BililiveRecorder.Core.Api.Model;
 
 namespace BililiveRecorder.Core.Api
 {
-    public interface IApiClient : IDisposable
+    internal interface IApiClient : IDisposable
     {
         Task<BilibiliApiResponse<RoomInfo>> GetRoomInfoAsync(int roomid);
         Task<BilibiliApiResponse<RoomPlayInfo>> GetStreamUrlAsync(int roomid, int qn);
