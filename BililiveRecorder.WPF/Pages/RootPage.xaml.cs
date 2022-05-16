@@ -169,9 +169,10 @@ You can uninstall me in system settings.", "安装成功 Installed", MessageBoxB
                         {
                             Error = error,
                             Path = lastdir,
-                            SkipAsking = pathInfo.SkipAsking
+                            SkipAsking = pathInfo.SkipAsking,
+                            Owner = Application.Current.MainWindow
                         };
-                        var dialogResult = await dialog.ShowAsync();
+                        var dialogResult = await dialog.ShowAndDisableMinimizeToTrayAsync();
                         switch (dialogResult)
                         {
                             case ContentDialogResult.Primary:

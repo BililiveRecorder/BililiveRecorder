@@ -92,6 +92,7 @@
     <Compile Include="Controls\CloseWindowConfirmDialog.xaml.cs">
       <DependentUpon>CloseWindowConfirmDialog.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\ContentDialogExtensions.cs" />
     <Compile Include="Controls\DeleteRoomConfirmDialog.xaml.cs">
       <DependentUpon>DeleteRoomConfirmDialog.xaml</DependentUpon>
     </Compile>

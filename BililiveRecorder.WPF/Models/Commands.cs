@@ -2,6 +2,7 @@ using System;
 using System.Diagnostics;
 using System.Windows;
 using System.Windows.Input;
+using BililiveRecorder.WPF.Controls;
 using ModernWpf.Controls;
 
 #nullable enable
@@ -19,7 +20,7 @@ namespace BililiveRecorder.WPF.Models
         public static Commands OpenContentDialog { get; } = new Commands
         {
 #pragma warning disable VSTHRD101 // Avoid unsupported async delegates
-            ExecuteDelegate = async o => { try { await (o as ContentDialog)!.ShowAsync(); } catch (Exception) { } }
+            ExecuteDelegate = async o => { try { await (o as ContentDialog)!.ShowAndDisableMinimizeToTrayAsync(); } catch (Exception) { } }
 #pragma warning restore VSTHRD101 // Avoid unsupported async delegates
         };
 

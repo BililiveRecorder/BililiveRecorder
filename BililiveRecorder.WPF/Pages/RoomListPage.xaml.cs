@@ -119,10 +119,11 @@ namespace BililiveRecorder.WPF.Pages
                 {
                     var dialog = new DeleteRoomConfirmDialog
                     {
-                        DataContext = room
+                        DataContext = room,
+                        Owner = Application.Current.MainWindow
                     };
 
-                    var result = await dialog.ShowAsync();
+                    var result = await dialog.ShowAndDisableMinimizeToTrayAsync();
 
                     if (result == ContentDialogResult.Primary)
                     {
@@ -139,7 +140,11 @@ namespace BililiveRecorder.WPF.Pages
         {
             try
             {
-                await new PerRoomSettingsDialog { DataContext = sender }.ShowAsync();
+                await new PerRoomSettingsDialog
+                {
+                    DataContext = sender,
+                    Owner = Application.Current.MainWindow
+                }.ShowAndDisableMinimizeToTrayAsync();
             }
             catch (Exception) { }
         }
@@ -162,7 +167,11 @@ namespace BililiveRecorder.WPF.Pages
                 {
                     try
                     {
-                        await new AddRoomFailedDialog { DataContext = AddRoomFailedDialog.AddRoomFailedErrorText.InvalidInput }.ShowAsync();
+                        await new AddRoomFailedDialog
+                        {
+                            DataContext = AddRoomFailedDialog.AddRoomFailedErrorText.InvalidInput,
+                            Owner = Application.Current.MainWindow
+                        }.ShowAndDisableMinimizeToTrayAsync();
                     }
                     catch (Exception) { }
                     return;
@@ -173,7 +182,11 @@ namespace BililiveRecorder.WPF.Pages
             {
                 try
                 {
-                    await new AddRoomFailedDialog { DataContext = AddRoomFailedDialog.AddRoomFailedErrorText.RoomIdNegative }.ShowAsync();
+                    await new AddRoomFailedDialog
+                    {
+                        DataContext = AddRoomFailedDialog.AddRoomFailedErrorText.RoomIdNegative,
+                        Owner = Application.Current.MainWindow
+                    }.ShowAndDisableMinimizeToTrayAsync();
                 }
                 catch (Exception) { }
                 return;
@@ -182,7 +195,11 @@ namespace BililiveRecorder.WPF.Pages
             {
                 try
                 {
-                    await new AddRoomFailedDialog { DataContext = AddRoomFailedDialog.AddRoomFailedErrorText.RoomIdZero }.ShowAsync();
+                    await new AddRoomFailedDialog
+                    {
+                        DataContext = AddRoomFailedDialog.AddRoomFailedErrorText.RoomIdZero,
+                        Owner = Application.Current.MainWindow
+                    }.ShowAndDisableMinimizeToTrayAsync();
                 }
                 catch (Exception) { }
                 return;
@@ -192,7 +209,11 @@ namespace BililiveRecorder.WPF.Pages
             {
                 try
                 {
-                    await new AddRoomFailedDialog { DataContext = AddRoomFailedDialog.AddRoomFailedErrorText.Duplicate }.ShowAsync();
+                    await new AddRoomFailedDialog
+                    {
+                        DataContext = AddRoomFailedDialog.AddRoomFailedErrorText.Duplicate,
+                        Owner = Application.Current.MainWindow
+                    }.ShowAndDisableMinimizeToTrayAsync();
                 }
                 catch (Exception) { }
                 return;

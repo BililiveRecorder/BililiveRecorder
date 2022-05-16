@@ -73,10 +73,11 @@ namespace BililiveRecorder.WPF.Pages
                 progressDialog = new AutoFixProgressDialog()
                 {
                     CancelButtonVisibility = Visibility.Visible,
-                    CancellationTokenSource = new CancellationTokenSource()
+                    CancellationTokenSource = new CancellationTokenSource(),
+                    Owner = Application.Current.MainWindow
                 };
                 var token = progressDialog.CancellationTokenSource.Token;
-                var showTask = progressDialog.ShowAsync();
+                var showTask = progressDialog.ShowAndDisableMinimizeToTrayAsync();
 
                 string? output_path;
                 {
@@ -170,10 +171,11 @@ namespace BililiveRecorder.WPF.Pages
                 progressDialog = new AutoFixProgressDialog()
                 {
                     CancelButtonVisibility = Visibility.Visible,
-                    CancellationTokenSource = new CancellationTokenSource()
+                    CancellationTokenSource = new CancellationTokenSource(),
+                    Owner = Application.Current.MainWindow
                 };
                 var token = progressDialog.CancellationTokenSource.Token;
-                var showTask = progressDialog.ShowAsync();
+                var showTask = progressDialog.ShowAndDisableMinimizeToTrayAsync();
 
                 var req = new AnalyzeRequest
                 {
@@ -245,10 +247,11 @@ namespace BililiveRecorder.WPF.Pages
                 progressDialog = new AutoFixProgressDialog()
                 {
                     CancelButtonVisibility = Visibility.Visible,
-                    CancellationTokenSource = new CancellationTokenSource()
+                    CancellationTokenSource = new CancellationTokenSource(),
+                    Owner = Application.Current.MainWindow
                 };
                 var token = progressDialog.CancellationTokenSource.Token;
-                var showTask = progressDialog.ShowAsync();
+                var showTask = progressDialog.ShowAndDisableMinimizeToTrayAsync();
 
                 var outputPath = string.Empty;
                 {

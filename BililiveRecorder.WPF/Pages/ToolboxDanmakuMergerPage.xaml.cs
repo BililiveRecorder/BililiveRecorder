@@ -134,10 +134,11 @@ namespace BililiveRecorder.WPF.Pages
                 progressDialog = new AutoFixProgressDialog()
                 {
                     CancelButtonVisibility = Visibility.Collapsed,
-                    CancellationTokenSource = new CancellationTokenSource()
+                    CancellationTokenSource = new CancellationTokenSource(),
+                    Owner = Application.Current.MainWindow
                 };
                 var token = progressDialog.CancellationTokenSource.Token;
-                var showTask = progressDialog.ShowAsync();
+                var showTask = progressDialog.ShowAndDisableMinimizeToTrayAsync();
 
                 string? outputPath;
                 {

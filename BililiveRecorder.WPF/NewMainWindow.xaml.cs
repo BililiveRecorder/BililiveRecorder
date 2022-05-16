@@ -1,7 +1,6 @@
 using System;
 using System.Globalization;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Threading;
 using BililiveRecorder.WPF.Controls;
@@ -66,10 +65,11 @@ namespace BililiveRecorder.WPF
 
         private bool notification_showed = false;
         public bool HideToTray { get; set; } = false;
+        public bool HideToTrayBlockedByContentDialog { get; set; } = false;
 
         private void Window_StateChanged(object sender, EventArgs e)
         {
-            if (this.HideToTray && this.WindowState == WindowState.Minimized)
+            if (this.HideToTray && !this.HideToTrayBlockedByContentDialog && this.WindowState == WindowState.Minimized)
             {
                 this.Hide();
                 if (!this.notification_showed)
@@ -102,7 +102,7 @@ namespace BililiveRecorder.WPF
                 {
                     try
                     {
-                        if (await new CloseWindowConfirmDialog().ShowAsync() == ContentDialogResult.Primary)
+                        if (await new CloseWindowConfirmDialog { Owner = Application.Current.MainWindow }.ShowAndDisableMinimizeToTrayAsync() == ContentDialogResult.Primary)
                         {
                             this.CloseConfirmed = true;
                             _ = this.Dispatcher.BeginInvoke(this.Close, DispatcherPriority.Normal);
