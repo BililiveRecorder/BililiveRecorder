@@ -131,14 +131,14 @@
 このソフトウェアはオープンソースソフトウェアです。GNU GPLv3でライセンスされています。</value>
   </data>
   <data name="About_Name" xml:space="preserve">
-    <value>ビリビリ生配信リコーダー</value>
+    <value>ビリ生録画姫</value>
     <comment>Add "(B站录播姬)" after translation</comment>
   </data>
   <data name="About_Project" xml:space="preserve">
     <value>プロジェクトホーム</value>
   </data>
   <data name="About_Title" xml:space="preserve">
-    <value>ビリビリ生配信リコーダーについて</value>
+    <value>ビリ生録画姫について</value>
   </data>
   <data name="About_Translator" xml:space="preserve">
     <value>翻訳者</value>
@@ -224,7 +224,7 @@
     <value>ルーム番号</value>
   </data>
   <data name="LogPanel_Header_Timestamp" xml:space="preserve">
-    <value>時刻</value>
+    <value>時間</value>
   </data>
   <data name="LogPanel_Level_Debug" xml:space="preserve">
     <value>デバッグ</value>
@@ -274,9 +274,11 @@
     <value>録画停止</value>
   </data>
   <data name="RoomCard_Menu_Tooltip" xml:space="preserve">
-    <value>設定</value>
+    <value>オプション</value>
   </data>
-  
+  <data name="RoomCard_SplitButton_Tooltip" xml:space="preserve">
+    <value>出力ファイルを切り抜き</value>
+  </data>
   <data name="RoomCard_Status_AutoRecordForThisSessionDisabled_Tooltip" xml:space="preserve">
     <value>今回の配信の自動録画が停止しました。配信終了後に再開されます</value>
   </data>
@@ -354,7 +356,9 @@
   <data name="RoomListPage_Menu_File_SaveConfig" xml:space="preserve">
     <value>設定を保存</value>
   </data>
-  
+  <data name="RoomListPage_Menu_File_ShowLogFilesInExplorer" xml:space="preserve">
+    <value>ログ ファイルを表示</value>
+  </data>
   <data name="RoomListPage_Menu_Links" xml:space="preserve">
     <value>リンク</value>
   </data>
@@ -521,23 +525,36 @@ Will use default setting and disable user input when checked.</comment>
     <value>レコーダーはもうタスクトレイに格納されました、アイコンをクリックすると元に戻れるですよ</value>
   </data>
   <data name="TaskbarIconControl_Title" xml:space="preserve">
-    <value>ビリビリ生配信リコーダー</value>
+    <value>ビリ生録画姫</value>
   </data>
-  
+  <data name="Toolbox_AutoFix_AnalyzeResult_ContainsUnrepairable" xml:space="preserve">
+    <value>録画姫が修復できないエラーがファイルにございます。
+「修復失敗？」にクリックして、フィードバックができます。</value>
+  </data>
   <data name="Toolbox_AutoFix_AnalyzeResult_FixNeeded" xml:space="preserve">
     <value>修復は必要です</value>
   </data>
   <data name="Toolbox_AutoFix_AnalyzeResult_FixNotNeeded" xml:space="preserve">
     <value>修復は不要です</value>
   </data>
-  
-  
+  <data name="Toolbox_AutoFix_AnalyzeResult_IssueTypeDecodingHeader" xml:space="preserve">
+    <value>{0} 解像度・デコーディングエラー</value>
+  </data>
+  <data name="Toolbox_AutoFix_AnalyzeResult_IssueTypeOther" xml:space="preserve">
+    <value>{0} 他エラー</value>
+  </data>
   <data name="Toolbox_AutoFix_AnalyzeResult_IssueTypeRepeatingData" xml:space="preserve">
     <value>{0} パートが重複しました</value>
   </data>
-  
-  
-  
+  <data name="Toolbox_AutoFix_AnalyzeResult_IssueTypeTimestampJump" xml:space="preserve">
+    <value>{0} タイムスタンプ不連続エラー</value>
+  </data>
+  <data name="Toolbox_AutoFix_AnalyzeResult_IssueTypeTimestampOffset" xml:space="preserve">
+    <value>{0} タイムスタンプオフセットエラー</value>
+  </data>
+  <data name="Toolbox_AutoFix_AnalyzeResult_IssueTypeUnrepairable" xml:space="preserve">
+    <value>{0} つの問題が修復できませんでした</value>
+  </data>
   <data name="Toolbox_AutoFix_AnalyzeResult_NoDataNote" xml:space="preserve">
     <value>備考：解析しなくても修復することができます</value>
   </data>
@@ -545,7 +562,7 @@ Will use default setting and disable user input when checked.</comment>
     <value>解析ボタンを押すと解析が始まります</value>
   </data>
   <data name="Toolbox_AutoFix_AnalyzeResult_OutputFileCount" xml:space="preserve">
-    <value>今回の修復は {0} 個ファイルが出力されます</value>
+    <value>修復すると {0} 個ファイルが出力されます</value>
   </data>
   <data name="Toolbox_AutoFix_AnalyzeResult_Stats_Audio" xml:space="preserve">
     <value>音声</value>
@@ -553,10 +570,18 @@ Will use default setting and disable user input when checked.</comment>
   <data name="Toolbox_AutoFix_AnalyzeResult_Stats_AvgFPS" xml:space="preserve">
     <value>平均FPS {0:F2}</value>
   </data>
-  
-  
-  
-  
+  <data name="Toolbox_AutoFix_AnalyzeResult_Stats_Disclaimer" xml:space="preserve">
+    <value>参考用、問題ファイルの統計が不正確である可能性があります</value>
+  </data>
+  <data name="Toolbox_AutoFix_AnalyzeResult_Stats_FrameCount" xml:space="preserve">
+    <value>フレーム数</value>
+  </data>
+  <data name="Toolbox_AutoFix_AnalyzeResult_Stats_FrameCountTemplate" xml:space="preserve">
+    <value>フレーム数 {0} 個</value>
+  </data>
+  <data name="Toolbox_AutoFix_AnalyzeResult_Stats_FrameDuration" xml:space="preserve">
+    <value>フレーム長さ</value>
+  </data>
   <data name="Toolbox_AutoFix_AnalyzeResult_Stats_Title" xml:space="preserve">
     <value>統計情報</value>
   </data>
@@ -564,13 +589,13 @@ Will use default setting and disable user input when checked.</comment>
     <value>ビデオ</value>
   </data>
   <data name="Toolbox_AutoFix_ButtonAnalyze" xml:space="preserve">
-    <value>分析</value>
+    <value>解析</value>
   </data>
   <data name="Toolbox_AutoFix_ButtonFix" xml:space="preserve">
     <value>修復</value>
   </data>
   <data name="Toolbox_AutoFix_ButtonNotFixed" xml:space="preserve">
-    <value>修復に失敗しました?</value>
+    <value>修復失敗?</value>
   </data>
   <data name="Toolbox_AutoFix_ButtonSelectInput" xml:space="preserve">
     <value>選択...</value>
@@ -600,8 +625,16 @@ Will use default setting and disable user input when checked.</comment>
   <data name="Toolbox_AutoFix_InputPathPlaceholder" xml:space="preserve">
     <value>FLV ファイル</value>
   </data>
-  
-  
+  <data name="Toolbox_AutoFix_NotFixed_ButtonExportData" xml:space="preserve">
+    <value>解析データをエクスポート</value>
+  </data>
+  <data name="Toolbox_AutoFix_NotFixed_Description" xml:space="preserve">
+    <value>もし録画ファイルを修復できない、修復後再びエラーが生じた場合は
+rec@danmuji.orgまでフィードバック受け付けます。
+こちらの解析データをメールの添付ファイルに入れ、
+録画ファイルのエラーと、お使いの録画姫バージョンを詳しく説明して下さい。
+修復されたファイルではなく、修復されないファイルを解析に使って下さい。</value>
+  </data>
   <data name="Toolbox_AutoFix_NotFixed_LearnMore" xml:space="preserve">
     <value>詳細はこちらをクリック</value>
   </data>
@@ -614,18 +647,42 @@ Will use default setting and disable user input when checked.</comment>
   <data name="Toolbox_AutoFix_Title" xml:space="preserve">
     <value>録画の修復</value>
   </data>
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
+  <data name="Toolbox_Merge_Button_AddFile" xml:space="preserve">
+    <value>ファイルの添付</value>
+  </data>
+  <data name="Toolbox_Merge_Button_Merge" xml:space="preserve">
+    <value>マージ</value>
+  </data>
+  <data name="Toolbox_Merge_Button_Remove" xml:space="preserve">
+    <value>削除</value>
+  </data>
+  <data name="Toolbox_Merge_Error_AtLeastTwo" xml:space="preserve">
+    <value>マージするには2つのファイルが必要です。</value>
+  </data>
+  <data name="Toolbox_Merge_OpenFileDialogTitle" xml:space="preserve">
+    <value>マージする XML 弾幕ファイルを選択してください</value>
+  </data>
+  <data name="Toolbox_Merge_Tip" xml:space="preserve">
+    <value>「ファイル追加」をクリック、またはファイルをここまでドラッグ</value>
+  </data>
+  <data name="Toolbox_Merge_Title" xml:space="preserve">
+    <value>コメント統合</value>
+  </data>
+  <data name="Toolbox_Merge_Title_Long" xml:space="preserve">
+    <value>XMLコメントファイルの統合</value>
+  </data>
+  <data name="Toolbox_Merge_XmlDanmakuFiles" xml:space="preserve">
+    <value>XMLコメントファイル</value>
+  </data>
+  <data name="Toolbox_Remux_OpenFileTitle" xml:space="preserve">
+    <value>コンテナ変更するFLVファイルを選択</value>
+  </data>
+  <data name="Toolbox_Remux_SaveFileTitle" xml:space="preserve">
+    <value>MP4の保存先を選択</value>
+  </data>
+  <data name="Toolbox_Remux_Title" xml:space="preserve">
+    <value>コンテナ変更</value>
+  </data>
   <data name="Toolbox_Title" xml:space="preserve">
     <value>ツールボックス</value>
   </data>

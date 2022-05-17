@@ -157,15 +157,11 @@
     <value>房間號或房間連結</value>
     <comment>id or link</comment>
   </data>
-  <data name="AddRoomCard_PlaceholderText_FontSize" xml:space="preserve">
-    <value>14</value>
-  </data>
+  
   <data name="AddRoomCard_Title" xml:space="preserve">
     <value>新增錄製房間</value>
   </data>
-  <data name="AddRoomFailedDialog_CloseButtonText" xml:space="preserve">
-    <value>知道了</value>
-  </data>
+  
   <data name="AddRoomFailedDialog_ErrorText_Duplicate" xml:space="preserve">
     <value>這個直播間已經被添加過了</value>
   </data>
@@ -193,9 +189,7 @@
   <data name="DeleteRoomConfirmDialog_Title" xml:space="preserve">
     <value>確定要删除這個直播間嗎？</value>
   </data>
-  <data name="Global_Cancel" xml:space="preserve">
-    <value>取消</value>
-  </data>
+  
   <data name="Global_Close" xml:space="preserve">
     <value>關閉</value>
   </data>
@@ -205,12 +199,8 @@
   <data name="Global_Copy" xml:space="preserve">
     <value>複製</value>
   </data>
-  <data name="Global_Delete" xml:space="preserve">
-    <value>删除</value>
-  </data>
-  <data name="Global_Quit" xml:space="preserve">
-    <value>退出</value>
-  </data>
+  
+  
   <data name="LogPage_RightClickCopyToolTip" xml:space="preserve">
     <value>點擊右鍵複製此行日誌</value>
   </data>
@@ -232,18 +222,14 @@
   <data name="LogPanel_Level_Error" xml:space="preserve">
     <value>錯誤</value>
   </data>
-  <data name="LogPanel_Level_Fatal" xml:space="preserve">
-    <value>致命</value>
-  </data>
+  
   <data name="LogPanel_Level_Information" xml:space="preserve">
     <value>資訊</value>
   </data>
   <data name="LogPanel_Level_Verbose" xml:space="preserve">
     <value>詳細資訊</value>
   </data>
-  <data name="LogPanel_Level_Warning" xml:space="preserve">
-    <value>警告</value>
-  </data>
+  
   <data name="RoomCard_ClipButton_Tooltip" xml:space="preserve">
     <value>重播剪輯（正在處理中的數量）</value>
     <comment>This feature is off by default, and will be removed in the future.</comment>
@@ -273,9 +259,7 @@
   <data name="RoomCard_Menu_StopRecording" xml:space="preserve">
     <value>停止錄製</value>
   </data>
-  <data name="RoomCard_Menu_Tooltip" xml:space="preserve">
-    <value>操作</value>
-  </data>
+  
   <data name="RoomCard_SplitButton_Tooltip" xml:space="preserve">
     <value>切割錄製輸出文件</value>
   </data>
@@ -318,10 +302,7 @@
   <data name="RoomCard_Status_SpeedIndicator_SessionDuration" xml:space="preserve">
     <value>錄製經過時間: {0:g}</value>
   </data>
-  <data name="RoomCard_Status_SpeedIndicator_SpeedInMbps" xml:space="preserve">
-    <value>{0:F2} Mbps</value>
-    <comment>Should not translate</comment>
-  </data>
+  
   <data name="RoomCard_Status_SpeedIndicator_SpeedInPercentage" xml:space="preserve">
     <value>當前速度比值：{0:P2}</value>
     <comment>Speed percentage relative to upload speed of the streamer</comment>
@@ -371,9 +352,7 @@
   <data name="RoomListPage_Menu_Links_Website" xml:space="preserve">
     <value>網站</value>
   </data>
-  <data name="RoomListPage_Menu_Sort_Default" xml:space="preserve">
-    <value>不排序</value>
-  </data>
+  
   <data name="RoomListPage_Menu_Sort_RoomId" xml:space="preserve">
     <value>按房間號排序</value>
   </data>
@@ -392,9 +371,7 @@
   <data name="RootPage_NavigationViewItem_AdvancedSettingsPage" xml:space="preserve">
     <value>進階設定</value>
   </data>
-  <data name="RootPage_NavigationViewItem_AnnouncementPage" xml:space="preserve">
-    <value>公告</value>
-  </data>
+  
   <data name="RootPage_NavigationViewItem_LogPage" xml:space="preserve">
     <value>日誌</value>
   </data>
@@ -462,15 +439,11 @@
   <data name="Settings_RecordMode_Clip_FutureDuration_Left" xml:space="preserve">
     <value>剪輯未來時長</value>
   </data>
-  <data name="Settings_RecordMode_Clip_FutureDuration_Right" xml:space="preserve">
-    <value>秒</value>
-  </data>
+  
   <data name="Settings_RecordMode_Clip_PastDuration_Left" xml:space="preserve">
     <value>剪輯過去時長</value>
   </data>
-  <data name="Settings_RecordMode_Clip_PastDuration_Right" xml:space="preserve">
-    <value>秒</value>
-  </data>
+  
   <data name="Settings_RecordMode_RadioButton_RawData" xml:space="preserve">
     <value>原始數據模式</value>
   </data>
@@ -492,27 +465,19 @@
   <data name="Settings_Splitting_RadioButton_Disabled" xml:space="preserve">
     <value>不自動分段</value>
   </data>
-  <data name="Settings_Splitting_TextBox_Left" xml:space="preserve">
-    <value>每</value>
-  </data>
+  
   <data name="Settings_Splitting_TextBox_Right" xml:space="preserve">
     <value>儲存成一個檔案</value>
   </data>
-  <data name="Settings_Splitting_TextBox_SizeUnit" xml:space="preserve">
-    <value>MiB</value>
-  </data>
-  <data name="Settings_Splitting_TextBox_TimeUnit" xml:space="preserve">
-    <value>分</value>
-  </data>
+  
+  
   <data name="Settings_Splitting_Title" xml:space="preserve">
     <value>自動分段</value>
   </data>
   <data name="Settings_Webhook_Address" xml:space="preserve">
     <value>Webhook 網址，一行一個</value>
   </data>
-  <data name="Settings_Webhook_Title" xml:space="preserve">
-    <value>Webhook</value>
-  </data>
+  
   <data name="SettingWithDefault_Default" xml:space="preserve">
     <value>預設</value>
     <comment>Text of the checkbox in the reuseable control for setting items.
@@ -567,9 +532,7 @@ Will use default setting and disable user input when checked.</comment>
   <data name="Toolbox_AutoFix_AnalyzeResult_Stats_Audio" xml:space="preserve">
     <value>音頻</value>
   </data>
-  <data name="Toolbox_AutoFix_AnalyzeResult_Stats_AvgFPS" xml:space="preserve">
-    <value>平均FPS {0:F2}</value>
-  </data>
+  
   <data name="Toolbox_AutoFix_AnalyzeResult_Stats_Disclaimer" xml:space="preserve">
     <value>僅供參考，有問題的文件的統計可能不准確</value>
   </data>
@@ -588,9 +551,7 @@ Will use default setting and disable user input when checked.</comment>
   <data name="Toolbox_AutoFix_AnalyzeResult_Stats_Video" xml:space="preserve">
     <value>視頻</value>
   </data>
-  <data name="Toolbox_AutoFix_ButtonAnalyze" xml:space="preserve">
-    <value>分析</value>
-  </data>
+  
   <data name="Toolbox_AutoFix_ButtonFix" xml:space="preserve">
     <value>修復</value>
   </data>
@@ -612,10 +573,7 @@ Will use default setting and disable user input when checked.</comment>
   <data name="Toolbox_AutoFix_Error_Type_NotFlvFile" xml:space="preserve">
     <value>輸入不是FLV檔案</value>
   </data>
-  <data name="Toolbox_AutoFix_Error_Type_OK" xml:space="preserve">
-    <value>OK</value>
-    <comment>其实不是错误类型</comment>
-  </data>
+  
   <data name="Toolbox_AutoFix_Error_Type_OutputIOError" xml:space="preserve">
     <value>檔案寫入失敗</value>
   </data>
@@ -653,9 +611,7 @@ Will use default setting and disable user input when checked.</comment>
   <data name="Toolbox_Merge_Button_Merge" xml:space="preserve">
     <value>合併</value>
   </data>
-  <data name="Toolbox_Merge_Button_Remove" xml:space="preserve">
-    <value>移除</value>
-  </data>
+  
   <data name="Toolbox_Merge_Error_AtLeastTwo" xml:space="preserve">
     <value>最少需要 2 個文件才能合併</value>
   </data>
@@ -683,9 +639,7 @@ Will use default setting and disable user input when checked.</comment>
   <data name="Toolbox_Remux_Title" xml:space="preserve">
     <value>轉封裝</value>
   </data>
-  <data name="Toolbox_Title" xml:space="preserve">
-    <value>工具箱</value>
-  </data>
+  
   <data name="Window_Title" xml:space="preserve">
     <value>B站錄播姬 {0}</value>
   </data>

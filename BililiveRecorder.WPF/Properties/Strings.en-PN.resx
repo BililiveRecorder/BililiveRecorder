@@ -157,9 +157,7 @@
     <value>喵喵喵喵喵喵喵喵</value>
     <comment>id or link</comment>
   </data>
-  <data name="AddRoomCard_PlaceholderText_FontSize" xml:space="preserve">
-    <value>14</value>
-  </data>
+  
   <data name="AddRoomCard_Title" xml:space="preserve">
     <value>喵喵喵喵</value>
   </data>
