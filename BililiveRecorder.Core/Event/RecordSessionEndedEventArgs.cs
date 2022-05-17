@@ -1,9 +1,15 @@
+using System;
+using BililiveRecorder.Core.SimpleWebhook;
+
 namespace BililiveRecorder.Core.Event
 {
-    public sealed class RecordSessionEndedEventArgs : RecordEventArgsBase
+    /// <summary>
+    /// <see cref="EventType.SessionEnded"/>
+    /// </summary>
+    public sealed class RecordSessionEndedEventArgs : RecordEventArgsBase, IRecordSessionEventArgs
     {
-        public RecordSessionEndedEventArgs() { }
+        internal RecordSessionEndedEventArgs(IRoom room) : base(room) { }
 
-        public RecordSessionEndedEventArgs(IRoom room) : base(room) { }
+        public Guid SessionId { get; set; }
     }
 }

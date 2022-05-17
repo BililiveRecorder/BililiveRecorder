@@ -78,6 +78,7 @@ namespace BililiveRecorder.WPF
                     { }
                 }
             });
+            ServicePointManager.Expect100Continue = false;
             update = new Update(logger);
         }
 

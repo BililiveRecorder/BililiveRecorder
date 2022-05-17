@@ -167,6 +167,20 @@ namespace BililiveRecorder.Core
 
         private void Room_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
+            if (sender is not IRoom room)
+                return;
+
+            if (e.PropertyName == nameof(IRoom.Streaming))
+            {
+                if (room.Streaming)
+                {
+                    _ = Task.Run(async () => await this.basicWebhookV2.SendStreamStartedAsync(new StreamStartedEventArgs(room)).ConfigureAwait(false));
+                }
+                else
+                {
+                    _ = Task.Run(async () => await this.basicWebhookV2.SendStreamEndedAsync(new StreamEndedEventArgs(room)).ConfigureAwait(false));
+                }
+            }
             // TODO
             // throw new NotImplementedException();
         }

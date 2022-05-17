@@ -1,12 +1,11 @@
 using System;
+using BililiveRecorder.Core.Event;
 
 namespace BililiveRecorder.Core.SimpleWebhook
 {
-    internal class EventWrapper<T> where T : class
+    internal class EventWrapper<T> where T : RecordEventArgsBase
     {
-        public EventWrapper()
-        {
-        }
+        public EventWrapper() { }
 
         public EventWrapper(T data)
         {

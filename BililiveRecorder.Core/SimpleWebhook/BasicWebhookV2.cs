@@ -37,6 +37,12 @@ namespace BililiveRecorder.Core.SimpleWebhook
         public Task SendFileClosedAsync(RecordFileClosedEventArgs args) =>
             this.SendAsync(new EventWrapper<RecordFileClosedEventArgs>(args) { EventType = EventType.FileClosed });
 
+        public Task SendStreamStartedAsync(StreamStartedEventArgs args) =>
+            this.SendAsync(new EventWrapper<StreamStartedEventArgs>(args) { EventType = EventType.StreamStarted });
+
+        public Task SendStreamEndedAsync(StreamEndedEventArgs args) =>
+            this.SendAsync(new EventWrapper<StreamEndedEventArgs>(args) { EventType = EventType.StreamEnded });
+
         private async Task SendAsync(object data)
         {
             var urls = this.config.WebHookUrlsV2;
@@ -46,7 +52,7 @@ namespace BililiveRecorder.Core.SimpleWebhook
 
             var dataStr = JsonConvert.SerializeObject(data, Formatting.None);
 
-            logger.Debug("尝试发送 WebhookV2 数据 {WebhookData}, 地址 {Urls}", dataStr, urls);
+            logger.Debug("尝试发送 WebhookV2 到 {Urls}, 数据 {WebhookData}", urls, dataStr);
 
             var bytes = Encoding.UTF8.GetBytes(dataStr);
 

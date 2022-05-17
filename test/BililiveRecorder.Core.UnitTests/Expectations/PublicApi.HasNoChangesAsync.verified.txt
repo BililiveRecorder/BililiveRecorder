@@ -283,22 +283,25 @@ namespace BililiveRecorder.Core.Event
         public double NetworkMbps { get; set; }
         public System.DateTimeOffset StartTime { get; set; }
     }
+    public interface IRecordSessionEventArgs
+    {
+        System.Guid SessionId { get; }
+    }
     public abstract class RecordEventArgsBase : System.EventArgs
     {
-        public RecordEventArgsBase() { }
-        public RecordEventArgsBase(BililiveRecorder.Core.IRoom room) { }
+        protected RecordEventArgsBase(BililiveRecorder.Core.IRoom room) { }
         public string AreaNameChild { get; set; }
         public string AreaNameParent { get; set; }
+        public bool DanmakuConnected { get; set; }
         public string Name { get; set; }
+        public bool Recording { get; set; }
         public int RoomId { get; set; }
-        public System.Guid SessionId { get; set; }
         public int ShortId { get; set; }
+        public bool Streaming { get; set; }
         public string Title { get; set; }
     }
-    public sealed class RecordFileClosedEventArgs : BililiveRecorder.Core.Event.RecordEventArgsBase
+    public sealed class RecordFileClosedEventArgs : BililiveRecorder.Core.Event.RecordEventArgsBase, BililiveRecorder.Core.Event.IRecordSessionEventArgs
     {
-        public RecordFileClosedEventArgs() { }
-        public RecordFileClosedEventArgs(BililiveRecorder.Core.IRoom room) { }
         public double Duration { get; set; }
         public System.DateTimeOffset FileCloseTime { get; set; }
         public System.DateTimeOffset FileOpenTime { get; set; }
@@ -306,25 +309,23 @@ namespace BililiveRecorder.Core.Event
         [Newtonsoft.Json.JsonIgnore]
         public string FullPath { get; set; }
         public string RelativePath { get; set; }
+        public System.Guid SessionId { get; set; }
     }
-    public sealed class RecordFileOpeningEventArgs : BililiveRecorder.Core.Event.RecordEventArgsBase
+    public sealed class RecordFileOpeningEventArgs : BililiveRecorder.Core.Event.RecordEventArgsBase, BililiveRecorder.Core.Event.IRecordSessionEventArgs
     {
-        public RecordFileOpeningEventArgs() { }
-        public RecordFileOpeningEventArgs(BililiveRecorder.Core.IRoom room) { }
         public System.DateTimeOffset FileOpenTime { get; set; }
         [Newtonsoft.Json.JsonIgnore]
         public string FullPath { get; set; }
         public string RelativePath { get; set; }
+        public System.Guid SessionId { get; set; }
     }
-    public sealed class RecordSessionEndedEventArgs : BililiveRecorder.Core.Event.RecordEventArgsBase
+    public sealed class RecordSessionEndedEventArgs : BililiveRecorder.Core.Event.RecordEventArgsBase, BililiveRecorder.Core.Event.IRecordSessionEventArgs
     {
-        public RecordSessionEndedEventArgs() { }
-        public RecordSessionEndedEventArgs(BililiveRecorder.Core.IRoom room) { }
+        public System.Guid SessionId { get; set; }
     }
-    public sealed class RecordSessionStartedEventArgs : BililiveRecorder.Core.Event.RecordEventArgsBase
+    public sealed class RecordSessionStartedEventArgs : BililiveRecorder.Core.Event.RecordEventArgsBase, BililiveRecorder.Core.Event.IRecordSessionEventArgs
     {
-        public RecordSessionStartedEventArgs() { }
-        public RecordSessionStartedEventArgs(BililiveRecorder.Core.IRoom room) { }
+        public System.Guid SessionId { get; set; }
     }
     public sealed class RecordingStatsEventArgs : System.EventArgs
     {
@@ -351,6 +352,8 @@ namespace BililiveRecorder.Core.Event
         public long TotalOutputVideoBytes { get; set; }
         public int TotalOutputVideoFrames { get; set; }
     }
+    public sealed class StreamEndedEventArgs : BililiveRecorder.Core.Event.RecordEventArgsBase { }
+    public sealed class StreamStartedEventArgs : BililiveRecorder.Core.Event.RecordEventArgsBase { }
 }
 namespace BililiveRecorder.Core
 {

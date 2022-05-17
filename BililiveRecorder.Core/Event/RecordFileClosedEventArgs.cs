@@ -1,13 +1,17 @@
 using System;
+using BililiveRecorder.Core.SimpleWebhook;
 using Newtonsoft.Json;
 
 namespace BililiveRecorder.Core.Event
 {
-    public sealed class RecordFileClosedEventArgs : RecordEventArgsBase
+    /// <summary>
+    /// <see cref="EventType.FileClosed"/>
+    /// </summary>
+    public sealed class RecordFileClosedEventArgs : RecordEventArgsBase, IRecordSessionEventArgs
     {
-        public RecordFileClosedEventArgs() { }
+        internal RecordFileClosedEventArgs(IRoom room) : base(room) { }
 
-        public RecordFileClosedEventArgs(IRoom room) : base(room) { }
+        public Guid SessionId { get; set; }
 
         [JsonIgnore]
         public string FullPath { get; set; } = string.Empty;

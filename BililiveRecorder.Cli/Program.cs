@@ -30,6 +30,8 @@ namespace BililiveRecorder.Cli
     {
         private static int Main(string[] args)
         {
+            ServicePointManager.Expect100Continue = false;
+
             var cmd_run = new Command("run", "Run BililiveRecorder in standard mode")
             {
                 new Option<string?>(new []{ "--web-bind", "--bind", "-b" }, () => null, "Bind address for web api"),
