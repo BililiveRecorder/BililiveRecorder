@@ -224,7 +224,7 @@
     <value>ルーム番号</value>
   </data>
   <data name="LogPanel_Header_Timestamp" xml:space="preserve">
-    <value>時刻</value>
+    <value>時間</value>
   </data>
   <data name="LogPanel_Level_Debug" xml:space="preserve">
     <value>デバッグ</value>
@@ -525,11 +525,11 @@ Will use default setting and disable user input when checked.</comment>
     <value>レコーダーはもうタスクトレイに格納されました、アイコンをクリックすると元に戻れるですよ</value>
   </data>
   <data name="TaskbarIconControl_Title" xml:space="preserve">
-    <value>ビリビリ生配信リコーダー</value>
+    <value>ビリ生録画姫</value>
   </data>
   <data name="Toolbox_AutoFix_AnalyzeResult_ContainsUnrepairable" xml:space="preserve">
-    <value>録画姫が修正できないエラーがファイルにございます。
-「修正失敗？」にクリックして、フィードバックができます。</value>
+    <value>録画姫が修復できないエラーがファイルにございます。
+「修復失敗？」にクリックして、フィードバックができます。</value>
   </data>
   <data name="Toolbox_AutoFix_AnalyzeResult_FixNeeded" xml:space="preserve">
     <value>修復は必要です</value>
@@ -553,7 +553,7 @@ Will use default setting and disable user input when checked.</comment>
     <value>{0} タイムスタンプオフセットエラー</value>
   </data>
   <data name="Toolbox_AutoFix_AnalyzeResult_IssueTypeUnrepairable" xml:space="preserve">
-    <value>{0} つの問題が復原できませんでした</value>
+    <value>{0} つの問題が修復できませんでした</value>
   </data>
   <data name="Toolbox_AutoFix_AnalyzeResult_NoDataNote" xml:space="preserve">
     <value>備考：解析しなくても修復することができます</value>
@@ -562,7 +562,7 @@ Will use default setting and disable user input when checked.</comment>
     <value>解析ボタンを押すと解析が始まります</value>
   </data>
   <data name="Toolbox_AutoFix_AnalyzeResult_OutputFileCount" xml:space="preserve">
-    <value>今回の修復は {0} 個ファイルが出力されます</value>
+    <value>修復すると {0} 個ファイルが出力されます</value>
   </data>
   <data name="Toolbox_AutoFix_AnalyzeResult_Stats_Audio" xml:space="preserve">
     <value>音声</value>
@@ -589,13 +589,13 @@ Will use default setting and disable user input when checked.</comment>
     <value>ビデオ</value>
   </data>
   <data name="Toolbox_AutoFix_ButtonAnalyze" xml:space="preserve">
-    <value>分析</value>
+    <value>解析</value>
   </data>
   <data name="Toolbox_AutoFix_ButtonFix" xml:space="preserve">
     <value>修復</value>
   </data>
   <data name="Toolbox_AutoFix_ButtonNotFixed" xml:space="preserve">
-    <value>修復に失敗しました?</value>
+    <value>修復失敗?</value>
   </data>
   <data name="Toolbox_AutoFix_ButtonSelectInput" xml:space="preserve">
     <value>選択...</value>
@@ -626,14 +626,14 @@ Will use default setting and disable user input when checked.</comment>
     <value>FLV ファイル</value>
   </data>
   <data name="Toolbox_AutoFix_NotFixed_ButtonExportData" xml:space="preserve">
-    <value>元の分析データをエクスポート</value>
+    <value>解析データをエクスポート</value>
   </data>
   <data name="Toolbox_AutoFix_NotFixed_Description" xml:space="preserve">
-    <value>録画ファイルを修正できない、修正後再びエラーが生じた場合
+    <value>もし録画ファイルを修復できない、修復後再びエラーが生じた場合は
 rec@danmuji.orgまでフィードバック受け付けます。
 こちらの解析データをメールの添付ファイルに入れ、
 録画ファイルのエラーと、お使いの録画姫バージョンを詳しく説明して下さい。
-修正されたファイルではなく、修正されないファイルを解析に使って下さい。</value>
+修復されたファイルではなく、修復されないファイルを解析に使って下さい。</value>
   </data>
   <data name="Toolbox_AutoFix_NotFixed_LearnMore" xml:space="preserve">
     <value>詳細はこちらをクリック</value>
