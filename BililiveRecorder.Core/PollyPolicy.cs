@@ -15,7 +15,7 @@ namespace BililiveRecorder.Core
     {
         private static readonly ILogger logger = Log.ForContext<PollyPolicy>();
 
-        internal PollyPolicy()
+        public PollyPolicy()
         {
             this.IpBlockedHttp412CircuitBreakerPolicy = Policy
                 .Handle<Http412Exception>()
@@ -68,7 +68,6 @@ namespace BililiveRecorder.Core
             this[PolicyNames.PolicyRoomInfoApiRequestAsync] = Policy.WrapAsync(bulkhead, retry, this.IpBlockedHttp412CircuitBreakerPolicy, this.RequestFailedCircuitBreakerPolicy);
             this[PolicyNames.PolicyDanmakuApiRequestAsync] = Policy.WrapAsync(cachePolicy, bulkhead, retry, this.IpBlockedHttp412CircuitBreakerPolicy, this.RequestFailedCircuitBreakerPolicy);
             this[PolicyNames.PolicyStreamApiRequestAsync] = Policy.WrapAsync(bulkhead, retry, this.IpBlockedHttp412CircuitBreakerPolicy, this.RequestFailedCircuitBreakerPolicy);
-
         }
 
         public readonly MemoryCache memoryCache;

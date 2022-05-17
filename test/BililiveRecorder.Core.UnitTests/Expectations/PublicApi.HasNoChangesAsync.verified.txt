@@ -404,6 +404,7 @@ namespace BililiveRecorder.Core
         public readonly Polly.CircuitBreaker.AsyncCircuitBreakerPolicy IpBlockedHttp412CircuitBreakerPolicy;
         public readonly Polly.CircuitBreaker.AsyncCircuitBreakerPolicy RequestFailedCircuitBreakerPolicy;
         public readonly Microsoft.Extensions.Caching.Memory.MemoryCache memoryCache;
+        public PollyPolicy() { }
     }
     public class RoomStats : System.ComponentModel.INotifyPropertyChanged
     {

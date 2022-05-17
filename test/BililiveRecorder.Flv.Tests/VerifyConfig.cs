@@ -12,7 +12,8 @@ namespace BililiveRecorder.Flv.Tests
         {
             VerifierSettings.DerivePathInfo(Expectations.Initialize);
             VerifierSettings.ModifySerialization(_ => _.IgnoreMembersWithType<Stream>());
-            DiffRunner.Disabled = true;
+            DiffRunner.Disabled = false;
+            DiffTools.UseOrder(DiffTool.VisualStudioCode, DiffTool.Rider, DiffTool.WinMerge, DiffTool.VisualStudio);
         }
     }
 }

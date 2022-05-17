@@ -280,7 +280,7 @@ namespace BililiveRecorder.WPF
 
         private class SentryEventProcessor : ISentryEventProcessor
         {
-            private const string JintConsole = "Core.Scripting.Runtime.JintConsole";
+            private const string JintConsole = "BililiveRecorder.Core.Scripting.Runtime.JintConsole";
             private static readonly string UserScriptRunner = typeof(Core.Scripting.UserScriptRunner).FullName;
             public SentryEvent? Process(SentryEvent e) => (e?.Logger == JintConsole || e?.Logger == UserScriptRunner) ? null : e;
         }
