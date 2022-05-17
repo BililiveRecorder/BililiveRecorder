@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Xml;
 using BililiveRecorder.Core.Api.Danmaku;
 using BililiveRecorder.Core.Config.V3;
+using BililiveRecorder.Core.Scripting;
 using Serilog;
 
 #nullable enable
@@ -34,10 +35,12 @@ namespace BililiveRecorder.Core.Danmaku
 
         private readonly SemaphoreSlim semaphoreSlim = new SemaphoreSlim(1, 1);
         private readonly ILogger logger;
+        private readonly UserScriptRunner userScriptRunner;
 
-        public BasicDanmakuWriter(ILogger logger)
+        public BasicDanmakuWriter(ILogger logger, UserScriptRunner userScriptRunner)
         {
             this.logger = logger?.ForContext<BasicDanmakuWriter>() ?? throw new ArgumentNullException(nameof(logger));
+            this.userScriptRunner = userScriptRunner ?? throw new ArgumentNullException(nameof(userScriptRunner));
         }
 
         public void EnableWithPath(string path, IRoom room)
@@ -105,89 +108,98 @@ namespace BililiveRecorder.Core.Danmaku
 
         public async Task WriteAsync(DanmakuModel danmakuModel)
         {
-            if (this.disposedValue) return;
-            if (this.config is null) return;
+            if (this.disposedValue)
+                return;
+
+            if (this.xmlWriter is null || this.config is null)
+                return;
+
+            if (danmakuModel.MsgType is not (DanmakuMsgType.Comment or DanmakuMsgType.SuperChat or DanmakuMsgType.GiftSend or DanmakuMsgType.GuardBuy))
+                return;
+
+            if (!this.userScriptRunner.CallOnDanmaku(this.logger, danmakuModel.RawString))
+                return;
 
             await this.semaphoreSlim.WaitAsync();
             try
             {
-                if (this.xmlWriter != null)
+                if (this.xmlWriter is null)
+                    return;
+
+                var write = true;
+                var recordDanmakuRaw = this.config.RecordDanmakuRaw;
+                switch (danmakuModel.MsgType)
                 {
-                    var write = true;
-                    var recordDanmakuRaw = this.config.RecordDanmakuRaw;
-                    switch (danmakuModel.MsgType)
-                    {
-                        case DanmakuMsgType.Comment:
-                            {
-                                var type = danmakuModel.RawObject?["info"]?[0]?[1]?.ToObject<int>() ?? 1;
-                                var size = danmakuModel.RawObject?["info"]?[0]?[2]?.ToObject<int>() ?? 25;
-                                var color = danmakuModel.RawObject?["info"]?[0]?[3]?.ToObject<int>() ?? 0XFFFFFF;
-                                var st = danmakuModel.RawObject?["info"]?[0]?[4]?.ToObject<long>() ?? 0L;
+                    case DanmakuMsgType.Comment:
+                        {
+                            var type = danmakuModel.RawObject?["info"]?[0]?[1]?.ToObject<int>() ?? 1;
+                            var size = danmakuModel.RawObject?["info"]?[0]?[2]?.ToObject<int>() ?? 25;
+                            var color = danmakuModel.RawObject?["info"]?[0]?[3]?.ToObject<int>() ?? 0XFFFFFF;
+                            var st = danmakuModel.RawObject?["info"]?[0]?[4]?.ToObject<long>() ?? 0L;
 
-                                var ts = Math.Max((DateTimeOffset.UtcNow - this.offset).TotalSeconds, 0d);
+                            var ts = Math.Max((DateTimeOffset.UtcNow - this.offset).TotalSeconds, 0d);
 
-                                await this.xmlWriter.WriteStartElementAsync(null, "d", null).ConfigureAwait(false);
-                                await this.xmlWriter.WriteAttributeStringAsync(null, "p", null, $"{ts:F3},{type},{size},{color},{st},0,{danmakuModel.UserID},0").ConfigureAwait(false);
-                                await this.xmlWriter.WriteAttributeStringAsync(null, "user", null, RemoveInvalidXMLChars(danmakuModel.UserName)).ConfigureAwait(false);
-                                if (recordDanmakuRaw)
-                                    await this.xmlWriter.WriteAttributeStringAsync(null, "raw", null, RemoveInvalidXMLChars(danmakuModel.RawObject?["info"]?.ToString(Newtonsoft.Json.Formatting.None))).ConfigureAwait(false);
-                                this.xmlWriter.WriteValue(RemoveInvalidXMLChars(danmakuModel.CommentText));
-                                await this.xmlWriter.WriteEndElementAsync().ConfigureAwait(false);
-                            }
-                            break;
-                        case DanmakuMsgType.SuperChat:
-                            if (this.config.RecordDanmakuSuperChat)
-                            {
-                                await this.xmlWriter.WriteStartElementAsync(null, "sc", null).ConfigureAwait(false);
-                                var ts = Math.Max((DateTimeOffset.UtcNow - this.offset).TotalSeconds, 0d);
-                                await this.xmlWriter.WriteAttributeStringAsync(null, "ts", null, ts.ToString("F3")).ConfigureAwait(false);
-                                await this.xmlWriter.WriteAttributeStringAsync(null, "user", null, RemoveInvalidXMLChars(danmakuModel.UserName)).ConfigureAwait(false);
-                                await this.xmlWriter.WriteAttributeStringAsync(null, "price", null, danmakuModel.Price.ToString()).ConfigureAwait(false);
-                                await this.xmlWriter.WriteAttributeStringAsync(null, "time", null, danmakuModel.SCKeepTime.ToString()).ConfigureAwait(false);
-                                if (recordDanmakuRaw)
-                                    await this.xmlWriter.WriteAttributeStringAsync(null, "raw", null, RemoveInvalidXMLChars(danmakuModel.RawObject?["data"]?.ToString(Newtonsoft.Json.Formatting.None))).ConfigureAwait(false);
-                                this.xmlWriter.WriteValue(RemoveInvalidXMLChars(danmakuModel.CommentText));
-                                await this.xmlWriter.WriteEndElementAsync().ConfigureAwait(false);
-                            }
-                            break;
-                        case DanmakuMsgType.GiftSend:
-                            if (this.config.RecordDanmakuGift)
-                            {
-                                await this.xmlWriter.WriteStartElementAsync(null, "gift", null).ConfigureAwait(false);
-                                var ts = Math.Max((DateTimeOffset.UtcNow - this.offset).TotalSeconds, 0d);
-                                await this.xmlWriter.WriteAttributeStringAsync(null, "ts", null, ts.ToString("F3")).ConfigureAwait(false);
-                                await this.xmlWriter.WriteAttributeStringAsync(null, "user", null, RemoveInvalidXMLChars(danmakuModel.UserName)).ConfigureAwait(false);
-                                await this.xmlWriter.WriteAttributeStringAsync(null, "giftname", null, RemoveInvalidXMLChars(danmakuModel.GiftName)).ConfigureAwait(false);
-                                await this.xmlWriter.WriteAttributeStringAsync(null, "giftcount", null, danmakuModel.GiftCount.ToString()).ConfigureAwait(false);
-                                if (recordDanmakuRaw)
-                                    await this.xmlWriter.WriteAttributeStringAsync(null, "raw", null, RemoveInvalidXMLChars(danmakuModel.RawObject?["data"]?.ToString(Newtonsoft.Json.Formatting.None))).ConfigureAwait(false);
-                                await this.xmlWriter.WriteEndElementAsync().ConfigureAwait(false);
-                            }
-                            break;
-                        case DanmakuMsgType.GuardBuy:
-                            if (this.config.RecordDanmakuGuard)
-                            {
-                                await this.xmlWriter.WriteStartElementAsync(null, "guard", null).ConfigureAwait(false);
-                                var ts = Math.Max((DateTimeOffset.UtcNow - this.offset).TotalSeconds, 0d);
-                                await this.xmlWriter.WriteAttributeStringAsync(null, "ts", null, ts.ToString("F3")).ConfigureAwait(false);
-                                await this.xmlWriter.WriteAttributeStringAsync(null, "user", null, RemoveInvalidXMLChars(danmakuModel.UserName)).ConfigureAwait(false);
-                                await this.xmlWriter.WriteAttributeStringAsync(null, "level", null, danmakuModel.UserGuardLevel.ToString()).ConfigureAwait(false); ;
-                                await this.xmlWriter.WriteAttributeStringAsync(null, "count", null, danmakuModel.GiftCount.ToString()).ConfigureAwait(false);
-                                if (recordDanmakuRaw)
-                                    await this.xmlWriter.WriteAttributeStringAsync(null, "raw", null, RemoveInvalidXMLChars(danmakuModel.RawObject?["data"]?.ToString(Newtonsoft.Json.Formatting.None))).ConfigureAwait(false);
-                                await this.xmlWriter.WriteEndElementAsync().ConfigureAwait(false);
-                            }
-                            break;
-                        default:
-                            write = false;
-                            break;
-                    }
+                            await this.xmlWriter.WriteStartElementAsync(null, "d", null).ConfigureAwait(false);
+                            await this.xmlWriter.WriteAttributeStringAsync(null, "p", null, $"{ts:F3},{type},{size},{color},{st},0,{danmakuModel.UserID},0").ConfigureAwait(false);
+                            await this.xmlWriter.WriteAttributeStringAsync(null, "user", null, RemoveInvalidXMLChars(danmakuModel.UserName)).ConfigureAwait(false);
+                            if (recordDanmakuRaw)
+                                await this.xmlWriter.WriteAttributeStringAsync(null, "raw", null, RemoveInvalidXMLChars(danmakuModel.RawObject?["info"]?.ToString(Newtonsoft.Json.Formatting.None))).ConfigureAwait(false);
+                            this.xmlWriter.WriteValue(RemoveInvalidXMLChars(danmakuModel.CommentText));
+                            await this.xmlWriter.WriteEndElementAsync().ConfigureAwait(false);
+                        }
+                        break;
+                    case DanmakuMsgType.SuperChat:
+                        if (this.config.RecordDanmakuSuperChat)
+                        {
+                            await this.xmlWriter.WriteStartElementAsync(null, "sc", null).ConfigureAwait(false);
+                            var ts = Math.Max((DateTimeOffset.UtcNow - this.offset).TotalSeconds, 0d);
+                            await this.xmlWriter.WriteAttributeStringAsync(null, "ts", null, ts.ToString("F3")).ConfigureAwait(false);
+                            await this.xmlWriter.WriteAttributeStringAsync(null, "user", null, RemoveInvalidXMLChars(danmakuModel.UserName)).ConfigureAwait(false);
+                            await this.xmlWriter.WriteAttributeStringAsync(null, "price", null, danmakuModel.Price.ToString()).ConfigureAwait(false);
+                            await this.xmlWriter.WriteAttributeStringAsync(null, "time", null, danmakuModel.SCKeepTime.ToString()).ConfigureAwait(false);
+                            if (recordDanmakuRaw)
+                                await this.xmlWriter.WriteAttributeStringAsync(null, "raw", null, RemoveInvalidXMLChars(danmakuModel.RawObject?["data"]?.ToString(Newtonsoft.Json.Formatting.None))).ConfigureAwait(false);
+                            this.xmlWriter.WriteValue(RemoveInvalidXMLChars(danmakuModel.CommentText));
+                            await this.xmlWriter.WriteEndElementAsync().ConfigureAwait(false);
+                        }
+                        break;
+                    case DanmakuMsgType.GiftSend:
+                        if (this.config.RecordDanmakuGift)
+                        {
+                            await this.xmlWriter.WriteStartElementAsync(null, "gift", null).ConfigureAwait(false);
+                            var ts = Math.Max((DateTimeOffset.UtcNow - this.offset).TotalSeconds, 0d);
+                            await this.xmlWriter.WriteAttributeStringAsync(null, "ts", null, ts.ToString("F3")).ConfigureAwait(false);
+                            await this.xmlWriter.WriteAttributeStringAsync(null, "user", null, RemoveInvalidXMLChars(danmakuModel.UserName)).ConfigureAwait(false);
+                            await this.xmlWriter.WriteAttributeStringAsync(null, "giftname", null, RemoveInvalidXMLChars(danmakuModel.GiftName)).ConfigureAwait(false);
+                            await this.xmlWriter.WriteAttributeStringAsync(null, "giftcount", null, danmakuModel.GiftCount.ToString()).ConfigureAwait(false);
+                            if (recordDanmakuRaw)
+                                await this.xmlWriter.WriteAttributeStringAsync(null, "raw", null, RemoveInvalidXMLChars(danmakuModel.RawObject?["data"]?.ToString(Newtonsoft.Json.Formatting.None))).ConfigureAwait(false);
+                            await this.xmlWriter.WriteEndElementAsync().ConfigureAwait(false);
+                        }
+                        break;
+                    case DanmakuMsgType.GuardBuy:
+                        if (this.config.RecordDanmakuGuard)
+                        {
+                            await this.xmlWriter.WriteStartElementAsync(null, "guard", null).ConfigureAwait(false);
+                            var ts = Math.Max((DateTimeOffset.UtcNow - this.offset).TotalSeconds, 0d);
+                            await this.xmlWriter.WriteAttributeStringAsync(null, "ts", null, ts.ToString("F3")).ConfigureAwait(false);
+                            await this.xmlWriter.WriteAttributeStringAsync(null, "user", null, RemoveInvalidXMLChars(danmakuModel.UserName)).ConfigureAwait(false);
+                            await this.xmlWriter.WriteAttributeStringAsync(null, "level", null, danmakuModel.UserGuardLevel.ToString()).ConfigureAwait(false); ;
+                            await this.xmlWriter.WriteAttributeStringAsync(null, "count", null, danmakuModel.GiftCount.ToString()).ConfigureAwait(false);
+                            if (recordDanmakuRaw)
+                                await this.xmlWriter.WriteAttributeStringAsync(null, "raw", null, RemoveInvalidXMLChars(danmakuModel.RawObject?["data"]?.ToString(Newtonsoft.Json.Formatting.None))).ConfigureAwait(false);
+                            await this.xmlWriter.WriteEndElementAsync().ConfigureAwait(false);
+                        }
+                        break;
+                    default:
+                        write = false;
+                        break;
+                }
 
-                    if (write && this.writeCount++ >= this.config.RecordDanmakuFlushInterval)
-                    {
-                        await this.xmlWriter.FlushAsync();
-                        this.writeCount = 0;
-                    }
+                if (write && this.writeCount++ >= this.config.RecordDanmakuFlushInterval)
+                {
+                    await this.xmlWriter.FlushAsync();
+                    this.writeCount = 0;
                 }
             }
             catch (Exception ex)

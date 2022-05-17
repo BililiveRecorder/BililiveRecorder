@@ -481,7 +481,7 @@ namespace BililiveRecorder.Core
                     break;
             }
 
-            _ = this.basicDanmakuWriter.WriteAsync(d);
+            _ = Task.Run(async () => await this.basicDanmakuWriter.WriteAsync(d));
         }
 
         private void DanmakuClient_StatusChanged(object sender, Api.Danmaku.StatusChangedEventArgs e)

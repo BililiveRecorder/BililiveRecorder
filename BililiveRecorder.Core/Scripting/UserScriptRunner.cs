@@ -136,6 +136,32 @@ globalThis.recorderEvents = {};
         }
 
         /// <summary>
+        /// 过滤保存的弹幕
+        /// </summary>
+        /// <param name="logger"></param>
+        /// <param name="json">弹幕 JSON 文本</param>
+        /// <returns>是否保存弹幕</returns>
+        public bool CallOnDanmaku(ILogger logger, string json)
+        {
+            const string callbackName = "onDanmaku";
+            var log = BuildLogger(logger);
+            try
+            {
+                var func = this.ExecuteScriptThenGetEventHandler(log, callbackName);
+                if (func is null) return true;
+
+                var result = func.Engine.Call(func, json);
+
+                return result.IsLooselyEqual(true);
+            }
+            catch (Exception ex)
+            {
+                log.Error(ex, $"执行脚本 {callbackName} 时发生错误");
+                return true;
+            }
+        }
+
+        /// <summary>
         /// 获取直播流 URL
         /// </summary>
         /// <param name="logger">logger</param>

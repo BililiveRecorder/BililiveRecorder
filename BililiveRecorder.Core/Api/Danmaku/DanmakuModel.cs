@@ -155,15 +155,17 @@ namespace BililiveRecorder.Core.Api.Danmaku
         /// <summary>
         /// 原始数据
         /// </summary>
-        public string? RawString { get; set; }
+        public string RawString { get; set; }
 
         /// <summary>
         /// 原始数据
         /// </summary>
         public JObject? RawObject { get; set; }
 
-        public DanmakuModel()
-        { }
+        private DanmakuModel()
+        {
+            this.RawString = string.Empty;
+        }
 
         public DanmakuModel(string json)
         {
