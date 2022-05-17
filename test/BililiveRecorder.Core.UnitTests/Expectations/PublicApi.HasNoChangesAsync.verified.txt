@@ -452,6 +452,7 @@ namespace BililiveRecorder.Core.Scripting
     public class UserScriptRunner
     {
         public UserScriptRunner(BililiveRecorder.Core.Config.V3.GlobalConfig config) { }
+        public bool CallOnDanmaku(Serilog.ILogger logger, string json) { }
         public string? CallOnFetchStreamUrl(Serilog.ILogger logger, int roomid, int[] qnSetting) { }
         public void CallOnTest(Serilog.ILogger logger, System.Action<string>? alert) { }
         [return: System.Runtime.CompilerServices.TupleElementNames(new string[] {
