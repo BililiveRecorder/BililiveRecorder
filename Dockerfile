@@ -5,8 +5,8 @@ RUN cd /src/BililiveRecorder.Cli && dotnet build -o /output -c Release
 FROM mcr.microsoft.com/dotnet/aspnet:6.0-alpine
 RUN apk add --no-cache tzdata
 ENV TZ=Asia/Shanghai
-COPY --from=0 /output /app
-VOLUME [ "/rec" ]
 WORKDIR /app
+VOLUME [ "/rec" ]
+COPY --from=0 /output /app
 ENTRYPOINT [ "/app/BililiveRecorder.Cli" ]
-CMD [ "run", "/rec" ]
+CMD [ "run", "--bind", "http://*:2356", "/rec" ]

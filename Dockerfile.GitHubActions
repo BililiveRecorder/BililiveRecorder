@@ -1,8 +1,8 @@
 FROM mcr.microsoft.com/dotnet/aspnet:6.0
 ENV TZ=Asia/Shanghai
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
-COPY ./BililiveRecorder.Cli/bin/docker_out /app
-VOLUME [ "/rec" ]
 WORKDIR /app
+VOLUME [ "/rec" ]
+COPY ./BililiveRecorder.Cli/bin/docker_out /app
 ENTRYPOINT [ "dotnet", "/app/BililiveRecorder.Cli.dll" ]
-CMD [ "run", "/rec" ]
+CMD [ "run", "--bind", "http://*:2356", "/rec" ]
