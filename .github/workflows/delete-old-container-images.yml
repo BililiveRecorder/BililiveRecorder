@@ -1,0 +1,15 @@
+name: Delete old container images
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron:  '33 23 * * 1,4'
+
+jobs:
+  run_script:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Run script
+        run: cd .github/delete-old-container-images/ && npm ci && node index.js

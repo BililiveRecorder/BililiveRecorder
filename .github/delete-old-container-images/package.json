@@ -1,0 +1,9 @@
+{
+    "type": "module",
+    "scripts": {
+        "delete": "ts-node index.ts"
+    },
+    "dependencies": {
+        "@octokit/core": "^3.6.0"
+    }
+}
