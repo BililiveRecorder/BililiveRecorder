@@ -16,5 +16,5 @@ jobs:
         uses: actions/checkout@v2
       - name: Run script
         env: 
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.DELETE_OLD_VERSION_ACCESS_TOKEN }}
         run: cd .github/delete-old-container-images/ && npm ci && node index.js
