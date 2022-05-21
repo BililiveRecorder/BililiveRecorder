@@ -155,6 +155,7 @@ namespace BililiveRecorder.Core.Danmaku
                             var ts = Math.Max((DateTimeOffset.UtcNow - this.offset).TotalSeconds, 0d);
                             await this.xmlWriter.WriteAttributeStringAsync(null, "ts", null, ts.ToString("F3")).ConfigureAwait(false);
                             await this.xmlWriter.WriteAttributeStringAsync(null, "user", null, RemoveInvalidXMLChars(danmakuModel.UserName)).ConfigureAwait(false);
+                            await this.xmlWriter.WriteAttributeStringAsync(null, "uid", null, danmakuModel.UserID.ToString()).ConfigureAwait(false);
                             await this.xmlWriter.WriteAttributeStringAsync(null, "price", null, danmakuModel.Price.ToString()).ConfigureAwait(false);
                             await this.xmlWriter.WriteAttributeStringAsync(null, "time", null, danmakuModel.SCKeepTime.ToString()).ConfigureAwait(false);
                             if (recordDanmakuRaw)
@@ -170,6 +171,7 @@ namespace BililiveRecorder.Core.Danmaku
                             var ts = Math.Max((DateTimeOffset.UtcNow - this.offset).TotalSeconds, 0d);
                             await this.xmlWriter.WriteAttributeStringAsync(null, "ts", null, ts.ToString("F3")).ConfigureAwait(false);
                             await this.xmlWriter.WriteAttributeStringAsync(null, "user", null, RemoveInvalidXMLChars(danmakuModel.UserName)).ConfigureAwait(false);
+                            await this.xmlWriter.WriteAttributeStringAsync(null, "uid", null, danmakuModel.UserID.ToString()).ConfigureAwait(false);
                             await this.xmlWriter.WriteAttributeStringAsync(null, "giftname", null, RemoveInvalidXMLChars(danmakuModel.GiftName)).ConfigureAwait(false);
                             await this.xmlWriter.WriteAttributeStringAsync(null, "giftcount", null, danmakuModel.GiftCount.ToString()).ConfigureAwait(false);
                             if (recordDanmakuRaw)
@@ -184,6 +186,7 @@ namespace BililiveRecorder.Core.Danmaku
                             var ts = Math.Max((DateTimeOffset.UtcNow - this.offset).TotalSeconds, 0d);
                             await this.xmlWriter.WriteAttributeStringAsync(null, "ts", null, ts.ToString("F3")).ConfigureAwait(false);
                             await this.xmlWriter.WriteAttributeStringAsync(null, "user", null, RemoveInvalidXMLChars(danmakuModel.UserName)).ConfigureAwait(false);
+                            await this.xmlWriter.WriteAttributeStringAsync(null, "uid", null, danmakuModel.UserID.ToString()).ConfigureAwait(false);
                             await this.xmlWriter.WriteAttributeStringAsync(null, "level", null, danmakuModel.UserGuardLevel.ToString()).ConfigureAwait(false); ;
                             await this.xmlWriter.WriteAttributeStringAsync(null, "count", null, danmakuModel.GiftCount.ToString()).ConfigureAwait(false);
                             if (recordDanmakuRaw)
