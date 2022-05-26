@@ -12,7 +12,6 @@ env:
   IMAGE_NAME: ${{ github.repository }}
 
 jobs:
-
   test:
     strategy:
       matrix:
@@ -23,61 +22,87 @@ jobs:
         uses: actions/checkout@v2
         with:
           fetch-depth: 0
+
       - uses: actions/setup-dotnet@v2
       - name: Restore Packages
         run: dotnet restore -v m --disable-parallel
-      - name: Run Tests
-        run: dotnet test -v m
+
+      - name: Run Tests - Debug
+        run: dotnet test -v m -c Debug
+      - name: Run Tests - Release
+        run: dotnet test -v m -c Release
 
   build_wpf:
     needs: test
-    strategy:
-      matrix:
-        build_configuration: [Debug, Release]
     runs-on: windows-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v2
         with:
           fetch-depth: 0
+
       - name: Add msbuild to PATH
         uses: microsoft/setup-msbuild@v1.1
       - name: Restore Packages
         run: nuget restore -Verbosity quiet
-      - name: Build WPF
-        run: msbuild /nologo /v:m /p:Configuration="${{ matrix.build_configuration }}"
-      - name: Upload Artifacts
+
+      - name: Build WPF - Debug
+        run: msbuild /nologo /v:m /p:Configuration="Debug"
+      - name: Build WPF - Release
+        run: msbuild /nologo /v:m /p:Configuration="Release"
+
+      - name: Upload Artifacts - Debug
         uses: actions/upload-artifact@v2
         with:
-          name: WPF-${{ matrix.build_configuration }}
-          path: BililiveRecorder.WPF/bin/${{ matrix.build_configuration }}
+          name: WPF-Debug
+          path: BililiveRecorder.WPF/bin/Debug
+
+      - name: Upload Artifacts - Release
+        uses: actions/upload-artifact@v2
+        with:
+          name: WPF-Release
+          path: BililiveRecorder.WPF/bin/Release
 
   build_cli:
     needs: test
     strategy:
       matrix:
         rid: [any, linux-arm, linux-arm64, linux-x64, osx-x64, win-x64]
-        build_configuration: [Debug, Release]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v2
         with:
           fetch-depth: 0
+
       - uses: actions/setup-dotnet@v2
       - name: Restore Packages
         run: dotnet restore -v m --disable-parallel
-      - name: Build CLI
+
+      - name: Build CLI - Debug
         if: ${{ matrix.rid == 'any' }}
-        run: dotnet publish -c ${{ matrix.build_configuration }} BililiveRecorder.Cli/BililiveRecorder.Cli.csproj
-      - name: Build CLI
+        run: dotnet publish -c Debug BililiveRecorder.Cli/BililiveRecorder.Cli.csproj
+      - name: Build CLI - Release
+        if: ${{ matrix.rid == 'any' }}
+        run: dotnet publish -c Release BililiveRecorder.Cli/BililiveRecorder.Cli.csproj
+
+      - name: Build CLI - Debug
         if: ${{ matrix.rid != 'any' }}
-        run: dotnet publish -c ${{ matrix.build_configuration }} -r ${{ matrix.rid }} BililiveRecorder.Cli/BililiveRecorder.Cli.csproj
-      - name: Upload Artifacts
+        run: dotnet publish -c Debug -r ${{ matrix.rid }} BililiveRecorder.Cli/BililiveRecorder.Cli.csproj
+      - name: Build CLI - Release
+        if: ${{ matrix.rid != 'any' }}
+        run: dotnet publish -c Release -r ${{ matrix.rid }} BililiveRecorder.Cli/BililiveRecorder.Cli.csproj
+
+      - name: Upload Artifacts - Debug
         uses: actions/upload-artifact@v2
         with:
-          name: CLI-${{ matrix.rid }}-${{ matrix.build_configuration }}
-          path: BililiveRecorder.Cli/publish/${{ matrix.rid }}
+          name: CLI-${{ matrix.rid }}-Debug
+          path: BililiveRecorder.Cli/publish/${{ matrix.rid }}/Debug
+      - name: Upload Artifacts - Release
+        uses: actions/upload-artifact@v2
+        with:
+          name: CLI-${{ matrix.rid }}-Release
+          path: BililiveRecorder.Cli/publish/${{ matrix.rid }}/Release
 
   build_docker:
     needs: test
