@@ -48,7 +48,6 @@ namespace BililiveRecorder.Core.Recording
         protected object ioDiskStatsLock = new();
         protected TimeSpan ioDiskWriteDuration;
         protected int ioDiskWrittenBytes;
-        private DateTimeOffset ioDiskWarningTimeout;
 
         private DateTimeOffset ioStatsLastTrigger;
         private TimeSpan durationSinceNoDataReceived;
@@ -166,14 +165,6 @@ namespace BililiveRecorder.Core.Recording
                 DiskWriteDuration = diskWriteDuration,
                 DiskMBps = diskMBps,
             });
-
-            var now = DateTimeOffset.Now;
-            if (diskWriteBytes > 0 && this.ioDiskWarningTimeout < now && (diskWriteDuration.TotalSeconds > 1d || diskMBps < 2d))
-            {
-                // 硬盘 IO 可能不能满足录播
-                this.ioDiskWarningTimeout = now + TimeSpan.FromMinutes(2); // 最多每 2 分钟提醒一次
-                this.logger.Warning("检测到硬盘写入速度较慢可能影响录播，请检查是否有其他软件或游戏正在使用硬盘");
-            }
 
             if ((!this.timeoutTriggered) && (this.durationSinceNoDataReceived.TotalMilliseconds > this.room.RoomConfig.TimingWatchdogTimeout))
             {
