@@ -5,6 +5,9 @@ using System.CommandLine.Invocation;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Security.Authentication;
+using System.Security.Cryptography;
+using System.Security.Cryptography.X509Certificates;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
@@ -16,6 +19,7 @@ using BililiveRecorder.DependencyInjection;
 using BililiveRecorder.ToolBox;
 using BililiveRecorder.Web;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Serilog;
@@ -34,9 +38,15 @@ namespace BililiveRecorder.Cli
 
             var cmd_run = new Command("run", "Run BililiveRecorder in standard mode")
             {
-                new Option<string?>(new []{ "--web-bind", "--bind", "-b" }, () => null, "Bind address for web api"),
+                new Option<string?>(new []{ "--http-bind", "--bind", "-b" }, () => null, "Bind address for http service"),
+                // new Option<int?>(new []{ "--http-port", "--port", "-p" }, () => null, "Port number for http service"),
                 new Option<LogEventLevel>(new []{ "--loglevel", "--log", "-l" }, () => LogEventLevel.Information, "Minimal log level output to console"),
                 new Option<LogEventLevel>(new []{ "--logfilelevel", "--flog" }, () => LogEventLevel.Debug, "Minimal log level output to file"),
+                new Option<string?>(new []{ "--cert-pem-path", "--pem" }, "Path of the certificate pem file"),
+                new Option<string?>(new []{ "--cert-key-path", "--key" }, "Path of the certificate key file"),
+                new Option<string?>(new []{ "--cert-pfx-path", "--pfx" }, "Path of the certificate pfx file"),
+                new Option<string?>(new []{ "--cert-password"}, "Password of the certificate"),
+
                 new Argument<string>("path"),
             };
             cmd_run.AddAlias("r");
@@ -44,9 +54,15 @@ namespace BililiveRecorder.Cli
 
             var cmd_portable = new Command("portable", "Run BililiveRecorder in config-less mode")
             {
-                new Option<string?>(new []{ "--web-bind", "--bind", "-b" }, () => null, "Bind address for web api"),
+                new Option<string?>(new []{ "--http-bind", "--bind", "-b" }, () => null, "Bind address for http service"),
+                // new Option<int?>(new []{ "--http-port", "--port", "-p" }, () => null, "Port number for http service"),
                 new Option<LogEventLevel>(new []{ "--loglevel", "--log", "-l" }, () => LogEventLevel.Information, "Minimal log level output to console"),
                 new Option<LogEventLevel>(new []{ "--logfilelevel", "--flog" }, () => LogEventLevel.Debug, "Minimal log level output to file"),
+                new Option<string?>(new []{ "--cert-pem-path", "--pem" }, "Path of the certificate pem file"),
+                new Option<string?>(new []{ "--cert-key-path", "--key" }, "Path of the certificate key file"),
+                new Option<string?>(new []{ "--cert-pfx-path", "--pfx" }, "Path of the certificate pfx file"),
+                new Option<string?>(new []{ "--cert-password"}, "Password of the certificate"),
+
                 new Option<RecordMode>(new []{ "--record-mode", "--mode" }, () => RecordMode.Standard, "Recording mode"),
                 new Option<string>(new []{ "--cookie", "-c" }, "Cookie string for api requests"),
                 new Option<string>(new []{ "--filename", "-f" }, "File name format"),
@@ -89,7 +105,7 @@ namespace BililiveRecorder.Cli
 
             var serviceProvider = BuildServiceProvider(config, logger);
 
-            return await RunRecorderAsync(serviceProvider, args.WebBind);
+            return await RunRecorderAsync(serviceProvider, args);
         }
 
         private static async Task<int> RunPortableModeAsync(PortableModeArguments args)
@@ -132,10 +148,10 @@ namespace BililiveRecorder.Cli
 
             var serviceProvider = BuildServiceProvider(config, logger);
 
-            return await RunRecorderAsync(serviceProvider, args.WebBind);
+            return await RunRecorderAsync(serviceProvider, args);
         }
 
-        private static async Task<int> RunRecorderAsync(IServiceProvider serviceProvider, string? webBind)
+        private static async Task<int> RunRecorderAsync(IServiceProvider serviceProvider, SharedArguments sharedArguments)
         {
             var logger = serviceProvider.GetRequiredService<ILogger>();
             IRecorder recorderAccessProxy(IServiceProvider x) => serviceProvider.GetRequiredService<IRecorder>();
@@ -143,15 +159,12 @@ namespace BililiveRecorder.Cli
             // recorder setup done
             // check if web service required
             IHost? host = null;
-            if (webBind is null)
+            if (sharedArguments.HttpBind is null)
             {
                 logger.Information("Web API not enabled");
             }
             else
             {
-                var bind = FixBindUrl(webBind, logger);
-                logger.Information("Creating web server on {BindAddress}", bind);
-
                 host = new HostBuilder()
                     .UseSerilog(logger: logger)
                     .ConfigureServices(services =>
@@ -161,10 +174,33 @@ namespace BililiveRecorder.Cli
                     .ConfigureWebHost(webBuilder =>
                     {
                         webBuilder
-                        .UseUrls(urls: bind)
                         .UseKestrel(option =>
                         {
+                            (var scheme, var host, var port) = ParseBindArgument(sharedArguments.HttpBind, logger);
 
+                            if (host.Equals("localhost", StringComparison.OrdinalIgnoreCase))
+                            {
+                                option.ListenLocalhost(port, ListenConfigure);
+                            }
+                            else if (IPAddress.TryParse(host, out var ip))
+                            {
+                                option.Listen(ip, port, ListenConfigure);
+                            }
+                            else
+                            {
+                                option.ListenAnyIP(port, ListenConfigure);
+                            }
+
+                            void ListenConfigure(ListenOptions listenOptions)
+                            {
+                                if (scheme == "https")
+                                {
+                                    listenOptions.UseHttps(LoadCertificate(sharedArguments, logger) ?? GenerateSelfSignedCertificate(logger), https =>
+                                    {
+                                        https.SslProtocols = SslProtocols.Tls11 | SslProtocols.Tls12 | SslProtocols.Tls13;
+                                    });
+                                }
+                            }
                         })
                         .UseStartup<Startup>();
                     })
@@ -223,24 +259,104 @@ namespace BililiveRecorder.Cli
             return 0;
         }
 
-        private static string FixBindUrl(string bind, ILogger logger)
+        private static X509Certificate2? LoadCertificate(SharedArguments arguments, ILogger logger)
         {
-            if (Regex.IsMatch(bind, @"^\d+$"))
+            if (arguments.CertPfxPath is not null)
             {
-                var result = "http://localhost:" + bind;
-                logger.Warning("标准的参数格式为 {Example} 而不是只有端口号，已自动修正为 {BindUrl}", @"http://{接口地址}:{端口号}", result);
-                return result;
+                if (arguments.CertPemPath is not null || arguments.CertKeyPath is not null)
+                {
+                    logger.Warning("Both cert-pfx and cert-pem/cert-key are specified. Using cert-pfx.");
+                }
+
+                if (!File.Exists(arguments.CertPfxPath))
+                {
+                    logger.Error("Certificate file {Path} not found.", arguments.CertPfxPath);
+                    return null;
+                }
+
+                return new X509Certificate2(arguments.CertPfxPath, arguments.CertPassword);
+            }
+            else if (arguments.CertPemPath is not null || arguments.CertKeyPath is not null)
+            {
+                if (arguments.CertPemPath is null)
+                {
+                    logger.Error("Certificate PEM file not specified.");
+                    return null;
+                }
+
+                if (arguments.CertKeyPath is null)
+                {
+                    logger.Error("Certificate key file not specified.");
+                    return null;
+                }
+
+                if (!File.Exists(arguments.CertPemPath))
+                {
+                    logger.Error("Certificate PEM file {Path} not found.", arguments.CertPemPath);
+                    return null;
+                }
+
+                if (!File.Exists(arguments.CertKeyPath))
+                {
+                    logger.Error("Certificate key file {Path} not found.", arguments.CertKeyPath);
+                    return null;
+                }
+
+                var cert = arguments.CertPassword is null
+                    ? X509Certificate2.CreateFromPemFile(arguments.CertPemPath, arguments.CertKeyPath)
+                    : X509Certificate2.CreateFromEncryptedPemFile(arguments.CertPemPath, arguments.CertPassword, arguments.CertKeyPath);
+
+                return new X509Certificate2(cert.Export(X509ContentType.Pfx));
             }
             else
-            if (Regex.IsMatch(bind, @"https?:"))
             {
-                return bind;
+                logger.Debug("No certificate specified.");
+                return null;
+            }
+        }
+
+        private static X509Certificate2 GenerateSelfSignedCertificate(ILogger logger)
+        {
+            logger.Warning("使用录播姬生成的自签名证书");
+
+            using var key = RSA.Create();
+            var req = new CertificateRequest("CN=B站录播姬, OU=自签名证书，每次启动都会重新生成", key, HashAlgorithmName.SHA256, RSASignaturePadding.Pkcs1);
+
+            var subjectAltName = new SubjectAlternativeNameBuilder();
+            subjectAltName.AddDnsName("BililiveRecorder");
+            subjectAltName.AddDnsName("localhost");
+            subjectAltName.AddIpAddress(IPAddress.Loopback);
+            subjectAltName.AddIpAddress(IPAddress.IPv6Loopback);
+            subjectAltName.AddDnsName("*.nip.io");
+            subjectAltName.AddDnsName("*.sslip.io");
+            req.CertificateExtensions.Add(subjectAltName.Build());
+
+            var firstDayofCurrentYear = new DateTimeOffset(DateTime.Now.Year, 1, 1, 0, 0, 0, TimeSpan.Zero);
+            using var cert = req.CreateSelfSigned(firstDayofCurrentYear, firstDayofCurrentYear.AddYears(10));
+            var bytes = cert.Export(X509ContentType.Pfx);
+            return new X509Certificate2(bytes);
+        }
+
+        private static (string schema, string host, int port) ParseBindArgument(string bind, ILogger logger)
+        {
+            if (int.TryParse(bind, out var value))
+            {
+                // 只传入了一个端口号
+                return ("http", "localhost", value);
+            }
+
+            var match = Regex.Match(bind, @"^(?<schema>https?):\/\/(?<host>[^\:\/\?\#]+)(?:\:(?<port>\d+))?(?:\/.*)?$", RegexOptions.Singleline | RegexOptions.CultureInvariant, TimeSpan.FromSeconds(5));
+            if (match.Success)
+            {
+                var schema = match.Groups["schema"].Value.ToLower();
+                var host = match.Groups["host"].Value;
+                var port = match.Groups["port"].Success ? int.Parse(match.Groups["port"].Value) : 2356;
+                return (schema, host, port);
             }
             else
             {
-                var result = "http://" + bind;
-                logger.Warning("标准的参数格式为 {Example} 而不是只有 IP 和端口号，已自动修正为 {BindUrl}", @"http://{接口地址}:{端口号}", result);
-                return result;
+                logger.Warning("侦听参数解析失败，使用默认值 {DefaultBindLocation}", "http://localhost:2356");
+                return ("http", "localhost", 2356);
             }
         }
 
@@ -271,25 +387,32 @@ namespace BililiveRecorder.Cli
             .WriteTo.File(new CompactJsonFormatter(), "./logs/bilirec.txt", restrictedToMinimumLevel: logFileLevel, shared: true, rollingInterval: RollingInterval.Day, rollOnFileSizeLimit: true)
             .CreateLogger();
 
-        public class RunModeArguments
+        public abstract class SharedArguments
         {
             public LogEventLevel LogLevel { get; set; } = LogEventLevel.Information;
 
             public LogEventLevel LogFileLevel { get; set; } = LogEventLevel.Information;
 
-            public string? WebBind { get; set; } = null;
+            public string? HttpBind { get; set; } = null;
 
+            // public int? HttpPort { get; set; } = null;
+
+            public string? CertPemPath { get; set; } = null;
+
+            public string? CertKeyPath { get; set; } = null;
+
+            public string? CertPfxPath { get; set; } = null;
+
+            public string? CertPassword { get; set; } = null;
+        }
+
+        public sealed class RunModeArguments : SharedArguments
+        {
             public string Path { get; set; } = string.Empty;
         }
 
-        public class PortableModeArguments
+        public sealed class PortableModeArguments : SharedArguments
         {
-            public LogEventLevel LogLevel { get; set; } = LogEventLevel.Information;
-
-            public LogEventLevel LogFileLevel { get; set; } = LogEventLevel.Debug;
-
-            public string? WebBind { get; set; } = null;
-
             public RecordMode RecordMode { get; set; } = RecordMode.Standard;
 
             public string OutputPath { get; set; } = string.Empty;
