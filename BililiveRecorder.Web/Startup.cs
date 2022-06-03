@@ -136,7 +136,15 @@ namespace BililiveRecorder.Web
                     var originalQueryString = context.Request.QueryString;
                     try
                     {
-                        context.Request.Path = PAGE404;
+                        if (originalPath.StartsWithSegments("/ui"))
+                        {
+                            context.Request.Path = "/ui/";
+                        }
+                        else
+                        {
+                            context.Request.Path = PAGE404;
+                        }
+
                         context.Request.QueryString = new QueryString();
                         await next(context);
                     }
@@ -209,10 +217,10 @@ namespace BililiveRecorder.Web
                     endpoints.MapGraphQLWebSockets<RecorderSchema>();
 
                     endpoints.MapSwagger();
-                    endpoints.MapGraphQLPlayground();
-                    endpoints.MapGraphQLGraphiQL();
-                    endpoints.MapGraphQLAltair();
-                    endpoints.MapGraphQLVoyager();
+                    endpoints.MapGraphQLPlayground("graphql/playground");
+                    endpoints.MapGraphQLGraphiQL("graphql/graphiql");
+                    endpoints.MapGraphQLAltair("graphql/altair");
+                    endpoints.MapGraphQLVoyager("graphql/voyager");
                 })
                 .UseSwaggerUI(c =>
                 {

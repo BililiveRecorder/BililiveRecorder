@@ -265,3 +265,4 @@ __pycache__/
 BililiveRecorder.Cli/Properties/launchSettings.json
 
 **/*.received.*
+BililiveRecorder.Web/embeded/ui/

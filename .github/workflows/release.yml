@@ -22,8 +22,16 @@ jobs:
         uses: actions/checkout@v2
         with:
           fetch-depth: 0
+          submodules: recursive
 
       - uses: actions/setup-dotnet@v2
+
+      - name: Make sure webui can be built
+        if: "${{ matrix.os == 'windows-latest' }}"
+        run: ./webui/build.ps1
+      - name: Make sure webui can be built
+        if: "${{ matrix.os == 'ubuntu-latest' }}"
+        run: ./webui/build.sh
 
       - name: Run Tests - Debug
         run: dotnet test -v m -c Debug
@@ -41,6 +49,7 @@ jobs:
         uses: actions/checkout@v2
         with:
           fetch-depth: 0
+          submodules: recursive
       - name: Add msbuild to PATH
         uses: microsoft/setup-msbuild@v1.0.2
       - name: Restore Packages
@@ -83,22 +92,31 @@ jobs:
         uses: actions/checkout@v2
         with:
           fetch-depth: 0
+          submodules: recursive
+
       - uses: actions/setup-dotnet@v2
+
+      - name: Build WebUI
+        run: ./webui/build.sh
+
       - name: Build CLI
         if: ${{ matrix.rid == 'any' }}
         run: dotnet publish -c ${{ matrix.build_configuration }} BililiveRecorder.Cli/BililiveRecorder.Cli.csproj
       - name: Build CLI
         if: ${{ matrix.rid != 'any' }}
         run: dotnet publish -c ${{ matrix.build_configuration }} -r ${{ matrix.rid }} BililiveRecorder.Cli/BililiveRecorder.Cli.csproj
+
       - name: Upload Artifacts
         uses: actions/upload-artifact@v2
         with:
           name: CLI-${{ matrix.rid }}-${{ matrix.build_configuration }}
           path: BililiveRecorder.Cli/publish/${{ matrix.rid }}
+
       - name: Pack Release Asset
         run: |
           cd BililiveRecorder.Cli/publish
           zip -r CLI-${{ matrix.rid }}-${{ matrix.build_configuration }}.zip ./${{ matrix.rid }}
+
       - name: Upload Release Asset
         uses: actions/upload-release-asset@v1
         env:
@@ -120,6 +138,7 @@ jobs:
         uses: actions/checkout@v2
         with:
           fetch-depth: 0
+          submodules: recursive
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v1
       - name: Set up Docker Buildx
@@ -148,6 +167,8 @@ jobs:
           images: |
             ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
             bililive/recorder
+      - name: Build WebUI
+        run: ./webui/build.sh
       - name: Build CLI
         run: dotnet build -c Release -o ./BililiveRecorder.Cli/bin/docker_out BililiveRecorder.Cli/BililiveRecorder.Cli.csproj
       # Build and push Docker image with Buildx (don't push on PR)

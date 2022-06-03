@@ -1,0 +1,3 @@
+[submodule "webui-source"]
+	path = webui/source
+	url = https://github.com/BililiveRecorder/BililiveRecorder-WebUI.git

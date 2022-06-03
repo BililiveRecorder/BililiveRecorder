@@ -23,8 +23,16 @@ jobs:
         uses: actions/checkout@v2
         with:
           fetch-depth: 0
+          submodules: recursive
 
       - uses: actions/setup-dotnet@v2
+
+      - name: Make sure webui can be built
+        if: "${{ matrix.os == 'windows-latest' }}"
+        run: ./webui/build.ps1
+      - name: Make sure webui can be built
+        if: "${{ matrix.os == 'ubuntu-latest' }}"
+        run: ./webui/build.sh
 
       - name: Run Tests - Debug
         run: dotnet test -v m -c Debug
@@ -39,6 +47,7 @@ jobs:
         uses: actions/checkout@v2
         with:
           fetch-depth: 0
+          submodules: recursive
 
       - name: Add msbuild to PATH
         uses: microsoft/setup-msbuild@v1.1
@@ -73,8 +82,12 @@ jobs:
         uses: actions/checkout@v2
         with:
           fetch-depth: 0
+          submodules: recursive
 
       - uses: actions/setup-dotnet@v2
+
+      - name: Build WebUI
+        run: ./webui/build.sh
 
       - name: Build CLI - Debug
         if: ${{ matrix.rid == 'any' }}
@@ -113,6 +126,7 @@ jobs:
         uses: actions/checkout@v2
         with:
           fetch-depth: 0
+          submodules: recursive
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v1
       - name: Set up Docker Buildx
@@ -132,6 +146,8 @@ jobs:
         with:
           images: |
             ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+      - name: Build WebUI
+        run: ./webui/build.sh
       - name: Build CLI
         run: dotnet build -c Release -o ./BililiveRecorder.Cli/bin/docker_out BililiveRecorder.Cli/BililiveRecorder.Cli.csproj
       # Build and push Docker image with Buildx (don't push on PR)
