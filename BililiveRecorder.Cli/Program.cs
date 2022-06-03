@@ -319,22 +319,39 @@ namespace BililiveRecorder.Cli
         {
             logger.Warning("使用录播姬生成的自签名证书");
 
-            using var key = RSA.Create();
-            var req = new CertificateRequest("CN=B站录播姬, OU=自签名证书，每次启动都会重新生成", key, HashAlgorithmName.SHA256, RSASignaturePadding.Pkcs1);
-
-            var subjectAltName = new SubjectAlternativeNameBuilder();
-            subjectAltName.AddDnsName("BililiveRecorder");
-            subjectAltName.AddDnsName("localhost");
-            subjectAltName.AddIpAddress(IPAddress.Loopback);
-            subjectAltName.AddIpAddress(IPAddress.IPv6Loopback);
-            subjectAltName.AddDnsName("*.nip.io");
-            subjectAltName.AddDnsName("*.sslip.io");
-            req.CertificateExtensions.Add(subjectAltName.Build());
-
             var firstDayofCurrentYear = new DateTimeOffset(DateTime.Now.Year, 1, 1, 0, 0, 0, TimeSpan.Zero);
-            using var cert = req.CreateSelfSigned(firstDayofCurrentYear, firstDayofCurrentYear.AddYears(10));
-            var bytes = cert.Export(X509ContentType.Pfx);
-            return new X509Certificate2(bytes);
+            X509Certificate2? CA = null;
+            try
+            {
+                {
+                    using var key = RSA.Create();
+                    var req = new CertificateRequest("CN=自签名证书，每次启动都会重新生成", key, HashAlgorithmName.SHA256, RSASignaturePadding.Pkcs1);
+                    req.CertificateExtensions.Add(new X509BasicConstraintsExtension(true, false, 0, false));
+                    CA = new X509Certificate2(req.CreateSelfSigned(firstDayofCurrentYear, firstDayofCurrentYear.AddYears(10)).Export(X509ContentType.Pfx));
+                }
+
+                {
+                    using var key = RSA.Create();
+                    var req = new CertificateRequest("CN=B站录播姬", key, HashAlgorithmName.SHA256, RSASignaturePadding.Pkcs1);
+
+                    var subjectAltName = new SubjectAlternativeNameBuilder();
+                    subjectAltName.AddDnsName("BililiveRecorder");
+                    subjectAltName.AddDnsName("localhost");
+                    subjectAltName.AddIpAddress(IPAddress.Loopback);
+                    subjectAltName.AddIpAddress(IPAddress.IPv6Loopback);
+                    subjectAltName.AddDnsName("*.nip.io");
+                    subjectAltName.AddDnsName("*.sslip.io");
+                    req.CertificateExtensions.Add(subjectAltName.Build());
+
+                    using var cert = req.Create(CA, firstDayofCurrentYear, firstDayofCurrentYear.AddYears(10), "BililiveRecorder".Select(x => (byte)x).ToArray());
+                    using var withPrivateKey = cert.CopyWithPrivateKey(key);
+                    return new X509Certificate2(withPrivateKey.Export(X509ContentType.Pfx));
+                }
+            }
+            finally
+            {
+                CA?.Dispose();
+            }
         }
 
         private static (string schema, string host, int port) ParseBindArgument(string bind, ILogger logger)
