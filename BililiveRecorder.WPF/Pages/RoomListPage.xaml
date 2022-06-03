@@ -73,6 +73,8 @@
                 <MenuItem Header="{l:Loc RoomListPage_Menu_AutoRecord}">
                     <MenuItem Header="{l:Loc RoomListPage_Menu_AutoRecord_EnableAll}" Click="MenuItem_EnableAutoRecAll_Click"/>
                     <MenuItem Header="{l:Loc RoomListPage_Menu_AutoRecord_DisableAll}" Click="MenuItem_DisableAutoRecAll_Click"/>
+                    <Separator/>
+                    <MenuItem Header="刷新全部房间信息" Click="MenuItem_RefreshAllRoomInfo_Click"/>
                 </MenuItem>
                 <MenuItem Header="{l:Loc RoomListPage_Menu_Links}">
                     <MenuItem Header="{l:Loc RoomListPage_Menu_Links_Website}" Command="{x:Static m:Commands.OpenLink}" CommandParameter="https://rec.danmuji.org/">
