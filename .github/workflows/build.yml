@@ -7,6 +7,7 @@ on:
 env:
   DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
   DOTNET_CLI_TELEMETRY_OPTOUT: true
+  DOTNET_GENERATE_ASPNET_CERTIFICATE: false
   NUGET_PACKAGES: ${{ github.workspace }}/.nuget/packages
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
@@ -24,8 +25,6 @@ jobs:
           fetch-depth: 0
 
       - uses: actions/setup-dotnet@v2
-      - name: Restore Packages
-        run: dotnet restore -v m --disable-parallel
 
       - name: Run Tests - Debug
         run: dotnet test -v m -c Debug
@@ -44,12 +43,12 @@ jobs:
       - name: Add msbuild to PATH
         uses: microsoft/setup-msbuild@v1.1
       - name: Restore Packages
-        run: nuget restore -Verbosity quiet
+        run: msbuild -t:restore /v:m BililiveRecorder.WPF/BililiveRecorder.WPF.csproj
 
       - name: Build WPF - Debug
-        run: msbuild /nologo /v:m /p:Configuration="Debug"
+        run: msbuild /nologo /v:m /p:Configuration="Debug" BililiveRecorder.WPF/BililiveRecorder.WPF.csproj
       - name: Build WPF - Release
-        run: msbuild /nologo /v:m /p:Configuration="Release"
+        run: msbuild /nologo /v:m /p:Configuration="Release" BililiveRecorder.WPF/BililiveRecorder.WPF.csproj
 
       - name: Upload Artifacts - Debug
         uses: actions/upload-artifact@v2
@@ -76,8 +75,6 @@ jobs:
           fetch-depth: 0
 
       - uses: actions/setup-dotnet@v2
-      - name: Restore Packages
-        run: dotnet restore -v m --disable-parallel
 
       - name: Build CLI - Debug
         if: ${{ matrix.rid == 'any' }}
