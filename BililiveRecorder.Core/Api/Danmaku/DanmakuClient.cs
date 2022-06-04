@@ -225,18 +225,19 @@ namespace BililiveRecorder.Core.Api.Danmaku
             if (stream is null)
                 throw new ArgumentNullException(nameof(stream));
 
-            var playload = Encoding.UTF8.GetBytes(body);
-            var size = playload.Length + 16;
-            var buffer = ArrayPool<byte>.Shared.Rent(16);
+            var playload = ((body?.Length ?? 0) > 0) ? Encoding.UTF8.GetBytes(body) : Array.Empty<byte>();
+            const int headerLength = 16;
+            var size = playload.Length + headerLength;
+            var buffer = ArrayPool<byte>.Shared.Rent(headerLength);
             try
             {
                 BinaryPrimitives.WriteUInt32BigEndian(new Span<byte>(buffer, 0, 4), (uint)size);
-                BinaryPrimitives.WriteUInt16BigEndian(new Span<byte>(buffer, 4, 2), 16);
+                BinaryPrimitives.WriteUInt16BigEndian(new Span<byte>(buffer, 4, 2), headerLength);
                 BinaryPrimitives.WriteUInt16BigEndian(new Span<byte>(buffer, 6, 2), 1);
                 BinaryPrimitives.WriteUInt32BigEndian(new Span<byte>(buffer, 8, 4), (uint)action);
                 BinaryPrimitives.WriteUInt32BigEndian(new Span<byte>(buffer, 12, 4), 1);
 
-                await stream.WriteAsync(buffer, 0, buffer.Length).ConfigureAwait(false);
+                await stream.WriteAsync(buffer, 0, headerLength).ConfigureAwait(false);
                 if (playload.Length > 0)
                     await stream.WriteAsync(playload, 0, playload.Length).ConfigureAwait(false);
                 await stream.FlushAsync().ConfigureAwait(false);
