@@ -384,25 +384,32 @@ namespace BililiveRecorder.Cli
             .AddRecorder()
             .BuildServiceProvider();
 
-        private static Logger BuildLogger(LogEventLevel logLevel, LogEventLevel logFileLevel) => new LoggerConfiguration()
-            .MinimumLevel.Verbose()
-            .Enrich.WithProcessId()
-            .Enrich.WithThreadId()
-            .Enrich.WithThreadName()
-            .Enrich.FromLogContext()
-            .Enrich.WithExceptionDetails()
-            .Destructure.AsScalar<IPAddress>()
-            .Destructure.ByTransforming<Flv.Xml.XmlFlvFile.XmlFlvFileMeta>(x => new
-            {
-                x.Version,
-                x.ExportTime,
-                x.FileSize,
-                x.FileCreationTime,
-                x.FileModificationTime,
-            })
-            .WriteTo.Console(restrictedToMinimumLevel: logLevel, outputTemplate: "[{Timestamp:HH:mm:ss} {Level:u3}] [{RoomId}] {Message:lj}{NewLine}{Exception}")
-            .WriteTo.File(new CompactJsonFormatter(), "./logs/bilirec.txt", restrictedToMinimumLevel: logFileLevel, shared: true, rollingInterval: RollingInterval.Day, rollOnFileSizeLimit: true)
-            .CreateLogger();
+        private static Logger BuildLogger(LogEventLevel logLevel, LogEventLevel logFileLevel)
+        {
+            var logFilePath = Environment.GetEnvironmentVariable("BILILIVERECORDER_LOG_FILE_PATH");
+            if (string.IsNullOrWhiteSpace(logFilePath))
+                logFilePath = Path.Combine(AppContext.BaseDirectory, "logs", "bilirec.txt");
+
+            return new LoggerConfiguration()
+                .MinimumLevel.Verbose()
+                .Enrich.WithProcessId()
+                .Enrich.WithThreadId()
+                .Enrich.WithThreadName()
+                .Enrich.FromLogContext()
+                .Enrich.WithExceptionDetails()
+                .Destructure.AsScalar<IPAddress>()
+                .Destructure.ByTransforming<Flv.Xml.XmlFlvFile.XmlFlvFileMeta>(x => new
+                {
+                    x.Version,
+                    x.ExportTime,
+                    x.FileSize,
+                    x.FileCreationTime,
+                    x.FileModificationTime,
+                })
+                .WriteTo.Console(restrictedToMinimumLevel: logLevel, outputTemplate: "[{Timestamp:HH:mm:ss} {Level:u3}] [{RoomId}] {Message:lj}{NewLine}{Exception}")
+                .WriteTo.File(new CompactJsonFormatter(), logFilePath, restrictedToMinimumLevel: logFileLevel, shared: true, rollingInterval: RollingInterval.Day, rollOnFileSizeLimit: true)
+                .CreateLogger();
+        }
 
         public abstract class SharedArguments
         {

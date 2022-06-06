@@ -211,55 +211,63 @@ namespace BililiveRecorder.WPF
             }
         }
 
-        private static Logger BuildLogger() => new LoggerConfiguration()
-            .MinimumLevel.ControlledBy(levelSwitchGlobal)
-            .Enrich.WithProcessId()
-            .Enrich.WithThreadId()
-            .Enrich.WithThreadName()
-            .Enrich.FromLogContext()
-            .Enrich.WithExceptionDetails()
-            .Destructure.AsScalar<IPAddress>()
-            .Destructure.ByTransforming<Flv.Xml.XmlFlvFile.XmlFlvFileMeta>(x => new
-            {
-                x.Version,
-                x.ExportTime,
-                x.FileSize,
-                x.FileCreationTime,
-                x.FileModificationTime,
-            })
-            .WriteTo.Console(levelSwitch: levelSwitchConsole)
+        private static Logger BuildLogger()
+        {
+            var logFilePath = Environment.GetEnvironmentVariable("BILILIVERECORDER_LOG_FILE_PATH");
+            if (string.IsNullOrWhiteSpace(logFilePath))
+                logFilePath = Path.Combine(AppContext.BaseDirectory, "logs", "bilirec.txt");
+
+            return new LoggerConfiguration()
+                .MinimumLevel.ControlledBy(levelSwitchGlobal)
+                .Enrich.WithProcessId()
+                .Enrich.WithThreadId()
+                .Enrich.WithThreadName()
+                .Enrich.FromLogContext()
+                .Enrich.WithExceptionDetails()
+                .Destructure.AsScalar<IPAddress>()
+                .Destructure.ByTransforming<Flv.Xml.XmlFlvFile.XmlFlvFileMeta>(x => new
+                {
+                    x.Version,
+                    x.ExportTime,
+                    x.FileSize,
+                    x.FileCreationTime,
+                    x.FileModificationTime,
+                })
+                .WriteTo.Console(levelSwitch: levelSwitchConsole)
 #if DEBUG
-            .WriteTo.Debug()
-            .WriteTo.Sink<WpfLogEventSink>(Serilog.Events.LogEventLevel.Debug)
+                .WriteTo.Debug()
+                .WriteTo.Sink<WpfLogEventSink>(Serilog.Events.LogEventLevel.Debug)
 #else
-            .WriteTo.Sink<WpfLogEventSink>(Serilog.Events.LogEventLevel.Information)
+                .WriteTo.Sink<WpfLogEventSink>(Serilog.Events.LogEventLevel.Information)
 #endif
-            .WriteTo.File(new CompactJsonFormatter(), "./logs/bilirec.txt", shared: true, rollingInterval: RollingInterval.Day, rollOnFileSizeLimit: true)
-            .WriteTo.Sentry(o =>
-            {
-                o.Dsn = "https://38036b2031474b8ba0a728ac2a961cfa@o210546.ingest.sentry.io/5556540";
-                o.SendDefaultPii = true;
-                o.IsGlobalModeEnabled = true;
-                o.DisableAppDomainUnhandledExceptionCapture();
-                o.DisableTaskUnobservedTaskExceptionCapture();
-                o.AddExceptionFilterForType<HttpRequestException>();
-                o.AddExceptionFilterForType<OutOfMemoryException>();
-                o.AddExceptionFilterForType<JintException>();
-                o.AddExceptionFilterForType<ParserException>();
-                o.AddEventProcessor(new SentryEventProcessor());
+                .WriteTo.File(new CompactJsonFormatter(), logFilePath, shared: true, rollingInterval: RollingInterval.Day, rollOnFileSizeLimit: true)
+                .WriteTo.Sentry(o =>
+                {
+                    o.Dsn = "https://38036b2031474b8ba0a728ac2a961cfa@o210546.ingest.sentry.io/5556540";
+                    o.SendDefaultPii = true;
+                    o.IsGlobalModeEnabled = true;
+                    o.DisableAppDomainUnhandledExceptionCapture();
+                    o.DisableTaskUnobservedTaskExceptionCapture();
+                    o.AddExceptionFilterForType<HttpRequestException>();
+                    o.AddExceptionFilterForType<OutOfMemoryException>();
+                    o.AddExceptionFilterForType<JintException>();
+                    o.AddExceptionFilterForType<ParserException>();
+                    o.AddEventProcessor(new SentryEventProcessor());
 
-                o.TextFormatter = new MessageTemplateTextFormatter("[{RoomId}] {Message}{NewLine}{Exception}{@ExceptionDetail:j}");
+                    o.TextFormatter = new MessageTemplateTextFormatter("[{RoomId}] {Message}{NewLine}{Exception}{@ExceptionDetail:j}");
 
-                o.MinimumBreadcrumbLevel = Serilog.Events.LogEventLevel.Debug;
-                o.MinimumEventLevel = Serilog.Events.LogEventLevel.Error;
+                    o.MinimumBreadcrumbLevel = Serilog.Events.LogEventLevel.Debug;
+                    o.MinimumEventLevel = Serilog.Events.LogEventLevel.Error;
 
 #if DEBUG
-                o.Environment = "debug-build";
+                    o.Environment = "debug-build";
 #else
-                o.Environment = "release-build";
+                    o.Environment = "release-build";
 #endif
-            })
-            .CreateLogger();
+                })
+                .CreateLogger();
+
+        }
 
         [DllImport("kernel32")]
         private static extern bool AttachConsole(int pid);
