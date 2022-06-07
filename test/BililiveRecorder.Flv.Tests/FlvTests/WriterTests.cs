@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using System.IO;
 using System.IO.Pipelines;
 using System.Threading.Tasks;
@@ -16,7 +15,7 @@ namespace BililiveRecorder.Flv.Tests.FlvTests
     {
         [Theory]
         [Expectation("Output")]
-        [SampleFileTestData("TestData/Flv", "*.flv")]
+        [SampleFileTestData("../data/flv/TestData/Flv", "*.flv")]
         public async Task ParserOutputIsCurrectAsync(string path)
         {
             var fullPath = SampleFileLoader.GetFullPath(path);

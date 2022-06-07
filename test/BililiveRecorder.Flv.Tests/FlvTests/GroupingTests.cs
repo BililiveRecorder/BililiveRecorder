@@ -16,7 +16,7 @@ namespace BililiveRecorder.Flv.Tests.FlvTests
     {
         [Theory]
         [Expectation("GroupingFromFlv")]
-        [SampleFileTestData("TestData/Flv", "*.flv")]
+        [SampleFileTestData("../data/flv/TestData/Flv", "*.flv")]
         public async void GroupingShouldMatchExpection(string path)
         {
             var results = new List<PipelineAction>();

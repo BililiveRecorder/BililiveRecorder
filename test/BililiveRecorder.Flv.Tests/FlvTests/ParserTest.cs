@@ -15,7 +15,7 @@ namespace BililiveRecorder.Flv.Tests.FlvTests
     {
         [Theory]
         [Expectation("XmlOutput")]
-        [SampleFileTestData("TestData/Flv", "*.flv")]
+        [SampleFileTestData("../data/flv/TestData/Flv", "*.flv")]
         public async Task ParserOutputIsCurrectAsync(string path)
         {
             var fullPath = SampleFileLoader.GetFullPath(path);

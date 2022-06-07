@@ -22,7 +22,7 @@ namespace BililiveRecorder.Flv.Tests.RuleTests
     {
         [Theory]
         [Expectation("TestBadSamples")]
-        [SampleFileTestData("TestData/Bad", "*.xml")]
+        [SampleFileTestData("../data/flv/TestData/Bad", "*.xml")]
         public async Task TestBadSamples(string path)
         {
 

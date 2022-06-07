@@ -16,7 +16,7 @@ namespace BililiveRecorder.Flv.Tests.RuleTests
     {
         [Theory]
         [Expectation("StandardTest")]
-        [SampleFileTestData("TestData/Good", "*.xml")]
+        [SampleFileTestData("../data/flv/TestData/Good", "*.xml")]
         public async Task StrictTestsAsync(string path)
         {
             // Arrange
@@ -51,7 +51,7 @@ namespace BililiveRecorder.Flv.Tests.RuleTests
 
         [Theory]
         [Expectation("WithOffsetTest")]
-        [SampleFileTestData("TestData/Good", "*.xml")]
+        [SampleFileTestData("../data/flv/TestData/Good", "*.xml")]
         public async Task StrictWithArtificalOffsetTestsAsync(string path)
         {
             // Arrange
