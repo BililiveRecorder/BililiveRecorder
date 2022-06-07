@@ -41,6 +41,7 @@ namespace BililiveRecorder.Cli
                 new Option<string?>(new []{ "--http-bind", "--bind", "-b" }, () => null, "Bind address for http service"),
                 new Option<string?>(new []{ "--http-basic-user" }, () => null, "Web interface username"),
                 new Option<string?>(new []{ "--http-basic-pass" }, () => null, "Web interface password"),
+                new Option<bool>(new []{ "--enable-file-browser" }, () => true, "Enable file browser located at '/file'"),
                 new Option<LogEventLevel>(new []{ "--loglevel", "--log", "-l" }, () => LogEventLevel.Information, "Minimal log level output to console"),
                 new Option<LogEventLevel>(new []{ "--logfilelevel", "--flog" }, () => LogEventLevel.Debug, "Minimal log level output to file"),
                 new Option<string?>(new []{ "--cert-pem-path", "--pem" }, "Path of the certificate pem file"),
@@ -58,6 +59,7 @@ namespace BililiveRecorder.Cli
                 new Option<string?>(new []{ "--http-bind", "--bind", "-b" }, () => null, "Bind address for http service"),
                 new Option<string?>(new []{ "--http-basic-user" }, () => null, "Web interface username"),
                 new Option<string?>(new []{ "--http-basic-pass" }, () => null, "Web interface password"),
+                new Option<bool>(new []{ "--enable-file-browser" }, () => true, "Enable file browser located at '/file'"),
                 new Option<LogEventLevel>(new []{ "--loglevel", "--log", "-l" }, () => LogEventLevel.Information, "Minimal log level output to console"),
                 new Option<LogEventLevel>(new []{ "--logfilelevel", "--flog" }, () => LogEventLevel.Debug, "Minimal log level output to file"),
                 new Option<string?>(new []{ "--cert-pem-path", "--pem" }, "Path of the certificate pem file"),
@@ -172,6 +174,8 @@ namespace BililiveRecorder.Cli
                     .ConfigureServices(services =>
                     {
                         services.AddSingleton(recorderAccessProxy);
+
+                        services.AddSingleton(new BililiveRecorderFileExplorerSettings(sharedArguments.EnableFileBrowser));
 
                         if (sharedArguments.HttpBasicUser is not null || sharedArguments.HttpBasicPass is not null)
                         {
@@ -429,6 +433,8 @@ namespace BililiveRecorder.Cli
             public string? HttpBasicUser { get; set; } = null;
 
             public string? HttpBasicPass { get; set; } = null;
+
+            public bool EnableFileBrowser { get; set; }
 
             public string? CertPemPath { get; set; } = null;
 

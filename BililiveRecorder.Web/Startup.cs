@@ -203,13 +203,16 @@ namespace BililiveRecorder.Web
 
             try
             {
-                var sharedRecordingFiles = new SharedOptions
+                if (app.ApplicationServices.GetService<BililiveRecorderFileExplorerSettings>()?.Enable ?? false)
                 {
-                    FileProvider = new PhysicalFileProvider(app.ApplicationServices.GetRequiredService<IRecorder>().Config.Global.WorkDirectory),
-                    RequestPath = "/file",
-                    RedirectToAppendTrailingSlash = true,
-                };
-                app.UseStaticFiles(new StaticFileOptions(sharedRecordingFiles)).UseDirectoryBrowser(new DirectoryBrowserOptions(sharedRecordingFiles));
+                    var sharedRecordingFiles = new SharedOptions
+                    {
+                        FileProvider = new PhysicalFileProvider(app.ApplicationServices.GetRequiredService<IRecorder>().Config.Global.WorkDirectory),
+                        RequestPath = "/file",
+                        RedirectToAppendTrailingSlash = true,
+                    };
+                    app.UseStaticFiles(new StaticFileOptions(sharedRecordingFiles)).UseDirectoryBrowser(new DirectoryBrowserOptions(sharedRecordingFiles));
+                }
             }
             catch (Exception) { }
 
