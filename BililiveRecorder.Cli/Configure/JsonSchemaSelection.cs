@@ -4,7 +4,7 @@ namespace BililiveRecorder.Cli.Configure
 {
     public enum JsonSchemaSelection
     {
-        [Description("https://raw.githubusercontent.com/Bililive/BililiveRecorder/dev-1.3/configV2.schema.json")]
+        [Description("https://raw.githubusercontent.com/BililiveRecorder/BililiveRecorder/dev/configV3.schema.json")]
         Default,
 
         [Description("Custom")]
