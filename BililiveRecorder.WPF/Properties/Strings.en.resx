@@ -157,7 +157,9 @@ This software is open source and licensed under the GNU General Public License V
     <value>Channel Id or Link</value>
     <comment>id or link</comment>
   </data>
-  
+  <data name="AddRoomCard_PlaceholderText_FontSize" xml:space="preserve">
+    <value>14</value>
+  </data>
   <data name="AddRoomCard_Title" xml:space="preserve">
     <value>Add Channel</value>
   </data>
@@ -316,7 +318,10 @@ It should be close to 100% and the color will be green</value>
   <data name="RoomCard_Status_SpeedIndicator_SessionDuration" xml:space="preserve">
     <value>Passed time: {0:g}</value>
   </data>
-  
+  <data name="RoomCard_Status_SpeedIndicator_SpeedInMbps" xml:space="preserve">
+    <value>{0:F2} Mbps</value>
+    <comment>Should not translate</comment>
+  </data>
   <data name="RoomCard_Status_SpeedIndicator_SpeedInPercentage" xml:space="preserve">
     <value>Current speed ratio: {0:P2}</value>
     <comment>Speed percentage relative to upload speed of the streamer</comment>
@@ -493,7 +498,9 @@ Only FLV is supported</value>
   <data name="Settings_Splitting_TextBox_Right" xml:space="preserve">
     <value> </value>
   </data>
-  
+  <data name="Settings_Splitting_TextBox_SizeUnit" xml:space="preserve">
+    <value>MiB</value>
+  </data>
   <data name="Settings_Splitting_TextBox_TimeUnit" xml:space="preserve">
     <value>minutes</value>
   </data>
@@ -503,7 +510,9 @@ Only FLV is supported</value>
   <data name="Settings_Webhook_Address" xml:space="preserve">
     <value>Webhook address, one per line</value>
   </data>
-  
+  <data name="Settings_Webhook_Title" xml:space="preserve">
+    <value>Webhook</value>
+  </data>
   <data name="SettingWithDefault_Default" xml:space="preserve">
     <value>Default</value>
     <comment>Text of the checkbox in the reuseable control for setting items.
@@ -603,7 +612,10 @@ Please click the Repair Failed? Button and send feedback to the developer</value
   <data name="Toolbox_AutoFix_Error_Type_NotFlvFile" xml:space="preserve">
     <value>The input is not a FLV file</value>
   </data>
-  
+  <data name="Toolbox_AutoFix_Error_Type_OK" xml:space="preserve">
+    <value>OK</value>
+    <comment>其实不是错误类型</comment>
+  </data>
   <data name="Toolbox_AutoFix_Error_Type_OutputIOError" xml:space="preserve">
     <value>Failed to write file</value>
   </data>
