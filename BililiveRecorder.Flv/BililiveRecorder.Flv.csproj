@@ -20,7 +20,7 @@
     <PackageReference Include="Serilog" Version="2.11.0" />
     <PackageReference Include="StructLinq" Version="0.27.1" />
     <PackageReference Include="System.IO.Pipelines" Version="6.0.3" />
-    <PackageReference Include="System.Memory" Version="4.5.4" />
+    <PackageReference Include="System.Memory" Version="4.5.5" />
   </ItemGroup>
 
 </Project>

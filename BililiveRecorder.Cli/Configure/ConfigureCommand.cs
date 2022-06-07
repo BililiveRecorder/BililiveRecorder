@@ -1,6 +1,6 @@
 using System;
 using System.CommandLine;
-using System.CommandLine.Invocation;
+using System.CommandLine.NamingConventionBinder;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
@@ -16,7 +16,7 @@ namespace BililiveRecorder.Cli.Configure
     {
         public ConfigureCommand() : base("configure", "Interactively configure config.json")
         {
-            this.AddArgument(new Argument("path") { Description = "Path to work directory or config.json" });
+            this.AddArgument(new Argument<string>("path") { Description = "Path to work directory or config.json" });
             this.Handler = CommandHandler.Create<string>(Run);
         }
 
