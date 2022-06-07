@@ -68,6 +68,8 @@ namespace BililiveRecorder.Web
                 .AddCors(o => o.AddDefaultPolicy(p => p.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader()))
                 ;
 
+            services.AddSingleton(new ManifestEmbeddedFileProvider(typeof(Startup).Assembly));
+
             // Graphql API
             GraphQL.MicrosoftDI.GraphQLBuilderExtensions.AddGraphQL(services)
                 .AddServer(true)
@@ -179,10 +181,11 @@ namespace BililiveRecorder.Web
             ctp.Mappings[".mjs"] = "text/javascript; charset=utf-8";
             ctp.Mappings[".json"] = "application/json; charset=utf-8";
 
+            var manifestEmbeddedFileProvider = app.ApplicationServices.GetRequiredService<ManifestEmbeddedFileProvider>();
             var sharedStaticFiles = new SharedOptions()
             {
                 // 在运行的 exe 旁边新建一个 wwwroot 文件夹，会优先使用里面的内容，然后 fallback 到打包的资源文件
-                FileProvider = new CompositeFileProvider(env.WebRootFileProvider, new ManifestEmbeddedFileProvider(typeof(Startup).Assembly)),
+                FileProvider = new CompositeFileProvider(env.WebRootFileProvider, manifestEmbeddedFileProvider),
                 RedirectToAppendTrailingSlash = true,
             };
 

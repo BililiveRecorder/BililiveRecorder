@@ -1,181 +1,137 @@
 <!DOCTYPE html>
-<html>
+<html class="enable-dark">
 
 <head>
     <meta charset=utf-8>
     <meta content="width=device-width,initial-scale=1" name=viewport>
-    <title>B站录播姬</title>
+    <title>B站录播姬 __VERSION__</title>
     <style>
-        a {
-            margin: 5px
+        html {
+            font-family: -apple-system, "Helvetica Neue", Helvetica, Arial, "PingFang SC", "Microsoft YaHei", SimHei, sans-serif;
         }
 
-        textarea {
-            width: 300px;
-            height: 200px
+        @media (prefers-color-scheme: dark) {
+            html.enable-dark {
+                background-color: #292a2d;
+                color: #eee;
+            }
+
+            html.enable-dark a {
+                color: #eee;
+            }
+        }
+
+        .links {
+            margin: auto;
+            max-width: 240px;
+        }
+
+        .group h2 {
+            margin-bottom: 0;
+        }
+
+        .group {
+            margin: 40px 0;
+        }
+
+        a {
+            text-decoration: none;
+            color: black;
+        }
+
+        .card:hover {
+            box-shadow: 0px 0px 8px 2px #4682b4;
+        }
+
+        .card {
+            color: black;
+            background: gainsboro;
+            margin: 5px 0;
+            padding: 0 10px;
+            border: 2px solid lightblue;
+            border-radius: 5px;
+        }
+
+        @media (min-width: 769px) {
+            .links {
+                display: flex;
+                justify-content: space-evenly;
+                max-width: 840px;
+            }
+
+            .card {
+                width: 230px;
+            }
+        }
+
+        .name {
+            font-size: 1.1em;
+            margin: 1rem 0 0 0;
+        }
+
+        .path {
+            font-family: monospace;
         }
     </style>
 </head>
 
 <body>
-    <h1>B站录播姬</h1>
-    <p>
-        <span style="color:red;font-weight:700">录播姬管理界面</span>：
-        <a href="/ui">WebUI</a>
+    <h1 style="text-align: center">B站录播姬</h1>
+    <p style="text-align: center;font-family:'Courier New', Courier, monospace;" title="__FULL_VERSION__">
+        __VERSION__
     </p>
-    <p>
-        <span style="color:red;font-weight:700">REST API 界面</span>：
-        <a href="/swagger">Swagger</a>
-    </p>
-    <p>
-        <span style="color:red;font-weight:700">GraphiQL API 界面</span>：
-        <a href="/graphql/graphiql">GraphiQL</a>
-        <a href="/graphql/playground">Playground</a>
-        <a href="/graphql/altair">Altair</a>
-        <a href="/graphql/voyager">Voyager</a>
-    </p>
-    <p>录播姬 API 里的 objectId 在重启后会重新生成，是不保存到配置文件里的</p>
+    <p style="text-align: center;"><a href="https://rec.danmuji.org">https://rec.danmuji.org</a></p>
     <div>
-        <hr style="margin-top: 50px;">
-        <h2>GraphQL API 用法示例</h2>
-        <p>
-            graphql 的<b>语法</b>请查看官方文档
-            <a href="https://graphql.org/learn/">https://graphql.org/learn/</a>
-            或中文翻译镜像
-            <a href="https://graphql.cn/learn/">https://graphql.cn/learn/</a>
-        </p>x
-        <div>
-            <h3>列出所有直播间和基本信息</h3>
-
-            <textarea>
-query {
-  rooms {
-    objectId
-    roomConfig {
-      roomId
-      autoRecord
-    }
-    shortId
-    name
-    streaming
-    title
-    areaNameParent
-    areaNameChild
-  }
-}</textarea>
-
+        <div class="links">
+            <div class="group">
+                <h2>录播姬管理界面</h2>
+                <p>&nbsp;</p>
+                <a href="/ui">
+                    <div class="card">
+                        <p class="name">B站录播姬 WebUI</p>
+                        <p class="path">/ui</p>
+                    </div>
+                </a>
+            </div>
+            <div class="group">
+                <h2>REST API</h2>
+                <p>API 路径: <span style="font-family: monospace;">/api</span></p>
+                <a href="/swagger">
+                    <div class="card">
+                        <p class="name">Swagger UI</p>
+                        <p class="path">/swagger</p>
+                    </div>
+                </a>
+            </div>
+            <div class="group">
+                <h2>GraphiQL API</h2>
+                <p>API 路径: <span style="font-family: monospace;">/graphql</span></p>
+                <a href="/graphql/graphiql">
+                    <div class="card">
+                        <p class="name">GraphiQL</p>
+                        <p class="path">/graphql/graphiql</p>
+                    </div>
+                </a>
+                <a href="/graphql/playground">
+                    <div class="card">
+                        <p class="name">Playground</p>
+                        <p class="path">/graphql/playground</p>
+                    </div>
+                </a>
+                <a href="/graphql/altair">
+                    <div class="card">
+                        <p class="name">Altair</p>
+                        <p class="path">/graphql/altair</p>
+                    </div>
+                </a>
+                <a href="/graphql/voyager">
+                    <div class="card">
+                        <p class="name">Voyager</p>
+                        <p class="path">/graphql/voyager</p>
+                    </div>
+                </a>
+            </div>
         </div>
-        <div>
-            <h3>列出所有直播间的所有信息（截至编写此页面时，具体最新属性见API界面的文档）</h3><textarea>
-query {
-  rooms {
-    objectId
-    shortId
-    recording
-    roomConfig {
-      roomId
-      autoRecord
-      optionalRecordingQuality {
-        value
-        hasValue
-      }
-      optionalRecordMode {
-        value
-        hasValue
-      }
-      optionalRecordDanmakuSuperChat {
-        value
-        hasValue
-      }
-      optionalRecordDanmakuRaw {
-        value
-        hasValue
-      }
-      optionalRecordDanmakuGuard {
-        value
-        hasValue
-      }
-      optionalRecordDanmakuGift {
-        value
-        hasValue
-      }
-      optionalRecordDanmaku {
-        value
-        hasValue
-      }
-      optionalCuttingNumber {
-        value
-        hasValue
-      }
-      optionalCuttingMode {
-        value
-        hasValue
-      }
-    }
-    stats {
-      durationRatio
-      fileMaxTimestamp
-      networkMbps
-      sessionDuration
-      totalInputBytes
-      sessionMaxTimestamp
-      totalOutputBytes
-    }
-    streaming
-    title
-    name
-    danmakuConnected
-    autoRecordForThisSession
-    areaNameParent
-    areaNameChild
-  }
-}  
-</textarea>
-        </div>
-        <div>
-            <h3>添加一个房间</h3><textarea>
-mutation {
-  addRoom(roomId: 3, autoRecord: false) {
-    objectId
-    shortId
-    roomConfig {
-      roomId
-      autoRecord
-    }
-  }
-}
-</textarea>
-        </div>
-        <div>
-            <h3>添加一个房间，用变量传参版</h3><textarea>
-mutation AddRoom($roomid: Int, $autoRecord: Boolean) {
-  addRoom(roomId: $roomid, autoRecord: $autoRecord) {
-    objectId
-    shortId
-    roomConfig {
-      roomId
-      autoRecord
-    }
-  }
-}
-</textarea> <textarea>{'roomid': 4, 'autoRecord': false}</textarea>
-        </div>
-        <div>
-            <h3>启用自动录制</h3><textarea>
-mutation {
-  setRoomConfig(roomId: 3, config: { autoRecord: true }) {
-    objectId
-    shortId
-    recording
-    roomConfig {
-      roomId
-      autoRecord
-    }
-  }
-}
-</textarea>
-        </div>
-        <div>开始录制、结束录制、手动切分，都是 mutation，在 graphql 文档页面里可以看到</div>
     </div>
 </body>
 
