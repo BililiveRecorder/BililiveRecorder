@@ -39,7 +39,8 @@ namespace BililiveRecorder.Cli
             var cmd_run = new Command("run", "Run BililiveRecorder in standard mode")
             {
                 new Option<string?>(new []{ "--http-bind", "--bind", "-b" }, () => null, "Bind address for http service"),
-                // new Option<int?>(new []{ "--http-port", "--port", "-p" }, () => null, "Port number for http service"),
+                new Option<string?>(new []{ "--http-basic-user" }, () => null, "Web interface username"),
+                new Option<string?>(new []{ "--http-basic-pass" }, () => null, "Web interface password"),
                 new Option<LogEventLevel>(new []{ "--loglevel", "--log", "-l" }, () => LogEventLevel.Information, "Minimal log level output to console"),
                 new Option<LogEventLevel>(new []{ "--logfilelevel", "--flog" }, () => LogEventLevel.Debug, "Minimal log level output to file"),
                 new Option<string?>(new []{ "--cert-pem-path", "--pem" }, "Path of the certificate pem file"),
@@ -55,7 +56,8 @@ namespace BililiveRecorder.Cli
             var cmd_portable = new Command("portable", "Run BililiveRecorder in config-less mode")
             {
                 new Option<string?>(new []{ "--http-bind", "--bind", "-b" }, () => null, "Bind address for http service"),
-                // new Option<int?>(new []{ "--http-port", "--port", "-p" }, () => null, "Port number for http service"),
+                new Option<string?>(new []{ "--http-basic-user" }, () => null, "Web interface username"),
+                new Option<string?>(new []{ "--http-basic-pass" }, () => null, "Web interface password"),
                 new Option<LogEventLevel>(new []{ "--loglevel", "--log", "-l" }, () => LogEventLevel.Information, "Minimal log level output to console"),
                 new Option<LogEventLevel>(new []{ "--logfilelevel", "--flog" }, () => LogEventLevel.Debug, "Minimal log level output to file"),
                 new Option<string?>(new []{ "--cert-pem-path", "--pem" }, "Path of the certificate pem file"),
@@ -170,6 +172,11 @@ namespace BililiveRecorder.Cli
                     .ConfigureServices(services =>
                     {
                         services.AddSingleton(recorderAccessProxy);
+
+                        if (sharedArguments.HttpBasicUser is not null || sharedArguments.HttpBasicPass is not null)
+                        {
+                            services.AddSingleton(new BasicAuthCredential(sharedArguments.HttpBasicUser ?? string.Empty, sharedArguments.HttpBasicPass ?? string.Empty));
+                        }
                     })
                     .ConfigureWebHost(webBuilder =>
                     {
@@ -419,7 +426,9 @@ namespace BililiveRecorder.Cli
 
             public string? HttpBind { get; set; } = null;
 
-            // public int? HttpPort { get; set; } = null;
+            public string? HttpBasicUser { get; set; } = null;
+
+            public string? HttpBasicPass { get; set; } = null;
 
             public string? CertPemPath { get; set; } = null;
 
