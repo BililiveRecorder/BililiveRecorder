@@ -19,6 +19,11 @@
             html.enable-dark a {
                 color: #eee;
             }
+
+            html.enable-dark .card {
+                background-color: #444546;
+                color: #eee;
+            }
         }
 
         .links {
@@ -44,12 +49,13 @@
         }
 
         .card {
-            color: black;
-            background: gainsboro;
+            color: #000;
+            background: #eee;
             margin: 5px 0;
             padding: 0 10px;
             border: 2px solid lightblue;
             border-radius: 5px;
+            transition: 0.1s ease-out;
         }
 
         @media (min-width: 769px) {
@@ -104,7 +110,7 @@
                 </a>
             </div>
             <div class="group">
-                <h2>GraphiQL API</h2>
+                <h2>GraphQL API</h2>
                 <p>API 路径: <span style="font-family: monospace;">/graphql</span></p>
                 <a href="/graphql/graphiql">
                     <div class="card">
