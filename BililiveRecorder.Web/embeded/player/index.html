@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html class="enable-dark">
+
+<head>
+    <meta charset=utf-8>
+    <meta content="width=device-width,initial-scale=1" name=viewport>
+    <title>录播姬播放器</title>
+    <style>
+        html {
+            font-family: -apple-system, "Helvetica Neue", Helvetica, Arial, "PingFang SC", "Microsoft YaHei", SimHei, sans-serif;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            html.enable-dark {
+                background-color: #292a2d;
+                color: #eee;
+            }
+        }
+
+        #controlArea {
+            display: flex;
+            flex-wrap: wrap;
+            font-family: monospace;
+        }
+
+        #controlArea>* {
+            flex: 1 1 auto;
+            margin: 2px;
+        }
+
+        #controlArea input {
+            width: calc(100% - 12em);
+        }
+
+        #controlArea input[type=button] {
+            font-size: 1.5em;
+        }
+
+        html,
+        body {
+            height: 100%;
+            margin: 0;
+        }
+
+        #root {
+            display: flex;
+            flex-flow: column;
+            height: 100%;
+        }
+
+        #root .headerArea {
+            flex: 0 1 auto;
+        }
+
+        #root .playerArea {
+            flex: 1 1 auto;
+            margin: 5px;
+            padding: 5px;
+        }
+    </style>
+    <script src="./mpegts.js"></script>
+    <script src="./artplayer.js"></script>
+    <script src="./artplayer-plugin-danmuku.js"></script>
+</head>
+
+<body>
+    <div id="root">
+        <div class="headerArea">
+            <h1 style="text-align:center;margin-bottom:0">B站录播姬播放器</h1>
+            <p style="margin:0;text-align:center;">临时测试版</p>
+            <div id="controlArea">
+                <label for="flvpath">FLV 视频文件路径: </label>
+                <input type="text" placeholder="FLV 视频文件路径" name="flvPath" id="flvPath" onkeyup="updateXmlPath()">
+                <label for="flvpath">XML 弹幕文件路径: </label>
+                <input type="text" placeholder="XML 弹幕文件路径" name="xmlPath" id="xmlPath">
+                <input type="button" value="加载" onclick="loadFiles()">
+            </div>
+        </div>
+        <div class="playerArea">
+
+        </div>
+    </div>
+    <script>
+        function updateXmlPath() {
+            if (flvPath.value.endsWith(".flv")) {
+                xmlPath.value = flvPath.value.slice(0, -3) + 'xml';
+            }
+        }
+        function loadFiles() {
+            if (window.brecArt) {
+                window.brecArt.destory()
+                window.brecArt = null;
+            }
+            window.brecArt = new Artplayer({
+                container: '.playerArea',
+                autoplay: true,
+                url: flvPath.value,
+                plugins: [
+                    artplayerPluginDanmuku({
+                        danmuku: xmlPath.value,
+                    }),
+                ],
+                customType: {
+                    flv: function (video, url) {
+                        if (mpegts.isSupported()) {
+                            const player = mpegts.createPlayer({
+                                type: 'flv',
+                                url: url,
+                            });
+                            player.attachMediaElement(video);
+                            player.load();
+                        } else {
+                            window.brecArt.notice.show = '不支持播放格式：flv';
+                        }
+                    },
+                },
+            });
+        }
+    </script>
+</body>
+
+</html>
