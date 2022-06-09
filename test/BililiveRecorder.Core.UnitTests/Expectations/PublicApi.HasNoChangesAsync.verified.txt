@@ -463,25 +463,25 @@ namespace BililiveRecorder.Core.Scripting
 }
 namespace BililiveRecorder.Core.Templating
 {
-    public class FileNameGenerator
+    public sealed class FileNameGenerator
     {
         public FileNameGenerator(BililiveRecorder.Core.Config.V3.GlobalConfig config) { }
         [return: System.Runtime.CompilerServices.TupleElementNames(new string[] {
                 "fullPath",
                 "relativePath"})]
-        public System.ValueTuple<string, string> CreateFilePath(BililiveRecorder.Core.Templating.FileNameGenerator.FileNameContextData data) { }
-        public class FileNameContextData
-        {
-            public FileNameContextData() { }
-            public string AreaChild { get; set; }
-            public string AreaParent { get; set; }
-            public Newtonsoft.Json.Linq.JObject? Json { get; set; }
-            public string Name { get; set; }
-            public int Qn { get; set; }
-            public int RoomId { get; set; }
-            public int ShortId { get; set; }
-            public string Title { get; set; }
-        }
+        public System.ValueTuple<string, string> CreateFilePath(BililiveRecorder.Core.Templating.FileNameTemplateContext data) { }
+    }
+    public class FileNameTemplateContext
+    {
+        public FileNameTemplateContext() { }
+        public string AreaChild { get; set; }
+        public string AreaParent { get; set; }
+        public Newtonsoft.Json.Linq.JObject? Json { get; set; }
+        public string Name { get; set; }
+        public int Qn { get; set; }
+        public int RoomId { get; set; }
+        public int ShortId { get; set; }
+        public string Title { get; set; }
     }
 }
 namespace BililiveRecorder.DependencyInjection
