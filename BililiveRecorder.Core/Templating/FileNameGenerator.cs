@@ -10,8 +10,11 @@ using Serilog;
 
 namespace BililiveRecorder.Core.Templating
 {
-    public class FileNameGenerator
+    public sealed class FileNameGenerator
     {
+        // TODO: 需要改得更通用一些
+        // 日志不应该一定绑定到一个直播间上
+
         private static readonly ILogger logger = Log.Logger.ForContext<FileNameGenerator>();
 
         private static readonly FluidParser parser;
@@ -93,7 +96,7 @@ namespace BililiveRecorder.Core.Templating
             this.template = template;
         }
 
-        public (string fullPath, string relativePath) CreateFilePath(FileNameContextData data)
+        public (string fullPath, string relativePath) CreateFilePath(FileNameTemplateContext data)
         {
             var now = DateTimeOffset.Now;
             var templateOptions = new TemplateOptions
@@ -145,25 +148,6 @@ namespace BililiveRecorder.Core.Templating
         returnDefaultPath:
             var defaultRelativePath = RemoveInvalidFileName(defaultTemplate.Render(context));
             return (Path.GetFullPath(Path.Combine(this.config.WorkDirectory, defaultRelativePath)), defaultRelativePath);
-        }
-
-        public class FileNameContextData
-        {
-            public int RoomId { get; set; }
-
-            public int ShortId { get; set; }
-
-            public string Name { get; set; } = string.Empty;
-
-            public string Title { get; set; } = string.Empty;
-
-            public string AreaParent { get; set; } = string.Empty;
-
-            public string AreaChild { get; set; } = string.Empty;
-
-            public int Qn { get; set; }
-
-            public JObject? Json { get; set; }
         }
 
         private class JContainerValue : ObjectValueBase

@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace BililiveRecorder.Web.Api
 {
     [ApiController, Route("api/[controller]", Name = "[controller] [action]")]
-    public class ConfigController : ControllerBase
+    public sealed class ConfigController : ControllerBase
     {
         private readonly IMapper mapper;
         private readonly IRecorder recorder;

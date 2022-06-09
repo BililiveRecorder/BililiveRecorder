@@ -2,6 +2,8 @@ using AutoMapper;
 using BililiveRecorder.Core;
 using BililiveRecorder.Core.Config.V3;
 using BililiveRecorder.Core.Event;
+using BililiveRecorder.Core.Templating;
+using Newtonsoft.Json.Linq;
 
 namespace BililiveRecorder.Web.Models.Rest
 {
@@ -32,6 +34,10 @@ namespace BililiveRecorder.Web.Models.Rest
             this.CreateMap<RoomConfig, RoomConfigDto>();
 
             this.CreateMap<GlobalConfig, GlobalConfigDto>();
+
+            this.CreateMap<FileNameTemplateContextDto, FileNameTemplateContext>();
+
+            this.CreateMap<string, JObject>().ConvertUsing(s => JObject.Parse(s));
         }
     }
 }

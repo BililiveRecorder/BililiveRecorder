@@ -56,11 +56,8 @@ namespace BililiveRecorder.Web
 
 #if DEBUG
             // TODO 移动到一个单独的测试项目里
-            if (Debugger.IsAttached)
-            {
-                var configuration = new MapperConfiguration(cfg => cfg.AddProfile<DataMappingProfile>());
-                configuration.AssertConfigurationIsValid();
-            }
+            var configuration = new MapperConfiguration(cfg => cfg.AddProfile<DataMappingProfile>());
+            configuration.AssertConfigurationIsValid();
 #endif
 
             services

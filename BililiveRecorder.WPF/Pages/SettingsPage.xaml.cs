@@ -13,7 +13,7 @@ namespace BililiveRecorder.WPF.Pages
     {
         private static readonly ILogger logger = Log.ForContext<SettingsPage>();
 
-        private static readonly FileNameGenerator.FileNameContextData data = new()
+        private static readonly FileNameTemplateContext data = new()
         {
             Name = "3号直播间",
             RoomId = 23058,

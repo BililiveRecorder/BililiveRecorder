@@ -8,7 +8,7 @@ namespace BililiveRecorder.Web
 {
     [Controller, Route("/", Name = "Home Page")]
     [ApiExplorerSettings(IgnoreApi = true)]
-    public class IndexController : Controller
+    public sealed class IndexController : Controller
     {
         private static string? result;
         private readonly ManifestEmbeddedFileProvider fileProvider;

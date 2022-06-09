@@ -174,7 +174,7 @@ namespace BililiveRecorder.Core.Recording
             }
         }
 
-        protected (string fullPath, string relativePath) CreateFileName() => this.fileNameGenerator.CreateFilePath(new FileNameGenerator.FileNameContextData
+        protected (string fullPath, string relativePath) CreateFileName() => this.fileNameGenerator.CreateFilePath(new FileNameTemplateContext
         {
             Name = FileNameGenerator.RemoveInvalidFileName(this.room.Name, ignore_slash: false),
             Title = FileNameGenerator.RemoveInvalidFileName(this.room.Title, ignore_slash: false),
