@@ -128,9 +128,10 @@ namespace BililiveRecorder.Web
         {
             const string PAGE404 = "/404.html";
 
-            app.UseMiddleware<BasicAuthMiddleware>();
-
-            app.UseCors().UseWebSockets();
+            app
+                .UseCors()
+                .UseMiddleware<BasicAuthMiddleware>()
+                .UseWebSockets();
 
             app.Use(static next => async context =>
             {
