@@ -62,8 +62,17 @@ namespace BililiveRecorder.Web
 
             services
                 .AddAutoMapper(c => c.AddProfile<DataMappingProfile>())
-                .AddCors(o => o.AddDefaultPolicy(p => p.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader()))
-                ;
+                .AddCors(o => o.AddDefaultPolicy(policy =>
+                {
+                    policy
+                    .SetIsOriginAllowed(origin => true)
+                    .AllowAnyMethod()
+                    .AllowAnyHeader()
+                    .AllowCredentials()
+                    .WithExposedHeaders("Content-Length")
+                    .SetPreflightMaxAge(TimeSpan.FromMinutes(5))
+                    ;
+                }));
 
             services.AddSingleton(new ManifestEmbeddedFileProvider(typeof(Startup).Assembly));
 
