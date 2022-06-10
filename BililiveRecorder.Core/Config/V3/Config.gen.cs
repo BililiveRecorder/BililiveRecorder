@@ -107,12 +107,12 @@ namespace BililiveRecorder.Core.Config.V3
         public string? FileNameRecordTemplate => this.GetPropertyValue<string>();
 
         /// <summary>
-        /// 录制文件写入结束 Webhook 地址 每行一个
+        /// WebhookV1
         /// </summary>
         public string? WebHookUrls => this.GetPropertyValue<string>();
 
         /// <summary>
-        /// Webhook v2 地址 每行一个
+        /// WebhookV2
         /// </summary>
         public string? WebHookUrlsV2 => this.GetPropertyValue<string>();
 
@@ -122,17 +122,17 @@ namespace BililiveRecorder.Core.Config.V3
         public bool WpfShowTitleAndArea => this.GetPropertyValue<bool>();
 
         /// <summary>
-        /// 请求 API 时使用的 Cookie
+        /// Cookie
         /// </summary>
         public string? Cookie => this.GetPropertyValue<string>();
 
         /// <summary>
-        /// 替换 api.live.bilibili.com 服务器为其他反代，可以支持在云服务器上录制
+        /// API Host
         /// </summary>
         public string? LiveApiHost => this.GetPropertyValue<string>();
 
         /// <summary>
-        /// HTTP API 检查时间间隔 秒
+        /// 主动检查时间间隔 秒
         /// </summary>
         public uint TimingCheckInterval => this.GetPropertyValue<uint>();
 
@@ -157,12 +157,12 @@ namespace BililiveRecorder.Core.Config.V3
         public uint TimingDanmakuRetry => this.GetPropertyValue<uint>();
 
         /// <summary>
-        /// 最大允许未收到直播数据时间 毫秒
+        /// 最大未收到直播数据时间 毫秒
         /// </summary>
         public uint TimingWatchdogTimeout => this.GetPropertyValue<uint>();
 
         /// <summary>
-        /// 触发 <see cref="System.Xml.XmlWriter.Flush"/> 的弹幕个数
+        /// 触发刷新弹幕写入缓冲的个数
         /// </summary>
         public uint RecordDanmakuFlushInterval => this.GetPropertyValue<uint>();
 
@@ -267,7 +267,7 @@ namespace BililiveRecorder.Core.Config.V3
         public Optional<string?> OptionalFileNameRecordTemplate { get => this.GetPropertyValueOptional<string>(nameof(this.FileNameRecordTemplate)); set => this.SetPropertyValueOptional(value, nameof(this.FileNameRecordTemplate)); }
 
         /// <summary>
-        /// 录制文件写入结束 Webhook 地址 每行一个
+        /// WebhookV1
         /// </summary>
         public string? WebHookUrls { get => this.GetPropertyValue<string>(); set => this.SetPropertyValue(value); }
         public bool HasWebHookUrls { get => this.GetPropertyHasValue(nameof(this.WebHookUrls)); set => this.SetPropertyHasValue<string>(value, nameof(this.WebHookUrls)); }
@@ -275,7 +275,7 @@ namespace BililiveRecorder.Core.Config.V3
         public Optional<string?> OptionalWebHookUrls { get => this.GetPropertyValueOptional<string>(nameof(this.WebHookUrls)); set => this.SetPropertyValueOptional(value, nameof(this.WebHookUrls)); }
 
         /// <summary>
-        /// Webhook v2 地址 每行一个
+        /// WebhookV2
         /// </summary>
         public string? WebHookUrlsV2 { get => this.GetPropertyValue<string>(); set => this.SetPropertyValue(value); }
         public bool HasWebHookUrlsV2 { get => this.GetPropertyHasValue(nameof(this.WebHookUrlsV2)); set => this.SetPropertyHasValue<string>(value, nameof(this.WebHookUrlsV2)); }
@@ -291,7 +291,7 @@ namespace BililiveRecorder.Core.Config.V3
         public Optional<bool> OptionalWpfShowTitleAndArea { get => this.GetPropertyValueOptional<bool>(nameof(this.WpfShowTitleAndArea)); set => this.SetPropertyValueOptional(value, nameof(this.WpfShowTitleAndArea)); }
 
         /// <summary>
-        /// 请求 API 时使用的 Cookie
+        /// Cookie
         /// </summary>
         public string? Cookie { get => this.GetPropertyValue<string>(); set => this.SetPropertyValue(value); }
         public bool HasCookie { get => this.GetPropertyHasValue(nameof(this.Cookie)); set => this.SetPropertyHasValue<string>(value, nameof(this.Cookie)); }
@@ -299,7 +299,7 @@ namespace BililiveRecorder.Core.Config.V3
         public Optional<string?> OptionalCookie { get => this.GetPropertyValueOptional<string>(nameof(this.Cookie)); set => this.SetPropertyValueOptional(value, nameof(this.Cookie)); }
 
         /// <summary>
-        /// 替换 api.live.bilibili.com 服务器为其他反代，可以支持在云服务器上录制
+        /// API Host
         /// </summary>
         public string? LiveApiHost { get => this.GetPropertyValue<string>(); set => this.SetPropertyValue(value); }
         public bool HasLiveApiHost { get => this.GetPropertyHasValue(nameof(this.LiveApiHost)); set => this.SetPropertyHasValue<string>(value, nameof(this.LiveApiHost)); }
@@ -307,7 +307,7 @@ namespace BililiveRecorder.Core.Config.V3
         public Optional<string?> OptionalLiveApiHost { get => this.GetPropertyValueOptional<string>(nameof(this.LiveApiHost)); set => this.SetPropertyValueOptional(value, nameof(this.LiveApiHost)); }
 
         /// <summary>
-        /// HTTP API 检查时间间隔 秒
+        /// 主动检查时间间隔 秒
         /// </summary>
         public uint TimingCheckInterval { get => this.GetPropertyValue<uint>(); set => this.SetPropertyValue(value); }
         public bool HasTimingCheckInterval { get => this.GetPropertyHasValue(nameof(this.TimingCheckInterval)); set => this.SetPropertyHasValue<uint>(value, nameof(this.TimingCheckInterval)); }
@@ -347,7 +347,7 @@ namespace BililiveRecorder.Core.Config.V3
         public Optional<uint> OptionalTimingDanmakuRetry { get => this.GetPropertyValueOptional<uint>(nameof(this.TimingDanmakuRetry)); set => this.SetPropertyValueOptional(value, nameof(this.TimingDanmakuRetry)); }
 
         /// <summary>
-        /// 最大允许未收到直播数据时间 毫秒
+        /// 最大未收到直播数据时间 毫秒
         /// </summary>
         public uint TimingWatchdogTimeout { get => this.GetPropertyValue<uint>(); set => this.SetPropertyValue(value); }
         public bool HasTimingWatchdogTimeout { get => this.GetPropertyHasValue(nameof(this.TimingWatchdogTimeout)); set => this.SetPropertyHasValue<uint>(value, nameof(this.TimingWatchdogTimeout)); }
@@ -355,7 +355,7 @@ namespace BililiveRecorder.Core.Config.V3
         public Optional<uint> OptionalTimingWatchdogTimeout { get => this.GetPropertyValueOptional<uint>(nameof(this.TimingWatchdogTimeout)); set => this.SetPropertyValueOptional(value, nameof(this.TimingWatchdogTimeout)); }
 
         /// <summary>
-        /// 触发 <see cref="System.Xml.XmlWriter.Flush"/> 的弹幕个数
+        /// 触发刷新弹幕写入缓冲的个数
         /// </summary>
         public uint RecordDanmakuFlushInterval { get => this.GetPropertyValue<uint>(); set => this.SetPropertyValue(value); }
         public bool HasRecordDanmakuFlushInterval { get => this.GetPropertyHasValue(nameof(this.RecordDanmakuFlushInterval)); set => this.SetPropertyHasValue<uint>(value, nameof(this.RecordDanmakuFlushInterval)); }
@@ -409,31 +409,31 @@ namespace BililiveRecorder.Core.Config.V3
 
         public bool RecordDanmakuGuard => true;
 
-        public string RecordingQuality => "10000";
+        public string RecordingQuality => @"10000";
 
-        public string FileNameRecordTemplate => "{{ roomId }}-{{ name }}/录制-{{ roomId }}-{{ \"now\" | time_zone: \"Asia/Shanghai\" | format_date: \"yyyyMMdd-HHmmss-fff\" }}-{{ title }}.flv";
+        public string FileNameRecordTemplate => @"{{ roomId }}-{{ name }}/录制-{{ roomId }}-{{ ""now"" | time_zone: ""Asia/Shanghai"" | format_date: ""yyyyMMdd-HHmmss-fff"" }}-{{ title }}.flv";
 
-        public string WebHookUrls => string.Empty;
+        public string WebHookUrls => @"";
 
-        public string WebHookUrlsV2 => string.Empty;
+        public string WebHookUrlsV2 => @"";
 
         public bool WpfShowTitleAndArea => true;
 
-        public string Cookie => string.Empty;
+        public string Cookie => @"";
 
-        public string LiveApiHost => "https://api.live.bilibili.com";
+        public string LiveApiHost => @"https://api.live.bilibili.com";
 
-        public uint TimingCheckInterval => 10 * 60;
+        public uint TimingCheckInterval => 600;
 
-        public uint TimingStreamRetry => 6 * 1000;
+        public uint TimingStreamRetry => 6000;
 
         public uint TimingStreamRetryNoQn => 90;
 
-        public uint TimingStreamConnect => 5 * 1000;
+        public uint TimingStreamConnect => 5000;
 
-        public uint TimingDanmakuRetry => 9 * 1000;
+        public uint TimingDanmakuRetry => 9000;
 
-        public uint TimingWatchdogTimeout => 10 * 1000;
+        public uint TimingWatchdogTimeout => 10000;
 
         public uint RecordDanmakuFlushInterval => 20;
 
@@ -441,7 +441,7 @@ namespace BililiveRecorder.Core.Config.V3
 
         public AllowedAddressFamily NetworkTransportAllowedAddressFamily => AllowedAddressFamily.Any;
 
-        public string UserScript => string.Empty;
+        public string UserScript => @"";
 
     }
 

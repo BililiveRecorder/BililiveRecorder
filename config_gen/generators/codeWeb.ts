@@ -10,41 +10,41 @@ using HierarchicalPropertyDefault;
 `;
     function write_query_graphType_property(r: ConfigEntry) {
         if (r.configType == "roomOnly") {
-            result += `this.Field(x => x.${r.name});\n`;
+            result += `this.Field(x => x.${r.id});\n`;
         } else {
-            result += `this.Field(x => x.Optional${r.name}, type: typeof(HierarchicalOptionalType<${trimEnd(r.type, '?')}>));\n`;
+            result += `this.Field(x => x.Optional${r.id}, type: typeof(HierarchicalOptionalType<${trimEnd(r.type, '?')}>));\n`;
         }
     }
 
     function write_rest_dto_property(r: ConfigEntry) {
         if (r.configType == "roomOnly") {
-            result += `public ${r.type} ${r.name} { get; set; }\n`;
+            result += `public ${r.type} ${r.id} { get; set; }\n`;
         } else {
-            result += `public Optional<${r.type}> Optional${r.name} { get; set; }\n`;
+            result += `public Optional<${r.type}> Optional${r.id} { get; set; }\n`;
         }
     }
 
     function write_mutation_graphType_property(r: ConfigEntry) {
         if (r.configType == "roomOnly") {
-            result += `this.Field(x => x.${r.name}, nullable: true);\n`;
+            result += `this.Field(x => x.${r.id}, nullable: true);\n`;
         } else {
-            result += `this.Field(x => x.Optional${r.name}, nullable: true, type: typeof(HierarchicalOptionalInputType<${trimEnd(r.type, '?')}>));\n`;
+            result += `this.Field(x => x.Optional${r.id}, nullable: true, type: typeof(HierarchicalOptionalInputType<${trimEnd(r.type, '?')}>));\n`;
         }
     }
 
     function write_mutation_dataType_property(r: ConfigEntry) {
         if (r.configType == "roomOnly") {
-            result += `public ${r.type}? ${r.name} { get; set; }\n`;
+            result += `public ${r.type}? ${r.id} { get; set; }\n`;
         } else {
-            result += `public Optional<${r.type}>? Optional${r.name} { get; set; }\n`;
+            result += `public Optional<${r.type}>? Optional${r.id} { get; set; }\n`;
         }
     }
 
     function write_mutation_apply_method(r: ConfigEntry) {
         if (r.configType == "roomOnly") {
-            result += `if (this.${r.name}.HasValue) config.${r.name} = this.${r.name}.Value;\n`;
+            result += `if (this.${r.id}.HasValue) config.${r.id} = this.${r.id}.Value;\n`;
         } else {
-            result += `if (this.Optional${r.name}.HasValue) config.Optional${r.name} = this.Optional${r.name}.Value;\n`;
+            result += `if (this.Optional${r.id}.HasValue) config.Optional${r.id} = this.Optional${r.id}.Value;\n`;
         }
     }
 
@@ -129,7 +129,7 @@ using HierarchicalPropertyDefault;
 
         data.filter(r => r.configType != "roomOnly")
             .forEach(r => {
-                result += `this.Field(x => x.${r.name});\n`;
+                result += `this.Field(x => x.${r.id});\n`;
             });
 
         result += "}\n}\n\n";

@@ -15,7 +15,7 @@ export default function (data: ConfigEntry[]): string {
     {
         [Description("[grey]Exit[/]")]
         Exit,
-        ${data.filter(x => x.configType != 'roomOnly').map(x => x.name).join(",\n")}
+        ${data.filter(x => x.configType != 'roomOnly').map(x => x.id).join(",\n")}
     }`;
 
     result += `
@@ -23,7 +23,7 @@ export default function (data: ConfigEntry[]): string {
     {
         [Description("[grey]Exit[/]")]
         Exit,
-        ${data.filter(x => x.configType != 'globalOnly').map(x => x.name).join(",\n")}
+        ${data.filter(x => x.configType != 'globalOnly').map(x => x.id).join(",\n")}
     }`;
 
 
@@ -37,11 +37,11 @@ export default function (data: ConfigEntry[]): string {
     {
         ${data
             .filter(x => x.configType != 'roomOnly')
-            .map(r => `GlobalConfig.Add(GlobalConfigProperties.${r.name}, new ConfigInstruction<GlobalConfig, ${trimEnd(r.type, '?')}>(config => config.Has${r.name} = false, (config, value) => config.${r.name} = value) { Name = "${r.name}", CanBeOptional = true });`)
+            .map(r => `GlobalConfig.Add(GlobalConfigProperties.${r.id}, new ConfigInstruction<GlobalConfig, ${trimEnd(r.type, '?')}>(config => config.Has${r.id} = false, (config, value) => config.${r.id} = value) { Name = "${r.id}", CanBeOptional = true });`)
             .join("\n")
         }
     
-        ${data.filter(x => x.configType != 'globalOnly').map(r => `RoomConfig.Add(RoomConfigProperties.${r.name}, new ConfigInstruction<RoomConfig, ${trimEnd(r.type, '?')}>(config => config.Has${r.name} = false, (config, value) => config.${r.name} = value) { Name = "${r.name}", CanBeOptional = ${r.configType != 'roomOnly'} });`).join("\n")}
+        ${data.filter(x => x.configType != 'globalOnly').map(r => `RoomConfig.Add(RoomConfigProperties.${r.id}, new ConfigInstruction<RoomConfig, ${trimEnd(r.type, '?')}>(config => config.Has${r.id} = false, (config, value) => config.${r.id} = value) { Name = "${r.id}", CanBeOptional = ${r.configType != 'roomOnly'} });`).join("\n")}
     }
     }
     `

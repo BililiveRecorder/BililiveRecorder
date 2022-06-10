@@ -7,13 +7,22 @@ export type ConfigEntryType =
     /** 只能单独房间设置 */
     | "roomOnly"
 
+export type ConfigValueType =
+    "string?"
+    | "int"
+    | "uint"
+    | "bool"
+    | "RecordMode"
+    | "CuttingMode"
+    | "AllowedAddressFamily"
+
 export interface ConfigEntry {
     /** 名字 */
-    readonly name: string,
+    readonly id: string,
     /** 说明 */
-    readonly description: string,
+    readonly name: string,
     /** 代码类型 */
-    readonly type: string,
+    readonly type: ConfigValueType,
     /** 设置类型 */
     readonly configType: ConfigEntryType
     /** Web API 只读属性 */
@@ -21,11 +30,5 @@ export interface ConfigEntry {
     /** 是否为高级设置（隐藏设置），默认为 false */
     readonly advancedConfig?: boolean,
     /** 默认值 */
-    readonly defaultValue: string,
-    /** 文档显示用默认值，默认使用 defaultValue */
-    readonly defaultValueDescription?: string,
-    /** XML 注释，默认使用 description */
-    readonly xmlComment?: string,
-    /** Markdown 格式的说明文档 */
-    readonly markdown: string,
+    readonly default: string | number | boolean,
 }

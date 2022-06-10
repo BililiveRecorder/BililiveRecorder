@@ -1,0 +1,11 @@
+{
+    "compilerOptions": {
+        "lib": [
+            "ES2021"
+        ],
+        "typeRoots": [
+            "@types",
+            "node_modules/@types"
+        ],
+    },
+}
