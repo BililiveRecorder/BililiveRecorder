@@ -138,6 +138,7 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
+
       # Extract metadata (tags, labels) for Docker
       # https://github.com/docker/metadata-action
       - name: Extract Docker metadata
@@ -146,6 +147,11 @@ jobs:
         with:
           images: |
             ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          tags: |
+            type=edge
+            type=ref,event=branch
+            type=ref,event=pr
+
       - name: Build WebUI
         run: ./webui/build.sh
       - name: Build CLI
