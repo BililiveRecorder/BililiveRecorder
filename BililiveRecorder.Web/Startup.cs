@@ -218,7 +218,10 @@ namespace BililiveRecorder.Web
                         RequestPath = "/file",
                         RedirectToAppendTrailingSlash = true,
                     };
-                    app.UseStaticFiles(new StaticFileOptions(sharedRecordingFiles)).UseDirectoryBrowser(new DirectoryBrowserOptions(sharedRecordingFiles));
+                    app.UseStaticFiles(new StaticFileOptions(sharedRecordingFiles)).UseDirectoryBrowser(new DirectoryBrowserOptions(sharedRecordingFiles)
+                    {
+                        Formatter = new BililiveRecorderDirectoryFormatter()
+                    });
                 }
             }
             catch (Exception) { }

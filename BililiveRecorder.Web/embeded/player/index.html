@@ -116,6 +116,15 @@
                 },
             });
         }
+
+        ~function () {
+            const path = location.hash.slice(1);
+            if (path) {
+                flvPath.value = path;
+                updateXmlPath();
+                loadFiles();
+            }
+        }()
     </script>
 </body>
 

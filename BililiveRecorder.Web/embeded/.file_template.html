@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ path }} - B站录播姬文件浏览器</title>
+    <style>
+        html,
+        body {
+            font-family: -apple-system, "Helvetica Neue", Helvetica, Arial, "PingFang SC", "Microsoft YaHei", SimHei, sans-serif;
+        }
+
+        #index {
+            border-collapse: separate;
+            border-spacing: 0;
+            margin: 0 0 20px;
+        }
+
+        #index th {
+            vertical-align: bottom;
+            padding: 10px 5px 5px 5px;
+            font-weight: 400;
+            color: #a0a0a0;
+            text-align: center;
+        }
+
+        #index td {
+            padding: 3px 10px;
+        }
+
+        #index th,
+        #index td {
+            border-right: 1px #ddd solid;
+            border-bottom: 1px #ddd solid;
+            border-left: 1px transparent solid;
+            border-top: 1px transparent solid;
+            box-sizing: border-box;
+        }
+
+        #index th:last-child,
+        #index td:last-child {
+            border-right: 1px transparent solid;
+        }
+
+        #index td.length,
+        td.modified {
+            text-align: right;
+        }
+
+        td.size {
+            text-align: right;
+        }
+
+        a {
+            color: #1ba1e2;
+            text-decoration: none;
+        }
+
+        a:hover {
+            color: #13709e;
+            text-decoration: underline;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            html {
+                background-color: #292a2d;
+                color: #eee;
+            }
+
+            #index th,
+            #index td {
+                border-right: 1px #666 solid;
+                border-bottom: 1px #666 solid;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <section id="main">
+        <table id="index">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>名字</th>
+                    <th>大小</th>
+                    <th>修改时间</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="directory">
+                    <td></td>
+                    <td class="name"><a href="../">../</a></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                {% for file in files %}{% if file.isDirectory -%}
+                <tr class="directory">
+                    <td></td>
+                    <td class="name"><a href="./{{ file.name | escape }}/">{{ file.name | escape }}/</a></td>
+                    <td></td>
+                    <td class="modified" data-time="{{ file.lastModified | format_date: 'O' }}">{{ file.lastModified }}
+                    </td>
+                </tr>
+                {% endif %}{% endfor -%}
+                {% for file in files %}{% unless file.isDirectory -%}
+                <tr class="file">
+                    <td></td>
+                    <td class="name"><a href="./{{ file.name | escape }}">{{ file.name | escape }}</a></td>
+                    <td class="size" data-size="{{ file.length }}" title="{{ file.length }} 字节">{{ file.length |
+                        format_number: 'N0' }} B</td>
+                    <td class="modified" data-time="{{ file.lastModified | format_date: 'O' }}">{{ file.lastModified }}
+                    </td>
+                </tr>
+                {%- endunless %}{% endfor %}
+                <script>
+                    Array.from(document.querySelectorAll('#index tbody tr')).forEach(row => {
+                        const d = row.querySelectorAll('td');
+                        if (d[1].textContent.endsWith('flv')) {
+                            const playerLink = document.createElement('a');
+                            playerLink.textContent = '播放';
+                            playerLink.href = '/player/#' + new URL(d[1].textContent, location.href).pathname;
+                            d[0].appendChild(playerLink);
+                        }
+
+                        if (d[2].dataset.size) {
+                            const KB = 1024;
+                            const MB = KB * 1024;
+                            const GB = MB * 1024;
+
+                            const size = Number(d[2].dataset.size);
+
+                            if (size / GB >= 1) {
+                                d[2].textContent = `${(size / GB).toFixed(2)} GB`;
+                            } else if (size / MB >= 2) {
+                                d[2].textContent = `${(size / MB).toFixed(2)} MB`;
+                            } else if (size / KB >= 2) {
+                                d[2].textContent = `${(size / KB).toFixed(2)} KB`;
+                            } else {
+                                d[2].textContent = `${size} B`;
+                            }
+                        }
+
+                        if (d[3].dataset.time) {
+                            const date = new Date(d[3].dataset.time);
+                            d[3].textContent = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')} ${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}:${String(date.getSeconds()).padStart(2, '0')}`;
+                            d[3].title = d[3].dataset.time;
+                        }
+                    });
+                </script>
+            </tbody>
+        </table>
+    </section>
+</body>
+
+</html>
