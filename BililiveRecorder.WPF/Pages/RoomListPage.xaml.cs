@@ -332,23 +332,23 @@ namespace BililiveRecorder.WPF.Pages
 
         private void MenuItem_RefreshAllRoomInfo_Click(object sender, RoutedEventArgs e)
         {
-            _ = Task.Run(async () =>
+            if (this.DataContext is IRecorder rec)
             {
-                await Task.Delay(200);
-
-                if (MessageBox.Show("录播姬会自动检测直播间状态，不需要手动刷新。\n录播姬主要通过接收B站服务器的推送来更新状态，直播服务器会给录播姬实时发送开播通知，延迟极低。\n\n" +
-                    "频繁刷新直播间状态、短时间内大量请求B站直播 API 可能会导致你的 IP 被屏蔽，完全无法录播。\n\n本功能是特殊情况下确实需要刷新所有直播间信息时使用的。\n\n是否要刷新所有直播间的信息？\n（每个直播间会发送一个请求）", "B站录播姬", MessageBoxButton.YesNo, MessageBoxImage.Warning) != MessageBoxResult.Yes)
-                    return;
-
-                if (this.DataContext is IRecorder rec)
+                _ = Task.Run(async () =>
                 {
+                    await Task.Delay(200);
+
+                    if (MessageBox.Show("录播姬会自动检测直播间状态，不需要手动刷新。\n录播姬主要通过接收B站服务器的推送来更新状态，直播服务器会给录播姬实时发送开播通知，延迟极低。\n\n" +
+                        "频繁刷新直播间状态、短时间内大量请求B站直播 API 可能会导致你的 IP 被屏蔽，完全无法录播。\n\n本功能是特殊情况下确实需要刷新所有直播间信息时使用的。\n\n是否要刷新所有直播间的信息？\n（每个直播间会发送一个请求）", "B站录播姬", MessageBoxButton.YesNo, MessageBoxImage.Warning) != MessageBoxResult.Yes)
+                        return;
+
                     foreach (var room in rec.Rooms.ToArray())
                     {
                         await room.RefreshRoomInfoAsync();
                         await Task.Delay(500);
                     }
-                }
-            });
+                });
+            }
         }
     }
 
