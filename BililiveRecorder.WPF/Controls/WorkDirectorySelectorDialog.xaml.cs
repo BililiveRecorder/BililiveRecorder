@@ -26,6 +26,15 @@ namespace BililiveRecorder.WPF.Controls
         {
             this.DataContext = this;
             this.InitializeComponent();
+
+            try
+            {
+                new System.Globalization.CultureInfo("en-PN");
+            }
+            catch (System.Exception)
+            {
+                this.JokeLangSelectionMenuItem.Visibility = System.Windows.Visibility.Collapsed;
+            }
         }
 
         public enum WorkDirectorySelectorDialogError
