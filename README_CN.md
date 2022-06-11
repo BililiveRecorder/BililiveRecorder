@@ -1,14 +1,26 @@
+<div style="text-align:center">
+<img width="20%" src=".github/assets/logo.svg">
+
 # B站录播姬
 
-[![Build and Test](https://github.com/Bililive/BililiveRecorder/actions/workflows/build.yml/badge.svg)](https://github.com/Bililive/BililiveRecorder/actions/workflows/build.yml)
-[![当前版本](https://img.shields.io/github/tag/Bililive/BililiveRecorder.svg?label=当前版本)](#)
-[![开源协议](https://img.shields.io/github/license/Bililive/BililiveRecorder.svg?label=开源协议)](#)
-[![QQ群 689636812](https://img.shields.io/badge/QQ%E7%BE%A4-689636812-success)](https://jq.qq.com/?_wv=1027&k=5zVwEyf)
+[![Build and Test](https://github.com/BililiveRecorder/BililiveRecorder/actions/workflows/build.yml/badge.svg?branch=dev)](https://github.com/BililiveRecorder/BililiveRecorder/actions/workflows/build.yml)
+[![Version](https://img.shields.io/github/tag/Bililive/BililiveRecorder.svg?label=Version)](#)
+[![License](https://img.shields.io/github/license/Bililive/BililiveRecorder.svg)](#)
 [![Crowdin](https://badges.crowdin.net/bililiverecorder/localized.svg)](https://crowdin.com/project/bililiverecorder)
 
-## 安装 & 使用
+</div>
 
-参见网站 [rec.danmuji.org](https://rec.danmuji.org)
+## 安装
+
+在 [rec.danmuji.org](https://rec.danmuji.org) 提供了有自动更新功能的安装包。
+
+或者也可以在 [releases](https://github.com/BililiveRecorder/BililiveRecorder/releases) 页面下载 “绿色版” 压缩包，没有版本检查和更新功能。你可以 watch 本仓库的新版本发布（点击 “Watch” 、点击 “Custom”、勾选 “Releases”）。
+
+命令行版可执行文件可以在 [releases](https://github.com/BililiveRecorder/BililiveRecorder/releases) 页面下载，支持 Linux、 macOS 和 Windows 系统。
+
+可以在 [Docker Hub `bililive/recorder`](https://hub.docker.com/r/bililive/recorder) 或 [`ghcr.io/bililiverecorder/bililiverecorder`](https://github.com/bililiverecorder/BililiveRecorder/pkgs/container/bililiverecorder) 拉取 Docker 镜像。
+
+安装使用教程在 [rec.danmuji.org/user/install](https://rec.danmuji.org/user/install)。
 
 ## 功能
 
@@ -23,21 +35,58 @@
 <sup>1</sup>：仅限未经处理的直接从直播服务器下载的原始FLV文件。 如果录播是用 FFmpeg 录制的或处理过的就无法修复了，FFmpeg 会进一步损坏有问题的文件。  
 <sup>2</sup>：录播姬桌面版内含了一个 mini 版 FFmpeg 用于工具箱内的转封装功能。
 
-## 开发 & 编译
-
-推荐使用选配了 .NET 5 开发的 Visual Studio 2019，不过其他 IDE 应该也可以。
-
-项目 | 平台 | 备注
-:---:|:---:|:---:
-BililiveRecorder.WPF | .NET Framework 4.7.2 | Windows only GUI
-BililiveRecorder.Cli | .NET 5 | 跨平台命令行
-BililiveRecorder.ToolBox | .NET Standard 2.0 | WPF 和 Cli 使用的库
-BililiveRecorder.Core | .NET Standard 2.0 | 核心录制逻辑
-BililiveRecorder.Flv | .NET Standard 2.0 | 数据处理逻辑
-
 ## 版本号
 
-本项目不使用 Semantic Versioning，不保证任何版本之间源代码接口的兼容性。
+本项目从 2.0.0 开始使用 Semantic Versioning。
+
+请注意各个项目（比如 `BililiveRecorder.Flv`）的 .NET API 就算是 public 的也属于内部实现，所以不保证任何版本之间源代码接口的兼容性。
+
+## 编译
+
+注意：需要有完整的 git 历史才能生成版本号。
+
+WPF 版：
+
+```powershell
+cd BililiveRecorder.WPF
+msbuild -t:restore
+msbuild
+```
+
+命令行版：
+
+```sh
+# Build WebUI, optional
+git submodule update --init --recursive
+./webui/build.sh
+# For building on Windows:
+# ./webui/build.ps1
+
+dotnet build BililiveRecorder.Cli
+```
+
+## 项目结构
+
+Project | Target |
+:--- |:--- |
+BililiveRecorder.Flv | .NET Standard 2.0 |
+BililiveRecorder.Core | .NET Standard 2.0 |
+BililiveRecorder.Toolbox | .NET Standard 2.0 |
+BililiveRecorder.WPF | .NET Framework 4.7.2 |
+BililiveRecorder.Web | .NET 6 |
+BililiveRecorder.Cli | .NET 6 |
+
+```mermaid
+graph BT
+    toolbox(BililiveRecorder.Toolbox) --> flv(BililiveRecorder.Flv)
+    core(BililiveRecorder.Core) --> flv
+    wpf(BililiveRecorder.WPF) --> core
+    wpf --> toolbox
+    cli(BililiveRecorder.Cli) --> toolbox
+    cli ---> core
+    web(BililiveRecorder.Web) --> core
+    cli --> web
+```
 
 ## 参考资料 & 鸣谢
 

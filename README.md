@@ -1,13 +1,18 @@
-# BiliBili Stream Recorder B站录播姬
+<div style="text-align:center">
+<img width="20%" src=".github/assets/logo.svg">
 
-[![Build and Test](https://github.com/Bililive/BililiveRecorder/actions/workflows/build.yml/badge.svg)](https://github.com/Bililive/BililiveRecorder/actions/workflows/build.yml)
+# B站录播姬
+
+[![Build and Test](https://github.com/BililiveRecorder/BililiveRecorder/actions/workflows/build.yml/badge.svg?branch=dev)](https://github.com/BililiveRecorder/BililiveRecorder/actions/workflows/build.yml)
 [![Version](https://img.shields.io/github/tag/Bililive/BililiveRecorder.svg?label=Version)](#)
 [![License](https://img.shields.io/github/license/Bililive/BililiveRecorder.svg)](#)
 [![Crowdin](https://badges.crowdin.net/bililiverecorder/localized.svg)](https://crowdin.com/project/bililiverecorder)
 
+</div>
+
 [简体中文 README | Simplified Chinese](README_CN.md)
 
-GitHub is a global platform, and theoretically, everyone should use English. But since this project is mostly meant for Chinese user and rely on a Chinese website [BiliBili](https://live.bilibili.com) ([_wikipedia_](https://en.wikipedia.org/wiki/Bilibili)), all code comments are in Chinese. This README file will always use English so people like _you_ can understand what is this, and perhaps make some use out of it.
+GitHub is a global platform, and theoretically, everyone should use English. But since this project is mostly meant for Chinese user and rely on a Chinese website [BiliBili](https://live.bilibili.com) ([_wikipedia_](https://en.wikipedia.org/wiki/Bilibili)), most things related to this project like code comments, documentations and other related repositories are written in Chinese. This README file will always use English so people like _you_ can understand what is this, and perhaps make some use out of it.
 
 Software UI is available in
 
@@ -16,9 +21,18 @@ Software UI is available in
 - 日本語
 - English
 
-## Install & Use
+## Installation
 
-See [rec.danmuji.org](https://rec.danmuji.org) (in Chinese)
+See [rec.danmuji.org](https://rec.danmuji.org) (in Chinese) for Windows installer with auto update.
+
+Alernatively, you can download from [releases](https://github.com/BililiveRecorder/BililiveRecorder/releases) page.  
+The zip file avaiable at the releases page does not have auto update enabled. You are welcome to watch this repository for releases. (Click the "Watch" dropdown menu, then "Custom", and check the "Releases" checkbox).
+
+Binary files of the command line version are available for Linux, macOS, and Windows at [releases](https://github.com/BililiveRecorder/BililiveRecorder/releases).
+
+Docker images are available at [Docker Hub `bililive/recorder`](https://hub.docker.com/r/bililive/recorder) or [`ghcr.io/bililiverecorder/bililiverecorder`](https://github.com/bililiverecorder/BililiveRecorder/pkgs/container/bililiverecorder).
+
+Step by step installation guides are avaiable at [rec.danmuji.org/user/install](https://rec.danmuji.org/user/install) (in Chinese).
 
 ## Feature
 
@@ -33,21 +47,58 @@ See [rec.danmuji.org](https://rec.danmuji.org) (in Chinese)
 <sup>1</sup>: Only unprocessed flv file downloaded directly from stream servers can be fixed. If the file is downloaded or processed by FFmpeg it no longer can be fixed, FFmpeg will fvck up the already broken recording even further.  
 <sup>2</sup>: A minimal version of FFmpeg is bundled with the desktop edition of BililiveRecorder for the remux feature in toolbox.
 
-## Develop & Build
-
-Visual Studio 2019 with .NET 5 is recommended, though any other IDE should work too.
-
-Project | Target | Note
-:---:|:---:|:---:
-BililiveRecorder.WPF | .NET Framework 4.7.2 | Windows only GUI
-BililiveRecorder.Cli | .NET 5 | Cross-platform
-BililiveRecorder.ToolBox | .NET Standard 2.0 | library used by WPF & Cli
-BililiveRecorder.Core | .NET Standard 2.0 | Main recording logic
-BililiveRecorder.Flv | .NET Standard 2.0 | Data processing logic
-
 ## Versioning
 
-This project does not follow semantic versioning, no source code compatibility is guaranteed between any version.
+This project is following Semantic Versioning since version 2.0.0.
+
+Please note this does not include the public .NET API of `BililiveRecorder.Flv`, or any project within this repository for that matter. They are considered as internal implementation thus could have breaking changes in any releases.
+
+## Building from source
+
+Note: full git history is required for version generation to work.
+
+WPF version:
+
+```powershell
+cd BililiveRecorder.WPF
+msbuild -t:restore
+msbuild
+```
+
+Command line version:
+
+```sh
+# Build WebUI, optional
+git submodule update --init --recursive
+./webui/build.sh
+# For building on Windows:
+# ./webui/build.ps1
+
+dotnet build BililiveRecorder.Cli
+```
+
+## Project structure
+
+Project | Target |
+:--- |:--- |
+BililiveRecorder.Flv | .NET Standard 2.0 |
+BililiveRecorder.Core | .NET Standard 2.0 |
+BililiveRecorder.Toolbox | .NET Standard 2.0 |
+BililiveRecorder.WPF | .NET Framework 4.7.2 |
+BililiveRecorder.Web | .NET 6 |
+BililiveRecorder.Cli | .NET 6 |
+
+```mermaid
+graph BT
+    toolbox(BililiveRecorder.Toolbox) --> flv(BililiveRecorder.Flv)
+    core(BililiveRecorder.Core) --> flv
+    wpf(BililiveRecorder.WPF) --> core
+    wpf --> toolbox
+    cli(BililiveRecorder.Cli) --> toolbox
+    cli ---> core
+    web(BililiveRecorder.Web) --> core
+    cli --> web
+```
 
 ## Reference & Acknowledgements
 
