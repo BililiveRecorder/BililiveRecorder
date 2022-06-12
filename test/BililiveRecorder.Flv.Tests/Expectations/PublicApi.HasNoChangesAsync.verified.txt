@@ -677,6 +677,13 @@ namespace BililiveRecorder.Flv.Pipeline.Actions
         public System.Collections.Generic.IReadOnlyList<BililiveRecorder.Flv.Tag> Tags { get; set; }
         public override BililiveRecorder.Flv.Pipeline.Actions.PipelineAction Clone() { }
     }
+    public class PipelineLogMessageWithLocationAction : BililiveRecorder.Flv.Pipeline.Actions.PipelineAction
+    {
+        public PipelineLogMessageWithLocationAction(Serilog.Events.LogEventLevel level, string message) { }
+        public Serilog.Events.LogEventLevel Level { get; }
+        public string Message { get; }
+        public override BililiveRecorder.Flv.Pipeline.Actions.PipelineAction Clone() { }
+    }
     public class PipelineNewFileAction : BililiveRecorder.Flv.Pipeline.Actions.PipelineAction
     {
         public static readonly BililiveRecorder.Flv.Pipeline.Actions.PipelineNewFileAction Instance;
@@ -701,6 +708,7 @@ namespace BililiveRecorder.Flv.Pipeline
         TimestampOffset = 4,
         DecodingHeader = 5,
         RepeatingData = 6,
+        OnMetaData = 7,
     }
     public class FlvProcessingContext
     {
@@ -805,7 +813,7 @@ namespace BililiveRecorder.Flv.Writer
 {
     public class FlvProcessingContextWriter : BililiveRecorder.Flv.IFlvProcessingContextWriter, System.IDisposable
     {
-        public FlvProcessingContextWriter(BililiveRecorder.Flv.IFlvTagWriter tagWriter, bool allowMissingHeader, bool disableKeyframes) { }
+        public FlvProcessingContextWriter(BililiveRecorder.Flv.IFlvTagWriter tagWriter, bool allowMissingHeader, bool disableKeyframes, Serilog.ILogger? logger) { }
         public System.Action<BililiveRecorder.Flv.Amf.ScriptTagBody>? BeforeScriptTagRewrite { get; set; }
         public System.Action<BililiveRecorder.Flv.Amf.ScriptTagBody>? BeforeScriptTagWrite { get; set; }
         public event System.EventHandler<BililiveRecorder.Flv.FileClosedEventArgs>? FileClosed;
