@@ -60,6 +60,7 @@ namespace BililiveRecorder.Web.Api
                     }
                     else
                     {
+                        var pathTrimmed = path.Trim('/');
                         fileLikes.Add(new FileDto
                         {
                             Name = content.Name,
@@ -67,7 +68,7 @@ namespace BililiveRecorder.Web.Api
                             Size = content.Length,
 
                             // Path.Combine 在 Windows 上会用 \
-                            Url = "/file/" + path.Trim('/') + '/' + content.Name,
+                            Url = "/file/" + (pathTrimmed.Length > 0 ? pathTrimmed + '/' : string.Empty) + content.Name,
                         });
                     }
                 }
