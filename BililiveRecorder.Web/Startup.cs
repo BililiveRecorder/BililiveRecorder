@@ -98,6 +98,9 @@ namespace BililiveRecorder.Web
             services
                 .AddSwaggerGen(c =>
                 {
+                    c.UseAllOfForInheritance();
+                    c.UseOneOfForPolymorphism();
+
                     c.SwaggerDoc("brec", new OpenApiInfo
                     {
                         Title = "录播姬 REST API",
