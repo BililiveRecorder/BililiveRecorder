@@ -9,5 +9,6 @@ namespace BililiveRecorder.Flv.Pipeline
         TimestampOffset,
         DecodingHeader,
         RepeatingData,
+        OnMetaData,
     }
 }

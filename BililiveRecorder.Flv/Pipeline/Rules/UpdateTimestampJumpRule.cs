@@ -75,10 +75,12 @@ namespace BililiveRecorder.Flv.Pipeline.Rules
                 {
                     ts.Reset();
                 }
-                else if (action is PipelineScriptAction s) // Script Tag 时间戳永远为 0
+                else if (action is PipelineScriptAction s) // ~~Script Tag 时间戳永远为 0~~
                 {
-                    s.Tag.Timestamp = 0;
-                    ts.Reset();
+                    // 这个分支把收到 script tag 时分段禁用了
+                    // 所以把时间戳设置成 NextTimestampTarget 而不是固定的 0
+                    s.Tag.Timestamp = ts.NextTimestampTarget;
+                    // ts.Reset();
                 }
                 else if (action is PipelineHeaderAction h) // Header Tag 时间戳永远为 0
                 {

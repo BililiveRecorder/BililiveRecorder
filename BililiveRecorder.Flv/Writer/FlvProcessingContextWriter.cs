@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using BililiveRecorder.Flv.Amf;
 using BililiveRecorder.Flv.Pipeline;
 using BililiveRecorder.Flv.Pipeline.Actions;
+using Serilog;
 
 namespace BililiveRecorder.Flv.Writer
 {
@@ -13,6 +14,7 @@ namespace BililiveRecorder.Flv.Writer
         private readonly IFlvTagWriter tagWriter;
         private readonly bool allowMissingHeader;
         private readonly bool disableKeyframes;
+        private readonly ILogger? logger;
         private bool disposedValue;
 
         private WriterState state = WriterState.EmptyFileOrNotOpen;
@@ -32,11 +34,12 @@ namespace BililiveRecorder.Flv.Writer
         public Action<ScriptTagBody>? BeforeScriptTagWrite { get; set; }
         public Action<ScriptTagBody>? BeforeScriptTagRewrite { get; set; }
 
-        public FlvProcessingContextWriter(IFlvTagWriter tagWriter, bool allowMissingHeader, bool disableKeyframes)
+        public FlvProcessingContextWriter(IFlvTagWriter tagWriter, bool allowMissingHeader, bool disableKeyframes, ILogger? logger)
         {
             this.tagWriter = tagWriter ?? throw new ArgumentNullException(nameof(tagWriter));
             this.allowMissingHeader = allowMissingHeader;
             this.disableKeyframes = disableKeyframes;
+            this.logger = logger?.ForContext<FlvProcessingContextWriter>();
         }
 
         public async Task<int> WriteAsync(FlvProcessingContext context)
@@ -94,8 +97,15 @@ namespace BililiveRecorder.Flv.Writer
             PipelineDataAction dataAction => this.WriteDataTags(dataAction),
             PipelineEndAction endAction => this.WriteEndTag(endAction),
             PipelineLogAlternativeHeaderAction logAlternativeHeaderAction => this.WriteAlternativeHeader(logAlternativeHeaderAction),
+            PipelineLogMessageWithLocationAction pipelineLogMessageWithLocationAction => this.LogMessageWithLocation(pipelineLogMessageWithLocationAction),
             _ => Task.CompletedTask,
         };
+
+        private Task LogMessageWithLocation(PipelineLogMessageWithLocationAction logMessageWithLocationAction)
+        {
+            this.logger?.Write(logMessageWithLocationAction.Level, logMessageWithLocationAction.Message + $"\n 位置：视频时间 {this.lastDuration} 秒, 文件位置 {this.tagWriter.FileSize} 字节。");
+            return Task.CompletedTask;
+        }
 
         private Task WriteAlternativeHeader(PipelineLogAlternativeHeaderAction logAlternativeHeaderAction) =>
             this.tagWriter.WriteAlternativeHeaders(logAlternativeHeaderAction.Tags);

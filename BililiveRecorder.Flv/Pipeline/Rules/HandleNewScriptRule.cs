@@ -10,8 +10,9 @@ namespace BililiveRecorder.Flv.Pipeline.Rules
     /// </summary>
     public class HandleNewScriptRule : ISimpleProcessingRule
     {
+        private const string STORE_KEY = "HandleNewScriptRule_MetaDataReceived";
         private const string onMetaData = "onMetaData";
-        private static readonly ProcessingComment comment_onmetadata = new ProcessingComment(CommentType.Logging, "收到了 onMetaData");
+        private static readonly ProcessingComment comment_onmetadata = new ProcessingComment(CommentType.OnMetaData, "收到了 onMetaData");
 
         public void Run(FlvProcessingContext context, Action next)
         {
@@ -70,19 +71,34 @@ namespace BililiveRecorder.Flv.Pipeline.Rules
                 ScriptDataEcmaArray arr => arr,
                 _ => new ScriptDataEcmaArray()
             };
-            context.AddComment(comment_onmetadata);
-            yield return PipelineNewFileAction.Instance;
-            yield return (new PipelineScriptAction(new Tag
+
+            var metaDataReceived = context.SessionItems.ContainsKey(STORE_KEY);
+            if (!metaDataReceived)
             {
-                Type = TagType.Script,
-                ScriptData = new ScriptTagBody(new List<IScriptDataValue>
+                context.SessionItems[STORE_KEY] = true;
+
+                context.AddComment(comment_onmetadata);
+
+                yield return PipelineNewFileAction.Instance;
+                yield return (new PipelineScriptAction(new Tag
+                {
+                    Type = TagType.Script,
+                    ScriptData = new ScriptTagBody(new List<IScriptDataValue>
                 {
                     (ScriptDataString)onMetaData,
                     value
                 })
-            }));
-            yield break;
-
+                }));
+                yield break;
+            }
+            else
+            {
+                // 记录信息，不输出到文件，不对文件进行分段。
+                var message = $"重复收到 onMetaData, onMetaData 内容: {data?.ToJson() ?? "(null)"}";
+                context.AddComment(new ProcessingComment(CommentType.OnMetaData, message));
+                yield return new PipelineLogMessageWithLocationAction(Serilog.Events.LogEventLevel.Warning, "重复收到 onMetaData");
+                yield break;
+            }
         notOnMetaData:
             context.AddComment(new ProcessingComment(CommentType.Logging, "收到了非 onMetaData 的 Script Tag: " + (data?.ToJson() ?? "(null)")));
             yield break;
