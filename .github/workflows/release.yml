@@ -84,7 +84,7 @@ jobs:
     needs: test
     strategy:
       matrix:
-        rid: [any, linux-arm, linux-arm64, linux-x64, osx-x64, win-x64]
+        rid: [any, linux-arm, linux-arm64, linux-x64, osx-x64, osx-arm64, win-x64]
         build_configuration: [Release]
     runs-on: ubuntu-latest
     steps:
