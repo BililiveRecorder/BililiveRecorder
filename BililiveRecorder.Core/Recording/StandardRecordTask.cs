@@ -296,11 +296,11 @@ namespace BililiveRecorder.Core.Recording
                 return (stream, state);
             }
 
-            public Stream CreateAlternativeHeaderStream()
+            public Stream CreateAccompanyingTextLogStream()
             {
                 var path = string.IsNullOrWhiteSpace(this.last_path)
-                    ? Path.ChangeExtension(this.task.CreateFileName().fullPath, "headers.txt")
-                    : Path.ChangeExtension(this.last_path, "headers.txt");
+                    ? Path.ChangeExtension(this.task.CreateFileName().fullPath, "txt")
+                    : Path.ChangeExtension(this.last_path, "txt");
 
                 try
                 { Directory.CreateDirectory(Path.GetDirectoryName(path)); }

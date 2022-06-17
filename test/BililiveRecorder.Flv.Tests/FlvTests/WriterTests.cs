@@ -43,7 +43,7 @@ namespace BililiveRecorder.Flv.Tests.FlvTests
 
             private bool flag = false;
 
-            public Stream CreateAlternativeHeaderStream() => throw new System.NotImplementedException();
+            public Stream CreateAccompanyingTextLogStream() => throw new System.NotImplementedException();
 
             public (Stream stream, object? state) CreateOutputStream()
             {

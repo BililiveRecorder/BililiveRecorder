@@ -96,19 +96,15 @@ namespace BililiveRecorder.Flv.Writer
             PipelineHeaderAction headerAction => this.WriteHeaderTags(headerAction),
             PipelineDataAction dataAction => this.WriteDataTags(dataAction),
             PipelineEndAction endAction => this.WriteEndTag(endAction),
-            PipelineLogAlternativeHeaderAction logAlternativeHeaderAction => this.WriteAlternativeHeader(logAlternativeHeaderAction),
             PipelineLogMessageWithLocationAction pipelineLogMessageWithLocationAction => this.LogMessageWithLocation(pipelineLogMessageWithLocationAction),
             _ => Task.CompletedTask,
         };
 
-        private Task LogMessageWithLocation(PipelineLogMessageWithLocationAction logMessageWithLocationAction)
+        private async Task LogMessageWithLocation(PipelineLogMessageWithLocationAction logMessageWithLocationAction)
         {
-            this.logger?.Write(logMessageWithLocationAction.Level, logMessageWithLocationAction.Message + $"\n 位置：视频时间 {this.lastDuration} 秒, 文件位置 {this.tagWriter.FileSize} 字节。");
-            return Task.CompletedTask;
+            this.logger?.Debug("写入录制记录，位置：视频时间 {FileDuration} 秒, 文件位置 {FileSize} 字节。\n{Message}", this.lastDuration, this.tagWriter.FileSize, logMessageWithLocationAction.Message);
+            await this.tagWriter.WriteAccompanyingTextLog(this.lastDuration, logMessageWithLocationAction.Message).ConfigureAwait(false);
         }
-
-        private Task WriteAlternativeHeader(PipelineLogAlternativeHeaderAction logAlternativeHeaderAction) =>
-            this.tagWriter.WriteAlternativeHeaders(logAlternativeHeaderAction.Tags);
 
         private Task OpenNewFile()
         {

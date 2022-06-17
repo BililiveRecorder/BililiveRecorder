@@ -170,15 +170,15 @@ namespace BililiveRecorder.ToolBox.Tool.Fix
                             XmlFlvFile.Serializer.Serialize(file, new XmlFlvFile { Tags = w.Files[i] });
                         }
 
-                        if (w.AlternativeHeaders.Count > 0)
+                        if (w.AccompanyingTextLogs.Count > 0)
                         {
-                            var path = Path.ChangeExtension(request.OutputBase, $"headers.txt");
+                            var path = Path.ChangeExtension(request.OutputBase, "txt");
                             using var writer = new StreamWriter(File.Open(path, FileMode.Append, FileAccess.Write, FileShare.None));
-                            foreach (var tag in w.AlternativeHeaders)
+                            foreach (var (lastTagDuration, message) in w.AccompanyingTextLogs)
                             {
                                 writer.WriteLine();
-                                writer.WriteLine(tag.ToString());
-                                writer.WriteLine(tag.BinaryDataForSerializationUseOnly);
+                                writer.WriteLine(lastTagDuration);
+                                writer.WriteLine(message);
                             }
                         }
                     });
@@ -264,9 +264,9 @@ namespace BililiveRecorder.ToolBox.Tool.Fix
                 this.pathTemplate = pathTemplate;
             }
 
-            public Stream CreateAlternativeHeaderStream()
+            public Stream CreateAccompanyingTextLogStream()
             {
-                var path = Path.ChangeExtension(this.pathTemplate, "header.txt");
+                var path = Path.ChangeExtension(this.pathTemplate, "txt");
                 return new FileStream(path, FileMode.Append, FileAccess.Write, FileShare.Read);
             }
 

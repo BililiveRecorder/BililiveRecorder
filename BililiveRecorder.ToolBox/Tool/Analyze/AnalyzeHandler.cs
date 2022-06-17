@@ -218,7 +218,7 @@ namespace BililiveRecorder.ToolBox.Tool.Analyze
 
             public void Dispose() { }
             public Task OverwriteMetadata(ScriptTagBody metadata) => Task.CompletedTask;
-            public Task WriteAlternativeHeaders(IEnumerable<Tag> tags) => Task.CompletedTask;
+            public Task WriteAccompanyingTextLog(double lastTagDuration, string message) => Task.CompletedTask;
             public Task WriteTag(Tag tag) => Task.CompletedTask;
         }
     }

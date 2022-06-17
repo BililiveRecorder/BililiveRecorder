@@ -1,7 +1,6 @@
 using System;
 using System.Buffers;
 using System.Buffers.Binary;
-using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
@@ -19,6 +18,7 @@ namespace BililiveRecorder.Flv.Writer
         private readonly ILogger? logger;
 
         private Stream? stream;
+        private StreamWriter? textFile;
         private uint lastMetadataLength;
         private bool disposedValue;
 
@@ -43,9 +43,19 @@ namespace BililiveRecorder.Flv.Writer
             try
             { this.stream.Dispose(); }
             catch (Exception ex)
-            { this.logger?.Warning(ex, "关闭文件时发生错误"); }
+            { this.logger?.Warning(ex, "关闭录像文件时发生错误"); }
 
             this.stream = null;
+
+            if (this.textFile is not null)
+            {
+                try
+                { this.textFile.Dispose(); }
+                catch (Exception ex)
+                { this.logger?.Warning(ex, "关闭录像记录文本文件时发生错误"); }
+
+                this.textFile = null;
+            }
 
             return true;
         }
@@ -93,24 +103,37 @@ namespace BililiveRecorder.Flv.Writer
             }
         }
 
-        public async Task WriteAlternativeHeaders(IEnumerable<Tag> tags)
+        public async Task WriteAccompanyingTextLog(double lastTagDuration, string message)
         {
             if (this.disposedValue)
                 throw new ObjectDisposedException(nameof(FlvTagFileWriter));
 
-            using var writer = new StreamWriter(this.targetProvider.CreateAlternativeHeaderStream(), Encoding.UTF8);
-            await writer.WriteLineAsync("----- Group Start -----").ConfigureAwait(false);
-            await writer.WriteLineAsync("连续遇到了多个不同的音视频Header，如果录制的文件不能正常播放可以尝试用这里的数据进行修复").ConfigureAwait(false);
-            await writer.WriteLineAsync(DateTimeOffset.Now.ToString("O")).ConfigureAwait(false);
-
-            foreach (var tag in tags)
+            if (this.textFile is null || !this.textFile.BaseStream.CanWrite)
             {
-                await writer.WriteLineAsync().ConfigureAwait(false);
-                await writer.WriteLineAsync(tag.ToString()).ConfigureAwait(false);
-                await writer.WriteLineAsync(tag.BinaryDataForSerializationUseOnly).ConfigureAwait(false);
+                this.textFile = new StreamWriter(this.targetProvider.CreateAccompanyingTextLogStream(), Encoding.UTF8);
+
+                await this.textFile.WriteLineAsync("此文件内记录了对应的视频文件中可能存在的问题").ConfigureAwait(false);
+                await this.textFile.WriteAsync("B站录播姬 ").ConfigureAwait(false);
+                await this.textFile.WriteLineAsync(GitVersionInformation.FullSemVer).ConfigureAwait(false);
+                await this.textFile.WriteLineAsync().ConfigureAwait(false);
             }
 
-            await writer.WriteLineAsync("----- Group End -----").ConfigureAwait(false);
+            var fileTime = TimeSpan.FromSeconds(lastTagDuration);
+
+            await this.textFile.WriteLineAsync("-----记录开始-----").ConfigureAwait(false);
+            await this.textFile.WriteAsync("记录时间: ").ConfigureAwait(false);
+            await this.textFile.WriteLineAsync(DateTimeOffset.Now.ToString("O")).ConfigureAwait(false);
+            await this.textFile.WriteAsync("视频时间: ").ConfigureAwait(false);
+            await this.textFile.WriteLineAsync($"{(int)Math.Floor(fileTime.TotalHours):D2}:{fileTime.Minutes:D2}:{fileTime.Seconds:D2}.{fileTime.Milliseconds:D3}").ConfigureAwait(false);
+            await this.textFile.WriteAsync("文件位置: ").ConfigureAwait(false);
+            await this.textFile.WriteAsync(this.FileSize.ToString()).ConfigureAwait(false);
+            await this.textFile.WriteLineAsync(" 字节").ConfigureAwait(false);
+
+            await this.textFile.WriteLineAsync(message).ConfigureAwait(false);
+
+            await this.textFile.WriteLineAsync("-----记录结束-----").ConfigureAwait(false);
+
+            await this.textFile.FlushAsync().ConfigureAwait(false);
         }
 
         public Task WriteTag(Tag tag)

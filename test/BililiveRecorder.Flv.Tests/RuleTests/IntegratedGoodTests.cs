@@ -33,7 +33,7 @@ namespace BililiveRecorder.Flv.Tests.RuleTests
 
             Assert.Empty(comments);
 
-            Assert.Empty(flvTagListWriter.AlternativeHeaders);
+            Assert.Empty(flvTagListWriter.AccompanyingTextLogs);
 
             var outputTags = Assert.Single(flvTagListWriter.Files);
             Assert.Equal(originalTags.Count, outputTags.Count);
@@ -77,7 +77,7 @@ namespace BililiveRecorder.Flv.Tests.RuleTests
             comments.RemoveAll(x => !x.ActionRequired);
             Assert.Equal(CommentType.TimestampJump, Assert.Single(comments).Type);
 
-            Assert.Empty(output.AlternativeHeaders);
+            Assert.Empty(output.AccompanyingTextLogs);
 
             var outputTags = Assert.Single(output.Files);
             Assert.Equal(originalTags.Count, outputTags.Count);

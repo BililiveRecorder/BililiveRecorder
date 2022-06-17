@@ -39,7 +39,7 @@ namespace BililiveRecorder.Flv.Tests.RuleTests
 
             var outputResult = new OutputResult
             {
-                AlternativeHeaders = flvTagListWriter.AlternativeHeaders.Select(x => x.BinaryDataForSerializationUseOnly).ToArray(),
+                AccompanyingTextLogs = flvTagListWriter.AccompanyingTextLogs.Select(x => x.lastTagDuration + "\n" + x.message).ToArray(),
                 Comments = comments.GroupBy(x => x.Type).Select(x => new CommentCount(x.Key, x.Count())).ToArray(),
                 TagCounts = flvTagListWriter.Files.Select(x => x.Count).ToArray()
             };
@@ -69,7 +69,7 @@ namespace BililiveRecorder.Flv.Tests.RuleTests
 
             public CommentCount[] Comments { get; set; } = Array.Empty<CommentCount>();
 
-            public string?[] AlternativeHeaders { get; set; } = Array.Empty<string>();
+            public string?[] AccompanyingTextLogs { get; set; } = Array.Empty<string>();
         }
 
         public struct CommentCount

@@ -93,19 +93,19 @@ namespace BililiveRecorder.Flv.Pipeline.Rules
             }
             else
             {
-                // 记录信息，不输出到文件，不对文件进行分段。
-                var message = $"重复收到 onMetaData, onMetaData 内容: {data?.ToJson() ?? "(null)"}";
+                // 记录信息，不对文件进行分段。
+                var message = $"收到直播服务器发送的 onMetaData 数据，请检查此位置是否有重复的直播片段或缺少数据。\n造成这个问题的原因可能是录播姬所连接的直播服务器与它的上级服务器的连接断开重连了。\n数据内容: {data?.ToJson() ?? "(null)"}";
                 context.AddComment(new ProcessingComment(CommentType.OnMetaData, false, message));
 
-                yield return new PipelineLogMessageWithLocationAction(Serilog.Events.LogEventLevel.Warning, "重复收到 onMetaData");
+                yield return new PipelineLogMessageWithLocationAction(message);
                 yield return (new PipelineScriptAction(new Tag
                 {
                     Type = TagType.Script,
                     ScriptData = new ScriptTagBody(new List<IScriptDataValue>
-                {
-                    (ScriptDataString)onMetaData,
-                    value
-                })
+                    {
+                        (ScriptDataString)onMetaData,
+                        value
+                    })
                 }));
                 yield break;
             }

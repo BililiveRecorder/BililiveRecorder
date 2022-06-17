@@ -342,12 +342,12 @@ namespace BililiveRecorder.Flv
         bool CloseCurrentFile();
         System.Threading.Tasks.Task CreateNewFile();
         System.Threading.Tasks.Task OverwriteMetadata(BililiveRecorder.Flv.Amf.ScriptTagBody metadata);
-        System.Threading.Tasks.Task WriteAlternativeHeaders(System.Collections.Generic.IEnumerable<BililiveRecorder.Flv.Tag> tags);
+        System.Threading.Tasks.Task WriteAccompanyingTextLog(double lastTagDuration, string message);
         System.Threading.Tasks.Task WriteTag(BililiveRecorder.Flv.Tag tag);
     }
     public interface IFlvWriterTargetProvider
     {
-        System.IO.Stream CreateAlternativeHeaderStream();
+        System.IO.Stream CreateAccompanyingTextLogStream();
         [return: System.Runtime.CompilerServices.TupleElementNames(new string[] {
                 "stream",
                 "state"})]
@@ -671,16 +671,9 @@ namespace BililiveRecorder.Flv.Pipeline.Actions
         public BililiveRecorder.Flv.Tag? VideoHeader { get; set; }
         public override BililiveRecorder.Flv.Pipeline.Actions.PipelineAction Clone() { }
     }
-    public class PipelineLogAlternativeHeaderAction : BililiveRecorder.Flv.Pipeline.Actions.PipelineAction
-    {
-        public PipelineLogAlternativeHeaderAction(System.Collections.Generic.IReadOnlyList<BililiveRecorder.Flv.Tag> tags) { }
-        public System.Collections.Generic.IReadOnlyList<BililiveRecorder.Flv.Tag> Tags { get; set; }
-        public override BililiveRecorder.Flv.Pipeline.Actions.PipelineAction Clone() { }
-    }
     public class PipelineLogMessageWithLocationAction : BililiveRecorder.Flv.Pipeline.Actions.PipelineAction
     {
-        public PipelineLogMessageWithLocationAction(Serilog.Events.LogEventLevel level, string message) { }
-        public Serilog.Events.LogEventLevel Level { get; }
+        public PipelineLogMessageWithLocationAction(string message) { }
         public string Message { get; }
         public override BililiveRecorder.Flv.Pipeline.Actions.PipelineAction Clone() { }
     }
@@ -832,13 +825,16 @@ namespace BililiveRecorder.Flv.Writer
         public void Dispose() { }
         protected virtual void Dispose(bool disposing) { }
         public System.Threading.Tasks.Task OverwriteMetadata(BililiveRecorder.Flv.Amf.ScriptTagBody metadata) { }
-        public System.Threading.Tasks.Task WriteAlternativeHeaders(System.Collections.Generic.IEnumerable<BililiveRecorder.Flv.Tag> tags) { }
+        public System.Threading.Tasks.Task WriteAccompanyingTextLog(double lastTagDuration, string message) { }
         public System.Threading.Tasks.Task WriteTag(BililiveRecorder.Flv.Tag tag) { }
     }
     public class FlvTagListWriter : BililiveRecorder.Flv.IFlvTagWriter, System.IDisposable
     {
         public FlvTagListWriter() { }
-        public System.Collections.Generic.List<BililiveRecorder.Flv.Tag> AlternativeHeaders { get; }
+        [System.Runtime.CompilerServices.TupleElementNames(new string[] {
+                "lastTagDuration",
+                "message"})]
+        public System.Collections.Generic.List<System.ValueTuple<double, string>> AccompanyingTextLogs { get; }
         public long FileSize { get; }
         public System.Collections.Generic.List<System.Collections.Generic.List<BililiveRecorder.Flv.Tag>> Files { get; }
         public object? State { get; }
@@ -846,7 +842,7 @@ namespace BililiveRecorder.Flv.Writer
         public System.Threading.Tasks.Task CreateNewFile() { }
         public void Dispose() { }
         public System.Threading.Tasks.Task OverwriteMetadata(BililiveRecorder.Flv.Amf.ScriptTagBody metadata) { }
-        public System.Threading.Tasks.Task WriteAlternativeHeaders(System.Collections.Generic.IEnumerable<BililiveRecorder.Flv.Tag> tags) { }
+        public System.Threading.Tasks.Task WriteAccompanyingTextLog(double lastTagDuration, string message) { }
         public System.Threading.Tasks.Task WriteTag(BililiveRecorder.Flv.Tag tag) { }
     }
 }

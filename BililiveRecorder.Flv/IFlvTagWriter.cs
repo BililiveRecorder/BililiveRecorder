@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using BililiveRecorder.Flv.Amf;
 
@@ -15,6 +14,6 @@ namespace BililiveRecorder.Flv
         Task WriteTag(Tag tag);
         Task OverwriteMetadata(ScriptTagBody metadata);
 
-        Task WriteAlternativeHeaders(IEnumerable<Tag> tags);
+        Task WriteAccompanyingTextLog(double lastTagDuration, string message);
     }
 }

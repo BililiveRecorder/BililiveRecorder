@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using BililiveRecorder.Flv.Pipeline.Actions;
 using StructLinq;
 using StructLinq.Where;
@@ -81,7 +82,20 @@ namespace BililiveRecorder.Flv.Pipeline.Rules
                 // 输出所有 Header 到一个独立的文件，以防出现无法播放的问题
                 // 如果不能正常播放，后期可以使用这里保存的 Header 配合 FlvInteractiveRebase 工具手动修复
                 if (multiple_header_present)
-                    yield return new PipelineLogAlternativeHeaderAction(header.AllTags);
+                {
+                    var b = new StringBuilder("连续遇到了多个不同的音视频Header，如果录制的文件不能正常播放可以尝试用这里的数据进行手动修复\n");
+
+                    foreach (var tag in header.AllTags)
+                    {
+                        b.Append("\n");
+                        b.Append(tag.ToString());
+                        b.Append("\n");
+                        b.Append(tag.BinaryDataForSerializationUseOnly);
+                        b.Append("\n");
+                    }
+
+                    yield return new PipelineLogMessageWithLocationAction(b.ToString());
+                }
 
             }
             else

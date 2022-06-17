@@ -47,7 +47,7 @@ namespace BililiveRecorder.Flv.Tests.RuleTests
             // 不应该有任何问题 Shouldn't have any problems
             Assert.Empty(comments);
             // 不应该有多个 Header Shouldn't have multiple headers
-            Assert.Empty(output.AlternativeHeaders);
+            Assert.Empty(output.AccompanyingTextLogs);
 
             // 只应该有一个文件输出 Should output only a single file
             var outputTags = Assert.Single(output.Files);

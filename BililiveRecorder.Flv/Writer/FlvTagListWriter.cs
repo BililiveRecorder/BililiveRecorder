@@ -12,11 +12,11 @@ namespace BililiveRecorder.Flv.Writer
         public FlvTagListWriter()
         {
             this.Files = new List<List<Tag>>();
-            this.AlternativeHeaders = new List<Tag>();
+            this.AccompanyingTextLogs = new List<(double, string)>();
         }
 
         public List<List<Tag>> Files { get; }
-        public List<Tag> AlternativeHeaders { get; }
+        public List<(double lastTagDuration, string message)> AccompanyingTextLogs { get; }
 
         public long FileSize => -1;
 
@@ -42,9 +42,9 @@ namespace BililiveRecorder.Flv.Writer
 
         public Task OverwriteMetadata(ScriptTagBody metadata) => Task.CompletedTask;
 
-        public Task WriteAlternativeHeaders(IEnumerable<Tag> tags)
+        public Task WriteAccompanyingTextLog(double lastTagDuration, string message)
         {
-            this.AlternativeHeaders.AddRange(tags);
+            this.AccompanyingTextLogs.Add((lastTagDuration, message));
             return Task.CompletedTask;
         }
 

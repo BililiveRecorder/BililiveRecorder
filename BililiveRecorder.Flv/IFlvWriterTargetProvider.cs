@@ -6,6 +6,6 @@ namespace BililiveRecorder.Flv
     {
         (Stream stream, object? state) CreateOutputStream();
 
-        Stream CreateAlternativeHeaderStream();
+        Stream CreateAccompanyingTextLogStream();
     }
 }
