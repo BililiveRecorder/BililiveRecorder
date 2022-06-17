@@ -752,9 +752,10 @@ namespace BililiveRecorder.Flv.Pipeline
     }
     public class ProcessingComment
     {
-        public ProcessingComment(BililiveRecorder.Flv.Pipeline.CommentType t, string c) { }
-        public string C { get; }
-        public BililiveRecorder.Flv.Pipeline.CommentType T { get; }
+        public ProcessingComment(BililiveRecorder.Flv.Pipeline.CommentType type, bool actionRequired, string comment) { }
+        public bool ActionRequired { get; }
+        public string Comment { get; }
+        public BililiveRecorder.Flv.Pipeline.CommentType Type { get; }
         public override string ToString() { }
     }
     public delegate void ProcessingDelegate(BililiveRecorder.Flv.Pipeline.FlvProcessingContext context);

@@ -12,8 +12,8 @@ namespace BililiveRecorder.Flv.Pipeline.Rules
     /// </summary>
     public class UpdateTimestampOffsetRule : ISimpleProcessingRule
     {
-        private static readonly ProcessingComment COMMENT_JumpedWithinGOP = new ProcessingComment(CommentType.Unrepairable, "GOP 内音频或视频时间戳不连续");
-        private static readonly ProcessingComment COMMENT_CantSolve = new ProcessingComment(CommentType.Unrepairable, "出现了无法计算偏移量的音视频偏移");
+        private static readonly ProcessingComment COMMENT_JumpedWithinGOP = new ProcessingComment(CommentType.Unrepairable, true, "GOP 内音频或视频时间戳不连续");
+        private static readonly ProcessingComment COMMENT_CantSolve = new ProcessingComment(CommentType.Unrepairable, true, "出现了无法计算偏移量的音视频偏移");
 
         public void Run(FlvProcessingContext context, Action next)
         {
@@ -145,7 +145,7 @@ namespace BililiveRecorder.Flv.Pipeline.Rules
                 validOffset:
                     if (offset != 0)
                     {
-                        context.AddComment(new ProcessingComment(CommentType.TimestampOffset, $"音视频时间戳偏移, D: {offset}"));
+                        context.AddComment(new ProcessingComment(CommentType.TimestampOffset, true, $"音视频时间戳偏移, D: {offset}"));
 
                         foreach (var tag in data.Tags)
                             if (tag.Type == TagType.Video)

@@ -137,25 +137,25 @@ namespace BililiveRecorder.ToolBox.Tool.Analyze
                 {
                     var (videoStats, audioStats) = statsRule.GetStats();
 
-                    var countableComments = comments.Where(x => x.T != CommentType.Logging).ToArray();
+                    var countableComments = comments.Where(x => x.Type != CommentType.Logging).ToArray();
                     return new AnalyzeResponse
                     {
                         InputPath = inputPath,
 
                         NeedFix = tagWriter.OutputFileCount != 1 || countableComments.Any(),
-                        Unrepairable = countableComments.Any(x => x.T == CommentType.Unrepairable),
+                        Unrepairable = countableComments.Any(x => x.Type == CommentType.Unrepairable),
 
                         OutputFileCount = tagWriter.OutputFileCount,
 
                         VideoStats = videoStats,
                         AudioStats = audioStats,
 
-                        IssueTypeOther = countableComments.Count(x => x.T == CommentType.Other),
-                        IssueTypeUnrepairable = countableComments.Count(x => x.T == CommentType.Unrepairable),
-                        IssueTypeTimestampJump = countableComments.Count(x => x.T == CommentType.TimestampJump),
-                        IssueTypeTimestampOffset = countableComments.Count(x => x.T == CommentType.TimestampOffset),
-                        IssueTypeDecodingHeader = countableComments.Count(x => x.T == CommentType.DecodingHeader),
-                        IssueTypeRepeatingData = countableComments.Count(x => x.T == CommentType.RepeatingData)
+                        IssueTypeOther = countableComments.Count(x => x.Type == CommentType.Other),
+                        IssueTypeUnrepairable = countableComments.Count(x => x.Type == CommentType.Unrepairable),
+                        IssueTypeTimestampJump = countableComments.Count(x => x.Type == CommentType.TimestampJump),
+                        IssueTypeTimestampOffset = countableComments.Count(x => x.Type == CommentType.TimestampOffset),
+                        IssueTypeDecodingHeader = countableComments.Count(x => x.Type == CommentType.DecodingHeader),
+                        IssueTypeRepeatingData = countableComments.Count(x => x.Type == CommentType.RepeatingData)
                     };
                 });
 

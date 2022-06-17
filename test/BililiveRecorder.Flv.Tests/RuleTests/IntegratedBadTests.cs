@@ -20,7 +20,7 @@ namespace BililiveRecorder.Flv.Tests.RuleTests
     [ExpectationPath("Bad")]
     public class IntegratedBadTests : IntegratedTestBase
     {
-        [Theory(Skip = "魔改版，不测试")]
+        [Theory()]
         [Expectation("TestBadSamples")]
         [SampleFileTestData("../data/flv/TestData/Bad", "*.xml")]
         public async Task TestBadSamples(string path)
@@ -35,12 +35,12 @@ namespace BililiveRecorder.Flv.Tests.RuleTests
             await RunPipeline(reader, flvTagListWriter, comments).ConfigureAwait(false);
 
             // Assert
-            comments.RemoveAll(x => x.T == CommentType.Logging);
+            comments.RemoveAll(x => !x.ActionRequired);
 
             var outputResult = new OutputResult
             {
                 AlternativeHeaders = flvTagListWriter.AlternativeHeaders.Select(x => x.BinaryDataForSerializationUseOnly).ToArray(),
-                Comments = comments.GroupBy(x => x.T).Select(x => new CommentCount(x.Key, x.Count())).ToArray(),
+                Comments = comments.GroupBy(x => x.Type).Select(x => new CommentCount(x.Key, x.Count())).ToArray(),
                 TagCounts = flvTagListWriter.Files.Select(x => x.Count).ToArray()
             };
 

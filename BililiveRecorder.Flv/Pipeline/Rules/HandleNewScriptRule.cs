@@ -12,7 +12,7 @@ namespace BililiveRecorder.Flv.Pipeline.Rules
     {
         private const string STORE_KEY = "HandleNewScriptRule_MetaDataReceived";
         private const string onMetaData = "onMetaData";
-        private static readonly ProcessingComment comment_onmetadata = new ProcessingComment(CommentType.OnMetaData, "收到了 onMetaData");
+        private static readonly ProcessingComment comment_onmetadata = new ProcessingComment(CommentType.OnMetaData, false, "收到了 onMetaData");
 
         public void Run(FlvProcessingContext context, Action next)
         {
@@ -95,12 +95,12 @@ namespace BililiveRecorder.Flv.Pipeline.Rules
             {
                 // 记录信息，不输出到文件，不对文件进行分段。
                 var message = $"重复收到 onMetaData, onMetaData 内容: {data?.ToJson() ?? "(null)"}";
-                context.AddComment(new ProcessingComment(CommentType.OnMetaData, message));
+                context.AddComment(new ProcessingComment(CommentType.OnMetaData, false, message));
                 yield return new PipelineLogMessageWithLocationAction(Serilog.Events.LogEventLevel.Warning, "重复收到 onMetaData");
                 yield break;
             }
         notOnMetaData:
-            context.AddComment(new ProcessingComment(CommentType.Logging, "收到了非 onMetaData 的 Script Tag: " + (data?.ToJson() ?? "(null)")));
+            context.AddComment(new ProcessingComment(CommentType.Logging, false, "收到了非 onMetaData 的 Script Tag: " + (data?.ToJson() ?? "(null)")));
             yield break;
         }
     }

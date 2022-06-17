@@ -9,7 +9,7 @@ namespace BililiveRecorder.Flv.Pipeline.Rules
     /// </summary>
     public class HandleEndTagRule : ISimpleProcessingRule
     {
-        private static readonly ProcessingComment comment = new ProcessingComment(CommentType.Logging, "因收到 End Tag 分段");
+        private static readonly ProcessingComment comment = new ProcessingComment(CommentType.Logging, false, "因收到 End Tag 分段");
 
         public void Run(FlvProcessingContext context, Action next)
         {

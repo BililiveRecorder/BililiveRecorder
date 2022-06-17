@@ -14,7 +14,7 @@ namespace BililiveRecorder.Flv.Tests.RuleTests
     [ExpectationPath("Good")]
     public class IntegratedGoodTests : IntegratedTestBase
     {
-        [Theory(Skip = "魔改版，不测试")]
+        [Theory()]
         [Expectation("StandardTest")]
         [SampleFileTestData("../data/flv/TestData/Good", "*.xml")]
         public async Task StrictTestsAsync(string path)
@@ -29,7 +29,7 @@ namespace BililiveRecorder.Flv.Tests.RuleTests
             await RunPipeline(reader, flvTagListWriter, comments).ConfigureAwait(false);
 
             // Assert
-            comments.RemoveAll(x => x.T == CommentType.Logging);
+            comments.RemoveAll(x => !x.ActionRequired);
 
             Assert.Empty(comments);
 
@@ -49,7 +49,7 @@ namespace BililiveRecorder.Flv.Tests.RuleTests
             await Verifier.Verify(xmlStr).UseExtension("xml").UseParameters(path);
         }
 
-        [Theory(Skip = "魔改版，不测试")]
+        [Theory()]
         [Expectation("WithOffsetTest")]
         [SampleFileTestData("../data/flv/TestData/Good", "*.xml")]
         public async Task StrictWithArtificalOffsetTestsAsync(string path)
@@ -74,8 +74,8 @@ namespace BililiveRecorder.Flv.Tests.RuleTests
             await RunPipeline(reader, output, comments).ConfigureAwait(false);
 
             // Assert
-            comments.RemoveAll(x => x.T == CommentType.Logging);
-            Assert.Equal(CommentType.TimestampJump, Assert.Single(comments).T);
+            comments.RemoveAll(x => !x.ActionRequired);
+            Assert.Equal(CommentType.TimestampJump, Assert.Single(comments).Type);
 
             Assert.Empty(output.AlternativeHeaders);
 

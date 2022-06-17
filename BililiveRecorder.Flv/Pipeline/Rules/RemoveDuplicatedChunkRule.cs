@@ -21,7 +21,7 @@ namespace BililiveRecorder.Flv.Pipeline.Rules
         private const string QUEUE_KEY = "DeDuplicationQueue";
 
         private static readonly FarmHash64 farmHash64 = new();
-        private static readonly ProcessingComment comment = new ProcessingComment(CommentType.RepeatingData, "重复数据");
+        private static readonly ProcessingComment comment = new ProcessingComment(CommentType.RepeatingData, true, "重复数据");
 
         public void Run(FlvProcessingContext context, Action next)
         {

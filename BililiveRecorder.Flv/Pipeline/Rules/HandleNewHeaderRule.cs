@@ -15,8 +15,8 @@ namespace BililiveRecorder.Flv.Pipeline.Rules
         private const string VIDEO_HEADER_KEY = "HandleNewHeaderRule_VideoHeader";
         private const string AUDIO_HEADER_KEY = "HandleNewHeaderRule_AudioHeader";
 
-        private static readonly ProcessingComment MultipleHeaderComment = new ProcessingComment(CommentType.DecodingHeader, "收到了连续多个 Header，新建文件");
-        private static readonly ProcessingComment SplitFileComment = new ProcessingComment(CommentType.DecodingHeader, "因为 Header 问题新建文件");
+        private static readonly ProcessingComment MultipleHeaderComment = new ProcessingComment(CommentType.DecodingHeader, true, "收到了连续多个 Header，新建文件");
+        private static readonly ProcessingComment SplitFileComment = new ProcessingComment(CommentType.DecodingHeader, true, "因为 Header 问题新建文件");
 
         public void Run(FlvProcessingContext context, Action next)
         {

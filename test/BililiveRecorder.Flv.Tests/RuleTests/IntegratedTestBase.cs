@@ -43,7 +43,7 @@ namespace BililiveRecorder.Flv.Tests.RuleTests
             await RunPipeline(reader, output, comments).ConfigureAwait(false);
 
             // 忽略 ignore Logging 
-            comments.RemoveAll(x => x.T == CommentType.Logging);
+            comments.RemoveAll(x => !x.ActionRequired);
             // 不应该有任何问题 Shouldn't have any problems
             Assert.Empty(comments);
             // 不应该有多个 Header Shouldn't have multiple headers

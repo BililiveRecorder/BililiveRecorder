@@ -42,12 +42,12 @@ namespace BililiveRecorder.Flv.Pipeline.Rules
                     var diff = currentTimestamp - ts.LastOriginal;
                     if (diff < 0)
                     {
-                        context.AddComment(new ProcessingComment(CommentType.TimestampJump, $"时间戳变小, curr: {currentTimestamp}, diff: {diff}"));
+                        context.AddComment(new ProcessingComment(CommentType.TimestampJump, true, $"时间戳变小, curr: {currentTimestamp}, diff: {diff}"));
                         ts.CurrentOffset = currentTimestamp - ts.NextTimestampTarget;
                     }
                     else if (diff > JUMP_THRESHOLD)
                     {
-                        context.AddComment(new ProcessingComment(CommentType.TimestampJump, $"时间戳间隔过大, curr: {currentTimestamp}, diff: {diff}"));
+                        context.AddComment(new ProcessingComment(CommentType.TimestampJump, true, $"时间戳间隔过大, curr: {currentTimestamp}, diff: {diff}"));
                         ts.CurrentOffset = currentTimestamp - ts.NextTimestampTarget;
                     }
 

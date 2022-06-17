@@ -4,22 +4,28 @@ namespace BililiveRecorder.Flv.Pipeline
 {
     public class ProcessingComment
     {
-        public ProcessingComment(CommentType t, string c)
+        public ProcessingComment(CommentType type, bool actionRequired, string comment)
         {
-            this.T = t;
-            this.C = c ?? throw new ArgumentNullException(nameof(c));
+            this.Type = type;
+            this.ActionRequired = actionRequired;
+            this.Comment = comment ?? throw new ArgumentNullException(nameof(comment));
         }
 
         /// <summary>
         /// Type
         /// </summary>
-        public CommentType T { get; }
+        public CommentType Type { get; }
+
+        /// <summary>
+        /// Action Required
+        /// </summary>
+        public bool ActionRequired { get; }
 
         /// <summary>
         /// Comment
         /// </summary>
-        public string C { get; }
+        public string Comment { get; }
 
-        public override string ToString() => $"{this.T} {this.C}";
+        public override string ToString() => $"({this.Type},{(this.ActionRequired ? "A" : "C")}): {this.Comment}";
     }
 }

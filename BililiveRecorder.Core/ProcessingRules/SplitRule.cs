@@ -13,8 +13,8 @@ namespace BililiveRecorder.Core.ProcessingRules
         private const int FLAG_BEFORE = 1;
         private const int FLAG_AFTER = 2;
 
-        private static readonly ProcessingComment comment_before = new ProcessingComment(CommentType.Logging, "New file before data by split rule");
-        private static readonly ProcessingComment comment_after = new ProcessingComment(CommentType.Logging, "New file after data by split rule");
+        private static readonly ProcessingComment comment_before = new ProcessingComment(CommentType.Logging, false, "New file before data by split rule");
+        private static readonly ProcessingComment comment_after = new ProcessingComment(CommentType.Logging, false, "New file after data by split rule");
 
         public void Run(FlvProcessingContext context, System.Action next)
         {
