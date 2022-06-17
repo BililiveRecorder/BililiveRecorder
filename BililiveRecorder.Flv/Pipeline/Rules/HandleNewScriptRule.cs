@@ -96,7 +96,17 @@ namespace BililiveRecorder.Flv.Pipeline.Rules
                 // 记录信息，不输出到文件，不对文件进行分段。
                 var message = $"重复收到 onMetaData, onMetaData 内容: {data?.ToJson() ?? "(null)"}";
                 context.AddComment(new ProcessingComment(CommentType.OnMetaData, false, message));
+
                 yield return new PipelineLogMessageWithLocationAction(Serilog.Events.LogEventLevel.Warning, "重复收到 onMetaData");
+                yield return (new PipelineScriptAction(new Tag
+                {
+                    Type = TagType.Script,
+                    ScriptData = new ScriptTagBody(new List<IScriptDataValue>
+                {
+                    (ScriptDataString)onMetaData,
+                    value
+                })
+                }));
                 yield break;
             }
         notOnMetaData:
