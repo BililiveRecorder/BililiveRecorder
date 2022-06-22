@@ -44,7 +44,7 @@ namespace BililiveRecorder.WPF.Pages
                 Filters =
                 {
                     new CommonFileDialogFilter("FLV",".flv"),
-                    new CommonFileDialogFilter("dev's toy",".xml,.gz")
+                    new CommonFileDialogFilter("dev's toy",".xml,.gz,.zip")
                 }
             };
             if (fileDialog.ShowDialog() == CommonFileDialogResult.Ok)
@@ -266,7 +266,7 @@ namespace BililiveRecorder.WPF.Pages
                         OverwritePrompt = true,
                         InitialDirectory = Path.GetDirectoryName(inputPath),
                         DefaultDirectory = Path.GetDirectoryName(inputPath),
-                        DefaultFileName = Path.GetFileNameWithoutExtension(inputPath) + ".brec.xml.gz"
+                        DefaultFileName = Path.GetFileNameWithoutExtension(inputPath) + ".brec.xml.zip"
                     };
                     if (fileDialog.ShowDialog() == CommonFileDialogResult.Ok)
                         outputPath = fileDialog.FileName;

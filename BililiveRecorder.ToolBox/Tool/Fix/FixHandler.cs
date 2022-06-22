@@ -68,6 +68,18 @@ namespace BililiveRecorder.ToolBox.Tool.Fix
                             return new FlvTagListReader(xmlFlvFile.Tags);
                         });
                     }
+                    else if (inputPath.EndsWith(".zip", StringComparison.OrdinalIgnoreCase))
+                    {
+                        xmlMode = true;
+                        tagReader = await Task.Run(() =>
+                        {
+                            using var zip = new ZipArchive(File.Open(inputPath, FileMode.Open, FileAccess.Read, FileShare.Read), ZipArchiveMode.Read, false, Encoding.UTF8);
+                            var entry = zip.Entries.First(x => x.Name.EndsWith(".xml", StringComparison.OrdinalIgnoreCase));
+                            var xmlFlvFile = (XmlFlvFile)XmlFlvFile.Serializer.Deserialize(entry.Open());
+                            meta = xmlFlvFile.Meta;
+                            return new FlvTagListReader(xmlFlvFile.Tags);
+                        });
+                    }
                     else
                     {
                         flvFileStream = new FileStream(inputPath, FileMode.Open, FileAccess.Read, FileShare.Read, 4096, FileOptions.Asynchronous | FileOptions.SequentialScan);

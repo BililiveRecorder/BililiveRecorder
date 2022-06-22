@@ -51,7 +51,7 @@ namespace BililiveRecorder.ToolBox.Tool.Export
 
                 try
                 {
-                    outputStream = File.OpenWrite(request.Output);
+                    outputStream = new FileStream(request.Output, FileMode.Create);
                 }
                 catch (Exception ex)
                 {
@@ -93,17 +93,40 @@ namespace BililiveRecorder.ToolBox.Tool.Export
 
                 await Task.Run(() =>
                 {
-                    using var writer = XmlWriter.Create(new GZipStream(outputStream, CompressionLevel.Optimal), new()
+                    switch (Path.GetExtension(request.Output))
                     {
-                        Encoding = Encoding.UTF8,
-                        Indent = true
-                    });
+                        case ".zip":
+                        default:
+                            {
+                                using var zip = new ZipArchive(outputStream, ZipArchiveMode.Create, false, Encoding.UTF8);
+                                using var writer = XmlWriter.Create(new StreamWriter(zip.CreateEntry(Path.GetFileName(request.Input) + ".brec.xml").Open(), Encoding.UTF8), new()
+                                {
+                                    Encoding = Encoding.UTF8,
+                                    Indent = true
+                                });
 
-                    XmlFlvFile.Serializer.Serialize(writer, new XmlFlvFile
-                    {
-                        Tags = tags,
-                        Meta = meta
-                    });
+                                XmlFlvFile.Serializer.Serialize(writer, new XmlFlvFile
+                                {
+                                    Tags = tags,
+                                    Meta = meta
+                                });
+                            }
+                            break;
+                        case ".xml":
+                            {
+                                using var writer = XmlWriter.Create(new StreamWriter(outputStream, Encoding.UTF8), new()
+                                {
+                                    Encoding = Encoding.UTF8,
+                                    Indent = true
+                                });
+                                XmlFlvFile.Serializer.Serialize(writer, new XmlFlvFile
+                                {
+                                    Tags = tags,
+                                    Meta = meta
+                                });
+                            }
+                            break;
+                    }
                 });
 
                 return new CommandResponse<ExportResponse> { Status = ResponseStatus.OK, Data = new ExportResponse() };

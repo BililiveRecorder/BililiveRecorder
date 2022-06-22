@@ -4,6 +4,7 @@ using System.IO;
 using System.IO.Compression;
 using System.IO.Pipelines;
 using System.Linq;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using BililiveRecorder.Flv;
@@ -57,6 +58,15 @@ namespace BililiveRecorder.ToolBox.Tool.Analyze
                         {
                             using var stream = File.Open(inputPath, FileMode.Open, FileAccess.Read, FileShare.Read);
                             var xmlFlvFile = (XmlFlvFile)XmlFlvFile.Serializer.Deserialize(stream);
+                            meta = xmlFlvFile.Meta;
+                            return new FlvTagListReader(xmlFlvFile.Tags);
+                        });
+                    else if (inputPath.EndsWith(".zip", StringComparison.OrdinalIgnoreCase))
+                        tagReader = await Task.Run(() =>
+                        {
+                            using var zip = new ZipArchive(File.Open(inputPath, FileMode.Open, FileAccess.Read, FileShare.Read), ZipArchiveMode.Read, false, Encoding.UTF8);
+                            var entry = zip.Entries.First(x => x.Name.EndsWith(".xml", StringComparison.OrdinalIgnoreCase));
+                            var xmlFlvFile = (XmlFlvFile)XmlFlvFile.Serializer.Deserialize(entry.Open());
                             meta = xmlFlvFile.Meta;
                             return new FlvTagListReader(xmlFlvFile.Tags);
                         });

@@ -30,7 +30,7 @@ namespace BililiveRecorder.ToolBox
             this.RegisterCommand<ExportHandler, ExportRequest, ExportResponse>("export", null, c =>
             {
                 c.Add(new Argument<string>("input", "example: input.flv"));
-                c.Add(new Argument<string>("output", "example: output.brec.xml.gz"));
+                c.Add(new Argument<string>("output", "example: output.xml or output.zip"));
             });
 
             this.RegisterCommand<DanmakuStartTimeHandler, DanmakuStartTimeRequest, DanmakuStartTimeResponse>("danmaku-start-time", null, c =>
