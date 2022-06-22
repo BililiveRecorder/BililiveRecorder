@@ -121,6 +121,9 @@
                             <TextBlock Grid.Row="2" HorizontalAlignment="Center" FontSize="15" Foreground="Red"
                                        Visibility="{Binding Unrepairable,Converter={StaticResource BooleanToVisibilityCollapsedConverter}}"
                                        Text="{l:Loc Toolbox_AutoFix_AnalyzeResult_ContainsUnrepairable}"/>
+                            <TextBlock Grid.Row="2" HorizontalAlignment="Center" FontSize="15" Foreground="Yellow" TextAlignment="Center"
+                                       Visibility="{Binding FfmpegDetected,Converter={StaticResource BooleanToVisibilityCollapsedConverter}}"
+                                       Text="检测到此文件可能是 FFmpeg 输出的&#x0a;文件中的问题可能已经无法修复（如果有问题的话）&#x0a;只有从直播服务器直出的未处理过的数据可以被修复"/>
                             <StackPanel Grid.Row="3" HorizontalAlignment="Center" Margin="10">
                                 <TextBlock Margin="0,0,0,5">
                                     <TextBlock.Text>

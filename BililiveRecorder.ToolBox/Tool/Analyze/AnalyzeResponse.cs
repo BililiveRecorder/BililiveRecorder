@@ -9,6 +9,7 @@ namespace BililiveRecorder.ToolBox.Tool.Analyze
 
         public bool NeedFix { get; set; }
         public bool Unrepairable { get; set; }
+        public bool FfmpegDetected { get; set; }
 
         public int OutputFileCount { get; set; }
 
@@ -38,6 +39,18 @@ namespace BililiveRecorder.ToolBox.Tool.Analyze
                     Header = new PanelHeader("Important Note"),
                     Border = BoxBorder.Rounded,
                     BorderStyle = new Style(foreground: Color.Red)
+                });
+            }
+
+            if (this.FfmpegDetected)
+            {
+                AnsiConsole.Write(new Panel("This file seems like it was written by FFmpeg.\n" +
+                    "It might no longer possible to fix this file, if there's any problem.\n" +
+                    "Only unprocessed data taken directly from the stream server could be fixed.")
+                {
+                    Header = new PanelHeader("[bold yellow]FFmpeg Detected[/]"),
+                    Border = BoxBorder.Rounded,
+                    BorderStyle = new Style(foreground: Color.Yellow)
                 });
             }
 

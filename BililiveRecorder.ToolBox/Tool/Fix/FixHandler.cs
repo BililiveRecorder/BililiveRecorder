@@ -112,7 +112,8 @@ namespace BililiveRecorder.ToolBox.Tool.Fix
                 using var grouping = new TagGroupReader(tagReader);
                 using var writer = new FlvProcessingContextWriter(tagWriter: tagWriter, allowMissingHeader: true, disableKeyframes: false, logger: logger);
                 var statsRule = new StatsRule();
-                var pipeline = new ProcessingPipelineBuilder(new ServiceCollection().BuildServiceProvider()).Add(statsRule).AddDefault().AddRemoveFillerData().Build();
+                var ffmpegDetectionRule = new FfmpegDetectionRule();
+                var pipeline = new ProcessingPipelineBuilder(new ServiceCollection().BuildServiceProvider()).Add(statsRule).Add(ffmpegDetectionRule).AddDefault().AddRemoveFillerData().Build();
 
                 // Run
                 await Task.Run(async () =>
@@ -200,6 +201,7 @@ namespace BililiveRecorder.ToolBox.Tool.Fix
 
                         NeedFix = outputPaths.Count != 1 || countableComments.Any(),
                         Unrepairable = countableComments.Any(x => x.Type == CommentType.Unrepairable),
+                        FfmpegDetected = ffmpegDetectionRule.LavfEncoderDetected && ffmpegDetectionRule.EndTagDetected,
 
                         VideoStats = videoStats,
                         AudioStats = audioStats,
