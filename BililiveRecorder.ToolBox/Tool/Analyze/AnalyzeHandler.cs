@@ -137,7 +137,7 @@ namespace BililiveRecorder.ToolBox.Tool.Analyze
                 {
                     var (videoStats, audioStats) = statsRule.GetStats();
 
-                    var countableComments = comments.Where(x => x.Type != CommentType.Logging).ToArray();
+                    var countableComments = comments.Where(x => x.ActionRequired).ToArray();
                     return new AnalyzeResponse
                     {
                         InputPath = inputPath,
