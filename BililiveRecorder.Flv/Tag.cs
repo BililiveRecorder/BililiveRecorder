@@ -174,7 +174,16 @@ namespace BililiveRecorder.Flv
                 {
                     foreach (var nalu in this.Nalus)
                     {
-                        nalu.NaluHash = BinaryConvertUtilities.ByteArrayToHexString(farmHash64.ComputeHash(buffer, nalu.StartPosition, (int)nalu.FullSize));
+                        var bytesLeft = buffer.Length - nalu.StartPosition;
+
+                        if (bytesLeft >= nalu.FullSize)
+                        {
+                            nalu.NaluHash = BinaryConvertUtilities.ByteArrayToHexString(farmHash64.ComputeHash(buffer, nalu.StartPosition, (int)nalu.FullSize));
+                        }
+                        else
+                        {
+                            nalu.NaluHash = BinaryConvertUtilities.ByteArrayToHexString(farmHash64.ComputeHash(buffer, nalu.StartPosition, Math.Min(buffer.Length - nalu.StartPosition, (int)nalu.FullSize))) + "-PARTIAL";
+                        }
                     }
                 }
             }
