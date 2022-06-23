@@ -5,4 +5,5 @@ WORKDIR /app
 VOLUME [ "/rec" ]
 COPY ./BililiveRecorder.Cli/bin/docker_out /app
 ENTRYPOINT [ "dotnet", "/app/BililiveRecorder.Cli.dll" ]
+EXPOSE 2356/tcp
 CMD [ "run", "--bind", "http://*:2356", "/rec" ]

@@ -9,4 +9,5 @@ WORKDIR /app
 VOLUME [ "/rec" ]
 COPY --from=0 /output /app
 ENTRYPOINT [ "/app/BililiveRecorder.Cli" ]
+EXPOSE 2356/tcp
 CMD [ "run", "--bind", "http://*:2356", "/rec" ]
