@@ -18,7 +18,7 @@ namespace BililiveRecorder.Flv.Pipeline.Rules
             if (!this.LavfEncoderDetected && context.Actions.Any(action =>
             {
                 if (action is PipelineScriptAction scriptAction
-                    && (scriptAction?.Tag?.ScriptData?.GetMetadataValue()?.Value?.TryGetValue("encoder", out var encoderValue) ?? false)
+                    && (scriptAction?.Tag?.ScriptData?.GetMetadataValue()?.TryGetValue("encoder", out var encoderValue) ?? false)
                     && encoderValue is ScriptDataString encoder)
                     return encoder.Value.StartsWith("Lavf", StringComparison.Ordinal);
                 return false;
