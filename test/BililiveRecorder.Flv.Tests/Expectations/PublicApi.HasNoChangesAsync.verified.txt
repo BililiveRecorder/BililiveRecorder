@@ -762,6 +762,13 @@ namespace BililiveRecorder.Flv.Pipeline
 }
 namespace BililiveRecorder.Flv.Pipeline.Rules
 {
+    public class FfmpegDetectionRule : BililiveRecorder.Flv.Pipeline.IProcessingRule, BililiveRecorder.Flv.Pipeline.ISimpleProcessingRule
+    {
+        public FfmpegDetectionRule() { }
+        public bool EndTagDetected { get; }
+        public bool LavfEncoderDetected { get; }
+        public void Run(BililiveRecorder.Flv.Pipeline.FlvProcessingContext context, System.Action next) { }
+    }
     public class HandleDelayedAudioHeaderRule : BililiveRecorder.Flv.Pipeline.IProcessingRule, BililiveRecorder.Flv.Pipeline.ISimpleProcessingRule
     {
         public HandleDelayedAudioHeaderRule() { }
