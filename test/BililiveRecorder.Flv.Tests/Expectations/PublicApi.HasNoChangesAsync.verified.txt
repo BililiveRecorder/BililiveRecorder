@@ -725,18 +725,19 @@ namespace BililiveRecorder.Flv.Pipeline
     }
     public interface IProcessingPipelineBuilder
     {
-        System.IServiceProvider ServiceProvider { get; }
-        BililiveRecorder.Flv.Pipeline.IProcessingPipelineBuilder Add(System.Func<BililiveRecorder.Flv.Pipeline.ProcessingDelegate, BililiveRecorder.Flv.Pipeline.ProcessingDelegate> rule);
+        Microsoft.Extensions.DependencyInjection.IServiceCollection ServiceCollection { get; }
+        BililiveRecorder.Flv.Pipeline.IProcessingPipelineBuilder AddRule(System.Func<BililiveRecorder.Flv.Pipeline.ProcessingDelegate, System.IServiceProvider, BililiveRecorder.Flv.Pipeline.ProcessingDelegate> rule);
         BililiveRecorder.Flv.Pipeline.ProcessingDelegate Build();
     }
     public static class IProcessingPipelineBuilderExtensions
     {
-        public static BililiveRecorder.Flv.Pipeline.IProcessingPipelineBuilder Add<T>(this BililiveRecorder.Flv.Pipeline.IProcessingPipelineBuilder builder)
+        public static BililiveRecorder.Flv.Pipeline.IProcessingPipelineBuilder AddDefaultRules(this BililiveRecorder.Flv.Pipeline.IProcessingPipelineBuilder builder) { }
+        public static BililiveRecorder.Flv.Pipeline.IProcessingPipelineBuilder AddRemoveFillerDataRule(this BililiveRecorder.Flv.Pipeline.IProcessingPipelineBuilder builder) { }
+        public static BililiveRecorder.Flv.Pipeline.IProcessingPipelineBuilder AddRule<T>(this BililiveRecorder.Flv.Pipeline.IProcessingPipelineBuilder builder)
             where T : BililiveRecorder.Flv.Pipeline.IProcessingRule { }
-        public static BililiveRecorder.Flv.Pipeline.IProcessingPipelineBuilder Add<T>(this BililiveRecorder.Flv.Pipeline.IProcessingPipelineBuilder builder, T instance)
+        public static BililiveRecorder.Flv.Pipeline.IProcessingPipelineBuilder AddRule<T>(this BililiveRecorder.Flv.Pipeline.IProcessingPipelineBuilder builder, T instance)
             where T : BililiveRecorder.Flv.Pipeline.IProcessingRule { }
-        public static BililiveRecorder.Flv.Pipeline.IProcessingPipelineBuilder AddDefault(this BililiveRecorder.Flv.Pipeline.IProcessingPipelineBuilder builder) { }
-        public static BililiveRecorder.Flv.Pipeline.IProcessingPipelineBuilder AddRemoveFillerData(this BililiveRecorder.Flv.Pipeline.IProcessingPipelineBuilder builder) { }
+        public static BililiveRecorder.Flv.Pipeline.IProcessingPipelineBuilder ConfigureServices(this BililiveRecorder.Flv.Pipeline.IProcessingPipelineBuilder builder, System.Action<Microsoft.Extensions.DependencyInjection.IServiceCollection> configure) { }
     }
     public interface IProcessingRule { }
     public interface ISimpleProcessingRule : BililiveRecorder.Flv.Pipeline.IProcessingRule
@@ -754,10 +755,16 @@ namespace BililiveRecorder.Flv.Pipeline
     public delegate void ProcessingDelegate(BililiveRecorder.Flv.Pipeline.FlvProcessingContext context);
     public class ProcessingPipelineBuilder : BililiveRecorder.Flv.Pipeline.IProcessingPipelineBuilder
     {
-        public ProcessingPipelineBuilder(System.IServiceProvider serviceProvider) { }
-        public System.IServiceProvider ServiceProvider { get; }
-        public BililiveRecorder.Flv.Pipeline.IProcessingPipelineBuilder Add(System.Func<BililiveRecorder.Flv.Pipeline.ProcessingDelegate, BililiveRecorder.Flv.Pipeline.ProcessingDelegate> rule) { }
+        public ProcessingPipelineBuilder() { }
+        public ProcessingPipelineBuilder(Microsoft.Extensions.DependencyInjection.IServiceCollection servicesCollection) { }
+        public Microsoft.Extensions.DependencyInjection.IServiceCollection ServiceCollection { get; }
+        public BililiveRecorder.Flv.Pipeline.IProcessingPipelineBuilder AddRule(System.Func<BililiveRecorder.Flv.Pipeline.ProcessingDelegate, System.IServiceProvider, BililiveRecorder.Flv.Pipeline.ProcessingDelegate> rule) { }
         public BililiveRecorder.Flv.Pipeline.ProcessingDelegate Build() { }
+    }
+    public class ProcessingPipelineSettings
+    {
+        public ProcessingPipelineSettings() { }
+        public bool SplitOnScriptTag { get; set; }
     }
 }
 namespace BililiveRecorder.Flv.Pipeline.Rules
@@ -786,7 +793,7 @@ namespace BililiveRecorder.Flv.Pipeline.Rules
     }
     public class HandleNewScriptRule : BililiveRecorder.Flv.Pipeline.IProcessingRule, BililiveRecorder.Flv.Pipeline.ISimpleProcessingRule
     {
-        public HandleNewScriptRule() { }
+        public HandleNewScriptRule(BililiveRecorder.Flv.Pipeline.ProcessingPipelineSettings? processingPipelineSettings) { }
         public void Run(BililiveRecorder.Flv.Pipeline.FlvProcessingContext context, System.Action next) { }
     }
     public class RemoveDuplicatedChunkRule : BililiveRecorder.Flv.Pipeline.IProcessingRule, BililiveRecorder.Flv.Pipeline.ISimpleProcessingRule

@@ -102,6 +102,14 @@ namespace BililiveRecorder.Core.Config.V3
         public Optional<string?> OptionalRecordingQuality { get => this.GetPropertyValueOptional<string>(nameof(this.RecordingQuality)); set => this.SetPropertyValueOptional(value, nameof(this.RecordingQuality)); }
 
         /// <summary>
+        /// FLV修复-检测到可能缺少数据时分段
+        /// </summary>
+        public bool FlvProcessorSplitOnScriptTag { get => this.GetPropertyValue<bool>(); set => this.SetPropertyValue(value); }
+        public bool HasFlvProcessorSplitOnScriptTag { get => this.GetPropertyHasValue(nameof(this.FlvProcessorSplitOnScriptTag)); set => this.SetPropertyHasValue<bool>(value, nameof(this.FlvProcessorSplitOnScriptTag)); }
+        [JsonProperty(nameof(FlvProcessorSplitOnScriptTag)), EditorBrowsable(EditorBrowsableState.Never)]
+        public Optional<bool> OptionalFlvProcessorSplitOnScriptTag { get => this.GetPropertyValueOptional<bool>(nameof(this.FlvProcessorSplitOnScriptTag)); set => this.SetPropertyValueOptional(value, nameof(this.FlvProcessorSplitOnScriptTag)); }
+
+        /// <summary>
         /// 录制文件名模板
         /// </summary>
         public string? FileNameRecordTemplate => this.GetPropertyValue<string>();
@@ -267,6 +275,14 @@ namespace BililiveRecorder.Core.Config.V3
         public Optional<string?> OptionalFileNameRecordTemplate { get => this.GetPropertyValueOptional<string>(nameof(this.FileNameRecordTemplate)); set => this.SetPropertyValueOptional(value, nameof(this.FileNameRecordTemplate)); }
 
         /// <summary>
+        /// FLV修复-检测到可能缺少数据时分段
+        /// </summary>
+        public bool FlvProcessorSplitOnScriptTag { get => this.GetPropertyValue<bool>(); set => this.SetPropertyValue(value); }
+        public bool HasFlvProcessorSplitOnScriptTag { get => this.GetPropertyHasValue(nameof(this.FlvProcessorSplitOnScriptTag)); set => this.SetPropertyHasValue<bool>(value, nameof(this.FlvProcessorSplitOnScriptTag)); }
+        [JsonProperty(nameof(FlvProcessorSplitOnScriptTag)), EditorBrowsable(EditorBrowsableState.Never)]
+        public Optional<bool> OptionalFlvProcessorSplitOnScriptTag { get => this.GetPropertyValueOptional<bool>(nameof(this.FlvProcessorSplitOnScriptTag)); set => this.SetPropertyValueOptional(value, nameof(this.FlvProcessorSplitOnScriptTag)); }
+
+        /// <summary>
         /// WebhookV1
         /// </summary>
         public string? WebHookUrls { get => this.GetPropertyValue<string>(); set => this.SetPropertyValue(value); }
@@ -412,6 +428,8 @@ namespace BililiveRecorder.Core.Config.V3
         public string RecordingQuality => @"10000";
 
         public string FileNameRecordTemplate => @"{{ roomId }}-{{ name }}/录制-{{ roomId }}-{{ ""now"" | time_zone: ""Asia/Shanghai"" | format_date: ""yyyyMMdd-HHmmss-fff"" }}-{{ title }}.flv";
+
+        public bool FlvProcessorSplitOnScriptTag => false;
 
         public string WebHookUrls => @"";
 

@@ -52,6 +52,21 @@
                         <TextBlock Text="{l:Loc Toolbox_AutoFix_ButtonAnalyze}"/>
                     </StackPanel>
                 </Button>
+                <Button VerticalAlignment="Bottom" DockPanel.Dock="Right" Margin="0,0,5,0">
+                    <StackPanel Orientation="Horizontal">
+                        <ui:PathIcon Height="14" Margin="0,0,5,0" Style="{StaticResource PathIconDataCogOutline}"/>
+                        <TextBlock Text="设置"/>
+                    </StackPanel>
+                    <ui:FlyoutService.Flyout>
+                        <ui:Flyout Placement="Bottom">
+                            <Grid DataContext="{x:Null}" x:Name="SettingsArea">
+                                <StackPanel Margin="10" Orientation="Vertical">
+                                    <CheckBox Content="检测到可能缺少数据时分段" IsChecked="{Binding SplitOnScriptTag}"/>
+                                </StackPanel>
+                            </Grid>
+                        </ui:Flyout>
+                    </ui:FlyoutService.Flyout>
+                </Button>
                 <Button VerticalAlignment="Bottom" DockPanel.Dock="Right" Margin="0,0,5,0" Content="{l:Loc Toolbox_AutoFix_ButtonSelectInput}" Click="SelectFile_Button_Click"/>
                 <TextBox ui:ControlHelper.PlaceholderText="{l:Loc Toolbox_AutoFix_InputPathPlaceholder}" ui:TextBoxHelper.IsDeleteButtonVisible="False" x:Name="FileNameTextBox" />
             </DockPanel>

@@ -1,7 +1,10 @@
 using System;
 using System.CommandLine;
 using System.CommandLine.NamingConventionBinder;
+using System.CommandLine.Parsing;
+using System.Linq;
 using System.Threading.Tasks;
+using BililiveRecorder.Flv.Pipeline;
 using BililiveRecorder.ToolBox.Tool.Analyze;
 using BililiveRecorder.ToolBox.Tool.DanmakuMerger;
 using BililiveRecorder.ToolBox.Tool.DanmakuStartTime;
@@ -19,12 +22,14 @@ namespace BililiveRecorder.ToolBox
             this.RegisterCommand<AnalyzeHandler, AnalyzeRequest, AnalyzeResponse>("analyze", null, c =>
             {
                 c.Add(new Argument<string>("input", "example: input.flv"));
+                c.Add(new Option<ProcessingPipelineSettings?>(name: "pipeline-settings", parseArgument: this.ParseProcessingPipelineSettings));
             });
 
             this.RegisterCommand<FixHandler, FixRequest, FixResponse>("fix", null, c =>
             {
                 c.Add(new Argument<string>("input", "example: input.flv"));
                 c.Add(new Argument<string>("output-base", "example: output.flv"));
+                c.Add(new Option<ProcessingPipelineSettings?>(name: "pipeline-settings", parseArgument: this.ParseProcessingPipelineSettings));
             });
 
             this.RegisterCommand<ExportHandler, ExportRequest, ExportResponse>("export", null, c =>
@@ -44,6 +49,21 @@ namespace BililiveRecorder.ToolBox
                 c.Add(new Argument<string[]>("inputs", "example: 1.xml 2.xml ..."));
                 c.Add(new Option<int[]?>("--offsets", "Use offsets provided instead of calculating from starttime attribute."));
             });
+        }
+
+        private ProcessingPipelineSettings? ParseProcessingPipelineSettings(ArgumentResult result)
+        {
+            if (result.Tokens.Count == 0) return null;
+
+            try
+            {
+                return JsonConvert.DeserializeObject<ProcessingPipelineSettings>(result.Tokens.Single().Value);
+            }
+            catch (Exception)
+            {
+                result.ErrorMessage = "Pipeline settings must be a valid json string";
+                return null;
+            }
         }
 
         private void RegisterCommand<THandler, TRequest, TResponse>(string name, string? description, Action<Command> configure)

@@ -1,27 +1,36 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace BililiveRecorder.Flv.Pipeline
 {
     public class ProcessingPipelineBuilder : IProcessingPipelineBuilder
     {
-        public IServiceProvider ServiceProvider { get; }
+        public IServiceCollection ServiceCollection { get; }
 
-        private readonly List<Func<ProcessingDelegate, ProcessingDelegate>> rules = new List<Func<ProcessingDelegate, ProcessingDelegate>>();
+        private readonly List<Func<ProcessingDelegate, IServiceProvider, ProcessingDelegate>> rules = new();
 
-        public ProcessingPipelineBuilder(IServiceProvider serviceProvider)
+        public ProcessingPipelineBuilder() : this(new ServiceCollection())
+        { }
+
+        public ProcessingPipelineBuilder(IServiceCollection servicesCollection)
         {
-            this.ServiceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
+            this.ServiceCollection = servicesCollection;
         }
 
-        public IProcessingPipelineBuilder Add(Func<ProcessingDelegate, ProcessingDelegate> rule)
+        public IProcessingPipelineBuilder AddRule(Func<ProcessingDelegate, IServiceProvider, ProcessingDelegate> rule)
         {
             this.rules.Add(rule);
             return this;
         }
 
         public ProcessingDelegate Build()
-            => this.rules.AsEnumerable().Reverse().Aggregate((ProcessingDelegate)(_ => { }), (i, o) => o(i));
+        {
+            this.ServiceCollection.TryAddSingleton(_ => new ProcessingPipelineSettings());
+            var provider = this.ServiceCollection.BuildServiceProvider();
+            return this.rules.AsEnumerable().Reverse().Aggregate((ProcessingDelegate)(_ => { }), (i, o) => o(i, provider));
+        }
     }
 }

@@ -15,6 +15,7 @@ using BililiveRecorder.Flv;
 using BililiveRecorder.Flv.Amf;
 using BililiveRecorder.Flv.Pipeline;
 using BililiveRecorder.Flv.Pipeline.Actions;
+using Microsoft.Extensions.DependencyInjection;
 using Serilog;
 
 namespace BililiveRecorder.Core.Recording
@@ -63,10 +64,14 @@ namespace BililiveRecorder.Core.Recording
             this.statsRule.StatsUpdated += this.StatsRule_StatsUpdated;
 
             this.pipeline = builder
-                .Add(this.statsRule)
-                .Add(this.splitFileRule)
-                .AddDefault()
-                .AddRemoveFillerData()
+                .ConfigureServices(services => services.AddSingleton(new ProcessingPipelineSettings
+                {
+                    SplitOnScriptTag = room.RoomConfig.FlvProcessorSplitOnScriptTag
+                }))
+                .AddRule(this.statsRule)
+                .AddRule(this.splitFileRule)
+                .AddDefaultRules()
+                .AddRemoveFillerDataRule()
                 .Build();
 
             this.targetProvider = new WriterTargetProvider(this, paths =>

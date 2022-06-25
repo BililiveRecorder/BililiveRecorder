@@ -440,6 +440,22 @@
               "default": "10000"
             }
           }
+        },
+        "FlvProcessorSplitOnScriptTag": {
+          "description": "FLV修复-检测到可能缺少数据时分段\n默认: false",
+          "markdownDescription": "FLV修复-检测到可能缺少数据时分段  \n默认: `false `\n\n",
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "HasValue": {
+              "type": "boolean",
+              "default": true
+            },
+            "Value": {
+              "type": "boolean",
+              "default": false
+            }
+          }
         }
       }
     },
@@ -635,6 +651,22 @@
             "Value": {
               "type": "string",
               "default": "10000"
+            }
+          }
+        },
+        "FlvProcessorSplitOnScriptTag": {
+          "description": "FLV修复-检测到可能缺少数据时分段\n默认: false",
+          "markdownDescription": "FLV修复-检测到可能缺少数据时分段  \n默认: `false `\n\n",
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "HasValue": {
+              "type": "boolean",
+              "default": true
+            },
+            "Value": {
+              "type": "boolean",
+              "default": false
             }
           }
         }

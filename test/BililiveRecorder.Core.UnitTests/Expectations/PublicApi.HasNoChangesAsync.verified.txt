@@ -68,6 +68,7 @@ namespace BililiveRecorder.Core.Config.V3
         public BililiveRecorder.Core.Config.CuttingMode CuttingMode { get; }
         public uint CuttingNumber { get; }
         public string FileNameRecordTemplate { get; }
+        public bool FlvProcessorSplitOnScriptTag { get; }
         public string LiveApiHost { get; }
         public BililiveRecorder.Core.Config.AllowedAddressFamily NetworkTransportAllowedAddressFamily { get; }
         public bool NetworkTransportUseSystemProxy { get; }
@@ -98,10 +99,12 @@ namespace BililiveRecorder.Core.Config.V3
         public BililiveRecorder.Core.Config.CuttingMode CuttingMode { get; set; }
         public uint CuttingNumber { get; set; }
         public string? FileNameRecordTemplate { get; set; }
+        public bool FlvProcessorSplitOnScriptTag { get; set; }
         public bool HasCookie { get; set; }
         public bool HasCuttingMode { get; set; }
         public bool HasCuttingNumber { get; set; }
         public bool HasFileNameRecordTemplate { get; set; }
+        public bool HasFlvProcessorSplitOnScriptTag { get; set; }
         public bool HasLiveApiHost { get; set; }
         public bool HasNetworkTransportAllowedAddressFamily { get; set; }
         public bool HasNetworkTransportUseSystemProxy { get; set; }
@@ -134,6 +137,8 @@ namespace BililiveRecorder.Core.Config.V3
         public HierarchicalPropertyDefault.Optional<uint> OptionalCuttingNumber { get; set; }
         [Newtonsoft.Json.JsonProperty("FileNameRecordTemplate")]
         public HierarchicalPropertyDefault.Optional<string?> OptionalFileNameRecordTemplate { get; set; }
+        [Newtonsoft.Json.JsonProperty("FlvProcessorSplitOnScriptTag")]
+        public HierarchicalPropertyDefault.Optional<bool> OptionalFlvProcessorSplitOnScriptTag { get; set; }
         [Newtonsoft.Json.JsonProperty("LiveApiHost")]
         public HierarchicalPropertyDefault.Optional<string?> OptionalLiveApiHost { get; set; }
         [Newtonsoft.Json.JsonProperty("NetworkTransportAllowedAddressFamily")]
@@ -205,9 +210,11 @@ namespace BililiveRecorder.Core.Config.V3
         public BililiveRecorder.Core.Config.CuttingMode CuttingMode { get; set; }
         public uint CuttingNumber { get; set; }
         public string? FileNameRecordTemplate { get; }
+        public bool FlvProcessorSplitOnScriptTag { get; set; }
         public bool HasAutoRecord { get; set; }
         public bool HasCuttingMode { get; set; }
         public bool HasCuttingNumber { get; set; }
+        public bool HasFlvProcessorSplitOnScriptTag { get; set; }
         public bool HasRecordDanmaku { get; set; }
         public bool HasRecordDanmakuGift { get; set; }
         public bool HasRecordDanmakuGuard { get; set; }
@@ -225,6 +232,8 @@ namespace BililiveRecorder.Core.Config.V3
         public HierarchicalPropertyDefault.Optional<BililiveRecorder.Core.Config.CuttingMode> OptionalCuttingMode { get; set; }
         [Newtonsoft.Json.JsonProperty("CuttingNumber")]
         public HierarchicalPropertyDefault.Optional<uint> OptionalCuttingNumber { get; set; }
+        [Newtonsoft.Json.JsonProperty("FlvProcessorSplitOnScriptTag")]
+        public HierarchicalPropertyDefault.Optional<bool> OptionalFlvProcessorSplitOnScriptTag { get; set; }
         [Newtonsoft.Json.JsonProperty("RecordDanmaku")]
         public HierarchicalPropertyDefault.Optional<bool> OptionalRecordDanmaku { get; set; }
         [Newtonsoft.Json.JsonProperty("RecordDanmakuGift")]

@@ -1,12 +1,13 @@
 using System;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace BililiveRecorder.Flv.Pipeline
 {
     public interface IProcessingPipelineBuilder
     {
-        IServiceProvider ServiceProvider { get; }
+        IServiceCollection ServiceCollection { get; }
 
-        IProcessingPipelineBuilder Add(Func<ProcessingDelegate, ProcessingDelegate> rule);
+        IProcessingPipelineBuilder AddRule(Func<ProcessingDelegate, IServiceProvider, ProcessingDelegate> rule);
 
         ProcessingDelegate Build();
     }

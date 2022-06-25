@@ -6,7 +6,6 @@ using BililiveRecorder.Flv.Pipeline;
 using BililiveRecorder.Flv.Pipeline.Rules;
 using BililiveRecorder.Flv.Writer;
 using BililiveRecorder.Flv.Xml;
-using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 
 namespace BililiveRecorder.Flv.Tests.RuleTests
@@ -18,7 +17,7 @@ namespace BililiveRecorder.Flv.Tests.RuleTests
             var writer = new FlvProcessingContextWriter(tagWriter: output, allowMissingHeader: true, disableKeyframes: true, logger: null);
             var session = new Dictionary<object, object?>();
             var context = new FlvProcessingContext();
-            var pipeline = new ProcessingPipelineBuilder(new ServiceCollection().BuildServiceProvider()).Add<FfmpegDetectionRule>().AddDefault().AddRemoveFillerData().Build();
+            var pipeline = new ProcessingPipelineBuilder().AddRule<FfmpegDetectionRule>().AddDefaultRules().AddRemoveFillerDataRule().Build();
 
             while (true)
             {

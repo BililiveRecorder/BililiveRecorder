@@ -14,6 +14,13 @@ namespace BililiveRecorder.Flv.Pipeline.Rules
         private const string onMetaData = "onMetaData";
         private static readonly ProcessingComment comment_onmetadata = new ProcessingComment(CommentType.OnMetaData, false, "收到了 onMetaData");
 
+        private readonly bool splitOnScriptTag;
+
+        public HandleNewScriptRule(ProcessingPipelineSettings? processingPipelineSettings)
+        {
+            this.splitOnScriptTag = processingPipelineSettings?.SplitOnScriptTag ?? false;
+        }
+
         public void Run(FlvProcessingContext context, Action next)
         {
             context.PerActionRun(this.RunPerAction);
@@ -93,11 +100,20 @@ namespace BililiveRecorder.Flv.Pipeline.Rules
             }
             else
             {
-                // 记录信息，不对文件进行分段。
                 var message = $"收到直播服务器发送的 onMetaData 数据，请检查此位置是否有重复的直播片段或缺少数据。\n造成这个问题的原因可能是录播姬所连接的直播服务器与它的上级服务器的连接断开重连了。\n数据内容: {data?.ToJson() ?? "(null)"}";
                 context.AddComment(new ProcessingComment(CommentType.OnMetaData, false, message));
 
-                yield return new PipelineLogMessageWithLocationAction(message);
+                if (this.splitOnScriptTag)
+                {
+                    // 对文件进行分段
+                    yield return PipelineNewFileAction.Instance;
+                }
+                else
+                {
+                    // 记录信息，不对文件进行分段。
+                    yield return new PipelineLogMessageWithLocationAction(message);
+                }
+
                 yield return (new PipelineScriptAction(new Tag
                 {
                     Type = TagType.Script,
@@ -107,6 +123,7 @@ namespace BililiveRecorder.Flv.Pipeline.Rules
                         value
                     })
                 }));
+
                 yield break;
             }
         notOnMetaData:

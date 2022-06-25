@@ -24,6 +24,7 @@ namespace BililiveRecorder.Cli.Configure
         RecordDanmakuGuard,
         RecordingQuality,
         FileNameRecordTemplate,
+        FlvProcessorSplitOnScriptTag,
         WebHookUrls,
         WebHookUrlsV2,
         WpfShowTitleAndArea,
@@ -54,7 +55,8 @@ namespace BililiveRecorder.Cli.Configure
         RecordDanmakuSuperChat,
         RecordDanmakuGift,
         RecordDanmakuGuard,
-        RecordingQuality
+        RecordingQuality,
+        FlvProcessorSplitOnScriptTag
     }
     public static class ConfigInstructions
     {
@@ -73,6 +75,7 @@ namespace BililiveRecorder.Cli.Configure
             GlobalConfig.Add(GlobalConfigProperties.RecordDanmakuGuard, new ConfigInstruction<GlobalConfig, bool>(config => config.HasRecordDanmakuGuard = false, (config, value) => config.RecordDanmakuGuard = value) { Name = "RecordDanmakuGuard", CanBeOptional = true });
             GlobalConfig.Add(GlobalConfigProperties.RecordingQuality, new ConfigInstruction<GlobalConfig, string>(config => config.HasRecordingQuality = false, (config, value) => config.RecordingQuality = value) { Name = "RecordingQuality", CanBeOptional = true });
             GlobalConfig.Add(GlobalConfigProperties.FileNameRecordTemplate, new ConfigInstruction<GlobalConfig, string>(config => config.HasFileNameRecordTemplate = false, (config, value) => config.FileNameRecordTemplate = value) { Name = "FileNameRecordTemplate", CanBeOptional = true });
+            GlobalConfig.Add(GlobalConfigProperties.FlvProcessorSplitOnScriptTag, new ConfigInstruction<GlobalConfig, bool>(config => config.HasFlvProcessorSplitOnScriptTag = false, (config, value) => config.FlvProcessorSplitOnScriptTag = value) { Name = "FlvProcessorSplitOnScriptTag", CanBeOptional = true });
             GlobalConfig.Add(GlobalConfigProperties.WebHookUrls, new ConfigInstruction<GlobalConfig, string>(config => config.HasWebHookUrls = false, (config, value) => config.WebHookUrls = value) { Name = "WebHookUrls", CanBeOptional = true });
             GlobalConfig.Add(GlobalConfigProperties.WebHookUrlsV2, new ConfigInstruction<GlobalConfig, string>(config => config.HasWebHookUrlsV2 = false, (config, value) => config.WebHookUrlsV2 = value) { Name = "WebHookUrlsV2", CanBeOptional = true });
             GlobalConfig.Add(GlobalConfigProperties.WpfShowTitleAndArea, new ConfigInstruction<GlobalConfig, bool>(config => config.HasWpfShowTitleAndArea = false, (config, value) => config.WpfShowTitleAndArea = value) { Name = "WpfShowTitleAndArea", CanBeOptional = true });
@@ -100,6 +103,7 @@ namespace BililiveRecorder.Cli.Configure
             RoomConfig.Add(RoomConfigProperties.RecordDanmakuGift, new ConfigInstruction<RoomConfig, bool>(config => config.HasRecordDanmakuGift = false, (config, value) => config.RecordDanmakuGift = value) { Name = "RecordDanmakuGift", CanBeOptional = true });
             RoomConfig.Add(RoomConfigProperties.RecordDanmakuGuard, new ConfigInstruction<RoomConfig, bool>(config => config.HasRecordDanmakuGuard = false, (config, value) => config.RecordDanmakuGuard = value) { Name = "RecordDanmakuGuard", CanBeOptional = true });
             RoomConfig.Add(RoomConfigProperties.RecordingQuality, new ConfigInstruction<RoomConfig, string>(config => config.HasRecordingQuality = false, (config, value) => config.RecordingQuality = value) { Name = "RecordingQuality", CanBeOptional = true });
+            RoomConfig.Add(RoomConfigProperties.FlvProcessorSplitOnScriptTag, new ConfigInstruction<RoomConfig, bool>(config => config.HasFlvProcessorSplitOnScriptTag = false, (config, value) => config.FlvProcessorSplitOnScriptTag = value) { Name = "FlvProcessorSplitOnScriptTag", CanBeOptional = true });
         }
     }
 

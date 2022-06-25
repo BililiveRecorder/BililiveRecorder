@@ -6,34 +6,40 @@ namespace BililiveRecorder.Flv.Pipeline
 {
     public static class IProcessingPipelineBuilderExtensions
     {
-        public static IProcessingPipelineBuilder Add<T>(this IProcessingPipelineBuilder builder) where T : IProcessingRule =>
-            builder.Add(next => (ActivatorUtilities.GetServiceOrCreateInstance<T>(builder.ServiceProvider)) switch
+        public static IProcessingPipelineBuilder ConfigureServices(this IProcessingPipelineBuilder builder, Action<IServiceCollection> configure)
+        {
+            configure?.Invoke(builder.ServiceCollection);
+            return builder;
+        }
+
+        public static IProcessingPipelineBuilder AddRule<T>(this IProcessingPipelineBuilder builder) where T : IProcessingRule =>
+            builder.AddRule((next, services) => ActivatorUtilities.GetServiceOrCreateInstance<T>(services) switch
             {
                 ISimpleProcessingRule simple => context => simple.Run(context, () => next(context)),
                 IFullProcessingRule full => context => full.Run(context, next),
                 _ => throw new ArgumentException($"Type ({typeof(T).FullName}) does not ISimpleProcessingRule or IFullProcessingRule")
             });
 
-        public static IProcessingPipelineBuilder Add<T>(this IProcessingPipelineBuilder builder, T instance) where T : IProcessingRule =>
+        public static IProcessingPipelineBuilder AddRule<T>(this IProcessingPipelineBuilder builder, T instance) where T : IProcessingRule =>
             instance switch
             {
-                ISimpleProcessingRule simple => builder.Add(next => context => simple.Run(context, () => next(context))),
-                IFullProcessingRule full => builder.Add(next => context => full.Run(context, next)),
+                ISimpleProcessingRule simple => builder.AddRule((next, services) => context => simple.Run(context, () => next(context))),
+                IFullProcessingRule full => builder.AddRule((next, services) => context => full.Run(context, next)),
                 _ => throw new ArgumentException($"Type ({typeof(T).FullName}) does not ISimpleProcessingRule or IFullProcessingRule")
             };
 
-        public static IProcessingPipelineBuilder AddDefault(this IProcessingPipelineBuilder builder) =>
+        public static IProcessingPipelineBuilder AddDefaultRules(this IProcessingPipelineBuilder builder) =>
             builder
-            .Add<HandleEndTagRule>()
-            .Add<HandleDelayedAudioHeaderRule>()
-            .Add<UpdateTimestampOffsetRule>()
-            .Add<UpdateTimestampJumpRule>()
-            .Add<HandleNewScriptRule>()
-            .Add<HandleNewHeaderRule>()
-            .Add<RemoveDuplicatedChunkRule>()
+            .AddRule<HandleEndTagRule>()
+            .AddRule<HandleDelayedAudioHeaderRule>()
+            .AddRule<UpdateTimestampOffsetRule>()
+            .AddRule<UpdateTimestampJumpRule>()
+            .AddRule<HandleNewScriptRule>()
+            .AddRule<HandleNewHeaderRule>()
+            .AddRule<RemoveDuplicatedChunkRule>()
             ;
 
-        public static IProcessingPipelineBuilder AddRemoveFillerData(this IProcessingPipelineBuilder builder) =>
-            builder.Add<RemoveFillerDataRule>();
+        public static IProcessingPipelineBuilder AddRemoveFillerDataRule(this IProcessingPipelineBuilder builder) =>
+            builder.AddRule<RemoveFillerDataRule>();
     }
 }

@@ -114,7 +114,13 @@ namespace BililiveRecorder.ToolBox.Tool.Fix
                 using var writer = new FlvProcessingContextWriter(tagWriter: tagWriter, allowMissingHeader: true, disableKeyframes: false, logger: logger);
                 var statsRule = new StatsRule();
                 var ffmpegDetectionRule = new FfmpegDetectionRule();
-                var pipeline = new ProcessingPipelineBuilder(new ServiceCollection().BuildServiceProvider()).Add(statsRule).Add(ffmpegDetectionRule).AddDefault().AddRemoveFillerData().Build();
+                var pipeline = new ProcessingPipelineBuilder()
+                    .ConfigureServices(services => services.AddSingleton(request.PipelineSettings ?? new ProcessingPipelineSettings()))
+                    .AddRule(statsRule)
+                    .AddRule(ffmpegDetectionRule)
+                    .AddDefaultRules()
+                    .AddRemoveFillerDataRule()
+                    .Build();
 
                 // Run
                 await Task.Run(async () =>

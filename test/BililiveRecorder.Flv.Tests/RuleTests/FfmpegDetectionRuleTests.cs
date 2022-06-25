@@ -4,7 +4,6 @@ using BililiveRecorder.Flv.Amf;
 using BililiveRecorder.Flv.Pipeline;
 using BililiveRecorder.Flv.Pipeline.Actions;
 using BililiveRecorder.Flv.Pipeline.Rules;
-using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 
 namespace BililiveRecorder.Flv.Tests.RuleTests
@@ -16,7 +15,7 @@ namespace BililiveRecorder.Flv.Tests.RuleTests
         public void ShouldDetectEndTag(bool expectEndTag, PipelineAction pipelineAction)
         {
             var rule = new FfmpegDetectionRule();
-            var pipeline = new ProcessingPipelineBuilder(new ServiceCollection().BuildServiceProvider()).Add(rule).Build();
+            var pipeline = new ProcessingPipelineBuilder().AddRule(rule).Build();
 
             var context = new FlvProcessingContext(pipelineAction, new Dictionary<object, object?>());
 
@@ -46,7 +45,7 @@ namespace BililiveRecorder.Flv.Tests.RuleTests
         public void ShouldDetectLvafEncoder(bool expectedValue, string metadataJson)
         {
             var rule = new FfmpegDetectionRule();
-            var pipeline = new ProcessingPipelineBuilder(new ServiceCollection().BuildServiceProvider()).Add(rule).Build();
+            var pipeline = new ProcessingPipelineBuilder().AddRule(rule).Build();
 
             var action = new PipelineScriptAction(new Tag
             {

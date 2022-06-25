@@ -1,5 +1,8 @@
 using System;
+using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
+using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -23,9 +26,13 @@ namespace BililiveRecorder.WPF.Pages
         private static readonly ILogger logger = Log.ForContext<ToolboxAutoFixPage>();
         private readonly SemaphoreSlim semaphoreSlim = new SemaphoreSlim(1, 1);
 
+        private readonly AutoFixSettings settings = new AutoFixSettings();
+
         public ToolboxAutoFixPage()
         {
             this.InitializeComponent();
+
+            this.SettingsArea.DataContext = this.settings;
         }
 
         private void SelectFile_Button_Click(object sender, RoutedEventArgs e)
@@ -104,6 +111,10 @@ namespace BililiveRecorder.WPF.Pages
                 {
                     Input = inputPath,
                     OutputBase = output_path,
+                    PipelineSettings = new Flv.Pipeline.ProcessingPipelineSettings
+                    {
+                        SplitOnScriptTag = this.settings.SplitOnScriptTag
+                    }
                 };
 
                 var handler = new FixHandler();
@@ -179,7 +190,11 @@ namespace BililiveRecorder.WPF.Pages
 
                 var req = new AnalyzeRequest
                 {
-                    Input = inputPath
+                    Input = inputPath,
+                    PipelineSettings = new Flv.Pipeline.ProcessingPipelineSettings
+                    {
+                        SplitOnScriptTag = this.settings.SplitOnScriptTag
+                    }
                 };
 
                 var handler = new AnalyzeHandler();
@@ -330,6 +345,26 @@ namespace BililiveRecorder.WPF.Pages
             }
             catch (Exception)
             { }
+        }
+
+        public sealed class AutoFixSettings : INotifyPropertyChanged
+        {
+            private bool splitOnScriptTag;
+
+            public event PropertyChangedEventHandler? PropertyChanged;
+            private bool SetField<T>(ref T location, T value, [CallerMemberName] string propertyName = "")
+            {
+                if (EqualityComparer<T>.Default.Equals(location, value))
+                    return false;
+                location = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+                return true;
+            }
+
+            /// <summary>
+            /// FLV修复-检测到可能缺少数据时分段
+            /// </summary>
+            public bool SplitOnScriptTag { get => this.splitOnScriptTag; set => this.SetField(ref this.splitOnScriptTag, value); }
         }
     }
 }

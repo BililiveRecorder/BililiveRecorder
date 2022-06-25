@@ -87,6 +87,13 @@ export const data: Array<ConfigEntry> = [
         default: '{{ roomId }}-{{ name }}/录制-{{ roomId }}-{{ "now" | time_zone: "Asia/Shanghai" | format_date: "yyyyMMdd-HHmmss-fff" }}-{{ title }}.flv',
     },
     {
+        id: "FlvProcessorSplitOnScriptTag",
+        name: "FLV修复-检测到可能缺少数据时分段",
+        type: "bool",
+        configType: "room",
+        default: false
+    },
+    {
         id: "WebHookUrls",
         name: "WebhookV1",
         type: "string?",

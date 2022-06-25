@@ -61,6 +61,15 @@
                         </local:SettingWithDefault>
                     </StackPanel>
                 </GroupBox>
+                <GroupBox Header="标准模式录制修复设置">
+                    <StackPanel>
+                        <local:SettingWithDefault IsSettingNotUsingDefault="{Binding HasFlvProcessorSplitOnScriptTag}">
+                            <StackPanel>
+                                <ui:ToggleSwitch IsOn="{Binding FlvProcessorSplitOnScriptTag}" OnContent="检测到可能缺少数据时分段" OffContent="检测到可能缺少数据时分段"/>
+                            </StackPanel>
+                        </local:SettingWithDefault>
+                    </StackPanel>
+                </GroupBox>
                 <GroupBox Header="{l:Loc Settings_Splitting_Title}">
                     <StackPanel>
                         <local:SettingWithDefault IsSettingNotUsingDefault="{Binding HasCuttingMode}">
