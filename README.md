@@ -26,13 +26,13 @@ Software UI is available in
 See [rec.danmuji.org](https://rec.danmuji.org) (in Chinese) for Windows installer with auto update.
 
 Alernatively, you can download from [releases](https://github.com/BililiveRecorder/BililiveRecorder/releases) page.  
-The zip file avaiable at the releases page does not have auto update enabled. You are welcome to watch this repository for releases. (Click the "Watch" dropdown menu, then "Custom", and check the "Releases" checkbox).
+The zip file available at the releases page does not have auto update enabled. You are welcome to watch this repository for new releases. (Click the "Watch" dropdown menu, then "Custom", and check the "Releases" checkbox).
 
 Binary files of the command line version are available for Linux, macOS, and Windows at [releases](https://github.com/BililiveRecorder/BililiveRecorder/releases).
 
-Docker images are available at [Docker Hub `bililive/recorder`](https://hub.docker.com/r/bililive/recorder) or [`ghcr.io/bililiverecorder/bililiverecorder`](https://github.com/bililiverecorder/BililiveRecorder/pkgs/container/bililiverecorder).
+Docker images can be pulled from [Docker Hub `bililive/recorder`](https://hub.docker.com/r/bililive/recorder) or [`ghcr.io/bililiverecorder/bililiverecorder`](https://github.com/bililiverecorder/BililiveRecorder/pkgs/container/bililiverecorder).
 
-Step by step installation guides are avaiable at [rec.danmuji.org/user/install](https://rec.danmuji.org/user/install) (in Chinese).
+See [rec.danmuji.org/user/install](https://rec.danmuji.org/user/install) for step by step installation guides (in Chinese).
 
 ## Feature
 
