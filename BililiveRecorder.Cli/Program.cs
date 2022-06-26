@@ -35,58 +35,72 @@ namespace BililiveRecorder.Cli
     {
         private static int Main(string[] args)
         {
-            ServicePointManager.Expect100Continue = false;
+            RootCommand root;
 
-            var cmd_run = new Command("run", "Run BililiveRecorder in standard mode")
+            using (var entrypointLogger = BuildLogger(LogEventLevel.Fatal, LogEventLevel.Verbose))
             {
-                new Option<string?>(new []{ "--http-bind", "--bind", "-b" }, () => null, "Bind address for http service"),
-                new Option<string?>(new []{ "--http-basic-user" }, () => null, "Web interface username"),
-                new Option<string?>(new []{ "--http-basic-pass" }, () => null, "Web interface password"),
-                new Option<bool>(new []{ "--enable-file-browser" }, () => true, "Enable file browser located at '/file'"),
-                new Option<LogEventLevel>(new []{ "--loglevel", "--log", "-l" }, () => LogEventLevel.Information, "Minimal log level output to console"),
-                new Option<LogEventLevel>(new []{ "--logfilelevel", "--flog" }, () => LogEventLevel.Debug, "Minimal log level output to file"),
-                new Option<string?>(new []{ "--cert-pem-path", "--pem" }, "Path of the certificate pem file"),
-                new Option<string?>(new []{ "--cert-key-path", "--key" }, "Path of the certificate key file"),
-                new Option<string?>(new []{ "--cert-pfx-path", "--pfx" }, "Path of the certificate pfx file"),
-                new Option<string?>(new []{ "--cert-password"}, "Password of the certificate"),
+                entrypointLogger.Information("Starting, {Version}, {CommandLine}", GitVersionInformation.InformationalVersion, args);
+                try
+                {
+                    ServicePointManager.Expect100Continue = false;
 
-                new Argument<string>("path"),
-            };
-            cmd_run.AddAlias("r");
-            cmd_run.Handler = CommandHandler.Create<RunModeArguments>(RunConfigModeAsync);
+                    var cmd_run = new Command("run", "Run BililiveRecorder in standard mode")
+                    {
+                        new Option<string?>(new []{ "--http-bind", "--bind", "-b" }, () => null, "Bind address for http service"),
+                        new Option<string?>(new []{ "--http-basic-user" }, () => null, "Web interface username"),
+                        new Option<string?>(new []{ "--http-basic-pass" }, () => null, "Web interface password"),
+                        new Option<bool>(new []{ "--enable-file-browser" }, () => true, "Enable file browser located at '/file'"),
+                        new Option<LogEventLevel>(new []{ "--loglevel", "--log", "-l" }, () => LogEventLevel.Information, "Minimal log level output to console"),
+                        new Option<LogEventLevel>(new []{ "--logfilelevel", "--flog" }, () => LogEventLevel.Debug, "Minimal log level output to file"),
+                        new Option<string?>(new []{ "--cert-pem-path", "--pem" }, "Path of the certificate pem file"),
+                        new Option<string?>(new []{ "--cert-key-path", "--key" }, "Path of the certificate key file"),
+                        new Option<string?>(new []{ "--cert-pfx-path", "--pfx" }, "Path of the certificate pfx file"),
+                        new Option<string?>(new []{ "--cert-password"}, "Password of the certificate"),
 
-            var cmd_portable = new Command("portable", "Run BililiveRecorder in config-less mode")
-            {
-                new Option<string?>(new []{ "--http-bind", "--bind", "-b" }, () => null, "Bind address for http service"),
-                new Option<string?>(new []{ "--http-basic-user" }, () => null, "Web interface username"),
-                new Option<string?>(new []{ "--http-basic-pass" }, () => null, "Web interface password"),
-                new Option<bool>(new []{ "--enable-file-browser" }, () => true, "Enable file browser located at '/file'"),
-                new Option<LogEventLevel>(new []{ "--loglevel", "--log", "-l" }, () => LogEventLevel.Information, "Minimal log level output to console"),
-                new Option<LogEventLevel>(new []{ "--logfilelevel", "--flog" }, () => LogEventLevel.Debug, "Minimal log level output to file"),
-                new Option<string?>(new []{ "--cert-pem-path", "--pem" }, "Path of the certificate pem file"),
-                new Option<string?>(new []{ "--cert-key-path", "--key" }, "Path of the certificate key file"),
-                new Option<string?>(new []{ "--cert-pfx-path", "--pfx" }, "Path of the certificate pfx file"),
-                new Option<string?>(new []{ "--cert-password"}, "Password of the certificate"),
+                        new Argument<string>("path"),
+                    };
+                    cmd_run.AddAlias("r");
+                    cmd_run.Handler = CommandHandler.Create<RunModeArguments>(RunConfigModeAsync);
 
-                new Option<RecordMode>(new []{ "--record-mode", "--mode" }, () => RecordMode.Standard, "Recording mode"),
-                new Option<string>(new []{ "--cookie", "-c" }, "Cookie string for api requests"),
-                new Option<string>(new []{ "--filename", "-f" }, "File name format"),
-                new Option<PortableModeArguments.PortableDanmakuMode>(new []{ "--danmaku", "-d" }, "Flags for danmaku recording"),
-                new Option<string>("--webhook-url", "URL of webhoook"),
-                new Option<string>("--live-api-host"),
-                new Argument<string>("output-path"),
-                new Argument<int[]>("room-ids", () => Array.Empty<int>())
-            };
-            cmd_portable.AddAlias("p");
-            cmd_portable.Handler = CommandHandler.Create<PortableModeArguments>(RunPortableModeAsync);
+                    var cmd_portable = new Command("portable", "Run BililiveRecorder in config-less mode")
+                    {
+                        new Option<string?>(new []{ "--http-bind", "--bind", "-b" }, () => null, "Bind address for http service"),
+                        new Option<string?>(new []{ "--http-basic-user" }, () => null, "Web interface username"),
+                        new Option<string?>(new []{ "--http-basic-pass" }, () => null, "Web interface password"),
+                        new Option<bool>(new []{ "--enable-file-browser" }, () => true, "Enable file browser located at '/file'"),
+                        new Option<LogEventLevel>(new []{ "--loglevel", "--log", "-l" }, () => LogEventLevel.Information, "Minimal log level output to console"),
+                        new Option<LogEventLevel>(new []{ "--logfilelevel", "--flog" }, () => LogEventLevel.Debug, "Minimal log level output to file"),
+                        new Option<string?>(new []{ "--cert-pem-path", "--pem" }, "Path of the certificate pem file"),
+                        new Option<string?>(new []{ "--cert-key-path", "--key" }, "Path of the certificate key file"),
+                        new Option<string?>(new []{ "--cert-pfx-path", "--pfx" }, "Path of the certificate pfx file"),
+                        new Option<string?>(new []{ "--cert-password"}, "Password of the certificate"),
 
-            var root = new RootCommand("A Stream Recorder For Bilibili Live")
-            {
-                cmd_run,
-                cmd_portable,
-                new ConfigureCommand(),
-                new ToolCommand()
-            };
+                        new Option<RecordMode>(new []{ "--record-mode", "--mode" }, () => RecordMode.Standard, "Recording mode"),
+                        new Option<string>(new []{ "--cookie", "-c" }, "Cookie string for api requests"),
+                        new Option<string>(new []{ "--filename", "-f" }, "File name format"),
+                        new Option<PortableModeArguments.PortableDanmakuMode>(new []{ "--danmaku", "-d" }, "Flags for danmaku recording"),
+                        new Option<string>("--webhook-url", "URL of webhoook"),
+                        new Option<string>("--live-api-host"),
+                        new Argument<string>("output-path"),
+                        new Argument<int[]>("room-ids", () => Array.Empty<int>())
+                    };
+                    cmd_portable.AddAlias("p");
+                    cmd_portable.Handler = CommandHandler.Create<PortableModeArguments>(RunPortableModeAsync);
+
+                    root = new RootCommand("A Stream Recorder For Bilibili Live")
+                    {
+                        cmd_run,
+                        cmd_portable,
+                        new ConfigureCommand(),
+                        new ToolCommand(),
+                    };
+                }
+                catch (Exception ex)
+                {
+                    entrypointLogger.Fatal(ex, "Fatal error during startup");
+                    return -1;
+                }
+            }
 
             return root.Invoke(args);
         }
