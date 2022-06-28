@@ -33,12 +33,22 @@ namespace BililiveRecorder.WPF.Controls
             { }
         }
 
+        private static readonly TimeSpan OneSecond = TimeSpan.FromSeconds(1);
+        private DateTimeOffset lastSizeChanged = DateTimeOffset.MinValue;
+
         private void ListView_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             try
             {
                 if (sender is not ListView listView) return;
                 if (listView.View is not GridView view) return;
+
+                var now = DateTimeOffset.Now;
+
+                if (now - this.lastSizeChanged < OneSecond)
+                    return;
+
+                this.lastSizeChanged = now;
 
                 var w = listView.ActualWidth - SystemParameters.VerticalScrollBarWidth - 105 - 60 - 105;
 
