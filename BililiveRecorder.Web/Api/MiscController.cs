@@ -23,19 +23,19 @@ namespace BililiveRecorder.Web.Api
         /// <param name="input"></param>
         /// <returns></returns>
         [HttpPost("generateFileName")]
-        public ActionResult<string> GenerateFileName([FromBody] GenerateFileNameInput input)
+        public ActionResult<FileNameTemplateOutput> GenerateFileName([FromBody] GenerateFileNameInput input)
         {
             var config = new GlobalConfig()
             {
                 WorkDirectory = "/",
                 FileNameRecordTemplate = input.Template
             };
-            var generator = new FileNameGenerator(config);
+            var generator = new FileNameGenerator(config, null);
 
             var context = this.mapper.Map<FileNameTemplateContext>(input.Context);
 
-            var (_, relativePath) = generator.CreateFilePath(context);
-            return relativePath;
+            var output = generator.CreateFilePath(context);
+            return output;
         }
     }
 }

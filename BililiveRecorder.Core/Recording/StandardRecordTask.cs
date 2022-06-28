@@ -10,7 +10,6 @@ using BililiveRecorder.Core.Config;
 using BililiveRecorder.Core.Event;
 using BililiveRecorder.Core.ProcessingRules;
 using BililiveRecorder.Core.Scripting;
-using BililiveRecorder.Core.Templating;
 using BililiveRecorder.Flv;
 using BililiveRecorder.Flv.Amf;
 using BililiveRecorder.Flv.Pipeline;
@@ -44,12 +43,10 @@ namespace BililiveRecorder.Core.Recording
                           IFlvTagReaderFactory flvTagReaderFactory,
                           ITagGroupReaderFactory tagGroupReaderFactory,
                           IFlvProcessingContextWriterFactory writerFactory,
-                          FileNameGenerator fileNameGenerator,
                           UserScriptRunner userScriptRunner)
             : base(room: room,
                    logger: logger?.ForContext<StandardRecordTask>().ForContext(LoggingContext.RoomId, room.RoomConfig.RoomId)!,
                    apiClient: apiClient,
-                   fileNameGenerator: fileNameGenerator,
                    userScriptRunner: userScriptRunner)
         {
             this.flvTagReaderFactory = flvTagReaderFactory ?? throw new ArgumentNullException(nameof(flvTagReaderFactory));

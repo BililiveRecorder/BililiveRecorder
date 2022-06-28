@@ -18,7 +18,7 @@ namespace BililiveRecorder.Core.Config.V3
         public bool DisableConfigSave { get; set; } = false; // for CLI
     }
 
-    public partial class RoomConfig
+    public partial class RoomConfig : IFileNameConfig
     {
         public RoomConfig() : base(x => x.AutoMap(p => new[] { "Has" + p.Name }))
         { }
@@ -28,7 +28,7 @@ namespace BililiveRecorder.Core.Config.V3
         public string? WorkDirectory => this.GetPropertyValue<string>();
     }
 
-    public partial class GlobalConfig
+    public partial class GlobalConfig : IFileNameConfig
     {
         public GlobalConfig() : base(x => x.AutoMap(p => new[] { "Has" + p.Name }))
         {

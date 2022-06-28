@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using BililiveRecorder.Core.Api;
 using BililiveRecorder.Core.Event;
 using BililiveRecorder.Core.Scripting;
-using BililiveRecorder.Core.Templating;
 using Serilog;
 
 namespace BililiveRecorder.Core.Recording
@@ -17,12 +16,10 @@ namespace BililiveRecorder.Core.Recording
         public RawDataRecordTask(IRoom room,
                                  ILogger logger,
                                  IApiClient apiClient,
-                                 FileNameGenerator fileNameGenerator,
                                  UserScriptRunner userScriptRunner)
             : base(room: room,
                    logger: logger?.ForContext<RawDataRecordTask>().ForContext(LoggingContext.RoomId, room.RoomConfig.RoomId)!,
                    apiClient: apiClient,
-                   fileNameGenerator: fileNameGenerator,
                    userScriptRunner: userScriptRunner)
         {
         }

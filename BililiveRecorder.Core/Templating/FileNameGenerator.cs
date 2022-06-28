@@ -7,6 +7,7 @@ using Fluid.Ast;
 using Fluid.Values;
 using Newtonsoft.Json.Linq;
 using Serilog;
+using Serilog.Core;
 
 namespace BililiveRecorder.Core.Templating
 {
@@ -14,8 +15,6 @@ namespace BililiveRecorder.Core.Templating
     {
         // TODO: 需要改得更通用一些
         // 日志不应该一定绑定到一个直播间上
-
-        private static readonly ILogger logger = Log.Logger.ForContext<FileNameGenerator>();
 
         private static readonly FluidParser parser;
         private static readonly IFluidTemplate defaultTemplate;
@@ -39,8 +38,8 @@ namespace BililiveRecorder.Core.Templating
             }
         }
 
-        private readonly GlobalConfig config;
-        private IFluidTemplate? template;
+        private readonly IFileNameConfig config;
+        private readonly ILogger logger;
 
         static FileNameGenerator()
         {
@@ -72,32 +71,22 @@ namespace BililiveRecorder.Core.Templating
             defaultTemplate = parser.Parse(DefaultConfig.Instance.FileNameRecordTemplate);
         }
 
-        public FileNameGenerator(GlobalConfig config)
+        public FileNameGenerator(IFileNameConfig config, ILogger? logger)
         {
             this.config = config ?? throw new ArgumentNullException(nameof(config));
-
-            config.PropertyChanged += (s, e) =>
-            {
-                if (e.PropertyName == nameof(config.FileNameRecordTemplate))
-                {
-                    this.UpdateTemplate();
-                }
-            };
-
-            this.UpdateTemplate();
+            this.logger = logger?.ForContext<FileNameGenerator>() ?? Logger.None;
         }
 
-        private void UpdateTemplate()
+        public FileNameTemplateOutput CreateFilePath(FileNameTemplateContext data)
         {
-            if (!parser.TryParse(this.config.FileNameRecordTemplate, out var template, out var error))
-            {
-                logger.Warning("文件名模板格式不正确，请修改: {ParserError}", error);
-            }
-            this.template = template;
-        }
+            var status = FileNameTemplateStatus.Success;
+            string? errorMessage = null;
+            string relativePath;
+            string? fullPath;
 
-        public (string fullPath, string relativePath) CreateFilePath(FileNameTemplateContext data)
-        {
+            var workDirectory = this.config.WorkDirectory;
+            var skipFullPath = workDirectory is null;
+
             var now = DateTimeOffset.Now;
             var templateOptions = new TemplateOptions
             {
@@ -105,49 +94,57 @@ namespace BililiveRecorder.Core.Templating
             };
             templateOptions.MemberAccessStrategy.MemberNameStrategy = MemberNameStrategies.CamelCase;
             templateOptions.ValueConverters.Add(o => o is JContainer j ? new JContainerValue(j) : null);
-            templateOptions.Filters.AddFilter("format_qn", static (FluidValue input, FilterArguments arguments, TemplateContext context)
-                => new StringValue(StreamQualityNumber.MapToString((int)input.ToNumberValue()))
-                );
+            templateOptions.Filters.AddFilter("format_qn",
+                static (FluidValue input, FilterArguments arguments, TemplateContext context) => new StringValue(StreamQualityNumber.MapToString((int)input.ToNumberValue())));
 
             var context = new TemplateContext(data, templateOptions);
 
-            var workDirectory = this.config.WorkDirectory!;
-
-            if (this.template is not { } t)
+            if (!parser.TryParse(this.config.FileNameRecordTemplate, out var template, out var error))
             {
-                logger.ForContext(LoggingContext.RoomId, data.RoomId).Warning("文件名模板格式不正确，请检查设置。将写入到默认路径。");
+                this.logger.Warning("文件名模板格式不正确，请修改: {ParserError}", error);
+                errorMessage = "文件名模板格式不正确，请修改: " + error;
+                status = FileNameTemplateStatus.TemplateError;
                 goto returnDefaultPath;
             }
 
-            var relativePath = t.Render(context);
+            relativePath = template.Render(context);
             relativePath = RemoveInvalidFileName(relativePath);
-            var fullPath = Path.GetFullPath(Path.Combine(workDirectory, relativePath));
 
-            if (!CheckIsWithinPath(workDirectory!, Path.GetDirectoryName(fullPath)))
+            fullPath = skipFullPath ? null : Path.GetFullPath(Path.Combine(workDirectory, relativePath));
+
+            if (!skipFullPath && !CheckIsWithinPath(workDirectory!, Path.GetDirectoryName(fullPath)))
             {
-                logger.ForContext(LoggingContext.RoomId, data.RoomId).Warning("录制文件位置超出允许范围，请检查设置。将写入到默认路径。");
+                this.logger.Warning("录制文件位置超出允许范围，请检查设置。将写入到默认路径。");
+                status = FileNameTemplateStatus.OutOfRange;
+                errorMessage = "录制文件位置超出允许范围";
                 goto returnDefaultPath;
             }
 
-            var ext = Path.GetExtension(fullPath);
+            var ext = Path.GetExtension(relativePath);
             if (!ext.Equals(".flv", StringComparison.OrdinalIgnoreCase))
             {
-                logger.ForContext(LoggingContext.RoomId, data.RoomId).Warning("录播姬只支持 FLV 文件格式，将在录制文件后缀名 {ExtensionName} 后添加 .flv。", ext);
+                this.logger.Warning("录播姬只支持 FLV 文件格式，将在录制文件后缀名 {ExtensionName} 后添加 {DotFlv}。", ext, ".flv");
                 relativePath += ".flv";
-                fullPath += ".flv";
+
+                if (!skipFullPath)
+                    fullPath += ".flv";
             }
 
-            if (File.Exists(fullPath))
+            if (!skipFullPath && File.Exists(fullPath))
             {
-                logger.ForContext(LoggingContext.RoomId, data.RoomId).Warning("录制文件名冲突，请检查设置。将写入到默认路径。");
+                this.logger.Warning("录制文件名冲突，将写入到默认路径。");
+                status = FileNameTemplateStatus.FileConflict;
+                errorMessage = "录制文件名冲突";
                 goto returnDefaultPath;
             }
 
-            return (fullPath, relativePath);
+            return new FileNameTemplateOutput(status, errorMessage, relativePath, fullPath);
 
         returnDefaultPath:
             var defaultRelativePath = RemoveInvalidFileName(defaultTemplate.Render(context));
-            return (Path.GetFullPath(Path.Combine(this.config.WorkDirectory, defaultRelativePath)), defaultRelativePath);
+            var defaultFullPath = skipFullPath ? null : Path.GetFullPath(Path.Combine(workDirectory, defaultRelativePath));
+
+            return new FileNameTemplateOutput(status, errorMessage, defaultRelativePath, defaultFullPath);
         }
 
         private class JContainerValue : ObjectValueBase
@@ -238,22 +235,29 @@ namespace BililiveRecorder.Core.Templating
             return input;
         }
 
+        private static readonly char[] separator = new[] { Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar };
+
         internal static bool CheckIsWithinPath(string parent, string child)
         {
-            if (parent is null || child is null)
+            var fullParent = Path.GetFullPath(parent);
+            var fullChild = Path.GetFullPath(child);
+
+            var parentSegments = fullParent.Split(separator, StringSplitOptions.None).AsSpan();
+            if (parentSegments[parentSegments.Length - 1] == "")
+            {
+                parentSegments = parentSegments.Slice(0, parentSegments.Length - 1);
+            }
+
+            var childSegments = fullChild.Split(separator, StringSplitOptions.None).AsSpan();
+            if (childSegments[childSegments.Length - 1] == "")
+            {
+                childSegments = childSegments.Slice(0, childSegments.Length - 1);
+            }
+
+            if (parentSegments.Length >= childSegments.Length)
                 return false;
 
-            parent = parent.Replace('/', '\\');
-            if (!parent.EndsWith("\\"))
-                parent += "\\";
-            parent = Path.GetFullPath(parent);
-
-            child = child.Replace('/', '\\');
-            if (!child.EndsWith("\\"))
-                child += "\\";
-            child = Path.GetFullPath(child);
-
-            return child.StartsWith(parent, StringComparison.Ordinal);
+            return childSegments.Slice(0, parentSegments.Length).SequenceEqual(parentSegments);
         }
     }
 }

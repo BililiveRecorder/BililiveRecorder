@@ -52,13 +52,14 @@ namespace BililiveRecorder.Core.Recording
         private DateTimeOffset ioStatsLastTrigger;
         private TimeSpan durationSinceNoDataReceived;
 
-        protected RecordTaskBase(IRoom room, ILogger logger, IApiClient apiClient, FileNameGenerator fileNameGenerator, UserScriptRunner userScriptRunner)
+        protected RecordTaskBase(IRoom room, ILogger logger, IApiClient apiClient, UserScriptRunner userScriptRunner)
         {
             this.room = room ?? throw new ArgumentNullException(nameof(room));
             this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
             this.apiClient = apiClient ?? throw new ArgumentNullException(nameof(apiClient));
-            this.fileNameGenerator = fileNameGenerator ?? throw new ArgumentNullException(nameof(fileNameGenerator));
             this.userScriptRunner = userScriptRunner ?? throw new ArgumentNullException(nameof(userScriptRunner));
+
+            this.fileNameGenerator = new FileNameGenerator(room.RoomConfig, logger);
             this.ct = this.cts.Token;
 
             this.timer.Elapsed += this.Timer_Elapsed_TriggerIOStats;
@@ -174,17 +175,22 @@ namespace BililiveRecorder.Core.Recording
             }
         }
 
-        protected (string fullPath, string relativePath) CreateFileName() => this.fileNameGenerator.CreateFilePath(new FileNameTemplateContext
+        protected (string fullPath, string relativePath) CreateFileName()
         {
-            Name = FileNameGenerator.RemoveInvalidFileName(this.room.Name, ignore_slash: false),
-            Title = FileNameGenerator.RemoveInvalidFileName(this.room.Title, ignore_slash: false),
-            RoomId = this.room.RoomConfig.RoomId,
-            ShortId = this.room.ShortId,
-            AreaParent = FileNameGenerator.RemoveInvalidFileName(this.room.AreaNameParent, ignore_slash: false),
-            AreaChild = FileNameGenerator.RemoveInvalidFileName(this.room.AreaNameChild, ignore_slash: false),
-            Qn = this.qn,
-            Json = this.room.RawBilibiliApiJsonData,
-        });
+            var output = this.fileNameGenerator.CreateFilePath(new FileNameTemplateContext
+            {
+                Name = FileNameGenerator.RemoveInvalidFileName(this.room.Name, ignore_slash: false),
+                Title = FileNameGenerator.RemoveInvalidFileName(this.room.Title, ignore_slash: false),
+                RoomId = this.room.RoomConfig.RoomId,
+                ShortId = this.room.ShortId,
+                AreaParent = FileNameGenerator.RemoveInvalidFileName(this.room.AreaNameParent, ignore_slash: false),
+                AreaChild = FileNameGenerator.RemoveInvalidFileName(this.room.AreaNameChild, ignore_slash: false),
+                Qn = this.qn,
+                Json = this.room.RawBilibiliApiJsonData,
+            });
+
+            return (output.FullPath!, output.RelativePath);
+        }
 
         #region Api Requests
 

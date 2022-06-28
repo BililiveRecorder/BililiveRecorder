@@ -11,6 +11,7 @@
     l:ResxLocalizationProvider.DefaultDictionary="Strings"
     xmlns:c="clr-namespace:BililiveRecorder.WPF.Controls"
     xmlns:m="clr-namespace:BililiveRecorder.WPF.Models"
+    xmlns:t="clr-namespace:BililiveRecorder.Core.Templating;assembly=BililiveRecorder.Core"
     xmlns:local="clr-namespace:BililiveRecorder.WPF.Pages"
     xmlns:config="clr-namespace:BililiveRecorder.Core.Config;assembly=BililiveRecorder.Core"
     xmlns:configv3="clr-namespace:BililiveRecorder.Core.Config.V3;assembly=BililiveRecorder.Core"
@@ -96,7 +97,14 @@
                         <TextBox Text="{Binding FileNameRecordTemplate,Delay=500}" ui:TextBoxHelper.IsDeleteButtonVisible="False"/>
                     </c:SettingWithDefault>
                     <Button Margin="0,10,0,5" Content="测试" Click="TestFileNameTemplate_Button_Click"/>
-                    <TextBox Visibility="Collapsed" IsReadOnly="True" x:Name="FileNameTestResult"/>
+                    <Border x:Name="FileNameTestResultArea" d:DataContext="{d:DesignInstance Type=t:FileNameTemplateOutput}" Visibility="Collapsed"
+                            BorderBrush="{DynamicResource SystemControlBackgroundBaseMediumBrush}" CornerRadius="5" BorderThickness="1" Padding="5">
+                        <StackPanel Orientation="Vertical" Margin="0">
+                            <TextBlock Text="测试结果："/>
+                            <TextBlock Text="{Binding ErrorMessage,Mode=OneWay}" Margin="0,5"/>
+                            <TextBox IsReadOnly="True" Text="{Binding RelativePath,Mode=OneWay}"/>
+                        </StackPanel>
+                    </Border>
                 </StackPanel>
             </GroupBox>
             <GroupBox Header="录制画质">
