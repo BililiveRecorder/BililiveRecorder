@@ -27,7 +27,9 @@ using Serilog;
 using Serilog.Core;
 using Serilog.Events;
 using Serilog.Exceptions;
+using Serilog.Filters;
 using Serilog.Formatting.Compact;
+using Serilog.Sinks.SystemConsole.Themes;
 
 namespace BililiveRecorder.Cli
 {
@@ -415,6 +417,10 @@ namespace BililiveRecorder.Cli
             var logFilePath = Environment.GetEnvironmentVariable("BILILIVERECORDER_LOG_FILE_PATH");
             if (string.IsNullOrWhiteSpace(logFilePath))
                 logFilePath = Path.Combine(AppContext.BaseDirectory, "logs", "bilirec.txt");
+            logFilePath = Path.GetFullPath(logFilePath);
+            var logFilePathMicrosoft = Path.Combine(Path.GetDirectoryName(logFilePath)!, Path.GetFileNameWithoutExtension(logFilePath) + "-web" + Path.GetExtension(logFilePath));
+
+            var matchMicrosoft = Matching.FromSource("Microsoft");
 
             return new LoggerConfiguration()
                 .MinimumLevel.Verbose()
@@ -433,8 +439,21 @@ namespace BililiveRecorder.Cli
                     x.FileCreationTime,
                     x.FileModificationTime,
                 })
-                .WriteTo.Console(restrictedToMinimumLevel: logLevel, outputTemplate: "[{Timestamp:HH:mm:ss} {Level:u3}] [{RoomId}] {Message:lj}{NewLine}{Exception}")
-                .WriteTo.File(new CompactJsonFormatter(), logFilePath, restrictedToMinimumLevel: logFileLevel, shared: true, rollingInterval: RollingInterval.Day, rollOnFileSizeLimit: true)
+                .WriteTo.Console(restrictedToMinimumLevel: logLevel, outputTemplate: "[{Timestamp:HH:mm:ss} {Level:u3}] [{RoomId}] {Message:lj}{NewLine}{Exception}", theme: AnsiConsoleTheme.Code)
+                .WriteTo.Logger(sl =>
+                {
+                    sl
+                    .Filter.ByExcluding(matchMicrosoft)
+                    .WriteTo.File(new CompactJsonFormatter(), logFilePath, restrictedToMinimumLevel: logFileLevel, shared: true, rollingInterval: RollingInterval.Day, rollOnFileSizeLimit: true)
+                    ;
+                })
+                .WriteTo.Logger(sl =>
+                {
+                    sl
+                    .Filter.ByIncludingOnly(matchMicrosoft)
+                    .WriteTo.File(new CompactJsonFormatter(), logFilePathMicrosoft, restrictedToMinimumLevel: logFileLevel, shared: true, rollingInterval: RollingInterval.Day, rollOnFileSizeLimit: true)
+                    ;
+                })
                 .CreateLogger();
         }
 
