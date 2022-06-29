@@ -145,14 +145,14 @@ namespace BililiveRecorder.Web.Api
         #region Get Room Stats
 
         /// <summary>
-        /// 读取直播间统计信息
+        /// 读取直播间录制统计信息
         /// </summary>
         /// <param name="roomId"></param>
         /// <returns></returns>
         [HttpGet("{roomId:int}/stats")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(RestApiError), StatusCodes.Status404NotFound)]
-        public ActionResult<RoomRecordingStatsDto> GetRoomStats(int roomId)
+        public ActionResult<RoomRecordingStatsDto> GetRoomRecordingStats(int roomId)
         {
             var room = this.FetchRoom(roomId);
             if (room is null)
@@ -161,19 +161,51 @@ namespace BililiveRecorder.Web.Api
         }
 
         /// <summary>
-        /// 读取直播间统计信息
+        /// 读取直播间录制统计信息
         /// </summary>
         /// <param name="objectId"></param>
         /// <returns></returns>
         [HttpGet("{objectId:guid}/stats")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(RestApiError), StatusCodes.Status404NotFound)]
-        public ActionResult<RoomRecordingStatsDto> GetRoomStats(Guid objectId)
+        public ActionResult<RoomRecordingStatsDto> GetRoomRecordingStats(Guid objectId)
         {
             var room = this.FetchRoom(objectId);
             if (room is null)
                 return this.NotFound(new RestApiError { Code = RestApiErrorCode.RoomNotFound, Message = "Room not found" });
             return this.mapper.Map<RoomRecordingStatsDto>(room.Stats);
+        }
+
+        /// <summary>
+        /// 读取直播间 IO 统计信息
+        /// </summary>
+        /// <param name="roomId"></param>
+        /// <returns></returns>
+        [HttpGet("{roomId:int}/ioStats")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(RestApiError), StatusCodes.Status404NotFound)]
+        public ActionResult<RoomIOStatsDto> GetRoomIOStats(int roomId)
+        {
+            var room = this.FetchRoom(roomId);
+            if (room is null)
+                return this.NotFound(new RestApiError { Code = RestApiErrorCode.RoomNotFound, Message = "Room not found" });
+            return this.mapper.Map<RoomIOStatsDto>(room.Stats);
+        }
+
+        /// <summary>
+        /// 读取直播间 IO 统计信息
+        /// </summary>
+        /// <param name="objectId"></param>
+        /// <returns></returns>
+        [HttpGet("{objectId:guid}/ioStats")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(RestApiError), StatusCodes.Status404NotFound)]
+        public ActionResult<RoomIOStatsDto> GetRoomIOStats(Guid objectId)
+        {
+            var room = this.FetchRoom(objectId);
+            if (room is null)
+                return this.NotFound(new RestApiError { Code = RestApiErrorCode.RoomNotFound, Message = "Room not found" });
+            return this.mapper.Map<RoomIOStatsDto>(room.Stats);
         }
 
         #endregion

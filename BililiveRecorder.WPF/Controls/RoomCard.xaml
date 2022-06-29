@@ -11,7 +11,7 @@
     l:ResxLocalizationProvider.DefaultDictionary="Strings"
     xmlns:local="clr-namespace:BililiveRecorder.WPF.Controls"
     xmlns:core="clr-namespace:BililiveRecorder.Core;assembly=BililiveRecorder.Core"
-    d:DataContext="{d:DesignInstance core:Room}"
+    d:DataContext="{d:DesignInstance core:IRoom}"
     d:DesignWidth="220" d:DesignHeight="110"
     mc:Ignorable="d">
     <Border Background="{DynamicResource SystemControlBackgroundAltHighBrush}"

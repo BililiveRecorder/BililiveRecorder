@@ -353,6 +353,7 @@ namespace BililiveRecorder.Core
         {
             this.logger.Verbose("IO stats: {@stats}", e);
 
+            this.Stats.StreamHost = e.StreamHost;
             this.Stats.StartTime = e.StartTime;
             this.Stats.EndTime = e.EndTime;
             this.Stats.Duration = e.Duration;

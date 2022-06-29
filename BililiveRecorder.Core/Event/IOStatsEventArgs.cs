@@ -5,6 +5,11 @@ namespace BililiveRecorder.Core.Event
     public sealed class IOStatsEventArgs : EventArgs
     {
         /// <summary>
+        /// 直播服务器域名
+        /// </summary>
+        public string? StreamHost { get; set; }
+
+        /// <summary>
         /// 当前统计区间的开始时间
         /// </summary>
         public DateTimeOffset StartTime { get; set; }

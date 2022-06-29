@@ -157,6 +157,7 @@ namespace BililiveRecorder.Core.Recording
 
             this.OnIOStats(new IOStatsEventArgs
             {
+                StreamHost = streamHost,
                 NetworkBytesDownloaded = networkDownloadBytes,
                 Duration = durationDiff,
                 StartTime = startTime,

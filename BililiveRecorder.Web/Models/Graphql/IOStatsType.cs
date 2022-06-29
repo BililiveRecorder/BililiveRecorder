@@ -7,6 +7,7 @@ namespace BililiveRecorder.Web.Models.Graphql
     {
         public IOStatsType()
         {
+            this.Field(x => x.StreamHost, nullable: true);
             this.Field(x => x.StartTime);
             this.Field(x => x.EndTime);
             this.Field(x => x.Duration, type: typeof(TimeSpanMillisecondsGraphType));

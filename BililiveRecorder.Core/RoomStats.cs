@@ -9,6 +9,7 @@ namespace BililiveRecorder.Core
     public class RoomStats : INotifyPropertyChanged
     {
         #region IO Stats Fields
+        private string? ___StreamHost;
         private DateTimeOffset ___StartTime;
         private DateTimeOffset ___EndTime;
         private TimeSpan ___Duration;
@@ -53,6 +54,11 @@ namespace BililiveRecorder.Core
         }
 
         #region IO Stats Properties
+
+        /// <summary>
+        /// 直播服务器域名
+        /// </summary>
+        public string? StreamHost { get => this.___StreamHost; set => this.SetField(ref this.___StreamHost, value); }
 
         /// <summary>
         /// 当前统计区间的开始时间
@@ -206,6 +212,8 @@ namespace BililiveRecorder.Core
             //this.DurationRatio = double.NaN;
 
             // ------------------------------
+
+            this.StreamHost = null;
 
             this.StartTime = default;
             this.EndTime = default;

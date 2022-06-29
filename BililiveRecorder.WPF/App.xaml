@@ -33,6 +33,7 @@
                     <TextBlock Visibility="{Binding Stats.DurationRatio,Converter={StaticResource IsNaNToVisibilityCollapsedConverter}}" 
                                TextAlignment="Center" Text="{l:Loc RoomCard_Status_SpeedIndicator_NoData}"/>
                     <StackPanel Visibility="{Binding Stats.DurationRatio,Converter={StaticResource InvertIsNaNToVisibilityCollapsedConverter}}">
+                        <TextBlock Text="{Binding Stats.StreamHost,StringFormat=直播服务器: {0}}"/>
                         <TextBlock>
                             <TextBlock.Text>
                                 <MultiBinding Converter="{l:StringFormatConverter}">
