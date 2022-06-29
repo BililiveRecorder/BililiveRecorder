@@ -296,6 +296,7 @@ namespace BililiveRecorder.Core.Event
         public int NetworkBytesDownloaded { get; set; }
         public double NetworkMbps { get; set; }
         public System.DateTimeOffset StartTime { get; set; }
+        public string? StreamHost { get; set; }
     }
     public interface IRecordSessionEventArgs
     {
@@ -447,6 +448,7 @@ namespace BililiveRecorder.Core
         public System.TimeSpan SessionDuration { get; set; }
         public System.TimeSpan SessionMaxTimestamp { get; set; }
         public System.DateTimeOffset StartTime { get; set; }
+        public string? StreamHost { get; set; }
         public long TotalInputAudioBytes { get; set; }
         public long TotalInputBytes { get; set; }
         public long TotalInputVideoBytes { get; set; }
