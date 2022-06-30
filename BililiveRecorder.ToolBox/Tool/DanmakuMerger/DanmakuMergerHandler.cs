@@ -195,7 +195,7 @@ namespace BililiveRecorder.ToolBox.Tool.DanmakuMerger
                         if (els.Count == 0)
                             break;
 
-                        (var time, var el, var readerIndex) = els[0];
+                        (_, var el, var readerIndex) = els[0];
                         el.WriteTo(writer);
                         els.RemoveAt(0);
 

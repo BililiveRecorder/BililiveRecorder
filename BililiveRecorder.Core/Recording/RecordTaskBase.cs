@@ -226,12 +226,12 @@ namespace BililiveRecorder.Core.Recording
             }
 
             const int DefaultQn = 10000;
-            var selected_qn = DefaultQn;
             var codecItem = await this.apiClient.GetCodecItemInStreamUrlAsync(roomid: roomid, qn: DefaultQn).ConfigureAwait(false);
 
             if (codecItem is null)
                 throw new Exception("no supported stream url, qn: " + DefaultQn);
 
+            int selected_qn;
             // Select first avaiable qn
             foreach (var qn in qns)
             {
@@ -297,8 +297,6 @@ namespace BililiveRecorder.Core.Recording
                     if (scriptIp is not null)
                     {
                         this.logger.Debug("用户脚本指定了服务器 IP {IP}", scriptIp);
-
-                        request = new HttpRequestMessage(HttpMethod.Get, fullUrl);
 
                         var uri = new Uri(fullUrl);
                         var builder = new UriBuilder(uri)

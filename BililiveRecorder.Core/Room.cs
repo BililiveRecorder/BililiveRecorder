@@ -62,7 +62,7 @@ namespace BililiveRecorder.Core
             this.basicDanmakuWriter = basicDanmakuWriter ?? throw new ArgumentNullException(nameof(basicDanmakuWriter));
             this.recordTaskFactory = recordTaskFactory ?? throw new ArgumentNullException(nameof(recordTaskFactory));
 
-            this.timer = new Timer(this.RoomConfig.TimingCheckInterval * 1000);
+            this.timer = new Timer(this.RoomConfig.TimingCheckInterval * 1000d);
             this.cts = new CancellationTokenSource();
             this.ct = this.cts.Token;
 
@@ -555,7 +555,7 @@ namespace BililiveRecorder.Core
                     this.logger = this.loggerWithoutContext.ForContext(LoggingContext.RoomId, this.RoomConfig.RoomId);
                     break;
                 case nameof(this.RoomConfig.TimingCheckInterval):
-                    this.timer.Interval = this.RoomConfig.TimingCheckInterval * 1000;
+                    this.timer.Interval = this.RoomConfig.TimingCheckInterval * 1000d;
                     break;
                 case nameof(this.RoomConfig.AutoRecord):
                     if (this.RoomConfig.AutoRecord)

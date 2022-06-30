@@ -84,8 +84,6 @@ namespace BililiveRecorder.Flv.Grouping
                     firstTag
                 };
 
-                firstTag = null;
-
                 while (!token.IsCancellationRequested)
                 {
                     var tag = await this.TagReader.ReadTagAsync(token).ConfigureAwait(false);

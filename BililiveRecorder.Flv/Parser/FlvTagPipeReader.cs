@@ -104,11 +104,11 @@ namespace BililiveRecorder.Flv.Parser
 
                     if (result.IsCompleted)
                     {
-                        if (buffer.Length > 0)
-                        {
-                            // The message is incomplete and there's no more data to process.
-                            // throw new FlvException("Incomplete message.");
-                        }
+                        //if (buffer.Length > 0)
+                        //{
+                        //// The message is incomplete and there's no more data to process.
+                        //// throw new FlvException("Incomplete message.");
+                        //}
 
                         break;
                     }

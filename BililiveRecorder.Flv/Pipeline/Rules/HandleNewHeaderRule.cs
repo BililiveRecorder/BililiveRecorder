@@ -36,8 +36,6 @@ namespace BililiveRecorder.Flv.Pipeline.Rules
                 var multiple_header_present = false;
 
                 // 音频 视频 分别单独处理
-                var group = header.AllTags.GroupBy(x => x.Type);
-
                 var currentVideoHeader = SelectHeader(ref multiple_header_present, header.AllTags.ToStructEnumerable().Where(ref LinqFunctions.TagIsVideo, x => x));
                 var currentAudioHeader = SelectHeader(ref multiple_header_present, header.AllTags.ToStructEnumerable().Where(ref LinqFunctions.TagIsAudio, x => x));
 
