@@ -422,6 +422,10 @@ namespace BililiveRecorder.Cli
 
             var matchMicrosoft = Matching.FromSource("Microsoft");
 
+            ConsoleTheme theme = OperatingSystem.IsWindows() && string.IsNullOrWhiteSpace(Environment.GetEnvironmentVariable("WT_SESSION"))
+                ? SystemConsoleTheme.Literate
+                : AnsiConsoleTheme.Code;
+
             return new LoggerConfiguration()
                 .MinimumLevel.Verbose()
                 .Enrich.WithProcessId()
@@ -439,7 +443,7 @@ namespace BililiveRecorder.Cli
                     x.FileCreationTime,
                     x.FileModificationTime,
                 })
-                .WriteTo.Console(restrictedToMinimumLevel: logLevel, outputTemplate: "[{Timestamp:HH:mm:ss} {Level:u3}] [{RoomId}] {Message:lj}{NewLine}{Exception}", theme: AnsiConsoleTheme.Code)
+                .WriteTo.Console(restrictedToMinimumLevel: logLevel, outputTemplate: "[{Timestamp:HH:mm:ss} {Level:u3}] [{RoomId}] {Message:lj}{NewLine}{Exception}", theme: theme)
                 .WriteTo.Logger(sl =>
                 {
                     sl
