@@ -118,22 +118,22 @@ namespace BililiveRecorder.WPF
                 {
                     IsHidden = true
                 },
-                new Option<SemanticVersion?>("--squirrel-install")
+                new Option<SemanticVersion?>("--squirrel-install", getDefaultValue: () => null)
                 {
                     IsHidden = true,
                     IsRequired = false,
                 },
-                new Option<SemanticVersion?>("--squirrel-updated")
+                new Option<SemanticVersion?>("--squirrel-updated", getDefaultValue: () => null)
                 {
                     IsHidden = true,
                     IsRequired = false,
                 },
-                new Option<SemanticVersion?>("--squirrel-obsolete")
+                new Option<SemanticVersion?>("--squirrel-obsolete", getDefaultValue: () => null)
                 {
                     IsHidden = true,
                     IsRequired = false,
                 },
-                new Option<SemanticVersion?>("--squirrel-uninstall")
+                new Option<SemanticVersion?>("--squirrel-uninstall", getDefaultValue: () => null)
                 {
                     IsHidden = true,
                     IsRequired = false,
