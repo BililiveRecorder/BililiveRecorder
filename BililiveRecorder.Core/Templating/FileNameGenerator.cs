@@ -13,9 +13,6 @@ namespace BililiveRecorder.Core.Templating
 {
     public sealed class FileNameGenerator
     {
-        // TODO: 需要改得更通用一些
-        // 日志不应该一定绑定到一个直播间上
-
         private static readonly FluidParser parser;
         private static readonly IFluidTemplate defaultTemplate;
 
@@ -112,7 +109,7 @@ namespace BililiveRecorder.Core.Templating
 
             fullPath = skipFullPath ? null : Path.GetFullPath(Path.Combine(workDirectory, relativePath));
 
-            if (!skipFullPath && !CheckIsWithinPath(workDirectory!, Path.GetDirectoryName(fullPath)))
+            if (!skipFullPath && !CheckIsWithinPath(workDirectory!, fullPath!))
             {
                 this.logger.Warning("录制文件位置超出允许范围，请检查设置。将写入到默认路径。");
                 status = FileNameTemplateStatus.OutOfRange;
