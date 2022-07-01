@@ -1,7 +1,6 @@
 using System;
 using System.CommandLine;
 using System.CommandLine.NamingConventionBinder;
-using System.Diagnostics;
 using System.IO;
 using System.Net;
 using System.Net.Http;
@@ -22,6 +21,7 @@ using Serilog.Core;
 using Serilog.Exceptions;
 using Serilog.Formatting.Compact;
 using Serilog.Formatting.Display;
+using Squirrel;
 
 #nullable enable
 namespace BililiveRecorder.WPF
@@ -114,19 +114,79 @@ namespace BililiveRecorder.WPF
 
             var root = new RootCommand("")
             {
-                run,
                 new Option<bool>("--squirrel-firstrun")
                 {
                     IsHidden = true
                 },
+                new Option<SemanticVersion?>("--squirrel-install")
+                {
+                    IsHidden = true,
+                    IsRequired = false,
+                },
+                new Option<SemanticVersion?>("--squirrel-updated")
+                {
+                    IsHidden = true,
+                    IsRequired = false,
+                },
+                new Option<SemanticVersion?>("--squirrel-obsolete")
+                {
+                    IsHidden = true,
+                    IsRequired = false,
+                },
+                new Option<SemanticVersion?>("--squirrel-uninstall")
+                {
+                    IsHidden = true,
+                    IsRequired = false,
+                },
+
+                run,
                 new ToolCommand(),
             };
-            root.Handler = CommandHandler.Create((bool squirrelFirstrun) => Commands.RunWpfHandler(path: null, squirrelFirstrun: squirrelFirstrun, askPath: false, hide: false));
+            root.Handler = CommandHandler.Create<bool, SemanticVersion?, SemanticVersion?, SemanticVersion?, SemanticVersion?>(Commands.RunRootCommandHandler);
             return root;
         }
 
         private static class Commands
         {
+            private static IAppTools GetSquirrelAppTools()
+            {
+                var m = new UpdateManager(updateSource: null, applicationIdOverride: null, localAppDataDirectoryOverride: null);
+                m.Dispose();
+                return m;
+            }
+
+            internal static int RunRootCommandHandler(bool squirrelFirstrun, SemanticVersion? squirrelInstall, SemanticVersion? squirrelUpdated, SemanticVersion? squirrelObsolete, SemanticVersion? squirrelUninstall)
+            {
+                var tools = GetSquirrelAppTools();
+                if (squirrelInstall is not null)
+                {
+                    tools.CreateShortcutForThisExe();
+                    Environment.Exit(0);
+                    return 0;
+                }
+                else if (squirrelUpdated is not null)
+                {
+                    Environment.Exit(0);
+                    return 0;
+                }
+                else if (squirrelObsolete is not null)
+                {
+                    Environment.Exit(0);
+                    return 0;
+                }
+                else if (squirrelUninstall is not null)
+                {
+                    tools.RemoveShortcutForThisExe();
+                    Environment.Exit(0);
+                    return 0;
+                }
+                else
+                {
+                    tools.SetProcessAppUserModelId();
+                    return RunWpfHandler(path: null, squirrelFirstrun: squirrelFirstrun, askPath: false, hide: false);
+                }
+            }
+
             internal static int RunWpfHandler(string? path, bool squirrelFirstrun, bool askPath, bool hide)
             {
                 Pages.RootPage.CommandArgumentRecorderPath = path;

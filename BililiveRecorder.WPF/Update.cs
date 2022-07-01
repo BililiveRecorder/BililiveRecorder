@@ -34,6 +34,12 @@ namespace BililiveRecorder.WPF
             {
                 using var updateManager = new UpdateManager(@"https://soft.danmuji.org/BililiveRecorder/");
 
+                if (!updateManager.IsInstalledApp)
+                {
+                    this.logger.Information("当前不是安装版，不检查是否有新版本。");
+                    return;
+                }
+
                 var ignoreDeltaUpdates = false;
 
             retry:
@@ -43,15 +49,15 @@ namespace BililiveRecorder.WPF
 
                     if (updateInfo.ReleasesToApply.Count == 0)
                     {
-                        this.logger.Information("当前运行的是最新版本 {BuildVersion}/{InstalledVersion}",
-                            typeof(Update).Assembly.GetName().Version.ToString(4),
+                        this.logger.Information("当前运行的是最新版本 {BuildVersion} ({InstalledVersion})",
+                            GitVersionInformation.FullSemVer,
                             updateInfo.CurrentlyInstalledVersion?.Version?.ToString() ?? "×");
                     }
                     else
                     {
-                        this.logger.Information("有新版本 {RemoteVersion}，当前本地 {BuildVersion}/{InstalledVersion}",
+                        this.logger.Information("有新版本 {RemoteVersion}，当前本地是 {BuildVersion} ({InstalledVersion})",
                             updateInfo.FutureReleaseEntry?.Version?.ToString() ?? "×",
-                            typeof(Update).Assembly.GetName().Version.ToString(4),
+                            GitVersionInformation.FullSemVer,
                             updateInfo.CurrentlyInstalledVersion?.Version?.ToString() ?? "×");
 
                         await updateManager.DownloadReleases(updateInfo.ReleasesToApply);
@@ -74,7 +80,7 @@ namespace BililiveRecorder.WPF
             }
             catch (Exception ex)
             {
-                this.logger.Warning(ex, "检查更新时出错");
+                this.logger.Warning(ex, "检查更新时发生错误");
             }
         }
     }
