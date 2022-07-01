@@ -37,7 +37,7 @@ namespace BililiveRecorder.WPF
         internal static Task? updateTask;
 
 #if DEBUG
-        internal static readonly bool DebugMode = Debugger.IsAttached;
+        internal static readonly bool DebugMode = System.Diagnostics.Debugger.IsAttached;
 #else
         internal static readonly bool DebugMode = false;
 #endif
