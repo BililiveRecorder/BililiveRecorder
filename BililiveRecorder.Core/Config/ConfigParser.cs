@@ -23,13 +23,16 @@ namespace BililiveRecorder.Core.Config
             try
             {
                 if (!Directory.Exists(directory))
+                {
+                    logger.Warning("目标文件夹不存在");
                     return null;
+                }
 
                 var filepath = Path.Combine(directory, CONFIG_FILE_NAME);
 
                 if (!File.Exists(filepath))
                 {
-                    logger.Debug("Config file does not exist {Path}", filepath);
+                    logger.Information("初始化默认设置，因为配置文件不存在 {Path}", filepath);
                     return new V3.ConfigV3();
                 }
 
