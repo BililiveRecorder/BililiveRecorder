@@ -114,9 +114,8 @@ jobs:
 
       - name: Pack Release Asset
         run: |
-          mkdir /brecAsset
           cd BililiveRecorder.Cli/publish/${{ matrix.rid }}/Release
-          zip -r /brecAsset/CLI-${{ matrix.rid }}-${{ matrix.build_configuration }}.zip .
+          zip -r /tmp/CLI-${{ matrix.rid }}-${{ matrix.build_configuration }}.zip .
 
       - name: Upload Release Asset
         uses: actions/upload-release-asset@v1
@@ -124,7 +123,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ github.event.release.upload_url }}
-          asset_path: /brecAsset/CLI-${{ matrix.rid }}-${{ matrix.build_configuration }}.zip
+          asset_path: /tmp/CLI-${{ matrix.rid }}-${{ matrix.build_configuration }}.zip
           asset_name: BililiveRecorder-CLI-${{ matrix.rid }}.zip
           asset_content_type: application/zip
 
