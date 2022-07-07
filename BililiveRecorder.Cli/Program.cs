@@ -29,7 +29,7 @@ using Serilog.Events;
 using Serilog.Exceptions;
 using Serilog.Filters;
 using Serilog.Formatting.Compact;
-using Serilog.Sinks.SystemConsole.Themes;
+using Serilog.Templates;
 
 namespace BililiveRecorder.Cli
 {
@@ -422,11 +422,9 @@ namespace BililiveRecorder.Cli
 
             var matchMicrosoft = Matching.FromSource("Microsoft");
 
-            ConsoleTheme theme = OperatingSystem.IsWindows() && string.IsNullOrWhiteSpace(Environment.GetEnvironmentVariable("WT_SESSION"))
-                ? SystemConsoleTheme.Literate
-                : AnsiConsoleTheme.Code;
+            var ansiColorSupport = !OperatingSystem.IsWindows() || !string.IsNullOrWhiteSpace(Environment.GetEnvironmentVariable("WT_SESSION"));
 
-            return new LoggerConfiguration()
+            var builder = new LoggerConfiguration()
                 .MinimumLevel.Verbose()
                 .Enrich.WithProcessId()
                 .Enrich.WithThreadId()
@@ -443,7 +441,6 @@ namespace BililiveRecorder.Cli
                     x.FileCreationTime,
                     x.FileModificationTime,
                 })
-                .WriteTo.Console(restrictedToMinimumLevel: logLevel, outputTemplate: "[{Timestamp:HH:mm:ss} {Level:u3}] [{RoomId}] {Message:lj}{NewLine}{Exception}", theme: theme)
                 .WriteTo.Logger(sl =>
                 {
                     sl
@@ -457,8 +454,18 @@ namespace BililiveRecorder.Cli
                     .Filter.ByIncludingOnly(matchMicrosoft)
                     .WriteTo.File(new CompactJsonFormatter(), logFilePathMicrosoft, restrictedToMinimumLevel: logFileLevel, shared: true, rollingInterval: RollingInterval.Day, rollOnFileSizeLimit: true)
                     ;
-                })
-                .CreateLogger();
+                });
+
+            if (ansiColorSupport)
+            {
+                builder.WriteTo.Console(new ExpressionTemplate("[{@t:HH:mm:ss} {@l:u3}{#if SourceContext is not null} ({SourceContext}){#end}]{#if RoomId is not null} [{RoomId}]{#end} {@m}{#if ExceptionDetail is not null}\n    [{ExceptionDetail['Type']}]: {ExceptionDetail['Message']}{#end}\n", theme: Serilog.Templates.Themes.TemplateTheme.Code), logLevel);
+            }
+            else
+            {
+                builder.WriteTo.Console(restrictedToMinimumLevel: logLevel, outputTemplate: "[{Timestamp:HH:mm:ss} {Level:u3} ({SourceContext})] [{RoomId}] {Message:lj}{NewLine}{Exception}");
+            }
+
+            return builder.CreateLogger();
         }
 
         public abstract class SharedArguments
