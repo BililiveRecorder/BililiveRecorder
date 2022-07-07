@@ -16,7 +16,7 @@ namespace BililiveRecorder.WPF
         private static readonly ILogger logger = Log.ForContext(typeof(NetworkChangeDetector));
 
         private static readonly object debounceLock = new();
-        private static readonly TimeSpan debounceDelay = TimeSpan.FromSeconds(15);
+        private static readonly TimeSpan debounceDelay = TimeSpan.FromSeconds(10);
         private static CancellationTokenSource? debounceTokenSource = null;
 
         internal static void Enable()
