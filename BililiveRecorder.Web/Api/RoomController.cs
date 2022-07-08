@@ -260,6 +260,8 @@ namespace BililiveRecorder.Web.Api
 
             config.ApplyTo(room.RoomConfig);
 
+            this.recorder.SaveConfig();
+
             return this.mapper.Map<RoomConfigDto>(room.RoomConfig);
         }
 
@@ -279,6 +281,8 @@ namespace BililiveRecorder.Web.Api
                 return this.NotFound(new RestApiError { Code = RestApiErrorCode.RoomNotFound, Message = "Room not found" });
 
             config.ApplyTo(room.RoomConfig);
+
+            this.recorder.SaveConfig();
 
             return this.mapper.Map<RoomConfigDto>(room.RoomConfig);
         }

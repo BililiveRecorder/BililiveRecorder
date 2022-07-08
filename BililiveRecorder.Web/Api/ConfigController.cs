@@ -43,6 +43,7 @@ namespace BililiveRecorder.Web.Api
         public ActionResult<GlobalConfigDto> SetGlobalConfig([FromBody] SetGlobalConfig config)
         {
             config.ApplyTo(this.recorder.Config.Global);
+            this.recorder.SaveConfig();
             return this.mapper.Map<GlobalConfigDto>(this.recorder.Config.Global);
         }
     }
