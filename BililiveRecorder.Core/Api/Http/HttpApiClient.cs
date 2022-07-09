@@ -17,7 +17,7 @@ namespace BililiveRecorder.Core.Api.Http
         private const string HttpHeaderOrigin = "https://live.bilibili.com";
         private const string HttpHeaderReferer = "https://live.bilibili.com/";
         private const string HttpHeaderUserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.141 Safari/537.36";
-        private static readonly TimeSpan TimeOutTimeSpan = TimeSpan.FromSeconds(10);
+        private static readonly TimeSpan TimeOutTimeSpan = TimeSpan.FromSeconds(15);
 
         private readonly GlobalConfig config;
         private readonly HttpClient anonClient;
