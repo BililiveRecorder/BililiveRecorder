@@ -32,7 +32,7 @@ namespace BililiveRecorder.Flv.Pipeline
             builder
             .AddRule<HandleEndTagRule>()
             .AddRule<HandleDelayedAudioHeaderRule>()
-            .AddRule<UpdateTimestampOffsetRule>()
+            // .AddRule<UpdateTimestampOffsetRule>()
             .AddRule<UpdateTimestampJumpRule>()
             .AddRule<HandleNewScriptRule>()
             .AddRule<HandleNewHeaderRule>()
