@@ -45,7 +45,7 @@ namespace BililiveRecorder.Flv.Pipeline.Rules
                                     if (shouldReportError)
                                     {
                                         context.AddComment(comment1);
-                                        yield return PipelineDisconnectAction.Instance;
+                                        yield return new PipelineDisconnectAction("直播音频数据中间出现音频头");
                                         yield return PipelineNewFileAction.Instance;
                                         yield return null;
                                         yield break;

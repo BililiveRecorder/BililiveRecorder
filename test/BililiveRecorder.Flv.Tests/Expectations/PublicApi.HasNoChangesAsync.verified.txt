@@ -653,8 +653,8 @@ namespace BililiveRecorder.Flv.Pipeline.Actions
     }
     public class PipelineDisconnectAction : BililiveRecorder.Flv.Pipeline.Actions.PipelineAction
     {
-        public static readonly BililiveRecorder.Flv.Pipeline.Actions.PipelineDisconnectAction Instance;
-        public PipelineDisconnectAction() { }
+        public PipelineDisconnectAction(string reason) { }
+        public string Reason { get; set; }
         public override BililiveRecorder.Flv.Pipeline.Actions.PipelineAction Clone() { }
     }
     public class PipelineEndAction : BililiveRecorder.Flv.Pipeline.Actions.PipelineAction

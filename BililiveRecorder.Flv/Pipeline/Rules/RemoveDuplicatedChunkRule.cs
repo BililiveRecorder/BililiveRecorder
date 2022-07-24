@@ -19,6 +19,7 @@ namespace BililiveRecorder.Flv.Pipeline.Rules
     {
         private const int MAX_HISTORY = 16;
         private const string QUEUE_KEY = "DeDuplicationQueue";
+        private const string DUPLICATED_COUNT_KEY = "DuplicatedFlvDataCount";
 
         private static readonly FarmHash64 farmHash64 = new();
         private static readonly ProcessingComment comment = new ProcessingComment(CommentType.RepeatingData, true, "重复数据");
@@ -75,6 +76,27 @@ namespace BililiveRecorder.Flv.Pipeline.Rules
                 {
                     // 重复数据                    
                     context.AddComment(comment);
+
+                    // 判断连续收到的重复数据数量
+                    if (context.SessionItems.ContainsKey(DUPLICATED_COUNT_KEY) && context.SessionItems[DUPLICATED_COUNT_KEY] is int count)
+                    {
+                        count += 1;
+                    }
+                    else
+                    {
+                        count = 1;
+                    }
+
+                    const int DisconnectOnDuplicatedDataCount = 10;
+                    if (count > DisconnectOnDuplicatedDataCount)
+                    {
+                        yield return new PipelineDisconnectAction($"连续收到了 {DisconnectOnDuplicatedDataCount} 段重复数据");
+                        context.SessionItems.Remove(DUPLICATED_COUNT_KEY);
+                    }
+                    else
+                    {
+                        context.SessionItems[DUPLICATED_COUNT_KEY] = count;
+                    }
                 }
                 else
                 {
@@ -84,11 +106,14 @@ namespace BililiveRecorder.Flv.Pipeline.Rules
                     while (hashHistory.Count > MAX_HISTORY)
                         hashHistory.Dequeue();
 
+                    context.SessionItems.Remove(DUPLICATED_COUNT_KEY);
                     yield return action;
                 }
             }
             else
+            {
                 yield return action;
+            }
         }
     }
 }

@@ -2,8 +2,13 @@ namespace BililiveRecorder.Flv.Pipeline.Actions
 {
     public class PipelineDisconnectAction : PipelineAction
     {
-        public static readonly PipelineDisconnectAction Instance = new PipelineDisconnectAction();
+        public string Reason { get; set; } = string.Empty;
 
-        public override PipelineAction Clone() => Instance;
+        public PipelineDisconnectAction(string reason)
+        {
+            this.Reason = reason;
+        }
+
+        public override PipelineAction Clone() => new PipelineDisconnectAction(reason: this.Reason);
     }
 }

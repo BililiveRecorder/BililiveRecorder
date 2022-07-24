@@ -187,9 +187,9 @@ namespace BililiveRecorder.Core.Recording
                     }
                     this.ioDiskStopwatch.Reset();
 
-                    if (this.context.Actions.Any(x => x is PipelineDisconnectAction))
+                    if (this.context.Actions.FirstOrDefault(x => x is PipelineDisconnectAction) is PipelineDisconnectAction disconnectAction)
                     {
-                        this.logger.Information("根据修复逻辑的要求结束录制");
+                        this.logger.Information("修复系统断开录制：{Reason}", disconnectAction.Reason);
                         break;
                     }
                 }

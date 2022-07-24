@@ -45,7 +45,7 @@ namespace BililiveRecorder.Flv.Pipeline.Rules
                 if (data.Tags.Where(x => x.Type == TagType.Audio).Any2(ref IsNextTimestampSmaller.Instance) || data.Tags.Where(x => x.Type == TagType.Video).Any2(ref IsNextTimestampSmaller.Instance))
                 {
                     // 音频或视频自身就有问题，没救了
-                    yield return PipelineDisconnectAction.Instance;
+                    yield return new PipelineDisconnectAction("GOP 内音频或视频时间戳不连续");
                     context.AddComment(COMMENT_JumpedWithinGOP);
                     yield break;
                 }
@@ -157,7 +157,7 @@ namespace BililiveRecorder.Flv.Pipeline.Rules
 
                 invalidOffset:
                     context.AddComment(COMMENT_CantSolve);
-                    yield return PipelineDisconnectAction.Instance;
+                    yield return new PipelineDisconnectAction("出现无法计算的音视频时间戳错位");
                     yield break;
                 }
             }
