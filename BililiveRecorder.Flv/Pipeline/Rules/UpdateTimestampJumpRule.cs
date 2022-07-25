@@ -40,7 +40,8 @@ namespace BililiveRecorder.Flv.Pipeline.Rules
                     var tags = dataAction.Tags;
                     var currentTimestamp = tags[0].Timestamp;
                     var diff = currentTimestamp - ts.LastOriginal;
-                    if (diff < 0)
+
+                    if (diff < (-JUMP_THRESHOLD))
                     {
                         context.AddComment(new ProcessingComment(CommentType.TimestampJump, true, $"时间戳变小, curr: {currentTimestamp}, diff: {diff}"));
                         ts.CurrentOffset = currentTimestamp - ts.NextTimestampTarget;
