@@ -135,7 +135,8 @@ namespace BililiveRecorder.Core
                 {
                     try
                     {
-                        this.CreateAndStartNewRecordTask();
+                        // 手动触发录制，启动录制前再刷新一次房间信息
+                        this.CreateAndStartNewRecordTask(skipFetchRoomInfo: false);
                     }
                     catch (Exception ex)
                     {
@@ -168,12 +169,10 @@ namespace BililiveRecorder.Core
 
             try
             {
+                // 如果直播状态从 false 改成 true，Room_PropertyChanged 会触发录制
                 await this.FetchRoomInfoAsync().ConfigureAwait(false);
 
                 this.StartDamakuConnection(delay: false);
-
-                if (this.Streaming && this.AutoRecordForThisSession && this.RoomConfig.AutoRecord)
-                    this.CreateAndStartNewRecordTask();
             }
             catch (Exception ex)
             {
@@ -205,7 +204,7 @@ namespace BililiveRecorder.Core
         }
 
         ///
-        private void CreateAndStartNewRecordTask()
+        private void CreateAndStartNewRecordTask(bool skipFetchRoomInfo = false)
         {
             lock (this.recordStartLock)
             {
@@ -233,6 +232,9 @@ namespace BililiveRecorder.Core
                 {
                     try
                     {
+                        if (!skipFetchRoomInfo)
+                            await this.FetchRoomInfoAsync();
+
                         await this.recordTask.StartAsync();
                     }
                     catch (NoMatchingQnValueException)
@@ -299,13 +301,13 @@ namespace BililiveRecorder.Core
                     this.recordRetryDelaySemaphoreSlim.Release();
                 }
 
+                // 如果状态是非直播中，跳过重试尝试。当状态切换到直播中时会开始新的录制任务。
                 if (!this.Streaming || !this.AutoRecordForThisSession)
                     return;
 
-                await this.FetchRoomInfoAsync().ConfigureAwait(false);
-
+                // 启动录制时更新房间信息
                 if (this.Streaming && this.AutoRecordForThisSession)
-                    this.CreateAndStartNewRecordTask();
+                    this.CreateAndStartNewRecordTask(skipFetchRoomInfo: false);
             }
             catch (Exception ex)
             {
@@ -429,18 +431,20 @@ namespace BililiveRecorder.Core
                 this.recordTask = null;
                 _ = Task.Run(async () =>
                 {
+                    await Task.Yield();
+
                     // 录制结束退出后的重试逻辑
                     // 比 RestartAfterRecordTaskFailedAsync 少了等待时间
 
+                    // 如果状态是非直播中，跳过重试尝试。当状态切换到直播中时会开始新的录制任务。
                     if (!this.Streaming || !this.AutoRecordForThisSession)
                         return;
 
                     try
                     {
-                        await this.FetchRoomInfoAsync().ConfigureAwait(false);
-
+                        // 开始录制前刷新房间信息
                         if (this.Streaming && this.AutoRecordForThisSession)
-                            this.CreateAndStartNewRecordTask();
+                            this.CreateAndStartNewRecordTask(skipFetchRoomInfo: false);
                     }
                     catch (Exception ex)
                     {
@@ -519,8 +523,9 @@ namespace BililiveRecorder.Core
                         // 定时主动检查不需要错误重试
                         await this.FetchRoomInfoAsync().ConfigureAwait(false);
 
+                        // 刚更新了房间信息不需要再获取一次
                         if (this.Streaming && this.AutoRecordForThisSession && this.RoomConfig.AutoRecord)
-                            this.CreateAndStartNewRecordTask();
+                            this.CreateAndStartNewRecordTask(skipFetchRoomInfo: true);
                     }
                     catch (Exception) { }
                 });
@@ -534,8 +539,9 @@ namespace BililiveRecorder.Core
                 case nameof(this.Streaming):
                     if (this.Streaming)
                     {
+                        // 如果开播状态是通过广播消息获取的，本地的直播间信息就不是最新的，需要重新获取。
                         if (this.AutoRecordForThisSession && this.RoomConfig.AutoRecord)
-                            this.CreateAndStartNewRecordTask();
+                            this.CreateAndStartNewRecordTask(skipFetchRoomInfo: false);
                     }
                     else
                     {
@@ -561,8 +567,10 @@ namespace BililiveRecorder.Core
                     if (this.RoomConfig.AutoRecord)
                     {
                         this.AutoRecordForThisSession = true;
+
+                        // 启动录制时更新一次房间信息
                         if (this.Streaming && this.AutoRecordForThisSession)
-                            this.CreateAndStartNewRecordTask();
+                            this.CreateAndStartNewRecordTask(skipFetchRoomInfo: false);
                     }
                     break;
                 default:
