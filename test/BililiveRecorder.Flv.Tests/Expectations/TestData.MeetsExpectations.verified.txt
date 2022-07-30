@@ -9,7 +9,6 @@ Bad/p3-mock-20210310-change_header_both.xml
 Bad/p3-mock-20210310-change_header_video.xml
 Bad/p3-mock-20210310-multiple_headers.xml
 Bad/p4-brec_legacy-20210309-pk_agora_ts_offset.xml
-Bad/p4-brec_legacy-20210313-issue_171.xml
 Bad/README.md
 Flv/sample.flv
 Good/obs-fps10.xml

@@ -20,7 +20,7 @@ namespace BililiveRecorder.Flv.Tests.RuleTests
     [ExpectationPath("Bad")]
     public class IntegratedBadTests : IntegratedTestBase
     {
-        [Theory(Skip = "随便改改试试，跳过测试")]
+        [Theory]
         [Expectation("TestBadSamples")]
         [SampleFileTestData("../data/flv/TestData/Bad", "*.xml")]
         public async Task TestBadSamples(string path)
