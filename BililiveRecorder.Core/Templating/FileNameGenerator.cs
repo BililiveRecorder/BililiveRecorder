@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using BililiveRecorder.Core.Config.V3;
 using Fluid;
@@ -224,11 +225,16 @@ namespace BililiveRecorder.Core.Templating
             }
         }
 
+        private static readonly Regex invalidDirectoryNameRegex = new Regex(@"([ .])([\\\/])", RegexOptions.Compiled);
+
         internal static string RemoveInvalidFileName(string input, bool ignore_slash = true)
         {
             foreach (var c in Path.GetInvalidFileNameChars())
                 if (!ignore_slash || c != '\\' && c != '/')
                     input = input.Replace(c, '_');
+
+            input = invalidDirectoryNameRegex.Replace(input, "$1_$2");
+
             return input;
         }
 
