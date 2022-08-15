@@ -5,6 +5,6 @@ pushd "$SCRIPT_DIR/source"
 export BASE_URL="/ui/"
 export VITE_EMBEDDED_BUILD="true"
 npm ci && npx vite build
-rm --recursive ../../BililiveRecorder.Web/embeded/ui 2>/dev/null || true
-cp --recursive dist ../../BililiveRecorder.Web/embeded/ui
+rm -R ../../BililiveRecorder.Web/embeded/ui 2>/dev/null || true
+cp -R dist ../../BililiveRecorder.Web/embeded/ui
 popd
