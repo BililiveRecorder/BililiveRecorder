@@ -39,9 +39,21 @@ namespace BililiveRecorder.Flv.Pipeline.Rules
                 {   // SetDataTimestamp
                     var tags = dataAction.Tags;
                     var currentTimestamp = tags[0].Timestamp;
+
+                    bool isFirstChunk = ts.FirstChunk;
+                    if (isFirstChunk)
+                    {
+                        // 第一段数据使用最小的时间戳作为基础偏移量
+                        // 防止出现前几个 Tag 时间戳为负数的情况
+                        ts.FirstChunk = false;
+
+                        var min = tags.Min(t => t.Timestamp);
+                        currentTimestamp = min;
+                    }
+
                     var diff = currentTimestamp - ts.LastOriginal;
 
-                    if (diff < (-JUMP_THRESHOLD))
+                    if (diff < (-JUMP_THRESHOLD) || (isFirstChunk && diff < 0))
                     {
                         context.AddComment(new ProcessingComment(CommentType.TimestampJump, true, $"时间戳变小, curr: {currentTimestamp}, diff: {diff}"));
                         ts.CurrentOffset = currentTimestamp - ts.NextTimestampTarget;
@@ -132,6 +144,16 @@ namespace BililiveRecorder.Flv.Pipeline.Rules
 
         private class TimestampStore
         {
+            public TimestampStore()
+            {
+                this.Reset();
+            }
+
+            /// <summary>
+            /// 第一块直播数据特殊处理
+            /// </summary>
+            public bool FirstChunk;
+
             /// <summary>
             /// 下一个 Tag 的目标时间戳
             /// </summary>
@@ -149,6 +171,7 @@ namespace BililiveRecorder.Flv.Pipeline.Rules
 
             public void Reset()
             {
+                this.FirstChunk = true;
                 this.NextTimestampTarget = 0;
                 this.LastOriginal = 0;
                 this.CurrentOffset = 0;
