@@ -42,6 +42,13 @@ namespace BililiveRecorder.Core.Config
         ByTime = 1,
         BySize = 2,
     }
+    public enum DanmakuTransportMode
+    {
+        Random = 0,
+        Tcp = 1,
+        Ws = 2,
+        Wss = 3,
+    }
     public enum RecordMode
     {
         Standard = 0,
@@ -67,6 +74,7 @@ namespace BililiveRecorder.Core.Config.V3
         public string Cookie { get; }
         public BililiveRecorder.Core.Config.CuttingMode CuttingMode { get; }
         public uint CuttingNumber { get; }
+        public BililiveRecorder.Core.Config.DanmakuTransportMode DanmakuTransport { get; }
         public string FileNameRecordTemplate { get; }
         public bool FlvProcessorSplitOnScriptTag { get; }
         public string LiveApiHost { get; }
@@ -89,6 +97,7 @@ namespace BililiveRecorder.Core.Config.V3
         public string UserScript { get; }
         public string WebHookUrls { get; }
         public string WebHookUrlsV2 { get; }
+        public bool WpfNotifyStreamStart { get; }
         public bool WpfShowTitleAndArea { get; }
     }
     [Newtonsoft.Json.JsonObject(Newtonsoft.Json.MemberSerialization.OptIn)]
@@ -98,11 +107,13 @@ namespace BililiveRecorder.Core.Config.V3
         public string? Cookie { get; set; }
         public BililiveRecorder.Core.Config.CuttingMode CuttingMode { get; set; }
         public uint CuttingNumber { get; set; }
+        public BililiveRecorder.Core.Config.DanmakuTransportMode DanmakuTransport { get; set; }
         public string? FileNameRecordTemplate { get; set; }
         public bool FlvProcessorSplitOnScriptTag { get; set; }
         public bool HasCookie { get; set; }
         public bool HasCuttingMode { get; set; }
         public bool HasCuttingNumber { get; set; }
+        public bool HasDanmakuTransport { get; set; }
         public bool HasFileNameRecordTemplate { get; set; }
         public bool HasFlvProcessorSplitOnScriptTag { get; set; }
         public bool HasLiveApiHost { get; set; }
@@ -125,6 +136,7 @@ namespace BililiveRecorder.Core.Config.V3
         public bool HasUserScript { get; set; }
         public bool HasWebHookUrls { get; set; }
         public bool HasWebHookUrlsV2 { get; set; }
+        public bool HasWpfNotifyStreamStart { get; set; }
         public bool HasWpfShowTitleAndArea { get; set; }
         public string? LiveApiHost { get; set; }
         public BililiveRecorder.Core.Config.AllowedAddressFamily NetworkTransportAllowedAddressFamily { get; set; }
@@ -135,6 +147,8 @@ namespace BililiveRecorder.Core.Config.V3
         public HierarchicalPropertyDefault.Optional<BililiveRecorder.Core.Config.CuttingMode> OptionalCuttingMode { get; set; }
         [Newtonsoft.Json.JsonProperty("CuttingNumber")]
         public HierarchicalPropertyDefault.Optional<uint> OptionalCuttingNumber { get; set; }
+        [Newtonsoft.Json.JsonProperty("DanmakuTransport")]
+        public HierarchicalPropertyDefault.Optional<BililiveRecorder.Core.Config.DanmakuTransportMode> OptionalDanmakuTransport { get; set; }
         [Newtonsoft.Json.JsonProperty("FileNameRecordTemplate")]
         public HierarchicalPropertyDefault.Optional<string?> OptionalFileNameRecordTemplate { get; set; }
         [Newtonsoft.Json.JsonProperty("FlvProcessorSplitOnScriptTag")]
@@ -179,6 +193,8 @@ namespace BililiveRecorder.Core.Config.V3
         public HierarchicalPropertyDefault.Optional<string?> OptionalWebHookUrls { get; set; }
         [Newtonsoft.Json.JsonProperty("WebHookUrlsV2")]
         public HierarchicalPropertyDefault.Optional<string?> OptionalWebHookUrlsV2 { get; set; }
+        [Newtonsoft.Json.JsonProperty("WpfNotifyStreamStart")]
+        public HierarchicalPropertyDefault.Optional<bool> OptionalWpfNotifyStreamStart { get; set; }
         [Newtonsoft.Json.JsonProperty("WpfShowTitleAndArea")]
         public HierarchicalPropertyDefault.Optional<bool> OptionalWpfShowTitleAndArea { get; set; }
         public bool RecordDanmaku { get; set; }
@@ -199,6 +215,7 @@ namespace BililiveRecorder.Core.Config.V3
         public string? WebHookUrls { get; set; }
         public string? WebHookUrlsV2 { get; set; }
         public string? WorkDirectory { get; set; }
+        public bool WpfNotifyStreamStart { get; set; }
         public bool WpfShowTitleAndArea { get; set; }
     }
     public interface IFileNameConfig
@@ -214,6 +231,7 @@ namespace BililiveRecorder.Core.Config.V3
         public string? Cookie { get; }
         public BililiveRecorder.Core.Config.CuttingMode CuttingMode { get; set; }
         public uint CuttingNumber { get; set; }
+        public BililiveRecorder.Core.Config.DanmakuTransportMode DanmakuTransport { get; }
         public string? FileNameRecordTemplate { get; }
         public bool FlvProcessorSplitOnScriptTag { get; set; }
         public bool HasAutoRecord { get; set; }
@@ -274,6 +292,7 @@ namespace BililiveRecorder.Core.Config.V3
         public string? WebHookUrls { get; }
         public string? WebHookUrlsV2 { get; }
         public string? WorkDirectory { get; }
+        public bool WpfNotifyStreamStart { get; }
         public bool WpfShowTitleAndArea { get; }
     }
 }
@@ -382,6 +401,7 @@ namespace BililiveRecorder.Core
         event System.EventHandler<BililiveRecorder.Core.Event.AggregatedRoomEventArgs<BililiveRecorder.Core.Event.RecordSessionEndedEventArgs>>? RecordSessionEnded;
         event System.EventHandler<BililiveRecorder.Core.Event.AggregatedRoomEventArgs<BililiveRecorder.Core.Event.RecordSessionStartedEventArgs>>? RecordSessionStarted;
         event System.EventHandler<BililiveRecorder.Core.Event.AggregatedRoomEventArgs<BililiveRecorder.Core.Event.RecordingStatsEventArgs>>? RecordingStats;
+        event System.EventHandler<BililiveRecorder.Core.IRoom> StreamStarted;
         BililiveRecorder.Core.IRoom AddRoom(int roomid);
         BililiveRecorder.Core.IRoom AddRoom(int roomid, bool enabled);
         void RemoveRoom(BililiveRecorder.Core.IRoom room);
