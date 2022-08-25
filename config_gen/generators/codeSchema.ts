@@ -8,6 +8,8 @@ function mapTypeToJsonSchema(id: string, type: string, defaultValue: any) {
             return { type: "integer", default: 0, enum: [0, 1, 2], "description": "0: 禁用\n1: 根据时间切割\n2: 根据文件大小切割" };
         case "AllowedAddressFamily":
             return { type: "integer", default: 0, enum: [-1, 0, 1, 2], "description": "-1: 由系统决定\n0: 任意 IPv4 或 IPv6\n1: 仅 IPv4\n2: IPv6" };
+        case "DanmakuTransportMode":
+            return { type: "integer", default: 0, enum: [0, 1, 2, 3], "description": "0: 随机\n1: TCP\n2: WebSocket (HTTP)\n3: WebSocket (HTTPS)" };
         case "uint":
             return { type: "integer", minimum: 0, maximum: 4294967295, default: defaultValue };
         case "int":

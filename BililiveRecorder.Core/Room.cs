@@ -325,6 +325,7 @@ namespace BililiveRecorder.Core
                 try
                 {
                     if (delay)
+                    {
                         try
                         {
                             await Task.Delay((int)this.RoomConfig.TimingDanmakuRetry, this.ct).ConfigureAwait(false);
@@ -334,15 +335,16 @@ namespace BililiveRecorder.Core
                             // 房间已被删除
                             return;
                         }
+                    }
 
-                    await this.danmakuClient.ConnectAsync(this.RoomConfig.RoomId, this.ct).ConfigureAwait(false);
+                    await this.danmakuClient.ConnectAsync(this.RoomConfig.RoomId, this.RoomConfig.DanmakuTransport, this.ct).ConfigureAwait(false);
                 }
                 catch (Exception ex)
                 {
                     this.logger.Write(ex is ExecutionRejectedException ? LogEventLevel.Verbose : LogEventLevel.Warning, ex, "连接弹幕服务器时出错");
 
                     if (!this.ct.IsCancellationRequested)
-                        this.StartDamakuConnection();
+                        this.StartDamakuConnection(delay: true);
                 }
             });
 

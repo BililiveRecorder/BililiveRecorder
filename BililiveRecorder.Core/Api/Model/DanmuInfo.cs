@@ -18,6 +18,12 @@ namespace BililiveRecorder.Core.Api.Model
 
             [JsonProperty("port")]
             public int Port { get; set; }
+
+            [JsonProperty("ws_port")]
+            public int WsPort { get; set; }
+
+            [JsonProperty("wss_port")]
+            public int WssPort { get; set; }
         }
     }
 }

@@ -1,15 +1,14 @@
 using System;
 using System.Buffers;
 using System.Buffers.Binary;
-using System.IO;
 using System.IO.Compression;
 using System.IO.Pipelines;
 using System.Net;
-using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Timers;
+using BililiveRecorder.Core.Config;
 using Nerdbank.Streams;
 using Newtonsoft.Json;
 using Serilog;
@@ -24,10 +23,10 @@ namespace BililiveRecorder.Core.Api.Danmaku
         private readonly Timer timer;
         private readonly SemaphoreSlim semaphoreSlim = new SemaphoreSlim(1, 1);
 
-        private Stream? danmakuStream;
+        private IDanmakuTransport? danmakuTransport;
         private bool disposedValue;
 
-        public bool Connected => this.danmakuStream != null;
+        public bool Connected => this.danmakuTransport != null;
 
         public event EventHandler<StatusChangedEventArgs>? StatusChanged;
         public event EventHandler<DanmakuReceivedEventArgs>? DanmakuReceived;
@@ -50,8 +49,8 @@ namespace BililiveRecorder.Core.Api.Danmaku
             await this.semaphoreSlim.WaitAsync().ConfigureAwait(false);
             try
             {
-                this.danmakuStream?.Dispose();
-                this.danmakuStream = null;
+                this.danmakuTransport?.Dispose();
+                this.danmakuTransport = null;
 
                 this.timer.Stop();
             }
@@ -63,40 +62,47 @@ namespace BililiveRecorder.Core.Api.Danmaku
             StatusChanged?.Invoke(this, StatusChangedEventArgs.False);
         }
 
-        public async Task ConnectAsync(int roomid, CancellationToken cancellationToken)
+        public async Task ConnectAsync(int roomid, DanmakuTransportMode transportMode, CancellationToken cancellationToken)
         {
             if (this.disposedValue)
                 throw new ObjectDisposedException(nameof(DanmakuClient));
 
+            if (!Enum.IsDefined(typeof(DanmakuTransportMode), transportMode))
+                throw new ArgumentOutOfRangeException(nameof(transportMode), transportMode, "Invalid danmaku transport mode.");
+
             await this.semaphoreSlim.WaitAsync().ConfigureAwait(false);
             try
             {
-                if (this.danmakuStream != null)
+                if (this.danmakuTransport != null)
                     return;
 
                 var serverInfo = await this.apiClient.GetDanmakuServerAsync(roomid).ConfigureAwait(false);
                 if (serverInfo.Data is null)
                     return;
-                serverInfo.Data.ChooseOne(out var host, out var port, out var token);
 
-                this.logger.Debug("Connecting to {Host}:{Port} with a {TokenLength} char long token for room {RoomId}", host, port, token?.Length, roomid);
+                var danmakuServerInfo = serverInfo.Data.SelectDanmakuServer(transportMode);
 
-                if (cancellationToken.IsCancellationRequested)
-                    return;
+                this.logger.Debug("连接弹幕服务器 {Mode} {Host}:{Port} 房间: {RoomId} TokenLength: {TokenLength}", danmakuServerInfo.TransportMode, danmakuServerInfo.Host, danmakuServerInfo.Port, roomid, danmakuServerInfo.Token?.Length);
 
-                var tcp = new TcpClient();
-                await tcp.ConnectAsync(host, port).ConfigureAwait(false);
+                IDanmakuTransport transport = danmakuServerInfo.TransportMode switch
+                {
+                    DanmakuTransportMode.Tcp => new DanmakuTransportTcp(),
+                    DanmakuTransportMode.Ws => new DanmakuTransportWebSocket(),
+                    DanmakuTransportMode.Wss => new DanmakuTransportSecureWebSocket(),
+                    _ => throw new ArgumentOutOfRangeException(nameof(transportMode), transportMode, "Invalid danmaku transport mode."),
+                };
 
-                this.danmakuStream = tcp.GetStream();
+                var reader = await transport.ConnectAsync(danmakuServerInfo.Host, danmakuServerInfo.Port, cancellationToken).ConfigureAwait(false);
 
-                await SendHelloAsync(this.danmakuStream, roomid, token!).ConfigureAwait(false);
-                await SendPingAsync(this.danmakuStream);
+                this.danmakuTransport = transport;
+
+                await this.SendHelloAsync(roomid, danmakuServerInfo.Token ?? string.Empty).ConfigureAwait(false);
+                await this.SendPingAsync().ConfigureAwait(false);
 
                 if (cancellationToken.IsCancellationRequested)
                 {
-                    tcp.Dispose();
-                    this.danmakuStream.Dispose();
-                    this.danmakuStream = null;
+                    this.danmakuTransport.Dispose();
+                    this.danmakuTransport = null;
                     return;
                 }
 
@@ -106,7 +112,7 @@ namespace BililiveRecorder.Core.Api.Danmaku
                 {
                     try
                     {
-                        await ProcessDataAsync(this.danmakuStream, this.ProcessCommand).ConfigureAwait(false);
+                        await ProcessDataAsync(reader, this.ProcessCommand).ConfigureAwait(false);
                     }
                     catch (ObjectDisposedException) { }
                     catch (Exception ex)
@@ -151,10 +157,10 @@ namespace BililiveRecorder.Core.Api.Danmaku
                 await this.semaphoreSlim.WaitAsync().ConfigureAwait(false);
                 try
                 {
-                    if (this.danmakuStream is null)
+                    if (this.danmakuTransport is null)
                         return;
 
-                    await SendPingAsync(this.danmakuStream).ConfigureAwait(false);
+                    await this.SendPingAsync().ConfigureAwait(false);
                 }
                 finally
                 {
@@ -177,7 +183,7 @@ namespace BililiveRecorder.Core.Api.Danmaku
                 {
                     // dispose managed state (managed objects)
                     this.timer.Dispose();
-                    this.danmakuStream?.Dispose();
+                    this.danmakuTransport?.Dispose();
                     this.semaphoreSlim.Dispose();
                 }
 
@@ -205,42 +211,41 @@ namespace BililiveRecorder.Core.Api.Danmaku
 
         #region Send
 
-        private static Task SendHelloAsync(Stream stream, int roomid, string token) =>
-            SendMessageAsync(stream, 7, JsonConvert.SerializeObject(new
+        private Task SendHelloAsync(int roomid, string token) =>
+            this.SendMessageAsync(7, JsonConvert.SerializeObject(new
             {
                 uid = 0,
                 roomid = roomid,
                 protover = 0,
                 platform = "web",
-                clientver = "2.6.25",
                 type = 2,
                 key = token,
             }, Formatting.None));
 
-        private static Task SendPingAsync(Stream stream) =>
-            SendMessageAsync(stream, 2);
+        private Task SendPingAsync() => this.SendMessageAsync(2);
 
-        private static async Task SendMessageAsync(Stream stream, int action, string body = "")
+        private async Task SendMessageAsync(int action, string body = "")
         {
-            if (stream is null)
-                throw new ArgumentNullException(nameof(stream));
+            if (this.danmakuTransport is not { } transport)
+                return;
 
             var playload = ((body?.Length ?? 0) > 0) ? Encoding.UTF8.GetBytes(body) : Array.Empty<byte>();
             const int headerLength = 16;
-            var size = playload.Length + headerLength;
-            var buffer = ArrayPool<byte>.Shared.Rent(headerLength);
+            var totalLength = playload.Length + headerLength;
+
+            var buffer = ArrayPool<byte>.Shared.Rent(totalLength);
             try
             {
-                BinaryPrimitives.WriteUInt32BigEndian(new Span<byte>(buffer, 0, 4), (uint)size);
+                BinaryPrimitives.WriteUInt32BigEndian(new Span<byte>(buffer, 0, 4), (uint)totalLength);
                 BinaryPrimitives.WriteUInt16BigEndian(new Span<byte>(buffer, 4, 2), headerLength);
                 BinaryPrimitives.WriteUInt16BigEndian(new Span<byte>(buffer, 6, 2), 1);
                 BinaryPrimitives.WriteUInt32BigEndian(new Span<byte>(buffer, 8, 4), (uint)action);
                 BinaryPrimitives.WriteUInt32BigEndian(new Span<byte>(buffer, 12, 4), 1);
 
-                await stream.WriteAsync(buffer, 0, headerLength).ConfigureAwait(false);
                 if (playload.Length > 0)
-                    await stream.WriteAsync(playload, 0, playload.Length).ConfigureAwait(false);
-                await stream.FlushAsync().ConfigureAwait(false);
+                    Array.Copy(playload, 0, buffer, headerLength, playload.Length);
+
+                await transport.SendAsync(buffer, 0, totalLength).ConfigureAwait(false);
             }
             finally
             {
@@ -252,10 +257,8 @@ namespace BililiveRecorder.Core.Api.Danmaku
 
         #region Receive
 
-        private static async Task ProcessDataAsync(Stream stream, Action<string> callback)
+        private static async Task ProcessDataAsync(PipeReader reader, Action<string> callback)
         {
-            var reader = PipeReader.Create(stream);
-
             while (true)
             {
                 var result = await reader.ReadAsync();

@@ -37,6 +37,7 @@ namespace BililiveRecorder.Cli.Configure
         TimingDanmakuRetry,
         TimingWatchdogTimeout,
         RecordDanmakuFlushInterval,
+        DanmakuTransport,
         NetworkTransportUseSystemProxy,
         NetworkTransportAllowedAddressFamily,
         UserScript
@@ -88,6 +89,7 @@ namespace BililiveRecorder.Cli.Configure
             GlobalConfig.Add(GlobalConfigProperties.TimingDanmakuRetry, new ConfigInstruction<GlobalConfig, uint>(config => config.HasTimingDanmakuRetry = false, (config, value) => config.TimingDanmakuRetry = value) { Name = "TimingDanmakuRetry", CanBeOptional = true });
             GlobalConfig.Add(GlobalConfigProperties.TimingWatchdogTimeout, new ConfigInstruction<GlobalConfig, uint>(config => config.HasTimingWatchdogTimeout = false, (config, value) => config.TimingWatchdogTimeout = value) { Name = "TimingWatchdogTimeout", CanBeOptional = true });
             GlobalConfig.Add(GlobalConfigProperties.RecordDanmakuFlushInterval, new ConfigInstruction<GlobalConfig, uint>(config => config.HasRecordDanmakuFlushInterval = false, (config, value) => config.RecordDanmakuFlushInterval = value) { Name = "RecordDanmakuFlushInterval", CanBeOptional = true });
+            GlobalConfig.Add(GlobalConfigProperties.DanmakuTransport, new ConfigInstruction<GlobalConfig, DanmakuTransportMode>(config => config.HasDanmakuTransport = false, (config, value) => config.DanmakuTransport = value) { Name = "DanmakuTransport", CanBeOptional = true });
             GlobalConfig.Add(GlobalConfigProperties.NetworkTransportUseSystemProxy, new ConfigInstruction<GlobalConfig, bool>(config => config.HasNetworkTransportUseSystemProxy = false, (config, value) => config.NetworkTransportUseSystemProxy = value) { Name = "NetworkTransportUseSystemProxy", CanBeOptional = true });
             GlobalConfig.Add(GlobalConfigProperties.NetworkTransportAllowedAddressFamily, new ConfigInstruction<GlobalConfig, AllowedAddressFamily>(config => config.HasNetworkTransportAllowedAddressFamily = false, (config, value) => config.NetworkTransportAllowedAddressFamily = value) { Name = "NetworkTransportAllowedAddressFamily", CanBeOptional = true });
             GlobalConfig.Add(GlobalConfigProperties.UserScript, new ConfigInstruction<GlobalConfig, string>(config => config.HasUserScript = false, (config, value) => config.UserScript = value) { Name = "UserScript", CanBeOptional = true });

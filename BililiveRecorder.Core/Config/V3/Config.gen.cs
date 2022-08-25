@@ -175,6 +175,11 @@ namespace BililiveRecorder.Core.Config.V3
         public uint RecordDanmakuFlushInterval => this.GetPropertyValue<uint>();
 
         /// <summary>
+        /// 使用的弹幕服务器传输协议
+        /// </summary>
+        public DanmakuTransportMode DanmakuTransport => this.GetPropertyValue<DanmakuTransportMode>();
+
+        /// <summary>
         /// 是否使用系统代理
         /// </summary>
         public bool NetworkTransportUseSystemProxy => this.GetPropertyValue<bool>();
@@ -379,6 +384,14 @@ namespace BililiveRecorder.Core.Config.V3
         public Optional<uint> OptionalRecordDanmakuFlushInterval { get => this.GetPropertyValueOptional<uint>(nameof(this.RecordDanmakuFlushInterval)); set => this.SetPropertyValueOptional(value, nameof(this.RecordDanmakuFlushInterval)); }
 
         /// <summary>
+        /// 使用的弹幕服务器传输协议
+        /// </summary>
+        public DanmakuTransportMode DanmakuTransport { get => this.GetPropertyValue<DanmakuTransportMode>(); set => this.SetPropertyValue(value); }
+        public bool HasDanmakuTransport { get => this.GetPropertyHasValue(nameof(this.DanmakuTransport)); set => this.SetPropertyHasValue<DanmakuTransportMode>(value, nameof(this.DanmakuTransport)); }
+        [JsonProperty(nameof(DanmakuTransport)), EditorBrowsable(EditorBrowsableState.Never)]
+        public Optional<DanmakuTransportMode> OptionalDanmakuTransport { get => this.GetPropertyValueOptional<DanmakuTransportMode>(nameof(this.DanmakuTransport)); set => this.SetPropertyValueOptional(value, nameof(this.DanmakuTransport)); }
+
+        /// <summary>
         /// 是否使用系统代理
         /// </summary>
         public bool NetworkTransportUseSystemProxy { get => this.GetPropertyValue<bool>(); set => this.SetPropertyValue(value); }
@@ -454,6 +467,8 @@ namespace BililiveRecorder.Core.Config.V3
         public uint TimingWatchdogTimeout => 10000;
 
         public uint RecordDanmakuFlushInterval => 20;
+
+        public DanmakuTransportMode DanmakuTransport => DanmakuTransportMode.Random;
 
         public bool NetworkTransportUseSystemProxy => false;
 

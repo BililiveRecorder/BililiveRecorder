@@ -187,6 +187,14 @@ export const data: Array<ConfigEntry> = [
         default: 20,
     },
     {
+        id: "DanmakuTransport",
+        name: "使用的弹幕服务器传输协议",
+        type: "DanmakuTransportMode",
+        configType: "globalOnly",
+        advancedConfig: true,
+        default: "DanmakuTransportMode.Random",
+    },
+    {
         id: "NetworkTransportUseSystemProxy",
         name: "是否使用系统代理",
         type: "bool",

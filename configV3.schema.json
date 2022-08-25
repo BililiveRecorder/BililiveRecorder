@@ -229,6 +229,29 @@
             }
           }
         },
+        "DanmakuTransport": {
+          "description": "使用的弹幕服务器传输协议\n默认: DanmakuTransportMode.Random",
+          "markdownDescription": "使用的弹幕服务器传输协议  \n默认: `DanmakuTransportMode.Random `\n\n",
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "HasValue": {
+              "type": "boolean",
+              "default": true
+            },
+            "Value": {
+              "type": "integer",
+              "default": 0,
+              "enum": [
+                0,
+                1,
+                2,
+                3
+              ],
+              "description": "0: 随机\n1: TCP\n2: WebSocket (HTTP)\n3: WebSocket (HTTPS)"
+            }
+          }
+        },
         "NetworkTransportUseSystemProxy": {
           "description": "是否使用系统代理\n默认: false",
           "markdownDescription": "是否使用系统代理  \n默认: `false `\n\n",

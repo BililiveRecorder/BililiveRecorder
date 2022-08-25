@@ -13,10 +13,10 @@ namespace BililiveRecorder.Core.Api.Http
 {
     internal class HttpApiClient : IApiClient, IDanmakuServerApiClient, IHttpClientAccessor
     {
-        private const string HttpHeaderAccept = "application/json, text/javascript, */*; q=0.01";
-        private const string HttpHeaderOrigin = "https://live.bilibili.com";
-        private const string HttpHeaderReferer = "https://live.bilibili.com/";
-        private const string HttpHeaderUserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.141 Safari/537.36";
+        internal const string HttpHeaderAccept = "application/json, text/javascript, */*; q=0.01";
+        internal const string HttpHeaderReferer = "https://live.bilibili.com/";
+        internal const string HttpHeaderOrigin = "https://live.bilibili.com";
+        internal const string HttpHeaderUserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/104.0.0.0 Safari/537.36";
         private static readonly TimeSpan TimeOutTimeSpan = TimeSpan.FromSeconds(15);
 
         private readonly GlobalConfig config;

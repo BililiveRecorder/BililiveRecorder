@@ -15,6 +15,7 @@ export type ConfigValueType =
     | "RecordMode"
     | "CuttingMode"
     | "AllowedAddressFamily"
+    | "DanmakuTransportMode"
 
 export interface ConfigEntry {
     /** 名字 */
