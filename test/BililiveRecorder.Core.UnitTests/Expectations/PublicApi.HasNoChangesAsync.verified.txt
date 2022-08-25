@@ -88,6 +88,7 @@ namespace BililiveRecorder.Core.Config.V3
         public bool RecordDanmakuSuperChat { get; }
         public BililiveRecorder.Core.Config.RecordMode RecordMode { get; }
         public string RecordingQuality { get; }
+        public uint TimingApiTimeout { get; }
         public uint TimingCheckInterval { get; }
         public uint TimingDanmakuRetry { get; }
         public uint TimingStreamConnect { get; }
@@ -127,6 +128,7 @@ namespace BililiveRecorder.Core.Config.V3
         public bool HasRecordDanmakuSuperChat { get; set; }
         public bool HasRecordMode { get; set; }
         public bool HasRecordingQuality { get; set; }
+        public bool HasTimingApiTimeout { get; set; }
         public bool HasTimingCheckInterval { get; set; }
         public bool HasTimingDanmakuRetry { get; set; }
         public bool HasTimingStreamConnect { get; set; }
@@ -175,6 +177,8 @@ namespace BililiveRecorder.Core.Config.V3
         public HierarchicalPropertyDefault.Optional<BililiveRecorder.Core.Config.RecordMode> OptionalRecordMode { get; set; }
         [Newtonsoft.Json.JsonProperty("RecordingQuality")]
         public HierarchicalPropertyDefault.Optional<string?> OptionalRecordingQuality { get; set; }
+        [Newtonsoft.Json.JsonProperty("TimingApiTimeout")]
+        public HierarchicalPropertyDefault.Optional<uint> OptionalTimingApiTimeout { get; set; }
         [Newtonsoft.Json.JsonProperty("TimingCheckInterval")]
         public HierarchicalPropertyDefault.Optional<uint> OptionalTimingCheckInterval { get; set; }
         [Newtonsoft.Json.JsonProperty("TimingDanmakuRetry")]
@@ -205,6 +209,7 @@ namespace BililiveRecorder.Core.Config.V3
         public bool RecordDanmakuSuperChat { get; set; }
         public BililiveRecorder.Core.Config.RecordMode RecordMode { get; set; }
         public string? RecordingQuality { get; set; }
+        public uint TimingApiTimeout { get; set; }
         public uint TimingCheckInterval { get; set; }
         public uint TimingDanmakuRetry { get; set; }
         public uint TimingStreamConnect { get; set; }
@@ -282,6 +287,7 @@ namespace BililiveRecorder.Core.Config.V3
         public BililiveRecorder.Core.Config.RecordMode RecordMode { get; set; }
         public string? RecordingQuality { get; set; }
         public int RoomId { get; set; }
+        public uint TimingApiTimeout { get; }
         public uint TimingCheckInterval { get; }
         public uint TimingDanmakuRetry { get; }
         public uint TimingStreamConnect { get; }
