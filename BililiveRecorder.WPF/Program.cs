@@ -14,6 +14,7 @@ using BililiveRecorder.Flv.Pipeline;
 using BililiveRecorder.ToolBox;
 using Esprima;
 using Jint.Runtime;
+using Microsoft.Toolkit.Uwp.Notifications;
 using Sentry;
 using Sentry.Extensibility;
 using Serilog;
@@ -221,6 +222,12 @@ namespace BililiveRecorder.WPF
                 }
                 finally
                 {
+                    try
+                    {
+                        ToastNotificationManagerCompat.Uninstall();
+                    }
+                    catch (Exception)
+                    { }
                     cancel.Cancel();
 #pragma warning disable VSTHRD002 // Avoid problematic synchronous waits
                     update.WaitForUpdatesOnShutdownAsync().GetAwaiter().GetResult();

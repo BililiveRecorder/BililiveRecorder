@@ -273,6 +273,9 @@ You can uninstall me in system settings.", "安装成功 Installed", MessageBoxB
                         if (!recorder.Config.Global.WpfNotifyStreamStart)
                             return;
 
+                        _ = StreamStartedNotification.ShowAsync(room);
+
+                        return;
                         _ = this.Dispatcher.BeginInvoke(DispatcherPriority.Normal, new Action(() =>
                         {
                             if (Application.Current.MainWindow is NewMainWindow nmw)
