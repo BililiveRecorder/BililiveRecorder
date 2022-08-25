@@ -109,10 +109,17 @@ export const data: Array<ConfigEntry> = [
     },
     {
         id: "WpfShowTitleAndArea",
-        name: "在界面显示标题和分区",
+        name: "桌面版在界面显示标题和分区",
         type: "bool",
         configType: "globalOnly",
         default: true
+    },
+    {
+        id: "WpfNotifyStreamStart",
+        name: "桌面版开播时弹出系统通知",
+        type: "bool",
+        configType: "globalOnly",
+        default: false
     },
     {
         id: "Cookie",

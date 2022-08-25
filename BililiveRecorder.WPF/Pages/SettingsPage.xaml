@@ -107,6 +107,9 @@
                     </Border>
                 </StackPanel>
             </GroupBox>
+            <GroupBox Header="开播通知">
+                <ui:ToggleSwitch IsOn="{Binding WpfNotifyStreamStart}" OnContent="直播间开播时弹出系统通知" OffContent="直播间开播时弹出系统通知"/>
+            </GroupBox>
             <GroupBox Header="录制画质">
                 <StackPanel MaxWidth="400" HorizontalAlignment="Left">
                     <Button Margin="5,0,0,0" Command="{x:Static m:Commands.OpenLink}" CommandParameter="https://rec.danmuji.org/docs/basic/settings/#%E7%9B%B4%E6%92%AD%E7%94%BB%E8%B4%A8">

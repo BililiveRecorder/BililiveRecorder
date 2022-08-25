@@ -125,9 +125,14 @@ namespace BililiveRecorder.Core.Config.V3
         public string? WebHookUrlsV2 => this.GetPropertyValue<string>();
 
         /// <summary>
-        /// 在界面显示标题和分区
+        /// 桌面版在界面显示标题和分区
         /// </summary>
         public bool WpfShowTitleAndArea => this.GetPropertyValue<bool>();
+
+        /// <summary>
+        /// 桌面版开播时弹出系统通知
+        /// </summary>
+        public bool WpfNotifyStreamStart => this.GetPropertyValue<bool>();
 
         /// <summary>
         /// Cookie
@@ -304,12 +309,20 @@ namespace BililiveRecorder.Core.Config.V3
         public Optional<string?> OptionalWebHookUrlsV2 { get => this.GetPropertyValueOptional<string>(nameof(this.WebHookUrlsV2)); set => this.SetPropertyValueOptional(value, nameof(this.WebHookUrlsV2)); }
 
         /// <summary>
-        /// 在界面显示标题和分区
+        /// 桌面版在界面显示标题和分区
         /// </summary>
         public bool WpfShowTitleAndArea { get => this.GetPropertyValue<bool>(); set => this.SetPropertyValue(value); }
         public bool HasWpfShowTitleAndArea { get => this.GetPropertyHasValue(nameof(this.WpfShowTitleAndArea)); set => this.SetPropertyHasValue<bool>(value, nameof(this.WpfShowTitleAndArea)); }
         [JsonProperty(nameof(WpfShowTitleAndArea)), EditorBrowsable(EditorBrowsableState.Never)]
         public Optional<bool> OptionalWpfShowTitleAndArea { get => this.GetPropertyValueOptional<bool>(nameof(this.WpfShowTitleAndArea)); set => this.SetPropertyValueOptional(value, nameof(this.WpfShowTitleAndArea)); }
+
+        /// <summary>
+        /// 桌面版开播时弹出系统通知
+        /// </summary>
+        public bool WpfNotifyStreamStart { get => this.GetPropertyValue<bool>(); set => this.SetPropertyValue(value); }
+        public bool HasWpfNotifyStreamStart { get => this.GetPropertyHasValue(nameof(this.WpfNotifyStreamStart)); set => this.SetPropertyHasValue<bool>(value, nameof(this.WpfNotifyStreamStart)); }
+        [JsonProperty(nameof(WpfNotifyStreamStart)), EditorBrowsable(EditorBrowsableState.Never)]
+        public Optional<bool> OptionalWpfNotifyStreamStart { get => this.GetPropertyValueOptional<bool>(nameof(this.WpfNotifyStreamStart)); set => this.SetPropertyValueOptional(value, nameof(this.WpfNotifyStreamStart)); }
 
         /// <summary>
         /// Cookie
@@ -449,6 +462,8 @@ namespace BililiveRecorder.Core.Config.V3
         public string WebHookUrlsV2 => @"";
 
         public bool WpfShowTitleAndArea => true;
+
+        public bool WpfNotifyStreamStart => false;
 
         public string Cookie => @"";
 

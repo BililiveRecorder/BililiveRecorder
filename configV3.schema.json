@@ -55,8 +55,8 @@
           }
         },
         "WpfShowTitleAndArea": {
-          "description": "在界面显示标题和分区\n默认: true",
-          "markdownDescription": "在界面显示标题和分区  \n默认: `true `\n\n",
+          "description": "桌面版在界面显示标题和分区\n默认: true",
+          "markdownDescription": "桌面版在界面显示标题和分区  \n默认: `true `\n\n",
           "type": "object",
           "additionalProperties": false,
           "properties": {
@@ -67,6 +67,22 @@
             "Value": {
               "type": "boolean",
               "default": true
+            }
+          }
+        },
+        "WpfNotifyStreamStart": {
+          "description": "桌面版开播时弹出系统通知\n默认: false",
+          "markdownDescription": "桌面版开播时弹出系统通知  \n默认: `false `\n\n",
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "HasValue": {
+              "type": "boolean",
+              "default": true
+            },
+            "Value": {
+              "type": "boolean",
+              "default": false
             }
           }
         },

@@ -267,6 +267,21 @@ You can uninstall me in system settings.", "安装成功 Installed", MessageBoxB
                     (Application.Current.MainWindow as NewMainWindow)!.HideToTray = true;
                     NetworkChangeDetector.Enable();
 
+                    // 开播提醒系统通知，乱，但它能跑起来 ┑(￣Д ￣)┍
+                    recorder.StreamStarted += (sender, room) =>
+                    {
+                        if (!recorder.Config.Global.WpfNotifyStreamStart)
+                            return;
+
+                        _ = this.Dispatcher.BeginInvoke(DispatcherPriority.Normal, new Action(() =>
+                        {
+                            if (Application.Current.MainWindow is NewMainWindow nmw)
+                            {
+                                nmw.ShowBalloonTipCallback?.Invoke(room.Name + " 开播了", $"{room.AreaNameParent} · {room.AreaNameChild}\n{room.Title}", Hardcodet.Wpf.TaskbarNotification.BalloonIcon.None);
+                            }
+                        }));
+                    };
+
                     _ = Task.Run(async () =>
                     {
                         await Task.Delay(150);

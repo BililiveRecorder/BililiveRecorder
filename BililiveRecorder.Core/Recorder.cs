@@ -52,6 +52,7 @@ namespace BililiveRecorder.Core
         public event EventHandler<AggregatedRoomEventArgs<RecordFileClosedEventArgs>>? RecordFileClosed;
         public event EventHandler<AggregatedRoomEventArgs<IOStatsEventArgs>>? IOStats;
         public event EventHandler<AggregatedRoomEventArgs<RecordingStatsEventArgs>>? RecordingStats;
+        public event EventHandler<IRoom>? StreamStarted;
 #pragma warning disable CS0067 // The event 'Recorder.PropertyChanged' is never used
         public event PropertyChangedEventHandler? PropertyChanged;
 #pragma warning restore CS0067 // The event 'Recorder.PropertyChanged' is never used
@@ -175,6 +176,7 @@ namespace BililiveRecorder.Core
                 if (room.Streaming)
                 {
                     _ = Task.Run(async () => await this.basicWebhookV2.SendStreamStartedAsync(new StreamStartedEventArgs(room)).ConfigureAwait(false));
+                    _ = Task.Run(() => StreamStarted?.Invoke(this, room));
                 }
                 else
                 {

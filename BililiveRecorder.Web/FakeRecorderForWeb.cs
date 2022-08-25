@@ -23,6 +23,7 @@ namespace BililiveRecorder.Web
         public event EventHandler<AggregatedRoomEventArgs<IOStatsEventArgs>>? IOStats;
         public event EventHandler<AggregatedRoomEventArgs<RecordingStatsEventArgs>>? RecordingStats;
         public event PropertyChangedEventHandler? PropertyChanged;
+        public event EventHandler<IRoom>? StreamStarted;
 #pragma warning restore CS0067
 
         public IRoom AddRoom(int roomid) => null!;
