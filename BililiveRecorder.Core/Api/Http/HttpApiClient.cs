@@ -17,7 +17,6 @@ namespace BililiveRecorder.Core.Api.Http
         internal const string HttpHeaderReferer = "https://live.bilibili.com/";
         internal const string HttpHeaderOrigin = "https://live.bilibili.com";
         internal const string HttpHeaderUserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/104.0.0.0 Safari/537.36";
-        private static readonly TimeSpan TimeOutTimeSpan = TimeSpan.FromSeconds(15);
 
         private readonly GlobalConfig config;
         private readonly HttpClient anonClient;
@@ -33,11 +32,11 @@ namespace BililiveRecorder.Core.Api.Http
             config.PropertyChanged += this.Config_PropertyChanged;
 
             this.mainClient = null!;
-            this.SetCookie();
+            this.UpdateHttpClient();
 
             this.anonClient = new HttpClient
             {
-                Timeout = TimeOutTimeSpan
+                Timeout = TimeSpan.FromMilliseconds(config.TimingApiTimeout)
             };
             var headers = this.anonClient.DefaultRequestHeaders;
             headers.Add("Accept", HttpHeaderAccept);
@@ -46,7 +45,7 @@ namespace BililiveRecorder.Core.Api.Http
             headers.Add("User-Agent", HttpHeaderUserAgent);
         }
 
-        private void SetCookie()
+        private void UpdateHttpClient()
         {
             var client = new HttpClient(new HttpClientHandler
             {
@@ -54,7 +53,7 @@ namespace BililiveRecorder.Core.Api.Http
                 UseDefaultCredentials = false,
             })
             {
-                Timeout = TimeOutTimeSpan
+                Timeout = TimeSpan.FromMilliseconds(this.config.TimingApiTimeout)
             };
             var headers = client.DefaultRequestHeaders;
             headers.Add("Accept", HttpHeaderAccept);
@@ -72,8 +71,8 @@ namespace BililiveRecorder.Core.Api.Http
 
         private void Config_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (e.PropertyName == nameof(this.config.Cookie))
-                this.SetCookie();
+            if (e.PropertyName == nameof(this.config.Cookie) || e.PropertyName == nameof(this.config.TimingApiTimeout))
+                this.UpdateHttpClient();
         }
 
         private static async Task<BilibiliApiResponse<T>> FetchAsync<T>(HttpClient client, string url) where T : class

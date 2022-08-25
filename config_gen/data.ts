@@ -146,6 +146,14 @@ export const data: Array<ConfigEntry> = [
         default: 10 * 60,
     },
     {
+        id: "TimingApiTimeout",
+        name: "请求B站API超时时间 毫秒",
+        type: "uint",
+        configType: "globalOnly",
+        advancedConfig: true,
+        default: 10 * 1000,
+    },
+    {
         id: "TimingStreamRetry",
         name: "录制断开重连时间间隔 毫秒",
         type: "uint",

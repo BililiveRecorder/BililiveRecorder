@@ -60,6 +60,7 @@ namespace BililiveRecorder.Web.Models
         public Optional<string?>? OptionalCookie { get; set; }
         public Optional<string?>? OptionalLiveApiHost { get; set; }
         public Optional<uint>? OptionalTimingCheckInterval { get; set; }
+        public Optional<uint>? OptionalTimingApiTimeout { get; set; }
         public Optional<uint>? OptionalTimingStreamRetry { get; set; }
         public Optional<uint>? OptionalTimingStreamRetryNoQn { get; set; }
         public Optional<uint>? OptionalTimingStreamConnect { get; set; }
@@ -91,6 +92,7 @@ namespace BililiveRecorder.Web.Models
             if (this.OptionalCookie.HasValue) config.OptionalCookie = this.OptionalCookie.Value;
             if (this.OptionalLiveApiHost.HasValue) config.OptionalLiveApiHost = this.OptionalLiveApiHost.Value;
             if (this.OptionalTimingCheckInterval.HasValue) config.OptionalTimingCheckInterval = this.OptionalTimingCheckInterval.Value;
+            if (this.OptionalTimingApiTimeout.HasValue) config.OptionalTimingApiTimeout = this.OptionalTimingApiTimeout.Value;
             if (this.OptionalTimingStreamRetry.HasValue) config.OptionalTimingStreamRetry = this.OptionalTimingStreamRetry.Value;
             if (this.OptionalTimingStreamRetryNoQn.HasValue) config.OptionalTimingStreamRetryNoQn = this.OptionalTimingStreamRetryNoQn.Value;
             if (this.OptionalTimingStreamConnect.HasValue) config.OptionalTimingStreamConnect = this.OptionalTimingStreamConnect.Value;
@@ -143,6 +145,7 @@ namespace BililiveRecorder.Web.Models.Rest
         public Optional<string?> OptionalCookie { get; set; }
         public Optional<string?> OptionalLiveApiHost { get; set; }
         public Optional<uint> OptionalTimingCheckInterval { get; set; }
+        public Optional<uint> OptionalTimingApiTimeout { get; set; }
         public Optional<uint> OptionalTimingStreamRetry { get; set; }
         public Optional<uint> OptionalTimingStreamRetryNoQn { get; set; }
         public Optional<uint> OptionalTimingStreamConnect { get; set; }
@@ -200,6 +203,7 @@ namespace BililiveRecorder.Web.Models.Graphql
             this.Field(x => x.OptionalCookie, type: typeof(HierarchicalOptionalType<string>));
             this.Field(x => x.OptionalLiveApiHost, type: typeof(HierarchicalOptionalType<string>));
             this.Field(x => x.OptionalTimingCheckInterval, type: typeof(HierarchicalOptionalType<uint>));
+            this.Field(x => x.OptionalTimingApiTimeout, type: typeof(HierarchicalOptionalType<uint>));
             this.Field(x => x.OptionalTimingStreamRetry, type: typeof(HierarchicalOptionalType<uint>));
             this.Field(x => x.OptionalTimingStreamRetryNoQn, type: typeof(HierarchicalOptionalType<uint>));
             this.Field(x => x.OptionalTimingStreamConnect, type: typeof(HierarchicalOptionalType<uint>));
@@ -235,6 +239,7 @@ namespace BililiveRecorder.Web.Models.Graphql
             this.Field(x => x.Cookie);
             this.Field(x => x.LiveApiHost);
             this.Field(x => x.TimingCheckInterval);
+            this.Field(x => x.TimingApiTimeout);
             this.Field(x => x.TimingStreamRetry);
             this.Field(x => x.TimingStreamRetryNoQn);
             this.Field(x => x.TimingStreamConnect);
@@ -288,6 +293,7 @@ namespace BililiveRecorder.Web.Models.Graphql
             this.Field(x => x.OptionalCookie, nullable: true, type: typeof(HierarchicalOptionalInputType<string>));
             this.Field(x => x.OptionalLiveApiHost, nullable: true, type: typeof(HierarchicalOptionalInputType<string>));
             this.Field(x => x.OptionalTimingCheckInterval, nullable: true, type: typeof(HierarchicalOptionalInputType<uint>));
+            this.Field(x => x.OptionalTimingApiTimeout, nullable: true, type: typeof(HierarchicalOptionalInputType<uint>));
             this.Field(x => x.OptionalTimingStreamRetry, nullable: true, type: typeof(HierarchicalOptionalInputType<uint>));
             this.Field(x => x.OptionalTimingStreamRetryNoQn, nullable: true, type: typeof(HierarchicalOptionalInputType<uint>));
             this.Field(x => x.OptionalTimingStreamConnect, nullable: true, type: typeof(HierarchicalOptionalInputType<uint>));

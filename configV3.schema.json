@@ -137,6 +137,24 @@
             }
           }
         },
+        "TimingApiTimeout": {
+          "description": "请求B站API超时时间 毫秒\n默认: 10000",
+          "markdownDescription": "请求B站API超时时间 毫秒  \n默认: `10000 `\n\n",
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "HasValue": {
+              "type": "boolean",
+              "default": true
+            },
+            "Value": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 4294967295,
+              "default": 10000
+            }
+          }
+        },
         "TimingStreamRetry": {
           "description": "录制断开重连时间间隔 毫秒\n默认: 6000",
           "markdownDescription": "录制断开重连时间间隔 毫秒  \n默认: `6000 `\n\n",

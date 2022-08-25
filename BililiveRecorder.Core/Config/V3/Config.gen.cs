@@ -150,6 +150,11 @@ namespace BililiveRecorder.Core.Config.V3
         public uint TimingCheckInterval => this.GetPropertyValue<uint>();
 
         /// <summary>
+        /// 请求B站API超时时间 毫秒
+        /// </summary>
+        public uint TimingApiTimeout => this.GetPropertyValue<uint>();
+
+        /// <summary>
         /// 录制断开重连时间间隔 毫秒
         /// </summary>
         public uint TimingStreamRetry => this.GetPropertyValue<uint>();
@@ -349,6 +354,14 @@ namespace BililiveRecorder.Core.Config.V3
         public Optional<uint> OptionalTimingCheckInterval { get => this.GetPropertyValueOptional<uint>(nameof(this.TimingCheckInterval)); set => this.SetPropertyValueOptional(value, nameof(this.TimingCheckInterval)); }
 
         /// <summary>
+        /// 请求B站API超时时间 毫秒
+        /// </summary>
+        public uint TimingApiTimeout { get => this.GetPropertyValue<uint>(); set => this.SetPropertyValue(value); }
+        public bool HasTimingApiTimeout { get => this.GetPropertyHasValue(nameof(this.TimingApiTimeout)); set => this.SetPropertyHasValue<uint>(value, nameof(this.TimingApiTimeout)); }
+        [JsonProperty(nameof(TimingApiTimeout)), EditorBrowsable(EditorBrowsableState.Never)]
+        public Optional<uint> OptionalTimingApiTimeout { get => this.GetPropertyValueOptional<uint>(nameof(this.TimingApiTimeout)); set => this.SetPropertyValueOptional(value, nameof(this.TimingApiTimeout)); }
+
+        /// <summary>
         /// 录制断开重连时间间隔 毫秒
         /// </summary>
         public uint TimingStreamRetry { get => this.GetPropertyValue<uint>(); set => this.SetPropertyValue(value); }
@@ -470,6 +483,8 @@ namespace BililiveRecorder.Core.Config.V3
         public string LiveApiHost => @"https://api.live.bilibili.com";
 
         public uint TimingCheckInterval => 600;
+
+        public uint TimingApiTimeout => 10000;
 
         public uint TimingStreamRetry => 6000;
 

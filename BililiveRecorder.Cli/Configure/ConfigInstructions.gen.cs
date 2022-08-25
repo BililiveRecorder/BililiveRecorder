@@ -32,6 +32,7 @@ namespace BililiveRecorder.Cli.Configure
         Cookie,
         LiveApiHost,
         TimingCheckInterval,
+        TimingApiTimeout,
         TimingStreamRetry,
         TimingStreamRetryNoQn,
         TimingStreamConnect,
@@ -85,6 +86,7 @@ namespace BililiveRecorder.Cli.Configure
             GlobalConfig.Add(GlobalConfigProperties.Cookie, new ConfigInstruction<GlobalConfig, string>(config => config.HasCookie = false, (config, value) => config.Cookie = value) { Name = "Cookie", CanBeOptional = true });
             GlobalConfig.Add(GlobalConfigProperties.LiveApiHost, new ConfigInstruction<GlobalConfig, string>(config => config.HasLiveApiHost = false, (config, value) => config.LiveApiHost = value) { Name = "LiveApiHost", CanBeOptional = true });
             GlobalConfig.Add(GlobalConfigProperties.TimingCheckInterval, new ConfigInstruction<GlobalConfig, uint>(config => config.HasTimingCheckInterval = false, (config, value) => config.TimingCheckInterval = value) { Name = "TimingCheckInterval", CanBeOptional = true });
+            GlobalConfig.Add(GlobalConfigProperties.TimingApiTimeout, new ConfigInstruction<GlobalConfig, uint>(config => config.HasTimingApiTimeout = false, (config, value) => config.TimingApiTimeout = value) { Name = "TimingApiTimeout", CanBeOptional = true });
             GlobalConfig.Add(GlobalConfigProperties.TimingStreamRetry, new ConfigInstruction<GlobalConfig, uint>(config => config.HasTimingStreamRetry = false, (config, value) => config.TimingStreamRetry = value) { Name = "TimingStreamRetry", CanBeOptional = true });
             GlobalConfig.Add(GlobalConfigProperties.TimingStreamRetryNoQn, new ConfigInstruction<GlobalConfig, uint>(config => config.HasTimingStreamRetryNoQn = false, (config, value) => config.TimingStreamRetryNoQn = value) { Name = "TimingStreamRetryNoQn", CanBeOptional = true });
             GlobalConfig.Add(GlobalConfigProperties.TimingStreamConnect, new ConfigInstruction<GlobalConfig, uint>(config => config.HasTimingStreamConnect = false, (config, value) => config.TimingStreamConnect = value) { Name = "TimingStreamConnect", CanBeOptional = true });
