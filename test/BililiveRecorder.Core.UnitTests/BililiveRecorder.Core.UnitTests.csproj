@@ -8,7 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.2.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.3.0" />
     <PackageReference Include="PublicApiGenerator" Version="10.3.0" />
     <PackageReference Include="Spectre.Verify.Extensions" Version="16.3.2" />
     <PackageReference Include="Verify.Xunit" Version="17.1.2" />

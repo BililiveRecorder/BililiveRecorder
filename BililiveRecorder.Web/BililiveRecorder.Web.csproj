@@ -21,9 +21,9 @@
     <PackageReference Include="GraphQL.Server.Ui.Playground" Version="5.2.1" />
     <PackageReference Include="GraphQL.Server.Ui.Voyager" Version="5.2.1" />
     <PackageReference Include="GraphQL.SystemReactive" Version="4.8.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="6.0.5" />
-    <PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="6.0.5" />
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.3.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="6.0.8" />
+    <PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="6.0.8" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
   </ItemGroup>
   
   <ItemGroup>
