@@ -221,13 +221,10 @@ namespace BililiveRecorder.WPF
                 }
                 finally
                 {
-                    try
-                    {
-                        Microsoft.Toolkit.Uwp.Notifications.ToastNotificationManagerCompat.Uninstall();
-                    }
-                    catch (Exception)
-                    { }
                     cancel.Cancel();
+
+                    StreamStartedNotification.Cleanup();
+
 #pragma warning disable VSTHRD002 // Avoid problematic synchronous waits
                     update.WaitForUpdatesOnShutdownAsync().GetAwaiter().GetResult();
 #pragma warning restore VSTHRD002 // Avoid problematic synchronous waits
