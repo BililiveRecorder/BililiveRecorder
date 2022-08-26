@@ -11,12 +11,12 @@ namespace BililiveRecorder.Web
     public class BasicAuthMiddleware
     {
         private readonly RequestDelegate next;
-        private readonly ManifestEmbeddedFileProvider fileProvider;
+        private readonly CompositeFileProvider fileProvider;
         private const string BasicAndSpace = "Basic ";
 
         private static string? Html401Page;
 
-        public BasicAuthMiddleware(RequestDelegate next, ManifestEmbeddedFileProvider fileProvider)
+        public BasicAuthMiddleware(RequestDelegate next, CompositeFileProvider fileProvider)
         {
             this.next = next ?? throw new ArgumentNullException(nameof(next));
             this.fileProvider = fileProvider ?? throw new ArgumentNullException(nameof(fileProvider));
