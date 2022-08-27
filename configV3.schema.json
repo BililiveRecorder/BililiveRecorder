@@ -482,6 +482,22 @@
             }
           }
         },
+        "SaveStreamCover": {
+          "description": "保存直播封面\n默认: false",
+          "markdownDescription": "保存直播封面  \n默认: `false `\n\n",
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "HasValue": {
+              "type": "boolean",
+              "default": true
+            },
+            "Value": {
+              "type": "boolean",
+              "default": false
+            }
+          }
+        },
         "RecordingQuality": {
           "description": "直播画质\n默认: 10000",
           "markdownDescription": "直播画质  \n默认: `10000 `\n\n",
@@ -692,6 +708,22 @@
             "Value": {
               "type": "boolean",
               "default": true
+            }
+          }
+        },
+        "SaveStreamCover": {
+          "description": "保存直播封面\n默认: false",
+          "markdownDescription": "保存直播封面  \n默认: `false `\n\n",
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "HasValue": {
+              "type": "boolean",
+              "default": true
+            },
+            "Value": {
+              "type": "boolean",
+              "default": false
             }
           }
         },

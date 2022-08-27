@@ -94,6 +94,14 @@ namespace BililiveRecorder.Core.Config.V3
         public Optional<bool> OptionalRecordDanmakuGuard { get => this.GetPropertyValueOptional<bool>(nameof(this.RecordDanmakuGuard)); set => this.SetPropertyValueOptional(value, nameof(this.RecordDanmakuGuard)); }
 
         /// <summary>
+        /// 保存直播封面
+        /// </summary>
+        public bool SaveStreamCover { get => this.GetPropertyValue<bool>(); set => this.SetPropertyValue(value); }
+        public bool HasSaveStreamCover { get => this.GetPropertyHasValue(nameof(this.SaveStreamCover)); set => this.SetPropertyHasValue<bool>(value, nameof(this.SaveStreamCover)); }
+        [JsonProperty(nameof(SaveStreamCover)), EditorBrowsable(EditorBrowsableState.Never)]
+        public Optional<bool> OptionalSaveStreamCover { get => this.GetPropertyValueOptional<bool>(nameof(this.SaveStreamCover)); set => this.SetPropertyValueOptional(value, nameof(this.SaveStreamCover)); }
+
+        /// <summary>
         /// 直播画质
         /// </summary>
         public string? RecordingQuality { get => this.GetPropertyValue<string>(); set => this.SetPropertyValue(value); }
@@ -272,6 +280,14 @@ namespace BililiveRecorder.Core.Config.V3
         public bool HasRecordDanmakuGuard { get => this.GetPropertyHasValue(nameof(this.RecordDanmakuGuard)); set => this.SetPropertyHasValue<bool>(value, nameof(this.RecordDanmakuGuard)); }
         [JsonProperty(nameof(RecordDanmakuGuard)), EditorBrowsable(EditorBrowsableState.Never)]
         public Optional<bool> OptionalRecordDanmakuGuard { get => this.GetPropertyValueOptional<bool>(nameof(this.RecordDanmakuGuard)); set => this.SetPropertyValueOptional(value, nameof(this.RecordDanmakuGuard)); }
+
+        /// <summary>
+        /// 保存直播封面
+        /// </summary>
+        public bool SaveStreamCover { get => this.GetPropertyValue<bool>(); set => this.SetPropertyValue(value); }
+        public bool HasSaveStreamCover { get => this.GetPropertyHasValue(nameof(this.SaveStreamCover)); set => this.SetPropertyHasValue<bool>(value, nameof(this.SaveStreamCover)); }
+        [JsonProperty(nameof(SaveStreamCover)), EditorBrowsable(EditorBrowsableState.Never)]
+        public Optional<bool> OptionalSaveStreamCover { get => this.GetPropertyValueOptional<bool>(nameof(this.SaveStreamCover)); set => this.SetPropertyValueOptional(value, nameof(this.SaveStreamCover)); }
 
         /// <summary>
         /// 直播画质
@@ -463,6 +479,8 @@ namespace BililiveRecorder.Core.Config.V3
         public bool RecordDanmakuGift => false;
 
         public bool RecordDanmakuGuard => true;
+
+        public bool SaveStreamCover => false;
 
         public string RecordingQuality => @"10000";
 

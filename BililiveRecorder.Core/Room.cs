@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
+using System.Net.Http;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
@@ -419,6 +420,39 @@ namespace BililiveRecorder.Core
                 this.basicDanmakuWriter.EnableWithPath(Path.ChangeExtension(e.FullPath, "xml"), this);
             else
                 this.basicDanmakuWriter.Disable();
+
+            if (this.RoomConfig.SaveStreamCover)
+            {
+                // 保存直播间封面
+                _ = Task.Run(async () =>
+                {
+                    try
+                    {
+                        var coverUrl = this.RawBilibiliApiJsonData?["room_info"]?["cover"]?.ToObject<string>();
+
+                        if (string.IsNullOrWhiteSpace(coverUrl))
+                        {
+                            this.logger.Information("没有直播间封面信息");
+                            return;
+                        }
+
+                        var targetPath = Path.ChangeExtension(e.FullPath, "cover" + Path.GetExtension(coverUrl));
+
+                        using var http = new HttpClient();
+                        http.DefaultRequestHeaders.UserAgent.Clear();
+
+                        var stream = await http.GetStreamAsync(coverUrl).ConfigureAwait(false);
+                        using var file = new FileStream(targetPath, FileMode.Create, FileAccess.Write, FileShare.None);
+                        await stream.CopyToAsync(file).ConfigureAwait(false);
+
+                        this.logger.Debug("直播间封面已成功从 {CoverUrl} 保存到 {FilePath}", coverUrl, targetPath);
+                    }
+                    catch (Exception ex)
+                    {
+                        this.logger.Warning(ex, "保存直播间封面时出错");
+                    }
+                });
+            }
 
             RecordFileOpening?.Invoke(this, e);
         }

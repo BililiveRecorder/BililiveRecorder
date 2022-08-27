@@ -98,6 +98,11 @@
                         </local:SettingWithDefault>
                     </StackPanel>
                 </GroupBox>
+                <GroupBox Header="直播封面">
+                    <local:SettingWithDefault IsSettingNotUsingDefault="{Binding HasSaveStreamCover}">
+                        <ui:ToggleSwitch IsOn="{Binding SaveStreamCover}" OnContent="录制时同时保存直播封面" OffContent="录制时同时保存直播封面"/>
+                    </local:SettingWithDefault>
+                </GroupBox>
                 <GroupBox Header="录制画质">
                     <StackPanel>
                         <TextBlock Text="逗号分割的录制画质ID"/>

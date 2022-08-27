@@ -80,6 +80,9 @@
                     </StackPanel>
                 </StackPanel>
             </GroupBox>
+            <GroupBox Header="直播封面">
+                <ui:ToggleSwitch IsOn="{Binding SaveStreamCover}" OnContent="录制时同时保存直播封面" OffContent="录制时同时保存直播封面"/>
+            </GroupBox>
             <GroupBox Header="{l:Loc Settings_FileName_Title}">
                 <StackPanel MaxWidth="500" HorizontalAlignment="Left">
                     <StackPanel Orientation="Horizontal" Margin="0,0,0,10">

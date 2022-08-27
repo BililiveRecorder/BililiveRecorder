@@ -73,6 +73,13 @@ export const data: Array<ConfigEntry> = [
         default: true
     },
     {
+        id: "SaveStreamCover",
+        name: "保存直播封面",
+        type: "bool",
+        configType: "room",
+        default: false
+    },
+    {
         id: "RecordingQuality",
         name: "直播画质",
         type: "string?",

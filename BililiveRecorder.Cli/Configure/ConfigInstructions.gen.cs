@@ -22,6 +22,7 @@ namespace BililiveRecorder.Cli.Configure
         RecordDanmakuSuperChat,
         RecordDanmakuGift,
         RecordDanmakuGuard,
+        SaveStreamCover,
         RecordingQuality,
         FileNameRecordTemplate,
         FlvProcessorSplitOnScriptTag,
@@ -58,6 +59,7 @@ namespace BililiveRecorder.Cli.Configure
         RecordDanmakuSuperChat,
         RecordDanmakuGift,
         RecordDanmakuGuard,
+        SaveStreamCover,
         RecordingQuality,
         FlvProcessorSplitOnScriptTag
     }
@@ -76,6 +78,7 @@ namespace BililiveRecorder.Cli.Configure
             GlobalConfig.Add(GlobalConfigProperties.RecordDanmakuSuperChat, new ConfigInstruction<GlobalConfig, bool>(config => config.HasRecordDanmakuSuperChat = false, (config, value) => config.RecordDanmakuSuperChat = value) { Name = "RecordDanmakuSuperChat", CanBeOptional = true });
             GlobalConfig.Add(GlobalConfigProperties.RecordDanmakuGift, new ConfigInstruction<GlobalConfig, bool>(config => config.HasRecordDanmakuGift = false, (config, value) => config.RecordDanmakuGift = value) { Name = "RecordDanmakuGift", CanBeOptional = true });
             GlobalConfig.Add(GlobalConfigProperties.RecordDanmakuGuard, new ConfigInstruction<GlobalConfig, bool>(config => config.HasRecordDanmakuGuard = false, (config, value) => config.RecordDanmakuGuard = value) { Name = "RecordDanmakuGuard", CanBeOptional = true });
+            GlobalConfig.Add(GlobalConfigProperties.SaveStreamCover, new ConfigInstruction<GlobalConfig, bool>(config => config.HasSaveStreamCover = false, (config, value) => config.SaveStreamCover = value) { Name = "SaveStreamCover", CanBeOptional = true });
             GlobalConfig.Add(GlobalConfigProperties.RecordingQuality, new ConfigInstruction<GlobalConfig, string>(config => config.HasRecordingQuality = false, (config, value) => config.RecordingQuality = value) { Name = "RecordingQuality", CanBeOptional = true });
             GlobalConfig.Add(GlobalConfigProperties.FileNameRecordTemplate, new ConfigInstruction<GlobalConfig, string>(config => config.HasFileNameRecordTemplate = false, (config, value) => config.FileNameRecordTemplate = value) { Name = "FileNameRecordTemplate", CanBeOptional = true });
             GlobalConfig.Add(GlobalConfigProperties.FlvProcessorSplitOnScriptTag, new ConfigInstruction<GlobalConfig, bool>(config => config.HasFlvProcessorSplitOnScriptTag = false, (config, value) => config.FlvProcessorSplitOnScriptTag = value) { Name = "FlvProcessorSplitOnScriptTag", CanBeOptional = true });
@@ -108,6 +111,7 @@ namespace BililiveRecorder.Cli.Configure
             RoomConfig.Add(RoomConfigProperties.RecordDanmakuSuperChat, new ConfigInstruction<RoomConfig, bool>(config => config.HasRecordDanmakuSuperChat = false, (config, value) => config.RecordDanmakuSuperChat = value) { Name = "RecordDanmakuSuperChat", CanBeOptional = true });
             RoomConfig.Add(RoomConfigProperties.RecordDanmakuGift, new ConfigInstruction<RoomConfig, bool>(config => config.HasRecordDanmakuGift = false, (config, value) => config.RecordDanmakuGift = value) { Name = "RecordDanmakuGift", CanBeOptional = true });
             RoomConfig.Add(RoomConfigProperties.RecordDanmakuGuard, new ConfigInstruction<RoomConfig, bool>(config => config.HasRecordDanmakuGuard = false, (config, value) => config.RecordDanmakuGuard = value) { Name = "RecordDanmakuGuard", CanBeOptional = true });
+            RoomConfig.Add(RoomConfigProperties.SaveStreamCover, new ConfigInstruction<RoomConfig, bool>(config => config.HasSaveStreamCover = false, (config, value) => config.SaveStreamCover = value) { Name = "SaveStreamCover", CanBeOptional = true });
             RoomConfig.Add(RoomConfigProperties.RecordingQuality, new ConfigInstruction<RoomConfig, string>(config => config.HasRecordingQuality = false, (config, value) => config.RecordingQuality = value) { Name = "RecordingQuality", CanBeOptional = true });
             RoomConfig.Add(RoomConfigProperties.FlvProcessorSplitOnScriptTag, new ConfigInstruction<RoomConfig, bool>(config => config.HasFlvProcessorSplitOnScriptTag = false, (config, value) => config.FlvProcessorSplitOnScriptTag = value) { Name = "FlvProcessorSplitOnScriptTag", CanBeOptional = true });
         }
