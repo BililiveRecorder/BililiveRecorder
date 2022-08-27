@@ -18,6 +18,7 @@ namespace BililiveRecorder.Web
         private static readonly MinifyMarkupFormatter formatter = new MinifyMarkupFormatter
         {
             ShouldKeepEmptyAttributes = true,
+            ShouldKeepAttributeQuotes = true,
         };
 
         private static string? cachedIndexHtml;
