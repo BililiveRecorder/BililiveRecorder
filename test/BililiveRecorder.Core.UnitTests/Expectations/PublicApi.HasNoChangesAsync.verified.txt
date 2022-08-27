@@ -91,6 +91,7 @@ namespace BililiveRecorder.Core.Config.V3
         public bool RecordDanmakuSuperChat { get; }
         public BililiveRecorder.Core.Config.RecordMode RecordMode { get; }
         public string RecordingQuality { get; }
+        public bool SaveStreamCover { get; }
         public uint TimingApiTimeout { get; }
         public uint TimingCheckInterval { get; }
         public uint TimingDanmakuRetry { get; }
@@ -131,6 +132,7 @@ namespace BililiveRecorder.Core.Config.V3
         public bool HasRecordDanmakuSuperChat { get; set; }
         public bool HasRecordMode { get; set; }
         public bool HasRecordingQuality { get; set; }
+        public bool HasSaveStreamCover { get; set; }
         public bool HasTimingApiTimeout { get; set; }
         public bool HasTimingCheckInterval { get; set; }
         public bool HasTimingDanmakuRetry { get; set; }
@@ -180,6 +182,8 @@ namespace BililiveRecorder.Core.Config.V3
         public HierarchicalPropertyDefault.Optional<BililiveRecorder.Core.Config.RecordMode> OptionalRecordMode { get; set; }
         [Newtonsoft.Json.JsonProperty("RecordingQuality")]
         public HierarchicalPropertyDefault.Optional<string?> OptionalRecordingQuality { get; set; }
+        [Newtonsoft.Json.JsonProperty("SaveStreamCover")]
+        public HierarchicalPropertyDefault.Optional<bool> OptionalSaveStreamCover { get; set; }
         [Newtonsoft.Json.JsonProperty("TimingApiTimeout")]
         public HierarchicalPropertyDefault.Optional<uint> OptionalTimingApiTimeout { get; set; }
         [Newtonsoft.Json.JsonProperty("TimingCheckInterval")]
@@ -212,6 +216,7 @@ namespace BililiveRecorder.Core.Config.V3
         public bool RecordDanmakuSuperChat { get; set; }
         public BililiveRecorder.Core.Config.RecordMode RecordMode { get; set; }
         public string? RecordingQuality { get; set; }
+        public bool SaveStreamCover { get; set; }
         public uint TimingApiTimeout { get; set; }
         public uint TimingCheckInterval { get; set; }
         public uint TimingDanmakuRetry { get; set; }
@@ -254,6 +259,7 @@ namespace BililiveRecorder.Core.Config.V3
         public bool HasRecordMode { get; set; }
         public bool HasRecordingQuality { get; set; }
         public bool HasRoomId { get; set; }
+        public bool HasSaveStreamCover { get; set; }
         public string? LiveApiHost { get; }
         public BililiveRecorder.Core.Config.AllowedAddressFamily NetworkTransportAllowedAddressFamily { get; }
         public bool NetworkTransportUseSystemProxy { get; }
@@ -281,6 +287,8 @@ namespace BililiveRecorder.Core.Config.V3
         public HierarchicalPropertyDefault.Optional<string?> OptionalRecordingQuality { get; set; }
         [Newtonsoft.Json.JsonProperty("RoomId")]
         public HierarchicalPropertyDefault.Optional<int> OptionalRoomId { get; set; }
+        [Newtonsoft.Json.JsonProperty("SaveStreamCover")]
+        public HierarchicalPropertyDefault.Optional<bool> OptionalSaveStreamCover { get; set; }
         public bool RecordDanmaku { get; set; }
         public uint RecordDanmakuFlushInterval { get; }
         public bool RecordDanmakuGift { get; set; }
@@ -290,6 +298,7 @@ namespace BililiveRecorder.Core.Config.V3
         public BililiveRecorder.Core.Config.RecordMode RecordMode { get; set; }
         public string? RecordingQuality { get; set; }
         public int RoomId { get; set; }
+        public bool SaveStreamCover { get; set; }
         public uint TimingApiTimeout { get; }
         public uint TimingCheckInterval { get; }
         public uint TimingDanmakuRetry { get; }
