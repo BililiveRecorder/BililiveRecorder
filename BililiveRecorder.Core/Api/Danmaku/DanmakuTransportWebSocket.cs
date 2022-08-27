@@ -34,7 +34,12 @@ namespace BililiveRecorder.Core.Api.Danmaku
         public async Task<PipeReader> ConnectAsync(string host, int port, CancellationToken cancellationToken)
         {
             var b = new UriBuilder(this.Scheme, host, port, "/sub");
-            await this.socket.ConnectAsync(b.Uri, cancellationToken).ConfigureAwait(false);
+
+            // 连接超时 10 秒
+            var cts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+            cts.CancelAfter(TimeSpan.FromSeconds(10));
+
+            await this.socket.ConnectAsync(b.Uri, cts.Token).ConfigureAwait(false);
             return this.socket.UsePipeReader();
         }
 
