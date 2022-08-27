@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Timers;
@@ -39,6 +40,7 @@ namespace BililiveRecorder.Core.Recording
         private int partIndex = 0;
 
         protected string? streamHost;
+        protected string? streamHostFull;
         protected bool started = false;
         protected bool timeoutTriggered = false;
         protected int qn;
@@ -284,6 +286,8 @@ namespace BililiveRecorder.Core.Recording
         {
             var client = this.CreateHttpClient();
 
+            var streamHostInfoBuilder = new StringBuilder();
+
             while (true)
             {
                 var allowedAddressFamily = this.room.RoomConfig.NetworkTransportAllowedAddressFamily;
@@ -299,6 +303,7 @@ namespace BililiveRecorder.Core.Recording
                     fullUrl = scriptUrl;
                     originalUri = new Uri(fullUrl);
 
+
                     if (scriptIp is not null)
                     {
                         this.logger.Debug("用户脚本指定了服务器 IP {IP}", scriptIp);
@@ -312,6 +317,11 @@ namespace BililiveRecorder.Core.Recording
                         request = new HttpRequestMessage(HttpMethod.Get, builder.Uri);
                         request.Headers.Host = uri.IsDefaultPort ? uri.Host : uri.Host + ":" + uri.Port;
 
+                        streamHostInfoBuilder.Append(originalUri.Host);
+                        streamHostInfoBuilder.Append(" [");
+                        streamHostInfoBuilder.Append(scriptIp);
+                        streamHostInfoBuilder.Append("]");
+
                         goto sendRequest;
                     }
                 }
@@ -324,6 +334,8 @@ namespace BililiveRecorder.Core.Recording
                 {
                     this.logger.Debug("NetworkTransportAllowedAddressFamily is System");
                     request = new HttpRequestMessage(HttpMethod.Get, originalUri);
+
+                    streamHostInfoBuilder.Append(originalUri.Host);
                 }
                 else
                 {
@@ -340,6 +352,11 @@ namespace BililiveRecorder.Core.Recording
                     var selected = filtered[this.random.Next(filtered.Length)];
 
                     this.logger.Debug("指定直播服务器地址 {DnsHost}: {SelectedIp}, Allowed: {AllowedAddressFamily}, {IPAddresses}", originalUri.DnsSafeHost, selected, allowedAddressFamily, ips);
+
+                    streamHostInfoBuilder.Append(originalUri.Host);
+                    streamHostInfoBuilder.Append(" [");
+                    streamHostInfoBuilder.Append(selected);
+                    streamHostInfoBuilder.Append("]");
 
                     if (selected is null)
                     {
@@ -358,15 +375,16 @@ namespace BililiveRecorder.Core.Recording
             sendRequest:
 
                 var resp = await client.SendAsync(request,
-                    HttpCompletionOption.ResponseHeadersRead,
-                    new CancellationTokenSource(timeout).Token)
-                    .ConfigureAwait(false);
+                     HttpCompletionOption.ResponseHeadersRead,
+                     new CancellationTokenSource(timeout).Token)
+                     .ConfigureAwait(false);
 
                 switch (resp.StatusCode)
                 {
                     case HttpStatusCode.OK:
                         {
                             this.logger.Information("开始接收直播流");
+                            this.streamHostFull = streamHostInfoBuilder.ToString();
                             var stream = await resp.Content.ReadAsStreamAsync().ConfigureAwait(false);
                             return stream;
                         }
@@ -376,6 +394,7 @@ namespace BililiveRecorder.Core.Recording
                             fullUrl = new Uri(originalUri, resp.Headers.Location).ToString();
                             this.logger.Debug("跳转到 {Url}, 原文本 {Location}", fullUrl, resp.Headers.Location.OriginalString);
                             resp.Dispose();
+                            streamHostInfoBuilder.Append('\n');
                             break;
                         }
                     default:
