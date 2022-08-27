@@ -16,6 +16,8 @@ namespace BililiveRecorder.Core.Templating
 
         public string AreaChild { get; set; } = string.Empty;
 
+        public int PartIndex { get; set; }
+
         public int Qn { get; set; }
 
         public JObject? Json { get; set; }

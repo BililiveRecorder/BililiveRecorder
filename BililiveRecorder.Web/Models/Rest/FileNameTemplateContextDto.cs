@@ -8,6 +8,7 @@ namespace BililiveRecorder.Web.Models.Rest
         public string Title { get; set; } = string.Empty;
         public string AreaParent { get; set; } = string.Empty;
         public string AreaChild { get; set; } = string.Empty;
+        public int PartIndex { get; set; }
         public int Qn { get; set; }
 
         /// <example>{}</example>

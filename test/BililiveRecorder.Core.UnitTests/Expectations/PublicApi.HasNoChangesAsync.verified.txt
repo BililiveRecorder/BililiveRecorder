@@ -517,6 +517,7 @@ namespace BililiveRecorder.Core.Templating
         public string AreaParent { get; set; }
         public Newtonsoft.Json.Linq.JObject? Json { get; set; }
         public string Name { get; set; }
+        public int PartIndex { get; set; }
         public int Qn { get; set; }
         public int RoomId { get; set; }
         public int ShortId { get; set; }

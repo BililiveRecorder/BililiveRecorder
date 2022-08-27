@@ -36,6 +36,8 @@ namespace BililiveRecorder.Core.Recording
         private readonly FileNameGenerator fileNameGenerator;
         private readonly UserScriptRunner userScriptRunner;
 
+        private int partIndex = 0;
+
         protected string? streamHost;
         protected bool started = false;
         protected bool timeoutTriggered = false;
@@ -178,6 +180,8 @@ namespace BililiveRecorder.Core.Recording
 
         protected (string fullPath, string relativePath) CreateFileName()
         {
+            this.partIndex++;
+
             var output = this.fileNameGenerator.CreateFilePath(new FileNameTemplateContext
             {
                 Name = FileNameGenerator.RemoveInvalidFileName(this.room.Name, ignore_slash: false),
@@ -186,6 +190,7 @@ namespace BililiveRecorder.Core.Recording
                 ShortId = this.room.ShortId,
                 AreaParent = FileNameGenerator.RemoveInvalidFileName(this.room.AreaNameParent, ignore_slash: false),
                 AreaChild = FileNameGenerator.RemoveInvalidFileName(this.room.AreaNameChild, ignore_slash: false),
+                PartIndex = this.partIndex,
                 Qn = this.qn,
                 Json = this.room.RawBilibiliApiJsonData,
             });
