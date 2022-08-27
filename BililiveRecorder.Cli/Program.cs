@@ -117,13 +117,18 @@ namespace BililiveRecorder.Cli
 
             path = Path.GetFullPath(path);
 
+            ConfigV3? config;
+
             if (args.ConfigOverride is not null)
             {
                 logger.Information("Using config from {ConfigOverride}", args.ConfigOverride);
-                path = args.ConfigOverride;
+                config = ConfigParser.LoadFromFile(args.ConfigOverride);
+            }
+            else
+            {
+                config = ConfigParser.LoadFromDirectory(path);
             }
 
-            var config = ConfigParser.LoadFrom(path);
             if (config is null)
             {
                 logger.Error("Config Loading Failed");

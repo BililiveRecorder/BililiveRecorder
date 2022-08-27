@@ -240,7 +240,7 @@ You can uninstall me in system settings.", "安装成功 Installed", MessageBoxB
                     catch (Exception) { }
 
                     // 加载配置文件
-                    var config = ConfigParser.LoadFrom(path);
+                    var config = ConfigParser.LoadFromDirectory(path);
                     if (config is null)
                     {
                         error = WorkDirectorySelectorDialog.WorkDirectorySelectorDialogError.FailedToLoadConfig;

@@ -18,26 +18,31 @@ namespace BililiveRecorder.Core.Config
             NullValueHandling = NullValueHandling.Ignore
         };
 
-        public static V3.ConfigV3? LoadFrom(string directory)
+        public static V3.ConfigV3? LoadFromDirectory(string directory)
+        {
+            if (!Directory.Exists(directory))
+            {
+                logger.Warning("目标文件夹不存在");
+                return null;
+            }
+
+            var path = Path.Combine(directory, CONFIG_FILE_NAME);
+
+            return LoadFromFile(path);
+        }
+
+        public static V3.ConfigV3? LoadFromFile(string path)
         {
             try
             {
-                if (!Directory.Exists(directory))
+                if (!File.Exists(path))
                 {
-                    logger.Warning("目标文件夹不存在");
-                    return null;
-                }
-
-                var filepath = Path.Combine(directory, CONFIG_FILE_NAME);
-
-                if (!File.Exists(filepath))
-                {
-                    logger.Information("初始化默认设置，因为配置文件不存在 {Path}", filepath);
+                    logger.Information("初始化默认设置，因为配置文件不存在 {Path}", path);
                     return new V3.ConfigV3();
                 }
 
-                logger.Debug("Loading config from {Path}", filepath);
-                var json = File.ReadAllText(filepath, Encoding.UTF8);
+                logger.Debug("Loading config from {Path}", path);
+                var json = File.ReadAllText(path, Encoding.UTF8);
                 return LoadJson(json);
 
             }

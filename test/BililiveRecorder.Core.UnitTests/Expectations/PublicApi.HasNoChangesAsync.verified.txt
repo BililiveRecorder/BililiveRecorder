@@ -30,10 +30,11 @@ namespace BililiveRecorder.Core.Config
     {
         public const string CONFIG_FILE_NAME = "config.json";
         public ConfigParser() { }
-        public static BililiveRecorder.Core.Config.V3.ConfigV3? LoadFrom(string directory) { }
+        public static BililiveRecorder.Core.Config.V3.ConfigV3? LoadFromDirectory(string directory) { }
+        public static BililiveRecorder.Core.Config.V3.ConfigV3? LoadFromFile(string path) { }
         public static BililiveRecorder.Core.Config.V3.ConfigV3? LoadJson(string json) { }
+        public static bool Save(BililiveRecorder.Core.Config.V3.ConfigV3 config) { }
         public static string? SaveJson(BililiveRecorder.Core.Config.V3.ConfigV3 config) { }
-        public static bool SaveTo(string directory, BililiveRecorder.Core.Config.V3.ConfigV3 config) { }
         public static void WriteAllTextWithBackup(string path, string contents) { }
     }
     public enum CuttingMode
@@ -60,6 +61,8 @@ namespace BililiveRecorder.Core.Config.V3
     public sealed class ConfigV3 : BililiveRecorder.Core.Config.ConfigBase
     {
         public ConfigV3() { }
+        [Newtonsoft.Json.JsonIgnore]
+        public string? ConfigPathOverride { get; set; }
         [Newtonsoft.Json.JsonIgnore]
         public bool DisableConfigSave { get; set; }
         [Newtonsoft.Json.JsonProperty("global")]
