@@ -48,6 +48,7 @@ namespace BililiveRecorder.Cli
 
                     var cmd_run = new Command("run", "Run BililiveRecorder in standard mode")
                     {
+                        new Option<string?>(new []{ "--config-override" }, () => null, "Config path override"),
                         new Option<string?>(new []{ "--http-bind", "--bind", "-b" }, () => null, "Bind address for http service"),
                         new Option<string?>(new []{ "--http-basic-user" }, () => null, "Web interface username"),
                         new Option<string?>(new []{ "--http-basic-pass" }, () => null, "Web interface password"),
@@ -115,14 +116,22 @@ namespace BililiveRecorder.Cli
             Log.Logger = logger;
 
             path = Path.GetFullPath(path);
+
+            if (args.ConfigOverride is not null)
+            {
+                logger.Information("Using config from {ConfigOverride}", args.ConfigOverride);
+                path = args.ConfigOverride;
+            }
+
             var config = ConfigParser.LoadFrom(path);
             if (config is null)
             {
-                logger.Error("Initialize Error");
+                logger.Error("Config Loading Failed");
                 return -1;
             }
 
             config.Global.WorkDirectory = path;
+            config.ConfigPathOverride = args.ConfigOverride;
 
             var serviceProvider = BuildServiceProvider(config, logger);
 
@@ -493,6 +502,8 @@ namespace BililiveRecorder.Cli
 
         public sealed class RunModeArguments : SharedArguments
         {
+            public string? ConfigOverride { get; set; } = null;
+
             public string Path { get; set; } = string.Empty;
         }
 

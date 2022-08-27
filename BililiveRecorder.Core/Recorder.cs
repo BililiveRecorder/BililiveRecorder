@@ -120,7 +120,7 @@ namespace BililiveRecorder.Core
         public void SaveConfig()
         {
             this.Config.Rooms = this.Rooms.Select(x => x.RoomConfig).ToList();
-            ConfigParser.SaveTo(this.Config.Global.WorkDirectory!, this.Config);
+            ConfigParser.Save(this.Config);
         }
 
         #region Events

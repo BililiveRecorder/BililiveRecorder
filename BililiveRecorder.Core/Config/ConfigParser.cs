@@ -92,8 +92,10 @@ namespace BililiveRecorder.Core.Config
             }
         }
 
-        public static bool SaveTo(string directory, V3.ConfigV3 config)
+        public static bool Save(V3.ConfigV3 config)
         {
+            var directory = config.Global.WorkDirectory;
+
             if (config.DisableConfigSave)
             {
                 logger.Debug("Skipping write config because DisableConfigSave is true.");
@@ -107,6 +109,9 @@ namespace BililiveRecorder.Core.Config
                     return false;
 
                 var filepath = Path.Combine(directory, CONFIG_FILE_NAME);
+
+                if (config.ConfigPathOverride is not null)
+                    filepath = config.ConfigPathOverride;
 
                 if (json is not null)
                     WriteAllTextWithBackup(filepath, json);

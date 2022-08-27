@@ -14,8 +14,13 @@ namespace BililiveRecorder.Core.Config.V3
         [JsonProperty("rooms")]
         public List<RoomConfig> Rooms { get; set; } = new List<RoomConfig>();
 
+        // for CLI
         [JsonIgnore]
-        public bool DisableConfigSave { get; set; } = false; // for CLI
+        public bool DisableConfigSave { get; set; } = false;
+
+        // for CLI
+        [JsonIgnore]
+        public string? ConfigPathOverride { get; set; }
     }
 
     public partial class RoomConfig : IFileNameConfig
