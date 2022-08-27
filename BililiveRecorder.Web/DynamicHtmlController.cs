@@ -15,7 +15,13 @@ namespace BililiveRecorder.Web
     [ApiExplorerSettings(IgnoreApi = true)]
     public sealed class DynamicHtmlController : Controller
     {
+        private static readonly MinifyMarkupFormatter formatter = new MinifyMarkupFormatter
+        {
+            ShouldKeepEmptyAttributes = true,
+        };
+
         private static string? cachedIndexHtml;
+
         private readonly CompositeFileProvider fileProvider;
 
         public DynamicHtmlController(CompositeFileProvider fileProvider)
@@ -86,7 +92,7 @@ namespace BililiveRecorder.Web
             this.Response.ContentType = "text/html; encoding=utf-8";
 
             using var writer = new StreamWriter(this.Response.Body);
-            document.ToHtml(writer, new MinifyMarkupFormatter());
+            document.ToHtml(writer, formatter);
         }
     }
 }
