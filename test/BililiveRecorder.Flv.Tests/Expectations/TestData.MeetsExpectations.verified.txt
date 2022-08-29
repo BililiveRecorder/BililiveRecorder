@@ -4,6 +4,7 @@ Bad/p1-mock-20211120-no_metadata.xml
 Bad/p2-mock-20210310-same_header_audio.xml
 Bad/p2-mock-20210310-same_header_both.xml
 Bad/p2-mock-20210310-same_header_video.xml
+Bad/p3-brec_std-20220829-30s_timestamp_jump.xml
 Bad/p3-mock-20210310-change_header_audio.xml
 Bad/p3-mock-20210310-change_header_both.xml
 Bad/p3-mock-20210310-change_header_video.xml
