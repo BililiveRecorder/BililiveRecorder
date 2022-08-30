@@ -6,6 +6,7 @@ using Fluid;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.Extensions.FileProviders;
+using NUglify;
 
 namespace BililiveRecorder.Web
 {
@@ -37,6 +38,9 @@ namespace BililiveRecorder.Web
             tc.SetValue("files", contents);
 
             var result = template.Render(tc);
+
+            result = Uglify.Html(result).Code;
+
             var bytes = Encoding.UTF8.GetBytes(result);
             context.Response.ContentLength = bytes.Length;
             return context.Response.Body.WriteAsync(bytes, 0, bytes.Length);
