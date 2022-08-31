@@ -19,6 +19,7 @@ using BililiveRecorder.DependencyInjection;
 using BililiveRecorder.Flv.Pipeline;
 using BililiveRecorder.ToolBox;
 using BililiveRecorder.Web;
+using BililiveRecorder.Web.Models.Rest.Logs;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.Extensions.DependencyInjection;
@@ -112,7 +113,7 @@ namespace BililiveRecorder.Cli
         {
             var path = Path.GetFullPath(args.Path);
 
-            using var logger = BuildLogger(args.LogLevel, args.LogFileLevel);
+            using var logger = BuildLogger(args.LogLevel, args.LogFileLevel, enableWebLog: args.HttpBind is not null);
             Log.Logger = logger;
 
             path = Path.GetFullPath(path);
@@ -145,7 +146,7 @@ namespace BililiveRecorder.Cli
 
         private static async Task<int> RunPortableModeAsync(PortableModeArguments args)
         {
-            using var logger = BuildLogger(args.LogLevel, args.LogFileLevel);
+            using var logger = BuildLogger(args.LogLevel, args.LogFileLevel, enableWebLog: args.HttpBind is not null);
             Log.Logger = logger;
 
             var config = new ConfigV3()
@@ -426,7 +427,7 @@ namespace BililiveRecorder.Cli
             .AddRecorder()
             .BuildServiceProvider();
 
-        private static Logger BuildLogger(LogEventLevel logLevel, LogEventLevel logFileLevel)
+        private static Logger BuildLogger(LogEventLevel logLevel, LogEventLevel logFileLevel, bool enableWebLog = false)
         {
             var logFilePath = Environment.GetEnvironmentVariable("BILILIVERECORDER_LOG_FILE_PATH");
             if (string.IsNullOrWhiteSpace(logFilePath))
@@ -469,6 +470,18 @@ namespace BililiveRecorder.Cli
                     .WriteTo.File(new CompactJsonFormatter(), logFilePathMicrosoft, restrictedToMinimumLevel: logFileLevel, shared: true, rollingInterval: RollingInterval.Day, rollOnFileSizeLimit: true)
                     ;
                 });
+
+            if (enableWebLog)
+            {
+                var webSink = new WebApiLogEventSink(new CompactJsonFormatter());
+                WebApiLogEventSink.Instance = webSink;
+                builder.WriteTo.Logger(sl =>
+                {
+                    sl
+                    .Filter.ByExcluding(matchMicrosoft)
+                    .WriteTo.Async(l => l.Sink(webSink, restrictedToMinimumLevel: LogEventLevel.Debug));
+                });
+            }
 
             if (ansiColorSupport)
             {

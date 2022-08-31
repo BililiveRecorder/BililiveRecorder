@@ -301,11 +301,11 @@ namespace BililiveRecorder.WPF
                 .WriteTo.Console(levelSwitch: levelSwitchConsole)
 #if DEBUG
                 .WriteTo.Debug()
-                .WriteTo.Sink<WpfLogEventSink>(Serilog.Events.LogEventLevel.Debug)
+                .WriteTo.Async(l => l.Sink<WpfLogEventSink>(Serilog.Events.LogEventLevel.Debug))
 #else
-                .WriteTo.Sink<WpfLogEventSink>(Serilog.Events.LogEventLevel.Information)
+                .WriteTo.Async(l => l.Sink<WpfLogEventSink>(Serilog.Events.LogEventLevel.Information))
 #endif
-                .WriteTo.File(new CompactJsonFormatter(), logFilePath, shared: true, rollingInterval: RollingInterval.Day, rollOnFileSizeLimit: true)
+                .WriteTo.Async(l => l.File(new CompactJsonFormatter(), logFilePath, shared: true, rollingInterval: RollingInterval.Day, rollOnFileSizeLimit: true))
                 .WriteTo.Sentry(o =>
                 {
                     o.Dsn = "https://6f92720d5ce84b2dba5db75ab5a5014d@o210546.ingest.sentry.io/5556540";

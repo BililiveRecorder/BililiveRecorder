@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>录播姬日志演示页</title>
+</head>
+
+<body>
+    <p>
+        当前 cursor: <span id="cursor_id"></span>
+    </p>
+    <div>
+        <table id="log_table">
+            <tr>
+                <th>日期</th>
+                <th>级别</th>
+                <th>房间号</th>
+                <th>消息</th>
+            </tr>
+        </table>
+    </div>
+    <script>
+        const cursor_span = document.getElementById('cursor_id');
+        const log_table = document.getElementById('log_table');
+        const page_url = new URL(location);
+        const api = page_url.searchParams.get('api') || './api/log/fetch';
+
+        let cursor = 0;
+
+        function fetchLogs() {
+            fetch(api + '?after=' + cursor)
+                .then(x => x.json())
+                .then(x => {
+                    cursor = x.cursor;
+                    cursor_span.textContent = cursor;
+
+                    if (!x.continuous) {
+                        appendLogText("不连续的日志");
+                    }
+
+                    x.logs.forEach(log => {
+                        const formatted_str = log['@mt'].replace(/\{(.+?)\}/g, (match, key) => log[key]);
+
+                        appendLogText(log['@t'], (log['@l'] || 'Info'), (log['RoomId'] || ''), formatted_str);
+                    });
+                })
+        }
+
+        function appendLogText(date, level, roomid, text) {
+            console.log(text);
+            const tr = document.createElement('tr');
+
+            let td = document.createElement('td');
+            td.textContent = date;
+            tr.appendChild(td);
+
+            td = document.createElement('td');
+            td.textContent = level;
+            tr.appendChild(td);
+
+            td = document.createElement('td');
+            td.textContent = roomid;
+            tr.appendChild(td);
+
+            td = document.createElement('td');
+            td.textContent = text;
+            tr.appendChild(td);
+
+            log_table.appendChild(tr);
+        }
+
+        setInterval(() => {
+            fetchLogs();
+        }, 1000);
+
+    </script>
+</body>
+
+</html>
