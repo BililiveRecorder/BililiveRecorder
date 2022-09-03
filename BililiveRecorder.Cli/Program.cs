@@ -201,8 +201,14 @@ namespace BililiveRecorder.Cli
             }
             else
             {
+#if DEBUG
+                const LogEventLevel webLogEventLevel = LogEventLevel.Debug;
+#else
+                const LogEventLevel webLogEventLevel = LogEventLevel.Error;
+#endif
+
                 host = new HostBuilder()
-                    .UseSerilog(logger: logger)
+                    .UseSerilog(logger: new LoggerConfiguration().MinimumLevel.Is(webLogEventLevel).WriteTo.Logger(logger).CreateLogger(), dispose: true)
                     .ConfigureServices(services =>
                     {
                         services.AddSingleton(recorderAccessProxy);
