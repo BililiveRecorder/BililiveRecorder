@@ -52,6 +52,14 @@ namespace BililiveRecorder.Core
         private DateTimeOffset danmakuClientConnectTime;
         private static readonly TimeSpan danmakuClientReconnectNoDelay = TimeSpan.FromMinutes(1);
 
+        private static readonly HttpClient coverDownloadHttpClient = new HttpClient();
+
+        static Room()
+        {
+            coverDownloadHttpClient.Timeout = TimeSpan.FromSeconds(10);
+            coverDownloadHttpClient.DefaultRequestHeaders.UserAgent.Clear();
+        }
+
         public Room(IServiceScope scope, RoomConfig roomConfig, int initDelayFactor, ILogger logger, IDanmakuClient danmakuClient, IApiClient apiClient, IBasicDanmakuWriter basicDanmakuWriter, IRecordTaskFactory recordTaskFactory)
         {
             this.scope = scope ?? throw new ArgumentNullException(nameof(scope));
@@ -423,38 +431,45 @@ namespace BililiveRecorder.Core
 
             if (this.RoomConfig.SaveStreamCover)
             {
-                // 保存直播间封面
-                _ = Task.Run(async () =>
-                {
-                    try
-                    {
-                        var coverUrl = this.RawBilibiliApiJsonData?["room_info"]?["cover"]?.ToObject<string>();
-
-                        if (string.IsNullOrWhiteSpace(coverUrl))
-                        {
-                            this.logger.Information("没有直播间封面信息");
-                            return;
-                        }
-
-                        var targetPath = Path.ChangeExtension(e.FullPath, "cover" + Path.GetExtension(coverUrl));
-
-                        using var http = new HttpClient();
-                        http.DefaultRequestHeaders.UserAgent.Clear();
-
-                        var stream = await http.GetStreamAsync(coverUrl).ConfigureAwait(false);
-                        using var file = new FileStream(targetPath, FileMode.Create, FileAccess.Write, FileShare.None);
-                        await stream.CopyToAsync(file).ConfigureAwait(false);
-
-                        this.logger.Debug("直播间封面已成功从 {CoverUrl} 保存到 {FilePath}", coverUrl, targetPath);
-                    }
-                    catch (Exception ex)
-                    {
-                        this.logger.Warning(ex, "保存直播间封面时出错");
-                    }
-                });
+                _ = Task.Run(() => this.SaveStreamCoverAsync(e.FullPath));
             }
 
             RecordFileOpening?.Invoke(this, e);
+        }
+
+        private async Task SaveStreamCoverAsync(string flvFullPath)
+        {
+            const int MAX_ATTEMPT = 3;
+            var attempt = 0;
+        retry:
+            try
+            {
+                var coverUrl = this.RawBilibiliApiJsonData?["room_info"]?["cover"]?.ToObject<string>();
+
+                if (string.IsNullOrWhiteSpace(coverUrl))
+                {
+                    this.logger.Information("没有直播间封面信息");
+                    return;
+                }
+
+                var targetPath = Path.ChangeExtension(flvFullPath, "cover" + Path.GetExtension(coverUrl));
+
+                var stream = await coverDownloadHttpClient.GetStreamAsync(coverUrl).ConfigureAwait(false);
+                using var file = new FileStream(targetPath, FileMode.Create, FileAccess.Write, FileShare.None);
+                await stream.CopyToAsync(file).ConfigureAwait(false);
+
+                this.logger.Debug("直播间封面已成功从 {CoverUrl} 保存到 {FilePath}", coverUrl, targetPath);
+            }
+            catch (Exception ex)
+            {
+                if (attempt++ < MAX_ATTEMPT)
+                {
+                    this.logger.Debug(ex, "保存直播间封面时出错, 次数 {Attempt}", attempt);
+                    goto retry;
+                }
+
+                this.logger.Warning(ex, "保存直播间封面时出错");
+            }
         }
 
         ///
