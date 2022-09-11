@@ -31,7 +31,13 @@ namespace BililiveRecorder.Core.Scripting.Runtime
                     ? throw new JavaScriptException(this._engine.Realm.Intrinsics.Error, "The provided value is not of type 'RequestInit'.")
                     : arg1;
 
-            var handler = new HttpClientHandler();
+            var handler = new HttpClientHandler
+            {
+                UseCookies = false,
+                UseDefaultCredentials = false,
+                UseProxy = false,
+            };
+
             var httpClient = new HttpClient(handler);
             var requestMessage = new HttpRequestMessage(HttpMethod.Get, urlString.ToString());
             var throwOnRedirect = false;
