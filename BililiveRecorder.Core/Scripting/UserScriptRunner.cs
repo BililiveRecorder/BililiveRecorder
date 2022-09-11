@@ -29,9 +29,9 @@ namespace BililiveRecorder.Core.Scripting
 
         static UserScriptRunner()
         {
-            setupScript = new JavaScriptParser(@"
+            setupScript = new JavaScriptParser(new ParserOptions()).ParseScript(@"
 globalThis.recorderEvents = {};
-", new ParserOptions(@"internalSetup.js")).ParseScript();
+", "internalSetup.js", true);
         }
 
         public UserScriptRunner(GlobalConfig config)
@@ -73,8 +73,8 @@ globalThis.recorderEvents = {};
                 return null;
             }
 
-            var parser = new JavaScriptParser(source!, new ParserOptions("userscript.js"));
-            var script = parser.ParseScript();
+            var parser = new JavaScriptParser();
+            var script = parser.ParseScript(source!, "userscript.js", true);
 
             this.cachedScript = script;
             this.cachedScriptSource = source;

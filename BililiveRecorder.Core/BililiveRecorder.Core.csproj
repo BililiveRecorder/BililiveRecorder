@@ -13,7 +13,7 @@
 
   <ItemGroup>
     <PackageReference Include="Fluid.Core" Version="2.2.15" />
-    <PackageReference Include="Jint" Version="3.0.0-preview-275" />
+    <PackageReference Include="Jint" Version="3.0.0-preview-336" />
     <PackageReference Include="JsonSubTypes" Version="1.9.0" />
     <PackageReference Include="HierarchicalPropertyDefault" Version="0.1.4-beta-g75fdf624b1" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="6.0.0" />
