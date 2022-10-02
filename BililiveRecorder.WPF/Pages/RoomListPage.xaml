@@ -99,6 +99,14 @@
                         <ui:PathIcon Style="{StaticResource PathIconDataOpenInNew}"/>
                     </MenuItem.Icon>
                 </MenuItem>
+                <Separator Name="wj202209Separator" Visibility="Collapsed"/>
+                <MenuItem Header="问卷调查" Name="wj202209" Visibility="Collapsed">
+                    <MenuItem Header="2022 年录播姬问卷调查" Command="{x:Static m:Commands.OpenLink}" CommandParameter="https://rec.danmuji.org/link/wj202209_wpf/">
+                        <MenuItem.Icon>
+                            <ui:PathIcon Style="{StaticResource PathIconDataOpenInNew}"/>
+                        </MenuItem.Icon>
+                    </MenuItem>
+                </MenuItem>
             </Menu>
             <Separator/>
         </StackPanel>
