@@ -2,7 +2,6 @@ using System;
 using System.Threading;
 using BililiveRecorder.Core.Config.V3;
 using BililiveRecorder.Core.Scripting.Runtime;
-using Esprima;
 using Esprima.Ast;
 using Jint;
 using Jint.Native;
@@ -29,9 +28,9 @@ namespace BililiveRecorder.Core.Scripting
 
         static UserScriptRunner()
         {
-            setupScript = new JavaScriptParser(new ParserOptions()).ParseScript(@"
+            setupScript = Engine.PrepareScript(@"
 globalThis.recorderEvents = {};
-", "internalSetup.js", true);
+", "internalSetup.js");
         }
 
         public UserScriptRunner(GlobalConfig config)
@@ -73,8 +72,7 @@ globalThis.recorderEvents = {};
                 return null;
             }
 
-            var parser = new JavaScriptParser();
-            var script = parser.ParseScript(source!, "userscript.js", true);
+            var script = Engine.PrepareScript(source!, "userscript.js");
 
             this.cachedScript = script;
             this.cachedScriptSource = source;
