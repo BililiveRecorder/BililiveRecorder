@@ -1,0 +1,41 @@
+name: Bug Report
+description: 提交 Bug
+body:
+  - type: dropdown
+    id: recorder-build
+    attributes:
+      label: Platforms
+      description: 你使用的是哪个平台的录播姬？
+      multiple: true
+      options:
+        - WPF (桌面版)
+        - Docker
+        - CLI - Windows
+        - CLI - Linux
+        - CLI - macOS
+    validations:
+      required: true
+  - type: input
+    id: recorder-version
+    attributes:
+      label: Version
+      description: 你使用的录播姬版本是？
+      placeholder: "例: v2.5.0"
+    validations:
+      required: true
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: 请描述你遇到的问题
+      render: Markdown
+    validations:
+      required: true
+  - type: textarea
+    id: recorder-log
+    attributes:
+      label: Logs
+      description: 请将录播姬的日志粘贴在这里（如果有的话）
+      render: JSON
+    validations:
+      required: false
