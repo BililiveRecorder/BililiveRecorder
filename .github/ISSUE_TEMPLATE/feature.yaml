@@ -11,14 +11,14 @@ body:
         - **自动上传、录制后执行命令**: 建议通过录播姬的 [Webhook](https://rec.danmuji.org/user/webhook/) 功能实现。
 
   - type: textarea
-    id: description
+    id: problem
     attributes:
       label: Problem
       description: 请描述你所遇到的问题/痛点
     validations:
       required: true
   - type: textarea
-    id: description
+    id: proposal
     attributes:
       label: Proposal
       description: 请描述你的建议
