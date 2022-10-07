@@ -28,7 +28,6 @@ body:
     attributes:
       label: Description
       description: 请描述你遇到的问题
-      render: Markdown
     validations:
       required: true
   - type: textarea

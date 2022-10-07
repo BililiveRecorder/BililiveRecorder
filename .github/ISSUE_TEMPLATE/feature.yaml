@@ -1,11 +1,26 @@
 name: Feature Request
 description: 提交新功能建议
 body:
+  - type: markdown
+    attributes:
+      value: |
+        常见需求：
+
+        - **只录制弹幕**: 目前录播姬主要功能是录制直播，如果要只录制弹幕改动会比较麻烦，短期内不会考虑支持。
+        - **开机自启**: 请使用系统自带的开机自启功能。Windows 上可以复制快捷方式到 _启动_ 文件夹。
+        - **自动上传、录制后执行命令**: 建议通过录播姬的 [Webhook](https://rec.danmuji.org/user/webhook/) 功能实现。
+
   - type: textarea
     id: description
     attributes:
-      label: Feature Description
-      description: 请描述你想要的功能
-      render: Markdown
+      label: Problem
+      description: 请描述你所遇到的问题/痛点
+    validations:
+      required: true
+  - type: textarea
+    id: description
+    attributes:
+      label: Proposal
+      description: 请描述你的建议
     validations:
       required: true
