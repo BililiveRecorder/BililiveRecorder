@@ -355,7 +355,7 @@
       <Version>13.0.1</Version>
     </PackageReference>
     <PackageReference Include="NuGet.CommandLine">
-      <Version>6.2.1</Version>
+      <Version>6.2.2</Version>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
