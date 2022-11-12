@@ -22,6 +22,9 @@ namespace BililiveRecorder.Core
 {
     internal class Room : IRoom
     {
+        private const int HR_ERROR_HANDLE_DISK_FULL = unchecked((int)0x80070027);
+        private const int HR_ERROR_DISK_FULL = unchecked((int)0x80070070);
+
         private readonly object recordStartLock = new object();
         private readonly SemaphoreSlim recordRetryDelaySemaphoreSlim = new SemaphoreSlim(1, 1);
         private readonly Timer timer;
@@ -263,10 +266,17 @@ namespace BililiveRecorder.Core
                         this.recordTask = null;
                         this.OnPropertyChanged(nameof(this.Recording));
 
-                        // 请求直播流出错时的重试逻辑
-                        _ = Task.Run(() => this.RestartAfterRecordTaskFailedAsync(RestartRecordingReason.GenericRetry));
-
-                        return;
+                        if (ex is IOException ioex && (ioex.HResult == HR_ERROR_DISK_FULL || ioex.HResult == HR_ERROR_HANDLE_DISK_FULL))
+                        {
+                            this.logger.Warning("因为硬盘空间已满，本次不再自动重试启动录制。");
+                            return;
+                        }
+                        else
+                        {
+                            // 请求直播流出错时的重试逻辑
+                            _ = Task.Run(() => this.RestartAfterRecordTaskFailedAsync(RestartRecordingReason.GenericRetry));
+                            return;
+                        }
                     }
 
                     RecordSessionStarted?.Invoke(this, new RecordSessionStartedEventArgs(this)
