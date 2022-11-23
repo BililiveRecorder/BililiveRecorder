@@ -1,4 +1,4 @@
-﻿[assembly: System.Runtime.Versioning.TargetFramework(".NETStandard,Version=v2.0", FrameworkDisplayName="")]
+﻿[assembly: System.Runtime.Versioning.TargetFramework(".NETStandard,Version=v2.0", FrameworkDisplayName=".NET Standard 2.0")]
 namespace BililiveRecorder.DependencyInjection
 {
     public static class DependencyInjectionExtensions
@@ -635,6 +635,13 @@ namespace BililiveRecorder.Flv.Parser
         public UnknownFlvTagTypeException(string message) { }
         protected UnknownFlvTagTypeException(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context) { }
         public UnknownFlvTagTypeException(string message, System.Exception innerException) { }
+    }
+    public class UnsupportedCodecException : BililiveRecorder.Flv.Parser.FlvException
+    {
+        public UnsupportedCodecException() { }
+        public UnsupportedCodecException(string message) { }
+        protected UnsupportedCodecException(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context) { }
+        public UnsupportedCodecException(string message, System.Exception innerException) { }
     }
 }
 namespace BililiveRecorder.Flv.Pipeline.Actions
