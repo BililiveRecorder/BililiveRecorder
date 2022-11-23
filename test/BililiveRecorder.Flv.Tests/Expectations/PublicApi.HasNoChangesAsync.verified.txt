@@ -1,4 +1,4 @@
-﻿[assembly: System.Runtime.Versioning.TargetFramework(".NETStandard,Version=v2.0", FrameworkDisplayName=".NET Standard 2.0")]
+﻿[assembly: System.Runtime.Versioning.TargetFramework(".NETStandard,Version=v2.0", FrameworkDisplayName="")]
 namespace BililiveRecorder.DependencyInjection
 {
     public static class DependencyInjectionExtensions
