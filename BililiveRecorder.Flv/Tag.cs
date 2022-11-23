@@ -81,8 +81,8 @@ namespace BililiveRecorder.Flv
             if (this.BinaryData != null)
             {
                 binaryData = provider?.CreateMemoryStream(nameof(Tag) + ":" + nameof(Clone)) ?? new MemoryStream();
-                this.BinaryData.Seek(0, SeekOrigin.Begin);
-                this.BinaryData.CopyToAsync(binaryData);
+                _ = this.BinaryData.Seek(0, SeekOrigin.Begin);
+                _ = this.BinaryData.CopyToAsync(binaryData);
             }
 
             ScriptTagBody? scriptData = null;
@@ -90,7 +90,7 @@ namespace BililiveRecorder.Flv
             {
                 using var stream = provider?.CreateMemoryStream(nameof(Tag) + ":" + nameof(Clone) + ":Temp") ?? new MemoryStream();
                 this.ScriptData.WriteTo(stream);
-                stream.Seek(0, SeekOrigin.Begin);
+                _ = stream.Seek(0, SeekOrigin.Begin);
                 scriptData = ScriptTagBody.Parse(stream);
             }
 
@@ -126,7 +126,7 @@ namespace BililiveRecorder.Flv
                 var buffer = ArrayPool<byte>.Shared.Rent(5);
                 try
                 {
-                    binaryData.Read(buffer, 0, 5);
+                    _ = binaryData.Read(buffer, 0, 5);
                     extra.FirstBytes = BinaryConvertUtilities.ByteArrayToHexString(buffer, 0, 2);
 
                     if (this.Type == TagType.Video)
@@ -176,14 +176,9 @@ namespace BililiveRecorder.Flv
                     {
                         var bytesLeft = buffer.Length - nalu.StartPosition;
 
-                        if (bytesLeft >= nalu.FullSize)
-                        {
-                            nalu.NaluHash = BinaryConvertUtilities.ByteArrayToHexString(farmHash64.ComputeHash(buffer, nalu.StartPosition, (int)nalu.FullSize));
-                        }
-                        else
-                        {
-                            nalu.NaluHash = BinaryConvertUtilities.ByteArrayToHexString(farmHash64.ComputeHash(buffer, nalu.StartPosition, Math.Min(buffer.Length - nalu.StartPosition, (int)nalu.FullSize))) + "-PARTIAL";
-                        }
+                        nalu.NaluHash = bytesLeft >= nalu.FullSize
+                            ? BinaryConvertUtilities.ByteArrayToHexString(farmHash64.ComputeHash(buffer, nalu.StartPosition, (int)nalu.FullSize))
+                            : BinaryConvertUtilities.ByteArrayToHexString(farmHash64.ComputeHash(buffer, nalu.StartPosition, Math.Min(buffer.Length - nalu.StartPosition, (int)nalu.FullSize))) + "-PARTIAL";
                     }
                 }
             }
@@ -229,7 +224,7 @@ namespace BililiveRecorder.Flv
                 {
                     var val = lookup32[bytes[i]];
                     result[2 * i] = (char)val;
-                    result[2 * i + 1] = (char)(val >> 16);
+                    result[(2 * i) + 1] = (char)(val >> 16);
                 }
                 return new string(result);
             }
@@ -245,13 +240,13 @@ namespace BililiveRecorder.Flv
             internal static string StreamToHexString(Stream stream)
             {
                 var lookup32 = _lookup32;
-                stream.Seek(0, SeekOrigin.Begin);
+                _ = stream.Seek(0, SeekOrigin.Begin);
                 var result = new char[stream.Length * 2];
                 for (var i = 0; i < stream.Length; i++)
                 {
                     var val = lookup32[stream.ReadByte()];
                     result[2 * i] = (char)val;
-                    result[2 * i + 1] = (char)(val >> 16);
+                    result[(2 * i) + 1] = (char)(val >> 16);
                 }
                 return new string(result);
             }

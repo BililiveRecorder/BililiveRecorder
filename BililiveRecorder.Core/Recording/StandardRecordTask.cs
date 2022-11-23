@@ -12,6 +12,7 @@ using BililiveRecorder.Core.ProcessingRules;
 using BililiveRecorder.Core.Scripting;
 using BililiveRecorder.Flv;
 using BililiveRecorder.Flv.Amf;
+using BililiveRecorder.Flv.Parser;
 using BililiveRecorder.Flv.Pipeline;
 using BililiveRecorder.Flv.Pipeline.Actions;
 using Microsoft.Extensions.DependencyInjection;
@@ -134,7 +135,7 @@ namespace BililiveRecorder.Core.Recording
                         if (bytesRead == 0)
                             break;
                         writer.Advance(bytesRead);
-                        Interlocked.Add(ref this.ioNetworkDownloadedBytes, bytesRead);
+                        _ = Interlocked.Add(ref this.ioNetworkDownloadedBytes, bytesRead);
                     }
                     catch (Exception ex)
                     {
@@ -193,6 +194,12 @@ namespace BililiveRecorder.Core.Recording
                         break;
                     }
                 }
+            }
+            catch (UnsupportedCodecException ex)
+            {
+                // 直播流不是 H.264
+                this.logger.Warning(ex, "不支持此直播流的视频编码格式（只支持 H.264），本场直播不再自动启动录制。");
+                this.room.StopRecord(); // 停止自动重试
             }
             catch (OperationCanceledException ex)
             {
@@ -260,7 +267,7 @@ namespace BililiveRecorder.Core.Recording
             switch (this.room.RoomConfig.CuttingMode)
             {
                 case CuttingMode.ByTime:
-                    if (e.FileMaxTimestamp > this.room.RoomConfig.CuttingNumber * (60u * 1000u))
+                    if (e.FileMaxTimestamp > this.room.RoomConfig.CuttingNumber * 60u * 1000u)
                         this.splitFileRule.SetSplitBeforeFlag();
                     break;
                 case CuttingMode.BySize:
@@ -290,7 +297,7 @@ namespace BililiveRecorder.Core.Recording
                 var paths = this.task.CreateFileName();
 
                 try
-                { Directory.CreateDirectory(Path.GetDirectoryName(paths.fullPath)); }
+                { _ = Directory.CreateDirectory(Path.GetDirectoryName(paths.fullPath)); }
                 catch (Exception) { }
 
                 this.last_path = paths.fullPath;
@@ -307,7 +314,7 @@ namespace BililiveRecorder.Core.Recording
                     : Path.ChangeExtension(this.last_path, "txt");
 
                 try
-                { Directory.CreateDirectory(Path.GetDirectoryName(path)); }
+                { _ = Directory.CreateDirectory(Path.GetDirectoryName(path)); }
                 catch (Exception) { }
 
                 var stream = new FileStream(path, FileMode.Append, FileAccess.Write, FileShare.Read);

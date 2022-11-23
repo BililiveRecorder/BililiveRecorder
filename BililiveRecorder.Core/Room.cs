@@ -317,7 +317,7 @@ namespace BililiveRecorder.Core
                 }
                 finally
                 {
-                    this.recordRetryDelaySemaphoreSlim.Release();
+                    _ = this.recordRetryDelaySemaphoreSlim.Release();
                 }
 
                 // 如果状态是非直播中，跳过重试尝试。当状态切换到直播中时会开始新的录制任务。
@@ -451,7 +451,7 @@ namespace BililiveRecorder.Core
         {
             const int MAX_ATTEMPT = 3;
             var attempt = 0;
-        retry:
+retry:
             try
             {
                 var coverUrl = this.RawBilibiliApiJsonData?["room_info"]?["cover"]?.ToObject<string>();

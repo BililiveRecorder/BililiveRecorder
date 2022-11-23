@@ -227,7 +227,7 @@ namespace BililiveRecorder.Flv.Parser
 
             if (tagBodyStream.Length > 2)
             {
-                tagBodyStream.Seek(0, SeekOrigin.Begin);
+                _ = tagBodyStream.Seek(0, SeekOrigin.Begin);
                 switch (tagType)
                 {
                     case TagType.Audio:
@@ -243,8 +243,10 @@ namespace BililiveRecorder.Flv.Parser
                     case TagType.Video:
                         {
                             var frame = tagBodyStream.ReadByte();
+
                             if ((frame & 0x0F) != 7) // AVC
-                                break;
+                                throw new UnsupportedCodecException(string.Format("Unsupported Video Codec: {0}.", frame & 0x0F));
+
                             if (frame == 0x17)
                                 tagFlag |= TagFlag.Keyframe;
                             var packet = tagBodyStream.ReadByte();
@@ -272,7 +274,7 @@ namespace BililiveRecorder.Flv.Parser
             };
 
             // Read Tag Type Specific Data
-            tagBodyStream.Seek(0, SeekOrigin.Begin);
+            _ = tagBodyStream.Seek(0, SeekOrigin.Begin);
 
             if (tag.Type == TagType.Script)
             {
@@ -320,7 +322,7 @@ namespace BililiveRecorder.Flv.Parser
             }
             finally
             {
-                this.peekSemaphoreSlim.Release();
+                _ = this.peekSemaphoreSlim.Release();
             }
         }
 
@@ -344,7 +346,7 @@ namespace BililiveRecorder.Flv.Parser
             }
             finally
             {
-                this.peekSemaphoreSlim.Release();
+                _ = this.peekSemaphoreSlim.Release();
             }
         }
     }
