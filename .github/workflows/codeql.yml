@@ -2,7 +2,7 @@ name: "CodeQL"
 
 on:
   push:
-    branches: [ 'dev', 'old-1.2', 'old-clickonce', 'old-master' ]
+    branches: [ 'dev' ]
   pull_request:
     # The branches below must be a subset of the branches above
     branches: [ 'dev' ]
@@ -28,17 +28,18 @@ jobs:
       uses: actions/checkout@v3
       with:
         fetch-depth: 0
-        submodules: recursive
+        submodules: false # skip fetching webui, they are analyzed separately
+
     - uses: actions/setup-dotnet@v2
 
     - name: Initialize CodeQL
       uses: github/codeql-action/init@v2
       with:
         languages: ${{ matrix.language }}
+        queries: +security-extended,security-and-quality
 
-    - name: Build WebUI
-      run: ./webui/build.sh
     - name: Build CLI
+      if: ${{ matrix.language == 'csharp' }}
       run: dotnet build BililiveRecorder.Cli/BililiveRecorder.Cli.csproj
 
     - name: Perform CodeQL Analysis
