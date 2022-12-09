@@ -71,7 +71,7 @@ namespace BililiveRecorder.Core.Api.Http
 
         private void Config_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (e.PropertyName == nameof(this.config.Cookie) || e.PropertyName == nameof(this.config.TimingApiTimeout))
+            if (e.PropertyName is (nameof(this.config.Cookie)) or (nameof(this.config.TimingApiTimeout)))
                 this.UpdateHttpClient();
         }
 
@@ -89,9 +89,7 @@ namespace BililiveRecorder.Core.Api.Http
             var text = await resp.Content.ReadAsStringAsync().ConfigureAwait(false);
 
             var obj = JsonConvert.DeserializeObject<BilibiliApiResponse<T>>(text);
-            if (obj?.Code != 0)
-                throw new BilibiliApiResponseCodeNotZeroException("Bilibili api code: " + (obj?.Code?.ToString() ?? "(null)") + "\n" + text);
-            return obj;
+            return obj?.Code != 0 ? throw new BilibiliApiResponseCodeNotZeroException(obj?.Code, text) : obj;
         }
 
         public async Task<BilibiliApiResponse<RoomInfo>> GetRoomInfoAsync(int roomid)
@@ -118,7 +116,7 @@ namespace BililiveRecorder.Core.Api.Http
 
             var obj = jobject.ToObject<BilibiliApiResponse<RoomInfo>>();
             if (obj?.Code != 0)
-                throw new BilibiliApiResponseCodeNotZeroException("Bilibili api code: " + (obj?.Code?.ToString() ?? "(null)") + "\n" + text);
+                throw new BilibiliApiResponseCodeNotZeroException(obj?.Code, text);
 
             obj.Data!.RawBilibiliApiJsonData = jobject["data"] as JObject;
 

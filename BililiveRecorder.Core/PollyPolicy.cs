@@ -38,7 +38,12 @@ namespace BililiveRecorder.Core
             this.RequestFailedCircuitBreakerPolicy = Policy
                 .Handle<HttpRequestException>()
                 .Or<JsonException>()
-                .Or<BilibiliApiResponseCodeNotZeroException>()
+                .Or<BilibiliApiResponseCodeNotZeroException>(x =>
+                {
+                    return x.Code is not 19002005 // 19002005: 房间已加密
+                    and not 19002000 // 19002000: 房间不存在（获取初始化数据失败）
+                    ;
+                })
                 .AdvancedCircuitBreakerAsync(
                 failureThreshold: 0.8,
                 samplingDuration: TimeSpan.FromSeconds(30),

@@ -271,6 +271,12 @@ namespace BililiveRecorder.Core
                             this.logger.Warning("因为硬盘空间已满，本次不再自动重试启动录制。");
                             return;
                         }
+                        else if (ex is BilibiliApiResponseCodeNotZeroException notzero && notzero.Code == 19002005)
+                        {
+                            // 房间已加密
+                            this.logger.Warning("房间已加密，无密码获取不到直播流，本次不再自动重试启动录制。");
+                            return;
+                        }
                         else
                         {
                             // 请求直播流出错时的重试逻辑
