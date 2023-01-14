@@ -29,7 +29,7 @@ namespace BililiveRecorder.Flv.Tests.FlvTests
                 tags.Add(tag);
             }
 
-            await Verifier.Verify(tags.SerializeXml()).UseExtension("xml").UseParameters(path);
+            await Verifier.Verify(tags.SerializeXml(), extension: "xml").UseParameters(path);
         }
     }
 }

@@ -34,7 +34,7 @@ namespace BililiveRecorder.Flv.Tests.FlvTests
                 await writer.WriteTag(tag);
             }
 
-            await Verifier.Verify(msprovider.Stream).UseExtension("flv").UseParameters(path);
+            await Verifier.Verify(msprovider.Stream, extension: "flv").UseParameters(path);
         }
 
         public class MemoryStreamFlvTargetProvider : IFlvWriterTargetProvider
@@ -47,10 +47,7 @@ namespace BililiveRecorder.Flv.Tests.FlvTests
 
             public (Stream stream, object? state) CreateOutputStream()
             {
-                if (!this.flag)
-                    this.flag = true;
-                else
-                    throw new System.InvalidOperationException();
+                this.flag = !this.flag ? true : throw new System.InvalidOperationException();
 
                 return (this.Stream, null);
             }

@@ -2,6 +2,7 @@ using System.IO;
 using System.Runtime.CompilerServices;
 using DiffEngine;
 using VerifyTests;
+using VerifyXunit;
 
 namespace BililiveRecorder.Core.UnitTests
 {
@@ -10,7 +11,7 @@ namespace BililiveRecorder.Core.UnitTests
         [ModuleInitializer]
         public static void Init()
         {
-            VerifierSettings.DerivePathInfo(Expectations.Initialize);
+            Verifier.DerivePathInfo(Expectations.Initialize);
             VerifierSettings.IgnoreMembersWithType<Stream>();
             DiffRunner.Disabled = false;
             DiffTools.UseOrder(DiffTool.VisualStudioCode, DiffTool.Rider, DiffTool.WinMerge, DiffTool.VisualStudio);

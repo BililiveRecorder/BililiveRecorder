@@ -24,7 +24,7 @@ namespace BililiveRecorder.Flv.Tests.RuleTests
             Assert.Equal(expectEndTag, rule.EndTagDetected);
         }
 
-        private static IEnumerable<object[]> EndTagTestData()
+        public static IEnumerable<object[]> EndTagTestData()
         {
             yield return new object[] { true, new PipelineEndAction(new Tag()) };
             yield return new object[] { false, new PipelineScriptAction(new Tag()) };

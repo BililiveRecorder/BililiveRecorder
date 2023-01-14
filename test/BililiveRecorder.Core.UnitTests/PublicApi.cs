@@ -11,7 +11,7 @@ namespace BililiveRecorder.Core.UnitTests
         [Fact]
         public Task HasNoChangesAsync()
         {
-            var publicApi = typeof(Recorder).Assembly.GeneratePublicApi();
+            var publicApi = typeof(Recorder).Assembly.GeneratePublicApi(new ApiGeneratorOptions { ExcludeAttributes = new[] { "System.Runtime.Versioning.TargetFrameworkAttribute" } });
             return Verifier.Verify(publicApi);
         }
     }

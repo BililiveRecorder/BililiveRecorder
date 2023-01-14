@@ -46,7 +46,7 @@ namespace BililiveRecorder.Flv.Tests.RuleTests
             await AssertTagsByRerunPipeline(outputTags).ConfigureAwait(false);
 
             var xmlStr = outputTags.SerializeXml();
-            await Verifier.Verify(xmlStr).UseExtension("xml").UseParameters(path);
+            await Verifier.Verify(xmlStr, extension: "xml").UseParameters(path);
         }
 
         [Theory()]
@@ -90,7 +90,7 @@ namespace BililiveRecorder.Flv.Tests.RuleTests
             await AssertTagsByRerunPipeline(outputTags).ConfigureAwait(false);
 
             var xmlStr = outputTags.SerializeXml();
-            await Verifier.Verify(xmlStr).UseExtension("xml").UseParameters(path);
+            await Verifier.Verify(xmlStr, extension: "xml").UseParameters(path);
         }
     }
 }

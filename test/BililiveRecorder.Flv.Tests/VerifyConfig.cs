@@ -4,6 +4,7 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using DiffEngine;
 using VerifyTests;
+using VerifyXunit;
 
 namespace BililiveRecorder.Flv.Tests
 {
@@ -12,7 +13,7 @@ namespace BililiveRecorder.Flv.Tests
         [ModuleInitializer]
         public static void Init()
         {
-            VerifierSettings.DerivePathInfo((string sourceFile, string projectDirectory, Type type, MethodInfo method) =>
+            Verifier.DerivePathInfo((string sourceFile, string projectDirectory, Type type, MethodInfo method) =>
             {
                 if (type != typeof(PublicApi) && type != typeof(TestData))
                     projectDirectory = Path.Combine(projectDirectory, "..", "data", "flv");

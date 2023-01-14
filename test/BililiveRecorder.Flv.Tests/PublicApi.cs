@@ -11,7 +11,7 @@ namespace BililiveRecorder.Flv.Tests
         [Fact]
         public Task HasNoChangesAsync()
         {
-            var publicApi = typeof(Tag).Assembly.GeneratePublicApi();
+            var publicApi = typeof(Tag).Assembly.GeneratePublicApi(new ApiGeneratorOptions { ExcludeAttributes = new[] { "System.Runtime.Versioning.TargetFrameworkAttribute" } });
             return Verifier.Verify(publicApi);
         }
     }
