@@ -22,6 +22,7 @@ namespace BililiveRecorder.Core.Scripting
         private readonly Options jintOptions;
 
         private static readonly Script setupScript;
+        private static readonly JintStorage sharedStorage = new();
 
         private string? cachedScriptSource;
         private Script? cachedScript;
@@ -41,11 +42,15 @@ globalThis.recorderEvents = {};
                 .CatchClrExceptions()
                 .LimitRecursion(100)
                 .RegexTimeoutInterval(TimeSpan.FromSeconds(2))
+                .AllowClr()
                 .Configure(engine =>
                 {
                     engine.Realm.GlobalObject.FastAddProperty("dns", new JintDns(engine), writable: false, enumerable: false, configurable: false);
                     engine.Realm.GlobalObject.FastAddProperty("dotnet", new JintDotnet(engine), writable: false, enumerable: false, configurable: false);
                     engine.Realm.GlobalObject.FastAddProperty("fetchSync", new JintFetchSync(engine), writable: false, enumerable: false, configurable: false);
+                    engine.Realm.GlobalObject.FastAddProperty("URL", TypeReference.CreateTypeReference<JintURL>(engine), writable: false, enumerable: false, configurable: false);
+                    engine.Realm.GlobalObject.FastAddProperty("URLSearchParams", TypeReference.CreateTypeReference<JintURLSearchParams>(engine), writable: false, enumerable: false, configurable: false);
+                    engine.Realm.GlobalObject.FastAddProperty("sharedStorage", new ObjectWrapper(engine, sharedStorage), writable: false, enumerable: false, configurable: false);
                 });
         }
 

@@ -13,6 +13,7 @@
 
   <ItemGroup>
     <PackageReference Include="Fluid.Core" Version="2.2.15" />
+    <PackageReference Include="Flurl" Version="3.0.7" />
     <PackageReference Include="Jint" Version="3.0.0-preview-348" />
     <PackageReference Include="JsonSubTypes" Version="1.9.0" />
     <PackageReference Include="HierarchicalPropertyDefault" Version="0.1.4-beta-g75fdf624b1" />
