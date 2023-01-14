@@ -117,11 +117,11 @@ namespace BililiveRecorder.Core.Scripting.Runtime
             var respString = resp.Content.ReadAsStringAsync().Result;
 #pragma warning restore VSTHRD002 // Avoid problematic synchronous waits
 
-            var respHeaders = new ObjectInstance(this._engine);
+            var respHeaders = new PlainOldJsObject(this._engine);
             foreach (var respHeader in resp.Headers)
                 respHeaders.Set(respHeader.Key, string.Join(", ", respHeader.Value));
 
-            var result = new ObjectInstance(this._engine);
+            var result = new PlainOldJsObject(this._engine);
             result.Set("body", respString);
             result.Set("headers", respHeaders);
             result.Set("ok", resp.IsSuccessStatusCode);

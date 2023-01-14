@@ -6,6 +6,7 @@ using Jint;
 using Jint.Native;
 using Jint.Native.Object;
 using Jint.Runtime;
+using Jint.Runtime.Descriptors;
 using Jint.Runtime.Interop;
 
 namespace BililiveRecorder.Core.Scripting.Runtime
@@ -23,7 +24,7 @@ namespace BililiveRecorder.Core.Scripting.Runtime
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             void Add(string name, Func<JsValue, JsValue[], JsValue> func)
             {
-                this.FastAddProperty(name, new ClrFunctionInstance(this._engine, name, func), false, false, false);
+                this.FastSetProperty(name, new PropertyDescriptor(new ClrFunctionInstance(this._engine, name, func), false, false, false));
             }
         }
 

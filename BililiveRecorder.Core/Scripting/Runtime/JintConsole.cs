@@ -9,6 +9,7 @@ using Jint.Native;
 using Jint.Native.Json;
 using Jint.Native.Object;
 using Jint.Runtime;
+using Jint.Runtime.Descriptors;
 using Jint.Runtime.Interop;
 using Serilog;
 using Serilog.Events;
@@ -63,7 +64,7 @@ namespace BililiveRecorder.Core.Scripting.Runtime
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             void Add(string name, Func<JsValue, JsValue[], JsValue> func)
             {
-                this.FastAddProperty(name, new ClrFunctionInstance(this._engine, name, func), false, false, false);
+                this.FastSetProperty(name, new PropertyDescriptor(new ClrFunctionInstance(this._engine, name, func), false, false, false));
             }
         }
 
@@ -97,7 +98,7 @@ namespace BililiveRecorder.Core.Scripting.Runtime
             JsValue Log(JsValue thisObject, JsValue[] arguments)
             {
                 var messages = this.FormatToString(arguments);
-                if (messages.Length > 0 && messages.Length <= MaxTemplateSlotCount)
+                if (messages.Length is > 0 and <= MaxTemplateSlotCount)
                 {
                     // Serilog quote "Catch a common pitfall when a single non-object array is cast to object[]"
                     // ref: https://github.com/serilog/serilog/blob/fabc2cbe637c9ddfa2d1ddc9f502df120f444acd/src/Serilog/Core/Logger.cs#L368
@@ -120,17 +121,7 @@ namespace BililiveRecorder.Core.Scripting.Runtime
         {
             if (!arguments.At(0).IsLooselyEqual(true))
             {
-                string[] messages;
-
-                if (arguments.Length < 2)
-                {
-                    messages = Array.Empty<string>();
-                }
-                else
-                {
-                    messages = this.FormatToString(arguments.AsSpan(1));
-                }
-
+                var messages = arguments.Length < 2 ? Array.Empty<string>() : this.FormatToString(arguments.AsSpan(1));
                 this.logger.Error("[Script] Assertion failed: {Messages}", messages);
             }
             return Undefined;

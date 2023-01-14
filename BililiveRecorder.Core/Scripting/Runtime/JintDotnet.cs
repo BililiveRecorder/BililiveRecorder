@@ -5,6 +5,7 @@ using System.Net.Http;
 using System.Web;
 using Jint;
 using Jint.Native.Object;
+using Jint.Runtime.Descriptors;
 using Jint.Runtime.Interop;
 
 namespace BililiveRecorder.Core.Scripting.Runtime
@@ -17,7 +18,7 @@ namespace BililiveRecorder.Core.Scripting.Runtime
 
         protected override void Initialize()
         {
-            this.FastAddProperty("Dns", TypeReference.CreateTypeReference(this._engine, typeof(Dns)), false, false, false);
+            this.FastSetProperty("Dns", new PropertyDescriptor(TypeReference.CreateTypeReference(this._engine, typeof(Dns)), false, false, false));
 
             AddTypeAsProperty<Uri>();
             AddTypeAsProperty<UriBuilder>();
@@ -33,7 +34,7 @@ namespace BililiveRecorder.Core.Scripting.Runtime
             AddTypeAsProperty<StringContent>();
             AddTypeAsProperty<FormUrlEncodedContent>();
 
-            void AddTypeAsProperty<T>() => this.FastAddProperty(typeof(T).Name, TypeReference.CreateTypeReference<T>(this._engine), false, false, false);
+            void AddTypeAsProperty<T>() => this.FastSetProperty(typeof(T).Name, new PropertyDescriptor(TypeReference.CreateTypeReference<T>(this._engine), false, false, false));
         }
     }
 }

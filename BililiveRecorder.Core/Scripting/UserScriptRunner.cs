@@ -7,6 +7,7 @@ using Jint;
 using Jint.Native;
 using Jint.Native.Function;
 using Jint.Native.Object;
+using Jint.Runtime.Descriptors;
 using Jint.Runtime.Interop;
 using Serilog;
 
@@ -45,12 +46,12 @@ globalThis.recorderEvents = {};
                 .AllowClr()
                 .Configure(engine =>
                 {
-                    engine.Realm.GlobalObject.FastAddProperty("dns", new JintDns(engine), writable: false, enumerable: false, configurable: false);
-                    engine.Realm.GlobalObject.FastAddProperty("dotnet", new JintDotnet(engine), writable: false, enumerable: false, configurable: false);
-                    engine.Realm.GlobalObject.FastAddProperty("fetchSync", new JintFetchSync(engine), writable: false, enumerable: false, configurable: false);
-                    engine.Realm.GlobalObject.FastAddProperty("URL", TypeReference.CreateTypeReference<JintURL>(engine), writable: false, enumerable: false, configurable: false);
-                    engine.Realm.GlobalObject.FastAddProperty("URLSearchParams", TypeReference.CreateTypeReference<JintURLSearchParams>(engine), writable: false, enumerable: false, configurable: false);
-                    engine.Realm.GlobalObject.FastAddProperty("sharedStorage", new ObjectWrapper(engine, sharedStorage), writable: false, enumerable: false, configurable: false);
+                    engine.Realm.GlobalObject.FastSetProperty("dns", new PropertyDescriptor(new JintDns(engine), writable: false, enumerable: false, configurable: false));
+                    engine.Realm.GlobalObject.FastSetProperty("dotnet", new PropertyDescriptor(new JintDotnet(engine), writable: false, enumerable: false, configurable: false));
+                    engine.Realm.GlobalObject.FastSetProperty("fetchSync", new PropertyDescriptor(new JintFetchSync(engine), writable: false, enumerable: false, configurable: false));
+                    engine.Realm.GlobalObject.FastSetProperty("URL", new PropertyDescriptor(TypeReference.CreateTypeReference<JintURL>(engine), writable: false, enumerable: false, configurable: false));
+                    engine.Realm.GlobalObject.FastSetProperty("URLSearchParams", new PropertyDescriptor(TypeReference.CreateTypeReference<JintURLSearchParams>(engine), writable: false, enumerable: false, configurable: false));
+                    engine.Realm.GlobalObject.FastSetProperty("sharedStorage", new PropertyDescriptor(new ObjectWrapper(engine, sharedStorage), writable: false, enumerable: false, configurable: false));
                 });
         }
 
@@ -89,7 +90,7 @@ globalThis.recorderEvents = {};
         {
             var engine = new Engine(this.jintOptions);
 
-            engine.Realm.GlobalObject.FastAddProperty("console", new JintConsole(engine, logger), writable: false, enumerable: false, configurable: false);
+            engine.Realm.GlobalObject.FastSetProperty("console", new PropertyDescriptor(new JintConsole(engine, logger), writable: false, enumerable: false, configurable: false));
 
             engine.Execute(setupScript);
 
@@ -179,7 +180,7 @@ globalThis.recorderEvents = {};
                 var func = this.ExecuteScriptThenGetEventHandler(log, callbackName);
                 if (func is null) return null;
 
-                var input = new ObjectInstance(func.Engine);
+                var input = new PlainOldJsObject(func.Engine);
                 input.Set("roomid", roomid);
                 input.Set("qn", JsValue.FromObject(func.Engine, qnSetting));
 
