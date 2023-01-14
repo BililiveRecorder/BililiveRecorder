@@ -43,7 +43,6 @@ globalThis.recorderEvents = {};
                 .CatchClrExceptions()
                 .LimitRecursion(100)
                 .RegexTimeoutInterval(TimeSpan.FromSeconds(2))
-                .AllowClr()
                 .Configure(engine =>
                 {
                     engine.Realm.GlobalObject.FastSetProperty("dns", new PropertyDescriptor(new JintDns(engine), writable: false, enumerable: false, configurable: false));
