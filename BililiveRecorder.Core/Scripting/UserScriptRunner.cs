@@ -179,7 +179,7 @@ globalThis.recorderEvents = {};
                 var func = this.ExecuteScriptThenGetEventHandler(log, callbackName);
                 if (func is null) return null;
 
-                var input = new PlainOldJsObject(func.Engine);
+                var input = new JsObject(func.Engine);
                 input.Set("roomid", roomid);
                 input.Set("qn", JsValue.FromObject(func.Engine, qnSetting));
 
