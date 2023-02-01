@@ -22,6 +22,22 @@
             }
           }
         },
+        "FlvWriteMetadata": {
+          "description": "是否在视频文件写入直播信息 metadata\n默认: true",
+          "markdownDescription": "是否在视频文件写入直播信息 metadata  \n默认: `true `\n\n",
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "HasValue": {
+              "type": "boolean",
+              "default": true
+            },
+            "Value": {
+              "type": "boolean",
+              "default": true
+            }
+          }
+        },
         "WebHookUrls": {
           "description": "WebhookV1\n默认: ",
           "markdownDescription": "WebhookV1  \n默认: ` `\n\n",

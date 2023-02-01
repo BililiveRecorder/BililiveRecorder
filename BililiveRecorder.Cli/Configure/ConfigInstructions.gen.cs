@@ -26,6 +26,7 @@ namespace BililiveRecorder.Cli.Configure
         RecordingQuality,
         FileNameRecordTemplate,
         FlvProcessorSplitOnScriptTag,
+        FlvWriteMetadata,
         WebHookUrls,
         WebHookUrlsV2,
         WpfShowTitleAndArea,
@@ -82,6 +83,7 @@ namespace BililiveRecorder.Cli.Configure
             GlobalConfig.Add(GlobalConfigProperties.RecordingQuality, new ConfigInstruction<GlobalConfig, string>(config => config.HasRecordingQuality = false, (config, value) => config.RecordingQuality = value) { Name = "RecordingQuality", CanBeOptional = true });
             GlobalConfig.Add(GlobalConfigProperties.FileNameRecordTemplate, new ConfigInstruction<GlobalConfig, string>(config => config.HasFileNameRecordTemplate = false, (config, value) => config.FileNameRecordTemplate = value) { Name = "FileNameRecordTemplate", CanBeOptional = true });
             GlobalConfig.Add(GlobalConfigProperties.FlvProcessorSplitOnScriptTag, new ConfigInstruction<GlobalConfig, bool>(config => config.HasFlvProcessorSplitOnScriptTag = false, (config, value) => config.FlvProcessorSplitOnScriptTag = value) { Name = "FlvProcessorSplitOnScriptTag", CanBeOptional = true });
+            GlobalConfig.Add(GlobalConfigProperties.FlvWriteMetadata, new ConfigInstruction<GlobalConfig, bool>(config => config.HasFlvWriteMetadata = false, (config, value) => config.FlvWriteMetadata = value) { Name = "FlvWriteMetadata", CanBeOptional = true });
             GlobalConfig.Add(GlobalConfigProperties.WebHookUrls, new ConfigInstruction<GlobalConfig, string>(config => config.HasWebHookUrls = false, (config, value) => config.WebHookUrls = value) { Name = "WebHookUrls", CanBeOptional = true });
             GlobalConfig.Add(GlobalConfigProperties.WebHookUrlsV2, new ConfigInstruction<GlobalConfig, string>(config => config.HasWebHookUrlsV2 = false, (config, value) => config.WebHookUrlsV2 = value) { Name = "WebHookUrlsV2", CanBeOptional = true });
             GlobalConfig.Add(GlobalConfigProperties.WpfShowTitleAndArea, new ConfigInstruction<GlobalConfig, bool>(config => config.HasWpfShowTitleAndArea = false, (config, value) => config.WpfShowTitleAndArea = value) { Name = "WpfShowTitleAndArea", CanBeOptional = true });

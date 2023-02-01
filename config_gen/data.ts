@@ -101,6 +101,13 @@ export const data: Array<ConfigEntry> = [
         default: false
     },
     {
+        id: "FlvWriteMetadata",
+        name: "是否在视频文件写入直播信息 metadata",
+        type: "bool",
+        configType: "globalOnly",
+        default: true
+    },
+    {
         id: "WebHookUrls",
         name: "WebhookV1",
         type: "string?",

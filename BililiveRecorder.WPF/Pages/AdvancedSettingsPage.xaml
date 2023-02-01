@@ -15,7 +15,7 @@
     xmlns:configv3="clr-namespace:BililiveRecorder.Core.Config.V3;assembly=BililiveRecorder.Core"
     xmlns:model="clr-namespace:BililiveRecorder.WPF.Models"
     mc:Ignorable="d" 
-    d:DesignHeight="1500" d:DesignWidth="500"
+    d:DesignHeight="2500" d:DesignWidth="500"
     DataContext="{Binding RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=local:RootPage},Path=DataContext.Recorder.Config.Global}"
     Title="SettingsPage">
     <ui:Page.Resources>
@@ -74,6 +74,13 @@
                             ConverterParameter={x:Static config:DanmakuTransportMode.Wss}}" />
                     </StackPanel>
                 </c:SettingWithDefault>
+            </GroupBox>
+            <GroupBox Header="录制">
+                <ui:SimpleStackPanel Spacing="10">
+                    <c:SettingWithDefault IsSettingNotUsingDefault="{Binding HasFlvWriteMetadata}">
+                        <ui:ToggleSwitch IsOn="{Binding FlvWriteMetadata}" OnContent="在视频文件写入直播信息 metadata" OffContent="在视频文件写入直播信息 metadata"/>
+                    </c:SettingWithDefault>
+                </ui:SimpleStackPanel>
             </GroupBox>
             <GroupBox Header="Network">
                 <StackPanel>

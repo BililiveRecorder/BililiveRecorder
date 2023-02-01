@@ -229,6 +229,9 @@ namespace BililiveRecorder.Core.Recording
 
         private void Writer_BeforeScriptTagWrite(ScriptTagBody scriptTagBody)
         {
+            if (!this.room.RoomConfig.FlvWriteMetadata)
+                return;
+
             if (scriptTagBody.Values.Count == 2 && scriptTagBody.Values[1] is ScriptDataEcmaArray value)
             {
                 var now = DateTimeOffset.Now;

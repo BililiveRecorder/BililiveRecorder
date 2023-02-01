@@ -123,6 +123,11 @@ namespace BililiveRecorder.Core.Config.V3
         public string? FileNameRecordTemplate => this.GetPropertyValue<string>();
 
         /// <summary>
+        /// 是否在视频文件写入直播信息 metadata
+        /// </summary>
+        public bool FlvWriteMetadata => this.GetPropertyValue<bool>();
+
+        /// <summary>
         /// WebhookV1
         /// </summary>
         public string? WebHookUrls => this.GetPropertyValue<string>();
@@ -314,6 +319,14 @@ namespace BililiveRecorder.Core.Config.V3
         public Optional<bool> OptionalFlvProcessorSplitOnScriptTag { get => this.GetPropertyValueOptional<bool>(nameof(this.FlvProcessorSplitOnScriptTag)); set => this.SetPropertyValueOptional(value, nameof(this.FlvProcessorSplitOnScriptTag)); }
 
         /// <summary>
+        /// 是否在视频文件写入直播信息 metadata
+        /// </summary>
+        public bool FlvWriteMetadata { get => this.GetPropertyValue<bool>(); set => this.SetPropertyValue(value); }
+        public bool HasFlvWriteMetadata { get => this.GetPropertyHasValue(nameof(this.FlvWriteMetadata)); set => this.SetPropertyHasValue<bool>(value, nameof(this.FlvWriteMetadata)); }
+        [JsonProperty(nameof(FlvWriteMetadata)), EditorBrowsable(EditorBrowsableState.Never)]
+        public Optional<bool> OptionalFlvWriteMetadata { get => this.GetPropertyValueOptional<bool>(nameof(this.FlvWriteMetadata)); set => this.SetPropertyValueOptional(value, nameof(this.FlvWriteMetadata)); }
+
+        /// <summary>
         /// WebhookV1
         /// </summary>
         public string? WebHookUrls { get => this.GetPropertyValue<string>(); set => this.SetPropertyValue(value); }
@@ -487,6 +500,8 @@ namespace BililiveRecorder.Core.Config.V3
         public string FileNameRecordTemplate => @"{{ roomId }}-{{ name }}/录制-{{ roomId }}-{{ ""now"" | time_zone: ""Asia/Shanghai"" | format_date: ""yyyyMMdd-HHmmss-fff"" }}-{{ title }}.flv";
 
         public bool FlvProcessorSplitOnScriptTag => false;
+
+        public bool FlvWriteMetadata => true;
 
         public string WebHookUrls => @"";
 
