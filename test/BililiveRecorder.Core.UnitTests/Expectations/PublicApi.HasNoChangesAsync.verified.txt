@@ -79,6 +79,7 @@ namespace BililiveRecorder.Core.Config.V3
         public BililiveRecorder.Core.Config.DanmakuTransportMode DanmakuTransport { get; }
         public string FileNameRecordTemplate { get; }
         public bool FlvProcessorSplitOnScriptTag { get; }
+        public bool FlvWriteMetadata { get; }
         public string LiveApiHost { get; }
         public BililiveRecorder.Core.Config.AllowedAddressFamily NetworkTransportAllowedAddressFamily { get; }
         public bool NetworkTransportUseSystemProxy { get; }
@@ -114,12 +115,14 @@ namespace BililiveRecorder.Core.Config.V3
         public BililiveRecorder.Core.Config.DanmakuTransportMode DanmakuTransport { get; set; }
         public string? FileNameRecordTemplate { get; set; }
         public bool FlvProcessorSplitOnScriptTag { get; set; }
+        public bool FlvWriteMetadata { get; set; }
         public bool HasCookie { get; set; }
         public bool HasCuttingMode { get; set; }
         public bool HasCuttingNumber { get; set; }
         public bool HasDanmakuTransport { get; set; }
         public bool HasFileNameRecordTemplate { get; set; }
         public bool HasFlvProcessorSplitOnScriptTag { get; set; }
+        public bool HasFlvWriteMetadata { get; set; }
         public bool HasLiveApiHost { get; set; }
         public bool HasNetworkTransportAllowedAddressFamily { get; set; }
         public bool HasNetworkTransportUseSystemProxy { get; set; }
@@ -159,6 +162,8 @@ namespace BililiveRecorder.Core.Config.V3
         public HierarchicalPropertyDefault.Optional<string?> OptionalFileNameRecordTemplate { get; set; }
         [Newtonsoft.Json.JsonProperty("FlvProcessorSplitOnScriptTag")]
         public HierarchicalPropertyDefault.Optional<bool> OptionalFlvProcessorSplitOnScriptTag { get; set; }
+        [Newtonsoft.Json.JsonProperty("FlvWriteMetadata")]
+        public HierarchicalPropertyDefault.Optional<bool> OptionalFlvWriteMetadata { get; set; }
         [Newtonsoft.Json.JsonProperty("LiveApiHost")]
         public HierarchicalPropertyDefault.Optional<string?> OptionalLiveApiHost { get; set; }
         [Newtonsoft.Json.JsonProperty("NetworkTransportAllowedAddressFamily")]
@@ -246,6 +251,7 @@ namespace BililiveRecorder.Core.Config.V3
         public BililiveRecorder.Core.Config.DanmakuTransportMode DanmakuTransport { get; }
         public string? FileNameRecordTemplate { get; }
         public bool FlvProcessorSplitOnScriptTag { get; set; }
+        public bool FlvWriteMetadata { get; }
         public bool HasAutoRecord { get; set; }
         public bool HasCuttingMode { get; set; }
         public bool HasCuttingNumber { get; set; }
