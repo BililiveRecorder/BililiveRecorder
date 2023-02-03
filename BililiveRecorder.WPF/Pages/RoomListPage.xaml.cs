@@ -38,13 +38,6 @@ namespace BililiveRecorder.WPF.Pages
             this.DataContextChanged += this.RoomListPage_DataContextChanged;
 
             this.InitializeComponent();
-
-            if (DateTimeOffset.UtcNow < new DateTimeOffset(2023, 1, 1, 0, 0, 0, TimeSpan.Zero))
-            {
-                // TODO: delete this
-                this.wj202209Separator.Visibility = Visibility.Visible;
-                this.wj202209.Visibility = Visibility.Visible;
-            }
         }
 
         private void RoomListPage_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
