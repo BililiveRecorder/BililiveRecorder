@@ -11,7 +11,7 @@ namespace BililiveRecorder.Core.Scripting.Runtime
         public void SetItem(string key, string value) => this.storage[key] = value;
         public void RemoveItem(string key) => this.storage.Remove(key);
         public void Clear() => this.storage.Clear();
-        public string? Key(int index) => this.storage.Count < index ? this.storage.Keys.ElementAt(index) : null;
+        public string? Key(int index) => this.storage.Count > index ? this.storage.Keys.ElementAt(index) : null;
         public int Length => this.storage.Count;
     }
 }
