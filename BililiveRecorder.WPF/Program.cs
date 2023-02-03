@@ -312,7 +312,7 @@ namespace BililiveRecorder.WPF
                     o.SendDefaultPii = true;
                     o.IsGlobalModeEnabled = true;
                     o.DisableAppDomainUnhandledExceptionCapture();
-                    o.DisableTaskUnobservedTaskExceptionCapture();
+                    o.DisableUnobservedTaskExceptionCapture();
                     o.AddExceptionFilterForType<HttpRequestException>();
                     o.AddExceptionFilterForType<OutOfMemoryException>();
                     o.AddExceptionFilterForType<JintException>();
