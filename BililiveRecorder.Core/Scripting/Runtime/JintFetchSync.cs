@@ -1,3 +1,5 @@
+using System;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using Jint;
@@ -30,7 +32,25 @@ namespace BililiveRecorder.Core.Scripting.Runtime
                 initObject = arguments[1] is not ObjectInstance arg1
                     ? throw new JavaScriptException(this._engine.Realm.Intrinsics.Error, "The provided value is not of type 'RequestInit'.")
                     : arg1;
+            try
+            {
+                return this.Run(urlString, initObject);
+            }
+            catch (Exception ex)
+            {
+                throw new JavaScriptException(this._engine.Realm.Intrinsics.Error, "Request failed: " + this.FormatClrException(ex));
+            }
+        }
 
+        private string FormatClrException(Exception ex) =>
+            ex is AggregateException ae
+                ? ae.InnerExceptions.Count == 1
+                    ? this.FormatClrException(ae.InnerExceptions[0])
+                    : "multiple errors: (" + string.Join(",", ae.InnerExceptions.Select(x => this.FormatClrException(x))) + ")"
+                : ex.Message;
+
+        private JsObject Run(JsString urlString, ObjectInstance? initObject)
+        {
             var handler = new HttpClientHandler
             {
                 UseCookies = false,
