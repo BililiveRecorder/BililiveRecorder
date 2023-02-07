@@ -1,7 +1,7 @@
 using System;
-using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Text;
 using Jint;
 using Jint.Native;
 using Jint.Native.Array;
@@ -38,16 +38,55 @@ namespace BililiveRecorder.Core.Scripting.Runtime
             }
             catch (Exception ex)
             {
-                throw new JavaScriptException(this._engine.Realm.Intrinsics.Error, "Request failed: " + this.FormatClrException(ex));
+                var b = new StringBuilder("Request failed: ");
+                this.FormatClrException(b, ex);
+
+                throw new JavaScriptException(this._engine.Realm.Intrinsics.Error, b.ToString());
             }
         }
 
-        private string FormatClrException(Exception ex) =>
-            ex is AggregateException ae
-                ? ae.InnerExceptions.Count == 1
-                    ? this.FormatClrException(ae.InnerExceptions[0])
-                    : "multiple errors: (" + string.Join(",", ae.InnerExceptions.Select(x => this.FormatClrException(x))) + ")"
-                : ex.Message;
+        private void FormatClrException(StringBuilder b, Exception ex)
+        {
+start:
+            if (ex is AggregateException ae)
+            {
+                if (ae.InnerExceptions.Count == 0)
+                {
+                    goto treatAsNormalException;
+                }
+
+                if (ae.InnerExceptions.Count == 1)
+                {
+                    // the following is equivalent of calling
+                    // this.FormatClrException(b, ae.InnerExceptions[0]); return;
+                    ex = ae.InnerExceptions[0];
+                    goto start;
+                }
+
+                // there are at least 2 exceptions
+                b.Append(ae.Message);
+                b.Append(": [");
+                this.FormatClrException(b, ae.InnerExceptions[0]);
+                for (var i = 1; i < ae.InnerExceptions.Count; i++)
+                {
+                    b.Append(',');
+                    this.FormatClrException(b, ae.InnerExceptions[i]);
+                }
+                b.Append(']');
+                return;
+            }
+
+treatAsNormalException:
+
+            b.Append(ex.Message);
+
+            if (ex.InnerException != null)
+            {
+                b.Append(" (");
+                this.FormatClrException(b, ex.InnerException);
+                b.Append(')');
+            }
+        }
 
         private JsObject Run(JsString urlString, ObjectInstance? initObject)
         {
