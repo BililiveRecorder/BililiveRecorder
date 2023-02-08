@@ -196,6 +196,14 @@ namespace BililiveRecorder.Web
             ctp.Mappings[".mjs"] = "text/javascript; charset=utf-8";
             ctp.Mappings[".json"] = "application/json; charset=utf-8";
 
+            ctp.Mappings[".mkv"] = "video/x-matroska";
+            ctp.Mappings[".mk3d"] = "video/x-matroska";
+            ctp.Mappings[".mka"] = "audio/x-matroska";
+            ctp.Mappings[".mks"] = "video/x-matroska";
+            ctp.Mappings[".srt"] = "text/plain";
+            ctp.Mappings[".ass"] = "text/plain";
+            ctp.Mappings[".ssa"] = "text/plain";
+
             var compositeFileProvider = app.ApplicationServices.GetRequiredService<CompositeFileProvider>();
             var sharedStaticFiles = new SharedOptions()
             {
@@ -224,10 +232,16 @@ namespace BililiveRecorder.Web
                         RequestPath = "/file",
                         RedirectToAppendTrailingSlash = true,
                     };
-                    app.UseStaticFiles(new StaticFileOptions(sharedRecordingFiles)).UseDirectoryBrowser(new DirectoryBrowserOptions(sharedRecordingFiles)
-                    {
-                        Formatter = new BililiveRecorderDirectoryFormatter()
-                    });
+                    app
+                        .UseStaticFiles(new StaticFileOptions(sharedRecordingFiles)
+                        {
+                            ContentTypeProvider = ctp,
+                            ServeUnknownFileTypes = true,
+                        })
+                        .UseDirectoryBrowser(new DirectoryBrowserOptions(sharedRecordingFiles)
+                        {
+                            Formatter = new BililiveRecorderDirectoryFormatter(),
+                        });
                 }
             }
             catch (Exception) { }
