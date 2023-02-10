@@ -87,8 +87,8 @@
             }
         }
         function loadFiles() {
-            if (window.brecArt) {
-                window.brecArt.destory()
+            if (window.brecArt && window.brecArt.destroy) {
+                window.brecArt.destroy();
                 window.brecArt = null;
             }
             window.brecArt = new Artplayer({
