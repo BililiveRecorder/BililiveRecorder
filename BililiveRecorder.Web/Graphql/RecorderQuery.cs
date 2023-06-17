@@ -28,7 +28,29 @@ namespace BililiveRecorder.Web.Graphql
 
             this.Field<DefaultConfigType>("defaultConfig", resolve: context => DefaultConfig.Instance);
 
-            this.Field<ListGraphType<RoomType>>("rooms", resolve: context => this.recorder.Rooms);
+            this.Field<ListGraphType<RoomType>>("rooms", arguments: new QueryArguments(
+                    new QueryArgument<ListGraphType<IdGraphType>> { Name = "objectIds" },
+                    new QueryArgument<ListGraphType<IntGraphType>> { Name = "roomIds" }
+                ),
+                resolve: context =>
+                {
+                    var objectIds = context.GetArgument<Guid[]>("objectIds");
+                    var roomIds = context.GetArgument<int[]>("roomIds");
+
+                    // If no arguments are provided, return all rooms
+                    if (objectIds == null && roomIds == null)
+                        return this.recorder.Rooms;
+
+                    // Remove any "0" from the roomIds
+                    roomIds = roomIds?.Where(x => x != 0).ToArray();
+
+                    // Otherwise, filter the rooms
+                    return this.recorder.Rooms.Where(x =>
+                        (objectIds?.Contains(x.ObjectId) ?? false) ||
+                        (roomIds?.Contains(x.RoomConfig.RoomId) ?? false) ||
+                        (roomIds?.Contains(x.ShortId) ?? false)
+                    );
+                });
 
             this.Field<RoomType>("room",
                 arguments: new QueryArguments(
@@ -38,11 +60,15 @@ namespace BililiveRecorder.Web.Graphql
                 resolve: context =>
                 {
                     var objectId = context.GetArgument<Guid>("objectId");
-                    var roomid = context.GetArgument<int>("roomId");
+                    var roomId = context.GetArgument<int>("roomId");
 
-                    var room = objectId != default
-                        ? this.recorder.Rooms.FirstOrDefault(x => x.ObjectId == objectId)
-                        : this.recorder.Rooms.FirstOrDefault(x => x.RoomConfig.RoomId == roomid || x.ShortId == roomid);
+                    IRoom? room;
+                    if (objectId != default)
+                        room = this.recorder.Rooms.FirstOrDefault(x => x.ObjectId == objectId);
+                    else if (roomId != 0)
+                        room = this.recorder.Rooms.FirstOrDefault(x => x.RoomConfig.RoomId == roomId || x.ShortId == roomId);
+                    else
+                        room = null;
 
                     return room;
                 }
