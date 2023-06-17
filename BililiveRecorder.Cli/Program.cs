@@ -215,6 +215,9 @@ namespace BililiveRecorder.Cli
 
                         services.AddSingleton(new BililiveRecorderFileExplorerSettings(sharedArguments.EnableFileBrowser));
 
+                        sharedArguments.HttpBasicUser ??= Environment.GetEnvironmentVariable("BREC_HTTP_BASIC_USER");
+                        sharedArguments.HttpBasicPass ??= Environment.GetEnvironmentVariable("BREC_HTTP_BASIC_PASS");
+
                         if (sharedArguments.HttpBasicUser is not null || sharedArguments.HttpBasicPass is not null)
                         {
                             services.AddSingleton(new BasicAuthCredential(sharedArguments.HttpBasicUser ?? string.Empty, sharedArguments.HttpBasicPass ?? string.Empty));
