@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Fluid;
@@ -35,7 +36,7 @@ namespace BililiveRecorder.Web
 
             var tc = new TemplateContext(options);
             tc.SetValue("path", (context.Request.PathBase + context.Request.Path).Value);
-            tc.SetValue("files", contents);
+            tc.SetValue("files", contents.OrderBy(x => x.Name));
 
             var result = template.Render(tc);
 
