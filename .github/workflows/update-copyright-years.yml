@@ -1,0 +1,21 @@
+name: Update copyright years
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '12 0 1 1 *' # Run on the first day of every year at 00:12 UTC, or 08:12 UTC+8
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - uses: FantasticFiasco/action-update-license-year@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          path: |
+            Directory.Build.props
+            BililiveRecorder.WPF/AssemblyInfo.cs
+          transform: 'Copyright © (?<from>\d{4}) - (\d{4})'
