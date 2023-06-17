@@ -18,4 +18,4 @@ jobs:
           path: |
             Directory.Build.props
             BililiveRecorder.WPF/Properties/AssemblyInfo.cs
-          transform: 'Copyright © (?<from>\d{4}) - (\d{4})'
+          transform: '(?<=Copyright © )(?<from>\d{4})-(\d{4})'
