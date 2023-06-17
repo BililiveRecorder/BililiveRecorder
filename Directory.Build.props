@@ -1,6 +1,6 @@
 <Project>
     <PropertyGroup>
-        <Copyright>Copyright © 2018 - 2023 Genteure</Copyright>
+        <Copyright>2018-2023 Genteure</Copyright>
         <Authors>Genteure</Authors>
         <Company>$(Authors)</Company>
         <LangVersion>9.0</LangVersion>
@@ -31,4 +31,6 @@
     <ItemGroup>
         <AdditionalFiles Include="$(MSBuildThisFileDirectory)BannedSymbols.txt" Link="BannedSymbols.txt"/>
     </ItemGroup>
+</Project>
+up>
 </Project>
