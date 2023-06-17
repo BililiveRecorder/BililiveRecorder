@@ -17,5 +17,5 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           path: |
             Directory.Build.props
-            BililiveRecorder.WPF/AssemblyInfo.cs
+            BililiveRecorder.WPF/Properties/AssemblyInfo.cs
           transform: 'Copyright © (?<from>\d{4}) - (\d{4})'
