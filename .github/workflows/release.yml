@@ -39,7 +39,7 @@ jobs:
         run: dotnet test -v m -c Release
 
   release_wpf:
-    needs: test
+    needs: test # Tests must be passed before releasing
     strategy:
       matrix:
         build_configuration: [Release]
@@ -81,7 +81,7 @@ jobs:
           asset_content_type: application/zip
 
   release_cli:
-    needs: test
+    needs: test # Tests must be passed before releasing
     strategy:
       matrix:
         rid: [any, linux-arm, linux-arm64, linux-x64, osx-x64, osx-arm64, win-x64]
@@ -128,7 +128,7 @@ jobs:
           asset_content_type: application/zip
 
   release_docker:
-    needs: test
+    needs: test # Tests must be passed before releasing
     runs-on: ubuntu-latest
     permissions:
       contents: read

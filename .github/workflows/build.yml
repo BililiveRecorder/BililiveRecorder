@@ -42,7 +42,8 @@ jobs:
         run: dotnet test -v m -c Release
 
   build_wpf:
-    needs: test
+    # Tests can be run parallelly for debug builds to save time
+    # needs: test
     runs-on: windows-latest
     steps:
       - name: Checkout
@@ -74,7 +75,8 @@ jobs:
           path: BililiveRecorder.WPF/bin/Release
 
   build_cli:
-    needs: test
+    # Tests can be run parallelly for debug builds to save time
+    # needs: test
     strategy:
       matrix:
         rid: [any, linux-arm, linux-arm64, linux-x64, osx-x64, osx-arm64, win-x64]
@@ -117,7 +119,8 @@ jobs:
           path: BililiveRecorder.Cli/publish/${{ matrix.rid }}/Release
 
   build_docker:
-    needs: test
+    # Tests can be run parallelly for debug builds to save time
+    # needs: test
     runs-on: ubuntu-latest
     if: github.event_name != 'pull_request'
     permissions:
