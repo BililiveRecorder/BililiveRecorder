@@ -549,6 +549,12 @@ retry:
                     this.AreaNameParent = d.ParentAreaName ?? this.AreaNameParent;
                     this.AreaNameChild = d.AreaName ?? this.AreaNameChild;
                     break;
+                case Api.Danmaku.DanmakuMsgType.RoomLock:
+                    this.logger.Information("直播间被封禁");
+                    break;
+                case Api.Danmaku.DanmakuMsgType.CutOff:
+                    this.logger.Information("直播被管理员切断");
+                    break;
                 default:
                     break;
             }
