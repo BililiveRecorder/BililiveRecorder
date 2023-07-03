@@ -1,5 +1,6 @@
 using System;
 using System.Runtime.Serialization;
+using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using BililiveRecorder.Core.Api;
@@ -79,7 +80,15 @@ namespace BililiveRecorder.WPF.Pages
                 return;
             }
 
-            MessageBox.Show("User: " + jo["data"]?["uname"]?.ToObject<string>(), "Cookie Test - Successed", MessageBoxButton.OK, MessageBoxImage.Information);
+            var b = new StringBuilder();
+            b.Append("User: ");
+            b.Append(jo["data"]?["uname"]?.ToObject<string>());
+            b.Append("\nUID (from API response): ");
+            b.Append(jo["data"]?["uid"]?.ToObject<string>());
+            b.Append("\nUID (from Cookie): ");
+            b.Append(this.httpApiClient.GetUid());
+
+            MessageBox.Show(b.ToString(), "Cookie Test - Successed", MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
         private void TestScript_Click(object sender, RoutedEventArgs e)

@@ -73,7 +73,7 @@ namespace BililiveRecorder.Core.Api.Http
 
             // 这里是故意不需要判断 Cookie 文本是否为空、以及 TryParse 是否成功的
             // 因为如果不成功，那么就是设置为 0
-            long.TryParse(this.matchCookieUidRegex.Match(this.config.Cookie).Groups[0].Value, out var uid);
+            long.TryParse(this.matchCookieUidRegex.Match(cookie_string).Groups[1].Value, out var uid);
             this.uid = uid;
         }
 
