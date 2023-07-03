@@ -138,7 +138,7 @@ namespace BililiveRecorder.Core.Api.Http
                 throw new ObjectDisposedException(nameof(HttpApiClient));
 
             var url = $@"{this.config.LiveApiHost}/xlive/web-room/v1/index/getDanmuInfo?id={roomid}&type=0";
-            return FetchAsync<DanmuInfo>(this.anonClient, url);
+            return FetchAsync<DanmuInfo>(this.mainClient, url);
         }
 
         protected virtual void Dispose(bool disposing)
