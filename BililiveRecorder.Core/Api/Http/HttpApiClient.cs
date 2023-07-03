@@ -18,9 +18,8 @@ namespace BililiveRecorder.Core.Api.Http
         internal const string HttpHeaderReferer = "https://live.bilibili.com/";
         internal const string HttpHeaderOrigin = "https://live.bilibili.com";
         internal const string HttpHeaderUserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36";
-
-        Regex MatchCookieUidRegex = new Regex(@"DedeUserID=([^;]+);", RegexOptions.Compiled);
-        readonly long Uid;
+        private readonly Regex matchCookieUidRegex = new Regex(@"DedeUserID=(\d+?);", RegexOptions.Compiled);
+        private long uid;
 
         private readonly GlobalConfig config;
         private readonly HttpClient anonClient;
@@ -38,12 +37,6 @@ namespace BililiveRecorder.Core.Api.Http
             this.mainClient = null!;
             this.UpdateHttpClient();
 
-            var cookie_string = this.config.Cookie;
-            if (!string.IsNullOrWhiteSpace(cookie_string))
-                this.Uid = long.Parse(MatchCookieUidRegex.Match(cookie_string).Value);
-            else
-                this.Uid = 0;
-
             this.anonClient = new HttpClient
             {
                 Timeout = TimeSpan.FromMilliseconds(config.TimingApiTimeout)
@@ -54,8 +47,6 @@ namespace BililiveRecorder.Core.Api.Http
             headers.Add("Referer", HttpHeaderReferer);
             headers.Add("User-Agent", HttpHeaderUserAgent);
         }
-
-        long IDanmakuServerApiClient.GetUid() => this.Uid;
 
         private void UpdateHttpClient()
         {
@@ -79,6 +70,11 @@ namespace BililiveRecorder.Core.Api.Http
 
             var old = Interlocked.Exchange(ref this.mainClient, client);
             old?.Dispose();
+
+            // 这里是故意不需要判断 Cookie 文本是否为空、以及 TryParse 是否成功的
+            // 因为如果不成功，那么就是设置为 0
+            long.TryParse(this.matchCookieUidRegex.Match(this.config.Cookie).Groups[0].Value, out var uid);
+            this.uid = uid;
         }
 
         private void Config_PropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -143,6 +139,8 @@ namespace BililiveRecorder.Core.Api.Http
             var url = $@"{this.config.LiveApiHost}/xlive/web-room/v2/index/getRoomPlayInfo?room_id={roomid}&protocol=0,1&format=0,1,2&codec=0,1&qn={qn}&platform=web&ptype=8&dolby=5&panorama=1";
             return FetchAsync<RoomPlayInfo>(this.mainClient, url);
         }
+
+        public long GetUid() => this.uid;
 
         public Task<BilibiliApiResponse<DanmuInfo>> GetDanmakuServerAsync(int roomid)
         {
