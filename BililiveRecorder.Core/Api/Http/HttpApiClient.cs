@@ -2,6 +2,7 @@ using System;
 using System.ComponentModel;
 using System.Net;
 using System.Net.Http;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using BililiveRecorder.Core.Api.Model;
@@ -16,7 +17,10 @@ namespace BililiveRecorder.Core.Api.Http
         internal const string HttpHeaderAccept = "application/json, text/javascript, */*; q=0.01";
         internal const string HttpHeaderReferer = "https://live.bilibili.com/";
         internal const string HttpHeaderOrigin = "https://live.bilibili.com";
-        internal const string HttpHeaderUserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/104.0.0.0 Safari/537.36";
+        internal const string HttpHeaderUserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36";
+
+        Regex MatchCookieUidRegex = new Regex(@"DedeUserID=([^;]+);", RegexOptions.Compiled);
+        readonly long Uid;
 
         private readonly GlobalConfig config;
         private readonly HttpClient anonClient;
@@ -34,6 +38,12 @@ namespace BililiveRecorder.Core.Api.Http
             this.mainClient = null!;
             this.UpdateHttpClient();
 
+            var cookie_string = this.config.Cookie;
+            if (!string.IsNullOrWhiteSpace(cookie_string))
+                this.Uid = long.Parse(MatchCookieUidRegex.Match(cookie_string).Value);
+            else
+                this.Uid = 0;
+
             this.anonClient = new HttpClient
             {
                 Timeout = TimeSpan.FromMilliseconds(config.TimingApiTimeout)
@@ -44,6 +54,8 @@ namespace BililiveRecorder.Core.Api.Http
             headers.Add("Referer", HttpHeaderReferer);
             headers.Add("User-Agent", HttpHeaderUserAgent);
         }
+
+        long IDanmakuServerApiClient.GetUid() => this.Uid;
 
         private void UpdateHttpClient()
         {
@@ -138,7 +150,7 @@ namespace BililiveRecorder.Core.Api.Http
                 throw new ObjectDisposedException(nameof(HttpApiClient));
 
             var url = $@"{this.config.LiveApiHost}/xlive/web-room/v1/index/getDanmuInfo?id={roomid}&type=0";
-            return FetchAsync<DanmuInfo>(this.anonClient, url);
+            return FetchAsync<DanmuInfo>(this.mainClient, url);
         }
 
         protected virtual void Dispose(bool disposing)
