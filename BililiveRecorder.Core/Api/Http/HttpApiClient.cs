@@ -2,6 +2,7 @@ using System;
 using System.ComponentModel;
 using System.Net;
 using System.Net.Http;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using BililiveRecorder.Core.Api.Model;
@@ -16,7 +17,9 @@ namespace BililiveRecorder.Core.Api.Http
         internal const string HttpHeaderAccept = "application/json, text/javascript, */*; q=0.01";
         internal const string HttpHeaderReferer = "https://live.bilibili.com/";
         internal const string HttpHeaderOrigin = "https://live.bilibili.com";
-        internal const string HttpHeaderUserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/104.0.0.0 Safari/537.36";
+        internal const string HttpHeaderUserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36";
+        private readonly Regex matchCookieUidRegex = new Regex(@"DedeUserID=(\d+?);", RegexOptions.Compiled);
+        private long uid;
 
         private readonly GlobalConfig config;
         private readonly HttpClient anonClient;
@@ -67,6 +70,11 @@ namespace BililiveRecorder.Core.Api.Http
 
             var old = Interlocked.Exchange(ref this.mainClient, client);
             old?.Dispose();
+
+            // 这里是故意不需要判断 Cookie 文本是否为空、以及 TryParse 是否成功的
+            // 因为如果不成功，那么就是设置为 0
+            long.TryParse(this.matchCookieUidRegex.Match(cookie_string).Groups[1].Value, out var uid);
+            this.uid = uid;
         }
 
         private void Config_PropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -132,13 +140,15 @@ namespace BililiveRecorder.Core.Api.Http
             return FetchAsync<RoomPlayInfo>(this.mainClient, url);
         }
 
+        public long GetUid() => this.uid;
+
         public Task<BilibiliApiResponse<DanmuInfo>> GetDanmakuServerAsync(int roomid)
         {
             if (this.disposedValue)
                 throw new ObjectDisposedException(nameof(HttpApiClient));
 
             var url = $@"{this.config.LiveApiHost}/xlive/web-room/v1/index/getDanmuInfo?id={roomid}&type=0";
-            return FetchAsync<DanmuInfo>(this.anonClient, url);
+            return FetchAsync<DanmuInfo>(this.mainClient, url);
         }
 
         protected virtual void Dispose(bool disposing)
