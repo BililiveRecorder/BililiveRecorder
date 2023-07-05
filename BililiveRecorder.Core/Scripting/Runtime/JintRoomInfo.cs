@@ -1,5 +1,6 @@
 using System;
 using Jint;
+using Jint.Native.Json;
 using Jint.Native.Object;
 using Jint.Runtime.Descriptors;
 
@@ -18,6 +19,9 @@ namespace BililiveRecorder.Core.Scripting.Runtime
             this.FastSetProperty("areaParent", new PropertyDescriptor(room.AreaNameParent, false, true, false));
             this.FastSetProperty("areaChild", new PropertyDescriptor(room.AreaNameChild, false, true, false));
             this.FastSetProperty("objectId", new PropertyDescriptor(room.ObjectId.ToString(), false, true, false));
+
+            var apiData = new JsonParser(engine).Parse(room.RawBilibiliApiJsonData?.ToString() ?? "{}");
+            this.FastSetProperty("apiData", new PropertyDescriptor(apiData, false, true, false));
         }
     }
 }
