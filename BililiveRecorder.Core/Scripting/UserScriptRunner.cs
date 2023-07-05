@@ -251,5 +251,44 @@ globalThis.recorderEvents = {};
                 return null;
             }
         }
+
+        /// <summary>
+        /// 修改发给弹幕服务器的握手包 JSON
+        /// </summary>
+        /// <param name="logger">logger</param>
+        /// <param name="room">对应的直播间</param>
+        /// <param name="json">原握手包文本 JSON 数据</param>
+        /// <returns>新的握手包JSON 或 null</returns>
+        public string? CallOnDanmakuHandshake(ILogger logger, IRoom room, string json)
+        {
+            const string callbackName = "onDanmakuHandshake";
+            var log = BuildLogger(logger);
+            try
+            {
+                var func = this.ExecuteScriptThenGetEventHandler(log, callbackName);
+                if (func is null)
+                    return null;
+
+                var roomInfo = new JintRoomInfo(func.Engine, room);
+
+                var result = func.Engine.Call(func, roomInfo, json);
+
+                switch (result)
+                {
+                    case JsString jsString:
+                        return jsString.ToString();
+                    case JsUndefined or JsNull:
+                        return null;
+                    default:
+                        log.Warning($"{RecorderEvents}.{callbackName}() 返回了不支持的类型: {{ValueType}}", result.Type);
+                        return null;
+                }
+            }
+            catch (Exception ex)
+            {
+                log.Error(ex, $"执行脚本 {callbackName} 时发生错误");
+                return null;
+            }
+        }
     }
 }

@@ -31,6 +31,8 @@ namespace BililiveRecorder.Core.Api.Danmaku
         public event EventHandler<StatusChangedEventArgs>? StatusChanged;
         public event EventHandler<DanmakuReceivedEventArgs>? DanmakuReceived;
 
+        public Func<string, string?>? BeforeHandshake { get; set; } = null;
+
         public DanmakuClient(IDanmakuServerApiClient apiClient, ILogger logger)
         {
             this.apiClient = apiClient ?? throw new ArgumentNullException(nameof(apiClient));
@@ -96,7 +98,7 @@ namespace BililiveRecorder.Core.Api.Danmaku
 
                 this.danmakuTransport = transport;
 
-                await this.SendHelloAsync(roomid, apiClient.GetUid(), danmakuServerInfo.Token ?? string.Empty).ConfigureAwait(false);
+                await this.SendHelloAsync(roomid, this.apiClient.GetUid(), danmakuServerInfo.Token ?? string.Empty).ConfigureAwait(false);
                 await this.SendPingAsync().ConfigureAwait(false);
 
                 if (cancellationToken.IsCancellationRequested)
@@ -211,8 +213,9 @@ namespace BililiveRecorder.Core.Api.Danmaku
 
         #region Send
 
-        private Task SendHelloAsync(int roomid, long uid, string token) =>
-            this.SendMessageAsync(7, JsonConvert.SerializeObject(new
+        private Task SendHelloAsync(int roomid, long uid, string token)
+        {
+            var body = JsonConvert.SerializeObject(new
             {
                 uid = uid,
                 roomid = roomid,
@@ -220,7 +223,20 @@ namespace BililiveRecorder.Core.Api.Danmaku
                 platform = "web",
                 type = 2,
                 key = token,
-            }, Formatting.None));
+            }, Formatting.None);
+
+            if (this.BeforeHandshake is { } func)
+            {
+                var newBody = func(body);
+                if (newBody is not null)
+                {
+                    this.logger.Debug("Danmaku BeforeHandshake: {OldBody} => {NewBody}", body, newBody);
+                    body = newBody;
+                }
+            }
+
+            return this.SendMessageAsync(7, body);
+        }
 
         private Task SendPingAsync() => this.SendMessageAsync(2);
 

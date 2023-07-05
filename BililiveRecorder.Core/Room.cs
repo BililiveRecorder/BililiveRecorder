@@ -11,6 +11,7 @@ using BililiveRecorder.Core.Config.V3;
 using BililiveRecorder.Core.Danmaku;
 using BililiveRecorder.Core.Event;
 using BililiveRecorder.Core.Recording;
+using BililiveRecorder.Core.Scripting;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json.Linq;
 using Polly;
@@ -35,6 +36,7 @@ namespace BililiveRecorder.Core
         private readonly IApiClient apiClient;
         private readonly IBasicDanmakuWriter basicDanmakuWriter;
         private readonly IRecordTaskFactory recordTaskFactory;
+        private readonly UserScriptRunner userScriptRunner;
         private readonly CancellationTokenSource cts;
         private readonly CancellationToken ct;
 
@@ -63,7 +65,7 @@ namespace BililiveRecorder.Core
             coverDownloadHttpClient.DefaultRequestHeaders.UserAgent.Clear();
         }
 
-        public Room(IServiceScope scope, RoomConfig roomConfig, int initDelayFactor, ILogger logger, IDanmakuClient danmakuClient, IApiClient apiClient, IBasicDanmakuWriter basicDanmakuWriter, IRecordTaskFactory recordTaskFactory)
+        public Room(IServiceScope scope, RoomConfig roomConfig, int initDelayFactor, ILogger logger, IDanmakuClient danmakuClient, IApiClient apiClient, IBasicDanmakuWriter basicDanmakuWriter, IRecordTaskFactory recordTaskFactory, UserScriptRunner userScriptRunner)
         {
             this.scope = scope ?? throw new ArgumentNullException(nameof(scope));
             this.RoomConfig = roomConfig ?? throw new ArgumentNullException(nameof(roomConfig));
@@ -73,6 +75,7 @@ namespace BililiveRecorder.Core
             this.apiClient = apiClient ?? throw new ArgumentNullException(nameof(apiClient));
             this.basicDanmakuWriter = basicDanmakuWriter ?? throw new ArgumentNullException(nameof(basicDanmakuWriter));
             this.recordTaskFactory = recordTaskFactory ?? throw new ArgumentNullException(nameof(recordTaskFactory));
+            this.userScriptRunner = userScriptRunner ?? throw new ArgumentNullException(nameof(userScriptRunner));
 
             this.timer = new Timer(this.RoomConfig.TimingCheckInterval * 1000d);
             this.cts = new CancellationTokenSource();
@@ -85,6 +88,7 @@ namespace BililiveRecorder.Core
 
             this.danmakuClient.StatusChanged += this.DanmakuClient_StatusChanged;
             this.danmakuClient.DanmakuReceived += this.DanmakuClient_DanmakuReceived;
+            this.danmakuClient.BeforeHandshake = this.DanmakuClient_BeforeHandshake;
 
             _ = Task.Run(async () =>
             {
@@ -532,6 +536,11 @@ retry:
             });
         }
 
+        private string? DanmakuClient_BeforeHandshake(string json)
+        {
+            return this.userScriptRunner.CallOnDanmakuHandshake(this.logger, this, json);
+        }
+
         private void DanmakuClient_DanmakuReceived(object sender, Api.Danmaku.DanmakuReceivedEventArgs e)
         {
             var d = e.Danmaku;
@@ -564,21 +573,19 @@ retry:
 
         private void DanmakuClient_StatusChanged(object sender, Api.Danmaku.StatusChangedEventArgs e)
         {
+            this.DanmakuConnected = e.Connected;
             if (e.Connected)
             {
-                this.DanmakuConnected = true;
                 this.danmakuClientConnectTime = DateTimeOffset.UtcNow;
                 this.logger.Information("弹幕服务器已连接");
             }
             else
             {
-                this.DanmakuConnected = false;
                 this.logger.Information("与弹幕服务器的连接被断开");
 
                 // 如果连接弹幕服务器的时间在至少 1 分钟之前，重连时不需要等待
                 // 针对偶尔的网络波动的优化，如果偶尔断开了尽快重连，减少漏录的弹幕量
                 this.StartDamakuConnection(delay: !((DateTimeOffset.UtcNow - this.danmakuClientConnectTime) > danmakuClientReconnectNoDelay));
-
                 this.danmakuClientConnectTime = DateTimeOffset.MaxValue;
             }
         }
