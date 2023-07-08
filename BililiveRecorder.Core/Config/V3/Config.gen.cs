@@ -203,6 +203,11 @@ namespace BililiveRecorder.Core.Config.V3
         public DanmakuTransportMode DanmakuTransport => this.GetPropertyValue<DanmakuTransportMode>();
 
         /// <summary>
+        /// 使用直播间主播的uid进行弹幕服务器认证
+        /// </summary>
+        public bool DanmakuAuthenticateWithStreamerUid => this.GetPropertyValue<bool>();
+
+        /// <summary>
         /// 是否使用系统代理
         /// </summary>
         public bool NetworkTransportUseSystemProxy => this.GetPropertyValue<bool>();
@@ -447,6 +452,14 @@ namespace BililiveRecorder.Core.Config.V3
         public Optional<DanmakuTransportMode> OptionalDanmakuTransport { get => this.GetPropertyValueOptional<DanmakuTransportMode>(nameof(this.DanmakuTransport)); set => this.SetPropertyValueOptional(value, nameof(this.DanmakuTransport)); }
 
         /// <summary>
+        /// 使用直播间主播的uid进行弹幕服务器认证
+        /// </summary>
+        public bool DanmakuAuthenticateWithStreamerUid { get => this.GetPropertyValue<bool>(); set => this.SetPropertyValue(value); }
+        public bool HasDanmakuAuthenticateWithStreamerUid { get => this.GetPropertyHasValue(nameof(this.DanmakuAuthenticateWithStreamerUid)); set => this.SetPropertyHasValue<bool>(value, nameof(this.DanmakuAuthenticateWithStreamerUid)); }
+        [JsonProperty(nameof(DanmakuAuthenticateWithStreamerUid)), EditorBrowsable(EditorBrowsableState.Never)]
+        public Optional<bool> OptionalDanmakuAuthenticateWithStreamerUid { get => this.GetPropertyValueOptional<bool>(nameof(this.DanmakuAuthenticateWithStreamerUid)); set => this.SetPropertyValueOptional(value, nameof(this.DanmakuAuthenticateWithStreamerUid)); }
+
+        /// <summary>
         /// 是否使用系统代理
         /// </summary>
         public bool NetworkTransportUseSystemProxy { get => this.GetPropertyValue<bool>(); set => this.SetPropertyValue(value); }
@@ -532,6 +545,8 @@ namespace BililiveRecorder.Core.Config.V3
         public uint RecordDanmakuFlushInterval => 20;
 
         public DanmakuTransportMode DanmakuTransport => DanmakuTransportMode.Random;
+
+        public bool DanmakuAuthenticateWithStreamerUid => false;
 
         public bool NetworkTransportUseSystemProxy => false;
 

@@ -225,6 +225,14 @@ export const data: Array<ConfigEntry> = [
         default: "DanmakuTransportMode.Random",
     },
     {
+        id: "DanmakuAuthenticateWithStreamerUid",
+        name: "使用直播间主播的uid进行弹幕服务器认证",
+        type: "bool",
+        configType: "globalOnly",
+        advancedConfig: true,
+        default: false,
+    },
+    {
         id: "NetworkTransportUseSystemProxy",
         name: "是否使用系统代理",
         type: "bool",

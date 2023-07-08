@@ -302,6 +302,22 @@
             }
           }
         },
+        "DanmakuAuthenticateWithStreamerUid": {
+          "description": "使用直播间主播的uid进行弹幕服务器认证\n默认: false",
+          "markdownDescription": "使用直播间主播的uid进行弹幕服务器认证  \n默认: `false `\n\n",
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "HasValue": {
+              "type": "boolean",
+              "default": true
+            },
+            "Value": {
+              "type": "boolean",
+              "default": false
+            }
+          }
+        },
         "NetworkTransportUseSystemProxy": {
           "description": "是否使用系统代理\n默认: false",
           "markdownDescription": "是否使用系统代理  \n默认: `false `\n\n",

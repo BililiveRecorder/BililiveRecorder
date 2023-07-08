@@ -13,6 +13,7 @@ using BililiveRecorder.Core.Event;
 using BililiveRecorder.Core.Recording;
 using BililiveRecorder.Core.Scripting;
 using Microsoft.Extensions.DependencyInjection;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Polly;
 using Serilog;
@@ -538,6 +539,15 @@ retry:
 
         private string? DanmakuClient_BeforeHandshake(string json)
         {
+            if (this.RoomConfig.DanmakuAuthenticateWithStreamerUid)
+            {
+                var obj = JObject.Parse(json);
+                // TODO add uid to property of IRoom
+                obj["uid"] = this.RawBilibiliApiJsonData?["room_info"]?["uid"]?.ToObject<int>() ?? 0;
+                // delete token
+                obj.Remove("key");
+                json = obj.ToString(Formatting.None);
+            }
             return this.userScriptRunner.CallOnDanmakuHandshake(this.logger, this, json);
         }
 
