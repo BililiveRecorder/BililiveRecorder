@@ -20,6 +20,7 @@ namespace BililiveRecorder.WPF.Pages
             Name = "3号直播间",
             RoomId = 23058,
             ShortId = 3,
+            Uid = 11153765,
             Title = "哔哩哔哩音悦台",
             AreaParent = "电台",
             AreaChild = "唱见电台",

@@ -11,6 +11,7 @@ namespace BililiveRecorder.Web.Models.Graphql
             this.Field(x => x.RoomConfig, type: typeof(RoomConfigType));
             this.Field(x => x.ShortId);
             this.Field(x => x.Name);
+            this.Field(x => x.Uid);
             this.Field(x => x.Title);
             this.Field(x => x.AreaNameParent);
             this.Field(x => x.AreaNameChild);
