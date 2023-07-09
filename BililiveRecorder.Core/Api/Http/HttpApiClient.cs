@@ -131,18 +131,13 @@ namespace BililiveRecorder.Core.Api.Http
             var resp = await this.client.GetStringAsync("https://api.live.bilibili.com/xlive/web-ucenter/user/get_user_info").ConfigureAwait(false);
             var jo = JObject.Parse(resp);
             if (jo["code"]?.ToObject<int>() != 0)
-                return (false, "Response:\n" + resp);
+                return (false, $"Response:\n{resp}");
 
-            var b = new System.Text.StringBuilder();
-            b.Append("User: ");
-            b.Append(jo["data"]?["uname"]?.ToObject<string>());
-            b.Append("\nUID (from API response): ");
-            b.Append(jo["data"]?["uid"]?.ToObject<string>());
-            b.Append("\nUID (from Cookie): ");
-            b.Append(this.GetUid());
-            b.Append("\nBUVID3 (from Cookie): ");
-            b.Append(this.GetBuvid3());
-            return (true, b.ToString());
+            string message = $@"User: {jo["data"]?["uname"]?.ToObject<string>()}
+UID (from API response): {jo["data"]?["uid"]?.ToObject<string>()}
+UID (from Cookie): {this.GetUid()}
+BUVID3 (from Cookie): {this.GetBuvid3()}";
+            return (true, message);
         }
 
         public static async Task<string?> GetAnonymousCookieAsync(HttpClient client)
