@@ -24,11 +24,10 @@ namespace BililiveRecorder.Core.Api.Http
         private string? buvid3;
 
         private readonly GlobalConfig config;
-        private readonly HttpClient anonClient;
-        private HttpClient mainClient;
+        private HttpClient client;
         private bool disposedValue;
 
-        public HttpClient MainHttpClient => this.mainClient;
+        public HttpClient MainHttpClient => this.client;
 
         public HttpApiClient(GlobalConfig config)
         {
@@ -36,18 +35,8 @@ namespace BililiveRecorder.Core.Api.Http
 
             config.PropertyChanged += this.Config_PropertyChanged;
 
-            this.mainClient = null!;
+            this.client = null!;
             this.UpdateHttpClient();
-
-            this.anonClient = new HttpClient
-            {
-                Timeout = TimeSpan.FromMilliseconds(config.TimingApiTimeout)
-            };
-            var headers = this.anonClient.DefaultRequestHeaders;
-            headers.Add("Accept", HttpHeaderAccept);
-            headers.Add("Origin", HttpHeaderOrigin);
-            headers.Add("Referer", HttpHeaderReferer);
-            headers.Add("User-Agent", HttpHeaderUserAgent);
         }
 
         private void UpdateHttpClient()
@@ -70,7 +59,7 @@ namespace BililiveRecorder.Core.Api.Http
             if (!string.IsNullOrWhiteSpace(cookie_string))
                 headers.Add("Cookie", cookie_string);
 
-            var old = Interlocked.Exchange(ref this.mainClient, client);
+            var old = Interlocked.Exchange(ref this.client, client);
             old?.Dispose();
 
             // 这里是故意不需要判断 Cookie 文本是否为空、以及 TryParse 是否成功的
@@ -87,11 +76,11 @@ namespace BililiveRecorder.Core.Api.Http
                 this.UpdateHttpClient();
         }
 
-        private static async Task<BilibiliApiResponse<T>> FetchAsync<T>(HttpClient client, string url) where T : class
+        private async Task<BilibiliApiResponse<T>> FetchAsync<T>(string url) where T : class
         {
             // 记得 GetRoomInfoAsync 里复制了一份这里的代码，以后修改记得一起改了
 
-            var resp = await client.GetAsync(url).ConfigureAwait(false);
+            var resp = await this.client.GetAsync(url).ConfigureAwait(false);
 
             if (resp.StatusCode == (HttpStatusCode)412)
                 throw new Http412Exception("Got HTTP Status 412 when requesting " + url);
@@ -115,7 +104,7 @@ namespace BililiveRecorder.Core.Api.Http
             // 下面的代码是从 FetchAsync 里复制修改的
             // 以后如果修改 FetchAsync 记得把这里也跟着改了
 
-            var resp = await this.mainClient.GetAsync(url).ConfigureAwait(false);
+            var resp = await this.client.GetAsync(url).ConfigureAwait(false);
 
             if (resp.StatusCode == (HttpStatusCode)412)
                 throw new Http412Exception("Got HTTP Status 412 when requesting " + url);
@@ -141,7 +130,7 @@ namespace BililiveRecorder.Core.Api.Http
                 throw new ObjectDisposedException(nameof(HttpApiClient));
 
             var url = $@"{this.config.LiveApiHost}/xlive/web-room/v2/index/getRoomPlayInfo?room_id={roomid}&protocol=0,1&format=0,1,2&codec=0,1&qn={qn}&platform=web&ptype=8&dolby=5&panorama=1";
-            return FetchAsync<RoomPlayInfo>(this.mainClient, url);
+            return this.FetchAsync<RoomPlayInfo>(url);
         }
 
         public long GetUid() => this.uid;
@@ -154,7 +143,7 @@ namespace BililiveRecorder.Core.Api.Http
                 throw new ObjectDisposedException(nameof(HttpApiClient));
 
             var url = $@"{this.config.LiveApiHost}/xlive/web-room/v1/index/getDanmuInfo?id={roomid}&type=0";
-            return FetchAsync<DanmuInfo>(this.mainClient, url);
+            return this.FetchAsync<DanmuInfo>(url);
         }
 
         protected virtual void Dispose(bool disposing)
@@ -165,8 +154,7 @@ namespace BililiveRecorder.Core.Api.Http
                 {
                     // dispose managed state (managed objects)
                     this.config.PropertyChanged -= this.Config_PropertyChanged;
-                    this.mainClient.Dispose();
-                    this.anonClient.Dispose();
+                    this.client.Dispose();
                 }
 
                 // free unmanaged resources (unmanaged objects) and override finalizer
