@@ -19,7 +19,9 @@ namespace BililiveRecorder.Core.Api.Http
         internal const string HttpHeaderOrigin = "https://live.bilibili.com";
         internal const string HttpHeaderUserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36";
         private readonly Regex matchCookieUidRegex = new Regex(@"DedeUserID=(\d+?);", RegexOptions.Compiled);
+        private readonly Regex matchCookieBuvid3Regex = new Regex(@"buvid3=(\d+?);", RegexOptions.Compiled);
         private long uid;
+        private string buvid3;
 
         private readonly GlobalConfig config;
         private readonly HttpClient anonClient;
@@ -75,6 +77,9 @@ namespace BililiveRecorder.Core.Api.Http
             // 因为如果不成功，那么就是设置为 0
             long.TryParse(this.matchCookieUidRegex.Match(cookie_string).Groups[1].Value, out var uid);
             this.uid = uid;
+
+            // TODO 如果不匹配即Groups为空列表的情况会产生exception吗？同样对于上面的uid获取
+            this.buvid3 = this.matchCookieBuvid3Regex.Match(cookie_string).Groups[1].Value;
         }
 
         private void Config_PropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -141,6 +146,8 @@ namespace BililiveRecorder.Core.Api.Http
         }
 
         public long GetUid() => this.uid;
+
+        public string GetBuvid3() => this.buvid3;
 
         public Task<BilibiliApiResponse<DanmuInfo>> GetDanmakuServerAsync(int roomid)
         {

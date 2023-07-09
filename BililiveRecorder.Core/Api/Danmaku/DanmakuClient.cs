@@ -98,7 +98,7 @@ namespace BililiveRecorder.Core.Api.Danmaku
 
                 this.danmakuTransport = transport;
 
-                await this.SendHelloAsync(roomid, this.apiClient.GetUid(), danmakuServerInfo.Token ?? string.Empty).ConfigureAwait(false);
+                await this.SendHelloAsync(roomid, this.apiClient.GetUid(), this.apiClient.GetBuvid3(), danmakuServerInfo.Token ?? string.Empty).ConfigureAwait(false);
                 await this.SendPingAsync().ConfigureAwait(false);
 
                 if (cancellationToken.IsCancellationRequested)
@@ -213,13 +213,14 @@ namespace BililiveRecorder.Core.Api.Danmaku
 
         #region Send
 
-        private Task SendHelloAsync(int roomid, long uid, string token)
+        private Task SendHelloAsync(int roomid, long uid, string buvid, string token)
         {
             var body = JsonConvert.SerializeObject(new
             {
-                uid = uid,
-                roomid = roomid,
+                uid,
+                roomid,
                 protover = 0,
+                buvid,
                 platform = "web",
                 type = 2,
                 key = token,

@@ -87,6 +87,8 @@ namespace BililiveRecorder.WPF.Pages
             b.Append(jo["data"]?["uid"]?.ToObject<string>());
             b.Append("\nUID (from Cookie): ");
             b.Append(this.httpApiClient.GetUid());
+            b.Append("\nBUVID3 (from Cookie): ");
+            b.Append(this.httpApiClient.GetBuvid3());
 
             MessageBox.Show(b.ToString(), "Cookie Test - Successed", MessageBoxButton.OK, MessageBoxImage.Information);
         }
