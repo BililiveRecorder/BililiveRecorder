@@ -33,6 +33,8 @@ namespace BililiveRecorder.Core.Api.Danmaku
 
         public Func<string, string?>? BeforeHandshake { get; set; } = null;
 
+        private JsonSerializerSettings jsonSerializerSettings = new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore };
+
         public DanmakuClient(IDanmakuServerApiClient apiClient, ILogger logger)
         {
             this.apiClient = apiClient ?? throw new ArgumentNullException(nameof(apiClient));
@@ -213,7 +215,7 @@ namespace BililiveRecorder.Core.Api.Danmaku
 
         #region Send
 
-        private Task SendHelloAsync(int roomid, long uid, string buvid, string token)
+        private Task SendHelloAsync(int roomid, long uid, string? buvid, string token)
         {
             var body = JsonConvert.SerializeObject(new
             {
@@ -224,7 +226,7 @@ namespace BililiveRecorder.Core.Api.Danmaku
                 platform = "web",
                 type = 2,
                 key = token,
-            }, Formatting.None);
+            }, Formatting.None, this.jsonSerializerSettings);
 
             if (this.BeforeHandshake is { } func)
             {

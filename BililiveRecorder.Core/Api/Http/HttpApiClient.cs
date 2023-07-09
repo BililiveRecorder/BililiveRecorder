@@ -21,7 +21,7 @@ namespace BililiveRecorder.Core.Api.Http
         private readonly Regex matchCookieUidRegex = new Regex(@"DedeUserID=(\d+?);", RegexOptions.Compiled);
         private readonly Regex matchCookieBuvid3Regex = new Regex(@"buvid3=(\d+?);", RegexOptions.Compiled);
         private long uid;
-        private string buvid3;
+        private string? buvid3;
 
         private readonly GlobalConfig config;
         private readonly HttpClient anonClient;
@@ -78,7 +78,6 @@ namespace BililiveRecorder.Core.Api.Http
             long.TryParse(this.matchCookieUidRegex.Match(cookie_string).Groups[1].Value, out var uid);
             this.uid = uid;
 
-            // TODO 如果不匹配即Groups为空列表的情况会产生exception吗？同样对于上面的uid获取
             this.buvid3 = this.matchCookieBuvid3Regex.Match(cookie_string).Groups[1].Value;
         }
 
@@ -147,7 +146,7 @@ namespace BililiveRecorder.Core.Api.Http
 
         public long GetUid() => this.uid;
 
-        public string GetBuvid3() => this.buvid3;
+        public string? GetBuvid3() => this.buvid3;
 
         public Task<BilibiliApiResponse<DanmuInfo>> GetDanmakuServerAsync(int roomid)
         {

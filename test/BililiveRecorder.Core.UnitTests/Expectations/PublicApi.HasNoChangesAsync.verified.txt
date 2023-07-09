@@ -5,7 +5,7 @@ namespace BililiveRecorder.Core.Api
     {
         System.Net.Http.HttpClient MainHttpClient { get; }
         long GetUid();
-        string GetBuvid3();
+        string? GetBuvid3();
     }
 }
 namespace BililiveRecorder.Core.Config
