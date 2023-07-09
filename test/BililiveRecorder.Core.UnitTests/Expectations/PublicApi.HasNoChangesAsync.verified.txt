@@ -3,9 +3,7 @@ namespace BililiveRecorder.Core.Api
 {
     public interface IHttpClientAccessor
     {
-        System.Net.Http.HttpClient MainHttpClient { get; }
-        string? GetBuvid3();
-        long GetUid();
+        System.Threading.Tasks<(bool, string)> TestCookieAsync();
     }
 }
 namespace BililiveRecorder.Core.Config

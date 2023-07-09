@@ -27,8 +27,6 @@ namespace BililiveRecorder.Core.Api.Http
         private HttpClient client;
         private bool disposedValue;
 
-        public HttpClient MainHttpClient => this.client;
-
         public HttpApiClient(GlobalConfig config)
         {
             this.config = config ?? throw new ArgumentNullException(nameof(config));
@@ -131,6 +129,25 @@ namespace BililiveRecorder.Core.Api.Http
 
             var url = $@"{this.config.LiveApiHost}/xlive/web-room/v2/index/getRoomPlayInfo?room_id={roomid}&protocol=0,1&format=0,1,2&codec=0,1&qn={qn}&platform=web&ptype=8&dolby=5&panorama=1";
             return this.FetchAsync<RoomPlayInfo>(url);
+        }
+
+        public async Task<(bool, string)> TestCookieAsync()
+        {
+            var resp = await this.client.GetStringAsync("https://api.live.bilibili.com/xlive/web-ucenter/user/get_user_info").ConfigureAwait(false);
+            var jo = JObject.Parse(resp);
+            if (jo["code"]?.ToObject<int>() != 0)
+                return (false, "Response:\n" + resp);
+
+            var b = new System.Text.StringBuilder();
+            b.Append("User: ");
+            b.Append(jo["data"]?["uname"]?.ToObject<string>());
+            b.Append("\nUID (from API response): ");
+            b.Append(jo["data"]?["uid"]?.ToObject<string>());
+            b.Append("\nUID (from Cookie): ");
+            b.Append(this.GetUid());
+            b.Append("\nBUVID3 (from Cookie): ");
+            b.Append(this.GetBuvid3());
+            return (true, b.ToString());
         }
 
         public long GetUid() => this.uid;
