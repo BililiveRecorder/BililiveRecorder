@@ -18,8 +18,8 @@ namespace BililiveRecorder.Core.Api.Http
         internal const string HttpHeaderReferer = "https://live.bilibili.com/";
         internal const string HttpHeaderOrigin = "https://live.bilibili.com";
         internal const string HttpHeaderUserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36";
-        private readonly Regex matchCookieUidRegex = new Regex(@"DedeUserID=(\d+?);", RegexOptions.Compiled);
-        private readonly Regex matchCookieBuvid3Regex = new Regex(@"buvid3=(\d+?);", RegexOptions.Compiled);
+        private static readonly Regex matchCookieUidRegex = new Regex(@"DedeUserID=(\d+?);", RegexOptions.Compiled);
+        private static readonly Regex matchCookieBuvid3Regex = new Regex(@"buvid3=(.+?);", RegexOptions.Compiled);
         private long uid;
         private string? buvid3;
 
@@ -75,10 +75,10 @@ namespace BililiveRecorder.Core.Api.Http
 
             // 这里是故意不需要判断 Cookie 文本是否为空、以及 TryParse 是否成功的
             // 因为如果不成功，那么就是设置为 0
-            long.TryParse(this.matchCookieUidRegex.Match(cookie_string).Groups[1].Value, out var uid);
+            long.TryParse(matchCookieUidRegex.Match(cookie_string).Groups[1].Value, out var uid);
             this.uid = uid;
 
-            this.buvid3 = this.matchCookieBuvid3Regex.Match(cookie_string).Groups[1].Value;
+            this.buvid3 = matchCookieBuvid3Regex.Match(cookie_string).Groups[1].Value;
         }
 
         private void Config_PropertyChanged(object sender, PropertyChangedEventArgs e)
