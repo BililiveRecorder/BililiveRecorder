@@ -74,10 +74,8 @@ namespace BililiveRecorder.Core.Api.Http
                 this.UpdateHttpClient();
         }
 
-        private async Task<BilibiliApiResponse<T>> FetchAsync<T>(string url) where T : class
+        private async Task<string> FetchAsTextAsync(string url)
         {
-            // 记得 GetRoomInfoAsync 里复制了一份这里的代码，以后修改记得一起改了
-
             var resp = await this.client.GetAsync(url).ConfigureAwait(false);
 
             if (resp.StatusCode == (HttpStatusCode)412)
@@ -85,8 +83,12 @@ namespace BililiveRecorder.Core.Api.Http
 
             resp.EnsureSuccessStatusCode();
 
-            var text = await resp.Content.ReadAsStringAsync().ConfigureAwait(false);
+            return await resp.Content.ReadAsStringAsync().ConfigureAwait(false);
+        }
 
+        private async Task<BilibiliApiResponse<T>> FetchAsync<T>(string url) where T : class
+        {
+            var text = await this.FetchAsTextAsync(url).ConfigureAwait(false);
             var obj = JsonConvert.DeserializeObject<BilibiliApiResponse<T>>(text);
             return obj?.Code != 0 ? throw new BilibiliApiResponseCodeNotZeroException(obj?.Code, text) : obj;
         }
@@ -98,18 +100,7 @@ namespace BililiveRecorder.Core.Api.Http
 
             var url = $@"{this.config.LiveApiHost}/xlive/web-room/v1/index/getInfoByRoom?room_id={roomid}";
 
-            // return FetchAsync<RoomInfo>(this.mainClient, url);
-            // 下面的代码是从 FetchAsync 里复制修改的
-            // 以后如果修改 FetchAsync 记得把这里也跟着改了
-
-            var resp = await this.client.GetAsync(url).ConfigureAwait(false);
-
-            if (resp.StatusCode == (HttpStatusCode)412)
-                throw new Http412Exception("Got HTTP Status 412 when requesting " + url);
-
-            resp.EnsureSuccessStatusCode();
-
-            var text = await resp.Content.ReadAsStringAsync().ConfigureAwait(false);
+            var text = await this.FetchAsTextAsync(url).ConfigureAwait(false);
 
             var jobject = JObject.Parse(text);
 
@@ -133,6 +124,7 @@ namespace BililiveRecorder.Core.Api.Http
 
         public async Task<(bool, string)> TestCookieAsync()
         {
+            // TODO 要使用新的 FetchAsTextAsync 吗？
             var resp = await this.client.GetStringAsync("https://api.live.bilibili.com/xlive/web-ucenter/user/get_user_info").ConfigureAwait(false);
             var jo = JObject.Parse(resp);
             if (jo["code"]?.ToObject<int>() != 0)
