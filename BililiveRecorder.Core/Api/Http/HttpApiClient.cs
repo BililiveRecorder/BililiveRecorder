@@ -20,6 +20,7 @@ namespace BililiveRecorder.Core.Api.Http
         internal const string HttpHeaderUserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36";
         private static readonly Regex matchCookieUidRegex = new Regex(@"DedeUserID=(\d+?);", RegexOptions.Compiled);
         private static readonly Regex matchCookieBuvid3Regex = new Regex(@"buvid3=(.+?);", RegexOptions.Compiled);
+        private static readonly Regex matchSetCookieBuvid3Regex = new Regex(@"(buvid3=.+?;)", RegexOptions.Compiled);
         private long uid;
         private string? buvid3;
 
@@ -77,6 +78,8 @@ namespace BililiveRecorder.Core.Api.Http
         private async Task<string> FetchAsTextAsync(string url)
         {
             var resp = await this.client.GetAsync(url).ConfigureAwait(false);
+
+            // 部分逻辑可能与 GetAnonymousCookieAsync 共享
 
             if (resp.StatusCode == (HttpStatusCode)412)
                 throw new Http412Exception("Got HTTP Status 412 when requesting " + url);
@@ -140,6 +143,31 @@ namespace BililiveRecorder.Core.Api.Http
             b.Append("\nBUVID3 (from Cookie): ");
             b.Append(this.GetBuvid3());
             return (true, b.ToString());
+        }
+
+        public static async Task<string?> GetAnonymousCookieAsync(HttpClient client)
+        {
+            var url = @"https://data.bilibili.com/v/";
+
+            var resp = await client.GetAsync(url).ConfigureAwait(false);
+
+            // 部分逻辑可能与 FetchAsTextAsync 共享
+            // 应该允许获取 cookie 失败，但对于风控情况仍应处理
+
+            if (resp.StatusCode == (HttpStatusCode)412)
+                throw new Http412Exception("Got HTTP Status 412 when requesting " + url);
+
+            if (!resp.IsSuccessStatusCode)
+                return null;
+
+            foreach (var setting_cookie in resp.Content.Headers.GetValues("Set-Cookie"))
+            {
+                var buvid3_cookie = matchSetCookieBuvid3Regex.Match(setting_cookie).Groups[1].Value;
+                if (buvid3_cookie != null)
+                    return buvid3_cookie;
+            }
+
+            return null;
         }
 
         public long GetUid() => this.uid;
