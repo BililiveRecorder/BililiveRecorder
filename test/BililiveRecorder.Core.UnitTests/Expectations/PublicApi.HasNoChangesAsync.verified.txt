@@ -4,8 +4,8 @@ namespace BililiveRecorder.Core.Api
     public interface IHttpClientAccessor
     {
         System.Net.Http.HttpClient MainHttpClient { get; }
-        long GetUid();
         string? GetBuvid3();
+        long GetUid();
     }
 }
 namespace BililiveRecorder.Core.Config
