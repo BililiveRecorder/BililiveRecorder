@@ -131,8 +131,8 @@
 本软件为开源软件，使用 GNU通用公共许可证第三版 （GPLv3） 授权。</value>
   </data>
   <data name="About_Name" xml:space="preserve">
-    <value>B站录播姬</value>
-    <comment>Add "(B站录播姬)" after translation</comment>
+    <value>mikufans录播姬</value>
+    <comment>Add "(mikufans录播姬)" after translation</comment>
   </data>
   <data name="About_Project" xml:space="preserve">
     <value>项目首页</value>
@@ -170,7 +170,7 @@
     <value>这个直播间已经被添加过了</value>
   </data>
   <data name="AddRoomFailedDialog_ErrorText_InvalidInput" xml:space="preserve">
-    <value>请输入B站直播房间号或直播间链接</value>
+    <value>请输入mikufans直播房间号或直播间链接</value>
   </data>
   <data name="AddRoomFailedDialog_ErrorText_RoomIdNegative" xml:space="preserve">
     <value>房间号不能是负数</value>
@@ -409,7 +409,7 @@
   </data>
   <data name="Settings_AdvancedPage_Warning" xml:space="preserve">
     <value>注：一般用户通常不需要也不应该修改这里的设置项。
-对 Timing 的修改可能会导致被B站服务器屏蔽、不能及时开始录制等问题。</value>
+对 Timing 的修改可能会导致被mikufans服务器屏蔽、不能及时开始录制等问题。</value>
   </data>
   <data name="Settings_Danmaku_FlushInterval" xml:space="preserve">
     <value>触发写硬盘所需弹幕个数</value>
@@ -525,7 +525,7 @@ Will use default setting and disable user input when checked.</comment>
     <value>录播姬已最小化到托盘，左键单击图标恢复界面</value>
   </data>
   <data name="TaskbarIconControl_Title" xml:space="preserve">
-    <value>B站录播姬</value>
+    <value>mikufans录播姬</value>
   </data>
   <data name="Toolbox_AutoFix_AnalyzeResult_ContainsUnrepairable" xml:space="preserve">
     <value>文件内存在录播姬无法自动修复的问题
@@ -687,7 +687,7 @@ Will use default setting and disable user input when checked.</comment>
     <value>工具箱</value>
   </data>
   <data name="Window_Title" xml:space="preserve">
-    <value>B站录播姬 {0}</value>
+    <value>mikufans录播姬 {0}</value>
   </data>
   <data name="WorkDirectorySelector_Browse" xml:space="preserve">
     <value>浏览...</value>

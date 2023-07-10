@@ -1,7 +1,7 @@
 <div style="text-align:center">
 <img width="20%" src=".github/assets/logo.svg">
 
-# B站录播姬
+# mikufans录播姬
 
 [![Build and Test](https://github.com/BililiveRecorder/BililiveRecorder/actions/workflows/build.yml/badge.svg?branch=dev)](https://github.com/BililiveRecorder/BililiveRecorder/actions/workflows/build.yml)
 [![Version](https://img.shields.io/github/tag/Bililive/BililiveRecorder.svg?label=Version)](#)

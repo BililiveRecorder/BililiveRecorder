@@ -384,7 +384,7 @@ namespace BililiveRecorder.Cli
 
                 {
                     using var key = RSA.Create();
-                    var req = new CertificateRequest("CN=B站录播姬", key, HashAlgorithmName.SHA256, RSASignaturePadding.Pkcs1);
+                    var req = new CertificateRequest("CN=mikufans录播姬", key, HashAlgorithmName.SHA256, RSASignaturePadding.Pkcs1);
 
                     var subjectAltName = new SubjectAlternativeNameBuilder();
                     subjectAltName.AddDnsName("BililiveRecorder");

@@ -154,8 +154,8 @@
           }
         },
         "TimingApiTimeout": {
-          "description": "请求B站API超时时间 毫秒\n默认: 10000",
-          "markdownDescription": "请求B站API超时时间 毫秒  \n默认: `10000 `\n\n",
+          "description": "请求mikufansAPI超时时间 毫秒\n默认: 10000",
+          "markdownDescription": "请求mikufansAPI超时时间 毫秒  \n默认: `10000 `\n\n",
           "type": "object",
           "additionalProperties": false,
           "properties": {
