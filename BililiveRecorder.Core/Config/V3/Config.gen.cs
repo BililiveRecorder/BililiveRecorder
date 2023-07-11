@@ -163,7 +163,7 @@ namespace BililiveRecorder.Core.Config.V3
         public uint TimingCheckInterval => this.GetPropertyValue<uint>();
 
         /// <summary>
-        /// 请求B站API超时时间 毫秒
+        /// 请求mikufansAPI超时时间 毫秒
         /// </summary>
         public uint TimingApiTimeout => this.GetPropertyValue<uint>();
 
@@ -388,7 +388,7 @@ namespace BililiveRecorder.Core.Config.V3
         public Optional<uint> OptionalTimingCheckInterval { get => this.GetPropertyValueOptional<uint>(nameof(this.TimingCheckInterval)); set => this.SetPropertyValueOptional(value, nameof(this.TimingCheckInterval)); }
 
         /// <summary>
-        /// 请求B站API超时时间 毫秒
+        /// 请求mikufansAPI超时时间 毫秒
         /// </summary>
         public uint TimingApiTimeout { get => this.GetPropertyValue<uint>(); set => this.SetPropertyValue(value); }
         public bool HasTimingApiTimeout { get => this.GetPropertyHasValue(nameof(this.TimingApiTimeout)); set => this.SetPropertyHasValue<uint>(value, nameof(this.TimingApiTimeout)); }

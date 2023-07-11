@@ -1,7 +1,7 @@
 <div style="text-align:center">
 <img width="20%" src=".github/assets/logo.svg">
 
-# B站录播姬
+# mikufans录播姬
 
 [![Build and Test](https://github.com/BililiveRecorder/BililiveRecorder/actions/workflows/build.yml/badge.svg?branch=dev)](https://github.com/BililiveRecorder/BililiveRecorder/actions/workflows/build.yml)
 [![Version](https://img.shields.io/github/tag/Bililive/BililiveRecorder.svg?label=Version)](#)
@@ -27,7 +27,7 @@
 - 使用简单
 - 主播开播后自动开始录制
 - 同时录制多个直播间
-- 自动修复B站直播服务器导致的各种问题
+- 自动修复mikufans直播服务器导致的各种问题
 - 工具箱模式，用于修复旧版录播姬或其他软件录的视频文件<sup>1</sup>
 - 纯 C# 实现，无 ffmpeg 等 native 依赖<sup>2</sup>
 - 开源！
@@ -92,4 +92,4 @@ graph BT
 
 - [Adobe Flash Video File Format Specification 10.1.2.01.pdf](https://www.adobe.com/content/dam/acom/en/devnet/flv/video_file_format_spec_v10_1.pdf)
 - [coreyauger/flv-streamer-2-file](https://github.com/coreyauger/flv-streamer-2-file) 曾在本项目开发早期作为参考
-- [zyzsdy/biliroku](https://github.com/zyzsdy/biliroku): (大概是)第一个B站直播录播工具
+- [zyzsdy/biliroku](https://github.com/zyzsdy/biliroku): (大概是)第一个mikufans直播录播工具

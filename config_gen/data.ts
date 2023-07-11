@@ -162,7 +162,7 @@ export const data: Array<ConfigEntry> = [
     },
     {
         id: "TimingApiTimeout",
-        name: "请求B站API超时时间 毫秒",
+        name: "请求mikufansAPI超时时间 毫秒",
         type: "uint",
         configType: "globalOnly",
         advancedConfig: true,

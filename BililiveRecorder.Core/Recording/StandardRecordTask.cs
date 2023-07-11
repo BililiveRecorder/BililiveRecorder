@@ -238,7 +238,7 @@ namespace BililiveRecorder.Core.Recording
                 value["Title"] = (ScriptDataString)this.room.Title;
                 value["Artist"] = (ScriptDataString)$"{this.room.Name} ({this.room.RoomConfig.RoomId})";
                 value["Comment"] = (ScriptDataString)
-                    ($"B站直播间 {this.room.RoomConfig.RoomId} 的直播录像\n" +
+                    ($"mikufans直播间 {this.room.RoomConfig.RoomId} 的直播录像\n" +
                     $"主播名: {this.room.Name}\n" +
                     $"直播标题: {this.room.Title}\n" +
                     $"直播分区: {this.room.AreaNameParent}·{this.room.AreaNameChild}\n" +
@@ -246,11 +246,11 @@ namespace BililiveRecorder.Core.Recording
                     $"直播服务器:\n" +
                     $"{this.streamHostFull}\n" +
                     $"\n" +
-                    $"使用 B站录播姬 录制 https://rec.danmuji.org\n" +
+                    $"使用 mikufans录播姬 录制 https://rec.danmuji.org\n" +
                     $"录播姬版本: {GitVersionInformation.FullSemVer}");
                 value["BililiveRecorder"] = new ScriptDataEcmaArray
                 {
-                    ["RecordedBy"] = (ScriptDataString)"BililiveRecorder B站录播姬",
+                    ["RecordedBy"] = (ScriptDataString)"BililiveRecorder mikufans录播姬",
                     ["RecordedFrom"] = (ScriptDataString)(this.streamHost ?? string.Empty),
                     ["StreamServers"] = (ScriptDataString)(this.streamHostFull ?? string.Empty),
                     ["RecorderVersion"] = (ScriptDataString)GitVersionInformation.InformationalVersion,

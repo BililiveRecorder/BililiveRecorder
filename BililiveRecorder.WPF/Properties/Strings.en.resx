@@ -131,8 +131,8 @@
 This software is open source and licensed under the GNU General Public License Version 3 (GPLv3).</value>
   </data>
   <data name="About_Name" xml:space="preserve">
-    <value>BiliRec (B站录播姬)</value>
-    <comment>Add "(B站录播姬)" after translation</comment>
+    <value>BiliRec (mikufans录播姬)</value>
+    <comment>Add "(mikufans录播姬)" after translation</comment>
   </data>
   <data name="About_Project" xml:space="preserve">
     <value>Project Homepage</value>
@@ -525,7 +525,7 @@ Will use default setting and disable user input when checked.</comment>
     <value>BiliRec has been minimized to the system tray, left click the tray icon to unhide.</value>
   </data>
   <data name="TaskbarIconControl_Title" xml:space="preserve">
-    <value>BiliRec (B站录播姬)</value>
+    <value>BiliRec (mikufans录播姬)</value>
   </data>
   <data name="Toolbox_AutoFix_AnalyzeResult_ContainsUnrepairable" xml:space="preserve">
     <value>There is a problem in the file that the can't be repaired automatically
@@ -687,7 +687,7 @@ Please analyze the original file, not the output of auto repair.</value>
     <value>Toolbox</value>
   </data>
   <data name="Window_Title" xml:space="preserve">
-    <value>BiliRec (B站录播姬) {0}</value>
+    <value>BiliRec (mikufans录播姬) {0}</value>
   </data>
   <data name="WorkDirectorySelector_Browse" xml:space="preserve">
     <value>Browse...</value>

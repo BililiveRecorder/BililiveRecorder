@@ -5,11 +5,11 @@ using System.Windows;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("B站录播姬")]
-[assembly: AssemblyDescription("B站录播姬 by genteure")]
+[assembly: AssemblyTitle("mikufans录播姬")]
+[assembly: AssemblyDescription("mikufans录播姬 by genteure")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Genteure")]
-[assembly: AssemblyProduct("B站录播姬")]
+[assembly: AssemblyProduct("mikufans录播姬")]
 [assembly: AssemblyCopyright("Copyright © 2018-2023 Genteure")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]

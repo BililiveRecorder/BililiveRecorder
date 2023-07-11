@@ -113,7 +113,7 @@ namespace BililiveRecorder.Flv.Writer
                 this.textFile = new StreamWriter(this.targetProvider.CreateAccompanyingTextLogStream(), Encoding.UTF8);
 
                 await this.textFile.WriteLineAsync("此文件内记录了对应的视频文件中可能存在的问题").ConfigureAwait(false);
-                await this.textFile.WriteAsync("B站录播姬 ").ConfigureAwait(false);
+                await this.textFile.WriteAsync("mikufans录播姬 ").ConfigureAwait(false);
                 await this.textFile.WriteLineAsync(GitVersionInformation.FullSemVer).ConfigureAwait(false);
                 await this.textFile.WriteLineAsync().ConfigureAwait(false);
             }

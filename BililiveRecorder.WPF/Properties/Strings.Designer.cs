@@ -98,7 +98,7 @@ namespace BililiveRecorder.WPF.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to B站录播姬.
+        ///   Looks up a localized string similar to mikufans录播姬.
         /// </summary>
         public static string About_Name {
             get {
@@ -206,7 +206,7 @@ namespace BililiveRecorder.WPF.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 请输入B站直播房间号或直播间链接.
+        ///   Looks up a localized string similar to 请输入mikufans直播房间号或直播间链接.
         /// </summary>
         public static string AddRoomFailedDialog_ErrorText_InvalidInput {
             get {
@@ -894,7 +894,7 @@ namespace BililiveRecorder.WPF.Properties {
         
         /// <summary>
         ///   Looks up a localized string similar to 注：一般用户通常不需要也不应该修改这里的设置项。
-        ///对 Timing 的修改可能会导致被B站服务器屏蔽、不能及时开始录制等问题。.
+        ///对 Timing 的修改可能会导致被mikufans服务器屏蔽、不能及时开始录制等问题。.
         /// </summary>
         public static string Settings_AdvancedPage_Warning {
             get {
@@ -1212,7 +1212,7 @@ namespace BililiveRecorder.WPF.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to B站录播姬.
+        ///   Looks up a localized string similar to mikufans录播姬.
         /// </summary>
         public static string TaskbarIconControl_Title {
             get {
@@ -1685,7 +1685,7 @@ namespace BililiveRecorder.WPF.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to B站录播姬 {0}.
+        ///   Looks up a localized string similar to mikufans录播姬 {0}.
         /// </summary>
         public static string Window_Title {
             get {
