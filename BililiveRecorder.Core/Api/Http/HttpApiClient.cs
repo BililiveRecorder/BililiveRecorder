@@ -23,6 +23,8 @@ namespace BililiveRecorder.Core.Api.Http
         private static readonly Regex matchSetCookieBuvid3Regex = new Regex(@"(buvid3=.+?;)", RegexOptions.Compiled);
         private long uid;
         private string? buvid3;
+        private Task? anon_cookie_task;
+        private CancellationTokenSource anon_cookie_task_cancel;
 
         private readonly GlobalConfig config;
         private HttpClient client;
@@ -30,6 +32,8 @@ namespace BililiveRecorder.Core.Api.Http
 
         public HttpApiClient(GlobalConfig config)
         {
+            this.anon_cookie_task_cancel = new CancellationTokenSource();
+
             this.config = config ?? throw new ArgumentNullException(nameof(config));
 
             config.PropertyChanged += this.Config_PropertyChanged;
@@ -40,6 +44,8 @@ namespace BililiveRecorder.Core.Api.Http
 
         private void UpdateHttpClient()
         {
+            this.anon_cookie_task_cancel.Cancel();
+
             var client = new HttpClient(new HttpClientHandler
             {
                 UseCookies = false,
@@ -55,11 +61,20 @@ namespace BililiveRecorder.Core.Api.Http
             headers.Add("User-Agent", HttpHeaderUserAgent);
 
             var cookie_string = this.config.Cookie;
-            if (!string.IsNullOrWhiteSpace(cookie_string))
+            bool anon = string.IsNullOrWhiteSpace(cookie_string);
+            if (!anon)
                 headers.Add("Cookie", cookie_string);
 
+            // 注意 BackgroundGetAnonCookie 操作的是当前的 this.client 所以要提前 swap
             var old = Interlocked.Exchange(ref this.client, client);
             old?.Dispose();
+
+            if (anon)
+            {
+                var new_task = Task.Run(() => this.BackgroundGetAnonCookie(), this.anon_cookie_task_cancel.Token);
+                var old_task = Interlocked.Exchange(ref this.anon_cookie_task, new_task);
+                old_task?.Dispose();
+            }
 
             // 这里是故意不需要判断 Cookie 文本是否为空、以及 TryParse 是否成功的
             // 因为如果不成功，那么就是设置为 0
@@ -77,9 +92,12 @@ namespace BililiveRecorder.Core.Api.Http
 
         private async Task<string> FetchAsTextAsync(string url)
         {
+            if (this.anon_cookie_task is not null)
+                await Interlocked.Exchange(ref this.anon_cookie_task, null)!;
+
             var resp = await this.client.GetAsync(url).ConfigureAwait(false);
 
-            // 部分逻辑可能与 GetAnonymousCookieAsync 共享
+            // 部分逻辑可能与 GetAnonCookieAsync 共享
 
             if (resp.StatusCode == (HttpStatusCode)412)
                 throw new Http412Exception("Got HTTP Status 412 when requesting " + url);
@@ -127,7 +145,7 @@ namespace BililiveRecorder.Core.Api.Http
 
         public async Task<(bool, string)> TestCookieAsync()
         {
-            // TODO 要使用新的 FetchAsTextAsync 吗？
+            // 需要测试 cookie 的情况不需要风控和失败检测，同时不需要等待未登录 cookie 获取完毕
             var resp = await this.client.GetStringAsync("https://api.live.bilibili.com/xlive/web-ucenter/user/get_user_info").ConfigureAwait(false);
             var jo = JObject.Parse(resp);
             if (jo["code"]?.ToObject<int>() != 0)
@@ -140,7 +158,7 @@ BUVID3 (from Cookie): {this.GetBuvid3()}";
             return (true, message);
         }
 
-        public static async Task<string?> GetAnonymousCookieAsync(HttpClient client)
+        public static async Task<string?> GetAnonCookieAsync(HttpClient client)
         {
             var url = @"https://data.bilibili.com/v/";
 
@@ -163,6 +181,14 @@ BUVID3 (from Cookie): {this.GetBuvid3()}";
             }
 
             return null;
+        }
+
+        private async Task BackgroundGetAnonCookie()
+        {
+            string? cookie_string = await GetAnonCookieAsync(this.client).ConfigureAwait(false);
+            var headers = this.client.DefaultRequestHeaders;
+            if (!string.IsNullOrWhiteSpace(cookie_string))
+                headers.Add("Cookie", cookie_string);
         }
 
         public long GetUid() => this.uid;
