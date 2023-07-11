@@ -107,7 +107,7 @@ namespace BililiveRecorder.WPF.Pages
                     await Task.Delay(1000);
                     _ = this.Dispatcher.BeginInvoke(DispatcherPriority.Normal, (Action)(() =>
                     {
-                        MessageBox.Show(Window.GetWindow(this), @"mikufans录播姬 安装成功！
+                        MessageBox.Show(Window.GetWindow(this), @"录播姬 安装成功！
 之后再运行请使用桌面或开始菜单里的快捷方式。
 如需卸载，可在系统设置里操作。
 

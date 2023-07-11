@@ -3,11 +3,11 @@
     <metadata>
         <id>BililiveRecorder</id>
         <version>0.0.0</version>
-        <title>mikufans录播姬</title>
+        <title>录播姬</title>
         <authors>Genteure</authors>
         <owners>Genteure</owners>
         <requireLicenseAcceptance>false</requireLicenseAcceptance>
-        <description>mikufans录播姬 安装包</description>
+        <description>录播姬 安装包</description>
         <language>zh-CN</language>
         <dependencies>
         </dependencies>

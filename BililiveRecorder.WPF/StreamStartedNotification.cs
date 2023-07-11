@@ -151,7 +151,7 @@ namespace BililiveRecorder.WPF
 
                 var roomUrl = new Uri("https://live.bilibili.com/" + room.RoomConfig.RoomId);
                 var builder = new ToastContentBuilder()
-                    .AddHeader("BililiveRecorder-StreamStarted", "mikufans录播姬开播通知", "")
+                    .AddHeader("BililiveRecorder-StreamStarted", "录播姬开播通知", "")
                     .AddText(room.Name + " 开播了")
                     .AddText(room.Title)
                     .AddText($"{room.AreaNameParent} · {room.AreaNameChild}")
