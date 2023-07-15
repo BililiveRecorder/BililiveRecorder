@@ -33,7 +33,7 @@ namespace BililiveRecorder.Core.Api.Danmaku
 
         public Func<string, string?>? BeforeHandshake { get; set; } = null;
 
-        private JsonSerializerSettings jsonSerializerSettings = new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore };
+        private static readonly JsonSerializerSettings jsonSerializerSettings = new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore };
 
         public DanmakuClient(IDanmakuServerApiClient apiClient, ILogger logger)
         {
@@ -226,7 +226,7 @@ namespace BililiveRecorder.Core.Api.Danmaku
                 platform = "web",
                 type = 2,
                 key = token,
-            }, Formatting.None, this.jsonSerializerSettings);
+            }, Formatting.None, jsonSerializerSettings);
 
             if (this.BeforeHandshake is { } func)
             {
