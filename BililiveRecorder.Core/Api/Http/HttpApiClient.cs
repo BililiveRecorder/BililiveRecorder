@@ -66,15 +66,19 @@ namespace BililiveRecorder.Core.Api.Http
 
             var cookie_string = this.config.Cookie;
             if (!string.IsNullOrWhiteSpace(cookie_string))
+            {
                 headers.Add("Cookie", cookie_string);
+
+                long.TryParse(this.matchCookieUidRegex.Match(cookie_string).Groups[1].Value, out var uid);
+                this.uid = uid;
+            }
+            else
+            {
+                this.uid = 0;
+            }
 
             var old = Interlocked.Exchange(ref this.mainClient, client);
             old?.Dispose();
-
-            // 这里是故意不需要判断 Cookie 文本是否为空、以及 TryParse 是否成功的
-            // 因为如果不成功，那么就是设置为 0
-            long.TryParse(this.matchCookieUidRegex.Match(cookie_string).Groups[1].Value, out var uid);
-            this.uid = uid;
         }
 
         private void Config_PropertyChanged(object sender, PropertyChangedEventArgs e)
