@@ -13,6 +13,7 @@ using BililiveRecorder.Core.Event;
 using BililiveRecorder.Core.Recording;
 using BililiveRecorder.Core.Scripting;
 using Microsoft.Extensions.DependencyInjection;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Polly;
 using Serilog;
@@ -45,6 +46,7 @@ namespace BililiveRecorder.Core
 
         private int shortId;
         private string name = string.Empty;
+        private long uid;
         private string title = string.Empty;
         private string areaNameParent = string.Empty;
         private string areaNameChild = string.Empty;
@@ -100,6 +102,7 @@ namespace BililiveRecorder.Core
 
         public int ShortId { get => this.shortId; private set => this.SetField(ref this.shortId, value); }
         public string Name { get => this.name; private set => this.SetField(ref this.name, value); }
+        public long Uid { get => this.uid; private set => this.SetField(ref this.uid, value); }
         public string Title { get => this.title; private set => this.SetField(ref this.title, value); }
         public string AreaNameParent { get => this.areaNameParent; private set => this.SetField(ref this.areaNameParent, value); }
         public string AreaNameChild { get => this.areaNameChild; private set => this.SetField(ref this.areaNameChild, value); }
@@ -208,6 +211,7 @@ namespace BililiveRecorder.Core
             {
                 this.RoomConfig.RoomId = room.Room.RoomId;
                 this.ShortId = room.Room.ShortId;
+                this.Uid = room.Room.Uid;
                 this.Title = room.Room.Title;
                 this.AreaNameParent = room.Room.ParentAreaName;
                 this.AreaNameChild = room.Room.AreaName;
@@ -538,6 +542,14 @@ retry:
 
         private string? DanmakuClient_BeforeHandshake(string json)
         {
+            if (this.RoomConfig.DanmakuAuthenticateWithStreamerUid)
+            {
+                var obj = JObject.Parse(json);
+                obj["uid"] = this.Uid;
+                // delete token
+                obj.Remove("key");
+                json = obj.ToString(Formatting.None);
+            }
             return this.userScriptRunner.CallOnDanmakuHandshake(this.logger, this, json);
         }
 

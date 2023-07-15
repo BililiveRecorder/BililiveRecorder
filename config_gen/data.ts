@@ -162,7 +162,7 @@ export const data: Array<ConfigEntry> = [
     },
     {
         id: "TimingApiTimeout",
-        name: "请求B站API超时时间 毫秒",
+        name: "请求mikufansAPI超时时间 毫秒",
         type: "uint",
         configType: "globalOnly",
         advancedConfig: true,
@@ -223,6 +223,14 @@ export const data: Array<ConfigEntry> = [
         configType: "globalOnly",
         advancedConfig: true,
         default: "DanmakuTransportMode.Random",
+    },
+    {
+        id: "DanmakuAuthenticateWithStreamerUid",
+        name: "使用直播间主播的uid进行弹幕服务器认证",
+        type: "bool",
+        configType: "globalOnly",
+        advancedConfig: true,
+        default: false,
     },
     {
         id: "NetworkTransportUseSystemProxy",

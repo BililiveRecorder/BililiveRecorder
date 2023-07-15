@@ -28,6 +28,9 @@ namespace BililiveRecorder.Core.Api.Model
 
         public class InnerRoomInfo
         {
+            [JsonProperty("uid")]
+            public long Uid { get; set; }
+
             [JsonProperty("room_id")]
             public int RoomId { get; set; }
 

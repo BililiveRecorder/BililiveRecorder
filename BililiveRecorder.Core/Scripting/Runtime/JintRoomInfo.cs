@@ -15,6 +15,7 @@ namespace BililiveRecorder.Core.Scripting.Runtime
             this.FastSetProperty("roomId", new PropertyDescriptor(room.RoomConfig.RoomId, false, true, false));
             this.FastSetProperty("shortId", new PropertyDescriptor(room.ShortId, false, true, false));
             this.FastSetProperty("name", new PropertyDescriptor(room.Name, false, true, false));
+            this.FastSetProperty("uid", new PropertyDescriptor(room.Uid.ToString(), false, true, false));
             this.FastSetProperty("title", new PropertyDescriptor(room.Title, false, true, false));
             this.FastSetProperty("areaParent", new PropertyDescriptor(room.AreaNameParent, false, true, false));
             this.FastSetProperty("areaChild", new PropertyDescriptor(room.AreaNameChild, false, true, false));

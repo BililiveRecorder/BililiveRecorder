@@ -15,6 +15,7 @@ namespace BililiveRecorder.Core
 
         int ShortId { get; }
         string Name { get; }
+        long Uid { get;}
         string Title { get; }
         string AreaNameParent { get; }
         string AreaNameChild { get; }

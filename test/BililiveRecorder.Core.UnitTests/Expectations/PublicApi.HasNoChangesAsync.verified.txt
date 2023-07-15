@@ -76,6 +76,7 @@ namespace BililiveRecorder.Core.Config.V3
         public string Cookie { get; }
         public BililiveRecorder.Core.Config.CuttingMode CuttingMode { get; }
         public uint CuttingNumber { get; }
+        public bool DanmakuAuthenticateWithStreamerUid { get; }
         public BililiveRecorder.Core.Config.DanmakuTransportMode DanmakuTransport { get; }
         public string FileNameRecordTemplate { get; }
         public bool FlvProcessorSplitOnScriptTag { get; }
@@ -112,6 +113,7 @@ namespace BililiveRecorder.Core.Config.V3
         public string? Cookie { get; set; }
         public BililiveRecorder.Core.Config.CuttingMode CuttingMode { get; set; }
         public uint CuttingNumber { get; set; }
+        public bool DanmakuAuthenticateWithStreamerUid { get; set; }
         public BililiveRecorder.Core.Config.DanmakuTransportMode DanmakuTransport { get; set; }
         public string? FileNameRecordTemplate { get; set; }
         public bool FlvProcessorSplitOnScriptTag { get; set; }
@@ -119,6 +121,7 @@ namespace BililiveRecorder.Core.Config.V3
         public bool HasCookie { get; set; }
         public bool HasCuttingMode { get; set; }
         public bool HasCuttingNumber { get; set; }
+        public bool HasDanmakuAuthenticateWithStreamerUid { get; set; }
         public bool HasDanmakuTransport { get; set; }
         public bool HasFileNameRecordTemplate { get; set; }
         public bool HasFlvProcessorSplitOnScriptTag { get; set; }
@@ -156,6 +159,8 @@ namespace BililiveRecorder.Core.Config.V3
         public HierarchicalPropertyDefault.Optional<BililiveRecorder.Core.Config.CuttingMode> OptionalCuttingMode { get; set; }
         [Newtonsoft.Json.JsonProperty("CuttingNumber")]
         public HierarchicalPropertyDefault.Optional<uint> OptionalCuttingNumber { get; set; }
+        [Newtonsoft.Json.JsonProperty("DanmakuAuthenticateWithStreamerUid")]
+        public HierarchicalPropertyDefault.Optional<bool> OptionalDanmakuAuthenticateWithStreamerUid { get; set; }
         [Newtonsoft.Json.JsonProperty("DanmakuTransport")]
         public HierarchicalPropertyDefault.Optional<BililiveRecorder.Core.Config.DanmakuTransportMode> OptionalDanmakuTransport { get; set; }
         [Newtonsoft.Json.JsonProperty("FileNameRecordTemplate")]
@@ -248,6 +253,7 @@ namespace BililiveRecorder.Core.Config.V3
         public string? Cookie { get; }
         public BililiveRecorder.Core.Config.CuttingMode CuttingMode { get; set; }
         public uint CuttingNumber { get; set; }
+        public bool DanmakuAuthenticateWithStreamerUid { get; }
         public BililiveRecorder.Core.Config.DanmakuTransportMode DanmakuTransport { get; }
         public string? FileNameRecordTemplate { get; }
         public bool FlvProcessorSplitOnScriptTag { get; set; }
@@ -445,6 +451,7 @@ namespace BililiveRecorder.Core
         BililiveRecorder.Core.RoomStats Stats { get; }
         bool Streaming { get; }
         string Title { get; }
+        long Uid { get; }
         event System.EventHandler<BililiveRecorder.Core.Event.IOStatsEventArgs>? IOStats;
         event System.EventHandler<BililiveRecorder.Core.Event.RecordFileClosedEventArgs>? RecordFileClosed;
         event System.EventHandler<BililiveRecorder.Core.Event.RecordFileOpeningEventArgs>? RecordFileOpening;
@@ -540,6 +547,7 @@ namespace BililiveRecorder.Core.Templating
         public int RoomId { get; set; }
         public int ShortId { get; set; }
         public string Title { get; set; }
+        public long Uid { get; set; }
     }
     public readonly struct FileNameTemplateOutput
     {

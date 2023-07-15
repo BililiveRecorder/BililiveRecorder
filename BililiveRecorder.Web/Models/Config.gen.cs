@@ -72,6 +72,7 @@ namespace BililiveRecorder.Web.Models
         public Optional<uint>? OptionalTimingWatchdogTimeout { get; set; }
         public Optional<uint>? OptionalRecordDanmakuFlushInterval { get; set; }
         public Optional<DanmakuTransportMode>? OptionalDanmakuTransport { get; set; }
+        public Optional<bool>? OptionalDanmakuAuthenticateWithStreamerUid { get; set; }
         public Optional<bool>? OptionalNetworkTransportUseSystemProxy { get; set; }
         public Optional<AllowedAddressFamily>? OptionalNetworkTransportAllowedAddressFamily { get; set; }
         public Optional<string?>? OptionalUserScript { get; set; }
@@ -106,6 +107,7 @@ namespace BililiveRecorder.Web.Models
             if (this.OptionalTimingWatchdogTimeout.HasValue) config.OptionalTimingWatchdogTimeout = this.OptionalTimingWatchdogTimeout.Value;
             if (this.OptionalRecordDanmakuFlushInterval.HasValue) config.OptionalRecordDanmakuFlushInterval = this.OptionalRecordDanmakuFlushInterval.Value;
             if (this.OptionalDanmakuTransport.HasValue) config.OptionalDanmakuTransport = this.OptionalDanmakuTransport.Value;
+            if (this.OptionalDanmakuAuthenticateWithStreamerUid.HasValue) config.OptionalDanmakuAuthenticateWithStreamerUid = this.OptionalDanmakuAuthenticateWithStreamerUid.Value;
             if (this.OptionalNetworkTransportUseSystemProxy.HasValue) config.OptionalNetworkTransportUseSystemProxy = this.OptionalNetworkTransportUseSystemProxy.Value;
             if (this.OptionalNetworkTransportAllowedAddressFamily.HasValue) config.OptionalNetworkTransportAllowedAddressFamily = this.OptionalNetworkTransportAllowedAddressFamily.Value;
             if (this.OptionalUserScript.HasValue) config.OptionalUserScript = this.OptionalUserScript.Value;
@@ -162,6 +164,7 @@ namespace BililiveRecorder.Web.Models.Rest
         public Optional<uint> OptionalTimingWatchdogTimeout { get; set; }
         public Optional<uint> OptionalRecordDanmakuFlushInterval { get; set; }
         public Optional<DanmakuTransportMode> OptionalDanmakuTransport { get; set; }
+        public Optional<bool> OptionalDanmakuAuthenticateWithStreamerUid { get; set; }
         public Optional<bool> OptionalNetworkTransportUseSystemProxy { get; set; }
         public Optional<AllowedAddressFamily> OptionalNetworkTransportAllowedAddressFamily { get; set; }
         public Optional<string?> OptionalUserScript { get; set; }
@@ -223,6 +226,7 @@ namespace BililiveRecorder.Web.Models.Graphql
             this.Field(x => x.OptionalTimingWatchdogTimeout, type: typeof(HierarchicalOptionalType<uint>));
             this.Field(x => x.OptionalRecordDanmakuFlushInterval, type: typeof(HierarchicalOptionalType<uint>));
             this.Field(x => x.OptionalDanmakuTransport, type: typeof(HierarchicalOptionalType<DanmakuTransportMode>));
+            this.Field(x => x.OptionalDanmakuAuthenticateWithStreamerUid, type: typeof(HierarchicalOptionalType<bool>));
             this.Field(x => x.OptionalNetworkTransportUseSystemProxy, type: typeof(HierarchicalOptionalType<bool>));
             this.Field(x => x.OptionalNetworkTransportAllowedAddressFamily, type: typeof(HierarchicalOptionalType<AllowedAddressFamily>));
             this.Field(x => x.OptionalUserScript, type: typeof(HierarchicalOptionalType<string>));
@@ -261,6 +265,7 @@ namespace BililiveRecorder.Web.Models.Graphql
             this.Field(x => x.TimingWatchdogTimeout);
             this.Field(x => x.RecordDanmakuFlushInterval);
             this.Field(x => x.DanmakuTransport);
+            this.Field(x => x.DanmakuAuthenticateWithStreamerUid);
             this.Field(x => x.NetworkTransportUseSystemProxy);
             this.Field(x => x.NetworkTransportAllowedAddressFamily);
             this.Field(x => x.UserScript);
@@ -318,6 +323,7 @@ namespace BililiveRecorder.Web.Models.Graphql
             this.Field(x => x.OptionalTimingWatchdogTimeout, nullable: true, type: typeof(HierarchicalOptionalInputType<uint>));
             this.Field(x => x.OptionalRecordDanmakuFlushInterval, nullable: true, type: typeof(HierarchicalOptionalInputType<uint>));
             this.Field(x => x.OptionalDanmakuTransport, nullable: true, type: typeof(HierarchicalOptionalInputType<DanmakuTransportMode>));
+            this.Field(x => x.OptionalDanmakuAuthenticateWithStreamerUid, nullable: true, type: typeof(HierarchicalOptionalInputType<bool>));
             this.Field(x => x.OptionalNetworkTransportUseSystemProxy, nullable: true, type: typeof(HierarchicalOptionalInputType<bool>));
             this.Field(x => x.OptionalNetworkTransportAllowedAddressFamily, nullable: true, type: typeof(HierarchicalOptionalInputType<AllowedAddressFamily>));
             this.Field(x => x.OptionalUserScript, nullable: true, type: typeof(HierarchicalOptionalInputType<string>));

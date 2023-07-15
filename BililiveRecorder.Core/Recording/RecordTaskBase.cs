@@ -190,6 +190,7 @@ namespace BililiveRecorder.Core.Recording
                 Title = FileNameGenerator.RemoveInvalidFileName(this.room.Title, ignore_slash: false),
                 RoomId = this.room.RoomConfig.RoomId,
                 ShortId = this.room.ShortId,
+                Uid = this.room.Uid,
                 AreaParent = FileNameGenerator.RemoveInvalidFileName(this.room.AreaNameParent, ignore_slash: false),
                 AreaChild = FileNameGenerator.RemoveInvalidFileName(this.room.AreaNameChild, ignore_slash: false),
                 PartIndex = this.partIndex,
