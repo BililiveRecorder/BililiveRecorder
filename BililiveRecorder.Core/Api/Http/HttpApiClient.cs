@@ -71,17 +71,17 @@ namespace BililiveRecorder.Core.Api.Http
 
             if (anon)
             {
+                this.uid = 0;
                 var new_task = Task.Run(() => this.BackgroundGetAnonCookie(), this.anon_cookie_task_cancel.Token);
                 var old_task = Interlocked.Exchange(ref this.anon_cookie_task, new_task);
                 old_task?.Dispose();
             }
-
-            // 这里是故意不需要判断 Cookie 文本是否为空、以及 TryParse 是否成功的
-            // 因为如果不成功，那么就是设置为 0
-            long.TryParse(matchCookieUidRegex.Match(cookie_string).Groups[1].Value, out var uid);
-            this.uid = uid;
-
-            this.buvid3 = matchCookieBuvid3Regex.Match(cookie_string).Groups[1].Value;
+            else
+            {
+                long.TryParse(matchCookieUidRegex.Match(cookie_string).Groups[1].Value, out var uid);
+                this.uid = uid;
+                this.buvid3 = matchCookieBuvid3Regex.Match(cookie_string).Groups[1].Value;
+            }
         }
 
         private void Config_PropertyChanged(object sender, PropertyChangedEventArgs e)
