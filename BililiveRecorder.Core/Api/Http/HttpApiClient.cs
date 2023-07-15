@@ -81,7 +81,11 @@ namespace BililiveRecorder.Core.Api.Http
             {
                 long.TryParse(matchCookieUidRegex.Match(cookie_string).Groups[1].Value, out var uid);
                 this.uid = uid;
-                this.buvid3 = matchCookieBuvid3Regex.Match(cookie_string).Groups[1].Value;
+                string buvid3 = matchCookieBuvid3Regex.Match(cookie_string).Groups[1].Value;
+                if (!string.IsNullOrWhiteSpace(buvid3))
+                    this.buvid3 = buvid3;
+                else
+                    this.buvid3 = null;
             }
         }
 
