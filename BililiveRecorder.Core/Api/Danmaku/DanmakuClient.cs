@@ -33,6 +33,8 @@ namespace BililiveRecorder.Core.Api.Danmaku
 
         public Func<string, string?>? BeforeHandshake { get; set; } = null;
 
+        private static readonly JsonSerializerSettings jsonSerializerSettings = new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore };
+
         public DanmakuClient(IDanmakuServerApiClient apiClient, ILogger logger)
         {
             this.apiClient = apiClient ?? throw new ArgumentNullException(nameof(apiClient));
@@ -98,7 +100,7 @@ namespace BililiveRecorder.Core.Api.Danmaku
 
                 this.danmakuTransport = transport;
 
-                await this.SendHelloAsync(roomid, this.apiClient.GetUid(), danmakuServerInfo.Token ?? string.Empty).ConfigureAwait(false);
+                await this.SendHelloAsync(roomid, this.apiClient.GetUid(), this.apiClient.GetBuvid3(), danmakuServerInfo.Token ?? string.Empty).ConfigureAwait(false);
                 await this.SendPingAsync().ConfigureAwait(false);
 
                 if (cancellationToken.IsCancellationRequested)
@@ -213,17 +215,18 @@ namespace BililiveRecorder.Core.Api.Danmaku
 
         #region Send
 
-        private Task SendHelloAsync(int roomid, long uid, string token)
+        private Task SendHelloAsync(int roomid, long uid, string? buvid, string token)
         {
             var body = JsonConvert.SerializeObject(new
             {
-                uid = uid,
-                roomid = roomid,
+                uid,
+                roomid,
                 protover = 0,
+                buvid,
                 platform = "web",
                 type = 2,
                 key = token,
-            }, Formatting.None);
+            }, Formatting.None, jsonSerializerSettings);
 
             if (this.BeforeHandshake is { } func)
             {

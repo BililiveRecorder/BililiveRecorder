@@ -18,38 +18,34 @@ namespace BililiveRecorder.Core.Api.Http
         internal const string HttpHeaderReferer = "https://live.bilibili.com/";
         internal const string HttpHeaderOrigin = "https://live.bilibili.com";
         internal const string HttpHeaderUserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36";
-        private readonly Regex matchCookieUidRegex = new Regex(@"DedeUserID=(\d+?);", RegexOptions.Compiled);
+        private static readonly Regex matchCookieUidRegex = new Regex(@"DedeUserID=(\d+?);", RegexOptions.Compiled);
+        private static readonly Regex matchCookieBuvid3Regex = new Regex(@"buvid3=(.+?);", RegexOptions.Compiled);
+        private static readonly Regex matchSetCookieBuvid3Regex = new Regex(@"(buvid3=.+?;)", RegexOptions.Compiled);
         private long uid;
+        private string? buvid3;
+        private Task? anon_cookie_task;
+        private CancellationTokenSource anon_cookie_task_cancel;
 
         private readonly GlobalConfig config;
-        private readonly HttpClient anonClient;
-        private HttpClient mainClient;
+        private HttpClient client;
         private bool disposedValue;
-
-        public HttpClient MainHttpClient => this.mainClient;
 
         public HttpApiClient(GlobalConfig config)
         {
+            this.anon_cookie_task_cancel = new CancellationTokenSource();
+
             this.config = config ?? throw new ArgumentNullException(nameof(config));
 
             config.PropertyChanged += this.Config_PropertyChanged;
 
-            this.mainClient = null!;
+            this.client = null!;
             this.UpdateHttpClient();
-
-            this.anonClient = new HttpClient
-            {
-                Timeout = TimeSpan.FromMilliseconds(config.TimingApiTimeout)
-            };
-            var headers = this.anonClient.DefaultRequestHeaders;
-            headers.Add("Accept", HttpHeaderAccept);
-            headers.Add("Origin", HttpHeaderOrigin);
-            headers.Add("Referer", HttpHeaderReferer);
-            headers.Add("User-Agent", HttpHeaderUserAgent);
         }
 
         private void UpdateHttpClient()
         {
+            this.anon_cookie_task_cancel.Cancel();
+
             var client = new HttpClient(new HttpClientHandler
             {
                 UseCookies = false,
@@ -65,20 +61,28 @@ namespace BililiveRecorder.Core.Api.Http
             headers.Add("User-Agent", HttpHeaderUserAgent);
 
             var cookie_string = this.config.Cookie;
-            if (!string.IsNullOrWhiteSpace(cookie_string))
-            {
+
+            bool anon = string.IsNullOrWhiteSpace(cookie_string);
+            if (!anon)
                 headers.Add("Cookie", cookie_string);
 
-                long.TryParse(this.matchCookieUidRegex.Match(cookie_string).Groups[1].Value, out var uid);
-                this.uid = uid;
+            // 注意 BackgroundGetAnonCookie 操作的是当前的 this.client 所以要提前 swap
+            var old = Interlocked.Exchange(ref this.client, client);
+            old?.Dispose();
+
+            if (anon)
+            {
+                this.uid = 0;
+                var new_task = Task.Run(() => this.BackgroundGetAnonCookie(), this.anon_cookie_task_cancel.Token);
+                var old_task = Interlocked.Exchange(ref this.anon_cookie_task, new_task);
+                old_task?.Dispose();
             }
             else
             {
-                this.uid = 0;
+                long.TryParse(matchCookieUidRegex.Match(cookie_string).Groups[1].Value, out var uid);
+                this.uid = uid;
+                this.buvid3 = matchCookieBuvid3Regex.Match(cookie_string).Groups[1].Value;
             }
-
-            var old = Interlocked.Exchange(ref this.mainClient, client);
-            old?.Dispose();
         }
 
         private void Config_PropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -87,19 +91,26 @@ namespace BililiveRecorder.Core.Api.Http
                 this.UpdateHttpClient();
         }
 
-        private static async Task<BilibiliApiResponse<T>> FetchAsync<T>(HttpClient client, string url) where T : class
+        private async Task<string> FetchAsTextAsync(string url)
         {
-            // 记得 GetRoomInfoAsync 里复制了一份这里的代码，以后修改记得一起改了
+            if (this.anon_cookie_task is not null)
+                await Interlocked.Exchange(ref this.anon_cookie_task, null)!;
 
-            var resp = await client.GetAsync(url).ConfigureAwait(false);
+            var resp = await this.client.GetAsync(url).ConfigureAwait(false);
+
+            // 部分逻辑可能与 GetAnonCookieAsync 共享
 
             if (resp.StatusCode == (HttpStatusCode)412)
                 throw new Http412Exception("Got HTTP Status 412 when requesting " + url);
 
             resp.EnsureSuccessStatusCode();
 
-            var text = await resp.Content.ReadAsStringAsync().ConfigureAwait(false);
+            return await resp.Content.ReadAsStringAsync().ConfigureAwait(false);
+        }
 
+        private async Task<BilibiliApiResponse<T>> FetchAsync<T>(string url) where T : class
+        {
+            var text = await this.FetchAsTextAsync(url).ConfigureAwait(false);
             var obj = JsonConvert.DeserializeObject<BilibiliApiResponse<T>>(text);
             return obj?.Code != 0 ? throw new BilibiliApiResponseCodeNotZeroException(obj?.Code, text) : obj;
         }
@@ -111,18 +122,7 @@ namespace BililiveRecorder.Core.Api.Http
 
             var url = $@"{this.config.LiveApiHost}/xlive/web-room/v1/index/getInfoByRoom?room_id={roomid}";
 
-            // return FetchAsync<RoomInfo>(this.mainClient, url);
-            // 下面的代码是从 FetchAsync 里复制修改的
-            // 以后如果修改 FetchAsync 记得把这里也跟着改了
-
-            var resp = await this.mainClient.GetAsync(url).ConfigureAwait(false);
-
-            if (resp.StatusCode == (HttpStatusCode)412)
-                throw new Http412Exception("Got HTTP Status 412 when requesting " + url);
-
-            resp.EnsureSuccessStatusCode();
-
-            var text = await resp.Content.ReadAsStringAsync().ConfigureAwait(false);
+            var text = await this.FetchAsTextAsync(url).ConfigureAwait(false);
 
             var jobject = JObject.Parse(text);
 
@@ -141,10 +141,60 @@ namespace BililiveRecorder.Core.Api.Http
                 throw new ObjectDisposedException(nameof(HttpApiClient));
 
             var url = $@"{this.config.LiveApiHost}/xlive/web-room/v2/index/getRoomPlayInfo?room_id={roomid}&protocol=0,1&format=0,1,2&codec=0,1&qn={qn}&platform=web&ptype=8&dolby=5&panorama=1";
-            return FetchAsync<RoomPlayInfo>(this.mainClient, url);
+            return this.FetchAsync<RoomPlayInfo>(url);
+        }
+
+        public async Task<(bool, string)> TestCookieAsync()
+        {
+            // 需要测试 cookie 的情况不需要风控和失败检测，同时不需要等待未登录 cookie 获取完毕
+            var resp = await this.client.GetStringAsync("https://api.live.bilibili.com/xlive/web-ucenter/user/get_user_info").ConfigureAwait(false);
+            var jo = JObject.Parse(resp);
+            if (jo["code"]?.ToObject<int>() != 0)
+                return (false, $"Response:\n{resp}");
+
+            string message = $@"User: {jo["data"]?["uname"]?.ToObject<string>()}
+UID (from API response): {jo["data"]?["uid"]?.ToObject<string>()}
+UID (from Cookie): {this.GetUid()}
+BUVID3 (from Cookie): {this.GetBuvid3()}";
+            return (true, message);
+        }
+
+        public static async Task<string?> GetAnonCookieAsync(HttpClient client)
+        {
+            var url = @"https://data.bilibili.com/v/";
+
+            var resp = await client.GetAsync(url).ConfigureAwait(false);
+
+            // 部分逻辑可能与 FetchAsTextAsync 共享
+            // 应该允许获取 cookie 失败，但对于风控情况仍应处理
+
+            if (resp.StatusCode == (HttpStatusCode)412)
+                throw new Http412Exception("Got HTTP Status 412 when requesting " + url);
+
+            if (!resp.IsSuccessStatusCode)
+                return null;
+
+            foreach (var setting_cookie in resp.Content.Headers.GetValues("Set-Cookie"))
+            {
+                var buvid3_cookie = matchSetCookieBuvid3Regex.Match(setting_cookie).Groups[1].Value;
+                if (buvid3_cookie != null)
+                    return buvid3_cookie;
+            }
+
+            return null;
+        }
+
+        private async Task BackgroundGetAnonCookie()
+        {
+            string? cookie_string = await GetAnonCookieAsync(this.client).ConfigureAwait(false);
+            var headers = this.client.DefaultRequestHeaders;
+            if (!string.IsNullOrWhiteSpace(cookie_string))
+                headers.Add("Cookie", cookie_string);
         }
 
         public long GetUid() => this.uid;
+
+        public string? GetBuvid3() => this.buvid3;
 
         public Task<BilibiliApiResponse<DanmuInfo>> GetDanmakuServerAsync(int roomid)
         {
@@ -152,7 +202,7 @@ namespace BililiveRecorder.Core.Api.Http
                 throw new ObjectDisposedException(nameof(HttpApiClient));
 
             var url = $@"{this.config.LiveApiHost}/xlive/web-room/v1/index/getDanmuInfo?id={roomid}&type=0";
-            return FetchAsync<DanmuInfo>(this.mainClient, url);
+            return this.FetchAsync<DanmuInfo>(url);
         }
 
         protected virtual void Dispose(bool disposing)
@@ -163,8 +213,7 @@ namespace BililiveRecorder.Core.Api.Http
                 {
                     // dispose managed state (managed objects)
                     this.config.PropertyChanged -= this.Config_PropertyChanged;
-                    this.mainClient.Dispose();
-                    this.anonClient.Dispose();
+                    this.client.Dispose();
                 }
 
                 // free unmanaged resources (unmanaged objects) and override finalizer
