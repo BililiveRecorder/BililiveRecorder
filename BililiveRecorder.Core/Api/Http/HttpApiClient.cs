@@ -84,8 +84,6 @@ namespace BililiveRecorder.Core.Api.Http
         {
             var resp = await this.client.GetAsync(url).ConfigureAwait(false);
 
-            // 部分逻辑可能与 GetAnonCookieAsync 共享
-
             if (resp.StatusCode == (HttpStatusCode)412)
                 throw new Http412Exception("Got HTTP Status 412 when requesting " + url);
 
