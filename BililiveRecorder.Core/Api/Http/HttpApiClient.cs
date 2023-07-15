@@ -54,7 +54,6 @@ namespace BililiveRecorder.Core.Api.Http
             headers.Add("User-Agent", HttpHeaderUserAgent);
 
             var cookie_string = this.config.Cookie;
-
             if (!string.IsNullOrWhiteSpace(cookie_string))
             {
                 headers.Add("Cookie", cookie_string);
