@@ -17,10 +17,10 @@ namespace BililiveRecorder.WPF.Pages
     public partial class AdvancedSettingsPage
     {
         private static readonly ILogger logger = Log.ForContext<AdvancedSettingsPage>();
-        private readonly IHttpClientAccessor? httpApiClient;
+        private readonly ICookieTester? httpApiClient;
         private readonly UserScriptRunner? userScriptRunner;
 
-        public AdvancedSettingsPage(IHttpClientAccessor? httpApiClient, UserScriptRunner? userScriptRunner)
+        public AdvancedSettingsPage(ICookieTester? httpApiClient, UserScriptRunner? userScriptRunner)
         {
             this.InitializeComponent();
             this.httpApiClient = httpApiClient;
@@ -29,7 +29,7 @@ namespace BililiveRecorder.WPF.Pages
 
         public AdvancedSettingsPage()
             : this(
-                  (IHttpClientAccessor?)(RootPage.ServiceProvider?.GetService(typeof(IHttpClientAccessor))),
+                  (ICookieTester?)(RootPage.ServiceProvider?.GetService(typeof(ICookieTester))),
                   (UserScriptRunner?)(RootPage.ServiceProvider?.GetService(typeof(UserScriptRunner)))
                   )
         { }

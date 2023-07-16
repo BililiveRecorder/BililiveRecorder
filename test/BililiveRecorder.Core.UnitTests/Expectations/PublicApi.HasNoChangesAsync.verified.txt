@@ -1,7 +1,7 @@
 ﻿[assembly: System.Runtime.CompilerServices.InternalsVisibleTo("BililiveRecorder.Core.UnitTests")]
 namespace BililiveRecorder.Core.Api
 {
-    public interface IHttpClientAccessor
+    public interface ICookieTester
     {
         System.Threading.Tasks.Task<System.ValueTuple<bool, string>> TestCookieAsync();
     }

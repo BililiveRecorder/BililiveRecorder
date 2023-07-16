@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 namespace BililiveRecorder.Core.Api
 {
-    public interface IHttpClientAccessor
+    public interface ICookieTester
     {
         Task<(bool, string)> TestCookieAsync();
     }
