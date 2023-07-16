@@ -68,6 +68,7 @@ namespace BililiveRecorder.Core.Api.Http
             else
             {
                 this.uid = 0;
+                this.buvid3 = null;
             }
 
             var old = Interlocked.Exchange(ref this.client, client);
