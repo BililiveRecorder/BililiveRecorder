@@ -546,8 +546,9 @@ retry:
             {
                 var obj = JObject.Parse(json);
                 obj["uid"] = this.Uid;
-                // delete token
+                // delete key and buvid
                 obj.Remove("key");
+                obj.Remove("buvid");
                 json = obj.ToString(Formatting.None);
             }
             return this.userScriptRunner.CallOnDanmakuHandshake(this.logger, this, json);
