@@ -1,10 +1,10 @@
 using System.Net.Http;
+using System.Threading.Tasks;
 
 namespace BililiveRecorder.Core.Api
 {
-    public interface IHttpClientAccessor
+    public interface ICookieTester
     {
-        HttpClient MainHttpClient { get; }
-        long GetUid();
+        Task<(bool, string)> TestCookieAsync();
     }
 }

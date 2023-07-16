@@ -18,6 +18,7 @@ namespace BililiveRecorder.Core.Api
         }
 
         public long GetUid() => this.client.GetUid();
+        public string? GetBuvid3() => this.client.GetBuvid3();
 
         public async Task<BilibiliApiResponse<DanmuInfo>> GetDanmakuServerAsync(int roomid) => await this.policies
             .Get<IAsyncPolicy>(PolicyNames.PolicyDanmakuApiRequestAsync)

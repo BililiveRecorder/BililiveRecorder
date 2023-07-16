@@ -37,7 +37,7 @@ namespace BililiveRecorder.DependencyInjection
 
         public static IServiceCollection AddRecorderApiClients(this IServiceCollection services) => services
             .AddSingleton<HttpApiClient>()
-            .AddSingleton<IHttpClientAccessor>(sp => sp.GetRequiredService<HttpApiClient>())
+            .AddSingleton<ICookieTester>(sp => sp.GetRequiredService<HttpApiClient>())
             .AddSingleton<PolicyWrappedApiClient<HttpApiClient>>()
             .AddSingleton<IApiClient>(sp => sp.GetRequiredService<PolicyWrappedApiClient<HttpApiClient>>())
             .AddSingleton<IDanmakuServerApiClient>(sp => sp.GetRequiredService<PolicyWrappedApiClient<HttpApiClient>>())
