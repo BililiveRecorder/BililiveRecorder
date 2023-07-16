@@ -230,7 +230,7 @@ export const data: Array<ConfigEntry> = [
         type: "bool",
         configType: "globalOnly",
         advancedConfig: true,
-        default: false,
+        default: true,
     },
     {
         id: "NetworkTransportUseSystemProxy",
