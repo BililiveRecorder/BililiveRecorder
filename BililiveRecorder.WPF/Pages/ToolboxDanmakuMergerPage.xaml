@@ -6,16 +6,26 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:ui="http://schemas.modernwpf.com/2019"
     xmlns:l="https://github.com/XAMLMarkupExtensions/WPFLocalizationExtension"
+    xmlns:scm="clr-namespace:System.ComponentModel;assembly=WindowsBase"
     l:LocalizeDictionary.DesignCulture=""
     l:ResxLocalizationProvider.DefaultAssembly="BililiveRecorder.WPF"
     l:ResxLocalizationProvider.DefaultDictionary="Strings"
     mc:Ignorable="d" DataContext="{x:Null}"
     d:DesignHeight="450" d:DesignWidth="800"
     Title="ToolboxDanmakuMergerPage">
+    <ui:Page.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/ModernWpf;component/DensityStyles/Compact.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+            <CollectionViewSource x:Key="cvs">
+                <CollectionViewSource.SortDescriptions>
+                    <scm:SortDescription PropertyName="Path" Direction="Ascending"/>
+                </CollectionViewSource.SortDescriptions>
+            </CollectionViewSource>
+        </ResourceDictionary>
+    </ui:Page.Resources>
     <Grid>
-        <Grid.Resources>
-            <ResourceDictionary Source="pack://application:,,,/ModernWpf;component/DensityStyles/Compact.xaml" />
-        </Grid.Resources>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
@@ -28,7 +38,7 @@
             <Button Margin="0,0,5,0" Content="{l:Loc Toolbox_Merge_Button_AddFile}" Click="AddFile_Click"/>
             <Button Content="{l:Loc Toolbox_Merge_Button_Merge}" Click="Merge_Click"/>
         </StackPanel>
-        <ListView Grid.Row="3" Margin="5" x:Name="listView" AllowDrop="True" Drop="DragDrop">
+        <ListView Grid.Row="3" Margin="5" x:Name="listView" ItemsSource="{Binding Source={StaticResource cvs}}" AllowDrop="True" Drop="DragDrop">
             <ListView.View>
                 <GridView AllowsColumnReorder="False">
                     <GridViewColumn>
@@ -41,7 +51,8 @@
                     </GridViewColumn>
                     <GridViewColumn Header="偏移量（秒）" Width="120">
                         <GridViewColumn.CellTemplate>
-                            <DataTemplate><!--
+                            <DataTemplate>
+                                <!--
                                 <ui:NumberBox Minimum="0" SmallChange="1" LargeChange="10" Text="{Binding Offset,UpdateSourceTrigger=PropertyChanged}"
                                           SpinButtonPlacementMode="Inline" ValidationMode="InvalidInputOverwritten"/>
                                 -->

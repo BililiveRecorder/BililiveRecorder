@@ -6,6 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
 using System.Windows.Threading;
 using BililiveRecorder.ToolBox;
 using BililiveRecorder.ToolBox.Tool.DanmakuMerger;
@@ -32,7 +33,9 @@ namespace BililiveRecorder.WPF.Pages
         public ToolboxDanmakuMergerPage()
         {
             this.InitializeComponent();
-            this.listView.ItemsSource = this.Files;
+
+            var cvs = (CollectionViewSource)this.FindResource("cvs");
+            cvs.Source = this.Files;
         }
 
         private void RemoveFile_Click(object sender, RoutedEventArgs e)
@@ -86,7 +89,8 @@ namespace BililiveRecorder.WPF.Pages
 
         private async Task AddFilesAsync(string[] paths)
         {
-            var req = new DanmakuStartTimeRequest { Inputs = paths };
+            // filter duplicate file paths
+            var req = new DanmakuStartTimeRequest { Inputs = paths.Where(x => !this.Files.Any(f => f.Path == x)).ToArray() };
             var handler = new DanmakuStartTimeHandler();
             var resp = await handler.Handle(req, default, default).ConfigureAwait(true);
 
@@ -111,9 +115,6 @@ namespace BililiveRecorder.WPF.Pages
             {
                 item.Offset = (int)(item.StartTime - minTime).TotalSeconds;
             }
-
-            this.listView.DataContext = null;
-            this.listView.DataContext = this.Files;
         }
 
 #pragma warning disable VSTHRD100 // Avoid async void methods
@@ -188,7 +189,7 @@ namespace BililiveRecorder.WPF.Pages
 
                 logger.Debug("弹幕合并结果 {@Response}", resp);
 
-                if (resp.Status != ResponseStatus.Cancelled && resp.Status != ResponseStatus.OK)
+                if (resp.Status is not ResponseStatus.Cancelled and not ResponseStatus.OK)
                 {
                     logger.Warning(resp.Exception, "弹幕合并时发生错误 (@Status)", resp.Status);
                     await Task.Run(() => ShowErrorMessageBox(resp)).ConfigureAwait(true);
