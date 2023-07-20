@@ -66,22 +66,27 @@
                 </StackPanel>
             </GroupBox>
             <GroupBox Header="弹幕服务器">
-                <c:SettingWithDefault IsSettingNotUsingDefault="{Binding HasDanmakuTransport}" Header="弹幕服务器传输协议">
-                    <StackPanel>
-                        <RadioButton GroupName="DanmakuTransport" Content="随机"
+                <ui:SimpleStackPanel>
+                    <c:SettingWithDefault IsSettingNotUsingDefault="{Binding HasDanmakuAuthenticateWithStreamerUid}">
+                        <ui:ToggleSwitch IsOn="{Binding DanmakuAuthenticateWithStreamerUid}" OnContent="连接弹幕服务器时使用主播 UID 认证" OffContent="连接弹幕服务器时使用主播 UID 认证"/>
+                    </c:SettingWithDefault>
+                    <c:SettingWithDefault IsSettingNotUsingDefault="{Binding HasDanmakuTransport}" Header="弹幕服务器传输协议">
+                        <StackPanel>
+                            <RadioButton GroupName="DanmakuTransport" Content="随机"
                                      IsChecked="{Binding Path=DanmakuTransport, Converter={StaticResource EnumToBooleanConverter},
                             ConverterParameter={x:Static config:DanmakuTransportMode.Random}}" />
-                        <RadioButton GroupName="DanmakuTransport" Content="TCP"
+                            <RadioButton GroupName="DanmakuTransport" Content="TCP"
                                      IsChecked="{Binding Path=DanmakuTransport, Converter={StaticResource EnumToBooleanConverter},
                             ConverterParameter={x:Static config:DanmakuTransportMode.Tcp}}" />
-                        <RadioButton GroupName="DanmakuTransport" Content="WS"
+                            <RadioButton GroupName="DanmakuTransport" Content="WS"
                                      IsChecked="{Binding Path=DanmakuTransport, Converter={StaticResource EnumToBooleanConverter},
                             ConverterParameter={x:Static config:DanmakuTransportMode.Ws}}" />
-                        <RadioButton GroupName="DanmakuTransport" Content="WSS"
+                            <RadioButton GroupName="DanmakuTransport" Content="WSS"
                                      IsChecked="{Binding Path=DanmakuTransport, Converter={StaticResource EnumToBooleanConverter},
                             ConverterParameter={x:Static config:DanmakuTransportMode.Wss}}" />
-                    </StackPanel>
-                </c:SettingWithDefault>
+                        </StackPanel>
+                    </c:SettingWithDefault>
+                </ui:SimpleStackPanel>
             </GroupBox>
             <GroupBox Header="录制">
                 <ui:SimpleStackPanel Spacing="10">
