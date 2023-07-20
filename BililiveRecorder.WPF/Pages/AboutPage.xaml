@@ -45,12 +45,8 @@
                     </Style>
                 </StackPanel.Resources>
                 <StackPanel>
-                    <TextBlock Text="B" Style="{StaticResource Pinyin}"/>
-                    <TextBlock Text="B" Style="{StaticResource MainText}"/>
-                </StackPanel>
-                <StackPanel>
-                    <TextBlock Text="zhàn" Style="{StaticResource Pinyin}"/>
-                    <TextBlock Text="站" Style="{StaticResource MainText}"/>
+                    <TextBlock Text="mikufans" Style="{StaticResource Pinyin}"/>
+                    <TextBlock Text="mikufans" Style="{StaticResource MainText}"/>
                 </StackPanel>
                 <StackPanel>
                     <TextBlock Text="lù" Style="{StaticResource Pinyin}"/>
@@ -77,7 +73,7 @@
             </TextBlock>
             <StackPanel Orientation="Horizontal">
                 <TextBlock FontSize="16" Text="{l:Loc About_Copyright}"/>
-                <TextBlock FontSize="16" Text=" © 2021 Genteure"/>
+                <TextBlock FontSize="16" Text=" © Genteure" x:Name="CopyrightTextBlock"/>
             </StackPanel>
             <TextBlock FontSize="16" TextWrapping="Wrap" Text="{l:Loc About_License}"/>
             <StackPanel Orientation="Horizontal">

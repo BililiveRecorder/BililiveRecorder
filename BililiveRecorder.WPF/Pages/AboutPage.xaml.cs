@@ -1,3 +1,5 @@
+using System.Text.RegularExpressions;
+
 namespace BililiveRecorder.WPF.Pages
 {
     /// <summary>
@@ -8,6 +10,15 @@ namespace BililiveRecorder.WPF.Pages
         public AboutPage()
         {
             this.InitializeComponent();
+
+            if (!string.IsNullOrEmpty(GitVersionInformation.CommitDate))
+            {
+                var match = Regex.Match(GitVersionInformation.CommitDate, @"^(?<year>\d{4})-(?<month>\d{2})-(?<day>\d{2})$");
+                if (match.Success)
+                {
+                    this.CopyrightTextBlock.Text = $" © {match.Groups["year"].Value} Genteure";
+                }
+            }
         }
     }
 }
