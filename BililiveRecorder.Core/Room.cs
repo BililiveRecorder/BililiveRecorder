@@ -55,10 +55,10 @@ namespace BililiveRecorder.Core
         private bool autoRecordForThisSession = true;
 
         private IRecordTask? recordTask;
-        private DateTimeOffset recordTaskStartTime;
         private DateTimeOffset danmakuClientConnectTime;
-        private static readonly TimeSpan danmakuClientReconnectNoDelay = TimeSpan.FromMinutes(1);
+        private readonly ManualResetEventSlim danmakuConnectHoldOff = new();
 
+        private static readonly TimeSpan danmakuClientReconnectNoDelay = TimeSpan.FromMinutes(1);
         private static readonly HttpClient coverDownloadHttpClient = new HttpClient();
 
         static Room()
@@ -220,6 +220,9 @@ namespace BililiveRecorder.Core
                 this.Name = room.User.BaseInfo.Name;
 
                 this.RawBilibiliApiJsonData = room.RawBilibiliApiJsonData;
+
+                // allow danmaku client to connect
+                this.danmakuConnectHoldOff.Set();
             }
         }
 
@@ -244,7 +247,6 @@ namespace BililiveRecorder.Core
                 task.RecordFileClosed += this.RecordTask_RecordFileClosed;
                 task.RecordSessionEnded += this.RecordTask_RecordSessionEnded;
                 this.recordTask = task;
-                this.recordTaskStartTime = DateTimeOffset.UtcNow;
                 this.Stats.Reset();
                 this.OnPropertyChanged(nameof(this.Recording));
 
@@ -368,6 +370,18 @@ namespace BililiveRecorder.Core
                             // 房间已被删除
                             return;
                         }
+                    }
+
+                    // 至少要等到获取到一次房间信息后才能连接弹幕服务器。
+                    // 理论上不专门写这么个逻辑也应该没有问题的，但为了保证连接时肯定有主播 uid 信息还是加上吧。
+                    // 这里同步堵塞等待了，因为 ManualResetEventSlim 没有 Async Wait
+                    // 并且这里运行在一个新的 Task 里，同步等待的影响也不是很大。
+                    if (!this.danmakuConnectHoldOff.Wait(TimeSpan.FromSeconds(2)))
+                    {
+                        // 如果 2 秒后还没有获取到房间信息直接返回
+                        // 房间信息获取成功后会自动再次尝试连接弹幕服务器所以不用担心会导致不连接弹幕服务器
+                        this.logger.Debug("暂无房间信息，不连接弹幕服务器");
+                        return;
                     }
 
                     await this.danmakuClient.ConnectAsync(this.RoomConfig.RoomId, this.RoomConfig.DanmakuTransport, this.ct).ConfigureAwait(false);
