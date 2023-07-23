@@ -303,8 +303,8 @@
           }
         },
         "DanmakuAuthenticateWithStreamerUid": {
-          "description": "使用直播间主播的uid进行弹幕服务器认证\n默认: true",
-          "markdownDescription": "使用直播间主播的uid进行弹幕服务器认证  \n默认: `true `\n\n",
+          "description": "使用直播间主播的uid进行弹幕服务器认证\n默认: false",
+          "markdownDescription": "使用直播间主播的uid进行弹幕服务器认证  \n默认: `false `\n\n",
           "type": "object",
           "additionalProperties": false,
           "properties": {
@@ -314,7 +314,7 @@
             },
             "Value": {
               "type": "boolean",
-              "default": true
+              "default": false
             }
           }
         },

@@ -546,7 +546,7 @@ namespace BililiveRecorder.Core.Config.V3
 
         public DanmakuTransportMode DanmakuTransport => DanmakuTransportMode.Random;
 
-        public bool DanmakuAuthenticateWithStreamerUid => true;
+        public bool DanmakuAuthenticateWithStreamerUid => false;
 
         public bool NetworkTransportUseSystemProxy => false;
 
