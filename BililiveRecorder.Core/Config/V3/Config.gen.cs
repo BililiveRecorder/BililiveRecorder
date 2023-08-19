@@ -544,7 +544,7 @@ namespace BililiveRecorder.Core.Config.V3
 
         public uint RecordDanmakuFlushInterval => 20;
 
-        public DanmakuTransportMode DanmakuTransport => DanmakuTransportMode.Random;
+        public DanmakuTransportMode DanmakuTransport => DanmakuTransportMode.Wss;
 
         public bool DanmakuAuthenticateWithStreamerUid => false;
 

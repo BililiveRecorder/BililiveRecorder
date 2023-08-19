@@ -222,7 +222,7 @@ export const data: Array<ConfigEntry> = [
         type: "DanmakuTransportMode",
         configType: "globalOnly",
         advancedConfig: true,
-        default: "DanmakuTransportMode.Random",
+        default: "DanmakuTransportMode.Wss",
     },
     {
         id: "DanmakuAuthenticateWithStreamerUid",

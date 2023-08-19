@@ -280,8 +280,8 @@
           }
         },
         "DanmakuTransport": {
-          "description": "使用的弹幕服务器传输协议\n默认: DanmakuTransportMode.Random",
-          "markdownDescription": "使用的弹幕服务器传输协议  \n默认: `DanmakuTransportMode.Random `\n\n",
+          "description": "使用的弹幕服务器传输协议\n默认: DanmakuTransportMode.Wss",
+          "markdownDescription": "使用的弹幕服务器传输协议  \n默认: `DanmakuTransportMode.Wss `\n\n",
           "type": "object",
           "additionalProperties": false,
           "properties": {
