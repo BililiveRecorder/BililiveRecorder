@@ -15,9 +15,10 @@ namespace BililiveRecorder.Core.Api.Http
     internal class HttpApiClient : IApiClient, IDanmakuServerApiClient, ICookieTester
     {
         internal const string HttpHeaderAccept = "application/json, text/javascript, */*; q=0.01";
+        internal const string HttpHeaderAcceptLanguage = "zh-CN";
         internal const string HttpHeaderReferer = "https://live.bilibili.com/";
         internal const string HttpHeaderOrigin = "https://live.bilibili.com";
-        internal const string HttpHeaderUserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36";
+        internal const string HttpHeaderUserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36";
         private static readonly Regex matchCookieUidRegex = new Regex(@"DedeUserID=(\d+?);", RegexOptions.Compiled);
         private static readonly Regex matchCookieBuvid3Regex = new Regex(@"buvid3=(.+?);", RegexOptions.Compiled);
         private long uid;
@@ -49,6 +50,7 @@ namespace BililiveRecorder.Core.Api.Http
             };
             var headers = client.DefaultRequestHeaders;
             headers.Add("Accept", HttpHeaderAccept);
+            headers.Add("Accept-Language", HttpHeaderAcceptLanguage);
             headers.Add("Origin", HttpHeaderOrigin);
             headers.Add("Referer", HttpHeaderReferer);
             headers.Add("User-Agent", HttpHeaderUserAgent);
@@ -59,7 +61,7 @@ namespace BililiveRecorder.Core.Api.Http
                 headers.Add("Cookie", cookie_string);
                 long.TryParse(matchCookieUidRegex.Match(cookie_string).Groups[1].Value, out var uid);
                 this.uid = uid;
-                string buvid3 = matchCookieBuvid3Regex.Match(cookie_string).Groups[1].Value;
+                var buvid3 = matchCookieBuvid3Regex.Match(cookie_string).Groups[1].Value;
                 if (!string.IsNullOrWhiteSpace(buvid3))
                     this.buvid3 = buvid3;
                 else
@@ -137,7 +139,7 @@ namespace BililiveRecorder.Core.Api.Http
             if (jo["code"]?.ToObject<int>() != 0)
                 return (false, $"Response:\n{resp}");
 
-            string message = $@"User: {jo["data"]?["uname"]?.ToObject<string>()}
+            var message = $@"User: {jo["data"]?["uname"]?.ToObject<string>()}
 UID (from API response): {jo["data"]?["uid"]?.ToObject<string>()}
 UID (from Cookie): {this.GetUid()}
 BUVID3 (from Cookie): {this.GetBuvid3()}";

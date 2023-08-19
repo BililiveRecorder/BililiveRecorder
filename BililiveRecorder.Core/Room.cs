@@ -209,6 +209,8 @@ namespace BililiveRecorder.Core
             var room = (await this.apiClient.GetRoomInfoAsync(this.RoomConfig.RoomId).ConfigureAwait(false)).Data;
             if (room != null)
             {
+                this.logger.Debug("拉取房间信息成功: {@room}", room);
+
                 this.RoomConfig.RoomId = room.Room.RoomId;
                 this.ShortId = room.Room.ShortId;
                 this.Uid = room.Room.Uid;
@@ -479,7 +481,7 @@ namespace BililiveRecorder.Core
         {
             const int MAX_ATTEMPT = 3;
             var attempt = 0;
-retry:
+        retry:
             try
             {
                 var coverUrl = this.RawBilibiliApiJsonData?["room_info"]?["cover"]?.ToObject<string>();
@@ -575,12 +577,15 @@ retry:
             switch (d.MsgType)
             {
                 case Api.Danmaku.DanmakuMsgType.LiveStart:
+                    this.logger.Debug("推送直播开始");
                     this.Streaming = true;
                     break;
                 case Api.Danmaku.DanmakuMsgType.LiveEnd:
+                    this.logger.Debug("推送直播结束");
                     this.Streaming = false;
                     break;
                 case Api.Danmaku.DanmakuMsgType.RoomChange:
+                    this.logger.Debug("推送房间信息变更, {Title}, {AreaNameParent}, {AreaNameChild}", d.Title, d.ParentAreaName, d.AreaName);
                     this.Title = d.Title ?? this.Title;
                     this.AreaNameParent = d.ParentAreaName ?? this.AreaNameParent;
                     this.AreaNameChild = d.AreaName ?? this.AreaNameChild;
