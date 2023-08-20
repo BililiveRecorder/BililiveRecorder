@@ -626,7 +626,8 @@ namespace BililiveRecorder.Core
         {
             this.StartDamakuConnection(delay: false);
 
-            if (this.RoomConfig.AutoRecord)
+            // 如果开启了自动录制 或者 还没有获取过第一次房间信息
+            if (this.RoomConfig.AutoRecord || !this.danmakuConnectHoldOff.IsSet)
             {
                 _ = Task.Run(async () =>
                 {
