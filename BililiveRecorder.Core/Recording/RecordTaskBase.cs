@@ -244,10 +244,8 @@ namespace BililiveRecorder.Core.Recording
             }
 
             const int DefaultQn = 10000;
-            var codecItem = await this.apiClient.GetCodecItemInStreamUrlAsync(roomid: roomid, qn: DefaultQn).ConfigureAwait(false);
-
-            if (codecItem is null)
-                throw new Exception("no supported stream url, qn: " + DefaultQn);
+            var codecItem = await this.apiClient.GetCodecItemInStreamUrlAsync(roomid: roomid, qn: DefaultQn).ConfigureAwait(false)
+                ?? throw new Exception("no supported stream url, qn: " + DefaultQn);
 
             int selected_qn;
             // Select first avaiable qn
@@ -331,7 +329,7 @@ match_qn_success:
                         streamHostInfoBuilder.Append(originalUri.Host);
                         streamHostInfoBuilder.Append(" [");
                         streamHostInfoBuilder.Append(scriptIp);
-                        streamHostInfoBuilder.Append("]");
+                        streamHostInfoBuilder.Append(']');
 
                         goto sendRequest;
                     }
@@ -367,7 +365,7 @@ match_qn_success:
                     streamHostInfoBuilder.Append(originalUri.Host);
                     streamHostInfoBuilder.Append(" [");
                     streamHostInfoBuilder.Append(selected);
-                    streamHostInfoBuilder.Append("]");
+                    streamHostInfoBuilder.Append(']');
 
                     if (selected is null)
                     {

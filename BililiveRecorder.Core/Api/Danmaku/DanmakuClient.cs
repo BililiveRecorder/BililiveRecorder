@@ -66,7 +66,7 @@ namespace BililiveRecorder.Core.Api.Danmaku
             StatusChanged?.Invoke(this, StatusChangedEventArgs.False);
         }
 
-        public async Task ConnectAsync(int roomid, DanmakuTransportMode transportMode, CancellationToken cancellationToken)
+        public async Task ConnectAsync(int roomId, DanmakuTransportMode transportMode, CancellationToken cancellationToken)
         {
             if (this.disposedValue)
                 throw new ObjectDisposedException(nameof(DanmakuClient));
@@ -74,19 +74,19 @@ namespace BililiveRecorder.Core.Api.Danmaku
             if (!Enum.IsDefined(typeof(DanmakuTransportMode), transportMode))
                 throw new ArgumentOutOfRangeException(nameof(transportMode), transportMode, "Invalid danmaku transport mode.");
 
-            await this.semaphoreSlim.WaitAsync().ConfigureAwait(false);
+            await this.semaphoreSlim.WaitAsync(cancellationToken).ConfigureAwait(false);
             try
             {
                 if (this.danmakuTransport != null)
                     return;
 
-                var serverInfo = await this.apiClient.GetDanmakuServerAsync(roomid).ConfigureAwait(false);
+                var serverInfo = await this.apiClient.GetDanmakuServerAsync(roomId).ConfigureAwait(false);
                 if (serverInfo.Data is null)
                     return;
 
                 var danmakuServerInfo = serverInfo.Data.SelectDanmakuServer(transportMode);
 
-                this.logger.Debug("连接弹幕服务器 {Mode} {Host}:{Port} 房间: {RoomId} TokenLength: {TokenLength}", danmakuServerInfo.TransportMode, danmakuServerInfo.Host, danmakuServerInfo.Port, roomid, danmakuServerInfo.Token?.Length);
+                this.logger.Debug("连接弹幕服务器 {Mode} {Host}:{Port} 房间: {RoomId} TokenLength: {TokenLength}", danmakuServerInfo.TransportMode, danmakuServerInfo.Host, danmakuServerInfo.Port, roomId, danmakuServerInfo.Token?.Length);
 
                 IDanmakuTransport transport = danmakuServerInfo.TransportMode switch
                 {
@@ -100,7 +100,7 @@ namespace BililiveRecorder.Core.Api.Danmaku
 
                 this.danmakuTransport = transport;
 
-                await this.SendHelloAsync(roomid, this.apiClient.GetUid(), this.apiClient.GetBuvid3(), danmakuServerInfo.Token ?? string.Empty).ConfigureAwait(false);
+                await this.SendHelloAsync(roomId, this.apiClient.GetUid(), this.apiClient.GetBuvid3(), danmakuServerInfo.Token ?? string.Empty).ConfigureAwait(false);
                 await this.SendPingAsync().ConfigureAwait(false);
 
                 if (cancellationToken.IsCancellationRequested)
@@ -129,7 +129,7 @@ namespace BililiveRecorder.Core.Api.Danmaku
                         await this.DisconnectAsync().ConfigureAwait(false);
                     }
                     catch (Exception) { }
-                });
+                }, CancellationToken.None);
             }
             finally
             {
@@ -370,7 +370,7 @@ namespace BililiveRecorder.Core.Api.Danmaku
                 case 5:
                     {
                         if (buffer.Length > int.MaxValue)
-                            throw new ArgumentOutOfRangeException("ParseCommandNormalBody buffer length larger than int.MaxValue");
+                            throw new ArgumentOutOfRangeException(nameof(buffer), "ParseCommandNormalBody buffer length larger than int.MaxValue");
 
                         var b = ArrayPool<byte>.Shared.Rent((int)buffer.Length);
                         try

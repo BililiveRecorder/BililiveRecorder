@@ -59,7 +59,7 @@ namespace BililiveRecorder.Core.Api.Http
             if (!string.IsNullOrWhiteSpace(cookie_string))
             {
                 headers.Add("Cookie", cookie_string);
-                long.TryParse(matchCookieUidRegex.Match(cookie_string).Groups[1].Value, out var uid);
+                _ = long.TryParse(matchCookieUidRegex.Match(cookie_string).Groups[1].Value, out var uid);
                 this.uid = uid;
                 var buvid3 = matchCookieBuvid3Regex.Match(cookie_string).Groups[1].Value;
                 if (!string.IsNullOrWhiteSpace(buvid3))

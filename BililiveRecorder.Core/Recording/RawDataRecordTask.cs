@@ -59,14 +59,24 @@ namespace BililiveRecorder.Core.Recording
 
                 while (!this.ct.IsCancellationRequested)
                 {
+#if NET6_0_OR_GREATER
+                    var bytesRead = await stream.ReadAsync(buffer, this.ct).ConfigureAwait(false);
+#else
                     var bytesRead = await stream.ReadAsync(buffer, 0, buffer.Length, this.ct).ConfigureAwait(false);
+#endif
                     if (bytesRead == 0)
                         break;
 
                     Interlocked.Add(ref this.ioNetworkDownloadedBytes, bytesRead);
 
                     this.ioDiskStopwatch.Restart();
+
+#if NET6_0_OR_GREATER
+                    await file.WriteAsync(buffer.AsMemory(0, bytesRead)).ConfigureAwait(false);
+#else
                     await file.WriteAsync(buffer, 0, bytesRead).ConfigureAwait(false);
+#endif
+
                     this.ioDiskStopwatch.Stop();
 
                     lock (this.ioDiskStatsLock)

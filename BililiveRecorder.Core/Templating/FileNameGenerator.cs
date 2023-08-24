@@ -246,21 +246,21 @@ returnDefaultPath:
             var fullChild = Path.GetFullPath(child);
 
             var parentSegments = fullParent.Split(separator, StringSplitOptions.None).AsSpan();
-            if (parentSegments[parentSegments.Length - 1] == "")
+            if (parentSegments[^1] == "")
             {
-                parentSegments = parentSegments.Slice(0, parentSegments.Length - 1);
+                parentSegments = parentSegments[..^1];
             }
 
             var childSegments = fullChild.Split(separator, StringSplitOptions.None).AsSpan();
-            if (childSegments[childSegments.Length - 1] == "")
+            if (childSegments[^1] == "")
             {
-                childSegments = childSegments.Slice(0, childSegments.Length - 1);
+                childSegments = childSegments[..^1];
             }
 
             if (parentSegments.Length >= childSegments.Length)
                 return false;
 
-            return childSegments.Slice(0, parentSegments.Length).SequenceEqual(parentSegments);
+            return childSegments[..parentSegments.Length].SequenceEqual(parentSegments);
         }
     }
 }
