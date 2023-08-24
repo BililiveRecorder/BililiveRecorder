@@ -30,13 +30,16 @@ namespace BililiveRecorder.Core.Api.Danmaku
 
             if (headerHashTable.GetValue(null) is not Hashtable table) return;
 
-            var info = table["User-Agent"];
-            if (info is null) return;
+            foreach (var key in new[] { "User-Agent", "Referer", "Accept" })
+            {
+                var info = table[key];
+                if (info is null) continue;
 
-            var isRequestRestrictedProperty = info.GetType().GetField("IsRequestRestricted", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic);
-            if (isRequestRestrictedProperty is null) return;
+                var isRequestRestrictedProperty = info.GetType().GetField("IsRequestRestricted", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic);
+                if (isRequestRestrictedProperty is null) continue;
 
-            isRequestRestrictedProperty.SetValue(info, false);
+                isRequestRestrictedProperty.SetValue(info, false);
+            }
         }
 
         public DanmakuTransportWebSocket()
@@ -48,8 +51,12 @@ namespace BililiveRecorder.Core.Api.Danmaku
             options.Proxy = null;
             options.Cookies = null;
             options.SetRequestHeader("Origin", HttpApiClient.HttpHeaderOrigin);
-            options.SetRequestHeader("Accept-Language", HttpApiClient.HttpHeaderAcceptLanguage);
+            options.SetRequestHeader("Referer", HttpApiClient.HttpHeaderReferer);
             options.SetRequestHeader("User-Agent", HttpApiClient.HttpHeaderUserAgent);
+            options.SetRequestHeader("Accept-Language", HttpApiClient.HttpHeaderAcceptLanguage);
+            options.SetRequestHeader("Accept", "*/*");
+            options.SetRequestHeader("Pragma", "no-cache");
+            options.SetRequestHeader("Cache-Control", "no-cache");
         }
 
         public async Task<PipeReader> ConnectAsync(string host, int port, CancellationToken cancellationToken)
