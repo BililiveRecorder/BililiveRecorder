@@ -3,7 +3,7 @@
         <Copyright>Copyright © 2018-2023 Genteure</Copyright>
         <Authors>Genteure</Authors>
         <Company>$(Authors)</Company>
-        <LangVersion>9.0</LangVersion>
+        <LangVersion>11.0</LangVersion>
         <Nullable>enable</Nullable>
     </PropertyGroup>
     <Target Name="_DisableCommandLineWarnings" BeforeTargets="ValidateCommandLineProperties">
