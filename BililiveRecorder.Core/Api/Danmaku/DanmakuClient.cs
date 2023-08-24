@@ -1,6 +1,7 @@
 using System;
 using System.Buffers;
 using System.Buffers.Binary;
+using System.IO;
 using System.IO.Compression;
 using System.IO.Pipelines;
 using System.Net;
@@ -221,7 +222,7 @@ namespace BililiveRecorder.Core.Api.Danmaku
             {
                 uid,
                 roomid,
-                protover = 0,
+                protover = 3,
                 buvid,
                 platform = "web",
                 type = 2,
@@ -334,17 +335,28 @@ namespace BililiveRecorder.Core.Api.Danmaku
             }
 
             if (header.Version == 2 && header.Action == 5)
-                ParseCommandDeflateBody(ref bodySlice, callback);
+            {
+                using var deflate = new DeflateStream(bodySlice.Slice(2, bodySlice.End).AsStream(), CompressionMode.Decompress, leaveOpen: false);
+                ParseCommandCompressedBody(deflate, callback);
+            }
+            else if (header.Version == 3 && header.Action == 5)
+            {
+#if NET6_0_OR_GREATER
+                using var brotli = new BrotliStream(bodySlice.AsStream(), CompressionMode.Decompress, leaveOpen: false);
+#else
+                using var brotli = new BrotliSharpLib.BrotliStream(bodySlice.AsStream(), CompressionMode.Decompress, leaveOpen: false);
+#endif
+                ParseCommandCompressedBody(brotli, callback);
+            }
             else
                 ParseCommandNormalBody(ref bodySlice, header.Action, callback);
 
             return true;
         }
 
-        private static void ParseCommandDeflateBody(ref ReadOnlySequence<byte> buffer, Action<string> callback)
+        private static void ParseCommandCompressedBody(Stream decompressed, Action<string> callback)
         {
-            using var deflate = new DeflateStream(buffer.Slice(2, buffer.End).AsStream(), CompressionMode.Decompress, leaveOpen: false);
-            var reader = PipeReader.Create(deflate);
+            var reader = PipeReader.Create(decompressed);
             while (true)
             {
 #pragma warning disable VSTHRD002 // Avoid problematic synchronous waits

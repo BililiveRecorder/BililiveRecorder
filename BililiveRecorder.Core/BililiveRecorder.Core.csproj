@@ -38,6 +38,7 @@
   
   <ItemGroup Condition="'$(TargetFramework)' == 'net472'">
     <Reference Include="System.Web" />
+    <PackageReference Include="BrotliSharpLib" Version="0.3.3" />
   </ItemGroup>
   
 </Project>
