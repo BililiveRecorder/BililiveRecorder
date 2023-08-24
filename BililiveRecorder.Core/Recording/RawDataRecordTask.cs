@@ -31,7 +31,7 @@ namespace BililiveRecorder.Core.Recording
             var (fullPath, relativePath) = this.CreateFileName();
 
             try
-            { Directory.CreateDirectory(Path.GetDirectoryName(fullPath)); }
+            { Directory.CreateDirectory(Path.GetDirectoryName(fullPath)!); }
             catch (Exception) { }
 
             this.fileOpeningEventArgs = new RecordFileOpeningEventArgs(this.room)
@@ -110,12 +110,24 @@ namespace BililiveRecorder.Core.Recording
                     recordFileClosedEvent = null;
 
                 try
-                { file.Dispose(); }
+                {
+#if NET6_0_OR_GREATER
+                    await file.DisposeAsync();
+#else
+                    file.Dispose();
+#endif
+                }
                 catch (Exception ex)
                 { this.logger.Warning(ex, "关闭文件时发生错误"); }
 
                 try
-                { stream.Dispose(); }
+                {
+#if NET6_0_OR_GREATER
+                    await stream.DisposeAsync();
+#else
+                    stream.Dispose();
+#endif
+                }
                 catch (Exception) { }
 
                 try

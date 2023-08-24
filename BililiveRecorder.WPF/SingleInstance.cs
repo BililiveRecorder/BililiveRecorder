@@ -68,7 +68,9 @@ namespace BililiveRecorder.WPF
 
         private class IPCRemoteService : MarshalByRefObject
         {
+#pragma warning disable VSTHRD110 // Observe result of async calls
             public void Notify() => Application.Current?.Dispatcher.BeginInvoke(DispatcherPriority.Normal, (Action)ActivateFirstInstanceCallback);
+#pragma warning restore VSTHRD110 // Observe result of async calls
             public override object? InitializeLifetimeService() => null;
         }
     }

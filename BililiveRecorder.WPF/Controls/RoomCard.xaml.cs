@@ -26,7 +26,9 @@ namespace BililiveRecorder.WPF.Controls
 
         private void MenuItem_StopRecording_Click(object sender, RoutedEventArgs e) => (this.DataContext as IRoom)?.StopRecord();
 
+#pragma warning disable VSTHRD110 // Observe result of async calls
         private void MenuItem_RefreshInfo_Click(object sender, RoutedEventArgs e) => (this.DataContext as IRoom)?.RefreshRoomInfoAsync();
+#pragma warning restore VSTHRD110 // Observe result of async calls
 
         private void MenuItem_StartMonitor_Click(object sender, RoutedEventArgs e)
         {

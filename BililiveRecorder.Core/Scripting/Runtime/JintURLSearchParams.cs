@@ -43,9 +43,9 @@ namespace BililiveRecorder.Core.Scripting.Runtime
             this.query.Remove(name);
         }
 
-        public string[][] Entries()
+        public string?[][] Entries()
         {
-            return this.query.Select(x => new string[] { x.Name, x.Value.ToString() }).ToArray();
+            return this.query.Select(x => new string?[] { x.Name, x.Value.ToString() }).ToArray();
         }
 
         public void ForEach(FunctionInstance callback, JsValue thisArg)
@@ -63,7 +63,7 @@ namespace BililiveRecorder.Core.Scripting.Runtime
             return this.query.TryGetFirst(name, out var value) ? value.ToString() : null;
         }
 
-        public string[] GetAll(string name)
+        public string?[] GetAll(string name)
         {
             return this.query.GetAll(name).Select(x => x.ToString()).ToArray();
         }
@@ -93,7 +93,7 @@ namespace BililiveRecorder.Core.Scripting.Runtime
             return this.query.ToString();
         }
 
-        public string[] Values()
+        public string?[] Values()
         {
             return this.query.Select(x => x.Value.ToString()).ToArray();
         }

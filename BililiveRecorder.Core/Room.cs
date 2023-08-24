@@ -402,7 +402,7 @@ namespace BililiveRecorder.Core
         #region Event Handlers
 
         ///
-        private void RecordTask_IOStats(object sender, IOStatsEventArgs e)
+        private void RecordTask_IOStats(object? sender, IOStatsEventArgs e)
         {
             this.logger.Verbose("IO stats: {@stats}", e);
 
@@ -420,7 +420,7 @@ namespace BililiveRecorder.Core
         }
 
         ///
-        private void RecordTask_RecordingStats(object sender, RecordingStatsEventArgs e)
+        private void RecordTask_RecordingStats(object? sender, RecordingStatsEventArgs e)
         {
             this.logger.Verbose("Recording stats: {@stats}", e);
 
@@ -454,7 +454,7 @@ namespace BililiveRecorder.Core
         }
 
         ///
-        private void RecordTask_RecordFileClosed(object sender, RecordFileClosedEventArgs e)
+        private void RecordTask_RecordFileClosed(object? sender, RecordFileClosedEventArgs e)
         {
             this.basicDanmakuWriter.Disable();
 
@@ -462,7 +462,7 @@ namespace BililiveRecorder.Core
         }
 
         ///
-        private void RecordTask_RecordFileOpening(object sender, RecordFileOpeningEventArgs e)
+        private void RecordTask_RecordFileOpening(object? sender, RecordFileOpeningEventArgs e)
         {
             if (this.RoomConfig.RecordDanmaku)
                 this.basicDanmakuWriter.EnableWithPath(Path.ChangeExtension(e.FullPath, "xml"), this);
@@ -481,7 +481,7 @@ namespace BililiveRecorder.Core
         {
             const int MAX_ATTEMPT = 3;
             var attempt = 0;
-        retry:
+retry:
             try
             {
                 var coverUrl = this.RawBilibiliApiJsonData?["room_info"]?["cover"]?.ToObject<string>();
@@ -513,7 +513,7 @@ namespace BililiveRecorder.Core
         }
 
         ///
-        private void RecordTask_RecordSessionEnded(object sender, EventArgs e)
+        private void RecordTask_RecordSessionEnded(object? sender, EventArgs e)
         {
             Guid id;
             lock (this.recordStartLock)
@@ -570,7 +570,7 @@ namespace BililiveRecorder.Core
             return this.userScriptRunner.CallOnDanmakuHandshake(this.logger, this, json);
         }
 
-        private void DanmakuClient_DanmakuReceived(object sender, Api.Danmaku.DanmakuReceivedEventArgs e)
+        private void DanmakuClient_DanmakuReceived(object? sender, Api.Danmaku.DanmakuReceivedEventArgs e)
         {
             var d = e.Danmaku;
 
@@ -603,7 +603,7 @@ namespace BililiveRecorder.Core
             _ = Task.Run(async () => await this.basicDanmakuWriter.WriteAsync(d));
         }
 
-        private void DanmakuClient_StatusChanged(object sender, Api.Danmaku.StatusChangedEventArgs e)
+        private void DanmakuClient_StatusChanged(object? sender, Api.Danmaku.StatusChangedEventArgs e)
         {
             this.DanmakuConnected = e.Connected;
             if (e.Connected)
@@ -622,7 +622,7 @@ namespace BililiveRecorder.Core
             }
         }
 
-        private void Timer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
+        private void Timer_Elapsed(object? sender, System.Timers.ElapsedEventArgs e)
         {
             this.StartDamakuConnection(delay: false);
 
@@ -645,7 +645,7 @@ namespace BililiveRecorder.Core
             }
         }
 
-        private void Room_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        private void Room_PropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
             switch (e.PropertyName)
             {
@@ -666,7 +666,7 @@ namespace BililiveRecorder.Core
             }
         }
 
-        private void RoomConfig_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        private void RoomConfig_PropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
             switch (e.PropertyName)
             {

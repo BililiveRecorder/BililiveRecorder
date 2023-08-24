@@ -77,7 +77,7 @@ namespace BililiveRecorder.Core.Api.Http
             old?.Dispose();
         }
 
-        private void Config_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        private void Config_PropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
             if (e.PropertyName is (nameof(this.config.Cookie)) or (nameof(this.config.TimingApiTimeout)))
                 this.UpdateHttpClient();

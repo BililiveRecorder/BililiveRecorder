@@ -115,9 +115,19 @@ namespace BililiveRecorder.Core.Recording
             {
                 try
                 {
+                    if (state is not WeakReference<Stream> weakRef)
+                        return;
+
                     await Task.Delay(1000);
-                    if (((WeakReference<Stream>)state).TryGetTarget(out var weakStream))
+
+                    if (weakRef.TryGetTarget(out var weakStream))
+                    {
+#if NET6_0_OR_GREATER
+                        await weakStream.DisposeAsync();
+#else
                         weakStream.Dispose();
+#endif
+                    }
                 }
                 catch (Exception)
                 { }
@@ -128,7 +138,7 @@ namespace BililiveRecorder.Core.Recording
 
         protected abstract void StartRecordingLoop(Stream stream);
 
-        private void Timer_Elapsed_TriggerIOStats(object sender, ElapsedEventArgs e)
+        private void Timer_Elapsed_TriggerIOStats(object? sender, ElapsedEventArgs e)
         {
             int networkDownloadBytes, diskWriteBytes;
             TimeSpan durationDiff, diskWriteDuration;
@@ -161,7 +171,7 @@ namespace BililiveRecorder.Core.Recording
 
             this.OnIOStats(new IOStatsEventArgs
             {
-                StreamHost = streamHost,
+                StreamHost = this.streamHost,
                 NetworkBytesDownloaded = networkDownloadBytes,
                 Duration = durationDiff,
                 StartTime = startTime,
@@ -253,7 +263,7 @@ namespace BililiveRecorder.Core.Recording
             this.logger.Information("没有符合设置要求的画质，稍后再试。设置画质 {QnSettings}, 可用画质 {AcceptQn}", qns, codecItem.AcceptQn);
             throw new NoMatchingQnValueException();
 
-        match_qn_success:
+match_qn_success:
             this.logger.Debug("设置画质 {QnSettings}, 可用画质 {AcceptQn}, 最终选择 {SelectedQn}", qns, codecItem.AcceptQn, selected_qn);
 
             if (selected_qn != DefaultQn)
@@ -373,7 +383,7 @@ namespace BililiveRecorder.Core.Recording
                     request.Headers.Host = originalUri.IsDefaultPort ? originalUri.Host : originalUri.Host + ":" + originalUri.Port;
                 }
 
-            sendRequest:
+sendRequest:
 
                 var resp = await client.SendAsync(request,
                      HttpCompletionOption.ResponseHeadersRead,
@@ -392,8 +402,8 @@ namespace BililiveRecorder.Core.Recording
                     case HttpStatusCode.Moved:
                     case HttpStatusCode.Redirect:
                         {
-                            fullUrl = new Uri(originalUri, resp.Headers.Location).ToString();
-                            this.logger.Debug("跳转到 {Url}, 原文本 {Location}", fullUrl, resp.Headers.Location.OriginalString);
+                            fullUrl = new Uri(originalUri, resp.Headers.Location!).ToString();
+                            this.logger.Debug("跳转到 {Url}, 原文本 {Location}", fullUrl, resp.Headers.Location!.OriginalString);
                             resp.Dispose();
                             streamHostInfoBuilder.Append('\n');
                             break;

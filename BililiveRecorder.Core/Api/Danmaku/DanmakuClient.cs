@@ -153,7 +153,7 @@ namespace BililiveRecorder.Core.Api.Danmaku
         }
 
 #pragma warning disable VSTHRD100 // Avoid async void methods
-        private async void SendPingMessageTimerCallback(object sender, ElapsedEventArgs e)
+        private async void SendPingMessageTimerCallback(object? sender, ElapsedEventArgs e)
 #pragma warning restore VSTHRD100 // Avoid async void methods
         {
             try
@@ -248,9 +248,9 @@ namespace BililiveRecorder.Core.Api.Danmaku
             if (this.danmakuTransport is not { } transport)
                 return;
 
-            var playload = ((body?.Length ?? 0) > 0) ? Encoding.UTF8.GetBytes(body) : Array.Empty<byte>();
+            var payload = Encoding.UTF8.GetBytes(body);
             const int headerLength = 16;
-            var totalLength = playload.Length + headerLength;
+            var totalLength = payload.Length + headerLength;
 
             var buffer = ArrayPool<byte>.Shared.Rent(totalLength);
             try
@@ -261,8 +261,8 @@ namespace BililiveRecorder.Core.Api.Danmaku
                 BinaryPrimitives.WriteUInt32BigEndian(new Span<byte>(buffer, 8, 4), (uint)action);
                 BinaryPrimitives.WriteUInt32BigEndian(new Span<byte>(buffer, 12, 4), 1);
 
-                if (playload.Length > 0)
-                    Array.Copy(playload, 0, buffer, headerLength, playload.Length);
+                if (payload.Length > 0)
+                    Array.Copy(payload, 0, buffer, headerLength, payload.Length);
 
                 await transport.SendAsync(buffer, 0, totalLength).ConfigureAwait(false);
             }

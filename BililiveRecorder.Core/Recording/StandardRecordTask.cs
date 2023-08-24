@@ -151,7 +151,11 @@ namespace BililiveRecorder.Core.Recording
             finally
             {
                 this.timer.Stop();
+#if NET6_0_OR_GREATER
+                await stream.DisposeAsync().ConfigureAwait(false);
+#else
                 stream.Dispose();
+#endif
                 await writer.CompleteAsync(exception).ConfigureAwait(false);
             }
         }
@@ -265,7 +269,7 @@ namespace BililiveRecorder.Core.Recording
             }
         }
 
-        private void StatsRule_StatsUpdated(object sender, RecordingStatsEventArgs e)
+        private void StatsRule_StatsUpdated(object? sender, RecordingStatsEventArgs e)
         {
             switch (this.room.RoomConfig.CuttingMode)
             {
@@ -300,7 +304,7 @@ namespace BililiveRecorder.Core.Recording
                 var paths = this.task.CreateFileName();
 
                 try
-                { _ = Directory.CreateDirectory(Path.GetDirectoryName(paths.fullPath)); }
+                { _ = Directory.CreateDirectory(Path.GetDirectoryName(paths.fullPath)!); }
                 catch (Exception) { }
 
                 this.last_path = paths.fullPath;
@@ -317,7 +321,7 @@ namespace BililiveRecorder.Core.Recording
                     : Path.ChangeExtension(this.last_path, "txt");
 
                 try
-                { _ = Directory.CreateDirectory(Path.GetDirectoryName(path)); }
+                { _ = Directory.CreateDirectory(Path.GetDirectoryName(path)!); }
                 catch (Exception) { }
 
                 var stream = new FileStream(path, FileMode.Append, FileAccess.Write, FileShare.Read);

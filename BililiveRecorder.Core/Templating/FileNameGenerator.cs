@@ -108,7 +108,7 @@ namespace BililiveRecorder.Core.Templating
             relativePath = template.Render(context);
             relativePath = RemoveInvalidFileName(relativePath);
 
-            fullPath = skipFullPath ? null : Path.GetFullPath(Path.Combine(workDirectory, relativePath));
+            fullPath = workDirectory is null ? null : Path.GetFullPath(Path.Combine(workDirectory, relativePath));
 
             if (!skipFullPath && !CheckIsWithinPath(workDirectory!, fullPath!))
             {
@@ -138,9 +138,9 @@ namespace BililiveRecorder.Core.Templating
 
             return new FileNameTemplateOutput(status, errorMessage, relativePath, fullPath);
 
-        returnDefaultPath:
+returnDefaultPath:
             var defaultRelativePath = RemoveInvalidFileName(defaultTemplate.Render(context));
-            var defaultFullPath = skipFullPath ? null : Path.GetFullPath(Path.Combine(workDirectory, defaultRelativePath));
+            var defaultFullPath = workDirectory is null ? null : Path.GetFullPath(Path.Combine(workDirectory, defaultRelativePath));
 
             return new FileNameTemplateOutput(status, errorMessage, defaultRelativePath, defaultFullPath);
         }
@@ -230,7 +230,7 @@ namespace BililiveRecorder.Core.Templating
         internal static string RemoveInvalidFileName(string input, bool ignore_slash = true)
         {
             foreach (var c in Path.GetInvalidFileNameChars())
-                if (!ignore_slash || c != '\\' && c != '/')
+                if (!ignore_slash || (c != '\\' && c != '/'))
                     input = input.Replace(c, '_');
 
             input = invalidDirectoryNameRegex.Replace(input, "$1_$2");

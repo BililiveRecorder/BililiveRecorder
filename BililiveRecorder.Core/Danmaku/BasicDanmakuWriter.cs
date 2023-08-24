@@ -58,7 +58,7 @@ namespace BililiveRecorder.Core.Danmaku
                     this.xmlWriter = null;
                 }
 
-                try { Directory.CreateDirectory(Path.GetDirectoryName(path)); } catch (Exception) { }
+                try { Directory.CreateDirectory(Path.GetDirectoryName(path)!); } catch (Exception) { }
                 var stream = File.Open(path, FileMode.Create, FileAccess.Write, FileShare.Read);
 
                 this.config = room.RoomConfig;

@@ -125,48 +125,48 @@ namespace BililiveRecorder.Core
 
         #region Events
 
-        private void Room_IOStats(object sender, IOStatsEventArgs e)
+        private void Room_IOStats(object? sender, IOStatsEventArgs e)
         {
-            var room = (IRoom)sender;
+            if (sender is not IRoom room) return;
             IOStats?.Invoke(this, new AggregatedRoomEventArgs<IOStatsEventArgs>(room, e));
         }
 
-        private void Room_RecordingStats(object sender, RecordingStatsEventArgs e)
+        private void Room_RecordingStats(object? sender, RecordingStatsEventArgs e)
         {
-            var room = (IRoom)sender;
+            if (sender is not IRoom room) return;
             RecordingStats?.Invoke(this, new AggregatedRoomEventArgs<RecordingStatsEventArgs>(room, e));
         }
 
-        private void Room_RecordFileClosed(object sender, RecordFileClosedEventArgs e)
+        private void Room_RecordFileClosed(object? sender, RecordFileClosedEventArgs e)
         {
-            var room = (IRoom)sender;
+            if (sender is not IRoom room) return;
             _ = Task.Run(async () => await this.basicWebhookV2.SendFileClosedAsync(e).ConfigureAwait(false));
             _ = Task.Run(async () => await this.basicWebhookV1.SendAsync(new RecordEndData(e)).ConfigureAwait(false));
             RecordFileClosed?.Invoke(this, new AggregatedRoomEventArgs<RecordFileClosedEventArgs>(room, e));
         }
 
-        private void Room_RecordFileOpening(object sender, RecordFileOpeningEventArgs e)
+        private void Room_RecordFileOpening(object? sender, RecordFileOpeningEventArgs e)
         {
-            var room = (IRoom)sender;
+            if (sender is not IRoom room) return;
             _ = Task.Run(async () => await this.basicWebhookV2.SendFileOpeningAsync(e).ConfigureAwait(false));
             RecordFileOpening?.Invoke(this, new AggregatedRoomEventArgs<RecordFileOpeningEventArgs>(room, e));
         }
 
-        private void Room_RecordSessionStarted(object sender, RecordSessionStartedEventArgs e)
+        private void Room_RecordSessionStarted(object? sender, RecordSessionStartedEventArgs e)
         {
-            var room = (IRoom)sender;
+            if (sender is not IRoom room) return;
             _ = Task.Run(async () => await this.basicWebhookV2.SendSessionStartedAsync(e).ConfigureAwait(false));
             RecordSessionStarted?.Invoke(this, new AggregatedRoomEventArgs<RecordSessionStartedEventArgs>(room, e));
         }
 
-        private void Room_RecordSessionEnded(object sender, RecordSessionEndedEventArgs e)
+        private void Room_RecordSessionEnded(object? sender, RecordSessionEndedEventArgs e)
         {
-            var room = (IRoom)sender;
+            if (sender is not IRoom room) return;
             _ = Task.Run(async () => await this.basicWebhookV2.SendSessionEndedAsync(e).ConfigureAwait(false));
             RecordSessionEnded?.Invoke(this, new AggregatedRoomEventArgs<RecordSessionEndedEventArgs>(room, e));
         }
 
-        private void Room_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        private void Room_PropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
             if (sender is not IRoom room)
                 return;

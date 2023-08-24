@@ -155,7 +155,7 @@ namespace BililiveRecorder.Core.Config
 
             var ext = Path.GetExtension(path);
 
-            var tempPath = Path.Combine(Path.GetDirectoryName(path), Path.ChangeExtension(path, RandomString(6) + ext));
+            var tempPath = Path.Combine(Path.GetDirectoryName(path)!, Path.ChangeExtension(path, RandomString(6) + ext));
             var backupPath = Path.ChangeExtension(path, "backup" + ext);
 
             // delete any existing backups
