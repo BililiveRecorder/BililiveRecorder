@@ -82,7 +82,7 @@ dotnet build BililiveRecorder.Cli
 Project | Target |
 :--- |:--- |
 BililiveRecorder.Flv | .NET Standard 2.0 |
-BililiveRecorder.Core | .NET Standard 2.0 |
+BililiveRecorder.Core | .NET 6<br>.NET Framework 4.7.2 |
 BililiveRecorder.Toolbox | .NET Standard 2.0 |
 BililiveRecorder.WPF | .NET Framework 4.7.2 |
 BililiveRecorder.Web | .NET 6 |
