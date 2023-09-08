@@ -23,9 +23,6 @@ namespace BililiveRecorder.WPF.Pages
     public partial class RoomListPage
     {
         private static readonly ILogger logger = Log.ForContext<RoomListPage>();
-        private static readonly Regex RoomIdRegex
-            = new Regex(@"^(?:https?:\/\/)?live\.bilibili\.com\/(?:blanc\/|h5\/)?(\d*)(?:\?.*)?$",
-                RegexOptions.IgnoreCase | RegexOptions.Singleline | RegexOptions.Compiled);
 
         private readonly IRoom?[] NullRoom = new IRoom?[] { null };
 
@@ -159,7 +156,7 @@ namespace BililiveRecorder.WPF.Pages
 
             if (!int.TryParse(input, out var roomid))
             {
-                var m = RoomIdRegex.Match(input);
+                var m = RoomIdFromUrl.Regex.Match(input);
                 if (m.Success && m.Groups.Count > 1 && int.TryParse(m.Groups[1].Value, out var result2))
                 {
                     roomid = result2;

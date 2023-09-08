@@ -474,6 +474,10 @@ namespace BililiveRecorder.Core
         public readonly Microsoft.Extensions.Caching.Memory.MemoryCache memoryCache;
         public PollyPolicy() { }
     }
+    public static class RoomIdFromUrl
+    {
+        public static readonly System.Text.RegularExpressions.Regex Regex;
+    }
     public class RoomStats : System.ComponentModel.INotifyPropertyChanged
     {
         public RoomStats() { }
