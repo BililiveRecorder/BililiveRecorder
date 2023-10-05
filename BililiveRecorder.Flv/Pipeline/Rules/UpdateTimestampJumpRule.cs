@@ -14,7 +14,7 @@ namespace BililiveRecorder.Flv.Pipeline.Rules
     {
         private const string TS_STORE_KEY = "Timestamp_Store_Key";
 
-        private const int JUMP_THRESHOLD = 50;
+        private const int JUMP_THRESHOLD = 500;
 
         private const int AUDIO_DURATION_FALLBACK = 22;
         private const int AUDIO_DURATION_MIN = 20;
@@ -40,7 +40,7 @@ namespace BililiveRecorder.Flv.Pipeline.Rules
                     var tags = dataAction.Tags;
                     var currentTimestamp = tags[0].Timestamp;
 
-                    bool isFirstChunk = ts.FirstChunk;
+                    var isFirstChunk = ts.FirstChunk;
                     if (isFirstChunk)
                     {
                         // 第一段数据使用最小的时间戳作为基础偏移量
@@ -75,7 +75,7 @@ namespace BililiveRecorder.Flv.Pipeline.Rules
                 {
                     var tag = endAction.Tag;
                     var diff = tag.Timestamp - ts.LastOriginal;
-                    if (diff < 0 || diff > JUMP_THRESHOLD)
+                    if (diff is < 0 or > JUMP_THRESHOLD)
                     {
                         tag.Timestamp = ts.NextTimestampTarget;
                     }

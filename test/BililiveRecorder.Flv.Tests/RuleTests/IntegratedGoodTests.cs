@@ -58,7 +58,7 @@ namespace BililiveRecorder.Flv.Tests.RuleTests
             var originalTags = SampleFileLoader.LoadXmlFlv(path).Tags;
 
             var random = new System.Random();
-            var offset = random.Next(51, 9999);
+            var offset = random.Next(501, 9999);
             if (random.Next(2) == 1)
                 offset = -offset;
 
