@@ -29,8 +29,8 @@
     <PackageReference Include="GraphQL.SystemReactive" Version="4.8.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="6.0.8" />
     <PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="6.0.8" />
-    <PackageReference Include="NUglify" Version="1.20.2" />
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
+    <PackageReference Include="NUglify" Version="1.20.7" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
   </ItemGroup>
   
   <ItemGroup>

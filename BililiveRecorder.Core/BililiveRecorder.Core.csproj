@@ -12,15 +12,15 @@
   </PropertyGroup>
   
   <ItemGroup>
-    <PackageReference Include="Fluid.Core" Version="2.3.1" />
+    <PackageReference Include="Fluid.Core" Version="2.5.0" />
     <PackageReference Include="Flurl" Version="3.0.7" />
-    <PackageReference Include="Jint" Version="3.0.0-beta-2045" />
-    <PackageReference Include="JsonSubTypes" Version="1.9.0" />
+    <PackageReference Include="Jint" Version="3.0.0-beta-2052" />
+    <PackageReference Include="JsonSubTypes" Version="2.0.1" />
     <PackageReference Include="HierarchicalPropertyDefault" Version="0.1.4-beta-g75fdf624b1" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="6.0.0" />
-    <PackageReference Include="Microsoft.IO.RecyclableMemoryStream" Version="2.2.1" />
-    <PackageReference Include="Nerdbank.Streams" Version="2.9.112" />
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+    <PackageReference Include="Microsoft.IO.RecyclableMemoryStream" Version="2.3.2" />
+    <PackageReference Include="Nerdbank.Streams" Version="2.10.72" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="Polly" Version="7.2.3" />
     <PackageReference Include="Polly.Caching.Memory" Version="3.0.2" />
     <PackageReference Include="PolySharp" Version="1.13.2">
@@ -29,7 +29,7 @@
     </PackageReference>
     <PackageReference Include="Serilog" Version="2.12.0" />
     <PackageReference Include="StructLinq" Version="0.28.1" />
-    <PackageReference Include="System.IO.Pipelines" Version="6.0.3" />
+    <PackageReference Include="System.IO.Pipelines" Version="7.0.0" />
   </ItemGroup>
   
   <ItemGroup>
