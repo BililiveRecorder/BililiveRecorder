@@ -83,9 +83,8 @@
                                 <RadioButton GroupName="Splitting" Content="{l:Loc Settings_Splitting_RadioButton_ByTime}"
                                  IsChecked="{Binding Path=CuttingMode, Converter={StaticResource EnumToBooleanConverter},
                         ConverterParameter={x:Static config:CuttingMode.ByTime}}" />
-                                <ToggleSwitch GroupName="Splitting" Name="CutByTitleToggleSwitch" Content="{l:Loc Settings_Splitting_ToggleSwitch_ByTitle}"
-                                 IsChecked="{Binding Path=CuttingMode, Converter={StaticResource FlagsEnumToBooleanConverter}, 
-                        ConverterParameter={x:Static config:CuttingMode.ByTitle}}"/>
+                                <ui:ToggleSwitch IsOn="{Binding Path=CuttingMode, Converter={StaticResource FlagsEnumToBooleanConverter}, ConverterParameter={x:Static config:CuttingMode.ByTitle}}"
+                                         OnContent="{l:Loc Settings_Splitting_ToggleSwitch_ByTitle}" OffContent="{l:Loc Settings_Splitting_ToggleSwitch_ByTitle}"/>
                             </StackPanel>
                         </local:SettingWithDefault>
                         <local:SettingWithDefault IsSettingNotUsingDefault="{Binding HasCuttingNumber}">
