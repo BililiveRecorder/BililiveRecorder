@@ -490,7 +490,10 @@
     <value>根据视频时间自动分段</value>
   </data>
   <data name="Settings_Splitting_RadioButton_Disabled" xml:space="preserve">
-    <value>不自动分段</value>
+    <value>不要根据文件大小/视频时间自动分段</value>
+  </data>
+  <data name="Settings_Splitting_ToggleSwitch_ByTitle" xml:space="preserve">
+    <value>根据直播间标题自动分段</value>
   </data>
   <data name="Settings_Splitting_TextBox_Left" xml:space="preserve">
     <value>每</value>

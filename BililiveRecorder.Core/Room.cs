@@ -8,6 +8,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using BililiveRecorder.Core.Api;
 using BililiveRecorder.Core.Config.V3;
+using BililiveRecorder.Core.Config;
 using BililiveRecorder.Core.Danmaku;
 using BililiveRecorder.Core.Event;
 using BililiveRecorder.Core.Recording;
@@ -667,6 +668,11 @@ retry:
                     else
                     {
                         this.AutoRecordForThisSession = true;
+                    }
+                    break;
+                case nameof(this.Title):
+                    if (this.RoomConfig.CuttingMode.HasFlag(CuttingMode.ByTitle)){
+                        this.recordTask.SplitOutput();
                     }
                     break;
                 default:

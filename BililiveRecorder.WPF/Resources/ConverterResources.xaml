@@ -52,6 +52,7 @@
     <c:BooleanInverterConverter x:Key="BooleanInverterConverter"/>
     <c:ClipEnabledToBooleanConverter x:Key="ClipEnabledToBooleanConverter"/>
     <c:EnumToBooleanConverter x:Key="EnumToBooleanConverter"/>
+    <c:FlagsEnumToBooleanConverter x:Key="FlagsEnumToBooleanConverter"/>
     <c:IsNullToVisibilityConverter x:Key="IsNullToVisibilityCollapsedConverter"/>
     <c:RatioToColorBrushConverter x:Key="RatioToColorBrushConverter"/>
     <c:RatioToArrowIconConverter x:Key="RatioToArrowIconConverter" UpArrow="{StaticResource PathIconDataArrowUpBold}" DownArrow="{StaticResource PathIconDataArrowDownBold}"/>

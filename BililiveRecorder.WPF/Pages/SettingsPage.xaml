@@ -78,6 +78,11 @@
                         <TextBlock Text="{l:Loc Settings_Splitting_TextBox_TimeUnit}" Visibility="{Binding ElementName=CutByTimeRadioButton,Path=IsChecked,Converter={StaticResource BooleanToVisibilityCollapsedConverter}}"/>
                         <TextBlock Text="{l:Loc Settings_Splitting_TextBox_Right}"/>
                     </StackPanel>
+
+                    <ToggleSwitch GroupName="Splitting" Name="CutByTitleToggleSwitch" Content="{l:Loc Settings_Splitting_ToggleSwitch_ByTitle}"
+                                IsChecked="{Binding Path=CuttingMode, Converter={StaticResource FlagsEnumToBooleanConverter}, 
+                        ConverterParameter={x:Static config:CuttingMode.ByTitle}}"/>
+
                 </StackPanel>
             </GroupBox>
             <GroupBox Header="直播封面">

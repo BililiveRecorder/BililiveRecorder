@@ -58,7 +58,7 @@ namespace BililiveRecorder.Core.Recording
 
             this.statsRule = new StatsRule();
             this.splitFileRule = new SplitRule();
-
+            
             this.statsRule.StatsUpdated += this.StatsRule_StatsUpdated;
 
             this.pipeline = builder
@@ -268,20 +268,19 @@ namespace BililiveRecorder.Core.Recording
                 };
             }
         }
-
         private void StatsRule_StatsUpdated(object? sender, RecordingStatsEventArgs e)
         {
-            switch (this.room.RoomConfig.CuttingMode)
-            {
-                case CuttingMode.ByTime:
-                    if (e.FileMaxTimestamp > this.room.RoomConfig.CuttingNumber * 60u * 1000u)
-                        this.splitFileRule.SetSplitBeforeFlag();
-                    break;
-                case CuttingMode.BySize:
-                    if ((e.CurrentFileSize + (e.OutputVideoBytes * 1.1) + e.OutputAudioBytes) / (1024d * 1024d) > this.room.RoomConfig.CuttingNumber)
-                        this.splitFileRule.SetSplitBeforeFlag();
-                    break;
-            }
+            var RoomCuttingMode = this.room.RoomConfig.CuttingMode;
+            bool byTime = RoomCuttingMode.HasFlag(CuttingMode.ByTime);
+            bool bySize = RoomCuttingMode.HasFlag(CuttingMode.BySize);
+            // bool byTitle = RoomCuttingMode.HasFlag(CuttingMode.ByTitle);
+            // uint? _CuttingNumberTime = this.room.RoomConfig.CuttingNumberTime ??  this.room.RoomConfig.CuttingNumber;
+            // uint? _CuttingNumberSize = this.room.RoomConfig.CuttingNumberSize ??  this.room.RoomConfig.CuttingNumber;
+
+            if (byTime && e.FileMaxTimestamp > this.room.RoomConfig.CuttingNumber * 60u * 1000u)
+                {this.splitFileRule.SetSplitBeforeFlag();}
+            else if (bySize && (e.CurrentFileSize + (e.OutputVideoBytes * 1.1) + e.OutputAudioBytes) / (1024d * 1024d) > this.room.RoomConfig.CuttingNumber)
+                {this.splitFileRule.SetSplitBeforeFlag();}
 
             this.OnRecordingStats(e);
         }
