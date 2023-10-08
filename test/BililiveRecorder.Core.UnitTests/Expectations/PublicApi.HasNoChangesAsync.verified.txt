@@ -36,11 +36,13 @@ namespace BililiveRecorder.Core.Config
         public static string? SaveJson(BililiveRecorder.Core.Config.V3.ConfigV3 config) { }
         public static void WriteAllTextWithBackup(string path, string contents) { }
     }
+    [System.Flags]
     public enum CuttingMode
     {
         Disabled = 0,
         ByTime = 1,
         BySize = 2,
+        ByTitle = 4,
     }
     public enum DanmakuTransportMode
     {
