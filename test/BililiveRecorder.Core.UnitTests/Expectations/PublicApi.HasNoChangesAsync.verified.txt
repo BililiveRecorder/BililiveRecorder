@@ -256,7 +256,7 @@ namespace BililiveRecorder.Core.Config.V3
         public RoomConfig() { }
         public bool AutoRecord { get; set; }
         public string? Cookie { get; }
-        public bool CuttingByTitle { get; }
+        public bool CuttingByTitle { get; set; }
         public BililiveRecorder.Core.Config.CuttingMode CuttingMode { get; set; }
         public uint CuttingNumber { get; set; }
         public bool DanmakuAuthenticateWithStreamerUid { get; }
