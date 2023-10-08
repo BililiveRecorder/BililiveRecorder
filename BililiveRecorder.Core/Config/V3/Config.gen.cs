@@ -54,6 +54,14 @@ namespace BililiveRecorder.Core.Config.V3
         public Optional<uint> OptionalCuttingNumber { get => this.GetPropertyValueOptional<uint>(nameof(this.CuttingNumber)); set => this.SetPropertyValueOptional(value, nameof(this.CuttingNumber)); }
 
         /// <summary>
+        /// 改标题后自动分段
+        /// </summary>
+        public bool CuttingByTitle { get => this.GetPropertyValue<bool>(); set => this.SetPropertyValue(value); }
+        public bool HasCuttingByTitle { get => this.GetPropertyHasValue(nameof(this.CuttingByTitle)); set => this.SetPropertyHasValue<bool>(value, nameof(this.CuttingByTitle)); }
+        [JsonProperty(nameof(CuttingByTitle)), EditorBrowsable(EditorBrowsableState.Never)]
+        public Optional<bool> OptionalCuttingByTitle { get => this.GetPropertyValueOptional<bool>(nameof(this.CuttingByTitle)); set => this.SetPropertyValueOptional(value, nameof(this.CuttingByTitle)); }
+
+        /// <summary>
         /// 弹幕录制
         /// </summary>
         public bool RecordDanmaku { get => this.GetPropertyValue<bool>(); set => this.SetPropertyValue(value); }
@@ -250,6 +258,14 @@ namespace BililiveRecorder.Core.Config.V3
         public bool HasCuttingNumber { get => this.GetPropertyHasValue(nameof(this.CuttingNumber)); set => this.SetPropertyHasValue<uint>(value, nameof(this.CuttingNumber)); }
         [JsonProperty(nameof(CuttingNumber)), EditorBrowsable(EditorBrowsableState.Never)]
         public Optional<uint> OptionalCuttingNumber { get => this.GetPropertyValueOptional<uint>(nameof(this.CuttingNumber)); set => this.SetPropertyValueOptional(value, nameof(this.CuttingNumber)); }
+
+        /// <summary>
+        /// 改标题后自动分段
+        /// </summary>
+        public bool CuttingByTitle { get => this.GetPropertyValue<bool>(); set => this.SetPropertyValue(value); }
+        public bool HasCuttingByTitle { get => this.GetPropertyHasValue(nameof(this.CuttingByTitle)); set => this.SetPropertyHasValue<bool>(value, nameof(this.CuttingByTitle)); }
+        [JsonProperty(nameof(CuttingByTitle)), EditorBrowsable(EditorBrowsableState.Never)]
+        public Optional<bool> OptionalCuttingByTitle { get => this.GetPropertyValueOptional<bool>(nameof(this.CuttingByTitle)); set => this.SetPropertyValueOptional(value, nameof(this.CuttingByTitle)); }
 
         /// <summary>
         /// 弹幕录制
@@ -495,6 +511,8 @@ namespace BililiveRecorder.Core.Config.V3
         public CuttingMode CuttingMode => CuttingMode.Disabled;
 
         public uint CuttingNumber => 100;
+
+        public bool CuttingByTitle => false;
 
         public bool RecordDanmaku => false;
 

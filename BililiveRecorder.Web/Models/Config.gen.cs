@@ -16,6 +16,7 @@ namespace BililiveRecorder.Web.Models
         public Optional<RecordMode>? OptionalRecordMode { get; set; }
         public Optional<CuttingMode>? OptionalCuttingMode { get; set; }
         public Optional<uint>? OptionalCuttingNumber { get; set; }
+        public Optional<bool>? OptionalCuttingByTitle { get; set; }
         public Optional<bool>? OptionalRecordDanmaku { get; set; }
         public Optional<bool>? OptionalRecordDanmakuRaw { get; set; }
         public Optional<bool>? OptionalRecordDanmakuSuperChat { get; set; }
@@ -31,6 +32,7 @@ namespace BililiveRecorder.Web.Models
             if (this.OptionalRecordMode.HasValue) config.OptionalRecordMode = this.OptionalRecordMode.Value;
             if (this.OptionalCuttingMode.HasValue) config.OptionalCuttingMode = this.OptionalCuttingMode.Value;
             if (this.OptionalCuttingNumber.HasValue) config.OptionalCuttingNumber = this.OptionalCuttingNumber.Value;
+            if (this.OptionalCuttingByTitle.HasValue) config.OptionalCuttingByTitle = this.OptionalCuttingByTitle.Value;
             if (this.OptionalRecordDanmaku.HasValue) config.OptionalRecordDanmaku = this.OptionalRecordDanmaku.Value;
             if (this.OptionalRecordDanmakuRaw.HasValue) config.OptionalRecordDanmakuRaw = this.OptionalRecordDanmakuRaw.Value;
             if (this.OptionalRecordDanmakuSuperChat.HasValue) config.OptionalRecordDanmakuSuperChat = this.OptionalRecordDanmakuSuperChat.Value;
@@ -47,6 +49,7 @@ namespace BililiveRecorder.Web.Models
         public Optional<RecordMode>? OptionalRecordMode { get; set; }
         public Optional<CuttingMode>? OptionalCuttingMode { get; set; }
         public Optional<uint>? OptionalCuttingNumber { get; set; }
+        public Optional<bool>? OptionalCuttingByTitle { get; set; }
         public Optional<bool>? OptionalRecordDanmaku { get; set; }
         public Optional<bool>? OptionalRecordDanmakuRaw { get; set; }
         public Optional<bool>? OptionalRecordDanmakuSuperChat { get; set; }
@@ -82,6 +85,7 @@ namespace BililiveRecorder.Web.Models
             if (this.OptionalRecordMode.HasValue) config.OptionalRecordMode = this.OptionalRecordMode.Value;
             if (this.OptionalCuttingMode.HasValue) config.OptionalCuttingMode = this.OptionalCuttingMode.Value;
             if (this.OptionalCuttingNumber.HasValue) config.OptionalCuttingNumber = this.OptionalCuttingNumber.Value;
+            if (this.OptionalCuttingByTitle.HasValue) config.OptionalCuttingByTitle = this.OptionalCuttingByTitle.Value;
             if (this.OptionalRecordDanmaku.HasValue) config.OptionalRecordDanmaku = this.OptionalRecordDanmaku.Value;
             if (this.OptionalRecordDanmakuRaw.HasValue) config.OptionalRecordDanmakuRaw = this.OptionalRecordDanmakuRaw.Value;
             if (this.OptionalRecordDanmakuSuperChat.HasValue) config.OptionalRecordDanmakuSuperChat = this.OptionalRecordDanmakuSuperChat.Value;
@@ -124,6 +128,7 @@ namespace BililiveRecorder.Web.Models.Rest
         public Optional<RecordMode> OptionalRecordMode { get; set; }
         public Optional<CuttingMode> OptionalCuttingMode { get; set; }
         public Optional<uint> OptionalCuttingNumber { get; set; }
+        public Optional<bool> OptionalCuttingByTitle { get; set; }
         public Optional<bool> OptionalRecordDanmaku { get; set; }
         public Optional<bool> OptionalRecordDanmakuRaw { get; set; }
         public Optional<bool> OptionalRecordDanmakuSuperChat { get; set; }
@@ -139,6 +144,7 @@ namespace BililiveRecorder.Web.Models.Rest
         public Optional<RecordMode> OptionalRecordMode { get; set; }
         public Optional<CuttingMode> OptionalCuttingMode { get; set; }
         public Optional<uint> OptionalCuttingNumber { get; set; }
+        public Optional<bool> OptionalCuttingByTitle { get; set; }
         public Optional<bool> OptionalRecordDanmaku { get; set; }
         public Optional<bool> OptionalRecordDanmakuRaw { get; set; }
         public Optional<bool> OptionalRecordDanmakuSuperChat { get; set; }
@@ -183,6 +189,7 @@ namespace BililiveRecorder.Web.Models.Graphql
             this.Field(x => x.OptionalRecordMode, type: typeof(HierarchicalOptionalType<RecordMode>));
             this.Field(x => x.OptionalCuttingMode, type: typeof(HierarchicalOptionalType<CuttingMode>));
             this.Field(x => x.OptionalCuttingNumber, type: typeof(HierarchicalOptionalType<uint>));
+            this.Field(x => x.OptionalCuttingByTitle, type: typeof(HierarchicalOptionalType<bool>));
             this.Field(x => x.OptionalRecordDanmaku, type: typeof(HierarchicalOptionalType<bool>));
             this.Field(x => x.OptionalRecordDanmakuRaw, type: typeof(HierarchicalOptionalType<bool>));
             this.Field(x => x.OptionalRecordDanmakuSuperChat, type: typeof(HierarchicalOptionalType<bool>));
@@ -201,6 +208,7 @@ namespace BililiveRecorder.Web.Models.Graphql
             this.Field(x => x.OptionalRecordMode, type: typeof(HierarchicalOptionalType<RecordMode>));
             this.Field(x => x.OptionalCuttingMode, type: typeof(HierarchicalOptionalType<CuttingMode>));
             this.Field(x => x.OptionalCuttingNumber, type: typeof(HierarchicalOptionalType<uint>));
+            this.Field(x => x.OptionalCuttingByTitle, type: typeof(HierarchicalOptionalType<bool>));
             this.Field(x => x.OptionalRecordDanmaku, type: typeof(HierarchicalOptionalType<bool>));
             this.Field(x => x.OptionalRecordDanmakuRaw, type: typeof(HierarchicalOptionalType<bool>));
             this.Field(x => x.OptionalRecordDanmakuSuperChat, type: typeof(HierarchicalOptionalType<bool>));
@@ -240,6 +248,7 @@ namespace BililiveRecorder.Web.Models.Graphql
             this.Field(x => x.RecordMode);
             this.Field(x => x.CuttingMode);
             this.Field(x => x.CuttingNumber);
+            this.Field(x => x.CuttingByTitle);
             this.Field(x => x.RecordDanmaku);
             this.Field(x => x.RecordDanmakuRaw);
             this.Field(x => x.RecordDanmakuSuperChat);
@@ -280,6 +289,7 @@ namespace BililiveRecorder.Web.Models.Graphql
             this.Field(x => x.OptionalRecordMode, nullable: true, type: typeof(HierarchicalOptionalInputType<RecordMode>));
             this.Field(x => x.OptionalCuttingMode, nullable: true, type: typeof(HierarchicalOptionalInputType<CuttingMode>));
             this.Field(x => x.OptionalCuttingNumber, nullable: true, type: typeof(HierarchicalOptionalInputType<uint>));
+            this.Field(x => x.OptionalCuttingByTitle, nullable: true, type: typeof(HierarchicalOptionalInputType<bool>));
             this.Field(x => x.OptionalRecordDanmaku, nullable: true, type: typeof(HierarchicalOptionalInputType<bool>));
             this.Field(x => x.OptionalRecordDanmakuRaw, nullable: true, type: typeof(HierarchicalOptionalInputType<bool>));
             this.Field(x => x.OptionalRecordDanmakuSuperChat, nullable: true, type: typeof(HierarchicalOptionalInputType<bool>));
@@ -298,6 +308,7 @@ namespace BililiveRecorder.Web.Models.Graphql
             this.Field(x => x.OptionalRecordMode, nullable: true, type: typeof(HierarchicalOptionalInputType<RecordMode>));
             this.Field(x => x.OptionalCuttingMode, nullable: true, type: typeof(HierarchicalOptionalInputType<CuttingMode>));
             this.Field(x => x.OptionalCuttingNumber, nullable: true, type: typeof(HierarchicalOptionalInputType<uint>));
+            this.Field(x => x.OptionalCuttingByTitle, nullable: true, type: typeof(HierarchicalOptionalInputType<bool>));
             this.Field(x => x.OptionalRecordDanmaku, nullable: true, type: typeof(HierarchicalOptionalInputType<bool>));
             this.Field(x => x.OptionalRecordDanmakuRaw, nullable: true, type: typeof(HierarchicalOptionalInputType<bool>));
             this.Field(x => x.OptionalRecordDanmakuSuperChat, nullable: true, type: typeof(HierarchicalOptionalInputType<bool>));

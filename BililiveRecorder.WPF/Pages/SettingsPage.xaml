@@ -78,6 +78,9 @@
                         <TextBlock Text="{l:Loc Settings_Splitting_TextBox_TimeUnit}" Visibility="{Binding ElementName=CutByTimeRadioButton,Path=IsChecked,Converter={StaticResource BooleanToVisibilityCollapsedConverter}}"/>
                         <TextBlock Text="{l:Loc Settings_Splitting_TextBox_Right}"/>
                     </StackPanel>
+
+                    <ui:ToggleSwitch IsOn="{Binding CuttingByTitle}" OnContent="{l:Loc Settings_Splitting_ToggleSwitch_ByTitle}" OffContent="{l:Loc Settings_Splitting_ToggleSwitch_ByTitle}"/>
+
                 </StackPanel>
             </GroupBox>
             <GroupBox Header="直播封面">
