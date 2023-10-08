@@ -672,7 +672,8 @@ retry:
                     break;
                 case nameof(this.Title):
                     if (this.RoomConfig.CuttingMode.HasFlag(CuttingMode.ByTitle)){
-                        this.recordTask.SplitOutput();
+                        // this.recordTask.SplitOutput();
+                        this.SplitOutput();
                     }
                     break;
                 default:
