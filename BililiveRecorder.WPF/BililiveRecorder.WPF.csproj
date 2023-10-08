@@ -117,6 +117,7 @@
     <Compile Include="Converters\ByteUnitsConverter.cs" />
     <Compile Include="Converters\ClipEnabledToBooleanConverter.cs" />
     <Compile Include="Converters\EnumToBooleanConverter.cs" />
+    <Compile Include="Converters\FlagsEnumToBooleanConverter.cs" />
     <Compile Include="Converters\IsNullToVisibilityConverter.cs" />
     <Compile Include="Converters\RatioToArrowIconConverter.cs" />
     <Compile Include="Converters\IsNaNToValueConverter.cs" />

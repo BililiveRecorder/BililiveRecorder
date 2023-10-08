@@ -79,9 +79,6 @@
                         <TextBlock Text="{l:Loc Settings_Splitting_TextBox_Right}"/>
                     </StackPanel>
 
-                    <RadioButton GroupName="Splitting" Name="CutByTitleToggleSwitch" Content="{l:Loc Settings_Splitting_ToggleSwitch_ByTitle}"
-                                IsChecked="{Binding Path=CuttingMode, Converter={StaticResource FlagsEnumToBooleanConverter}, 
-                        ConverterParameter={x:Static config:CuttingMode.ByTitle}}"/>
                     <ui:ToggleSwitch IsOn="{Binding Path=CuttingMode, Converter={StaticResource FlagsEnumToBooleanConverter}, ConverterParameter={x:Static config:CuttingMode.ByTitle}}"
                                          OnContent="{l:Loc Settings_Splitting_ToggleSwitch_ByTitle}" OffContent="{l:Loc Settings_Splitting_ToggleSwitch_ByTitle}"/>
 
