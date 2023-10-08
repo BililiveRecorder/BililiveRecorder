@@ -1,6 +1,8 @@
+using System;
 namespace BililiveRecorder.Core.Config
 {
-    [Flags] public enum CuttingMode : int
+    [Flags]
+    public enum CuttingMode : int
     {
         /// <summary>
         /// 禁用
