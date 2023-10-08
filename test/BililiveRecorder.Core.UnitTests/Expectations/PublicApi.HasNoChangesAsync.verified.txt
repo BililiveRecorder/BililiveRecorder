@@ -74,6 +74,7 @@ namespace BililiveRecorder.Core.Config.V3
     {
         public static readonly BililiveRecorder.Core.Config.V3.DefaultConfig Instance;
         public string Cookie { get; }
+        public bool CuttingByTitle { get; }
         public BililiveRecorder.Core.Config.CuttingMode CuttingMode { get; }
         public uint CuttingNumber { get; }
         public bool DanmakuAuthenticateWithStreamerUid { get; }
@@ -111,6 +112,7 @@ namespace BililiveRecorder.Core.Config.V3
     {
         public GlobalConfig() { }
         public string? Cookie { get; set; }
+        public bool CuttingByTitle { get; set; }
         public BililiveRecorder.Core.Config.CuttingMode CuttingMode { get; set; }
         public uint CuttingNumber { get; set; }
         public bool DanmakuAuthenticateWithStreamerUid { get; set; }
@@ -119,6 +121,7 @@ namespace BililiveRecorder.Core.Config.V3
         public bool FlvProcessorSplitOnScriptTag { get; set; }
         public bool FlvWriteMetadata { get; set; }
         public bool HasCookie { get; set; }
+        public bool HasCuttingByTitle { get; set; }
         public bool HasCuttingMode { get; set; }
         public bool HasCuttingNumber { get; set; }
         public bool HasDanmakuAuthenticateWithStreamerUid { get; set; }
@@ -155,6 +158,8 @@ namespace BililiveRecorder.Core.Config.V3
         public bool NetworkTransportUseSystemProxy { get; set; }
         [Newtonsoft.Json.JsonProperty("Cookie")]
         public HierarchicalPropertyDefault.Optional<string?> OptionalCookie { get; set; }
+        [Newtonsoft.Json.JsonProperty("CuttingByTitle")]
+        public HierarchicalPropertyDefault.Optional<bool> OptionalCuttingByTitle { get; set; }
         [Newtonsoft.Json.JsonProperty("CuttingMode")]
         public HierarchicalPropertyDefault.Optional<BililiveRecorder.Core.Config.CuttingMode> OptionalCuttingMode { get; set; }
         [Newtonsoft.Json.JsonProperty("CuttingNumber")]
@@ -251,6 +256,7 @@ namespace BililiveRecorder.Core.Config.V3
         public RoomConfig() { }
         public bool AutoRecord { get; set; }
         public string? Cookie { get; }
+        public bool CuttingByTitle { get; }
         public BililiveRecorder.Core.Config.CuttingMode CuttingMode { get; set; }
         public uint CuttingNumber { get; set; }
         public bool DanmakuAuthenticateWithStreamerUid { get; }
@@ -259,6 +265,7 @@ namespace BililiveRecorder.Core.Config.V3
         public bool FlvProcessorSplitOnScriptTag { get; set; }
         public bool FlvWriteMetadata { get; }
         public bool HasAutoRecord { get; set; }
+        public bool HasCuttingByTitle { get; set; }
         public bool HasCuttingMode { get; set; }
         public bool HasCuttingNumber { get; set; }
         public bool HasFlvProcessorSplitOnScriptTag { get; set; }
@@ -276,6 +283,8 @@ namespace BililiveRecorder.Core.Config.V3
         public bool NetworkTransportUseSystemProxy { get; }
         [Newtonsoft.Json.JsonProperty("AutoRecord")]
         public HierarchicalPropertyDefault.Optional<bool> OptionalAutoRecord { get; set; }
+        [Newtonsoft.Json.JsonProperty("CuttingByTitle")]
+        public HierarchicalPropertyDefault.Optional<bool> OptionalCuttingByTitle { get; set; }
         [Newtonsoft.Json.JsonProperty("CuttingMode")]
         public HierarchicalPropertyDefault.Optional<BililiveRecorder.Core.Config.CuttingMode> OptionalCuttingMode { get; set; }
         [Newtonsoft.Json.JsonProperty("CuttingNumber")]
