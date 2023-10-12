@@ -434,6 +434,22 @@
             }
           }
         },
+        "CuttingByTitle": {
+          "description": "改标题后自动分段\n默认: false",
+          "markdownDescription": "改标题后自动分段  \n默认: `false `\n\n",
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "HasValue": {
+              "type": "boolean",
+              "default": true
+            },
+            "Value": {
+              "type": "boolean",
+              "default": false
+            }
+          }
+        },
         "RecordDanmaku": {
           "description": "弹幕录制\n默认: false",
           "markdownDescription": "弹幕录制  \n默认: `false `\n\n",
@@ -660,6 +676,22 @@
               "minimum": 0,
               "maximum": 4294967295,
               "default": 100
+            }
+          }
+        },
+        "CuttingByTitle": {
+          "description": "改标题后自动分段\n默认: false",
+          "markdownDescription": "改标题后自动分段  \n默认: `false `\n\n",
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "HasValue": {
+              "type": "boolean",
+              "default": true
+            },
+            "Value": {
+              "type": "boolean",
+              "default": false
             }
           }
         },

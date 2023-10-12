@@ -669,6 +669,11 @@ retry:
                         this.AutoRecordForThisSession = true;
                     }
                     break;
+                case nameof(this.Title):
+                    if (this.RoomConfig.CuttingByTitle){
+                        this.SplitOutput();
+                    }
+                    break;
                 default:
                     break;
             }

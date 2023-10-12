@@ -490,7 +490,10 @@ FLV フォーマットのみサポートされています。</value>
     <value>録画の長さによって分割する</value>
   </data>
   <data name="Settings_Splitting_RadioButton_Disabled" xml:space="preserve">
-    <value>自動分割しない</value>
+    <value>ファイルサイズやビデオの時間によって分割しないでください</value>
+  </data>
+  <data name="Settings_Splitting_ToggleSwitch_ByTitle" xml:space="preserve">
+    <value>配信ルームの名を変更した後に、録画を分割する</value>
   </data>
   <data name="Settings_Splitting_TextBox_Left" xml:space="preserve">
     <value> </value>

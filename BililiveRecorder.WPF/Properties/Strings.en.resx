@@ -490,7 +490,10 @@ Only FLV is supported</value>
     <value>Split recording by video time</value>
   </data>
   <data name="Settings_Splitting_RadioButton_Disabled" xml:space="preserve">
-    <value>Disable</value>
+    <value>Don't split by file size or video time</value>
+  </data>
+  <data name="Settings_Splitting_ToggleSwitch_ByTitle" xml:space="preserve">
+    <value>Split recording by change of live stream title</value>
   </data>
   <data name="Settings_Splitting_TextBox_Left" xml:space="preserve">
     <value>Split recording every</value>

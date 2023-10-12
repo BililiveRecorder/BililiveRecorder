@@ -38,6 +38,13 @@ export const data: Array<ConfigEntry> = [
         default: 100
     },
     {
+        id: "CuttingByTitle",
+        name: "改标题后自动分段",
+        type: "bool",
+        configType: "room",
+        default: false
+    },
+    {
         id: "RecordDanmaku",
         name: "弹幕录制",
         type: "bool",

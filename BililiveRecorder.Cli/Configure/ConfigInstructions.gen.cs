@@ -17,6 +17,7 @@ namespace BililiveRecorder.Cli.Configure
         RecordMode,
         CuttingMode,
         CuttingNumber,
+        CuttingByTitle,
         RecordDanmaku,
         RecordDanmakuRaw,
         RecordDanmakuSuperChat,
@@ -56,6 +57,7 @@ namespace BililiveRecorder.Cli.Configure
         RecordMode,
         CuttingMode,
         CuttingNumber,
+        CuttingByTitle,
         RecordDanmaku,
         RecordDanmakuRaw,
         RecordDanmakuSuperChat,
@@ -75,6 +77,7 @@ namespace BililiveRecorder.Cli.Configure
             GlobalConfig.Add(GlobalConfigProperties.RecordMode, new ConfigInstruction<GlobalConfig, RecordMode>(config => config.HasRecordMode = false, (config, value) => config.RecordMode = value) { Name = "RecordMode", CanBeOptional = true });
             GlobalConfig.Add(GlobalConfigProperties.CuttingMode, new ConfigInstruction<GlobalConfig, CuttingMode>(config => config.HasCuttingMode = false, (config, value) => config.CuttingMode = value) { Name = "CuttingMode", CanBeOptional = true });
             GlobalConfig.Add(GlobalConfigProperties.CuttingNumber, new ConfigInstruction<GlobalConfig, uint>(config => config.HasCuttingNumber = false, (config, value) => config.CuttingNumber = value) { Name = "CuttingNumber", CanBeOptional = true });
+            GlobalConfig.Add(GlobalConfigProperties.CuttingByTitle, new ConfigInstruction<GlobalConfig, bool>(config => config.HasCuttingByTitle = false, (config, value) => config.CuttingByTitle = value) { Name = "CuttingByTitle", CanBeOptional = true });
             GlobalConfig.Add(GlobalConfigProperties.RecordDanmaku, new ConfigInstruction<GlobalConfig, bool>(config => config.HasRecordDanmaku = false, (config, value) => config.RecordDanmaku = value) { Name = "RecordDanmaku", CanBeOptional = true });
             GlobalConfig.Add(GlobalConfigProperties.RecordDanmakuRaw, new ConfigInstruction<GlobalConfig, bool>(config => config.HasRecordDanmakuRaw = false, (config, value) => config.RecordDanmakuRaw = value) { Name = "RecordDanmakuRaw", CanBeOptional = true });
             GlobalConfig.Add(GlobalConfigProperties.RecordDanmakuSuperChat, new ConfigInstruction<GlobalConfig, bool>(config => config.HasRecordDanmakuSuperChat = false, (config, value) => config.RecordDanmakuSuperChat = value) { Name = "RecordDanmakuSuperChat", CanBeOptional = true });
@@ -110,6 +113,7 @@ namespace BililiveRecorder.Cli.Configure
             RoomConfig.Add(RoomConfigProperties.RecordMode, new ConfigInstruction<RoomConfig, RecordMode>(config => config.HasRecordMode = false, (config, value) => config.RecordMode = value) { Name = "RecordMode", CanBeOptional = true });
             RoomConfig.Add(RoomConfigProperties.CuttingMode, new ConfigInstruction<RoomConfig, CuttingMode>(config => config.HasCuttingMode = false, (config, value) => config.CuttingMode = value) { Name = "CuttingMode", CanBeOptional = true });
             RoomConfig.Add(RoomConfigProperties.CuttingNumber, new ConfigInstruction<RoomConfig, uint>(config => config.HasCuttingNumber = false, (config, value) => config.CuttingNumber = value) { Name = "CuttingNumber", CanBeOptional = true });
+            RoomConfig.Add(RoomConfigProperties.CuttingByTitle, new ConfigInstruction<RoomConfig, bool>(config => config.HasCuttingByTitle = false, (config, value) => config.CuttingByTitle = value) { Name = "CuttingByTitle", CanBeOptional = true });
             RoomConfig.Add(RoomConfigProperties.RecordDanmaku, new ConfigInstruction<RoomConfig, bool>(config => config.HasRecordDanmaku = false, (config, value) => config.RecordDanmaku = value) { Name = "RecordDanmaku", CanBeOptional = true });
             RoomConfig.Add(RoomConfigProperties.RecordDanmakuRaw, new ConfigInstruction<RoomConfig, bool>(config => config.HasRecordDanmakuRaw = false, (config, value) => config.RecordDanmakuRaw = value) { Name = "RecordDanmakuRaw", CanBeOptional = true });
             RoomConfig.Add(RoomConfigProperties.RecordDanmakuSuperChat, new ConfigInstruction<RoomConfig, bool>(config => config.HasRecordDanmakuSuperChat = false, (config, value) => config.RecordDanmakuSuperChat = value) { Name = "RecordDanmakuSuperChat", CanBeOptional = true });

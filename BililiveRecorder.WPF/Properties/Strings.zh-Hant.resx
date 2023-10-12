@@ -457,13 +457,16 @@
     <value>設定</value>
   </data>
   <data name="Settings_Splitting_RadioButton_BySize" xml:space="preserve">
-    <value>依照文件大小自動分段</value>
+    <value>依照檔案大小自動分段</value>
   </data>
   <data name="Settings_Splitting_RadioButton_ByTime" xml:space="preserve">
-    <value>依照影片錄製時間自動分段</value>
+    <value>依照影片錄製時長自動分段</value>
   </data>
   <data name="Settings_Splitting_RadioButton_Disabled" xml:space="preserve">
-    <value>不自動分段</value>
+    <value>不要根據檔案大小或影片時長拆分錄製</value>
+  </data>
+  <data name="Settings_Splitting_ToggleSwitch_ByTitle" xml:space="preserve">
+    <value>按直播間標題变更拆分錄製</value>
   </data>
   
   <data name="Settings_Splitting_TextBox_Right" xml:space="preserve">
