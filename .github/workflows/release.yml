@@ -71,7 +71,7 @@ jobs:
           cd BililiveRecorder.WPF/bin/${{ matrix.build_configuration }}
           7z a BililiveRecorder-WPF-Portable.zip .
       - name: Upload Portable Zip File
-        uses: actions/upload-release-asset@v1 # This action was deprecated, but it still works
+        uses: shogo82148/actions-upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
@@ -118,7 +118,7 @@ jobs:
           zip -r /tmp/CLI-${{ matrix.rid }}-${{ matrix.build_configuration }}.zip .
 
       - name: Upload Release Asset
-        uses: actions/upload-release-asset@v1 # This action was deprecated, but it still works
+        uses: shogo82148/actions-upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
