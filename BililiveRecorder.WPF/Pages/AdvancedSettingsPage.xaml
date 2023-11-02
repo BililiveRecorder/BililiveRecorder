@@ -36,22 +36,7 @@
         <ui:SimpleStackPanel Orientation="Vertical" Spacing="5" Margin="20">
             <TextBlock Text="{l:Loc Settings_AdvancedPage_Title}" Style="{StaticResource TitleTextBlockStyle}" FontFamily="Microsoft YaHei" Margin="0,10"/>
             <TextBlock Text="{l:Loc Settings_AdvancedPage_Warning}"/>
-            <GroupBox Header="Cookie">
-                <StackPanel Orientation="Vertical">
-                    <TextBlock TextWrapping="Wrap">
-                        建议使用小号；软件开发者不对账号发生的任何事情负责。<LineBreak/>
-                        账号 UID 和 BUVID3 是直接从 Cookie 中的 DedeUserID 和 buvid3 读取的，连接弹幕服务器时会用。<LineBreak/>
-                        录播姬没有主动断开重连弹幕服务器的功能，如果你设置 Cookie 的目的是以登录状态连接弹幕服务器，建议修改设置后重启录播姬。<LineBreak/>
-                        Alt account highly recommended; developers are not responsible for anything happened to your account.<LineBreak/>
-                        Account UID and BUVID3 is read directly from DedeUserID and buvid3 in Cookie, and will be used when connecting to the danmaku server.<LineBreak/>
-                        BililiveRecorder does not have the ability to reconnect to the danmaku server. If you set Cookie to connect to the danmaku server in logged-in state, it is recommended to restart BililiveRecorder after changing the setting.
-                    </TextBlock>
-                    <c:SettingWithDefault IsSettingNotUsingDefault="{Binding HasCookie}">
-                        <TextBox Text="{Binding Cookie,UpdateSourceTrigger=PropertyChanged,Delay=1000}" Width="220" HorizontalAlignment="Left"/>
-                    </c:SettingWithDefault>
-                    <Button Content="Test" Click="TestCookie_Click"/>
-                </StackPanel>
-            </GroupBox>
+            <TextBlock TextWrapping="Wrap" Text="所有高级设置项目均不是录播姬的“正式功能”，它们的作用是便于 power users 在不修改录播姬源码重新编译的情况下深度调整录播姬的行为。请根据个人实际需求谨慎使用高级设置，不要随意修改。"/>
             <GroupBox Header="{l:Loc Settings_Danmaku_Title}">
                 <c:SettingWithDefault IsSettingNotUsingDefault="{Binding HasRecordDanmakuFlushInterval}" Header="{l:Loc Settings_Danmaku_FlushInterval}">
                     <ui:NumberBox Minimum="0" SmallChange="1" Text="{Binding RecordDanmakuFlushInterval,UpdateSourceTrigger=PropertyChanged}"/>
@@ -169,6 +154,19 @@
                         <ui:NumberBox Minimum="60" Description="单位: 秒" SmallChange="10" Text="{Binding TimingCheckInterval,Delay=500}"/>
                     </c:SettingWithDefault>
                 </ui:SimpleStackPanel>
+            </GroupBox>
+            <GroupBox Header="Cookie">
+                <StackPanel Orientation="Vertical">
+                    <TextBlock TextWrapping="Wrap">
+             Cookie 会用于包括获取直播间信息、获取直播流地址、连接弹幕服务器在内的所有 API 请求中。录播姬的请求与浏览器内正常使用所发送的请求不完全一致，能通过分析请求日志识别出来。<LineBreak/>
+             软件开发者不对账号发生的任何事情负责，包括并不限于被标记为机器人账号、大会员被冻结、无法参与各种抽奖和活动等。建议使用小号。<LineBreak/>
+             如您知晓您的账号会因以上所列出来的部分原因所导致无法使用或权益受损等情况，并愿意承担由此所会带来的一系列后果，请继续以下的操作，软件开发者不会对您账号所发生的任何后果承担责任。<LineBreak/>
+                    </TextBlock>
+                    <c:SettingWithDefault IsSettingNotUsingDefault="{Binding HasCookie}">
+                        <TextBox Text="{Binding Cookie,UpdateSourceTrigger=PropertyChanged,Delay=1000}" Width="220" HorizontalAlignment="Left"/>
+                    </c:SettingWithDefault>
+                    <Button Content="Test" Click="TestCookie_Click"/>
+                </StackPanel>
             </GroupBox>
             <GroupBox Header="Reset Request Policies">
                 <GroupBox.DataContext>
