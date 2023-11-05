@@ -47,6 +47,12 @@ namespace BililiveRecorder.Core.SimpleWebhook
 
         private async Task SendImplAsync(string url, byte[] data)
         {
+            if (!BasicWebhookV2.IsUrlAllowed(url))
+            {
+                logger.Warning("不支持向 {Url} 发送 Webhook，已跳过", url);
+                return;
+            }
+
             for (var i = 0; i < 3; i++)
                 try
                 {

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
@@ -67,6 +68,12 @@ namespace BililiveRecorder.Core.SimpleWebhook
 
         private async Task SendImplAsync(string url, byte[] data)
         {
+            if (!IsUrlAllowed(url))
+            {
+                logger.Warning("不支持向 {Url} 发送 Webhook，已跳过", url);
+                return;
+            }
+
             for (var i = 0; i < 3; i++)
                 try
                 {
@@ -84,6 +91,45 @@ namespace BililiveRecorder.Core.SimpleWebhook
                 {
                     logger.Warning(ex, "发送 WebhookV2 到 {Url} 失败", url);
                 }
+        }
+
+        private static readonly IReadOnlyList<string> DisallowedDomains = new[]
+        {
+            "test.example.com",
+            "baidu" + ".com",
+            "qq" + ".com",
+            "google" + ".com",
+            "b23" + ".tv",
+            "bilibili" + ".com",
+            "bilibili" + ".cn",
+            "bilibili" + ".tv",
+            "bilicomic" + ".com",
+            "bilicomics" + ".com",
+            "bilivideo" + ".com",
+            "bilivideo" + ".cn",
+            "biligame" + ".com",
+            "biligame" + ".net",
+            "biliapi" + ".com",
+            "biliapi" + ".net",
+            "hdslb" + ".com",
+        };
+
+        internal static bool IsUrlAllowed(string url)
+        {
+            if (string.IsNullOrWhiteSpace(url))
+                return false;
+
+            if (!Uri.TryCreate(url, UriKind.Absolute, out var uri))
+                return false;
+
+            if (uri.Scheme != Uri.UriSchemeHttp && uri.Scheme != Uri.UriSchemeHttps)
+                return false;
+
+            foreach (var domain in DisallowedDomains)
+                if (uri.Host.EndsWith(domain, StringComparison.OrdinalIgnoreCase))
+                    return false;
+
+            return true;
         }
     }
 }
