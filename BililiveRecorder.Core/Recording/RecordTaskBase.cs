@@ -21,9 +21,9 @@ namespace BililiveRecorder.Core.Recording
     internal abstract class RecordTaskBase : IRecordTask
     {
         private const string HttpHeaderAccept = "*/*";
-        private const string HttpHeaderOrigin = "https://live.bilibili.com";
-        private const string HttpHeaderReferer = "https://live.bilibili.com/";
-        private const string HttpHeaderUserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.4951.54 Safari/537.36";
+        private const string HttpHeaderOrigin = Api.Http.HttpApiClient.HttpHeaderOrigin;
+        private const string HttpHeaderReferer = Api.Http.HttpApiClient.HttpHeaderReferer;
+        private const string HttpHeaderUserAgent = Api.Http.HttpApiClient.HttpHeaderUserAgent;
 
         private const int timer_inverval = 2;
         protected readonly Timer timer = new Timer(1000 * timer_inverval);

@@ -18,7 +18,7 @@ namespace BililiveRecorder.Core.Api.Http
         internal const string HttpHeaderAcceptLanguage = "zh-CN";
         internal const string HttpHeaderReferer = "https://live.bilibili.com/";
         internal const string HttpHeaderOrigin = "https://live.bilibili.com";
-        internal const string HttpHeaderUserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36";
+        internal const string HttpHeaderUserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/118.0.0.0 Safari/537.36";
         private static readonly Regex matchCookieUidRegex = new Regex(@"DedeUserID=(\d+?);", RegexOptions.Compiled);
         private static readonly Regex matchCookieBuvid3Regex = new Regex(@"buvid3=(.+?);", RegexOptions.Compiled);
         private long uid;
