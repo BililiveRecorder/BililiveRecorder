@@ -5,6 +5,7 @@ using System.CommandLine.NamingConventionBinder;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Runtime.InteropServices;
 using System.Security.Authentication;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
@@ -38,6 +39,11 @@ namespace BililiveRecorder.Cli
     {
         private static int Main(string[] args)
         {
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows)
+                && string.IsNullOrEmpty(Environment.GetEnvironmentVariable("BREC_SKIP_DISABLE_QUICK_EDIT")))
+            {
+                ConsoleModeHelper.SetQuickEditMode(false);
+            }
             RootCommand root;
 
             using (var entrypointLogger = BuildLogger(LogEventLevel.Fatal, LogEventLevel.Verbose))
@@ -563,6 +569,73 @@ namespace BililiveRecorder.Cli
                 RawData = 1 << 4,
                 All = Danmaku | SuperChat | Guard | Gift | RawData
             }
+        }
+
+        private static class ConsoleModeHelper
+        {
+            internal static bool SetQuickEditMode(bool enable = true)
+            {
+                return SetMode(ConsoleModes.ENABLE_QUICK_EDIT_MODE, enable);
+            }
+
+            private static bool SetMode(ConsoleModes mode, bool enable = true)
+            {
+                IntPtr consoleHandle = GetStdHandle(STD_INPUT_HANDLE);
+                if (consoleHandle == INVALID_HANDLE_VALUE)
+                {
+                    return false;
+                }
+
+                uint consoleMode;
+                if (!GetConsoleMode(consoleHandle, out consoleMode))
+                {
+                    return false;
+                }
+
+                if (enable)
+                {
+                    consoleMode |= (uint)mode;
+                }
+                else
+                {
+                    consoleMode &= ~(uint)mode;
+                }
+
+                return SetConsoleMode(consoleHandle, consoleMode);
+            }
+
+            const int STD_INPUT_HANDLE = -10;
+            static readonly IntPtr INVALID_HANDLE_VALUE = new IntPtr(-1);
+
+            [Flags]
+            private enum ConsoleModes : uint
+            {
+                ENABLE_PROCESSED_INPUT = 0x0001,
+                ENABLE_LINE_INPUT = 0x0002,
+                ENABLE_ECHO_INPUT = 0x0004,
+                ENABLE_WINDOW_INPUT = 0x0008,
+                ENABLE_MOUSE_INPUT = 0x0010,
+                ENABLE_INSERT_MODE = 0x0020,
+                ENABLE_QUICK_EDIT_MODE = 0x0040,
+                ENABLE_EXTENDED_FLAGS = 0x0080,
+                ENABLE_AUTO_POSITION = 0x0100,
+                ENABLE_VIRTUAL_TERMINAL_INPUT = 0x0200,
+
+                ENABLE_PROCESSED_OUTPUT = 0x0001,
+                ENABLE_WRAP_AT_EOL_OUTPUT = 0x0002,
+                ENABLE_VIRTUAL_TERMINAL_PROCESSING = 0x0004,
+                DISABLE_NEWLINE_AUTO_RETURN = 0x0008,
+                ENABLE_LVB_GRID_WORLDWIDE = 0x0010
+            }
+
+            [DllImport("kernel32.dll", SetLastError = true)]
+            private static extern IntPtr GetStdHandle(int nStdHandle);
+
+            [DllImport("kernel32.dll", SetLastError = true)]
+            private static extern bool GetConsoleMode(IntPtr hConsoleHandle, out uint lpMode);
+
+            [DllImport("kernel32.dll", SetLastError = true)]
+            private static extern bool SetConsoleMode(IntPtr hConsoleHandle, uint dwMode);
         }
     }
 }
