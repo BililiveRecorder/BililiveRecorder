@@ -39,8 +39,11 @@ namespace BililiveRecorder.Cli
     {
         private static int Main(string[] args)
         {
-            ConsoleModeHelper.SetQuickEditMode(false);
-
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows)
+                && string.IsNullOrEmpty(Environment.GetEnvironmentVariable("BREC_SKIP_DISABLE_QUICK_EDIT")))
+            {
+                ConsoleModeHelper.SetQuickEditMode(false);
+            }
             RootCommand root;
 
             using (var entrypointLogger = BuildLogger(LogEventLevel.Fatal, LogEventLevel.Verbose))
