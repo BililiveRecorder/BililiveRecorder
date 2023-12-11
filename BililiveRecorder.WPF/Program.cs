@@ -4,8 +4,8 @@ using System.CommandLine.NamingConventionBinder;
 using System.IO;
 using System.Net;
 using System.Net.Http;
-using System.Runtime.ExceptionServices;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 using System.Security;
 using System.Threading;
 using System.Threading.Tasks;
@@ -22,6 +22,8 @@ using Serilog.Exceptions;
 using Serilog.Formatting.Compact;
 using Serilog.Formatting.Display;
 using Squirrel;
+
+[assembly: SupportedOSPlatform("windows")]
 
 #nullable enable
 namespace BililiveRecorder.WPF
@@ -337,18 +339,18 @@ namespace BililiveRecorder.WPF
         [DllImport("kernel32")]
         private static extern bool AttachConsole(int pid);
 
-        [HandleProcessCorruptedStateExceptions, SecurityCritical]
+        [SecurityCritical]
         private static void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
         {
             if (e.ExceptionObject is Exception ex)
                 logger.Fatal(ex, "Unhandled exception from AppDomain.UnhandledException");
         }
 
-        [HandleProcessCorruptedStateExceptions, SecurityCritical]
+        [SecurityCritical]
         private static void TaskScheduler_UnobservedTaskException(object sender, UnobservedTaskExceptionEventArgs e) =>
             logger.Error(e.Exception, "Unobserved exception from TaskScheduler.UnobservedTaskException");
 
-        [HandleProcessCorruptedStateExceptions, SecurityCritical]
+        [SecurityCritical]
         private static void App_DispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e) =>
             logger.Fatal(e.Exception, "Unhandled exception from Application.DispatcherUnhandledException");
 

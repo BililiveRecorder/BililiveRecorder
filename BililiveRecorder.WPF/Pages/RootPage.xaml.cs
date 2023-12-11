@@ -93,7 +93,7 @@ namespace BililiveRecorder.WPF.Pages
         private void RootPage_NativeBeforeWindowClose(object sender, EventArgs e)
         {
             this.Model.Dispose();
-            SingleInstance.Cleanup();
+            // FIXME: SingleInstance.Cleanup();
         }
 
 #pragma warning disable VSTHRD100 // Avoid async void methods
@@ -105,7 +105,7 @@ namespace BililiveRecorder.WPF.Pages
                 _ = Task.Run(async () =>
                 {
                     await Task.Delay(1000);
-                    _ = this.Dispatcher.BeginInvoke(DispatcherPriority.Normal, (Action)(() =>
+                    _ = this.Dispatcher.BeginInvoke(DispatcherPriority.Normal, () =>
                     {
                         MessageBox.Show(Window.GetWindow(this), @"录播姬 安装成功！
 之后再运行请使用桌面或开始菜单里的快捷方式。
@@ -115,7 +115,7 @@ BililiveRecorder Installed!
 Please use the shortcut on the desktop or
 in the start menu to launch.
 You can uninstall me in system settings.", "安装成功 Installed", MessageBoxButton.OK, MessageBoxImage.Information);
-                    }));
+                    });
                 });
             }
 
@@ -249,12 +249,12 @@ You can uninstall me in system settings.", "安装成功 Installed", MessageBoxB
                     config.Global.WorkDirectory = path;
 
                     // 检查已经在同目录运行的其他进程
-                    if (!SingleInstance.CheckMutex(path))
-                    {
-                        // 有已经在其他目录运行的进程，已经通知该进程，本进程退出
-                        (Application.Current.MainWindow as NewMainWindow)!.CloseWithoutConfirmAction();
-                        return;
-                    }
+                    // FIXME: if (!SingleInstance.CheckMutex(path))
+                    //{
+                    //    // 有已经在其他目录运行的进程，已经通知该进程，本进程退出
+                    //    (Application.Current.MainWindow as NewMainWindow)!.CloseWithoutConfirmAction();
+                    //    return;
+                    //}
 
                     // 无已经在同目录运行的进程
                     this.serviceProvider = this.BuildServiceProvider(config, logger);

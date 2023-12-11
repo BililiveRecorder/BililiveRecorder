@@ -33,7 +33,7 @@ namespace BililiveRecorder.WPF
 
             this.InitializeComponent();
 
-            SingleInstance.NotificationReceived += this.SingleInstance_NotificationReceived;
+            // FIXME: SingleInstance.NotificationReceived += this.SingleInstance_NotificationReceived;
         }
 
         private void SingleInstance_NotificationReceived(object sender, EventArgs e) => this.SuperActivateAction();
@@ -118,7 +118,7 @@ namespace BililiveRecorder.WPF
             }
             else
             {
-                SingleInstance.NotificationReceived -= this.SingleInstance_NotificationReceived;
+                // FIXME: SingleInstance.NotificationReceived -= this.SingleInstance_NotificationReceived;
                 Log.Logger.ForContext<NewMainWindow>().Debug("Window Closing");
                 NativeBeforeWindowClose?.Invoke(this, EventArgs.Empty);
                 return;

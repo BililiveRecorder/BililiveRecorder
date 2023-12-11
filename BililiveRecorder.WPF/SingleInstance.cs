@@ -1,19 +1,20 @@
-using System;
-using System.Collections.Generic;
-using System.Runtime.Remoting;
-using System.Runtime.Remoting.Channels;
-using System.Runtime.Remoting.Channels.Ipc;
-using System.Runtime.Serialization.Formatters;
-using System.Text;
-using System.Threading;
-using System.Windows;
-using System.Windows.Threading;
+//using System;
+//using System.Collections.Generic;
+//using System.Runtime.Remoting;
+//using System.Runtime.Remoting.Channels;
+//using System.Runtime.Remoting.Channels.Ipc;
+//using System.Runtime.Serialization.Formatters;
+//using System.Text;
+//using System.Threading;
+//using System.Windows;
+//using System.Windows.Threading;
 
 #nullable enable
 namespace BililiveRecorder.WPF
 {
+    // FIXME
     public static class SingleInstance
-    {
+    {/*
         private static Mutex? singleInstanceMutex;
         private static IpcServerChannel? channel;
 
@@ -73,5 +74,6 @@ namespace BililiveRecorder.WPF
 #pragma warning restore VSTHRD110 // Observe result of async calls
             public override object? InitializeLifetimeService() => null;
         }
+        */
     }
 }

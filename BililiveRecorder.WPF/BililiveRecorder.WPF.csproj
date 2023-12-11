@@ -1,332 +1,32 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{0C7D4236-BF43-4944-81FE-E07E05A3F31D}</ProjectGuid>
+    <TargetFramework>net8.0-windows10.0.17763.0</TargetFramework>
+    <TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
     <OutputType>WinExe</OutputType>
-    <RootNamespace>BililiveRecorder.WPF</RootNamespace>
-    <AssemblyName>BililiveRecorder.WPF</AssemblyName>
-    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-    <WarningLevel>4</WarningLevel>
-    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <DebugType>full</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <DebugSymbols>true</DebugSymbols>
-    <Prefer32Bit>false</Prefer32Bit>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <UseWindowsForms>true</UseWindowsForms>
+    <UseWPF>true</UseWPF>
+    <ImportWindowsDesktopTargets>true</ImportWindowsDesktopTargets>
   </PropertyGroup>
   <PropertyGroup>
     <StartupObject>BililiveRecorder.WPF.Program</StartupObject>
-  </PropertyGroup>
-  <PropertyGroup>
     <GenerateManifests>false</GenerateManifests>
-  </PropertyGroup>
-  <PropertyGroup>
     <ApplicationIcon>ico.ico</ApplicationIcon>
-  </PropertyGroup>
-  <PropertyGroup>
-    <SignAssembly>false</SignAssembly>
-  </PropertyGroup>
-  <PropertyGroup>
     <ApplicationManifest>Properties\app.manifest</ApplicationManifest>
   </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+  </PropertyGroup>
   <ItemGroup>
-    <Reference Include="System" />
-    <Reference Include="System.Configuration" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Deployment" />
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.Runtime.Remoting" />
-    <Reference Include="System.Runtime.Serialization" />
-    <Reference Include="System.ServiceModel" />
-    <Reference Include="System.Transactions" />
-    <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.Xml" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="System.Net.Http" />
-    <Reference Include="System.Xaml">
-      <RequiredTargetFramework>4.0</RequiredTargetFramework>
-    </Reference>
-    <Reference Include="WindowsBase" />
-    <Reference Include="PresentationCore" />
-    <Reference Include="PresentationFramework" />
-  </ItemGroup>
-  <ItemGroup>
-    <ApplicationDefinition Include="App.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </ApplicationDefinition>
-    <Compile Include="Controls\AddRoomCard.xaml.cs">
-      <DependentUpon>AddRoomCard.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\AddRoomFailedDialog.xaml.cs">
-      <DependentUpon>AddRoomFailedDialog.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\AutoFixProgressDialog.xaml.cs">
-      <DependentUpon>AutoFixProgressDialog.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\CloseWindowConfirmDialog.xaml.cs">
-      <DependentUpon>CloseWindowConfirmDialog.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\ContentDialogExtensions.cs" />
-    <Compile Include="Controls\DeleteRoomConfirmDialog.xaml.cs">
-      <DependentUpon>DeleteRoomConfirmDialog.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\LogPanel.xaml.cs">
-      <DependentUpon>LogPanel.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\PerRoomSettingsDialog.xaml.cs">
-      <DependentUpon>PerRoomSettingsDialog.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\RoomCard.xaml.cs">
-      <DependentUpon>RoomCard.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\SettingWithDefault.xaml.cs">
-      <DependentUpon>SettingWithDefault.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\TaskbarIconControl.xaml.cs">
-      <DependentUpon>TaskbarIconControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\WorkDirectorySelectorDialog.xaml.cs">
-      <DependentUpon>WorkDirectorySelectorDialog.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Converters\ByteUnitsConverter.cs" />
-    <Compile Include="Converters\ClipEnabledToBooleanConverter.cs" />
-    <Compile Include="Converters\EnumToBooleanConverter.cs" />
-    <Compile Include="Converters\IsNullToVisibilityConverter.cs" />
-    <Compile Include="Converters\RatioToArrowIconConverter.cs" />
-    <Compile Include="Converters\IsNaNToValueConverter.cs" />
-    <Compile Include="Converters\ShortRoomIdToVisibilityConverter.cs" />
-    <Compile Include="Converters\ValueConverterGroup.cs" />
-    <Compile Include="Models\AboutModel.cs" />
-    <Compile Include="Models\Commands.cs" />
-    <Compile Include="Models\DanmakuFileWithOffset.cs" />
-    <Compile Include="Models\LogModel.cs" />
-    <Compile Include="Models\PollyPolicyModel.cs" />
-    <Compile Include="Models\RootModel.cs" />
-    <Compile Include="NetworkChangeDetector.cs" />
-    <Compile Include="Pages\AboutPage.xaml.cs">
-      <DependentUpon>AboutPage.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Pages\AnnouncementPage.xaml.cs">
-      <DependentUpon>AnnouncementPage.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Pages\RootPage.xaml.cs">
-      <DependentUpon>RootPage.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Converters\BooleanAndConverter.cs" />
-    <Compile Include="Converters\BooleanInverterConverter.cs" />
-    <Compile Include="Converters\BoolToValueConverter.cs" />
-    <Compile Include="Converters\MultiBoolToValueConverter.cs" />
-    <Compile Include="Converters\NullValueTemplateSelector.cs" />
-    <Compile Include="Converters\RatioToColorBrushConverter.cs" />
-    <Compile Include="Pages\ToolboxAutoFixPage.xaml.cs">
-      <DependentUpon>ToolboxAutoFixPage.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Pages\ToolboxDanmakuMergerPage.xaml.cs">
-      <DependentUpon>ToolboxDanmakuMergerPage.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Pages\ToolboxRemuxPage.xaml.cs">
-      <DependentUpon>ToolboxRemuxPage.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Program.cs" />
-    <Compile Include="SingleInstance.cs" />
-    <Compile Include="Properties\Strings.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Strings.resx</DependentUpon>
-    </Compile>
-    <Compile Include="StreamStartedNotification.cs" />
-    <Compile Include="Update.cs" />
-    <Compile Include="WorkDirectoryLoader.cs" />
-    <Compile Include="WpfLogEventSink.cs" />
-    <Page Include="Controls\AddRoomCard.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\AddRoomFailedDialog.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\AutoFixProgressDialog.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\CloseWindowConfirmDialog.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\DeleteRoomConfirmDialog.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\LogPanel.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\PerRoomSettingsDialog.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\RoomCard.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\SettingWithDefault.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\TaskbarIconControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\WorkDirectorySelectorDialog.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Pages\AboutPage.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Pages\AnnouncementPage.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Pages\RootPage.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="DesignTimeResources.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="App.xaml.cs">
-      <DependentUpon>App.xaml</DependentUpon>
-      <SubType>Code</SubType>
-    </Compile>
-    <Page Include="NewMainWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Pages\LogPage.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Pages\RoomListPage.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Pages\AdvancedSettingsPage.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Pages\SettingsPage.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Pages\ToolboxAutoFixPage.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Pages\ToolboxDanmakuMergerPage.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Pages\ToolboxRemuxPage.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Resources\ConverterResources.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Resources\IconResources.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="NewMainWindow.xaml.cs">
-      <DependentUpon>NewMainWindow.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Pages\LogPage.xaml.cs">
-      <DependentUpon>LogPage.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Pages\RoomListPage.xaml.cs">
-      <DependentUpon>RoomListPage.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Pages\AdvancedSettingsPage.xaml.cs">
-      <DependentUpon>AdvancedSettingsPage.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Pages\SettingsPage.xaml.cs">
-      <DependentUpon>SettingsPage.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Properties\AssemblyInfo.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
-    <EmbeddedResource Include="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Properties\Strings.en.resx" />
-    <EmbeddedResource Include="Properties\Strings.en-PN.resx" />
-    <EmbeddedResource Include="Properties\Strings.ja.resx" />
-    <EmbeddedResource Include="Properties\Strings.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>Strings.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Properties\Strings.zh-Hant.resx" />
-    <None Include="lib\miniffmpeg">
+    <None Update="lib\miniffmpeg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Properties\app.manifest" />
     <Resource Include="ico.ico" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\BililiveRecorder.Core\BililiveRecorder.Core.csproj">
-      <Project>{cb9f2d58-181d-49f7-9560-d35a9b9c1d8c}</Project>
-      <Name>BililiveRecorder.Core</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\BililiveRecorder.Flv\BililiveRecorder.Flv.csproj">
-      <Project>{7610e19c-d3ab-4cbc-983e-6fda36f4d4b3}</Project>
-      <Name>BililiveRecorder.Flv</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\BililiveRecorder.ToolBox\BililiveRecorder.ToolBox.csproj">
-      <Project>{4faae8e7-ac4e-4e99-a7d1-53d20ad8a200}</Project>
-      <Name>BililiveRecorder.ToolBox</Name>
-    </ProjectReference>
+    <ProjectReference Include="..\BililiveRecorder.Core\BililiveRecorder.Core.csproj" />
+    <ProjectReference Include="..\BililiveRecorder.Flv\BililiveRecorder.Flv.csproj" />
+    <ProjectReference Include="..\BililiveRecorder.ToolBox\BililiveRecorder.ToolBox.csproj" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="CliWrap">
@@ -335,20 +35,12 @@
     <PackageReference Include="Hardcodet.NotifyIcon.Wpf">
       <Version>1.1.0</Version>
     </PackageReference>
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection">
-      <Version>6.0.0</Version>
-    </PackageReference>
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions">
-      <Version>6.0.0</Version>
-    </PackageReference>
+    <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
     <PackageReference Include="Microsoft.Toolkit.Uwp.Notifications">
-      <Version>7.1.2</Version>
+      <Version>7.1.3</Version>
     </PackageReference>
     <PackageReference Include="ModernWpfUI">
-      <Version>0.9.4</Version>
-    </PackageReference>
-    <PackageReference Include="Newtonsoft.Json">
-      <Version>13.0.3</Version>
+      <Version>0.9.6</Version>
     </PackageReference>
     <PackageReference Include="NuGet.CommandLine">
       <Version>6.3.3</Version>
@@ -385,26 +77,24 @@
     <PackageReference Include="Serilog.Sinks.File">
       <Version>5.0.0</Version>
     </PackageReference>
-    <PackageReference Include="Clowd.Squirrel">
-      <Version>2.9.42</Version>
-    </PackageReference>
-    <PackageReference Include="System.CommandLine">
-      <Version>2.0.0-beta4.22272.1</Version>
-    </PackageReference>
-    <PackageReference Include="System.CommandLine.NamingConventionBinder">
-      <Version>2.0.0-beta4.22272.1</Version>
-    </PackageReference>
-    <PackageReference Include="WindowsAPICodePack-Core">
-      <Version>1.1.2</Version>
-    </PackageReference>
-    <PackageReference Include="WindowsAPICodePack-Shell">
-      <Version>1.1.1</Version>
-    </PackageReference>
-    <PackageReference Include="WpfLocalizeExtension">
-      <Version>3.9.4</Version>
-    </PackageReference>
+    <PackageReference Include="Clowd.Squirrel" Version="2.11.1" />
+    <PackageReference Include="System.CommandLine" Version="2.0.0-beta4.22272.1" />
+    <PackageReference Include="System.CommandLine.NamingConventionBinder" Version="2.0.0-beta4.22272.1" />
+    <PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
+    <PackageReference Include="Microsoft-WindowsAPICodePack-Core" Version="1.1.5" />
+    <PackageReference Include="Microsoft-WindowsAPICodePack-Shell" Version="1.1.5" />
+    <PackageReference Include="WPFLocalizeExtension" Version="3.10.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Include="System.Configuration.ConfigurationManager" Version="8.0.0" />
+    <PackageReference Include="System.ServiceModel.Primitives" Version="6.2.0" />
+    <PackageReference Include="System.ServiceModel.Http" Version="6.2.0" />
+    <PackageReference Include="System.ServiceModel.Duplex" Version="6.0.0" />
+    <PackageReference Include="System.ServiceModel.NetTcp" Version="6.2.0" />
+    <PackageReference Include="System.ServiceModel.Security" Version="6.0.0" />
+    <PackageReference Include="System.ServiceModel.Federation" Version="6.2.0" />
   </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="AfterBuild" Condition=" '$(Configuration)' == 'Release'">
     <GetAssemblyIdentity AssemblyFiles="$(TargetPath)">
       <Output TaskParameter="Assemblies" ItemName="myAssemblyInfo" />

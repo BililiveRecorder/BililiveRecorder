@@ -17,7 +17,7 @@ namespace BililiveRecorder.WPF
     {
         private static readonly ILogger logger = Log.ForContext(typeof(StreamStartedNotification));
 
-        private static INotificationApi notificationApi;
+        private static readonly INotificationApi notificationApi;
 
         static StreamStartedNotification()
         {
@@ -69,7 +69,8 @@ namespace BililiveRecorder.WPF
 
             public NotificationCenterApi()
             {
-                _ = ToastNotificationManagerCompat.History;
+                throw new NotImplementedException("TODO: re-support windows notification center");
+                // FIXME: _ = ToastNotificationManagerCompat.History;
 
                 this.tempPath = Path.Combine(Path.GetTempPath(), "brec-notifi", Process.GetCurrentProcess().Id.ToString());
 
@@ -90,7 +91,7 @@ namespace BililiveRecorder.WPF
 
             public void Cleanup()
             {
-                ToastNotificationManagerCompat.Uninstall();
+                // FIXME: ToastNotificationManagerCompat.Uninstall();
 
                 try
                 {
@@ -169,7 +170,7 @@ namespace BililiveRecorder.WPF
                 if (cover is not null)
                     builder.AddInlineImage(cover);
 
-                builder.Show();
+                // FIXME: builder.Show();
             }
         }
     }

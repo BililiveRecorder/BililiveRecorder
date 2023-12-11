@@ -49,6 +49,7 @@
         </Style>
     </UserControl.Resources>
     <Grid>
+        <!-- TODO: replace with H.NotifyIcon.Wpf -->
         <controls:TaskbarIconControl DataContext="{Binding}" d:IsHidden="True"/>
         <ui:NavigationView IsBackEnabled="False" IsBackButtonVisible="Collapsed" 
                            IsSettingsVisible="False" ExpandedModeThresholdWidth="1115"
