@@ -59,6 +59,7 @@ namespace BililiveRecorder.Cli
                         new Option<string?>(new []{ "--http-bind", "--bind", "-b" }, () => null, "Bind address for http service"),
                         new Option<string?>(new []{ "--http-basic-user" }, () => null, "Web interface username"),
                         new Option<string?>(new []{ "--http-basic-pass" }, () => null, "Web interface password"),
+                        new Option<bool>(new []{ "--http-open-access" }, () => false, "Allow open access from the internet"),
                         new Option<bool>(new []{ "--enable-file-browser" }, () => true, "Enable file browser located at '/file'"),
                         new Option<LogEventLevel>(new []{ "--loglevel", "--log", "-l" }, () => LogEventLevel.Information, "Minimal log level output to console"),
                         new Option<LogEventLevel>(new []{ "--logfilelevel", "--flog" }, () => LogEventLevel.Debug, "Minimal log level output to file"),
@@ -77,6 +78,7 @@ namespace BililiveRecorder.Cli
                         new Option<string?>(new []{ "--http-bind", "--bind", "-b" }, () => null, "Bind address for http service"),
                         new Option<string?>(new []{ "--http-basic-user" }, () => null, "Web interface username"),
                         new Option<string?>(new []{ "--http-basic-pass" }, () => null, "Web interface password"),
+                        new Option<bool>(new []{ "--http-open-access" }, () => false, "Allow open access from the internet"),
                         new Option<bool>(new []{ "--enable-file-browser" }, () => true, "Enable file browser located at '/file'"),
                         new Option<LogEventLevel>(new []{ "--loglevel", "--log", "-l" }, () => LogEventLevel.Information, "Minimal log level output to console"),
                         new Option<LogEventLevel>(new []{ "--logfilelevel", "--flog" }, () => LogEventLevel.Debug, "Minimal log level output to file"),
@@ -227,6 +229,10 @@ namespace BililiveRecorder.Cli
                         if (sharedArguments.HttpBasicUser is not null || sharedArguments.HttpBasicPass is not null)
                         {
                             services.AddSingleton(new BasicAuthCredential(sharedArguments.HttpBasicUser ?? string.Empty, sharedArguments.HttpBasicPass ?? string.Empty));
+                        }
+
+                        if (!HttpOpenAccess.HttpOpenAccess && Environment.GetEnvironmentVariable("BREC_HTTP_BASIC_PASS") is not null){
+                            services.AddSingleton(new OpenAccessWarningConfig());
                         }
                     })
                     .ConfigureWebHost(webBuilder =>
@@ -521,6 +527,8 @@ namespace BililiveRecorder.Cli
             public string? HttpBasicUser { get; set; } = null;
 
             public string? HttpBasicPass { get; set; } = null;
+
+            public bool HttpOpenAccess { get; set; } = false;
 
             public bool EnableFileBrowser { get; set; }
 
