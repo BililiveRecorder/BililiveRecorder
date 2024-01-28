@@ -10,7 +10,7 @@ using System.Windows;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Genteure")]
 [assembly: AssemblyProduct("mikufans录播姬")]
-[assembly: AssemblyCopyright("Copyright © 2018-2023 Genteure")]
+[assembly: AssemblyCopyright("Copyright © 2018-2024 Genteure")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
