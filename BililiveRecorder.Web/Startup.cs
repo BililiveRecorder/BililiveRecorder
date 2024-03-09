@@ -133,7 +133,7 @@ namespace BililiveRecorder.Web
         {
             const string PAGE404 = "/404.html";
 
-            if (app.ApplicationServices.GetService<OpenAccessWarningConfig>() is null)
+            if (app.ApplicationServices.GetService<DisableOpenAccessWarningConfig>() is null)
             {
                 app.UseMiddleware<OpenAccessWarningMiddleware>();
             }

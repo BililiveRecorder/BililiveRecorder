@@ -1,10 +1,10 @@
 using System;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.FileProviders;
 using Microsoft.Net.Http.Headers;
 
 namespace BililiveRecorder.Web
@@ -29,22 +29,23 @@ namespace BililiveRecorder.Web
             if (sourceIpNotLan(context) || haveReverseProxyHeaders(context) || haveCustomHostValue(context))
             {
                 context.Response.StatusCode = 412;
-                if (context.Request.Headers[HeaderNames.Accept].ToString().Contains("text/plain"))
+                var accept = context.Request.Headers[HeaderNames.Accept];
+                if (accept.Contains("text/html"))
                 {
-                    context.Response.ContentType = "text/plain";
-                    return context.Response.WriteAsync("Open access from the internet detected. Please enable " +
-                    "basic authentication or disable this warning by setting the environment variable \"BREC_HTTP_OPEN_ACCESS\".\n" +
-                    "检测到非局域网无密码访问。请设置用户名密码或通过设置环境变量 \"BREC_HTTP_OPEN_ACCESS\" 禁用此警告。\n" +
-                    "BililiveRecorder " + GitVersionInformation.FullSemVer);
+                    context.Response.ContentType = "text/html; charset=utf-8";
+                    return context.Response.WriteAsync("<!DOCTYPE html><html><head><meta charset=\"utf-8\"><title>Access Denied</title></head>" +
+                    "<body><h1>Access Denied</h1><p>Open access from the internet detected. Please enable basic authentication " +
+                    "or disable this warning by setting the environment variable \"BREC_HTTP_OPEN_ACCESS\".</p>" +
+                    "<p>检测到非局域网无密码访问。请设置用户名密码或通过设置环境变量 \"BREC_HTTP_OPEN_ACCESS\" 禁用此警告。</p>" +
+                    "<hr><p>录播姬 BililiveRecorder " + GitVersionInformation.FullSemVer + "</p></body></html>\n");
                 }
                 else
                 {
-                    context.Response.ContentType = "text/html";
-                    return context.Response.WriteAsync("<!DOCTYPE html><html><head><meta charset=\"utf-8\"><title>Open access detected</title></head>" +
-                    "<body><h1>Open access detected</h1><p>Open access from the internet detected. Please enable basic authentication " +
-                    "or disable this warning by setting the environment variable \"BREC_HTTP_OPEN_ACCESS\".</p>" +
-                    "<p>检测到非局域网无密码访问。请设置用户名密码或通过设置环境变量 \"BREC_HTTP_OPEN_ACCESS\" 禁用此警告。</p>" +
-                    "<hr><p>BililiveRecorder " + GitVersionInformation.FullSemVer + "</p></body></html>");
+                    context.Response.ContentType = "text/plain; charset=utf-8";
+                    return context.Response.WriteAsync("Access Denied.\nOpen access from the internet detected. Please enable " +
+                    "basic authentication or disable this warning by setting the environment variable \"BREC_HTTP_OPEN_ACCESS\".\n" +
+                    "检测到非局域网无密码访问。请设置用户名密码或通过设置环境变量 \"BREC_HTTP_OPEN_ACCESS\" 禁用此警告。\n" +
+                    "录播姬 BililiveRecorder " + GitVersionInformation.FullSemVer + "\n");
                 }
             }
             else

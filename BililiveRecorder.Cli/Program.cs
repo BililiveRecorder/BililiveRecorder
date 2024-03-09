@@ -231,8 +231,8 @@ namespace BililiveRecorder.Cli
                             services.AddSingleton(new BasicAuthCredential(sharedArguments.HttpBasicUser ?? string.Empty, sharedArguments.HttpBasicPass ?? string.Empty));
                         }
 
-                        if (!sharedArguments.HttpOpenAccess && Environment.GetEnvironmentVariable("BREC_HTTP_BASIC_PASS") is not null){
-                            services.AddSingleton(new OpenAccessWarningConfig());
+                        if (!sharedArguments.HttpOpenAccess && Environment.GetEnvironmentVariable("BREC_HTTP_OPEN_ACCESS") is not null){
+                            services.AddSingleton(new DisableOpenAccessWarningConfig());
                         }
                     })
                     .ConfigureWebHost(webBuilder =>
