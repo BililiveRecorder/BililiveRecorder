@@ -34,17 +34,20 @@ namespace BililiveRecorder.Web
                 {
                     context.Response.ContentType = "text/html; charset=utf-8";
                     return context.Response.WriteAsync("<!DOCTYPE html><html><head><meta charset=\"utf-8\"><title>Access Denied</title></head>" +
-                    "<body><h1>Access Denied</h1><p>Open access from the internet detected. Please enable basic authentication " +
+                    "<body><h1>Access Denied</h1><p>Open access from the internet detected. Please enable basic authentication by setting the environment variables \"BREC_HTTP_BASIC_USER\" and \"BREC_HTTP_BASIC_PASS\", " +
                     "or disable this warning by setting the environment variable \"BREC_HTTP_OPEN_ACCESS\".</p>" +
-                    "<p>检测到非局域网无密码访问。请设置用户名密码或通过设置环境变量 \"BREC_HTTP_OPEN_ACCESS\" 禁用此警告。</p>" +
+                    "<p>检测到非局域网无密码访问。请设置使用环境变量 \"BREC_HTTP_BASIC_USER\" 和 \"BREC_HTTP_BASIC_PASS\" 设置用户名密码，" +
+                    "或如果你已经通过其他方法实现了访问控制（如只在内网开放）可以通过设置环境变量 \"BREC_HTTP_OPEN_ACCESS\" 为任意值来禁用此警告。暴露在互联网上无密码的录播姬存在安全风险。</p>" +
                     "<hr><p>录播姬 BililiveRecorder " + GitVersionInformation.FullSemVer + "</p></body></html>\n");
                 }
                 else
                 {
                     context.Response.ContentType = "text/plain; charset=utf-8";
                     return context.Response.WriteAsync("Access Denied.\nOpen access from the internet detected. Please enable " +
-                    "basic authentication or disable this warning by setting the environment variable \"BREC_HTTP_OPEN_ACCESS\".\n" +
-                    "检测到非局域网无密码访问。请设置用户名密码或通过设置环境变量 \"BREC_HTTP_OPEN_ACCESS\" 禁用此警告。\n" +
+                    "basic authentication by setting the environment variables \"BREC_HTTP_BASIC_USER\" and \"BREC_HTTP_BASIC_PASS\", " +
+                    "or disable this warning by setting the environment variable \"BREC_HTTP_OPEN_ACCESS\".\n" +
+                    "检测到非局域网无密码访问。请设置使用环境变量 \"BREC_HTTP_BASIC_USER\" 和 \"BREC_HTTP_BASIC_PASS\" 设置用户名密码，" +
+                    "或如果你已经通过其他方法实现了访问控制（如只在内网开放）可以通过设置环境变量 \"BREC_HTTP_OPEN_ACCESS\" 为任意值来禁用此警告。暴露在互联网上无密码的录播姬存在安全风险。\n" +
                     "录播姬 BililiveRecorder " + GitVersionInformation.FullSemVer + "\n");
                 }
             }
