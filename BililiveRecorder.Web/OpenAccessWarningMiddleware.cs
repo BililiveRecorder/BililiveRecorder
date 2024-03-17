@@ -1,6 +1,5 @@
 using System;
 using System.IO;
-using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
@@ -29,7 +28,7 @@ namespace BililiveRecorder.Web
             if (sourceIpNotLan(context) || haveReverseProxyHeaders(context) || haveCustomHostValue(context))
             {
                 context.Response.StatusCode = 412;
-                var accept = context.Request.Headers[HeaderNames.Accept];
+                var accept = context.Request.Headers[HeaderNames.Accept].ToString();
                 if (accept.Contains("text/html"))
                 {
                     context.Response.ContentType = "text/html; charset=utf-8";
