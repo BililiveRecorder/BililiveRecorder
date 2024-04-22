@@ -15,8 +15,8 @@ COPY ./BililiveRecorder.Cli/bin/docker_out /app
 ARG TARGETPLATFORM
 RUN if [ "$TARGETPLATFORM" = "linux/amd64" ]; then GOSU_FILE=gosu-amd64; fi; if [ "$TARGETPLATFORM" = "linux/arm64" ]; then GOSU_FILE=gosu-arm64; fi; if [ "$TARGETPLATFORM" = "linux/arm/v7" ]; then GOSU_FILE=gosu-armhf; fi
 
-RUN apt update && \
-    apt install -y wget && \
+RUN apt-get update && \
+    apt-get install -y wget && \
     wget -O /usr/local/bin/gosu https://github.com/tianon/gosu/releases/download/$GOSU_VERSION/$GOSU_FILE && \
     chmod +x /usr/local/bin/gosu && \
     useradd -r -g users user && \
