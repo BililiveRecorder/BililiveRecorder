@@ -1,9 +1,33 @@
 FROM mcr.microsoft.com/dotnet/aspnet:6.0
 ENV TZ=Asia/Shanghai
-RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+ENV GOSU_VERSION=1.17
+
+ENV UMASK=022
+ENV PUID=1000
+ENV PGID=1000
+
+
 WORKDIR /app
 VOLUME [ "/rec" ]
+
+COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
 COPY ./BililiveRecorder.Cli/bin/docker_out /app
-ENTRYPOINT [ "dotnet", "/app/BililiveRecorder.Cli.dll" ]
+
+RUN apt-get update && \
+    apt-get install -y wget && \
+    rm -rf /var/lib/apt/lists/* && \
+    useradd -r -g users user && \
+    chmod a+x /usr/local/bin/docker-entrypoint.sh && \
+    ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && \
+    echo $TZ > /etc/timezone
+
+ARG TARGETPLATFORM
+
+RUN if [ "$TARGETPLATFORM" = "linux/amd64" ]; then wget -O /usr/local/bin/gosu https://github.com/tianon/gosu/releases/download/$GOSU_VERSION/gosu-amd64; fi; if [ "$TARGETPLATFORM" = "linux/arm64" ]; then wget -O /usr/local/bin/gosu https://github.com/tianon/gosu/releases/download/$GOSU_VERSION/gosu-arm64; fi; if [ "$TARGETPLATFORM" = "linux/arm/v7" ]; then wget -O /usr/local/bin/gosu https://github.com/tianon/gosu/releases/download/$GOSU_VERSION/gosu-armhf; fi
+
+RUN chmod +x /usr/local/bin/gosu
+
 EXPOSE 2356/tcp
+
+ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
 CMD [ "run", "--bind", "http://*:2356", "/rec" ]
