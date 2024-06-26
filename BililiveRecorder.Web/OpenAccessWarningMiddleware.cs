@@ -60,7 +60,11 @@ namespace BililiveRecorder.Web
         {
             var ip = context.Connection.RemoteIpAddress;
             if (ip is null) return true;
-            return !isLocalIpv4Address(ip) && !ip.IsIPv6LinkLocal && !ip.IsIPv6UniqueLocal;
+            return
+                !isLocalIpv4Address(ip) && // LAN IPV4 and loopback IPV4
+                !isLoopbackAddress(ip) && // loopback IPV4/IPV6
+                !ip.IsIPv6LinkLocal && // link-local IPV6
+                !ip.IsIPv6UniqueLocal; // unique-local IPV6
         }
 
         private static bool isLocalIpv4Address(IPAddress ip)
@@ -89,12 +93,22 @@ namespace BililiveRecorder.Web
             }
         }
 
+        private static bool isLoopbackAddress(IPAddress ip)
+        {
+            if (ip.AddressFamily is System.Net.Sockets.AddressFamily.InterNetworkV6 ||
+                ip.AddressFamily is System.Net.Sockets.AddressFamily.InterNetwork)
+                return IPAddress.IsLoopback(ip);
+
+            return false;
+        }
+
         private static bool haveReverseProxyHeaders(HttpContext context)
         {
             return
                 context.Request.Headers.ContainsKey("X-Real-IP") ||
                 context.Request.Headers.ContainsKey("X-Forwarded-For") ||
                 context.Request.Headers.ContainsKey("X-Forwarded-Host") ||
+                context.Request.Headers.ContainsKey("X-Forwarded-Proto") ||
                 context.Request.Headers.ContainsKey("Via");
         }
 
@@ -103,10 +117,57 @@ namespace BililiveRecorder.Web
             // check if the host header is set to a custom value such as a domain name
             if (IPAddress.TryParse(context.Request.Host.Host, out var ip))
             {
-                // the host header is an IP address
-                // check if the IP address matches the server's IP address
-                return ip.Equals(context.Connection.LocalIpAddress);
+                var localIP = context.Connection.LocalIpAddress;
+
+                if (localIP is null) return true;
+
+                if (localIP.IsIPv4MappedToIPv6)
+                    localIP = localIP.MapToIPv4();
+
+                // Request.Host.Host and ip is IPV6
+                if (ip.AddressFamily == System.Net.Sockets.AddressFamily.InterNetworkV6 &&
+                    localIP.AddressFamily == System.Net.Sockets.AddressFamily.InterNetworkV6)
+                {
+                    // ip and localIP is Loopback IP
+                    if (isLoopbackAddress(ip) && isLoopbackAddress(localIP))
+                        return !ip.Equals(localIP);
+
+                    return
+                        !ip.Equals(localIP) ||
+                        !ip.IsIPv6UniqueLocal ||
+                        !localIP.IsIPv6UniqueLocal;
+                }
+
+                /*
+                 * 判断 ip 与 localIp 是否为 LAN IP 或 保留 IP
+                 * 1. 判断 ip 与 localIp 是否相同
+                 * 2. 判断 ip 是否为 LAN IP 或 保留 IP
+                 * 3. 判断 localIp 是否为 LAN IP 或 保留 IP
+                 */
+                return
+                    !ip.Equals(localIP) ||
+                    !isLocalIpv4Address(ip) ||
+                    !isLocalIpv4Address(localIP);
             }
+
+            // check if the host header is set to "localhost" IP address
+            if (context.Request.Host.Host.Equals("localhost"))
+            {
+                if (context.Connection.RemoteIpAddress is null || context.Connection.LocalIpAddress is null)
+                    return true;
+
+                /*
+                 * 判断是否为本机访问本机环回地址
+                 * 1. RemoteIp 与 LocalIp 是否相同
+                 * 2. RemoteIp 是否为本机环回地址
+                 * 3. LocalIp 是否为本机环回地址
+                */
+                return
+                    !context.Connection.RemoteIpAddress.Equals(context.Connection.LocalIpAddress) ||
+                    !isLoopbackAddress(context.Connection.RemoteIpAddress) ||
+                    !isLoopbackAddress(context.Connection.LocalIpAddress);
+            }
+
             // the host header is not an IP address
             return true;
         }
