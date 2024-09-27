@@ -15,9 +15,26 @@ namespace BililiveRecorder.Flv.Pipeline.Rules
     {
         private const string VIDEO_HEADER_KEY = "HandleNewHeaderRule_VideoHeader";
         private const string AUDIO_HEADER_KEY = "HandleNewHeaderRule_AudioHeader";
+        private const string ANNEXB_KEY = "HandleNewHeaderRule_AnnexB";
+
+        private enum AnnexBState
+        {
+            Unknown,
+            Pending,
+            IsAnnexB,
+        }
 
         private static readonly ProcessingComment MultipleHeaderComment = new ProcessingComment(CommentType.DecodingHeader, true, "收到了连续多个 Header，新建文件");
         private static readonly ProcessingComment SplitFileComment = new ProcessingComment(CommentType.DecodingHeader, true, "因为 Header 问题新建文件");
+        private static readonly ProcessingComment AnnexBCommentFirst = new ProcessingComment(CommentType.DecodingHeader, true, "检测到一次 AnnexB 格式");
+        private static readonly ProcessingComment AnnexBComment = new ProcessingComment(CommentType.DecodingHeader, true, "检测到 AnnexB 格式，不再切割文件");
+
+        private readonly bool disableSplitOnH264AnnexB;
+
+        public HandleNewHeaderRule(ProcessingPipelineSettings? processingPipelineSettings)
+        {
+            this.disableSplitOnH264AnnexB = processingPipelineSettings?.DisableSplitOnH264AnnexB ?? false;
+        }
 
         public void Run(FlvProcessingContext context, Action next)
         {
@@ -27,8 +44,70 @@ namespace BililiveRecorder.Flv.Pipeline.Rules
 
         private IEnumerable<PipelineAction?> RunPerAction(FlvProcessingContext context, PipelineAction action)
         {
+            if (this.disableSplitOnH264AnnexB)
+            {
+                var state = context.SessionItems.ContainsKey(ANNEXB_KEY) ? (AnnexBState)context.SessionItems[ANNEXB_KEY] : AnnexBState.Unknown;
+
+                if (state == AnnexBState.IsAnnexB)
+                {
+                    // 如果已经检测到 Annex B 格式则不再切割文件
+                    yield return action;
+                    yield break;
+                }
+
+                if (action is PipelineDataAction data)
+                {
+                    var annexb = false;
+
+                    for (var i = 0; i < data.Tags.Count; i++)
+                    {
+                        var tag = data.Tags[i];
+                        if (tag.IsKeyframeData())
+                        {
+                            // Check nalu
+                            if (tag.Nalus is { } nalus)
+                            {
+                                bool sps = false, pps = false;
+                                foreach (var nalu in nalus)
+                                {
+                                    if (nalu.Type == H264NaluType.Sps)
+                                        sps = true;
+                                    if (nalu.Type == H264NaluType.Pps)
+                                        pps = true;
+                                }
+                                annexb = sps && pps;
+                            }
+
+                            break;
+                        }
+                    }
+
+                    if (annexb)
+                    {
+                        if (state == AnnexBState.Unknown)
+                        {
+                            context.SessionItems[ANNEXB_KEY] = AnnexBState.Pending;
+                            context.AddComment(AnnexBCommentFirst);
+                        }
+                        else
+                        {
+                            context.SessionItems[ANNEXB_KEY] = AnnexBState.IsAnnexB;
+                            context.AddComment(AnnexBComment);
+                        }
+                    }
+
+                    yield return action;
+                    yield break;
+                } // if (action is PipelineDataAction data)
+            } // if (this.disableSplitOnH264AnnexB)
+
             if (action is PipelineHeaderAction header)
             {
+                if (this.disableSplitOnH264AnnexB)
+                {
+                    context.SessionItems.Remove(ANNEXB_KEY);
+                }
+
                 // 从 Session Items 里取上次写入的 Header
                 var lastVideoHeader = context.SessionItems.ContainsKey(VIDEO_HEADER_KEY) ? context.SessionItems[VIDEO_HEADER_KEY] as Tag : null;
                 var lastAudioHeader = context.SessionItems.ContainsKey(AUDIO_HEADER_KEY) ? context.SessionItems[AUDIO_HEADER_KEY] as Tag : null;

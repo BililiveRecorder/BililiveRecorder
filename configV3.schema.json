@@ -578,6 +578,22 @@
             }
           }
         },
+        "FlvProcessorDisableSplitOnH264AnnexB": {
+          "description": "FLV修复-检测到 H264 Annex-B 时禁用修复分段\n默认: false",
+          "markdownDescription": "FLV修复-检测到 H264 Annex-B 时禁用修复分段  \n默认: `false `\n\n",
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "HasValue": {
+              "type": "boolean",
+              "default": true
+            },
+            "Value": {
+              "type": "boolean",
+              "default": false
+            }
+          }
+        },
         "TitleFilterPatterns": {
           "description": "不录制的标题匹配正则\n默认: ",
           "markdownDescription": "不录制的标题匹配正则  \n默认: ` `\n\n",
@@ -826,6 +842,22 @@
         "FlvProcessorSplitOnScriptTag": {
           "description": "FLV修复-检测到可能缺少数据时分段\n默认: false",
           "markdownDescription": "FLV修复-检测到可能缺少数据时分段  \n默认: `false `\n\n",
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "HasValue": {
+              "type": "boolean",
+              "default": true
+            },
+            "Value": {
+              "type": "boolean",
+              "default": false
+            }
+          }
+        },
+        "FlvProcessorDisableSplitOnH264AnnexB": {
+          "description": "FLV修复-检测到 H264 Annex-B 时禁用修复分段\n默认: false",
+          "markdownDescription": "FLV修复-检测到 H264 Annex-B 时禁用修复分段  \n默认: `false `\n\n",
           "type": "object",
           "additionalProperties": false,
           "properties": {

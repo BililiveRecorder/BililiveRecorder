@@ -64,7 +64,8 @@ namespace BililiveRecorder.Core.Recording
             this.pipeline = builder
                 .ConfigureServices(services => services.AddSingleton(new ProcessingPipelineSettings
                 {
-                    SplitOnScriptTag = room.RoomConfig.FlvProcessorSplitOnScriptTag
+                    SplitOnScriptTag = room.RoomConfig.FlvProcessorSplitOnScriptTag,
+                    DisableSplitOnH264AnnexB = room.RoomConfig.FlvProcessorDisableSplitOnH264AnnexB,
                 }))
                 .AddRule(this.statsRule)
                 .AddRule(this.splitFileRule)

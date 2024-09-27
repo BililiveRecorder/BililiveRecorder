@@ -126,6 +126,14 @@ namespace BililiveRecorder.Core.Config.V3
         public Optional<bool> OptionalFlvProcessorSplitOnScriptTag { get => this.GetPropertyValueOptional<bool>(nameof(this.FlvProcessorSplitOnScriptTag)); set => this.SetPropertyValueOptional(value, nameof(this.FlvProcessorSplitOnScriptTag)); }
 
         /// <summary>
+        /// FLV修复-检测到 H264 Annex-B 时禁用修复分段
+        /// </summary>
+        public bool FlvProcessorDisableSplitOnH264AnnexB { get => this.GetPropertyValue<bool>(); set => this.SetPropertyValue(value); }
+        public bool HasFlvProcessorDisableSplitOnH264AnnexB { get => this.GetPropertyHasValue(nameof(this.FlvProcessorDisableSplitOnH264AnnexB)); set => this.SetPropertyHasValue<bool>(value, nameof(this.FlvProcessorDisableSplitOnH264AnnexB)); }
+        [JsonProperty(nameof(FlvProcessorDisableSplitOnH264AnnexB)), EditorBrowsable(EditorBrowsableState.Never)]
+        public Optional<bool> OptionalFlvProcessorDisableSplitOnH264AnnexB { get => this.GetPropertyValueOptional<bool>(nameof(this.FlvProcessorDisableSplitOnH264AnnexB)); set => this.SetPropertyValueOptional(value, nameof(this.FlvProcessorDisableSplitOnH264AnnexB)); }
+
+        /// <summary>
         /// 不录制的标题匹配正则
         /// </summary>
         public string? TitleFilterPatterns { get => this.GetPropertyValue<string>(); set => this.SetPropertyValue(value); }
@@ -348,6 +356,14 @@ namespace BililiveRecorder.Core.Config.V3
         public Optional<bool> OptionalFlvProcessorSplitOnScriptTag { get => this.GetPropertyValueOptional<bool>(nameof(this.FlvProcessorSplitOnScriptTag)); set => this.SetPropertyValueOptional(value, nameof(this.FlvProcessorSplitOnScriptTag)); }
 
         /// <summary>
+        /// FLV修复-检测到 H264 Annex-B 时禁用修复分段
+        /// </summary>
+        public bool FlvProcessorDisableSplitOnH264AnnexB { get => this.GetPropertyValue<bool>(); set => this.SetPropertyValue(value); }
+        public bool HasFlvProcessorDisableSplitOnH264AnnexB { get => this.GetPropertyHasValue(nameof(this.FlvProcessorDisableSplitOnH264AnnexB)); set => this.SetPropertyHasValue<bool>(value, nameof(this.FlvProcessorDisableSplitOnH264AnnexB)); }
+        [JsonProperty(nameof(FlvProcessorDisableSplitOnH264AnnexB)), EditorBrowsable(EditorBrowsableState.Never)]
+        public Optional<bool> OptionalFlvProcessorDisableSplitOnH264AnnexB { get => this.GetPropertyValueOptional<bool>(nameof(this.FlvProcessorDisableSplitOnH264AnnexB)); set => this.SetPropertyValueOptional(value, nameof(this.FlvProcessorDisableSplitOnH264AnnexB)); }
+
+        /// <summary>
         /// 是否在视频文件写入直播信息 metadata
         /// </summary>
         public bool FlvWriteMetadata { get => this.GetPropertyValue<bool>(); set => this.SetPropertyValue(value); }
@@ -547,6 +563,8 @@ namespace BililiveRecorder.Core.Config.V3
         public string FileNameRecordTemplate => @"{{ roomId }}-{{ name }}/录制-{{ roomId }}-{{ ""now"" | time_zone: ""Asia/Shanghai"" | format_date: ""yyyyMMdd-HHmmss-fff"" }}-{{ title }}.flv";
 
         public bool FlvProcessorSplitOnScriptTag => false;
+
+        public bool FlvProcessorDisableSplitOnH264AnnexB => false;
 
         public bool FlvWriteMetadata => true;
 

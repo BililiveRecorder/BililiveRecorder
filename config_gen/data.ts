@@ -108,6 +108,13 @@ export const data: Array<ConfigEntry> = [
         default: false
     },
     {
+        id: "FlvProcessorDisableSplitOnH264AnnexB",
+        name: "FLV修复-检测到 H264 Annex-B 时禁用修复分段",
+        type: "bool",
+        configType: "room",
+        default: false
+    },
+    {
         id: "FlvWriteMetadata",
         name: "是否在视频文件写入直播信息 metadata",
         type: "bool",
