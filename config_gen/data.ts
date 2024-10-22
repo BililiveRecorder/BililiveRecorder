@@ -116,6 +116,13 @@ export const data: Array<ConfigEntry> = [
         default: true
     },
     {
+        id: "TitleFilterPatterns",
+        name: "标题过滤",
+        type: "string?",
+        configType: "room",
+        default: ""
+    },
+    {
         id: "WebHookUrls",
         name: "WebhookV1",
         type: "string?",

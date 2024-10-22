@@ -228,6 +228,17 @@ namespace BililiveRecorder.Core
             }
         }
 
+        private bool ValidateTitle()
+        {
+            var patterns = this.RoomConfig.TitleFilterPatterns?.Split(',');
+            foreach (var pattern in patterns ?? Array.Empty<string>())
+            {
+                if (this.Title.Contains(pattern))
+                    return false;
+            }
+            return true;
+        }
+
         ///
         private void CreateAndStartNewRecordTask(bool skipFetchRoomInfo = false)
         {
@@ -241,6 +252,12 @@ namespace BililiveRecorder.Core
 
                 if (this.recordTask != null)
                     return;
+
+                if (!this.ValidateTitle())
+                {
+                    this.logger.Information("标题不符合要求，不录制");
+                    return;
+                }
 
                 var task = this.recordTaskFactory.CreateRecordTask(this);
                 task.IOStats += this.RecordTask_IOStats;
@@ -652,6 +669,7 @@ retry:
                 });
             }
         }
+
 
         private void Room_PropertyChanged(object? sender, PropertyChangedEventArgs e)
         {

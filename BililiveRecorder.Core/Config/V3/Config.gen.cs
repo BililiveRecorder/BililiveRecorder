@@ -126,6 +126,14 @@ namespace BililiveRecorder.Core.Config.V3
         public Optional<bool> OptionalFlvProcessorSplitOnScriptTag { get => this.GetPropertyValueOptional<bool>(nameof(this.FlvProcessorSplitOnScriptTag)); set => this.SetPropertyValueOptional(value, nameof(this.FlvProcessorSplitOnScriptTag)); }
 
         /// <summary>
+        /// 标题过滤
+        /// </summary>
+        public string? TitleFilterPatterns { get => this.GetPropertyValue<string>(); set => this.SetPropertyValue(value); }
+        public bool HasTitleFilterPatterns { get => this.GetPropertyHasValue(nameof(this.TitleFilterPatterns)); set => this.SetPropertyHasValue<string>(value, nameof(this.TitleFilterPatterns)); }
+        [JsonProperty(nameof(TitleFilterPatterns)), EditorBrowsable(EditorBrowsableState.Never)]
+        public Optional<string?> OptionalTitleFilterPatterns { get => this.GetPropertyValueOptional<string>(nameof(this.TitleFilterPatterns)); set => this.SetPropertyValueOptional(value, nameof(this.TitleFilterPatterns)); }
+
+        /// <summary>
         /// 录制文件名模板
         /// </summary>
         public string? FileNameRecordTemplate => this.GetPropertyValue<string>();
@@ -348,6 +356,14 @@ namespace BililiveRecorder.Core.Config.V3
         public Optional<bool> OptionalFlvWriteMetadata { get => this.GetPropertyValueOptional<bool>(nameof(this.FlvWriteMetadata)); set => this.SetPropertyValueOptional(value, nameof(this.FlvWriteMetadata)); }
 
         /// <summary>
+        /// 标题过滤
+        /// </summary>
+        public string? TitleFilterPatterns { get => this.GetPropertyValue<string>(); set => this.SetPropertyValue(value); }
+        public bool HasTitleFilterPatterns { get => this.GetPropertyHasValue(nameof(this.TitleFilterPatterns)); set => this.SetPropertyHasValue<string>(value, nameof(this.TitleFilterPatterns)); }
+        [JsonProperty(nameof(TitleFilterPatterns)), EditorBrowsable(EditorBrowsableState.Never)]
+        public Optional<string?> OptionalTitleFilterPatterns { get => this.GetPropertyValueOptional<string>(nameof(this.TitleFilterPatterns)); set => this.SetPropertyValueOptional(value, nameof(this.TitleFilterPatterns)); }
+
+        /// <summary>
         /// WebhookV1
         /// </summary>
         public string? WebHookUrls { get => this.GetPropertyValue<string>(); set => this.SetPropertyValue(value); }
@@ -533,6 +549,8 @@ namespace BililiveRecorder.Core.Config.V3
         public bool FlvProcessorSplitOnScriptTag => false;
 
         public bool FlvWriteMetadata => true;
+
+        public string TitleFilterPatterns => @"";
 
         public string WebHookUrls => @"";
 
