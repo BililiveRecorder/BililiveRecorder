@@ -579,8 +579,8 @@
           }
         },
         "TitleFilterPatterns": {
-          "description": "标题过滤\n默认: ",
-          "markdownDescription": "标题过滤  \n默认: ` `\n\n",
+          "description": "不录制的标题匹配正则\n默认: ",
+          "markdownDescription": "不录制的标题匹配正则  \n默认: ` `\n\n",
           "type": "object",
           "additionalProperties": false,
           "properties": {
@@ -840,8 +840,8 @@
           }
         },
         "TitleFilterPatterns": {
-          "description": "标题过滤\n默认: ",
-          "markdownDescription": "标题过滤  \n默认: ` `\n\n",
+          "description": "不录制的标题匹配正则\n默认: ",
+          "markdownDescription": "不录制的标题匹配正则  \n默认: ` `\n\n",
           "type": "object",
           "additionalProperties": false,
           "properties": {

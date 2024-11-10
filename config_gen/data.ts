@@ -117,7 +117,7 @@ export const data: Array<ConfigEntry> = [
     },
     {
         id: "TitleFilterPatterns",
-        name: "标题过滤",
+        name: "不录制的标题匹配正则",
         type: "string?",
         configType: "room",
         default: ""

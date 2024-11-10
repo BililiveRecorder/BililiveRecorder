@@ -126,7 +126,7 @@ namespace BililiveRecorder.Core.Config.V3
         public Optional<bool> OptionalFlvProcessorSplitOnScriptTag { get => this.GetPropertyValueOptional<bool>(nameof(this.FlvProcessorSplitOnScriptTag)); set => this.SetPropertyValueOptional(value, nameof(this.FlvProcessorSplitOnScriptTag)); }
 
         /// <summary>
-        /// 标题过滤
+        /// 不录制的标题匹配正则
         /// </summary>
         public string? TitleFilterPatterns { get => this.GetPropertyValue<string>(); set => this.SetPropertyValue(value); }
         public bool HasTitleFilterPatterns { get => this.GetPropertyHasValue(nameof(this.TitleFilterPatterns)); set => this.SetPropertyHasValue<string>(value, nameof(this.TitleFilterPatterns)); }
@@ -356,7 +356,7 @@ namespace BililiveRecorder.Core.Config.V3
         public Optional<bool> OptionalFlvWriteMetadata { get => this.GetPropertyValueOptional<bool>(nameof(this.FlvWriteMetadata)); set => this.SetPropertyValueOptional(value, nameof(this.FlvWriteMetadata)); }
 
         /// <summary>
-        /// 标题过滤
+        /// 不录制的标题匹配正则
         /// </summary>
         public string? TitleFilterPatterns { get => this.GetPropertyValue<string>(); set => this.SetPropertyValue(value); }
         public bool HasTitleFilterPatterns { get => this.GetPropertyHasValue(nameof(this.TitleFilterPatterns)); set => this.SetPropertyHasValue<string>(value, nameof(this.TitleFilterPatterns)); }
