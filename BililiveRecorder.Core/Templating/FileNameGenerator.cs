@@ -93,7 +93,11 @@ namespace BililiveRecorder.Core.Templating
             templateOptions.MemberAccessStrategy.MemberNameStrategy = MemberNameStrategies.CamelCase;
             templateOptions.ValueConverters.Add(o => o is JContainer j ? new JContainerValue(j) : null);
             templateOptions.Filters.AddFilter("format_qn",
-                static (FluidValue input, FilterArguments arguments, TemplateContext context) => new StringValue(StreamQualityNumber.MapToString((int)input.ToNumberValue())));
+                static (FluidValue input, FilterArguments arguments, TemplateContext context)
+                    => new StringValue(StreamQualityNumber.MapToString((int)input.ToNumberValue())));
+            templateOptions.Filters.AddFilter("unescape",
+                static (FluidValue input, FilterArguments arguments, TemplateContext context)
+                    => new StringValue(System.Net.WebUtility.HtmlDecode(input.ToStringValue())));
 
             var context = new TemplateContext(data, templateOptions);
 
