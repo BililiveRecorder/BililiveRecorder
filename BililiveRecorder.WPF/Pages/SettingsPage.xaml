@@ -56,6 +56,7 @@
             <GroupBox Header="标准模式录制修复设置">
                 <StackPanel>
                     <ui:ToggleSwitch IsOn="{Binding FlvProcessorSplitOnScriptTag}" OnContent="检测到可能缺少数据时分段" OffContent="检测到可能缺少数据时分段"/>
+                    <ui:ToggleSwitch IsOn="{Binding FlvProcessorDisableSplitOnH264AnnexB}" OnContent="使用实验性花屏修复判定逻辑" OffContent="使用实验性花屏修复判定逻辑"/>
                 </StackPanel>
             </GroupBox>
             <GroupBox Header="{l:Loc Settings_Splitting_Title}">

@@ -68,6 +68,11 @@
                                 <ui:ToggleSwitch IsOn="{Binding FlvProcessorSplitOnScriptTag}" OnContent="检测到可能缺少数据时分段" OffContent="检测到可能缺少数据时分段"/>
                             </StackPanel>
                         </local:SettingWithDefault>
+                        <local:SettingWithDefault IsSettingNotUsingDefault="{Binding HasFlvProcessorDisableSplitOnH264AnnexB}">
+                            <StackPanel>
+                                <ui:ToggleSwitch IsOn="{Binding FlvProcessorDisableSplitOnH264AnnexB}" OnContent="使用实验性花屏修复判定逻辑" OffContent="使用实验性花屏修复判定逻辑"/>
+                            </StackPanel>
+                        </local:SettingWithDefault>
                     </StackPanel>
                 </GroupBox>
                 <GroupBox Header="{l:Loc Settings_Splitting_Title}">
