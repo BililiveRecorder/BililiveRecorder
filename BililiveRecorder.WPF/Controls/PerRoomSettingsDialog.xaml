@@ -113,6 +113,15 @@
                         </local:SettingWithDefault>
                     </StackPanel>
                 </GroupBox>
+                <GroupBox Header="录制条件">
+                    <StackPanel>
+                        <TextBlock Margin="5" Text="跳过录制的直播标题正则匹配表达式，每行一个" />
+                        <local:SettingWithDefault IsSettingNotUsingDefault="{Binding HasTitleFilterPatterns}">
+                            <TextBox Margin="5" AcceptsReturn="True" TextWrapping="Wrap" VerticalScrollBarVisibility="Visible"
+                                Text="{Binding TitleFilterPatterns,UpdateSourceTrigger=PropertyChanged,Delay=1000}" ui:TextBoxHelper.IsDeleteButtonVisible="False"/>
+                        </local:SettingWithDefault>
+                    </StackPanel>
+                </GroupBox>
             </ui:SimpleStackPanel>
         </ScrollViewer>
     </Grid>

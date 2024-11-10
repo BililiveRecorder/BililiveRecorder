@@ -131,6 +131,13 @@
                     </c:SettingWithDefault>
                 </StackPanel>
             </GroupBox>
+            <GroupBox Header="录制条件">
+                <StackPanel>
+                    <TextBlock Margin="5" Text="跳过录制的直播标题正则匹配表达式，每行一个" />
+                    <TextBox Margin="5" AcceptsReturn="True" TextWrapping="Wrap" VerticalScrollBarVisibility="Visible"
+                         Text="{Binding TitleFilterPatterns,UpdateSourceTrigger=PropertyChanged,Delay=1000}" ui:TextBoxHelper.IsDeleteButtonVisible="False"/>
+                </StackPanel>
+            </GroupBox>
             <GroupBox Header="{l:Loc Settings_Webhook_Title}">
                 <StackPanel MaxWidth="400" HorizontalAlignment="Left">
                     <TextBlock Text="{l:Loc Settings_Webhook_Address}" Margin="0,0,0,10"/>
