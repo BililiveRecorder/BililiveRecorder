@@ -113,7 +113,8 @@ namespace BililiveRecorder.WPF.Pages
                     OutputBase = output_path,
                     PipelineSettings = new Flv.Pipeline.ProcessingPipelineSettings
                     {
-                        SplitOnScriptTag = this.settings.SplitOnScriptTag
+                        SplitOnScriptTag = this.settings.SplitOnScriptTag,
+                        DisableSplitOnH264AnnexB = this.settings.DisableSplitOnH264AnnexB,
                     }
                 };
 
@@ -193,7 +194,8 @@ namespace BililiveRecorder.WPF.Pages
                     Input = inputPath,
                     PipelineSettings = new Flv.Pipeline.ProcessingPipelineSettings
                     {
-                        SplitOnScriptTag = this.settings.SplitOnScriptTag
+                        SplitOnScriptTag = this.settings.SplitOnScriptTag,
+                        DisableSplitOnH264AnnexB = this.settings.DisableSplitOnH264AnnexB,
                     }
                 };
 
@@ -350,6 +352,7 @@ namespace BililiveRecorder.WPF.Pages
         public sealed class AutoFixSettings : INotifyPropertyChanged
         {
             private bool splitOnScriptTag;
+            private bool disableSplitOnH264AnnexB;
 
             public event PropertyChangedEventHandler? PropertyChanged;
             private bool SetField<T>(ref T location, T value, [CallerMemberName] string propertyName = "")
@@ -365,6 +368,11 @@ namespace BililiveRecorder.WPF.Pages
             /// FLV修复-检测到可能缺少数据时分段
             /// </summary>
             public bool SplitOnScriptTag { get => this.splitOnScriptTag; set => this.SetField(ref this.splitOnScriptTag, value); }
+
+            /// <summary>
+            /// FLV修复-检测到 H264 Annex-B 时禁用修复分段
+            /// </summary>
+            public bool DisableSplitOnH264AnnexB { get => this.disableSplitOnH264AnnexB; set => this.SetField(ref this.disableSplitOnH264AnnexB, value); }
         }
     }
 }

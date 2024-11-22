@@ -62,6 +62,7 @@
                             <Grid DataContext="{x:Null}" x:Name="SettingsArea">
                                 <StackPanel Margin="10" Orientation="Vertical">
                                     <CheckBox Content="检测到可能缺少数据时分段" IsChecked="{Binding SplitOnScriptTag}"/>
+                                    <CheckBox Content="使用实验性花屏修复判定逻辑" IsChecked="{Binding DisableSplitOnH264AnnexB}"/>
                                 </StackPanel>
                             </Grid>
                         </ui:Flyout>
