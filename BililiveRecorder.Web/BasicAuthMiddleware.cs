@@ -30,7 +30,7 @@ namespace BililiveRecorder.Web
                 return this.next(context);
             }
 
-            string headerValue = context.Request.Headers["Authorization"];
+            string? headerValue = context.Request.Headers["Authorization"];
             if (string.IsNullOrEmpty(headerValue) ||
                 !headerValue.StartsWith(BasicAndSpace, StringComparison.OrdinalIgnoreCase))
             {

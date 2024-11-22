@@ -233,7 +233,7 @@ namespace BililiveRecorder.Web
                 {
                     var sharedRecordingFiles = new SharedOptions
                     {
-                        FileProvider = new PhysicalFileProvider(app.ApplicationServices.GetRequiredService<IRecorder>().Config.Global.WorkDirectory),
+                        FileProvider = new PhysicalFileProvider(app.ApplicationServices.GetRequiredService<IRecorder>().Config.Global.WorkDirectory!),
                         RequestPath = "/file",
                         RedirectToAppendTrailingSlash = true,
                     };

@@ -20,7 +20,7 @@ namespace BililiveRecorder.Web.Api
             if (fileExplorerSettings is null) throw new ArgumentNullException(nameof(fileExplorerSettings));
             if (fileExplorerSettings.Enable)
             {
-                this.fileProvider = new PhysicalFileProvider(recorder.Config.Global.WorkDirectory);
+                this.fileProvider = new PhysicalFileProvider(recorder.Config.Global.WorkDirectory!);
             }
         }
 
