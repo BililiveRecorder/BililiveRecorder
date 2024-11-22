@@ -22,14 +22,14 @@ namespace BililiveRecorder.ToolBox
             this.RegisterCommand<AnalyzeHandler, AnalyzeRequest, AnalyzeResponse>("analyze", null, c =>
             {
                 c.Add(new Argument<string>("input", "example: input.flv"));
-                c.Add(new Option<ProcessingPipelineSettings?>(name: "pipeline-settings", parseArgument: this.ParseProcessingPipelineSettings));
+                c.Add(new Option<ProcessingPipelineSettings?>(name: "--pipeline-settings", parseArgument: this.ParseProcessingPipelineSettings));
             });
 
             this.RegisterCommand<FixHandler, FixRequest, FixResponse>("fix", null, c =>
             {
                 c.Add(new Argument<string>("input", "example: input.flv"));
                 c.Add(new Argument<string>("output-base", "example: output.flv"));
-                c.Add(new Option<ProcessingPipelineSettings?>(name: "pipeline-settings", parseArgument: this.ParseProcessingPipelineSettings));
+                c.Add(new Option<ProcessingPipelineSettings?>(name: "--pipeline-settings", parseArgument: this.ParseProcessingPipelineSettings));
             });
 
             this.RegisterCommand<ExportHandler, ExportRequest, ExportResponse>("export", null, c =>
