@@ -18,6 +18,5 @@ namespace BililiveRecorder.Core.Api
         [Obsolete]
         public BilibiliApiResponseCodeNotZeroException(string message) : base(message) { }
         public BilibiliApiResponseCodeNotZeroException(string message, Exception innerException) : base(message, innerException) { }
-        protected BilibiliApiResponseCodeNotZeroException(SerializationInfo info, StreamingContext context) : base(info, context) { }
     }
 }

@@ -276,7 +276,7 @@ namespace BililiveRecorder.Cli
                                 {
                                     listenOptions.UseHttps(LoadCertificate(sharedArguments, logger) ?? GenerateSelfSignedCertificate(logger), https =>
                                     {
-                                        https.SslProtocols = SslProtocols.Tls11 | SslProtocols.Tls12 | SslProtocols.Tls13;
+                                        https.SslProtocols = SslProtocols.Tls12 | SslProtocols.Tls13;
                                     });
                                 }
                             }

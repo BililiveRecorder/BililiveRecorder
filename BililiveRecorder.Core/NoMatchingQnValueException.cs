@@ -8,6 +8,5 @@ namespace BililiveRecorder.Core
         public NoMatchingQnValueException() { }
         public NoMatchingQnValueException(string message) : base(message) { }
         public NoMatchingQnValueException(string message, Exception innerException) : base(message, innerException) { }
-        protected NoMatchingQnValueException(SerializationInfo info, StreamingContext context) : base(info, context) { }
     }
 }
