@@ -1,8 +1,8 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks Condition=" '$(OS)' == 'Windows_NT' ">net4.8;net6.0</TargetFrameworks>
-    <TargetFramework Condition=" '$(OS)' != 'Windows_NT' ">net6.0</TargetFramework>
+    <TargetFrameworks Condition=" '$(OS)' == 'Windows_NT' ">net4.8;net8.0</TargetFrameworks>
+    <TargetFramework Condition=" '$(OS)' != 'Windows_NT' ">net8.0</TargetFramework>
     <IsPackable>false</IsPackable>
   </PropertyGroup>
 

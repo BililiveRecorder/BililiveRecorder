@@ -2,11 +2,11 @@
   
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <StartupObject>BililiveRecorder.Cli.Program</StartupObject>
     <SatelliteResourceLanguages>en</SatelliteResourceLanguages>
     <ValidateExecutableReferencesMatchSelfContained>false</ValidateExecutableReferencesMatchSelfContained>
-    <RuntimeIdentifiers>win-x64;osx-x64;osx.10.11-x64;linux-arm64;linux-arm;linux-x64</RuntimeIdentifiers>
+    <RuntimeIdentifiers>win-x64;osx-x64;osx-arm64;linux-arm64;linux-arm;linux-x64</RuntimeIdentifiers>
     <RuntimeIdentifier Condition=" '$(RuntimeIdentifier)' == 'any' "></RuntimeIdentifier>
     <UseAppHost Condition=" '$(RuntimeIdentifier)' == '' and '$(Configuration)' != 'Debug' ">false</UseAppHost>
     <PublishDir Condition=" '$(RuntimeIdentifier)' == '' ">publish\any\$(Configuration)</PublishDir>
