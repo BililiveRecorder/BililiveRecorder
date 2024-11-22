@@ -46,7 +46,8 @@ namespace BililiveRecorder.Flv.Pipeline.Rules
         {
             if (this.disableSplitOnH264AnnexB)
             {
-                var state = context.SessionItems.ContainsKey(ANNEXB_KEY) ? (AnnexBState)context.SessionItems[ANNEXB_KEY] : AnnexBState.Unknown;
+                context.SessionItems.TryGetValue(ANNEXB_KEY, out var annexBStateObj);
+                var state = annexBStateObj is AnnexBState annexBState ? annexBState : AnnexBState.Unknown;
 
                 if (state == AnnexBState.IsAnnexB)
                 {
