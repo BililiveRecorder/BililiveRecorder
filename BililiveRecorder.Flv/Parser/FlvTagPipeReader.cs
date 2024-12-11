@@ -224,6 +224,7 @@ namespace BililiveRecorder.Flv.Parser
 
             // Parse Tag Flag
             var tagFlag = TagFlag.None;
+            var isAVC = true;
 
             if (tagBodyStream.Length > 2)
             {
@@ -244,8 +245,8 @@ namespace BililiveRecorder.Flv.Parser
                         {
                             var frame = tagBodyStream.ReadByte();
 
-                            if ((frame & 0x0F) != 7) // AVC
-                                throw new UnsupportedCodecException(string.Format("Unsupported Video Codec: {0}.", frame & 0x0F));
+                            isAVC = (frame & 0x0F) == 7;
+                            // if (!isAVC) throw new UnsupportedCodecException(string.Format("Unsupported Video Codec: {0}.", frame & 0x0F));
 
                             if (frame == 0x17)
                                 tagFlag |= TagFlag.Keyframe;
@@ -287,7 +288,7 @@ namespace BililiveRecorder.Flv.Parser
                     this.logger?.Debug(ex, "Error parsing script tag body");
                 }
             }
-            else if (tag.Type == TagType.Video && (0 == (tag.Flag & TagFlag.Header)))
+            else if (isAVC && tag.Type == TagType.Video && (0 == (tag.Flag & TagFlag.Header)))
             {
                 if (H264Nalu.TryParseNalu(tagBodyStream, out var nalus))
                     tag.Nalus = nalus;
