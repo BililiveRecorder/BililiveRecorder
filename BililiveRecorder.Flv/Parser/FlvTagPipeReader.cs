@@ -248,8 +248,9 @@ namespace BililiveRecorder.Flv.Parser
                             isAVC = (frame & 0x0F) == 7;
                             // if (!isAVC) throw new UnsupportedCodecException(string.Format("Unsupported Video Codec: {0}.", frame & 0x0F));
 
-                            if (frame == 0x17)
+                            if ((frame & 0xF0) == 0x10)
                                 tagFlag |= TagFlag.Keyframe;
+
                             var packet = tagBodyStream.ReadByte();
                             tagFlag |= packet switch
                             {
