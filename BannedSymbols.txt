@@ -1,2 +1,0 @@
-M:ModernWpf.Controls.ContentDialog.ShowAsync
-M:ModernWpf.Controls.ContentDialog.ShowAsync(ModernWpf.Controls.ContentDialogPlacement)

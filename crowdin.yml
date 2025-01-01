@@ -1,3 +1,0 @@
-files:
-  - source: /BililiveRecorder.WPF/Properties/Strings.resx
-    translation: /BililiveRecorder.WPF/Properties/Strings.%osx_locale%.resx
