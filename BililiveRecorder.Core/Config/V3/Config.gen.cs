@@ -582,7 +582,7 @@ namespace BililiveRecorder.Core.Config.V3
 
         public string LiveApiHost => @"https://api.live.bilibili.com";
 
-        public uint TimingCheckInterval => 600;
+        public uint TimingCheckInterval => 180;
 
         public uint TimingApiTimeout => 10000;
 

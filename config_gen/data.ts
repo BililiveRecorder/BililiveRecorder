@@ -179,7 +179,7 @@ export const data: Array<ConfigEntry> = [
         type: "uint",
         configType: "globalOnly",
         advancedConfig: true,
-        default: 10 * 60,
+        default: 3 * 60,
     },
     {
         id: "TimingApiTimeout",

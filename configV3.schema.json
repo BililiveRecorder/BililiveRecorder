@@ -136,8 +136,8 @@
           }
         },
         "TimingCheckInterval": {
-          "description": "主动检查时间间隔 秒\n默认: 600",
-          "markdownDescription": "主动检查时间间隔 秒  \n默认: `600 `\n\n",
+          "description": "主动检查时间间隔 秒\n默认: 180",
+          "markdownDescription": "主动检查时间间隔 秒  \n默认: `180 `\n\n",
           "type": "object",
           "additionalProperties": false,
           "properties": {
@@ -149,7 +149,7 @@
               "type": "integer",
               "minimum": 0,
               "maximum": 4294967295,
-              "default": 600
+              "default": 180
             }
           }
         },
