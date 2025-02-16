@@ -22,12 +22,12 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
           submodules: recursive
 
-      - uses: actions/setup-dotnet@v3
+      - uses: actions/setup-dotnet@v4
 
       - name: Make sure webui can be built
         if: "${{ matrix.os == 'windows-latest' }}"
@@ -47,13 +47,13 @@ jobs:
     runs-on: windows-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
           submodules: recursive
 
       - name: Add msbuild to PATH
-        uses: microsoft/setup-msbuild@v1
+        uses: microsoft/setup-msbuild@v2
       - name: Restore Packages
         run: msbuild -t:restore /v:m BililiveRecorder.WPF/BililiveRecorder.WPF.csproj
 
@@ -63,13 +63,13 @@ jobs:
         run: msbuild /nologo /v:m /p:Configuration="Release" BililiveRecorder.WPF/BililiveRecorder.WPF.csproj
 
       - name: Upload Artifacts - Debug
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: WPF-Debug
           path: BililiveRecorder.WPF/bin/Debug
 
       - name: Upload Artifacts - Release
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: WPF-Release
           path: BililiveRecorder.WPF/bin/Release
@@ -83,12 +83,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
           submodules: recursive
 
-      - uses: actions/setup-dotnet@v3
+      - uses: actions/setup-dotnet@v4
 
       - name: Build WebUI
         run: ./webui/build.sh
@@ -108,12 +108,12 @@ jobs:
         run: dotnet publish -c Release -r ${{ matrix.rid }} BililiveRecorder.Cli/BililiveRecorder.Cli.csproj
 
       - name: Upload Artifacts - Debug
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: CLI-${{ matrix.rid }}-Debug
           path: BililiveRecorder.Cli/publish/${{ matrix.rid }}/Debug
       - name: Upload Artifacts - Release
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: CLI-${{ matrix.rid }}-Release
           path: BililiveRecorder.Cli/publish/${{ matrix.rid }}/Release
@@ -128,17 +128,17 @@ jobs:
       packages: write
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
           submodules: recursive
       - name: Set up QEMU
-        uses: docker/setup-qemu-action@v2
+        uses: docker/setup-qemu-action@v3
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
+        uses: docker/setup-buildx-action@v3
       - name: Login to GitHub Container Registry
         if: github.event_name != 'pull_request'
-        uses: docker/login-action@v2
+        uses: docker/login-action@v3
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
@@ -148,7 +148,7 @@ jobs:
       # https://github.com/docker/metadata-action
       - name: Extract Docker metadata
         id: meta
-        uses: docker/metadata-action@v4
+        uses: docker/metadata-action@v5
         with:
           images: |
             ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
@@ -164,7 +164,7 @@ jobs:
       # Build and push Docker image with Buildx (don't push on PR)
       # https://github.com/docker/build-push-action
       - name: Build and push Docker image
-        uses: docker/build-push-action@v4
+        uses: docker/build-push-action@v6
         with:
           context: .
           file: ./Dockerfile.GitHubActions
