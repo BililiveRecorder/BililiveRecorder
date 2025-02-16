@@ -91,7 +91,7 @@ export const data: Array<ConfigEntry> = [
         name: "直播画质",
         type: "string?",
         configType: "room",
-        default: "10000",
+        default: "avc10000,hevc10000",
     },
     {
         id: "FileNameRecordTemplate",

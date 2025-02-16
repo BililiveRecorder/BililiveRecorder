@@ -10,6 +10,7 @@ using System.Security;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Threading;
+using BililiveRecorder.Core.Api;
 using BililiveRecorder.Flv.Pipeline;
 using BililiveRecorder.ToolBox;
 using Esprima;
@@ -289,6 +290,7 @@ namespace BililiveRecorder.WPF
                 .Enrich.WithExceptionDetails()
                 .Destructure.AsScalar<IPAddress>()
                 .Destructure.AsScalar<ProcessingComment>()
+                .Destructure.AsScalar<StreamCodecQn>()
                 .Destructure.ByTransforming<Flv.Xml.XmlFlvFile.XmlFlvFileMeta>(x => new
                 {
                     x.Version,

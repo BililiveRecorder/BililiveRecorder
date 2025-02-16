@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using System.Threading;
+using BililiveRecorder.Core.Api;
 using BililiveRecorder.Core.Config.V3;
 using BililiveRecorder.Core.Scripting.Runtime;
 using Esprima.Ast;
@@ -170,7 +172,7 @@ globalThis.recorderEvents = {};
         /// <param name="logger">logger</param>
         /// <param name="roomid">房间号</param>
         /// <returns>直播流 URL</returns>
-        public string? CallOnFetchStreamUrl(ILogger logger, int roomid, int[] qnSetting)
+        public string? CallOnFetchStreamUrl(ILogger logger, int roomid, IReadOnlyList<StreamCodecQn> qnSetting)
         {
             const string callbackName = "onFetchStreamUrl";
             var log = BuildLogger(logger);

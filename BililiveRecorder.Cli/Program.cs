@@ -17,6 +17,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using BililiveRecorder.Cli.Configure;
 using BililiveRecorder.Core;
+using BililiveRecorder.Core.Api;
 using BililiveRecorder.Core.Config;
 using BililiveRecorder.Core.Config.V3;
 using BililiveRecorder.DependencyInjection;
@@ -519,6 +520,7 @@ namespace BililiveRecorder.Cli
                 .Enrich.WithExceptionDetails()
                 .Destructure.AsScalar<IPAddress>()
                 .Destructure.AsScalar<ProcessingComment>()
+                .Destructure.AsScalar<StreamCodecQn>()
                 .Destructure.ByTransforming<Flv.Xml.XmlFlvFile.XmlFlvFileMeta>(x => new
                 {
                     x.Version,
