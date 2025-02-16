@@ -516,7 +516,6 @@ namespace BililiveRecorder.Cli
                 .Enrich.WithProcessId()
                 .Enrich.WithThreadId()
                 .Enrich.WithThreadName()
-                .Enrich.FromLogContext()
                 .Enrich.WithExceptionDetails()
                 .Destructure.AsScalar<IPAddress>()
                 .Destructure.AsScalar<ProcessingComment>()

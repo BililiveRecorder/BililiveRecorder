@@ -286,7 +286,6 @@ namespace BililiveRecorder.WPF
                 .Enrich.WithProcessId()
                 .Enrich.WithThreadId()
                 .Enrich.WithThreadName()
-                .Enrich.FromLogContext()
                 .Enrich.WithExceptionDetails()
                 .Destructure.AsScalar<IPAddress>()
                 .Destructure.AsScalar<ProcessingComment>()
