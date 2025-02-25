@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using BililiveRecorder.Core.Api;
 using BililiveRecorder.Core.Config.V3;
@@ -183,7 +184,28 @@ globalThis.recorderEvents = {};
 
                 var input = new JsObject(func.Engine);
                 input.Set("roomid", roomid);
-                input.Set("qn", JsValue.FromObject(func.Engine, qnSetting));
+
+                var qnList = new List<int>();
+                var qnV2 = new JsArray(func.Engine, capacity: (uint)qnSetting.Count);
+                foreach (var setting in qnSetting)
+                {
+                    if (!qnList.Contains(setting.Qn))
+                    {
+                        qnList.Add(setting.Qn);
+                    }
+
+                    var v2element = new JsObject(func.Engine);
+                    v2element.Set("qn", setting.Qn);
+                    v2element.Set("codec", setting.Codec switch
+                    {
+                        StreamCodec.AVC => "avc",
+                        StreamCodec.HEVC => "hevc",
+                        _ => "unknown"
+                    });
+                    qnV2.Push(v2element);
+                }
+                input.Set("qn", new JsArray(func.Engine, qnList.Select(x => new JsNumber(x)).ToArray()));
+                input.Set("qn_v2", qnV2);
 
                 var result = func.Engine.Call(func, input);
 
