@@ -99,7 +99,7 @@
                 {% for file in files %}{% if file.isDirectory -%}
                 <tr class="directory">
                     <td></td>
-                    <td class="name"><a href="./{{ file.name | url_encode }}/">{{ file.name | escape }}/</a></td>
+                    <td class="name"><a href="./{{ file.name | brec_url_encode }}/">{{ file.name | escape }}/</a></td>
                     <td></td>
                     <td class="modified" data-time="{{ file.lastModified | format_date: 'O' }}">{{ file.lastModified }}
                     </td>
@@ -108,7 +108,7 @@
                 {% for file in files %}{% unless file.isDirectory -%}
                 <tr class="file">
                     <td></td>
-                    <td class="name"><a href="./{{ file.name | url_encode }}">{{ file.name | escape }}</a></td>
+                    <td class="name"><a href="./{{ file.name | brec_url_encode }}">{{ file.name | escape }}</a></td>
                     <td class="size" data-size="{{ file.length }}" title="{{ file.length }} 字节">{{ file.length |
                         format_number: 'N0' }} B</td>
                     <td class="modified" data-time="{{ file.lastModified | format_date: 'O' }}">{{ file.lastModified }}
@@ -121,10 +121,11 @@
                         const playerBaseUrl = new Array(pathDepth - 1).fill('../').join('') + 'player/#';
                         Array.from(document.querySelectorAll('#index tbody tr')).forEach(row => {
                             const d = row.querySelectorAll('td');
-                            if (d[1].textContent.endsWith('flv')) {
+                            const a = d[1].children[0];
+                            if (a.href.endsWith('flv')) {
                                 const playerLink = document.createElement('a');
                                 playerLink.textContent = '播放';
-                                playerLink.href = playerBaseUrl + new URL(encodeURIComponent(d[1].textContent), location.href).pathname;
+                                playerLink.href = playerBaseUrl + new URL(a.href).pathname;
                                 d[0].appendChild(playerLink);
                             }
 

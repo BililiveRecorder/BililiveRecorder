@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -33,6 +34,11 @@ namespace BililiveRecorder.Web
             var options = new TemplateOptions();
             options.MemberAccessStrategy.MemberNameStrategy = MemberNameStrategies.CamelCase;
             options.MemberAccessStrategy.Register<IFileInfo>();
+
+            options.Filters.AddFilter("brec_url_encode", static (input, arguments, context) =>
+            {
+                return new Fluid.Values.StringValue(Uri.EscapeDataString(input.ToStringValue()));
+            });
 
             var tc = new TemplateContext(options);
             tc.SetValue("path", (context.Request.PathBase + context.Request.Path).Value);
