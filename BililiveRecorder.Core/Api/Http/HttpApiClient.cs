@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Text.RegularExpressions;
@@ -7,6 +9,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using BililiveRecorder.Core.Api.Model;
 using BililiveRecorder.Core.Config.V3;
+using Flurl;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -18,13 +21,18 @@ namespace BililiveRecorder.Core.Api.Http
         internal const string HttpHeaderAcceptLanguage = "zh-CN";
         internal const string HttpHeaderReferer = "https://live.bilibili.com/";
         internal const string HttpHeaderOrigin = "https://live.bilibili.com";
-        internal const string HttpHeaderUserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/118.0.0.0 Safari/537.36";
+        internal const string HttpHeaderUserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36 Edg/132.0.0.0";
         private static readonly Regex matchCookieUidRegex = new Regex(@"DedeUserID=(\d+?);", RegexOptions.Compiled);
         private static readonly Regex matchCookieBuvid3Regex = new Regex(@"buvid3=(.+?);", RegexOptions.Compiled);
         private long uid;
         private string? buvid3;
 
         private readonly GlobalConfig config;
+
+        private readonly Wbi wbi = new Wbi();
+        private DateTimeOffset wbiLastUpdate = DateTimeOffset.MinValue;
+        private static readonly TimeSpan wbiUpdateInterval = TimeSpan.FromHours(2);
+
         private HttpClient client;
         private bool disposedValue;
 
@@ -83,6 +91,63 @@ namespace BililiveRecorder.Core.Api.Http
                 this.UpdateHttpClient();
         }
 
+        private readonly SemaphoreSlim wbiSemaphoreSlim = new SemaphoreSlim(1, 1);
+
+        private async Task UpdateWbiKeyAsync()
+        {
+            if (this.disposedValue)
+                throw new ObjectDisposedException(nameof(HttpApiClient));
+
+            if (this.wbiLastUpdate + wbiUpdateInterval > DateTimeOffset.UtcNow)
+                return;
+
+            await this.wbiSemaphoreSlim.WaitAsync().ConfigureAwait(false);
+            try
+            {
+                if (this.wbiLastUpdate + wbiUpdateInterval > DateTimeOffset.UtcNow)
+                    return;
+
+                const string URL = @"https://api.bilibili.com/x/web-interface/nav";
+                var resp = await this.client.GetAsync(URL).ConfigureAwait(false);
+                resp.EnsureSuccessStatusCode();
+                var text = await resp.Content.ReadAsStringAsync().ConfigureAwait(false);
+                var jo = JObject.Parse(text);
+
+                var wbi_img = (jo["data"]?["wbi_img"]) ?? throw new Exception("failed to get wbi key");
+                var img_url = wbi_img["img_url"]?.ToObject<string>() ?? throw new Exception("failed to get wbi key");
+                var sub_url = wbi_img["sub_url"]?.ToObject<string>() ?? throw new Exception("failed to get wbi key");
+
+                string img, sub;
+
+                {
+                    var slash = img_url.LastIndexOf('/');
+                    var dot = img_url.IndexOf('.', slash);
+                    if (slash == -1 || dot == -1)
+                        throw new Exception("failed to get wbi key");
+                    img = img_url.Substring(slash + 1, dot - slash - 1);
+                }
+
+                {
+                    var slash = sub_url.LastIndexOf('/');
+                    var dot = sub_url.IndexOf('.', slash);
+                    if (slash == -1 || dot == -1)
+                        throw new Exception("failed to get wbi key");
+                    sub = sub_url.Substring(slash + 1, dot - slash - 1);
+                }
+
+                if (string.IsNullOrWhiteSpace(img) || string.IsNullOrWhiteSpace(sub))
+                    throw new Exception("failed to get wbi key");
+
+                this.wbi.UpdateKey(img, sub);
+                this.wbiLastUpdate = DateTimeOffset.UtcNow;
+
+            }
+            finally
+            {
+                this.wbiSemaphoreSlim.Release();
+            }
+        }
+
         private async Task<string> FetchAsTextAsync(string url)
         {
             var resp = await this.client.GetAsync(url).ConfigureAwait(false);
@@ -107,7 +172,15 @@ namespace BililiveRecorder.Core.Api.Http
             if (this.disposedValue)
                 throw new ObjectDisposedException(nameof(HttpApiClient));
 
-            var url = $@"{this.config.LiveApiHost}/xlive/web-room/v1/index/getInfoByRoom?room_id={roomid}";
+            await this.UpdateWbiKeyAsync().ConfigureAwait(false);
+
+            Url url = $@"{this.config.LiveApiHost}/xlive/web-room/v1/index/getInfoByRoom?room_id={roomid}&web_location=444.8";
+            var q = url.QueryParams;
+
+            var sign = this.wbi.Sign(q.Select(static x => new KeyValuePair<string, string>(x.Name, x.Value.ToString())));
+
+            q.AddOrReplace(Wbi.W_RID, sign.sign);
+            q.AddOrReplace(Wbi.WTS, sign.ts);
 
             var text = await this.FetchAsTextAsync(url).ConfigureAwait(false);
 
@@ -127,7 +200,16 @@ namespace BililiveRecorder.Core.Api.Http
             if (this.disposedValue)
                 throw new ObjectDisposedException(nameof(HttpApiClient));
 
-            var url = $@"{this.config.LiveApiHost}/xlive/web-room/v2/index/getRoomPlayInfo?room_id={roomid}&protocol=0,1&format=0,1,2&codec=0,1&qn={qn}&platform=web&ptype=8&dolby=5&panorama=1";
+            Url url = $@"{this.config.LiveApiHost}/xlive/web-room/v2/index/getRoomPlayInfo?room_id=0&no_playurl=0&mask=1&qn=0&platform=web&protocol=0,1&format=0,1,2&codec=0,1,2&dolby=5&panorama=1&hdr_type=0,1&web_location=444.8";
+            var q = url.QueryParams;
+
+            q.AddOrReplace("room_id", roomid);
+            q.AddOrReplace("qn", qn);
+
+            var sign = this.wbi.Sign(q.Select(static x => new KeyValuePair<string, string>(x.Name, x.Value.ToString())));
+            q.AddOrReplace(Wbi.W_RID, sign.sign);
+            q.AddOrReplace(Wbi.WTS, sign.ts);
+
             return this.FetchAsync<RoomPlayInfo>(url);
         }
 
@@ -155,7 +237,13 @@ BUVID3 (from Cookie): {this.GetBuvid3()}";
             if (this.disposedValue)
                 throw new ObjectDisposedException(nameof(HttpApiClient));
 
-            var url = $@"{this.config.LiveApiHost}/xlive/web-room/v1/index/getDanmuInfo?id={roomid}&type=0";
+            Url url = $@"{this.config.LiveApiHost}/xlive/web-room/v1/index/getDanmuInfo?id={roomid}&type=0";
+            var q = url.QueryParams;
+
+            var sign = this.wbi.Sign(q.Select(static x => new KeyValuePair<string, string>(x.Name, x.Value.ToString())));
+            q.AddOrReplace(Wbi.W_RID, sign.sign);
+            q.AddOrReplace(Wbi.WTS, sign.ts);
+
             return this.FetchAsync<DanmuInfo>(url);
         }
 
@@ -168,6 +256,7 @@ BUVID3 (from Cookie): {this.GetBuvid3()}";
                     // dispose managed state (managed objects)
                     this.config.PropertyChanged -= this.Config_PropertyChanged;
                     this.client.Dispose();
+                    this.wbiSemaphoreSlim.Dispose();
                 }
 
                 // free unmanaged resources (unmanaged objects) and override finalizer
