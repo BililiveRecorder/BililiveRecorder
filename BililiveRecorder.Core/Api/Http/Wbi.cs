@@ -44,8 +44,8 @@ namespace BililiveRecorder.Core.Api.Http
             var tsStr = ts.ToString();
 
             var toBeHashed = query
-                .Append(new KeyValuePair<string, string>(WTS, tsStr))
                 .Select(static x => new KeyValuePair<string, string>(x.Key, new string(x.Value.Where(static c => c is not '!' and not '\'' and not '(' and not ')' and not '*').ToArray())))
+                .Append(new KeyValuePair<string, string>(WTS, tsStr))
                 .OrderBy(static x => x.Key, StringComparer.Ordinal);
 
 #pragma warning disable VSTHRD002 // Avoid problematic synchronous waits

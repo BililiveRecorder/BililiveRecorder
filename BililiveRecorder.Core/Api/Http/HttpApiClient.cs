@@ -177,7 +177,7 @@ namespace BililiveRecorder.Core.Api.Http
             Url url = $@"{this.config.LiveApiHost}/xlive/web-room/v1/index/getInfoByRoom?room_id={roomid}&web_location=444.8";
             var q = url.QueryParams;
 
-            var sign = this.wbi.Sign(q.Select(static x => new KeyValuePair<string, string>(x.Name, x.Value.ToString())));
+            var sign = this.wbi.Sign(q.Select(static x => new KeyValuePair<string, string>(x.Name, x.Value?.ToString() ?? string.Empty)));
 
             q.AddOrReplace(Wbi.W_RID, sign.sign);
             q.AddOrReplace(Wbi.WTS, sign.ts);
@@ -206,7 +206,7 @@ namespace BililiveRecorder.Core.Api.Http
             q.AddOrReplace("room_id", roomid);
             q.AddOrReplace("qn", qn);
 
-            var sign = this.wbi.Sign(q.Select(static x => new KeyValuePair<string, string>(x.Name, x.Value.ToString())));
+            var sign = this.wbi.Sign(q.Select(static x => new KeyValuePair<string, string>(x.Name, x.Value?.ToString() ?? string.Empty)));
             q.AddOrReplace(Wbi.W_RID, sign.sign);
             q.AddOrReplace(Wbi.WTS, sign.ts);
 
@@ -240,7 +240,7 @@ BUVID3 (from Cookie): {this.GetBuvid3()}";
             Url url = $@"{this.config.LiveApiHost}/xlive/web-room/v1/index/getDanmuInfo?id={roomid}&type=0";
             var q = url.QueryParams;
 
-            var sign = this.wbi.Sign(q.Select(static x => new KeyValuePair<string, string>(x.Name, x.Value.ToString())));
+            var sign = this.wbi.Sign(q.Select(static x => new KeyValuePair<string, string>(x.Name, x.Value?.ToString() ?? string.Empty)));
             q.AddOrReplace(Wbi.W_RID, sign.sign);
             q.AddOrReplace(Wbi.WTS, sign.ts);
 
