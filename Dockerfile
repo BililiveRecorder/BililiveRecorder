@@ -8,6 +8,6 @@ ENV TZ=Asia/Shanghai
 WORKDIR /app
 VOLUME [ "/rec" ]
 COPY --from=0 /output /app
-ENTRYPOINT [ "/app/BililiveRecorder.Cli" ]
+ENTRYPOINT [ "dotnet", "/app/BililiveRecorder.Cli.dll" ]
 EXPOSE 2356/tcp
 CMD [ "run", "--bind", "http://*:2356", "/rec" ]
