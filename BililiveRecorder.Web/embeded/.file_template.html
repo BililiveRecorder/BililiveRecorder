@@ -119,10 +119,18 @@
                     (function () {
                         const pathDepth = (document.currentScript.dataset.path.match(/\//g) || []).length;
                         const playerBaseUrl = new Array(pathDepth - 1).fill('../').join('') + 'player/#';
-                        Array.from(document.querySelectorAll('#index tbody tr')).forEach(row => {
+
+                        function isPlayable(filePath){
+                            const extensions = [
+                                "flv", "mkv", "mp4", "webm", "ogv"
+                            ]
+                            return extensions.some(x => filePath.endsWith(`.${x}`));
+                        }
+
+                        document.querySelectorAll('#index tbody tr').forEach(row => {
                             const d = row.querySelectorAll('td');
                             const a = d[1].children[0];
-                            if (a.href.endsWith('flv')) {
+                            if (isPlayable(a.href)) {
                                 const playerLink = document.createElement('a');
                                 playerLink.textContent = '播放';
                                 playerLink.href = playerBaseUrl + new URL(a.href).pathname;
@@ -135,22 +143,39 @@
                                 const GB = MB * 1024;
 
                                 const size = Number(d[2].dataset.size);
+                                if (!Number.isFinite(size) || size < 0) size = 0;
 
-                                if (size / GB >= 1) {
-                                    d[2].textContent = `${(size / GB).toFixed(2)} GB`;
-                                } else if (size / MB >= 2) {
-                                    d[2].textContent = `${(size / MB).toFixed(2)} MB`;
-                                } else if (size / KB >= 2) {
-                                    d[2].textContent = `${(size / KB).toFixed(2)} KB`;
+                                const format = (value, unit) => `${value.toFixed(2)} ${unit}`;
+
+                                if (size >= GB) {
+                                    d[2].textContent = format(size / GB, 'GB');
+                                } else if (size >= MB) {
+                                    d[2].textContent = format(size / MB, 'MB');
+                                } else if (size >= KB) {
+                                    d[2].textContent = format(size / KB, 'KB');
                                 } else {
                                     d[2].textContent = `${size} B`;
                                 }
                             }
 
                             if (d[3].dataset.time) {
-                                const date = new Date(d[3].dataset.time);
-                                d[3].textContent = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')} ${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}:${String(date.getSeconds()).padStart(2, '0')}`;
-                                d[3].title = d[3].dataset.time;
+                                const raw = d[3].dataset.time;
+                                const date = new Date(raw.replace(/-/g, '/'));
+
+                                if (!isNaN(date)) {
+                                    const pad = (n) => String(n).padStart(2, '0');
+                                    const Y = date.getFullYear();
+                                    const M = pad(date.getMonth() + 1);
+                                    const D = pad(date.getDate());
+                                    const h = pad(date.getHours());
+                                    const m = pad(date.getMinutes());
+                                    const s = pad(date.getSeconds());
+
+                                    d[3].textContent = `${Y}-${M}-${D} ${h}:${m}:${s}`;
+                                } else {
+                                    d[3].textContent = raw;
+                                }
+                                d[3].title = raw;
                             }
                         });
                     })();
