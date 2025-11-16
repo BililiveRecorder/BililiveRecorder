@@ -142,7 +142,7 @@
                                 const MB = KB * 1024;
                                 const GB = MB * 1024;
 
-                                const size = Number(d[2].dataset.size);
+                                let size = Number(d[2].dataset.size);
                                 if (!Number.isFinite(size) || size < 0) size = 0;
 
                                 const format = (value, unit) => `${value.toFixed(2)} ${unit}`;
