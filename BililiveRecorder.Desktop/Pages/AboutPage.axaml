@@ -1,0 +1,91 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:local="clr-namespace:BililiveRecorder.Desktop.Pages"
+             xmlns:models="clr-namespace:BililiveRecorder.Desktop.Models"
+             mc:Ignorable="d" d:DesignWidth="900" d:DesignHeight="600"
+             x:Class="BililiveRecorder.Desktop.Pages.AboutPage">
+    <ScrollViewer>
+        <StackPanel Margin="20" Spacing="15">
+            <StackPanel Orientation="Horizontal" Spacing="10">
+                <Border Height="60" Width="60">
+                    <Image Source="avares://BililiveRecorder.Desktop/ico.ico" Stretch="Uniform"/>
+                </Border>
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                    <StackPanel>
+                        <TextBlock Text="mikufans" FontSize="10" HorizontalAlignment="Center"/>
+                        <TextBlock Text="mikufans" FontSize="32"/>
+                    </StackPanel>
+                    <StackPanel>
+                        <TextBlock Text="lù" FontSize="10" HorizontalAlignment="Center"/>
+                        <TextBlock Text="录" FontSize="32"/>
+                    </StackPanel>
+                    <StackPanel>
+                        <TextBlock Text="bō" FontSize="10" HorizontalAlignment="Center"/>
+                        <TextBlock Text="播" FontSize="32"/>
+                    </StackPanel>
+                    <StackPanel>
+                        <TextBlock Text="jī" FontSize="10" HorizontalAlignment="Center"/>
+                        <TextBlock Text="姬" FontSize="32"/>
+                    </StackPanel>
+                </StackPanel>
+            </StackPanel>
+
+            <StackPanel Spacing="5">
+                <TextBlock FontSize="16" Text="{Binding VersionText}"/>
+                <TextBlock FontSize="16" x:Name="CopyrightTextBlock"/>
+                <TextBlock FontSize="16" TextWrapping="Wrap" Text="Licensed under GNU General Public License v3.0"/>
+                <StackPanel Orientation="Horizontal" Spacing="5">
+                    <TextBlock FontSize="16" Text="Contact:" VerticalAlignment="Center"/>
+                    <Button Content="rec@danmuji.org" Click="OpenEmail_Click"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Spacing="5">
+                    <TextBlock FontSize="16" Text="Website:" VerticalAlignment="Center"/>
+                    <Button Content="https://rec.danmuji.org" Click="OpenWebsite_Click"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Spacing="5">
+                    <TextBlock FontSize="16" Text="Project:" VerticalAlignment="Center"/>
+                    <Button Content="GitHub" Click="OpenGitHub_Click"/>
+                </StackPanel>
+            </StackPanel>
+
+            <TextBlock Text="Translators 翻译贡献者" FontSize="22"/>
+            <ItemsControl>
+                <ItemsControl.Items>
+                    <TextBlock Text="Dewei Li (deweili)" Margin="0,2"/>
+                    <TextBlock Text="Fox Older (olderfox)" Margin="0,2"/>
+                    <TextBlock Text="Genteure (genteure)" Margin="0,2"/>
+                    <TextBlock Text="Heongle (heongle)" Margin="0,2"/>
+                    <TextBlock Text="kafu (kafu0611)" Margin="0,2"/>
+                    <TextBlock Text="Kenneth (w41k3r15347)" Margin="0,2"/>
+                    <TextBlock Text="OrangeCat (dust0517)" Margin="0,2"/>
+                    <TextBlock Text="Vincent Tse (vincentkilua)" Margin="0,2"/>
+                </ItemsControl.Items>
+            </ItemsControl>
+
+            <TextBlock Text="Libraries Used 使用的库" FontSize="22"/>
+            <ItemsControl>
+                <ItemsControl.Items>
+                    <TextBlock Text="Avalonia" Margin="0,2"/>
+                    <TextBlock Text="FluentAvaloniaUI" Margin="0,2"/>
+                    <TextBlock Text="Avalonia.Labs.Panels" Margin="0,2"/>
+                    <TextBlock Text="Lucide.Avalonia" Margin="0,2"/>
+                    <TextBlock Text="Echoes" Margin="0,2"/>
+                    <TextBlock Text="GitVersion.MsBuild" Margin="0,2"/>
+                    <TextBlock Text="HierarchicalPropertyDefault" Margin="0,2"/>
+                    <TextBlock Text="JsonSubTypes" Margin="0,2"/>
+                    <TextBlock Text="Microsoft.Extensions.DependencyInjection" Margin="0,2"/>
+                    <TextBlock Text="Microsoft.IO.RecyclableMemoryStream" Margin="0,2"/>
+                    <TextBlock Text="Nerdbank.Streams" Margin="0,2"/>
+                    <TextBlock Text="Newtonsoft.Json" Margin="0,2"/>
+                    <TextBlock Text="Polly" Margin="0,2"/>
+                    <TextBlock Text="Serilog" Margin="0,2"/>
+                    <TextBlock Text="StructLinq" Margin="0,2"/>
+                    <TextBlock Text="System.CommandLine" Margin="0,2"/>
+                    <TextBlock Text="System.IO.Pipelines" Margin="0,2"/>
+                </ItemsControl.Items>
+            </ItemsControl>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

@@ -1,0 +1,157 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:lucide="using:Lucide.Avalonia"
+             xmlns:core="clr-namespace:BililiveRecorder.Core;assembly=BililiveRecorder.Core"
+             xmlns:local="clr-namespace:BililiveRecorder.Desktop.Controls"
+             mc:Ignorable="d" d:DesignWidth="230" d:DesignHeight="125"
+             x:Class="BililiveRecorder.Desktop.Controls.RoomCard"
+             x:DataType="core:IRoom"
+             MinWidth="230" MinHeight="100" MaxWidth="230" MaxHeight="125">
+    <Border Background="{DynamicResource SystemControlBackgroundAltHighBrush}"
+            BorderBrush="{DynamicResource SystemControlForegroundBaseMediumBrush}" 
+            BorderThickness="1"
+            CornerRadius="5">
+        <Grid Margin="8,5">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="25"/>
+            </Grid.RowDefinitions>
+            
+            <!-- Room Name -->
+            <TextBlock VerticalAlignment="Center" FontSize="16" FontWeight="SemiBold" 
+                       TextTrimming="CharacterEllipsis"
+                       Text="{Binding Name}" ToolTip.Tip="{Binding Name}"/>
+            
+            <!-- Middle Section -->
+            <Grid Grid.Row="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                
+                <StackPanel VerticalAlignment="Center" Spacing="2">
+                    <!-- Room ID -->
+                    <StackPanel Orientation="Horizontal" Spacing="5">
+                        <lucide:LucideIcon Kind="Hash" Width="10" Height="10"/>
+                        <TextBlock Text="{Binding RoomConfig.RoomId}" FontSize="11"/>
+                        <TextBlock Text="{Binding ShortId, StringFormat='({0})'}" FontSize="11"
+                                   IsVisible="{Binding ShortId, Converter={x:Static local:Converters.ShortRoomIdToVisibility}}"/>
+                    </StackPanel>
+                    
+                    <!-- Status Icons -->
+                    <StackPanel Orientation="Horizontal" Spacing="5">
+                        <!-- Danmaku Connected -->
+                        <lucide:LucideIcon Kind="Cloud" Width="10" Height="10"
+                                           Foreground="{Binding DanmakuConnected, Converter={x:Static local:Converters.BoolToConnectedColor}}"
+                                           ToolTip.Tip="{Binding DanmakuConnected, Converter={x:Static local:Converters.BoolToDanmakuTooltip}}"/>
+                        <!-- Live Status -->
+                        <lucide:LucideIcon Kind="Radio" Width="10" Height="10"
+                                           Foreground="{Binding Streaming, Converter={x:Static local:Converters.BoolToLiveColor}}"
+                                           ToolTip.Tip="{Binding Streaming, Converter={x:Static local:Converters.BoolToLiveTooltip}}"/>
+                    </StackPanel>
+                </StackPanel>
+                
+                <!-- Menu Button -->
+                <Button Grid.Column="1" VerticalAlignment="Center" x:Name="MenuButton" Click="MenuButton_Click">
+                    <lucide:LucideIcon Kind="MoreVertical" Width="16" Height="16"/>
+                    <Button.Flyout>
+                        <MenuFlyout>
+                            <MenuItem Header="开始录制 Start Recording" Click="MenuItem_StartRecording_Click">
+                                <MenuItem.Icon>
+                                    <lucide:LucideIcon Kind="Play"/>
+                                </MenuItem.Icon>
+                            </MenuItem>
+                            <MenuItem Header="停止录制 Stop Recording" Click="MenuItem_StopRecording_Click">
+                                <MenuItem.Icon>
+                                    <lucide:LucideIcon Kind="Square"/>
+                                </MenuItem.Icon>
+                            </MenuItem>
+                            <MenuItem Header="刷新信息 Refresh" Click="MenuItem_RefreshInfo_Click">
+                                <MenuItem.Icon>
+                                    <lucide:LucideIcon Kind="RefreshCw"/>
+                                </MenuItem.Icon>
+                            </MenuItem>
+                            <MenuItem Header="在浏览器中打开 Open in Browser" Click="MenuItem_OpenInBrowser_Click">
+                                <MenuItem.Icon>
+                                    <lucide:LucideIcon Kind="ExternalLink"/>
+                                </MenuItem.Icon>
+                            </MenuItem>
+                            <Separator/>
+                            <MenuItem Header="房间设置 Settings" Click="MenuItem_ShowSettings_Click">
+                                <MenuItem.Icon>
+                                    <lucide:LucideIcon Kind="Settings"/>
+                                </MenuItem.Icon>
+                            </MenuItem>
+                            <Separator/>
+                            <MenuItem Header="启用自动录制 Enable Auto Record" Click="MenuItem_EnableAutoRecord_Click">
+                                <MenuItem.Icon>
+                                    <lucide:LucideIcon Kind="Video"/>
+                                </MenuItem.Icon>
+                            </MenuItem>
+                            <MenuItem Header="禁用自动录制 Disable Auto Record" Click="MenuItem_DisableAutoRecord_Click">
+                                <MenuItem.Icon>
+                                    <lucide:LucideIcon Kind="VideoOff"/>
+                                </MenuItem.Icon>
+                            </MenuItem>
+                            <Separator/>
+                            <MenuItem Header="删除 Delete" Click="MenuItem_DeleteRoom_Click" Foreground="Red">
+                                <MenuItem.Icon>
+                                    <lucide:LucideIcon Kind="Trash2" Foreground="Red"/>
+                                </MenuItem.Icon>
+                            </MenuItem>
+                        </MenuFlyout>
+                    </Button.Flyout>
+                </Button>
+            </Grid>
+            
+            <!-- Bottom Status Bar -->
+            <Grid Grid.Row="2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                
+                <!-- Monitoring Status (when not recording) -->
+                <StackPanel Orientation="Horizontal" Spacing="3"
+                            IsVisible="{Binding Recording, Converter={x:Static local:Converters.InvertBool}}">
+                    <lucide:LucideIcon Kind="Eye" Width="15" Height="15" Foreground="DarkOrange"
+                                       IsVisible="{Binding RoomConfig.AutoRecord}"/>
+                    <TextBlock Text="监控中 Monitoring" Foreground="DarkOrange" FontSize="12"
+                               IsVisible="{Binding RoomConfig.AutoRecord}"/>
+                </StackPanel>
+                
+                <!-- Recording Status -->
+                <StackPanel Orientation="Horizontal" Spacing="3"
+                            IsVisible="{Binding Recording}">
+                    <lucide:LucideIcon Kind="CircleDot" Width="15" Height="15" Foreground="Red"/>
+                    <TextBlock Text="录制中 Recording" Foreground="Red" FontSize="12"/>
+                </StackPanel>
+                
+                <!-- Speed/Stats (when recording) -->
+                <Border Grid.Column="1" VerticalAlignment="Center" 
+                        IsVisible="{Binding Recording}"
+                        Background="{Binding Stats.DurationRatio, Converter={x:Static local:Converters.RatioToColorBrush}}"
+                        CornerRadius="5" Margin="2,0" Padding="5,2">
+                    <TextBlock HorizontalAlignment="Center" Foreground="Black" FontSize="11">
+                        <TextBlock.Text>
+                            <MultiBinding StringFormat="{}{0:F1} Mbps">
+                                <Binding Path="Stats.NetworkMbps"/>
+                            </MultiBinding>
+                        </TextBlock.Text>
+                    </TextBlock>
+                </Border>
+                
+                <!-- Split Button (when recording) -->
+                <Button Grid.Column="2" Padding="5,3" 
+                        IsVisible="{Binding Recording}"
+                        Click="Button_Split_Click" ToolTip.Tip="手动分段 Manual Split">
+                    <lucide:LucideIcon Kind="Scissors" Width="10" Height="10"/>
+                </Button>
+            </Grid>
+        </Grid>
+    </Border>
+</UserControl>

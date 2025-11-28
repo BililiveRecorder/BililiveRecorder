@@ -1,0 +1,46 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:lucide="using:Lucide.Avalonia"
+             xmlns:local="clr-namespace:BililiveRecorder.Desktop.Controls"
+             mc:Ignorable="d" d:DesignWidth="230" d:DesignHeight="125"
+             x:Class="BililiveRecorder.Desktop.Controls.AddRoomCard"
+             MinWidth="230" MinHeight="100" MaxWidth="230" MaxHeight="125">
+    <Border Background="{DynamicResource SystemControlBackgroundAltHighBrush}"
+            BorderBrush="{DynamicResource SystemControlForegroundBaseMediumBrush}" 
+            BorderThickness="1"
+            CornerRadius="5">
+        <Grid Margin="8,5">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            
+            <TextBlock VerticalAlignment="Center" FontSize="16" FontWeight="SemiBold" 
+                       Text="添加房间 Add Room"/>
+            
+            <Grid Grid.Row="1" VerticalAlignment="Center">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                
+                <TextBox x:Name="RoomIdTextBox" 
+                         Watermark="房间号 Room ID"
+                         VerticalAlignment="Center"
+                         KeyDown="RoomIdTextBox_KeyDown"/>
+                
+                <Button Grid.Column="1" Margin="5,0,0,0" Click="AddButton_Click" ToolTip.Tip="添加 Add">
+                    <lucide:LucideIcon Kind="Plus" Width="16" Height="16"/>
+                </Button>
+            </Grid>
+            
+            <CheckBox Grid.Row="2" x:Name="AutoRecordCheckBox" 
+                      Content="自动录制 Auto Record" 
+                      IsChecked="True" 
+                      Margin="0,5,0,0"/>
+        </Grid>
+    </Border>
+</UserControl>

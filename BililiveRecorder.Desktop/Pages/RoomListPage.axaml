@@ -1,0 +1,130 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:ui="using:FluentAvalonia.UI.Controls"
+             xmlns:labs="clr-namespace:Avalonia.Labs.Panels;assembly=Avalonia.Labs.Panels"
+             xmlns:lucide="using:Lucide.Avalonia"
+             xmlns:local="clr-namespace:BililiveRecorder.Desktop.Pages"
+             xmlns:controls="clr-namespace:BililiveRecorder.Desktop.Controls"
+             mc:Ignorable="d" d:DesignWidth="960" d:DesignHeight="1000"
+             x:Class="BililiveRecorder.Desktop.Pages.RoomListPage"
+             x:Name="TheRoomListPage">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition x:Name="RoomListRowDefinition" Height="*"/>
+            <RowDefinition Height="3"/>
+            <RowDefinition x:Name="LogRowDefinition" Height="0"/>
+        </Grid.RowDefinitions>
+        <StackPanel>
+            <Menu>
+                <MenuItem Header="文件 File">
+                    <MenuItem Header="打开工作目录 Open Directory" Click="MenuItem_OpenWorkDirectory_Click">
+                        <MenuItem.Icon>
+                            <lucide:LucideIcon Kind="FolderOpen"/>
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <MenuItem Header="保存配置 Save Config" Click="MenuItem_SaveConfig_Click">
+                        <MenuItem.Icon>
+                            <lucide:LucideIcon Kind="Save"/>
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <Separator/>
+                    <MenuItem Header="更换工作路径 Change Path" Click="MenuItem_ChangeWorkPath_Click">
+                        <MenuItem.Icon>
+                            <lucide:LucideIcon Kind="FolderSync"/>
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <Separator/>
+                    <MenuItem Header="打开日志目录 Log Files" Click="MenuItem_ShowLogFilesInExplorer_Click">
+                        <MenuItem.Icon>
+                            <lucide:LucideIcon Kind="FileText"/>
+                        </MenuItem.Icon>
+                    </MenuItem>
+                </MenuItem>
+                <MenuItem Header="查看 View">
+                    <MenuItem Header="默认排序 Default Sort" Tag="None" Click="MenuItem_SortBy_Click"/>
+                    <MenuItem Header="按房间号 By Room ID" Tag="RoomId" Click="MenuItem_SortBy_Click"/>
+                    <MenuItem Header="按状态 By Status" Tag="Status" Click="MenuItem_SortBy_Click"/>
+                    <Separator/>
+                    <MenuItem Header="开播时弹出系统通知 Stream Start Notification" x:Name="NotifyStreamStartMenuItem" Click="MenuItem_ToggleNotifyStreamStart_Click">
+                        <MenuItem.Icon>
+                            <lucide:LucideIcon Kind="Bell"/>
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <MenuItem Header="显示标题和分区 Show Title/Area" x:Name="ShowTitleAndAreaMenuItem" Click="MenuItem_ToggleShowTitleAndArea_Click">
+                        <MenuItem.Icon>
+                            <lucide:LucideIcon Kind="LayoutList"/>
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <MenuItem Header="显示日志 Show Log" x:Name="ShowLogMenuItem" Click="MenuItem_ToggleShowLog_Click">
+                        <MenuItem.Icon>
+                            <lucide:LucideIcon Kind="ScrollText"/>
+                        </MenuItem.Icon>
+                    </MenuItem>
+                </MenuItem>
+                <MenuItem Header="自动录制 Auto Record">
+                    <MenuItem Header="全部启用 Enable All" Click="MenuItem_EnableAutoRecAll_Click">
+                        <MenuItem.Icon>
+                            <lucide:LucideIcon Kind="PlayCircle"/>
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <MenuItem Header="全部禁用 Disable All" Click="MenuItem_DisableAutoRecAll_Click">
+                        <MenuItem.Icon>
+                            <lucide:LucideIcon Kind="StopCircle"/>
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <Separator/>
+                    <MenuItem Header="刷新全部房间信息 Refresh All" Click="MenuItem_RefreshAllRoomInfo_Click">
+                        <MenuItem.Icon>
+                            <lucide:LucideIcon Kind="RefreshCw"/>
+                        </MenuItem.Icon>
+                    </MenuItem>
+                </MenuItem>
+                <MenuItem Header="链接 Links">
+                    <MenuItem Header="官网 Website" Click="MenuItem_OpenWebsite_Click">
+                        <MenuItem.Icon>
+                            <lucide:LucideIcon Kind="Globe"/>
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <MenuItem Header="常见问题 FAQ" Click="MenuItem_OpenFAQ_Click">
+                        <MenuItem.Icon>
+                            <lucide:LucideIcon Kind="HelpCircle"/>
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <MenuItem Header="赞助 Sponsor" Click="MenuItem_OpenSponsor_Click">
+                        <MenuItem.Icon>
+                            <lucide:LucideIcon Kind="Heart"/>
+                        </MenuItem.Icon>
+                    </MenuItem>
+                </MenuItem>
+            </Menu>
+            <Separator Margin="0,5"/>
+        </StackPanel>
+        
+        <ScrollViewer Grid.Row="1">
+            <labs:FlexPanel x:Name="RoomCardsPanel" 
+                           HorizontalAlignment="Stretch" 
+                           Margin="8"
+                           Wrap="Wrap"
+                           JustifyContent="FlexStart"
+                           AlignItems="FlexStart"
+                           AlignContent="FlexStart"
+                           ColumnSpacing="5" 
+                           RowSpacing="7">
+                <!-- Room cards will be added dynamically -->
+                <controls:AddRoomCard x:Name="AddRoomCardControl" AddRoomRequested="AddRoomCard_AddRoomRequested"/>
+            </labs:FlexPanel>
+        </ScrollViewer>
+        
+        <GridSplitter Grid.Row="2" x:Name="Splitter" ResizeDirection="Rows" IsVisible="False"
+                      HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="Transparent"/>
+        <Border Grid.Row="3" x:Name="LogElement" IsVisible="False" Margin="5"
+                Background="{DynamicResource SystemControlBackgroundAltHighBrush}"
+                BorderBrush="{DynamicResource SystemControlForegroundBaseMediumBrush}"
+                BorderThickness="1" CornerRadius="5">
+            <controls:LogPanel/>
+        </Border>
+    </Grid>
+</UserControl>

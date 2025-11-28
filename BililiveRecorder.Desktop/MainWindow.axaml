@@ -1,0 +1,15 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:ui="using:FluentAvalonia.UI.Controls"
+        xmlns:pages="clr-namespace:BililiveRecorder.Desktop.Pages"
+        mc:Ignorable="d" d:DesignWidth="1000" d:DesignHeight="650"
+        x:Class="BililiveRecorder.Desktop.MainWindow"
+        x:DataType="MainWindow"
+        Title="{Binding WindowTitle}"
+        Width="1000" Height="650" MinHeight="400" MinWidth="340"
+        WindowStartupLocation="CenterScreen"
+        Kind="avares://BililiveRecorder.Desktop/ico.ico">
+    <pages:RootPage x:Name="RootPage"/>
+</Window>

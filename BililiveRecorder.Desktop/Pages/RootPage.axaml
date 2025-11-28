@@ -1,0 +1,92 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:ui="using:FluentAvalonia.UI.Controls"
+             xmlns:lucide="using:Lucide.Avalonia"
+             xmlns:local="clr-namespace:BililiveRecorder.Desktop.Pages"
+             xmlns:models="clr-namespace:BililiveRecorder.Desktop.Models"
+             mc:Ignorable="d" d:DesignWidth="900" d:DesignHeight="600"
+             x:Class="BililiveRecorder.Desktop.Pages.RootPage"
+             x:DataType="models:RootModel">
+    <Grid>
+        <ui:NavigationView x:Name="NavView"
+                          IsBackEnabled="False" IsBackButtonVisible="False"
+                          IsSettingsVisible="False"
+                          IsPaneOpen="False" OpenPaneLength="200"
+                          SelectionChanged="NavigationView_SelectionChanged">
+            <ui:NavigationView.PaneCustomContent>
+                <StackPanel Margin="0,8">
+                    <Button Classes="NavigationButton" Click="SwitchLanguage_Click" ToolTip.Tip="Switch Language">
+                        <lucide:LucideIcon Kind="Languages" Width="16" Height="16"/>
+                    </Button>
+                    <Button Classes="NavigationButton" Click="SwitchLightDarkTheme_Click" ToolTip.Tip="Switch Theme">
+                        <lucide:LucideIcon Kind="SunMoon" Width="16" Height="16"/>
+                    </Button>
+                </StackPanel>
+            </ui:NavigationView.PaneCustomContent>
+            <ui:NavigationView.PaneFooter>
+                <Grid Width="40" Height="40" x:Name="DebugBuildIcon" IsVisible="False" HorizontalAlignment="Left">
+                    <lucide:LucideIcon Kind="Bug" Width="24" Height="24" ToolTip.Tip="Debug Build 测试版"/>
+                </Grid>
+            </ui:NavigationView.PaneFooter>
+            <ui:NavigationView.MenuItems>
+                <ui:NavigationViewItem Content="公告 Announcement" Tag="AnnouncementPage" IsSelected="True">
+                    <ui:NavigationViewItem.Icon>
+                        <lucide:LucideIcon Kind="Megaphone"/>
+                    </ui:NavigationViewItem.Icon>
+                </ui:NavigationViewItem>
+                <ui:NavigationViewItem Content="房间 Rooms" Tag="RoomListPage" IsEnabled="False" x:Name="RoomListPageNavigationViewItem">
+                    <ui:NavigationViewItem.Icon>
+                        <lucide:LucideIcon Kind="Home"/>
+                    </ui:NavigationViewItem.Icon>
+                </ui:NavigationViewItem>
+                <ui:NavigationViewItem Content="工具箱 Toolbox" SelectsOnInvoked="False">
+                    <ui:NavigationViewItem.Icon>
+                        <lucide:LucideIcon Kind="Wrench"/>
+                    </ui:NavigationViewItem.Icon>
+                    <ui:NavigationViewItem.MenuItems>
+                        <ui:NavigationViewItem Content="FLV修复 AutoFix" Tag="ToolboxAutoFixPage">
+                            <ui:NavigationViewItem.Icon>
+                                <lucide:LucideIcon Kind="Sparkles"/>
+                            </ui:NavigationViewItem.Icon>
+                        </ui:NavigationViewItem>
+                        <ui:NavigationViewItem Content="封装 Remux" Tag="ToolboxRemuxPage">
+                            <ui:NavigationViewItem.Icon>
+                                <lucide:LucideIcon Kind="FileVideo"/>
+                            </ui:NavigationViewItem.Icon>
+                        </ui:NavigationViewItem>
+                        <ui:NavigationViewItem Content="弹幕合并 Merge" Tag="ToolboxDanmakuMergerPage">
+                            <ui:NavigationViewItem.Icon>
+                                <lucide:LucideIcon Kind="GitMerge"/>
+                            </ui:NavigationViewItem.Icon>
+                        </ui:NavigationViewItem>
+                    </ui:NavigationViewItem.MenuItems>
+                </ui:NavigationViewItem>
+            </ui:NavigationView.MenuItems>
+            <ui:NavigationView.FooterMenuItems>
+                <ui:NavigationViewItem Content="高级设置 Advanced" Tag="AdvancedSettingsPage" x:Name="AdvancedSettingsPageItem" IsVisible="False">
+                    <ui:NavigationViewItem.Icon>
+                        <lucide:LucideIcon Kind="Settings2"/>
+                    </ui:NavigationViewItem.Icon>
+                </ui:NavigationViewItem>
+                <ui:NavigationViewItem Content="设置 Settings" Tag="SettingsPage" IsEnabled="False" x:Name="SettingsPageNavigationViewItem">
+                    <ui:NavigationViewItem.Icon>
+                        <lucide:LucideIcon Kind="Settings"/>
+                    </ui:NavigationViewItem.Icon>
+                </ui:NavigationViewItem>
+                <ui:NavigationViewItem Content="日志 Log" Tag="LogPage">
+                    <ui:NavigationViewItem.Icon>
+                        <lucide:LucideIcon Kind="ScrollText"/>
+                    </ui:NavigationViewItem.Icon>
+                </ui:NavigationViewItem>
+                <ui:NavigationViewItem Content="关于 About" Tag="AboutPage">
+                    <ui:NavigationViewItem.Icon>
+                        <lucide:LucideIcon Kind="Info"/>
+                    </ui:NavigationViewItem.Icon>
+                </ui:NavigationViewItem>
+            </ui:NavigationView.FooterMenuItems>
+            <ui:Frame x:Name="MainFrame" />
+        </ui:NavigationView>
+    </Grid>
+</UserControl>
