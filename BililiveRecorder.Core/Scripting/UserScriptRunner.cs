@@ -5,12 +5,12 @@ using System.Threading;
 using BililiveRecorder.Core.Api;
 using BililiveRecorder.Core.Config.V3;
 using BililiveRecorder.Core.Scripting.Runtime;
-using Esprima.Ast;
+using Acornima.Ast;
 using Jint;
 using Jint.Native;
-using Jint.Native.Function;
+using Function = Jint.Native.Function.Function;
 using Jint.Native.Object;
-using Jint.Runtime.Descriptors;
+using Jint.Runtime;
 using Jint.Runtime.Interop;
 using Serilog;
 
@@ -25,11 +25,11 @@ namespace BililiveRecorder.Core.Scripting
         private readonly GlobalConfig config;
         private readonly Options jintOptions;
 
-        private static readonly Script setupScript;
+        private static readonly Prepared<Script> setupScript;
         private static readonly JintStorage sharedStorage = new();
 
         private string? cachedScriptSource;
-        private Script? cachedScript;
+        private Prepared<Script>? cachedScript;
 
         static UserScriptRunner()
         {
@@ -48,16 +48,16 @@ globalThis.recorderEvents = {};
                 .RegexTimeoutInterval(TimeSpan.FromSeconds(2))
                 .Configure(engine =>
                 {
-                    engine.Realm.GlobalObject.FastSetProperty("dns", new PropertyDescriptor(new JintDns(engine), writable: false, enumerable: false, configurable: false));
-                    engine.Realm.GlobalObject.FastSetProperty("dotnet", new PropertyDescriptor(new JintDotnet(engine), writable: false, enumerable: false, configurable: false));
-                    engine.Realm.GlobalObject.FastSetProperty("fetchSync", new PropertyDescriptor(new JintFetchSync(engine), writable: false, enumerable: false, configurable: false));
-                    engine.Realm.GlobalObject.FastSetProperty("URL", new PropertyDescriptor(TypeReference.CreateTypeReference<JintURL>(engine), writable: false, enumerable: false, configurable: false));
-                    engine.Realm.GlobalObject.FastSetProperty("URLSearchParams", new PropertyDescriptor(TypeReference.CreateTypeReference<JintURLSearchParams>(engine), writable: false, enumerable: false, configurable: false));
-                    engine.Realm.GlobalObject.FastSetProperty("sharedStorage", new PropertyDescriptor(new ObjectWrapper(engine, sharedStorage), writable: false, enumerable: false, configurable: false));
+                    engine.SetValue("dns", new JintDns(engine));
+                    engine.SetValue("dotnet", new JintDotnet(engine));
+                    engine.SetValue("fetchSync", JintFetchSync.Create(engine));
+                    engine.SetValue("URL", TypeReference.CreateTypeReference<JintURL>(engine));
+                    engine.SetValue("URLSearchParams", TypeReference.CreateTypeReference<JintURLSearchParams>(engine));
+                    engine.SetValue("sharedStorage", ObjectWrapper.Create(engine, sharedStorage));
                 });
         }
 
-        private Script? GetParsedScript()
+        private Prepared<Script>? GetParsedScript()
         {
             var source = this.config.UserScript;
 
@@ -92,7 +92,7 @@ globalThis.recorderEvents = {};
         {
             var engine = new Engine(this.jintOptions);
 
-            engine.Realm.GlobalObject.FastSetProperty("console", new PropertyDescriptor(new JintConsole(engine, logger), writable: false, enumerable: false, configurable: false));
+            engine.SetValue("console", new JintConsole(engine, logger));
 
             engine.Execute(setupScript);
 
@@ -105,22 +105,22 @@ globalThis.recorderEvents = {};
             return logger.ForContext<UserScriptRunner>().ForContext(nameof(ExecutionId), id);
         }
 
-        private FunctionInstance? ExecuteScriptThenGetEventHandler(ILogger logger, string functionName)
+        private Function? ExecuteScriptThenGetEventHandler(ILogger logger, string functionName)
         {
             var script = this.GetParsedScript();
             if (script is null)
                 return null;
 
             var engine = this.CreateJintEngine(logger);
-            engine.Execute(script);
+            engine.Execute(script.Value);
 
-            if (engine.Realm.GlobalObject.Get(RecorderEventsString) is not ObjectInstance events)
+            if (engine.Global.Get(RecorderEventsString) is not ObjectInstance events)
             {
                 logger.Warning("[Script] recorderEvents 被修改为非 object");
                 return null;
             }
 
-            return events.Get(functionName) as FunctionInstance;
+            return events.Get(functionName) as Function;
         }
 
         public void CallOnTest(ILogger logger, Action<string>? alert)
@@ -132,7 +132,7 @@ globalThis.recorderEvents = {};
                 var func = this.ExecuteScriptThenGetEventHandler(log, callbackName);
                 if (func is null) return;
 
-                _ = func.Engine.Call(func, new DelegateWrapper(func.Engine, alert ?? delegate { }));
+                _ = func.Engine.Call(func, JsValue.FromObject(func.Engine, alert ?? delegate { }));
             }
             catch (Exception ex)
             {
@@ -158,7 +158,7 @@ globalThis.recorderEvents = {};
 
                 var result = func.Engine.Call(func, json);
 
-                return result.IsLooselyEqual(true);
+                return TypeConverter.ToBoolean(result);
             }
             catch (Exception ex)
             {

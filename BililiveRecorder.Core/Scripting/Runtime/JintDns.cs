@@ -24,7 +24,7 @@ namespace BililiveRecorder.Core.Scripting.Runtime
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             void Add(string name, Func<JsValue, JsValue[], JsValue> func)
             {
-                this.FastSetProperty(name, new PropertyDescriptor(new ClrFunctionInstance(this._engine, name, func), false, false, false));
+                this.FastSetProperty(name, new PropertyDescriptor(new ClrFunction(this._engine, name, func), false, false, false));
             }
         }
 

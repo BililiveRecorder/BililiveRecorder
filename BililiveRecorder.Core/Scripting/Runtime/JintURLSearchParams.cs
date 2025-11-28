@@ -37,7 +37,7 @@ namespace BililiveRecorder.Core.Scripting.Runtime
         public void Delete(string name) => this.query.Remove(name);
         public string?[][] Entries() => this.query.Select(x => new string?[] { x.Name, x.Value.ToString() }).ToArray();
 
-        public void ForEach(FunctionInstance callback, JsValue thisArg)
+        public void ForEach(Function callback, JsValue thisArg)
         {
             var entries = this.Entries();
             for (var i = 0; i < entries.Length; i++)

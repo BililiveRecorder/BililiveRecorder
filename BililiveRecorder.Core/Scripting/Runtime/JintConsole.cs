@@ -64,7 +64,7 @@ namespace BililiveRecorder.Core.Scripting.Runtime
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             void Add(string name, Func<JsValue, JsValue[], JsValue> func)
             {
-                this.FastSetProperty(name, new PropertyDescriptor(new ClrFunctionInstance(this._engine, name, func), false, false, false));
+                this.FastSetProperty(name, new PropertyDescriptor(new ClrFunction(this._engine, name, func), false, false, false));
             }
         }
 
@@ -119,7 +119,7 @@ namespace BililiveRecorder.Core.Scripting.Runtime
 
         private JsValue Assert(JsValue thisObject, JsValue[] arguments)
         {
-            if (!arguments.At(0).IsLooselyEqual(true))
+            if (!TypeConverter.ToBoolean(arguments.At(0)))
             {
                 var messages = arguments.Length < 2 ? Array.Empty<string>() : this.FormatToString(arguments.AsSpan(1));
                 this.logger.Error("[Script] Assertion failed: {Messages}", messages);
