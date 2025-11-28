@@ -15,17 +15,11 @@ namespace BililiveRecorder.Core.Scripting.Runtime
     {
         public static ClrFunction Create(Engine engine)
         {
-            return new ClrFunction(engine, "fetchSync", CallImpl);
+            return new ClrFunction(engine, "fetchSync", (thisObj, args) => CallImpl(engine, args));
         }
 
-        private static JsValue CallImpl(JsValue thisObject, JsValue[] arguments)
+        private static JsValue CallImpl(Engine engine, JsValue[] arguments)
         {
-            // Get the engine from the function context
-            if (thisObject is not ClrFunction fn)
-                throw new InvalidOperationException("fetchSync must be called as a function");
-            
-            var engine = fn.Engine;
-            
             if (arguments.Length == 0)
                 throw new JavaScriptException(engine.Intrinsics.Error, "1 argument required, but only 0 present.");
 
