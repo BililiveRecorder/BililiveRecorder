@@ -170,7 +170,11 @@ namespace BililiveRecorder.Core.Danmaku
                     return;
 
                 // Write the raw JSON string from the server directly (one JSON object per line)
-                await this.jsonlWriter.WriteLineAsync(danmakuModel.RawString).ConfigureAwait(false);
+                // RawString is guaranteed to be valid JSON as it was successfully parsed in DanmakuModel constructor
+                if (!string.IsNullOrEmpty(danmakuModel.RawString))
+                {
+                    await this.jsonlWriter.WriteLineAsync(danmakuModel.RawString).ConfigureAwait(false);
+                }
 
                 if (this.writeCount++ >= this.config.RecordDanmakuFlushInterval)
                 {
