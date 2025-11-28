@@ -102,6 +102,14 @@ namespace BililiveRecorder.Core.Config.V3
         public Optional<bool> OptionalRecordDanmakuGuard { get => this.GetPropertyValueOptional<bool>(nameof(this.RecordDanmakuGuard)); set => this.SetPropertyValueOptional(value, nameof(this.RecordDanmakuGuard)); }
 
         /// <summary>
+        /// 弹幕文件格式
+        /// </summary>
+        public DanmakuFileFormat DanmakuFileFormat { get => this.GetPropertyValue<DanmakuFileFormat>(); set => this.SetPropertyValue(value); }
+        public bool HasDanmakuFileFormat { get => this.GetPropertyHasValue(nameof(this.DanmakuFileFormat)); set => this.SetPropertyHasValue<DanmakuFileFormat>(value, nameof(this.DanmakuFileFormat)); }
+        [JsonProperty(nameof(DanmakuFileFormat)), EditorBrowsable(EditorBrowsableState.Never)]
+        public Optional<DanmakuFileFormat> OptionalDanmakuFileFormat { get => this.GetPropertyValueOptional<DanmakuFileFormat>(nameof(this.DanmakuFileFormat)); set => this.SetPropertyValueOptional(value, nameof(this.DanmakuFileFormat)); }
+
+        /// <summary>
         /// 保存直播封面
         /// </summary>
         public bool SaveStreamCover { get => this.GetPropertyValue<bool>(); set => this.SetPropertyValue(value); }
@@ -322,6 +330,14 @@ namespace BililiveRecorder.Core.Config.V3
         public bool HasRecordDanmakuGuard { get => this.GetPropertyHasValue(nameof(this.RecordDanmakuGuard)); set => this.SetPropertyHasValue<bool>(value, nameof(this.RecordDanmakuGuard)); }
         [JsonProperty(nameof(RecordDanmakuGuard)), EditorBrowsable(EditorBrowsableState.Never)]
         public Optional<bool> OptionalRecordDanmakuGuard { get => this.GetPropertyValueOptional<bool>(nameof(this.RecordDanmakuGuard)); set => this.SetPropertyValueOptional(value, nameof(this.RecordDanmakuGuard)); }
+
+        /// <summary>
+        /// 弹幕文件格式
+        /// </summary>
+        public DanmakuFileFormat DanmakuFileFormat { get => this.GetPropertyValue<DanmakuFileFormat>(); set => this.SetPropertyValue(value); }
+        public bool HasDanmakuFileFormat { get => this.GetPropertyHasValue(nameof(this.DanmakuFileFormat)); set => this.SetPropertyHasValue<DanmakuFileFormat>(value, nameof(this.DanmakuFileFormat)); }
+        [JsonProperty(nameof(DanmakuFileFormat)), EditorBrowsable(EditorBrowsableState.Never)]
+        public Optional<DanmakuFileFormat> OptionalDanmakuFileFormat { get => this.GetPropertyValueOptional<DanmakuFileFormat>(nameof(this.DanmakuFileFormat)); set => this.SetPropertyValueOptional(value, nameof(this.DanmakuFileFormat)); }
 
         /// <summary>
         /// 保存直播封面
@@ -555,6 +571,8 @@ namespace BililiveRecorder.Core.Config.V3
         public bool RecordDanmakuGift => false;
 
         public bool RecordDanmakuGuard => true;
+
+        public DanmakuFileFormat DanmakuFileFormat => DanmakuFileFormat.Xml;
 
         public bool SaveStreamCover => false;
 

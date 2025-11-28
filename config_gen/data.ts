@@ -80,6 +80,13 @@ export const data: Array<ConfigEntry> = [
         default: true
     },
     {
+        id: "DanmakuFileFormat",
+        name: "弹幕文件格式",
+        type: "DanmakuFileFormat",
+        configType: "room",
+        default: "DanmakuFileFormat.Xml"
+    },
+    {
         id: "SaveStreamCover",
         name: "保存直播封面",
         type: "bool",

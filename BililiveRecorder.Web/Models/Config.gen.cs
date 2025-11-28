@@ -22,6 +22,7 @@ namespace BililiveRecorder.Web.Models
         public Optional<bool>? OptionalRecordDanmakuSuperChat { get; set; }
         public Optional<bool>? OptionalRecordDanmakuGift { get; set; }
         public Optional<bool>? OptionalRecordDanmakuGuard { get; set; }
+        public Optional<DanmakuFileFormat>? OptionalDanmakuFileFormat { get; set; }
         public Optional<bool>? OptionalSaveStreamCover { get; set; }
         public Optional<string?>? OptionalRecordingQuality { get; set; }
         public Optional<bool>? OptionalFlvProcessorSplitOnScriptTag { get; set; }
@@ -40,6 +41,7 @@ namespace BililiveRecorder.Web.Models
             if (this.OptionalRecordDanmakuSuperChat.HasValue) config.OptionalRecordDanmakuSuperChat = this.OptionalRecordDanmakuSuperChat.Value;
             if (this.OptionalRecordDanmakuGift.HasValue) config.OptionalRecordDanmakuGift = this.OptionalRecordDanmakuGift.Value;
             if (this.OptionalRecordDanmakuGuard.HasValue) config.OptionalRecordDanmakuGuard = this.OptionalRecordDanmakuGuard.Value;
+            if (this.OptionalDanmakuFileFormat.HasValue) config.OptionalDanmakuFileFormat = this.OptionalDanmakuFileFormat.Value;
             if (this.OptionalSaveStreamCover.HasValue) config.OptionalSaveStreamCover = this.OptionalSaveStreamCover.Value;
             if (this.OptionalRecordingQuality.HasValue) config.OptionalRecordingQuality = this.OptionalRecordingQuality.Value;
             if (this.OptionalFlvProcessorSplitOnScriptTag.HasValue) config.OptionalFlvProcessorSplitOnScriptTag = this.OptionalFlvProcessorSplitOnScriptTag.Value;
@@ -59,6 +61,7 @@ namespace BililiveRecorder.Web.Models
         public Optional<bool>? OptionalRecordDanmakuSuperChat { get; set; }
         public Optional<bool>? OptionalRecordDanmakuGift { get; set; }
         public Optional<bool>? OptionalRecordDanmakuGuard { get; set; }
+        public Optional<DanmakuFileFormat>? OptionalDanmakuFileFormat { get; set; }
         public Optional<bool>? OptionalSaveStreamCover { get; set; }
         public Optional<string?>? OptionalRecordingQuality { get; set; }
         public Optional<string?>? OptionalFileNameRecordTemplate { get; set; }
@@ -97,6 +100,7 @@ namespace BililiveRecorder.Web.Models
             if (this.OptionalRecordDanmakuSuperChat.HasValue) config.OptionalRecordDanmakuSuperChat = this.OptionalRecordDanmakuSuperChat.Value;
             if (this.OptionalRecordDanmakuGift.HasValue) config.OptionalRecordDanmakuGift = this.OptionalRecordDanmakuGift.Value;
             if (this.OptionalRecordDanmakuGuard.HasValue) config.OptionalRecordDanmakuGuard = this.OptionalRecordDanmakuGuard.Value;
+            if (this.OptionalDanmakuFileFormat.HasValue) config.OptionalDanmakuFileFormat = this.OptionalDanmakuFileFormat.Value;
             if (this.OptionalSaveStreamCover.HasValue) config.OptionalSaveStreamCover = this.OptionalSaveStreamCover.Value;
             if (this.OptionalRecordingQuality.HasValue) config.OptionalRecordingQuality = this.OptionalRecordingQuality.Value;
             if (this.OptionalFileNameRecordTemplate.HasValue) config.OptionalFileNameRecordTemplate = this.OptionalFileNameRecordTemplate.Value;
@@ -142,6 +146,7 @@ namespace BililiveRecorder.Web.Models.Rest
         public Optional<bool> OptionalRecordDanmakuSuperChat { get; set; }
         public Optional<bool> OptionalRecordDanmakuGift { get; set; }
         public Optional<bool> OptionalRecordDanmakuGuard { get; set; }
+        public Optional<DanmakuFileFormat> OptionalDanmakuFileFormat { get; set; }
         public Optional<bool> OptionalSaveStreamCover { get; set; }
         public Optional<string?> OptionalRecordingQuality { get; set; }
         public Optional<bool> OptionalFlvProcessorSplitOnScriptTag { get; set; }
@@ -160,6 +165,7 @@ namespace BililiveRecorder.Web.Models.Rest
         public Optional<bool> OptionalRecordDanmakuSuperChat { get; set; }
         public Optional<bool> OptionalRecordDanmakuGift { get; set; }
         public Optional<bool> OptionalRecordDanmakuGuard { get; set; }
+        public Optional<DanmakuFileFormat> OptionalDanmakuFileFormat { get; set; }
         public Optional<bool> OptionalSaveStreamCover { get; set; }
         public Optional<string?> OptionalRecordingQuality { get; set; }
         public Optional<string?> OptionalFileNameRecordTemplate { get; set; }
@@ -207,6 +213,7 @@ namespace BililiveRecorder.Web.Models.Graphql
             this.Field(x => x.OptionalRecordDanmakuSuperChat, type: typeof(HierarchicalOptionalType<bool>));
             this.Field(x => x.OptionalRecordDanmakuGift, type: typeof(HierarchicalOptionalType<bool>));
             this.Field(x => x.OptionalRecordDanmakuGuard, type: typeof(HierarchicalOptionalType<bool>));
+            this.Field(x => x.OptionalDanmakuFileFormat, type: typeof(HierarchicalOptionalType<DanmakuFileFormat>));
             this.Field(x => x.OptionalSaveStreamCover, type: typeof(HierarchicalOptionalType<bool>));
             this.Field(x => x.OptionalRecordingQuality, type: typeof(HierarchicalOptionalType<string>));
             this.Field(x => x.OptionalFlvProcessorSplitOnScriptTag, type: typeof(HierarchicalOptionalType<bool>));
@@ -228,6 +235,7 @@ namespace BililiveRecorder.Web.Models.Graphql
             this.Field(x => x.OptionalRecordDanmakuSuperChat, type: typeof(HierarchicalOptionalType<bool>));
             this.Field(x => x.OptionalRecordDanmakuGift, type: typeof(HierarchicalOptionalType<bool>));
             this.Field(x => x.OptionalRecordDanmakuGuard, type: typeof(HierarchicalOptionalType<bool>));
+            this.Field(x => x.OptionalDanmakuFileFormat, type: typeof(HierarchicalOptionalType<DanmakuFileFormat>));
             this.Field(x => x.OptionalSaveStreamCover, type: typeof(HierarchicalOptionalType<bool>));
             this.Field(x => x.OptionalRecordingQuality, type: typeof(HierarchicalOptionalType<string>));
             this.Field(x => x.OptionalFileNameRecordTemplate, type: typeof(HierarchicalOptionalType<string>));
@@ -270,6 +278,7 @@ namespace BililiveRecorder.Web.Models.Graphql
             this.Field(x => x.RecordDanmakuSuperChat);
             this.Field(x => x.RecordDanmakuGift);
             this.Field(x => x.RecordDanmakuGuard);
+            this.Field(x => x.DanmakuFileFormat);
             this.Field(x => x.SaveStreamCover);
             this.Field(x => x.RecordingQuality);
             this.Field(x => x.FileNameRecordTemplate);
@@ -313,6 +322,7 @@ namespace BililiveRecorder.Web.Models.Graphql
             this.Field(x => x.OptionalRecordDanmakuSuperChat, nullable: true, type: typeof(HierarchicalOptionalInputType<bool>));
             this.Field(x => x.OptionalRecordDanmakuGift, nullable: true, type: typeof(HierarchicalOptionalInputType<bool>));
             this.Field(x => x.OptionalRecordDanmakuGuard, nullable: true, type: typeof(HierarchicalOptionalInputType<bool>));
+            this.Field(x => x.OptionalDanmakuFileFormat, nullable: true, type: typeof(HierarchicalOptionalInputType<DanmakuFileFormat>));
             this.Field(x => x.OptionalSaveStreamCover, nullable: true, type: typeof(HierarchicalOptionalInputType<bool>));
             this.Field(x => x.OptionalRecordingQuality, nullable: true, type: typeof(HierarchicalOptionalInputType<string>));
             this.Field(x => x.OptionalFlvProcessorSplitOnScriptTag, nullable: true, type: typeof(HierarchicalOptionalInputType<bool>));
@@ -334,6 +344,7 @@ namespace BililiveRecorder.Web.Models.Graphql
             this.Field(x => x.OptionalRecordDanmakuSuperChat, nullable: true, type: typeof(HierarchicalOptionalInputType<bool>));
             this.Field(x => x.OptionalRecordDanmakuGift, nullable: true, type: typeof(HierarchicalOptionalInputType<bool>));
             this.Field(x => x.OptionalRecordDanmakuGuard, nullable: true, type: typeof(HierarchicalOptionalInputType<bool>));
+            this.Field(x => x.OptionalDanmakuFileFormat, nullable: true, type: typeof(HierarchicalOptionalInputType<DanmakuFileFormat>));
             this.Field(x => x.OptionalSaveStreamCover, nullable: true, type: typeof(HierarchicalOptionalInputType<bool>));
             this.Field(x => x.OptionalRecordingQuality, nullable: true, type: typeof(HierarchicalOptionalInputType<string>));
             this.Field(x => x.OptionalFileNameRecordTemplate, nullable: true, type: typeof(HierarchicalOptionalInputType<string>));

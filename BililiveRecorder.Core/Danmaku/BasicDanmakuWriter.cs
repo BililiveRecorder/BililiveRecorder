@@ -7,6 +7,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Xml;
 using BililiveRecorder.Core.Api.Danmaku;
+using BililiveRecorder.Core.Config;
 using BililiveRecorder.Core.Config.V3;
 using BililiveRecorder.Core.Scripting;
 using Serilog;
@@ -30,6 +31,8 @@ namespace BililiveRecorder.Core.Danmaku
         private static string RemoveInvalidXMLChars(string? text) => string.IsNullOrWhiteSpace(text) ? string.Empty : invalidXMLChars.Replace(text, string.Empty);
 
         private XmlWriter? xmlWriter = null;
+        private StreamWriter? jsonlWriter = null;
+        private DanmakuFileFormat fileFormat = DanmakuFileFormat.Xml;
         private readonly Stopwatch dmTime = new Stopwatch();
         private uint writeCount = 0;
         private RoomConfig? config;
@@ -51,20 +54,24 @@ namespace BililiveRecorder.Core.Danmaku
             this.semaphoreSlim.Wait();
             try
             {
-                if (this.xmlWriter != null)
-                {
-                    this.xmlWriter.Close();
-                    this.xmlWriter.Dispose();
-                    this.xmlWriter = null;
-                }
+                this.DisableCoreNoLock();
 
                 try { Directory.CreateDirectory(Path.GetDirectoryName(path)!); } catch (Exception) { }
                 var stream = File.Open(path, FileMode.Create, FileAccess.Write, FileShare.Read);
 
                 this.config = room.RoomConfig;
+                this.fileFormat = room.RoomConfig.DanmakuFileFormat;
 
-                this.xmlWriter = XmlWriter.Create(stream, xmlWriterSettings);
-                WriteStartDocument(this.xmlWriter, room);
+                if (this.fileFormat == DanmakuFileFormat.Jsonl)
+                {
+                    this.jsonlWriter = new StreamWriter(stream, new UTF8Encoding(false));
+                }
+                else
+                {
+                    this.xmlWriter = XmlWriter.Create(stream, xmlWriterSettings);
+                    WriteStartDocument(this.xmlWriter, room);
+                }
+
                 this.dmTime.Restart();
                 this.writeCount = 0;
             }
@@ -81,7 +88,7 @@ namespace BililiveRecorder.Core.Danmaku
             this.semaphoreSlim.Wait();
             try
             {
-                this.DisableCore();
+                this.DisableCoreNoLock();
             }
             finally
             {
@@ -89,7 +96,7 @@ namespace BililiveRecorder.Core.Danmaku
             }
         }
 
-        private void DisableCore()
+        private void DisableCoreNoLock()
         {
             try
             {
@@ -99,11 +106,18 @@ namespace BililiveRecorder.Core.Danmaku
                     this.xmlWriter.Dispose();
                     this.xmlWriter = null;
                 }
+                if (this.jsonlWriter != null)
+                {
+                    this.jsonlWriter.Close();
+                    this.jsonlWriter.Dispose();
+                    this.jsonlWriter = null;
+                }
             }
             catch (Exception ex)
             {
                 this.logger.Warning(ex, "关闭弹幕文件时发生错误");
                 this.xmlWriter = null;
+                this.jsonlWriter = null;
             }
         }
 
@@ -112,6 +126,71 @@ namespace BililiveRecorder.Core.Danmaku
             if (this.disposedValue)
                 return;
 
+            if (this.config is null)
+                return;
+
+            if (this.fileFormat == DanmakuFileFormat.Jsonl)
+            {
+                await this.WriteJsonlAsync(danmakuModel).ConfigureAwait(false);
+            }
+            else
+            {
+                await this.WriteXmlAsync(danmakuModel).ConfigureAwait(false);
+            }
+        }
+
+        private async Task WriteJsonlAsync(DanmakuModel danmakuModel)
+        {
+            if (this.jsonlWriter is null || this.config is null)
+                return;
+
+            if (danmakuModel.MsgType is not (DanmakuMsgType.Comment or DanmakuMsgType.SuperChat or DanmakuMsgType.GiftSend or DanmakuMsgType.GuardBuy))
+                return;
+
+            if (!this.userScriptRunner.CallOnDanmaku(this.logger, danmakuModel.RawString))
+                return;
+
+            // Check if this type of message should be recorded
+            var shouldWrite = danmakuModel.MsgType switch
+            {
+                DanmakuMsgType.Comment => true,
+                DanmakuMsgType.SuperChat => this.config.RecordDanmakuSuperChat,
+                DanmakuMsgType.GiftSend => this.config.RecordDanmakuGift,
+                DanmakuMsgType.GuardBuy => this.config.RecordDanmakuGuard,
+                _ => false
+            };
+
+            if (!shouldWrite)
+                return;
+
+            await this.semaphoreSlim.WaitAsync();
+            try
+            {
+                if (this.jsonlWriter is null)
+                    return;
+
+                // Write the raw JSON string from the server directly (one JSON object per line)
+                await this.jsonlWriter.WriteLineAsync(danmakuModel.RawString).ConfigureAwait(false);
+
+                if (this.writeCount++ >= this.config.RecordDanmakuFlushInterval)
+                {
+                    await this.jsonlWriter.FlushAsync();
+                    this.writeCount = 0;
+                }
+            }
+            catch (Exception ex)
+            {
+                this.logger.Warning(ex, "写入弹幕时发生错误");
+                this.DisableCoreNoLock();
+            }
+            finally
+            {
+                this.semaphoreSlim.Release();
+            }
+        }
+
+        private async Task WriteXmlAsync(DanmakuModel danmakuModel)
+        {
             if (this.xmlWriter is null || this.config is null)
                 return;
 
@@ -209,7 +288,7 @@ namespace BililiveRecorder.Core.Danmaku
             catch (Exception ex)
             {
                 this.logger.Warning(ex, "写入弹幕时发生错误");
-                this.DisableCore();
+                this.DisableCoreNoLock();
             }
             finally
             {
@@ -267,6 +346,9 @@ namespace BililiveRecorder.Core.Danmaku
                     this.xmlWriter?.Close();
                     this.xmlWriter?.Dispose();
                     this.xmlWriter = null;
+                    this.jsonlWriter?.Close();
+                    this.jsonlWriter?.Dispose();
+                    this.jsonlWriter = null;
                 }
 
                 // free unmanaged resources (unmanaged objects) and override finalizer

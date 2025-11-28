@@ -530,6 +530,22 @@
             }
           }
         },
+        "DanmakuFileFormat": {
+          "description": "弹幕文件格式\n默认: DanmakuFileFormat.Xml",
+          "markdownDescription": "弹幕文件格式  \n默认: `DanmakuFileFormat.Xml `\n\n",
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "HasValue": {
+              "type": "boolean",
+              "default": true
+            },
+            "Value": {
+              "type": "DanmakuFileFormat",
+              "default": "DanmakuFileFormat.Xml"
+            }
+          }
+        },
         "SaveStreamCover": {
           "description": "保存直播封面\n默认: false",
           "markdownDescription": "保存直播封面  \n默认: `false `\n\n",
@@ -804,6 +820,22 @@
             "Value": {
               "type": "boolean",
               "default": true
+            }
+          }
+        },
+        "DanmakuFileFormat": {
+          "description": "弹幕文件格式\n默认: DanmakuFileFormat.Xml",
+          "markdownDescription": "弹幕文件格式  \n默认: `DanmakuFileFormat.Xml `\n\n",
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "HasValue": {
+              "type": "boolean",
+              "default": true
+            },
+            "Value": {
+              "type": "DanmakuFileFormat",
+              "default": "DanmakuFileFormat.Xml"
             }
           }
         },
