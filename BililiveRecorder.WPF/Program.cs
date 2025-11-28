@@ -13,7 +13,7 @@ using System.Windows.Threading;
 using BililiveRecorder.Core.Api;
 using BililiveRecorder.Flv.Pipeline;
 using BililiveRecorder.ToolBox;
-using Esprima;
+using Acornima;
 using Jint.Runtime;
 using Sentry;
 using Sentry.Extensibility;
@@ -317,7 +317,7 @@ namespace BililiveRecorder.WPF
                     o.AddExceptionFilterForType<HttpRequestException>();
                     o.AddExceptionFilterForType<OutOfMemoryException>();
                     o.AddExceptionFilterForType<JintException>();
-                    o.AddExceptionFilterForType<ParserException>();
+                    o.AddExceptionFilterForType<ParseErrorException>();
                     o.AddEventProcessor(new SentryEventProcessor());
 
                     o.TextFormatter = new MessageTemplateTextFormatter("[{RoomId}] {Message}{NewLine}{Exception}{@ExceptionDetail:j}");
