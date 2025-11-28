@@ -14,7 +14,7 @@ using BililiveRecorder.Core.Api;
 using BililiveRecorder.Flv.Pipeline;
 using BililiveRecorder.ToolBox;
 using Acornima;
-using Jint.Runtime;
+using Jint;
 using Sentry;
 using Sentry.Extensibility;
 using Serilog;
