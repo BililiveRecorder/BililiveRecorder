@@ -116,12 +116,9 @@
           "description": "Configuration to build - Default is 'Debug' (local) or 'Release' (server)",
           "$ref": "#/definitions/Configuration"
         },
-        "RuntimeIdentifiers": {
-          "type": "array",
-          "description": "Runtime identifiers for CLI publish",
-          "items": {
-            "type": "string"
-          }
+        "RuntimeIdentifier": {
+          "type": "string",
+          "description": "Runtime identifier for CLI publish (e.g., linux-x64, win-x64, osx-arm64). Use 'any' for framework-dependent"
         },
         "Solution": {
           "type": "string",

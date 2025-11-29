@@ -11,15 +11,6 @@ using Nuke.Common.Tools.Npm;
 using Nuke.Common.Utilities.Collections;
 using static Nuke.Common.Tools.DotNet.DotNetTasks;
 
-[GitHubActions(
-    "build",
-    GitHubActionsImage.UbuntuLatest,
-    GitHubActionsImage.WindowsLatest,
-    OnPushBranches = new[] { "**" },
-    OnPullRequestBranches = new[] { "**" },
-    FetchDepth = 0,
-    InvokedTargets = new[] { nameof(Test), nameof(PublishCli) }
-)]
 class Build : NukeBuild
 {
     public static int Main() => Execute<Build>(x => x.Compile);
@@ -27,19 +18,8 @@ class Build : NukeBuild
     [Parameter("Configuration to build - Default is 'Debug' (local) or 'Release' (server)")]
     readonly Configuration Configuration = IsLocalBuild ? Configuration.Debug : Configuration.Release;
 
-    [Parameter("Runtime identifiers for CLI publish")]
-    readonly string[] RuntimeIdentifiers = new[]
-    {
-        "any",
-        "linux-arm",
-        "linux-arm64",
-        "linux-musl-arm64",
-        "linux-x64",
-        "linux-musl-x64",
-        "osx-x64",
-        "osx-arm64",
-        "win-x64"
-    };
+    [Parameter("Runtime identifier for CLI publish (e.g., linux-x64, win-x64, osx-arm64). Use 'any' for framework-dependent.")]
+    readonly string RuntimeIdentifier = "any";
 
     [Solution] readonly Solution Solution = null!;
 
@@ -72,9 +52,10 @@ class Build : NukeBuild
     Target BuildWebUI => _ => _
         .Executes(() =>
         {
-            if (!WebUISourceDirectory.DirectoryExists())
+            var packageJsonPath = WebUISourceDirectory / "package.json";
+            if (!packageJsonPath.FileExists())
             {
-                Serilog.Log.Warning("WebUI source directory not found, skipping WebUI build");
+                Serilog.Log.Warning("WebUI source not found (package.json missing), skipping WebUI build. Make sure git submodules are initialized.");
                 return;
             }
 
@@ -128,31 +109,28 @@ class Build : NukeBuild
         .Executes(() =>
         {
             var cliProject = Solution.GetProject("BililiveRecorder.Cli");
-            
-            foreach (var rid in RuntimeIdentifiers)
+            var rid = RuntimeIdentifier;
+
+            Serilog.Log.Information($"Publishing CLI for {rid}...");
+
+            var publishSettings = new DotNetPublishSettings()
+                .SetProject(cliProject)
+                .SetConfiguration(Configuration);
+
+            if (rid == "any")
             {
-                Serilog.Log.Information($"Publishing CLI for {rid}...");
-                
-                var publishSettings = new DotNetPublishSettings()
-                    .SetProject(cliProject)
-                    .SetConfiguration(Configuration)
-                    .EnableNoRestore();
-
-                if (rid == "any")
-                {
-                    // For "any" RID, don't specify a runtime identifier
-                    publishSettings = publishSettings
-                        .SetOutput(OutputDirectory / "cli" / rid / Configuration);
-                }
-                else
-                {
-                    publishSettings = publishSettings
-                        .SetRuntime(rid)
-                        .SetOutput(OutputDirectory / "cli" / rid / Configuration);
-                }
-
-                DotNetPublish(publishSettings);
+                // For "any" RID, don't specify a runtime identifier (framework-dependent)
+                publishSettings = publishSettings
+                    .SetOutput(OutputDirectory / "cli" / rid / Configuration);
             }
+            else
+            {
+                publishSettings = publishSettings
+                    .SetRuntime(rid)
+                    .SetOutput(OutputDirectory / "cli" / rid / Configuration);
+            }
+
+            DotNetPublish(publishSettings);
         });
 
     Target PublishWpf => _ => _
@@ -161,7 +139,7 @@ class Build : NukeBuild
         .Executes(() =>
         {
             var wpfProject = Solution.GetProject("BililiveRecorder.WPF");
-            
+
             DotNetBuild(s => s
                 .SetProjectFile(wpfProject)
                 .SetConfiguration(Configuration)

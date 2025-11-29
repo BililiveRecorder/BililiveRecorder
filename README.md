@@ -57,6 +57,41 @@ Please note this does not include the public .NET API of `BililiveRecorder.Flv`,
 
 Note: full git history is required for version generation to work.
 
+### Using NUKE Build (Recommended)
+
+This project uses [NUKE](https://nuke.build) as the unified build system.
+
+```sh
+# Initialize git submodules first
+git submodule update --init --recursive
+
+# Build the entire solution (default target is Compile)
+./build.sh              # Linux/macOS
+./build.ps1             # Windows
+
+# Run tests
+./build.sh Test
+./build.ps1 Test
+
+# Publish CLI for a specific runtime
+./build.sh PublishCli --runtime-identifier linux-x64
+./build.ps1 PublishCli --runtime-identifier win-x64
+
+# See all available targets and parameters
+./build.sh --help
+```
+
+Available targets:
+- `Clean` - Clean build outputs
+- `Restore` - Restore NuGet packages
+- `BuildWebUI` - Build the web UI (requires npm)
+- `Compile` - Build the solution (default)
+- `Test` - Run tests
+- `PublishCli` - Publish CLI for a specific runtime identifier
+- `PublishWpf` - Build WPF application (Windows only)
+
+### Manual Build
+
 WPF version:
 
 ```powershell
