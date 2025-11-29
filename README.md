@@ -77,6 +77,12 @@ git submodule update --init --recursive
 ./build.sh PublishCli --runtime-identifier linux-x64
 ./build.ps1 PublishCli --runtime-identifier win-x64
 
+# Publish CLI for all runtimes and create archives
+./build.sh PublishAllCli --configuration Release
+
+# Generate config code
+./build.sh GenerateConfig
+
 # See all available targets and parameters
 ./build.sh --help
 ```
@@ -88,7 +94,10 @@ Available targets:
 - `Compile` - Build the solution (default)
 - `Test` - Run tests
 - `PublishCli` - Publish CLI for a specific runtime identifier
+- `PublishAllCli` - Publish CLI for all runtime identifiers and create zip archives
 - `PublishWpf` - Build WPF application (Windows only)
+- `GenerateConfig` - Generate config code from TypeScript definitions
+- `BuildContainer` - Build multi-arch container image using buildah
 
 ### Manual Build
 

@@ -84,10 +84,6 @@ jobs:
 
   release_cli:
     needs: test # Tests must be passed before releasing
-    strategy:
-      matrix:
-        rid: [any, linux-arm, linux-arm64, linux-musl-arm64, linux-x64, linux-musl-x64, osx-x64, osx-arm64, win-x64]
-        build_configuration: [Release]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -98,32 +94,29 @@ jobs:
 
       - uses: actions/setup-dotnet@v4
 
-      - name: Run NUKE Build - BuildWebUI
-        run: ./build.sh BuildWebUI
+      - name: Run NUKE Build - PublishAllCli
+        run: ./build.sh PublishAllCli --configuration Release
 
-      - name: Run NUKE Build - PublishCli
-        run: ./build.sh PublishCli --configuration ${{ matrix.build_configuration }} --runtime-identifier ${{ matrix.rid }} --skip BuildWebUI
-
-      - name: Upload Artifacts
+      - name: Upload CLI Artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: CLI-${{ matrix.rid }}-${{ matrix.build_configuration }}
-          path: output/cli/${{ matrix.rid }}/Release
+          name: CLI-Release
+          path: output/cli/*/Release
 
-      - name: Pack Release Asset
+      - name: Upload CLI Archives
+        uses: actions/upload-artifact@v4
+        with:
+          name: CLI-Archives
+          path: output/artifacts/*.zip
+
+      - name: Upload Release Assets
         run: |
-          cd output/cli/${{ matrix.rid }}/Release
-          zip -r /tmp/CLI-${{ matrix.rid }}-${{ matrix.build_configuration }}.zip .
-
-      - name: Upload Release Asset
-        uses: shogo82148/actions-upload-release-asset@v1
+          for file in output/artifacts/*.zip; do
+            echo "Uploading $file..."
+            gh release upload "${{ github.event.release.tag_name }}" "$file" --clobber
+          done
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ github.event.release.upload_url }}
-          asset_path: /tmp/CLI-${{ matrix.rid }}-${{ matrix.build_configuration }}.zip
-          asset_name: BililiveRecorder-CLI-${{ matrix.rid }}.zip
-          asset_content_type: application/zip
 
   release_docker:
     needs: test # Tests must be passed before releasing
@@ -137,6 +130,9 @@ jobs:
         with:
           fetch-depth: 0
           submodules: recursive
+
+      - uses: actions/setup-dotnet@v4
+
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
       - name: Set up Docker Buildx

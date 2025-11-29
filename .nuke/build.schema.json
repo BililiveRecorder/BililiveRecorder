@@ -31,9 +31,12 @@
     "ExecutableTarget": {
       "type": "string",
       "enum": [
+        "BuildContainer",
         "BuildWebUI",
         "Clean",
         "Compile",
+        "GenerateConfig",
+        "PublishAllCli",
         "PublishCli",
         "PublishWpf",
         "Restore",
@@ -115,6 +118,18 @@
           "type": "string",
           "description": "Configuration to build - Default is 'Debug' (local) or 'Release' (server)",
           "$ref": "#/definitions/Configuration"
+        },
+        "ContainerPush": {
+          "type": "boolean",
+          "description": "Whether to push the container image"
+        },
+        "ContainerRegistry": {
+          "type": "string",
+          "description": "Container registry to push to (e.g., ghcr.io/bililiverecorder/bililiverecorder)"
+        },
+        "ContainerTag": {
+          "type": "string",
+          "description": "Container image tag"
         },
         "RuntimeIdentifier": {
           "type": "string",

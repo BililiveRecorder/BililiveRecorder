@@ -75,9 +75,6 @@ jobs:
           path: BililiveRecorder.WPF/bin/Release
 
   build_cli:
-    strategy:
-      matrix:
-        rid: [any, linux-arm, linux-arm64, linux-musl-arm64, linux-x64, linux-musl-x64, osx-x64, osx-arm64, win-x64]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -88,25 +85,29 @@ jobs:
 
       - uses: actions/setup-dotnet@v4
 
-      - name: Run NUKE Build - BuildWebUI
-        run: ./build.sh BuildWebUI
+      - name: Run NUKE Build - PublishAllCli (Debug)
+        run: ./build.sh PublishAllCli --configuration Debug
 
-      - name: Run NUKE Build - PublishCli (Debug)
-        run: ./build.sh PublishCli --configuration Debug --runtime-identifier ${{ matrix.rid }} --skip BuildWebUI
-
-      - name: Run NUKE Build - PublishCli (Release)
-        run: ./build.sh PublishCli --configuration Release --runtime-identifier ${{ matrix.rid }} --skip BuildWebUI
-
-      - name: Upload Artifacts - Debug
+      - name: Upload Debug Artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: CLI-${{ matrix.rid }}-Debug
-          path: output/cli/${{ matrix.rid }}/Debug
-      - name: Upload Artifacts - Release
+          name: CLI-Debug
+          path: output/cli/*/Debug
+
+      - name: Run NUKE Build - PublishAllCli (Release)
+        run: ./build.sh PublishAllCli --configuration Release
+
+      - name: Upload Release Artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: CLI-${{ matrix.rid }}-Release
-          path: output/cli/${{ matrix.rid }}/Release
+          name: CLI-Release
+          path: output/cli/*/Release
+
+      - name: Upload Release Archives
+        uses: actions/upload-artifact@v4
+        with:
+          name: CLI-Archives
+          path: output/artifacts/*.zip
 
   build_docker:
     runs-on: ubuntu-latest
@@ -120,6 +121,9 @@ jobs:
         with:
           fetch-depth: 0
           submodules: recursive
+
+      - uses: actions/setup-dotnet@v4
+
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
       - name: Set up Docker Buildx
