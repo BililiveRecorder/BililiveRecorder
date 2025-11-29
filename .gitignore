@@ -262,7 +262,7 @@ paket-files/
 __pycache__/
 *.pyc
 
-BililiveRecorder.Cli/Properties/launchSettings.json
+src/BililiveRecorder.Cli/Properties/launchSettings.json
 
 **/*.received.*
-BililiveRecorder.Web/embeded/ui/
+src/BililiveRecorder.Web/embeded/ui/

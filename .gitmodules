@@ -2,5 +2,5 @@
 	path = webui/source
 	url = https://github.com/BililiveRecorder/BililiveRecorder-WebUI.git
 [submodule "test-data"]
-	path = test/data
+	path = tests/data
 	url = https://github.com/BililiveRecorder/test-data.git
