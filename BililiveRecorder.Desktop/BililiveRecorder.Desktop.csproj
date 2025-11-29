@@ -20,6 +20,7 @@
     </PackageReference>
     <PackageReference Include="Echoes.Avalonia" Version="0.3.0" />
     <PackageReference Include="FluentAvaloniaUI" Version="2.4.1" />
+    <PackageReference Include="Lucide.Avalonia" Version="0.1.50" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.0" />
     <PackageReference Include="Serilog" Version="4.3.0" />
   </ItemGroup>

@@ -37,15 +37,30 @@ dotnet run --project BililiveRecorder.Desktop/BililiveRecorder.Desktop.csproj
 - **Avalonia** (11.3.9) - Cross-platform UI framework
 - **FluentAvalonia** (2.4.1) - Fluent design components for Avalonia
 - **Avalonia.Labs.Panels** (11.3.1) - FlexPanel for responsive layouts
+- **Lucide.Avalonia** (0.1.50) - Lucide icons for Avalonia
 - **Echoes.Avalonia** (0.3.0) - Multi-language UI support (to be integrated)
 - **Serilog** - Logging
 - **Microsoft.Extensions.DependencyInjection** - Dependency injection
+
+## Icon Usage
+
+This project uses [Lucide.Avalonia](https://github.com/dme-compunet/Lucide.Avalonia) for icons. Usage:
+
+```xml
+<!-- Add namespace -->
+xmlns:lucide="using:Lucide.Avalonia"
+
+<!-- Use icons with x:Static -->
+<lucide:LucideIcon Kind="{x:Static lucide:LucideIconKind.Star}" Size="24"/>
+```
+
+Note: NavigationViewItem icons in FluentAvalonia use IconSource which is not compatible with LucideIcon. Navigation items are currently text-only.
 
 ## Known Issues & Limitations
 
 ### UI Translation
 
-- **Icons**: Currently using SVG path data via `PathIcon` instead of icon libraries. Lucide.Avalonia was removed due to compatibility issues with FluentAvalonia's NavigationViewItem.Icon property.
+- **NavigationView Icons**: FluentAvalonia's NavigationViewItem.IconSource requires IconSource objects, not controls. LucideIcon works as button/content icons but not as NavigationViewItem icons.
 - **HyperlinkButton**: FluentAvalonia's HyperlinkButton has different API than WPF; using regular Buttons with Commands as workaround.
 - **Flyouts**: Some flyout implementations are simplified compared to WPF version.
 
@@ -68,7 +83,7 @@ dotnet run --project BililiveRecorder.Desktop/BililiveRecorder.Desktop.csproj
 ### Future Work
 
 - [ ] Integrate Echoes for proper localization
-- [ ] Add Lucide.Avalonia icons properly (investigate compatibility)
+- [ ] Add NavigationViewItem icons (may need custom IconSource wrapper for LucideIcon)
 - [ ] Implement all dialog controls
 - [ ] Connect UI to recording business logic
 - [ ] Add system tray support

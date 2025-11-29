@@ -2,6 +2,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:lucide="using:Lucide.Avalonia"
              mc:Ignorable="d" d:DesignWidth="210" d:DesignHeight="110"
              x:Class="BililiveRecorder.Desktop.Controls.AddRoomCard">
     <Border Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
@@ -19,7 +20,7 @@
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Grid.ColumnSpan="2">
-                <TextBlock Text="+" FontSize="24" VerticalAlignment="Center" Margin="5,0"/>
+                <lucide:LucideIcon Kind="{x:Static lucide:LucideIconKind.Plus}" Size="20" Margin="5,0"/>
                 <TextBlock FontSize="20" VerticalAlignment="Center" Text="添加房间"/>
             </StackPanel>
             <TextBox Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Center" x:Name="InputTextBox"

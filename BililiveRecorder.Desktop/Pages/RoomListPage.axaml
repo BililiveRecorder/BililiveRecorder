@@ -6,6 +6,7 @@
              xmlns:controls="using:BililiveRecorder.Desktop.Controls"
              xmlns:models="using:BililiveRecorder.Desktop.Models"
              xmlns:labs="using:Avalonia.Labs.Panels"
+             xmlns:lucide="using:Lucide.Avalonia"
              mc:Ignorable="d" d:DesignWidth="960" d:DesignHeight="1000"
              x:Class="BililiveRecorder.Desktop.Pages.RoomListPage"
              x:Name="TheRoomListPage">
@@ -43,17 +44,17 @@
                 <MenuItem Header="链接">
                     <MenuItem Header="网站" Command="{x:Static models:Commands.OpenLink}" CommandParameter="https://rec.danmuji.org/">
                         <MenuItem.Icon>
-                            <PathIcon Data="M14,3V5H17.59L7.76,14.83L9.17,16.24L19,6.41V10H21V3M19,19H5V5H12V3H5C3.89,3 3,3.9 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V12H19V19Z" Width="16" Height="16"/>
+                            <lucide:LucideIcon Kind="{x:Static lucide:LucideIconKind.ExternalLink}" Size="16"/>
                         </MenuItem.Icon>
                     </MenuItem>
                     <MenuItem Header="常见问题" Command="{x:Static models:Commands.OpenLink}" CommandParameter="https://rec.danmuji.org/link/faq/">
                         <MenuItem.Icon>
-                            <PathIcon Data="M14,3V5H17.59L7.76,14.83L9.17,16.24L19,6.41V10H21V3M19,19H5V5H12V3H5C3.89,3 3,3.9 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V12H19V19Z" Width="16" Height="16"/>
+                            <lucide:LucideIcon Kind="{x:Static lucide:LucideIconKind.ExternalLink}" Size="16"/>
                         </MenuItem.Icon>
                     </MenuItem>
                     <MenuItem Header="赞助" Command="{x:Static models:Commands.OpenLink}" CommandParameter="https://rec.danmuji.org/link/sponsor/">
                         <MenuItem.Icon>
-                            <PathIcon Data="M14,3V5H17.59L7.76,14.83L9.17,16.24L19,6.41V10H21V3M19,19H5V5H12V3H5C3.89,3 3,3.9 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V12H19V19Z" Width="16" Height="16"/>
+                            <lucide:LucideIcon Kind="{x:Static lucide:LucideIconKind.ExternalLink}" Size="16"/>
                         </MenuItem.Icon>
                     </MenuItem>
                 </MenuItem>

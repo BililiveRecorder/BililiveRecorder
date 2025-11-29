@@ -6,6 +6,7 @@
              xmlns:local="using:BililiveRecorder.Desktop.Pages"
              xmlns:models="using:BililiveRecorder.Desktop.Models"
              xmlns:controls="using:BililiveRecorder.Desktop.Controls"
+             xmlns:lucide="using:Lucide.Avalonia"
              mc:Ignorable="d" d:DesignWidth="900" d:DesignHeight="600"
              x:Class="BililiveRecorder.Desktop.Pages.RootPage"
              x:DataType="models:RootModel">
@@ -19,13 +20,17 @@
                            SelectionChanged="NavigationView_SelectionChanged">
             <ui:NavigationView.PaneCustomContent>
                 <StackPanel Margin="4">
-                    <Button Click="SwitchLanguage_Click" Padding="8" Content="语言"/>
-                    <Button Click="SwitchLightDarkTheme_Click" Padding="8" Margin="0,4,0,0" Content="主题"/>
+                    <Button Click="SwitchLanguage_Click" Padding="8">
+                        <lucide:LucideIcon Kind="{x:Static lucide:LucideIconKind.Languages}" Size="18"/>
+                    </Button>
+                    <Button Click="SwitchLightDarkTheme_Click" Padding="8" Margin="0,4,0,0">
+                        <lucide:LucideIcon Kind="{x:Static lucide:LucideIconKind.SunMoon}" Size="18"/>
+                    </Button>
                 </StackPanel>
             </ui:NavigationView.PaneCustomContent>
             <ui:NavigationView.PaneFooter>
                 <Grid Width="40" Height="40" x:Name="DebugBuildIcon" IsVisible="False" HorizontalAlignment="Left">
-                    <TextBlock Text="DEBUG" ToolTip.Tip="Debug Build 测试版" FontSize="10"/>
+                    <lucide:LucideIcon Kind="{x:Static lucide:LucideIconKind.Bug}" Size="24" ToolTip.Tip="Debug Build 测试版"/>
                 </Grid>
             </ui:NavigationView.PaneFooter>
             <ui:NavigationView.MenuItems>

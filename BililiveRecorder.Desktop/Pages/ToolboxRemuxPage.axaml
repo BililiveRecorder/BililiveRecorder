@@ -2,6 +2,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:lucide="using:Lucide.Avalonia"
              mc:Ignorable="d" d:DesignWidth="900" d:DesignHeight="600"
              x:Class="BililiveRecorder.Desktop.Pages.ToolboxRemuxPage">
     <Grid Margin="20">
@@ -12,7 +13,7 @@
         <DockPanel Margin="0,0,0,10">
             <Button VerticalAlignment="Bottom" DockPanel.Dock="Right" Click="Remux_Button_Click">
                 <StackPanel Orientation="Horizontal">
-                    <PathIcon Data="M13,9H18.5L13,3.5V9M6,2H14L20,8V20A2,2 0 0,1 18,22H6C4.89,22 4,21.1 4,20V4C4,2.89 4.89,2 6,2M11,11H9V16.5H11V14H13V16.5H15V11H13V13H11V11Z" Width="14" Height="14" Margin="0,0,5,0"/>
+                    <lucide:LucideIcon Kind="{x:Static lucide:LucideIconKind.Film}" Size="14" Margin="0,0,5,0"/>
                     <TextBlock Text="转封装"/>
                 </StackPanel>
             </Button>
