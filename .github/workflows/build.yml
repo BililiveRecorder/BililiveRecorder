@@ -88,14 +88,14 @@ jobs:
 
       - uses: actions/setup-dotnet@v4
 
-      - name: Build WebUI
-        run: ./webui/build.sh
+      - name: Run NUKE Build - BuildWebUI
+        run: ./build.sh BuildWebUI
 
       - name: Run NUKE Build - PublishCli (Debug)
-        run: ./build.sh PublishCli --configuration Debug --runtime-identifier ${{ matrix.rid }}
+        run: ./build.sh PublishCli --configuration Debug --runtime-identifier ${{ matrix.rid }} --skip BuildWebUI
 
       - name: Run NUKE Build - PublishCli (Release)
-        run: ./build.sh PublishCli --configuration Release --runtime-identifier ${{ matrix.rid }}
+        run: ./build.sh PublishCli --configuration Release --runtime-identifier ${{ matrix.rid }} --skip BuildWebUI
 
       - name: Upload Artifacts - Debug
         uses: actions/upload-artifact@v4
@@ -145,8 +145,8 @@ jobs:
             type=ref,event=branch
             type=ref,event=pr
 
-      - name: Build WebUI
-        run: ./webui/build.sh
+      - name: Run NUKE Build - BuildWebUI
+        run: ./build.sh BuildWebUI
       - name: Build CLI
         run: dotnet build -c Release -o ./BililiveRecorder.Cli/bin/docker_out BililiveRecorder.Cli/BililiveRecorder.Cli.csproj
       # Build and push Docker image with Buildx (don't push on PR)
