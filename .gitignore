@@ -266,3 +266,7 @@ BililiveRecorder.Cli/Properties/launchSettings.json
 
 **/*.received.*
 BililiveRecorder.Web/embeded/ui/
+
+# NUKE build system
+.nuke/temp/
+output/

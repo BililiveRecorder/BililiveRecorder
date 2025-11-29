@@ -1,0 +1,8 @@
+<Project>
+  <!-- Override Directory.Build.props to exclude NUKE build project from GitVersion and analyzers -->
+  <PropertyGroup>
+    <LangVersion>11.0</LangVersion>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+  <!-- Don't include the packages from parent Directory.Build.props -->
+</Project>

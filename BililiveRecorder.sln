@@ -31,6 +31,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BililiveRecorder.Flv.Tests"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BililiveRecorder.Web", "BililiveRecorder.Web\BililiveRecorder.Web.csproj", "{263EC584-AFD5-45C9-8347-127016B3B8F5}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "_build", "build\_build.csproj", "{B5C51D9C-1D84-4F63-B6D1-38F3E8E3C2A4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -69,6 +71,8 @@ Global
 		{263EC584-AFD5-45C9-8347-127016B3B8F5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{263EC584-AFD5-45C9-8347-127016B3B8F5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{263EC584-AFD5-45C9-8347-127016B3B8F5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B5C51D9C-1D84-4F63-B6D1-38F3E8E3C2A4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B5C51D9C-1D84-4F63-B6D1-38F3E8E3C2A4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
