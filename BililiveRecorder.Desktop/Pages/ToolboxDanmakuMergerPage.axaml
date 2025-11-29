@@ -1,0 +1,38 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="900" d:DesignHeight="600"
+             x:Class="BililiveRecorder.Desktop.Pages.ToolboxDanmakuMergerPage">
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <TextBlock Text="弹幕合并工具" FontSize="28" FontWeight="Bold"/>
+        <Border Grid.Row="1" BorderThickness="1" CornerRadius="5" Margin="0,10"
+                Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
+                BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}">
+            <Grid Margin="10">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                    <Button Content="添加文件" Click="AddFile_Button_Click" Margin="0,0,5,0"/>
+                    <Button Content="清空列表" Click="ClearList_Button_Click"/>
+                </StackPanel>
+                <ListBox Grid.Row="1" x:Name="FileListBox"/>
+            </Grid>
+        </Border>
+        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right">
+            <Button Click="Merge_Button_Click">
+                <StackPanel Orientation="Horizontal">
+                    <PathIcon Data="M8 17L12 13H15.2C15.6 14.2 16.7 15 18 15C19.7 15 21 13.7 21 12S19.7 9 18 9C16.7 9 15.6 9.8 15.2 11H12L8 7V3H3V8H6L10.2 12L6 16H3V21H8V17Z" Width="14" Height="14" Margin="0,0,5,0"/>
+                    <TextBlock Text="合并"/>
+                </StackPanel>
+            </Button>
+        </StackPanel>
+    </Grid>
+</UserControl>

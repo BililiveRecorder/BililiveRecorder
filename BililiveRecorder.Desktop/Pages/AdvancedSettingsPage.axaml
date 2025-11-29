@@ -1,0 +1,116 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:ui="using:FluentAvalonia.UI.Controls"
+             mc:Ignorable="d" d:DesignWidth="500" d:DesignHeight="2500"
+             x:Class="BililiveRecorder.Desktop.Pages.AdvancedSettingsPage">
+    <ScrollViewer>
+        <StackPanel Orientation="Vertical" Spacing="5" Margin="20">
+            <TextBlock Text="高级设置" FontSize="28" FontWeight="Bold" Margin="0,10"/>
+            <TextBlock Text="这里是高级设置，请谨慎修改" Foreground="Orange"/>
+            <TextBlock TextWrapping="Wrap" Text="所有高级设置项目均不是录播姬的正式功能，它们的作用是便于 power users 在不修改录播姬源码重新编译的情况下深度调整录播姬的行为。请根据个人实际需求谨慎使用高级设置，不要随意修改。"/>
+            
+            <Border Background="{DynamicResource CardBackgroundFillColorDefaultBrush}" 
+                    CornerRadius="8" Padding="15" Margin="0,5">
+                <StackPanel>
+                    <TextBlock Text="弹幕设置" FontSize="16" FontWeight="SemiBold" Margin="0,0,0,10"/>
+                    <TextBlock Text="弹幕写入间隔"/>
+                    <ui:NumberBox Minimum="0" SmallChange="1" Width="220" HorizontalAlignment="Left"/>
+                </StackPanel>
+            </Border>
+            
+            <Border Background="{DynamicResource CardBackgroundFillColorDefaultBrush}" 
+                    CornerRadius="8" Padding="15" Margin="0,5">
+                <StackPanel>
+                    <TextBlock Text="Scripting" FontSize="16" FontWeight="SemiBold" Margin="0,0,0,10"/>
+                    <Button Content="测试" Click="TestScript_Click"/>
+                    <TextBlock Text="请自由发挥((" Margin="0,10,0,5"/>
+                    <TextBox AcceptsReturn="True" MinHeight="70" MaxHeight="130"/>
+                </StackPanel>
+            </Border>
+            
+            <Border Background="{DynamicResource CardBackgroundFillColorDefaultBrush}" 
+                    CornerRadius="8" Padding="15" Margin="0,5">
+                <StackPanel>
+                    <TextBlock Text="弹幕服务器" FontSize="16" FontWeight="SemiBold" Margin="0,0,0,10"/>
+                    <ToggleSwitch OnContent="连接弹幕服务器时使用主播 UID 认证" OffContent="连接弹幕服务器时使用主播 UID 认证"/>
+                    <TextBlock Text="弹幕服务器传输协议" Margin="0,10,0,5"/>
+                    <RadioButton GroupName="DanmakuTransport" Content="随机"/>
+                    <RadioButton GroupName="DanmakuTransport" Content="TCP"/>
+                    <RadioButton GroupName="DanmakuTransport" Content="WS"/>
+                    <RadioButton GroupName="DanmakuTransport" Content="WSS"/>
+                </StackPanel>
+            </Border>
+            
+            <Border Background="{DynamicResource CardBackgroundFillColorDefaultBrush}" 
+                    CornerRadius="8" Padding="15" Margin="0,5">
+                <StackPanel>
+                    <TextBlock Text="录制" FontSize="16" FontWeight="SemiBold" Margin="0,0,0,10"/>
+                    <ToggleSwitch OnContent="在视频文件写入直播信息 metadata" OffContent="在视频文件写入直播信息 metadata"/>
+                </StackPanel>
+            </Border>
+            
+            <Border Background="{DynamicResource CardBackgroundFillColorDefaultBrush}" 
+                    CornerRadius="8" Padding="15" Margin="0,5">
+                <StackPanel>
+                    <TextBlock Text="Network" FontSize="16" FontWeight="SemiBold" Margin="0,0,0,10"/>
+                    <CheckBox Content="使用系统代理"/>
+                    <TextBlock Margin="0,10" Text="允许使用的网络类型："/>
+                    <RadioButton GroupName="NetworkTransport" Content="系统 (禁用录播姬的 IP 随机选择)"/>
+                    <RadioButton GroupName="NetworkTransport" Content="IPv4 和 IPv6"/>
+                    <RadioButton GroupName="NetworkTransport" Content="仅限 IPv4"/>
+                    <RadioButton GroupName="NetworkTransport" Content="仅限 IPv6"/>
+                    <TextBlock Text="mikufans直播 API Host" Margin="0,10,0,5"/>
+                    <TextBox HorizontalAlignment="Left" Width="300"/>
+                </StackPanel>
+            </Border>
+            
+            <Border Background="{DynamicResource CardBackgroundFillColorDefaultBrush}" 
+                    CornerRadius="8" Padding="15" Margin="0,5">
+                <StackPanel>
+                    <TextBlock Text="Timing" FontSize="16" FontWeight="SemiBold" Margin="0,0,0,10"/>
+                    <TextBlock Text="录制重试间隔 (毫秒)" Margin="0,5"/>
+                    <ui:NumberBox Minimum="1000" SmallChange="100" Width="220" HorizontalAlignment="Left"/>
+                    <TextBlock Text="录制重试间隔（无匹配画质）(秒)" Margin="0,10,0,5"/>
+                    <ui:NumberBox Minimum="10" SmallChange="5" Width="220" HorizontalAlignment="Left"/>
+                    <TextBlock Text="录制连接超时 (毫秒)" Margin="0,10,0,5"/>
+                    <ui:NumberBox Minimum="1000" SmallChange="100" Width="220" HorizontalAlignment="Left"/>
+                    <TextBlock Text="弹幕重连间隔 (毫秒)" Margin="0,10,0,5"/>
+                    <ui:NumberBox Minimum="1000" SmallChange="100" Width="220" HorizontalAlignment="Left"/>
+                    <TextBlock Text="接收数据超时 (毫秒)" Margin="0,10,0,5"/>
+                    <ui:NumberBox Minimum="1000" SmallChange="100" Width="220" HorizontalAlignment="Left"/>
+                    <TextBlock Text="开播检查间隔 (秒)" Margin="0,10,0,5"/>
+                    <ui:NumberBox Minimum="60" SmallChange="10" Width="220" HorizontalAlignment="Left"/>
+                </StackPanel>
+            </Border>
+            
+            <Border Background="{DynamicResource CardBackgroundFillColorDefaultBrush}" 
+                    CornerRadius="8" Padding="15" Margin="0,5">
+                <StackPanel Orientation="Vertical">
+                    <TextBlock Text="Cookie" FontSize="16" FontWeight="SemiBold" Margin="0,0,0,10"/>
+                    <TextBlock TextWrapping="Wrap" Text="Cookie 会用于包括获取直播间信息、获取直播流地址、连接弹幕服务器在内的所有 API 请求中。录播姬的请求与浏览器内正常使用所发送的请求不完全一致，能通过分析请求日志识别出来。"/>
+                    <TextBlock TextWrapping="Wrap" Text="软件开发者不对账号发生的任何事情负责。建议使用小号。" Foreground="Orange" Margin="0,5,0,0"/>
+                    <TextBox Width="220" HorizontalAlignment="Left" Margin="0,10,0,0"/>
+                    <Button Content="测试" Margin="0,10,0,0" Click="TestCookie_Click"/>
+                </StackPanel>
+            </Border>
+            
+            <Border Background="{DynamicResource CardBackgroundFillColorDefaultBrush}" 
+                    CornerRadius="8" Padding="15" Margin="0,5">
+                <StackPanel>
+                    <TextBlock Text="Reset Request Policies" FontSize="16" FontWeight="SemiBold" Margin="0,0,0,10"/>
+                    <Button Content="Reset"/>
+                </StackPanel>
+            </Border>
+            
+            <Border Background="{DynamicResource CardBackgroundFillColorDefaultBrush}" 
+                    CornerRadius="8" Padding="15" Margin="0,5">
+                <StackPanel>
+                    <TextBlock Text="手动崩溃 Test Crash" FontSize="16" FontWeight="SemiBold" Margin="0,0,0,10"/>
+                    <Button Content="Crash EVERYTHING !!" Click="Crash_Click"/>
+                </StackPanel>
+            </Border>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

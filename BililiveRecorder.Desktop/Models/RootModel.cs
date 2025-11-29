@@ -1,0 +1,50 @@
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
+using BililiveRecorder.Core;
+
+#nullable enable
+namespace BililiveRecorder.Desktop.Models
+{
+    internal class RootModel : INotifyPropertyChanged, IDisposable
+    {
+        private bool disposedValue;
+        private IRecorder? recorder;
+
+        public event PropertyChangedEventHandler? PropertyChanged;
+
+        public IRecorder? Recorder { get => this.recorder; internal set => this.SetField(ref this.recorder, value); }
+
+        public RootModel()
+        {
+        }
+
+        protected virtual void OnPropertyChanged(string propertyName) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+
+        protected bool SetField<T>(ref T field, T value, [CallerMemberName] string propertyName = "")
+        {
+            if (EqualityComparer<T>.Default.Equals(field, value)) { return false; }
+            field = value; this.OnPropertyChanged(propertyName); return true;
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!this.disposedValue)
+            {
+                if (disposing)
+                {
+                    this.Recorder?.Dispose();
+                }
+
+                this.disposedValue = true;
+            }
+        }
+
+        public void Dispose()
+        {
+            this.Dispose(disposing: true);
+            GC.SuppressFinalize(this);
+        }
+    }
+}

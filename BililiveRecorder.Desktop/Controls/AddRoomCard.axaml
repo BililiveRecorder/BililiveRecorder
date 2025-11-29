@@ -1,0 +1,30 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="210" d:DesignHeight="110"
+             x:Class="BililiveRecorder.Desktop.Controls.AddRoomCard">
+    <Border Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
+            BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}"
+            BorderThickness="1"
+            CornerRadius="5"
+            Width="210" Height="110">
+        <Grid Margin="15">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="2*"/>
+                <RowDefinition Height="3.5*"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Grid.ColumnSpan="2">
+                <TextBlock Text="+" FontSize="24" VerticalAlignment="Center" Margin="5,0"/>
+                <TextBlock FontSize="20" VerticalAlignment="Center" Text="添加房间"/>
+            </StackPanel>
+            <TextBox Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Center" x:Name="InputTextBox"
+                     Watermark="房间号" KeyDown="InputTextBox_KeyDown"/>
+            <Button Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" Content="添加" Click="Button_Click" Margin="5,0,0,0"/>
+        </Grid>
+    </Border>
+</UserControl>
