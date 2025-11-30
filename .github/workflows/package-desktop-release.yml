@@ -140,6 +140,7 @@ jobs:
 
       - name: Create Pull Request
         if: steps.commit.outputs.HAS_CHANGES == 'true' && github.event.inputs.dry_run != 'true'
+        working-directory: ./binary-repo
         env:
           GH_TOKEN: ${{ secrets.RELEASE_REPO_PAT }}
         run: |
@@ -167,7 +168,6 @@ jobs:
           *After merging this PR, the new version will be available for download.*
           "@
           
-          cd binary-repo
           gh pr create --title "$prTitle" --body "$prBody" --base main --head "$branchName"
 
       - name: Summary
