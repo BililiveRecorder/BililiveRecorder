@@ -8,7 +8,6 @@ name: Package Desktop Release
 # - A release must have been created and the release workflow must have completed
 # - The RELEASE_REPO_PAT secret must be configured with a PAT that has:
 #   - repo scope for the Bililive/soft.danmuji.org repository
-#   - workflow scope (if the target repo has workflow files)
 #
 # Usage:
 # 1. Go to Actions > Package Desktop Release
@@ -31,6 +30,8 @@ on:
         default: false
 
 env:
+  # Squirrel version must match the version used in the project (see BililiveRecorder.WPF.csproj)
+  # Download from: https://github.com/clowd/Clowd.Squirrel/releases
   SQUIRREL_VERSION: '2.11.1'
   BINARY_REPO: Bililive/soft.danmuji.org
   BINARY_REPO_PATH: BililiveRecorder
@@ -40,6 +41,7 @@ jobs:
     runs-on: windows-latest
     permissions:
       actions: read
+      contents: read
     steps:
       - name: Download WPF-NupkgReleases artifact
         uses: actions/download-artifact@v4
@@ -94,8 +96,9 @@ jobs:
           $iconsDir = "$env:TEMP\icons"
           New-Item -ItemType Directory -Path $iconsDir -Force | Out-Null
           
-          $installerIconUrl = "https://raw.githubusercontent.com/$env:MAIN_REPO/dev/BililiveRecorder.WPF/installer.ico"
-          $appIconUrl = "https://raw.githubusercontent.com/$env:MAIN_REPO/dev/BililiveRecorder.WPF/ico.ico"
+          # Use the release tag to get icons matching the release version
+          $installerIconUrl = "https://raw.githubusercontent.com/$env:MAIN_REPO/v$version/BililiveRecorder.WPF/installer.ico"
+          $appIconUrl = "https://raw.githubusercontent.com/$env:MAIN_REPO/v$version/BililiveRecorder.WPF/ico.ico"
           
           $iconPath = "$iconsDir\installer.ico"
           $appIconPath = "$iconsDir\ico.ico"
@@ -147,8 +150,8 @@ jobs:
           }
           
           Write-Host "Cloning to: $binaryRepoDir"
-          $cloneUrl = "https://x-access-token:$($env:RELEASE_REPO_PAT)@github.com/${{ env.BINARY_REPO }}.git"
-          git clone $cloneUrl $binaryRepoDir
+          # Use gh CLI for cloning which handles authentication via GH_TOKEN
+          gh repo clone "${{ env.BINARY_REPO }}" $binaryRepoDir
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
           
           $destPath = Join-Path $binaryRepoDir "${{ env.BINARY_REPO_PATH }}"
@@ -190,7 +193,10 @@ jobs:
             $status = git status --porcelain
             if (-not $status) {
               Write-Host "No changes detected in the binary repository"
-              echo "HAS_CHANGES=false" >> $env:GITHUB_OUTPUT
+              Write-Host "::warning::No changes detected; no PR will be created."
+              if ($env:GITHUB_STEP_SUMMARY) {
+                Add-Content -Path $env:GITHUB_STEP_SUMMARY -Value "### No changes detected`nNo pull request was created because there were no changes to commit."
+              }
               exit 0
             }
             
@@ -208,10 +214,6 @@ jobs:
             
             git commit -m "Release BililiveRecorder v$version"
             if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
-            
-            echo "HAS_CHANGES=true" >> $env:GITHUB_OUTPUT
-            echo "VERSION=$version" >> $env:GITHUB_OUTPUT
-            echo "BRANCH_NAME=$branchName" >> $env:GITHUB_OUTPUT
             
             # ============================================================
             # Step 7: Push and create PR (or show dry run info)
@@ -252,11 +254,7 @@ jobs:
               
               Write-Host "Creating pull request..."
               $prTitle = "Release BililiveRecorder v$version"
-              $prBody = @"
-          Release BililiveRecorder v$version
-          
-          Source: $env:SOURCE_RUN_URL
-          "@
+              $prBody = "Release BililiveRecorder v$version`n`nSource: $env:SOURCE_RUN_URL"
               
               gh pr create --title "$prTitle" --body "$prBody" --base main --head "$branchName"
               if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
