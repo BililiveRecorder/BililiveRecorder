@@ -252,7 +252,7 @@ jobs:
               gh auth setup-git
               
               Write-Host "Pushing branch..."
-              git push origin $branchName
+              git push -u origin $branchName
               if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
               
               Write-Host "Creating pull request..."
