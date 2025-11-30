@@ -1,0 +1,199 @@
+name: Package Desktop Release
+
+# This workflow semi-automates the final step of releasing a new Desktop version.
+# It packages the installer and upgrade diffs, then creates a pull request in the
+# binary repository for review before the changes go live.
+#
+# Prerequisites:
+# - A release must have been created and the release workflow must have completed
+# - The RELEASE_REPO_PAT secret must be configured with a PAT that has:
+#   - repo scope for the Bililive/soft.danmuji.org repository
+#   - workflow scope (if the target repo has workflow files)
+#
+# Usage:
+# 1. Go to Actions > Package Desktop Release
+# 2. Click "Run workflow"
+# 3. Enter the workflow run ID from the release workflow
+# 4. Click "Run workflow"
+# 5. Review and merge the created pull request in Bililive/soft.danmuji.org
+
+on:
+  workflow_dispatch:
+    inputs:
+      run_id:
+        description: 'Workflow run ID from the release workflow (find it in the URL of the release workflow run)'
+        required: true
+        type: string
+      dry_run:
+        description: 'Dry run mode - skip creating PR (for testing)'
+        required: false
+        type: boolean
+        default: false
+
+env:
+  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
+  DOTNET_CLI_TELEMETRY_OPTOUT: true
+  BINARY_REPO: Bililive/soft.danmuji.org
+  BINARY_REPO_PATH: BililiveRecorder
+
+jobs:
+  package:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout main repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Download WPF-NupkgReleases artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: WPF-NupkgReleases
+          path: ./nupkg
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          run-id: ${{ github.event.inputs.run_id }}
+
+      - name: List downloaded artifacts
+        run: |
+          Write-Host "Downloaded artifacts:"
+          Get-ChildItem -Path ./nupkg -Recurse | ForEach-Object { Write-Host $_.FullName }
+
+      - name: Find nupkg file and extract version
+        id: find_nupkg
+        run: |
+          $nupkg = Get-ChildItem -Path ./nupkg -Filter "BililiveRecorder.*.nupkg" | Select-Object -First 1
+          if (-not $nupkg) {
+            Write-Error "No nupkg file found in ./nupkg"
+            exit 1
+          }
+          Write-Host "Found nupkg: $($nupkg.FullName)"
+          echo "NUPKG_PATH=$($nupkg.FullName)" >> $env:GITHUB_OUTPUT
+          
+          # Extract version from filename (BililiveRecorder.X.Y.Z.nupkg)
+          $version = $nupkg.Name -replace '^BililiveRecorder\.', '' -replace '\.nupkg$', ''
+          Write-Host "Extracted version: $version"
+          echo "VERSION=$version" >> $env:GITHUB_OUTPUT
+
+      - name: Clone binary repository
+        run: |
+          git clone "https://x-access-token:${{ secrets.RELEASE_REPO_PAT }}@github.com/${{ env.BINARY_REPO }}.git" binary-repo
+
+      - name: Install Squirrel
+        run: dotnet tool install --global Clowd.Squirrel --version 2.11.1
+
+      - name: Run Squirrel releasify
+        run: |
+          $nupkgPath = "${{ steps.find_nupkg.outputs.NUPKG_PATH }}"
+          $destPath = "./binary-repo/${{ env.BINARY_REPO_PATH }}"
+          $iconPath = "./BililiveRecorder.WPF/installer.ico"
+          $appIconPath = "./BililiveRecorder.WPF/ico.ico"
+          
+          Write-Host "Running Squirrel releasify..."
+          Write-Host "  Package: $nupkgPath"
+          Write-Host "  Destination: $destPath"
+          Write-Host "  Installer icon: $iconPath"
+          Write-Host "  App icon: $appIconPath"
+          
+          squirrel releasify -p "$nupkgPath" -r "$destPath" --icon "$iconPath" --appIcon "$appIconPath" -f net472
+
+      - name: List generated files
+        run: |
+          Write-Host "Generated files in binary repo:"
+          Get-ChildItem -Path "./binary-repo/${{ env.BINARY_REPO_PATH }}" -Recurse | ForEach-Object { Write-Host $_.FullName }
+
+      - name: Configure Git
+        working-directory: ./binary-repo
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Create branch and commit changes
+        id: commit
+        working-directory: ./binary-repo
+        run: |
+          $version = "${{ steps.find_nupkg.outputs.VERSION }}"
+          $branchName = "release/BililiveRecorder-$version"
+          
+          # Check if there are any changes
+          $status = git status --porcelain
+          if (-not $status) {
+            Write-Host "No changes detected in the binary repository"
+            echo "HAS_CHANGES=false" >> $env:GITHUB_OUTPUT
+            exit 0
+          }
+          
+          Write-Host "Changes detected:"
+          Write-Host $status
+          
+          git checkout -b $branchName
+          git add -A
+          git commit -m "Release BililiveRecorder v$version"
+          
+          echo "HAS_CHANGES=true" >> $env:GITHUB_OUTPUT
+          echo "BRANCH_NAME=$branchName" >> $env:GITHUB_OUTPUT
+
+      - name: Push branch
+        if: steps.commit.outputs.HAS_CHANGES == 'true' && github.event.inputs.dry_run != 'true'
+        working-directory: ./binary-repo
+        run: |
+          git push origin "${{ steps.commit.outputs.BRANCH_NAME }}"
+
+      - name: Create Pull Request
+        if: steps.commit.outputs.HAS_CHANGES == 'true' && github.event.inputs.dry_run != 'true'
+        env:
+          GH_TOKEN: ${{ secrets.RELEASE_REPO_PAT }}
+        run: |
+          $version = "${{ steps.find_nupkg.outputs.VERSION }}"
+          $branchName = "${{ steps.commit.outputs.BRANCH_NAME }}"
+          
+          $prTitle = "Release BililiveRecorder v$version"
+          $prBody = @"
+          ## BililiveRecorder Desktop Release v$version
+          
+          This PR was automatically created by the [Package Desktop Release workflow](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}).
+          
+          ### Changes
+          - Updated installer and upgrade packages for version $version
+          
+          ### Source
+          - Release workflow run: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.event.inputs.run_id }}
+          
+          ### Review Checklist
+          - [ ] Verify the version number is correct
+          - [ ] Check that all expected files are present
+          - [ ] Test the installer if needed
+          
+          ---
+          *After merging this PR, the new version will be available for download.*
+          "@
+          
+          cd binary-repo
+          gh pr create --title "$prTitle" --body "$prBody" --base main --head "$branchName"
+
+      - name: Summary
+        run: |
+          $version = "${{ steps.find_nupkg.outputs.VERSION }}"
+          $hasChanges = "${{ steps.commit.outputs.HAS_CHANGES }}"
+          $dryRun = "${{ github.event.inputs.dry_run }}"
+          
+          Write-Host "=========================================="
+          Write-Host "Package Desktop Release Summary"
+          Write-Host "=========================================="
+          Write-Host "Version: $version"
+          Write-Host "Has Changes: $hasChanges"
+          Write-Host "Dry Run: $dryRun"
+          
+          if ($hasChanges -eq "true") {
+            if ($dryRun -eq "true") {
+              Write-Host ""
+              Write-Host "DRY RUN MODE: Changes were prepared but NOT pushed or PR created."
+              Write-Host "Run the workflow again without dry run to create the PR."
+            } else {
+              Write-Host ""
+              Write-Host "SUCCESS: A pull request has been created in ${{ env.BINARY_REPO }}"
+              Write-Host "Please review and merge the PR to complete the release."
+            }
+          } else {
+            Write-Host ""
+            Write-Host "No changes were detected. The binary repository may already be up to date."
+          }
