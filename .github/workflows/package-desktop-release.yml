@@ -39,6 +39,9 @@ env:
 jobs:
   package:
     runs-on: windows-latest
+    permissions:
+      contents: read
+      actions: read
     steps:
       - name: Checkout main repository
         uses: actions/checkout@v4
