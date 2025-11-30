@@ -39,14 +39,8 @@ jobs:
   package:
     runs-on: windows-latest
     permissions:
-      contents: read
       actions: read
     steps:
-      - name: Checkout main repository
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 1
-
       - name: Download WPF-NupkgReleases artifact
         uses: actions/download-artifact@v4
         with:
@@ -63,6 +57,7 @@ jobs:
           GH_TOKEN: ${{ secrets.RELEASE_REPO_PAT }}
           WORKFLOW_RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
           SOURCE_RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.event.inputs.run_id }}
+          MAIN_REPO: ${{ github.repository }}
         run: |
           $ErrorActionPreference = "Stop"
           
@@ -89,11 +84,36 @@ jobs:
           Write-Host "Extracted version: $version"
           
           # ============================================================
-          # Step 2: Download and extract Squirrel tools
+          # Step 2: Download icons from main repository
           # ============================================================
           Write-Host ""
           Write-Host "=========================================="
-          Write-Host "Step 2: Downloading Squirrel tools"
+          Write-Host "Step 2: Downloading icons"
+          Write-Host "=========================================="
+          
+          $iconsDir = "$env:TEMP\icons"
+          New-Item -ItemType Directory -Path $iconsDir -Force | Out-Null
+          
+          $installerIconUrl = "https://raw.githubusercontent.com/$env:MAIN_REPO/dev/BililiveRecorder.WPF/installer.ico"
+          $appIconUrl = "https://raw.githubusercontent.com/$env:MAIN_REPO/dev/BililiveRecorder.WPF/ico.ico"
+          
+          $iconPath = "$iconsDir\installer.ico"
+          $appIconPath = "$iconsDir\ico.ico"
+          
+          Write-Host "Downloading installer icon from: $installerIconUrl"
+          Invoke-WebRequest -Uri $installerIconUrl -OutFile $iconPath
+          
+          Write-Host "Downloading app icon from: $appIconUrl"
+          Invoke-WebRequest -Uri $appIconUrl -OutFile $appIconPath
+          
+          Write-Host "Icons downloaded to: $iconsDir"
+          
+          # ============================================================
+          # Step 3: Download and extract Squirrel tools
+          # ============================================================
+          Write-Host ""
+          Write-Host "=========================================="
+          Write-Host "Step 3: Downloading Squirrel tools"
           Write-Host "=========================================="
           
           $squirrelUrl = "https://github.com/clowd/Clowd.Squirrel/releases/download/${{ env.SQUIRREL_VERSION }}/SquirrelTools-${{ env.SQUIRREL_VERSION }}.zip"
@@ -114,11 +134,11 @@ jobs:
           Write-Host "Found Squirrel.exe: $($squirrelExe.FullName)"
           
           # ============================================================
-          # Step 3: Clone binary repository to temp folder
+          # Step 4: Clone binary repository to temp folder
           # ============================================================
           Write-Host ""
           Write-Host "=========================================="
-          Write-Host "Step 3: Cloning binary repository"
+          Write-Host "Step 4: Cloning binary repository"
           Write-Host "=========================================="
           
           $binaryRepoDir = "$env:TEMP\binary-repo"
@@ -127,22 +147,20 @@ jobs:
           }
           
           Write-Host "Cloning to: $binaryRepoDir"
-          git clone "https://x-access-token:$env:RELEASE_REPO_PAT@github.com/${{ env.BINARY_REPO }}.git" $binaryRepoDir
+          $cloneUrl = "https://x-access-token:$($env:RELEASE_REPO_PAT)@github.com/${{ env.BINARY_REPO }}.git"
+          git clone $cloneUrl $binaryRepoDir
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
           
           $destPath = Join-Path $binaryRepoDir "${{ env.BINARY_REPO_PATH }}"
           Write-Host "Release destination: $destPath"
           
           # ============================================================
-          # Step 4: Run Squirrel releasify
+          # Step 5: Run Squirrel releasify
           # ============================================================
           Write-Host ""
           Write-Host "=========================================="
-          Write-Host "Step 4: Running Squirrel releasify"
+          Write-Host "Step 5: Running Squirrel releasify"
           Write-Host "=========================================="
-          
-          $iconPath = Resolve-Path "./BililiveRecorder.WPF/installer.ico"
-          $appIconPath = Resolve-Path "./BililiveRecorder.WPF/ico.ico"
           
           Write-Host "  Package: $nupkgPath"
           Write-Host "  Destination: $destPath"
@@ -157,11 +175,11 @@ jobs:
           Get-ChildItem -Path $destPath -Recurse | ForEach-Object { Write-Host "  $($_.FullName)" }
           
           # ============================================================
-          # Step 5: Check for changes and commit
+          # Step 6: Check for changes and commit
           # ============================================================
           Write-Host ""
           Write-Host "=========================================="
-          Write-Host "Step 5: Checking for changes"
+          Write-Host "Step 6: Checking for changes"
           Write-Host "=========================================="
           
           Push-Location $binaryRepoDir
@@ -176,7 +194,7 @@ jobs:
               exit 0
             }
             
-            Write-Host "Changes detected:"
+            Write-Host "Changes detected (git status --porcelain):"
             Write-Host $status
             
             $branchName = "release/BililiveRecorder-$version"
@@ -196,15 +214,37 @@ jobs:
             echo "BRANCH_NAME=$branchName" >> $env:GITHUB_OUTPUT
             
             # ============================================================
-            # Step 6: Push and create PR (if not dry run)
+            # Step 7: Push and create PR (or show dry run info)
             # ============================================================
             Write-Host ""
             Write-Host "=========================================="
-            Write-Host "Step 6: Push and create PR"
+            Write-Host "Step 7: Push and create PR"
             Write-Host "=========================================="
             
             if ($env:DRY_RUN -eq "true") {
-              Write-Host "DRY RUN MODE: Skipping push and PR creation"
+              Write-Host "DRY RUN MODE: Showing detailed changes"
+              Write-Host ""
+              Write-Host "=========================================="
+              Write-Host "Git Status:"
+              Write-Host "=========================================="
+              git status
+              Write-Host ""
+              Write-Host "=========================================="
+              Write-Host "Git Diff --stat:"
+              Write-Host "=========================================="
+              git diff --stat HEAD~1
+              Write-Host ""
+              Write-Host "=========================================="
+              Write-Host "Files that would be committed:"
+              Write-Host "=========================================="
+              git diff --name-only HEAD~1
+              Write-Host ""
+              Write-Host "=========================================="
+              Write-Host "Git Log (last commit):"
+              Write-Host "=========================================="
+              git log -1 --oneline
+              Write-Host ""
+              Write-Host "DRY RUN COMPLETE: No changes pushed, no PR created."
             } else {
               Write-Host "Pushing branch..."
               git push origin $branchName
@@ -213,23 +253,9 @@ jobs:
               Write-Host "Creating pull request..."
               $prTitle = "Release BililiveRecorder v$version"
               $prBody = @"
-          ## BililiveRecorder Desktop Release v$version
+          Release BililiveRecorder v$version
           
-          This PR was automatically created by the [Package Desktop Release workflow]($env:WORKFLOW_RUN_URL).
-          
-          ### Changes
-          - Updated installer and upgrade packages for version $version
-          
-          ### Source
-          - Release workflow run: $env:SOURCE_RUN_URL
-          
-          ### Review Checklist
-          - [ ] Verify the version number is correct
-          - [ ] Check that all expected files are present
-          - [ ] Test the installer if needed
-          
-          ---
-          *After merging this PR, the new version will be available for download.*
+          Source: $env:SOURCE_RUN_URL
           "@
               
               gh pr create --title "$prTitle" --body "$prBody" --base main --head "$branchName"
