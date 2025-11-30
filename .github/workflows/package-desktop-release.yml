@@ -248,6 +248,9 @@ jobs:
               Write-Host ""
               Write-Host "DRY RUN COMPLETE: No changes pushed, no PR created."
             } else {
+              # Setup gh CLI as Git credential helper for authentication
+              gh auth setup-git
+              
               Write-Host "Pushing branch..."
               git push origin $branchName
               if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
