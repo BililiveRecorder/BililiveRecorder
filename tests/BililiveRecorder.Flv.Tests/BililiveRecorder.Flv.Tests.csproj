@@ -25,7 +25,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\BililiveRecorder.Flv\BililiveRecorder.Flv.csproj" />
+    <ProjectReference Include="..\..\src\BililiveRecorder.Flv\BililiveRecorder.Flv.csproj" />
   </ItemGroup>
 
 </Project>

@@ -40,7 +40,7 @@ jobs:
 
     - name: Build CLI
       if: ${{ matrix.language == 'csharp' }}
-      run: dotnet build BililiveRecorder.Cli/BililiveRecorder.Cli.csproj
+      run: dotnet build src/BililiveRecorder.Cli/BililiveRecorder.Cli.csproj
 
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v2

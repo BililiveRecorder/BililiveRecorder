@@ -10,7 +10,7 @@ VOLUME [ "/rec" ]
 
 COPY --from=tianon/gosu:1.17 /gosu /usr/local/bin/
 COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
-COPY ./BililiveRecorder.Cli/bin/docker_out /app
+COPY ./src/BililiveRecorder.Cli/bin/docker_out /app
 
 RUN chmod a+x /usr/local/bin/docker-entrypoint.sh && \
     chmod -R 777 /app && \

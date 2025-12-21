@@ -1,6 +1,6 @@
 FROM mcr.microsoft.com/dotnet/sdk:8.0-alpine
 COPY . /src
-RUN cd /src/BililiveRecorder.Cli && dotnet build -o /output -c Release
+RUN cd /src/src/BililiveRecorder.Cli && dotnet build -o /output -c Release
 
 FROM mcr.microsoft.com/dotnet/aspnet:8.0-alpine
 RUN apk add --no-cache tzdata
