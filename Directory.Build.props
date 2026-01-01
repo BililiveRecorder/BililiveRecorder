@@ -1,6 +1,6 @@
 <Project>
     <PropertyGroup>
-        <Copyright>Copyright © 2018-2025 Genteure</Copyright>
+        <Copyright>Copyright © 2018-2026 Genteure</Copyright>
         <Authors>Genteure</Authors>
         <Company>$(Authors)</Company>
         <LangVersion>11.0</LangVersion>
