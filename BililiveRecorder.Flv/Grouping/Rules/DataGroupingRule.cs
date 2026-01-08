@@ -7,9 +7,10 @@ namespace BililiveRecorder.Flv.Grouping.Rules
     public class DataGroupingRule : IGroupingRule
     {
         // Threshold for accumulated data size before forcing group completion
-        // Set to 10MB which is approximately 1 minute of high-quality audio
-        // This prevents memory bloat for audio-only streams without I-frames
-        private const uint MaxAccumulatedSize = 10 * 1024 * 1024; // 10 MB
+        // Set to 100MB which is approximately 1 minute of data for high bitrate streams
+        // Calculation: ~1 minute × 15 Mbps average ≈ 112.5 MiB
+        // This prevents memory bloat for audio-only streams or streams without I-frames
+        private const uint MaxAccumulatedSize = 100 * 1024 * 1024; // 100 MB
 
         public bool CanStartWith(Tag tag) => tag.IsData();
 
