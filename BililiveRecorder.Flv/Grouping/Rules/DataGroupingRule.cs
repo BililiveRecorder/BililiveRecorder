@@ -10,7 +10,7 @@ namespace BililiveRecorder.Flv.Grouping.Rules
         // Set to 100MB which is approximately 1 minute of data for high bitrate streams
         // Calculation: ~1 minute × 15 Mbps average ≈ 112.5 MiB
         // This prevents memory bloat for audio-only streams or streams without I-frames
-        private const uint MaxAccumulatedSize = 100 * 1024 * 1024; // 100 MB
+        private const ulong MaxAccumulatedSize = 100 * 1024 * 1024; // 100 MB
 
         public bool CanStartWith(Tag tag) => tag.IsData();
 
@@ -18,11 +18,16 @@ namespace BililiveRecorder.Flv.Grouping.Rules
         {
             // Check if we've accumulated too much data without finding an I-frame
             // This handles audio-only streams or streams with missing video track
-            var accumulatedSize = CalculateAccumulatedSize(tags);
-            if (accumulatedSize >= MaxAccumulatedSize)
+            // Calculate size efficiently by summing as we go
+            ulong accumulatedSize = 0;
+            for (var i = 0; i < tags.Count; i++)
             {
-                // Force group completion - don't accept any more tags
-                return false;
+                accumulatedSize += tags[i].Size;
+                if (accumulatedSize >= MaxAccumulatedSize)
+                {
+                    // Force group completion - don't accept any more tags
+                    return false;
+                }
             }
 
             return
@@ -36,15 +41,5 @@ namespace BililiveRecorder.Flv.Grouping.Rules
         }
 
         public PipelineAction CreatePipelineAction(List<Tag> tags) => new PipelineDataAction(tags);
-
-        private static ulong CalculateAccumulatedSize(List<Tag> tags)
-        {
-            ulong totalSize = 0;
-            for (var i = 0; i < tags.Count; i++)
-            {
-                totalSize += tags[i].Size;
-            }
-            return totalSize;
-        }
     }
 }
