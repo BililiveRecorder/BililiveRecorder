@@ -18,11 +18,17 @@ namespace BililiveRecorder.Flv.Grouping.Rules
         {
             // Check if we've accumulated too much data without finding an I-frame
             // This handles audio-only streams or streams with missing video track
-            // Calculate size efficiently by summing as we go
+            // Note: This has O(n) complexity per call, resulting in O(n²) total complexity
+            // for group building. However, groups are bounded by:
+            // 1. MaxAccumulatedSize limit (100MB)
+            // 2. Timestamp check limit (25 seconds)
+            // 3. Natural I-frame occurrence in normal streams
+            // So in practice n is small, making this acceptable.
             ulong accumulatedSize = 0;
             for (var i = 0; i < tags.Count; i++)
             {
-                accumulatedSize += tags[i].Size;
+                // Explicit cast from uint to ulong to prevent any potential overflow issues
+                accumulatedSize += (ulong)tags[i].Size;
                 if (accumulatedSize >= MaxAccumulatedSize)
                 {
                     // Force group completion - don't accept any more tags
