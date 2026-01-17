@@ -75,12 +75,21 @@
                         </local:SettingWithDefault>
                     </StackPanel>
                 </GroupBox>
-                <GroupBox Header="{l:Loc Settings_Splitting_Title}">
+                <GroupBox x:Name="SplittingGroupBox" Header="{l:Loc Settings_Splitting_Title}">
+                    <GroupBox.Style>
+                        <Style TargetType="GroupBox">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding RecordMode}" Value="1">
+                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </GroupBox.Style>
                     <StackPanel>
                         <local:SettingWithDefault IsSettingNotUsingDefault="{Binding HasCuttingMode}">
                             <StackPanel>
                                 <RadioButton GroupName="Splitting" Content="{l:Loc Settings_Splitting_RadioButton_Disabled}"
-                                 IsChecked="{Binding Path=CuttingMode, Converter={StaticResource EnumToBooleanConverter},
+                                  IsChecked="{Binding Path=CuttingMode, Converter={StaticResource EnumToBooleanConverter},
                         ConverterParameter={x:Static config:CuttingMode.Disabled}}" />
                                 <RadioButton GroupName="Splitting" Content="{l:Loc Settings_Splitting_RadioButton_BySize}"
                                  IsChecked="{Binding Path=CuttingMode, Converter={StaticResource EnumToBooleanConverter},

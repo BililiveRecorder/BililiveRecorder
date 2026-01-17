@@ -170,9 +170,21 @@
                         </Button>
                     </Grid>
                 </Border>
-                <Button Grid.Column="2" Padding="5,3" HorizontalAlignment="Right" Margin="5,0"
-                        ToolTip="{l:Loc RoomCard_SplitButton_Tooltip}" Click="Button_Split_Click"
+                <Button x:Name="SplitButton" Grid.Column="2" Padding="5,3" HorizontalAlignment="Right" Margin="5,0"
+                        Click="Button_Split_Click"
+                        ToolTipService.ShowOnDisabled="True"
                         Visibility="{Binding Recording, Converter={StaticResource BooleanToVisibilityCollapsedConverter},Mode=OneWay}">
+                    <Button.Style>
+                        <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+                            <Setter Property="ToolTip" Value="手动分段"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding RoomConfig.RecordMode}" Value="1">
+                                    <Setter Property="IsEnabled" Value="False"/>
+                                    <Setter Property="ToolTip" Value="原始数据模式禁用手动分段"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
                     <ui:PathIcon Width="10" Style="{StaticResource PathIconDataContentCut}"/>
                 </Button>
             </Grid>
