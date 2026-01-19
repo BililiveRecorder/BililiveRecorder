@@ -11,6 +11,7 @@
     l:ResxLocalizationProvider.DefaultDictionary="Strings"
     xmlns:local="clr-namespace:BililiveRecorder.WPF.Controls"
     xmlns:core="clr-namespace:BililiveRecorder.Core;assembly=BililiveRecorder.Core"
+    xmlns:config="clr-namespace:BililiveRecorder.Core.Config;assembly=BililiveRecorder.Core"
     d:DataContext="{d:DesignInstance core:IRoom}"
     d:DesignWidth="220" d:DesignHeight="110"
     mc:Ignorable="d">
@@ -178,7 +179,7 @@
                         <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
                             <Setter Property="ToolTip" Value="手动分段"/>
                             <Style.Triggers>
-                                <DataTrigger Binding="{Binding RoomConfig.RecordMode}" Value="1">
+                                <DataTrigger Binding="{Binding RecordModeForThisSession}" Value="{x:Static config:RecordMode.RawData}">
                                     <Setter Property="IsEnabled" Value="False"/>
                                     <Setter Property="ToolTip" Value="原始数据模式禁用手动分段"/>
                                 </DataTrigger>

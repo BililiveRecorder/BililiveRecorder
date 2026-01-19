@@ -60,16 +60,20 @@
                 </StackPanel>
             </GroupBox>
             <GroupBox x:Name="SplittingGroupBox" Header="{l:Loc Settings_Splitting_Title}">
-                <GroupBox.Style>
-                    <Style TargetType="GroupBox">
-                        <Style.Triggers>
-                            <DataTrigger Binding="{Binding RecordMode}" Value="1">
-                                <Setter Property="Visibility" Value="Collapsed"/>
-                            </DataTrigger>
-                        </Style.Triggers>
-                    </Style>
-                </GroupBox.Style>
                 <StackPanel>
+                    <TextBlock Margin="0,0,0,5" FontSize="14" Foreground="DarkOrange" TextWrapping="Wrap"
+                               Text="原始数据模式下自动分段功能不可用">
+                        <TextBlock.Style>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="Visibility" Value="Collapsed"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding RecordMode}" Value="{x:Static config:RecordMode.RawData}">
+                                        <Setter Property="Visibility" Value="Visible"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </TextBlock.Style>
+                    </TextBlock>
                     <RadioButton GroupName="Splitting" Name="CutDisabledRadioButton" Content="{l:Loc Settings_Splitting_RadioButton_Disabled}"
                                  IsChecked="{Binding Path=CuttingMode, Converter={StaticResource EnumToBooleanConverter},
                         ConverterParameter={x:Static config:CuttingMode.Disabled}}" />

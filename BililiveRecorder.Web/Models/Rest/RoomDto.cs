@@ -9,6 +9,7 @@ namespace BililiveRecorder.Web.Models.Rest
         public int RoomId { get; set; }
         public bool AutoRecord { get; set; }
         public RecordMode RecordMode { get; set; }
+        public RecordMode RecordModeForThisSession { get; set; }
         public int ShortId { get; set; }
         public string? Name { get; set; }
         public long Uid { get; set; }

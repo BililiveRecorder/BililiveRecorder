@@ -76,27 +76,31 @@
                     </StackPanel>
                 </GroupBox>
                 <GroupBox x:Name="SplittingGroupBox" Header="{l:Loc Settings_Splitting_Title}">
-                    <GroupBox.Style>
-                        <Style TargetType="GroupBox">
-                            <Style.Triggers>
-                                <DataTrigger Binding="{Binding RecordMode}" Value="1">
-                                    <Setter Property="Visibility" Value="Collapsed"/>
-                                </DataTrigger>
-                            </Style.Triggers>
-                        </Style>
-                    </GroupBox.Style>
                     <StackPanel>
+                        <TextBlock Margin="0,0,0,5" FontSize="14" Foreground="DarkOrange" TextWrapping="Wrap"
+                                   Text="原始数据模式下自动分段功能不可用">
+                            <TextBlock.Style>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding RecordMode}" Value="{x:Static config:RecordMode.RawData}">
+                                            <Setter Property="Visibility" Value="Visible"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBlock.Style>
+                        </TextBlock>
                         <local:SettingWithDefault IsSettingNotUsingDefault="{Binding HasCuttingMode}">
                             <StackPanel>
                                 <RadioButton GroupName="Splitting" Content="{l:Loc Settings_Splitting_RadioButton_Disabled}"
-                                  IsChecked="{Binding Path=CuttingMode, Converter={StaticResource EnumToBooleanConverter},
-                        ConverterParameter={x:Static config:CuttingMode.Disabled}}" />
+                                             IsChecked="{Binding Path=CuttingMode, Converter={StaticResource EnumToBooleanConverter},
+                                    ConverterParameter={x:Static config:CuttingMode.Disabled}}" />
                                 <RadioButton GroupName="Splitting" Content="{l:Loc Settings_Splitting_RadioButton_BySize}"
-                                 IsChecked="{Binding Path=CuttingMode, Converter={StaticResource EnumToBooleanConverter},
-                        ConverterParameter={x:Static config:CuttingMode.BySize}}" />
+                                             IsChecked="{Binding Path=CuttingMode, Converter={StaticResource EnumToBooleanConverter},
+                                    ConverterParameter={x:Static config:CuttingMode.BySize}}" />
                                 <RadioButton GroupName="Splitting" Content="{l:Loc Settings_Splitting_RadioButton_ByTime}"
-                                 IsChecked="{Binding Path=CuttingMode, Converter={StaticResource EnumToBooleanConverter},
-                        ConverterParameter={x:Static config:CuttingMode.ByTime}}" />
+                                             IsChecked="{Binding Path=CuttingMode, Converter={StaticResource EnumToBooleanConverter},
+                                    ConverterParameter={x:Static config:CuttingMode.ByTime}}" />
                             </StackPanel>
                         </local:SettingWithDefault>
                         <local:SettingWithDefault IsSettingNotUsingDefault="{Binding HasCuttingNumber}">
