@@ -62,7 +62,7 @@
             <GroupBox x:Name="SplittingGroupBox" Header="{l:Loc Settings_Splitting_Title}">
                 <StackPanel>
                     <TextBlock Margin="0,0,0,5" FontSize="14" Foreground="DarkOrange" TextWrapping="Wrap"
-                               Text="原始数据模式下自动分段功能不可用">
+                               Text="{l:Loc Settings_Splitting_RawDataModeWarning}">
                         <TextBlock.Style>
                             <Style TargetType="TextBlock">
                                 <Setter Property="Visibility" Value="Collapsed"/>

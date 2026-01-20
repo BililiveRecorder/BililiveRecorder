@@ -177,11 +177,11 @@
                         Visibility="{Binding Recording, Converter={StaticResource BooleanToVisibilityCollapsedConverter},Mode=OneWay}">
                     <Button.Style>
                         <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
-                            <Setter Property="ToolTip" Value="手动分段"/>
+                            <Setter Property="ToolTip" Value="{l:Loc RoomCard_SplitButton_Tooltip}"/>
                             <Style.Triggers>
                                 <DataTrigger Binding="{Binding RecordModeForThisSession}" Value="{x:Static config:RecordMode.RawData}">
                                     <Setter Property="IsEnabled" Value="False"/>
-                                    <Setter Property="ToolTip" Value="原始数据模式禁用手动分段"/>
+                                    <Setter Property="ToolTip" Value="{l:Loc RoomCard_SplitButton_Tooltip_RawDataDisabled}"/>
                                 </DataTrigger>
                             </Style.Triggers>
                         </Style>

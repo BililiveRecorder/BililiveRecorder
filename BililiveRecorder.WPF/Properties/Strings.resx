@@ -279,6 +279,9 @@
   <data name="RoomCard_SplitButton_Tooltip" xml:space="preserve">
     <value>切割录制输出文件</value>
   </data>
+  <data name="RoomCard_SplitButton_Tooltip_RawDataDisabled" xml:space="preserve">
+    <value>原始数据模式下禁用手动分段</value>
+  </data>
   <data name="RoomCard_Status_AutoRecordForThisSessionDisabled_Tooltip" xml:space="preserve">
     <value>本次直播不再自动录制，结束直播时恢复</value>
   </data>
@@ -509,6 +512,9 @@
   </data>
   <data name="Settings_Splitting_Title" xml:space="preserve">
     <value>自动分段</value>
+  </data>
+  <data name="Settings_Splitting_RawDataModeWarning" xml:space="preserve">
+    <value>原始数据模式下自动分段功能不可用</value>
   </data>
   <data name="Settings_Webhook_Address" xml:space="preserve">
     <value>Webhook 地址，一行一个</value>

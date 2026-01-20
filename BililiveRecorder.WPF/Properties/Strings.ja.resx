@@ -279,6 +279,9 @@
   <data name="RoomCard_SplitButton_Tooltip" xml:space="preserve">
     <value>出力ファイルを切り抜き</value>
   </data>
+  <data name="RoomCard_SplitButton_Tooltip_RawDataDisabled" xml:space="preserve">
+    <value>オリジナルデータモードでは手動分割できません</value>
+  </data>
   <data name="RoomCard_Status_AutoRecordForThisSessionDisabled_Tooltip" xml:space="preserve">
     <value>今回の配信の自動録画が停止しました。配信終了後に再開されます</value>
   </data>
@@ -509,6 +512,9 @@ FLV フォーマットのみサポートされています。</value>
   </data>
   <data name="Settings_Splitting_Title" xml:space="preserve">
     <value>自動分割</value>
+  </data>
+  <data name="Settings_Splitting_RawDataModeWarning" xml:space="preserve">
+    <value>オリジナルデータモードでは自動分割を利用できません</value>
   </data>
   <data name="Settings_Webhook_Address" xml:space="preserve">
     <value>Webhookアドレス、１行に１つずつ</value>
