@@ -65,6 +65,37 @@ git submodule update --init --recursive
 dotnet build BililiveRecorder.Cli
 ```
 
+打包单文件可执行程序（CLI）：
+
+```sh
+# Build WebUI, optional
+git submodule update --init --recursive
+./webui/build.sh
+
+# Windows x64 单文件可执行程序
+dotnet publish BililiveRecorder.Cli -c Release -r win-x64 --self-contained -p:PublishSingleFile=true
+
+# Windows ARM64 单文件可执行程序
+dotnet publish BililiveRecorder.Cli -c Release -r win-arm64 --self-contained -p:PublishSingleFile=true
+
+# macOS x64 / Apple Silicon
+dotnet publish BililiveRecorder.Cli -c Release -r osx-x64 --self-contained -p:PublishSingleFile=true
+dotnet publish BililiveRecorder.Cli -c Release -r osx-arm64 --self-contained -p:PublishSingleFile=true
+
+# Linux x64 / ARM64
+dotnet publish BililiveRecorder.Cli -c Release -r linux-x64 --self-contained -p:PublishSingleFile=true
+dotnet publish BililiveRecorder.Cli -c Release -r linux-arm64 --self-contained -p:PublishSingleFile=true
+
+# Linux ARM (32-bit)
+dotnet publish BililiveRecorder.Cli -c Release -r linux-arm --self-contained -p:PublishSingleFile=true
+
+# Linux musl (Alpine)
+dotnet publish BililiveRecorder.Cli -c Release -r linux-musl-x64 --self-contained -p:PublishSingleFile=true
+dotnet publish BililiveRecorder.Cli -c Release -r linux-musl-arm64 --self-contained -p:PublishSingleFile=true
+
+# 产物目录：BililiveRecorder.Cli/publish/<rid>/Release/
+```
+
 ## 项目结构
 
 Project | Target |
