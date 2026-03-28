@@ -67,7 +67,7 @@ namespace BililiveRecorder.WPF.Pages
                 {
                     var uri = Program.DebugMode
                         ? $"http://rec.127-0-0-1.nip.io/wpf/announcement.php?c={CultureInfo.Name}"
-                        : $"https://raw.githubusercontent.com/BililiveRecorder/website/main/public/wpf/announcement.xml";
+                        : "https://raw.githubusercontent.com/BililiveRecorder/website/main/public/wpf/announcement.xml";
 
                     var resp = await client.GetAsync(uri);
                     var stream = await resp.EnsureSuccessStatusCode().Content.ReadAsStreamAsync();
