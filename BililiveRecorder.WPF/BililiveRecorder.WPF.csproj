@@ -310,6 +310,7 @@
     </None>
     <None Include="Properties\app.manifest" />
     <Resource Include="ico.ico" />
+    <Resource Include="recording.ico" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
