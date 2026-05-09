@@ -98,7 +98,7 @@ export const data: Array<ConfigEntry> = [
         name: "录制文件名模板",
         type: "string?",
         configType: "globalOnly",
-        default: '{{ roomId }}-{{ name }}/录制-{{ roomId }}-{{ "now" | time_zone: "Asia/Shanghai" | format_date: "yyyyMMdd-HHmmss-fff" }}-{{ title }}.flv',
+        default: '{{ roomId }}-{{ name | unescape }}/录制-{{ roomId }}-{{ "now" | time_zone: "Asia/Shanghai" | format_date: "yyyyMMdd-HHmmss-fff" }}-{{ title | unescape }}.flv',
     },
     {
         id: "FlvProcessorSplitOnScriptTag",
