@@ -2,6 +2,9 @@ using System;
 using System.Collections;
 using System.IO.Pipelines;
 using System.Net;
+#if NET8_0_OR_GREATER
+using System.Net.Http;
+#endif
 using System.Net.WebSockets;
 using System.Runtime.InteropServices;
 using System.Threading;
@@ -15,7 +18,6 @@ namespace BililiveRecorder.Core.Api.Danmaku
     internal class DanmakuTransportWebSocket : IDanmakuTransport
     {
         private readonly ClientWebSocket socket;
-        // bindAddress is stored for future use when ClientWebSocket supports socket binding
         private readonly string? bindAddress;
 
         protected virtual string Scheme => "ws";
@@ -71,7 +73,20 @@ namespace BililiveRecorder.Core.Api.Danmaku
             var cts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
             cts.CancelAfter(TimeSpan.FromSeconds(10));
 
+#if NET8_0_OR_GREATER
+            if (!string.IsNullOrWhiteSpace(this.bindAddress))
+            {
+                var handler = HttpClientWithBindAddress.CreateHandler(this.bindAddress, useProxy: false);
+                var invoker = new HttpMessageInvoker(handler, disposeHandler: true);
+                await this.socket.ConnectAsync(b.Uri, invoker, cts.Token).ConfigureAwait(false);
+            }
+            else
+            {
+                await this.socket.ConnectAsync(b.Uri, cts.Token).ConfigureAwait(false);
+            }
+#else
             await this.socket.ConnectAsync(b.Uri, cts.Token).ConfigureAwait(false);
+#endif
             return this.socket.UsePipeReader();
         }
 
