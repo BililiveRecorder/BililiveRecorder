@@ -7,6 +7,7 @@ using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 using BililiveRecorder.Core.Api.Http;
+using BililiveRecorder.Core.Config;
 using Nerdbank.Streams;
 
 namespace BililiveRecorder.Core.Api.Danmaku
@@ -62,7 +63,7 @@ namespace BililiveRecorder.Core.Api.Danmaku
             options.SetRequestHeader("Cache-Control", "no-cache");
         }
 
-        public async Task<PipeReader> ConnectAsync(string host, int port, CancellationToken cancellationToken)
+        public async Task<PipeReader> ConnectAsync(string host, int port, AllowedAddressFamily allowedAddressFamily, CancellationToken cancellationToken)
         {
             var b = new UriBuilder(this.Scheme, host, port, "/sub");
 

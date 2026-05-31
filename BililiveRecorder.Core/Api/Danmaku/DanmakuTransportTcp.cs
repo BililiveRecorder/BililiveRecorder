@@ -1,11 +1,13 @@
 using System;
 using System.IO;
 using System.IO.Pipelines;
+using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
 using BililiveRecorder.Core.Api.Http;
+using BililiveRecorder.Core.Config;
 using Nerdbank.Streams;
 
 namespace BililiveRecorder.Core.Api.Danmaku
@@ -20,7 +22,7 @@ namespace BililiveRecorder.Core.Api.Danmaku
             this.bindAddress = bindAddress;
         }
 
-        public async Task<PipeReader> ConnectAsync(string host, int port, CancellationToken cancellationToken)
+        public async Task<PipeReader> ConnectAsync(string host, int port, AllowedAddressFamily allowedAddressFamily, CancellationToken cancellationToken)
         {
             if (this.stream is not null)
                 throw new InvalidOperationException("Tcp socket is connected.");
@@ -36,7 +38,28 @@ namespace BililiveRecorder.Core.Api.Danmaku
                 }
             }
 
-            await tcp.ConnectAsync(host, port).ConfigureAwait(false);
+            if (allowedAddressFamily == AllowedAddressFamily.System)
+            {
+                await tcp.ConnectAsync(host, port).ConfigureAwait(false);
+            }
+            else
+            {
+                var ips = await Dns.GetHostAddressesAsync(host).ConfigureAwait(false);
+
+                var filtered = ips.Where(x => allowedAddressFamily switch
+                {
+                    AllowedAddressFamily.Ipv4 => x.AddressFamily == AddressFamily.InterNetwork,
+                    AllowedAddressFamily.Ipv6 => x.AddressFamily == AddressFamily.InterNetworkV6,
+                    AllowedAddressFamily.Any => true,
+                    _ => false
+                }).ToArray();
+
+                if (filtered.Length == 0)
+                    throw new InvalidOperationException("DNS did not return any IP addresses matching the allowed address family.");
+
+                var selected = filtered[new Random().Next(filtered.Length)];
+                await tcp.ConnectAsync(selected, port).ConfigureAwait(false);
+            }
 
             var networkStream = tcp.GetStream();
             this.stream = networkStream;

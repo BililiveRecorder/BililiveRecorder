@@ -433,7 +433,7 @@ namespace BililiveRecorder.Core
                         return;
                     }
 
-                    await this.danmakuClient.ConnectAsync(this.RoomConfig.RoomId, this.RoomConfig.DanmakuTransport, this.RoomConfig.NetworkTransportBindAddress, this.ct).ConfigureAwait(false);
+                    await this.danmakuClient.ConnectAsync(this.RoomConfig.RoomId, this.RoomConfig.DanmakuTransport, this.RoomConfig.NetworkTransportBindAddress, this.RoomConfig.NetworkTransportAllowedAddressFamily, this.ct).ConfigureAwait(false);
                 }
                 catch (Exception ex)
                 {

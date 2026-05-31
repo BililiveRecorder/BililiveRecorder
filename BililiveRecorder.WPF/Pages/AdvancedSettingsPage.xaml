@@ -96,6 +96,16 @@
                     <RadioButton GroupName="NetworkTransportAllowedAddressFamily" Content="仅限 IPv6"
                                  IsChecked="{Binding Path=NetworkTransportAllowedAddressFamily, Converter={StaticResource EnumToBooleanConverter},
                         ConverterParameter={x:Static config:AllowedAddressFamily.Ipv6}}" />
+                    <c:SettingWithDefault IsSettingNotUsingDefault="{Binding HasNetworkTransportBindAddress}" Header="绑定网络接口/IP地址">
+                        <c:SettingWithDefault.ToolTip>
+                            <TextBlock>
+                                绑定到指定的网络接口或IP地址（可填写IP地址或网卡名称）。<LineBreak/>
+                                注意：本地绑定功能仅在 .NET 8+ (命令行版) 中完全支持。<LineBreak/>
+                                WPF 桌面版 (.NET Framework 4.7.2) 下此设置仅对弹幕 TCP 连接生效，HTTP 请求不支持绑定。
+                            </TextBlock>
+                        </c:SettingWithDefault.ToolTip>
+                        <TextBox ui:TextBoxHelper.IsDeleteButtonVisible="False" Text="{Binding NetworkTransportBindAddress,UpdateSourceTrigger=LostFocus}" Width="220"/>
+                    </c:SettingWithDefault>
                     <c:SettingWithDefault IsSettingNotUsingDefault="{Binding HasLiveApiHost}" Header="mikufans直播 API Host">
                         <TextBox ui:TextBoxHelper.IsDeleteButtonVisible="False" Text="{Binding LiveApiHost,UpdateSourceTrigger=LostFocus}"/>
                     </c:SettingWithDefault>

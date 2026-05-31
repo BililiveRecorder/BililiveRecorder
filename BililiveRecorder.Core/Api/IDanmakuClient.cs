@@ -15,8 +15,7 @@ namespace BililiveRecorder.Core.Api
 
         Func<string, string?>? BeforeHandshake { get; set; }
 
-        Task ConnectAsync(int roomid, DanmakuTransportMode transportMode, CancellationToken cancellationToken);
-        Task ConnectAsync(int roomid, DanmakuTransportMode transportMode, string? bindAddress, CancellationToken cancellationToken);
+        Task ConnectAsync(int roomid, DanmakuTransportMode transportMode, string? bindAddress, AllowedAddressFamily allowedAddressFamily, CancellationToken cancellationToken);
         Task DisconnectAsync();
     }
 }

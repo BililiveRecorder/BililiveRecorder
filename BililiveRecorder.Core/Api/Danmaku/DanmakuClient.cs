@@ -67,10 +67,7 @@ namespace BililiveRecorder.Core.Api.Danmaku
             StatusChanged?.Invoke(this, StatusChangedEventArgs.False);
         }
 
-        public Task ConnectAsync(int roomId, DanmakuTransportMode transportMode, CancellationToken cancellationToken)
-            => this.ConnectAsync(roomId, transportMode, null, cancellationToken);
-
-        public async Task ConnectAsync(int roomId, DanmakuTransportMode transportMode, string? bindAddress, CancellationToken cancellationToken)
+        public async Task ConnectAsync(int roomId, DanmakuTransportMode transportMode, string? bindAddress, AllowedAddressFamily allowedAddressFamily, CancellationToken cancellationToken)
         {
             if (this.disposedValue)
                 throw new ObjectDisposedException(nameof(DanmakuClient));
@@ -100,7 +97,7 @@ namespace BililiveRecorder.Core.Api.Danmaku
                     _ => throw new ArgumentOutOfRangeException(nameof(transportMode), transportMode, "Invalid danmaku transport mode."),
                 };
 
-                var reader = await transport.ConnectAsync(danmakuServerInfo.Host, danmakuServerInfo.Port, cancellationToken).ConfigureAwait(false);
+                var reader = await transport.ConnectAsync(danmakuServerInfo.Host, danmakuServerInfo.Port, allowedAddressFamily, cancellationToken).ConfigureAwait(false);
 
                 this.danmakuTransport = transport;
 

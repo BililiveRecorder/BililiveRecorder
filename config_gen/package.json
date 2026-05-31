@@ -1,6 +1,7 @@
 {
     "scripts": {
-        "build": "ts-node index.ts"
+        "build": "ts-node index.ts code",
+        "validate": "ts-node validate.ts"
     },
     "devDependencies": {
         "@types/node": "^16.11.39",
