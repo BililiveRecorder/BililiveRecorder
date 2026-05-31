@@ -14,6 +14,7 @@ namespace BililiveRecorder.Core.Api.Danmaku
     internal class DanmakuTransportWebSocket : IDanmakuTransport
     {
         private readonly ClientWebSocket socket;
+        // bindAddress is stored for future use when ClientWebSocket supports socket binding
         private readonly string? bindAddress;
 
         protected virtual string Scheme => "ws";
