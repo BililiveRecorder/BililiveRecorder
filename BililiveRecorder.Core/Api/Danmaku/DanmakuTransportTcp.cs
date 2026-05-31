@@ -14,6 +14,7 @@ namespace BililiveRecorder.Core.Api.Danmaku
 {
     internal class DanmakuTransportTcp : IDanmakuTransport
     {
+        private static readonly Random random = new Random();
         private Stream? stream;
         private readonly string? bindAddress;
 
@@ -57,7 +58,7 @@ namespace BililiveRecorder.Core.Api.Danmaku
                 if (filtered.Length == 0)
                     throw new InvalidOperationException("DNS did not return any IP addresses matching the allowed address family.");
 
-                var selected = filtered[new Random().Next(filtered.Length)];
+                var selected = filtered[random.Next(filtered.Length)];
                 await tcp.ConnectAsync(selected, port).ConfigureAwait(false);
             }
 
