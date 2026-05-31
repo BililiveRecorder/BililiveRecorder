@@ -48,11 +48,9 @@ namespace BililiveRecorder.Core.Api.Http
 
         private void UpdateHttpClient()
         {
-            var client = new HttpClient(new HttpClientHandler
-            {
-                UseCookies = false,
-                UseDefaultCredentials = false,
-            })
+            var handler = HttpClientWithBindAddress.CreateHandler(this.config.NetworkTransportBindAddress, false);
+
+            var client = new HttpClient(handler)
             {
                 Timeout = TimeSpan.FromMilliseconds(this.config.TimingApiTimeout)
             };
@@ -88,7 +86,7 @@ namespace BililiveRecorder.Core.Api.Http
 
         private void Config_PropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
-            if (e.PropertyName is (nameof(this.config.Cookie)) or (nameof(this.config.TimingApiTimeout)))
+            if (e.PropertyName is (nameof(this.config.Cookie)) or (nameof(this.config.TimingApiTimeout)) or (nameof(this.config.NetworkTransportBindAddress)))
                 this.UpdateHttpClient();
         }
 

@@ -242,6 +242,11 @@ namespace BililiveRecorder.Core.Config.V3
         public AllowedAddressFamily NetworkTransportAllowedAddressFamily => this.GetPropertyValue<AllowedAddressFamily>();
 
         /// <summary>
+        /// 绑定的网络接口或IP地址
+        /// </summary>
+        public string? NetworkTransportBindAddress => this.GetPropertyValue<string>();
+
+        /// <summary>
         /// 自定义脚本
         /// </summary>
         public string? UserScript => this.GetPropertyValue<string>();
@@ -524,6 +529,14 @@ namespace BililiveRecorder.Core.Config.V3
         public Optional<AllowedAddressFamily> OptionalNetworkTransportAllowedAddressFamily { get => this.GetPropertyValueOptional<AllowedAddressFamily>(nameof(this.NetworkTransportAllowedAddressFamily)); set => this.SetPropertyValueOptional(value, nameof(this.NetworkTransportAllowedAddressFamily)); }
 
         /// <summary>
+        /// 绑定的网络接口或IP地址
+        /// </summary>
+        public string? NetworkTransportBindAddress { get => this.GetPropertyValue<string>(); set => this.SetPropertyValue(value); }
+        public bool HasNetworkTransportBindAddress { get => this.GetPropertyHasValue(nameof(this.NetworkTransportBindAddress)); set => this.SetPropertyHasValue<string>(value, nameof(this.NetworkTransportBindAddress)); }
+        [JsonProperty(nameof(NetworkTransportBindAddress)), EditorBrowsable(EditorBrowsableState.Never)]
+        public Optional<string?> OptionalNetworkTransportBindAddress { get => this.GetPropertyValueOptional<string>(nameof(this.NetworkTransportBindAddress)); set => this.SetPropertyValueOptional(value, nameof(this.NetworkTransportBindAddress)); }
+
+        /// <summary>
         /// 自定义脚本
         /// </summary>
         public string? UserScript { get => this.GetPropertyValue<string>(); set => this.SetPropertyValue(value); }
@@ -605,6 +618,8 @@ namespace BililiveRecorder.Core.Config.V3
         public bool NetworkTransportUseSystemProxy => false;
 
         public AllowedAddressFamily NetworkTransportAllowedAddressFamily => AllowedAddressFamily.Any;
+
+        public string NetworkTransportBindAddress => @"";
 
         public string UserScript => @"";
 

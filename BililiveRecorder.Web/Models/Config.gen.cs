@@ -84,6 +84,7 @@ namespace BililiveRecorder.Web.Models
         public Optional<bool>? OptionalDanmakuAuthenticateWithStreamerUid { get; set; }
         public Optional<bool>? OptionalNetworkTransportUseSystemProxy { get; set; }
         public Optional<AllowedAddressFamily>? OptionalNetworkTransportAllowedAddressFamily { get; set; }
+        public Optional<string?>? OptionalNetworkTransportBindAddress { get; set; }
         public Optional<string?>? OptionalUserScript { get; set; }
 
         public void ApplyTo(GlobalConfig config)
@@ -122,6 +123,7 @@ namespace BililiveRecorder.Web.Models
             if (this.OptionalDanmakuAuthenticateWithStreamerUid.HasValue) config.OptionalDanmakuAuthenticateWithStreamerUid = this.OptionalDanmakuAuthenticateWithStreamerUid.Value;
             if (this.OptionalNetworkTransportUseSystemProxy.HasValue) config.OptionalNetworkTransportUseSystemProxy = this.OptionalNetworkTransportUseSystemProxy.Value;
             if (this.OptionalNetworkTransportAllowedAddressFamily.HasValue) config.OptionalNetworkTransportAllowedAddressFamily = this.OptionalNetworkTransportAllowedAddressFamily.Value;
+            if (this.OptionalNetworkTransportBindAddress.HasValue) config.OptionalNetworkTransportBindAddress = this.OptionalNetworkTransportBindAddress.Value;
             if (this.OptionalUserScript.HasValue) config.OptionalUserScript = this.OptionalUserScript.Value;
         }
     }
@@ -185,6 +187,7 @@ namespace BililiveRecorder.Web.Models.Rest
         public Optional<bool> OptionalDanmakuAuthenticateWithStreamerUid { get; set; }
         public Optional<bool> OptionalNetworkTransportUseSystemProxy { get; set; }
         public Optional<AllowedAddressFamily> OptionalNetworkTransportAllowedAddressFamily { get; set; }
+        public Optional<string?> OptionalNetworkTransportBindAddress { get; set; }
         public Optional<string?> OptionalUserScript { get; set; }
     }
 
@@ -253,6 +256,7 @@ namespace BililiveRecorder.Web.Models.Graphql
             this.Field(x => x.OptionalDanmakuAuthenticateWithStreamerUid, type: typeof(HierarchicalOptionalType<bool>));
             this.Field(x => x.OptionalNetworkTransportUseSystemProxy, type: typeof(HierarchicalOptionalType<bool>));
             this.Field(x => x.OptionalNetworkTransportAllowedAddressFamily, type: typeof(HierarchicalOptionalType<AllowedAddressFamily>));
+            this.Field(x => x.OptionalNetworkTransportBindAddress, type: typeof(HierarchicalOptionalType<string>));
             this.Field(x => x.OptionalUserScript, type: typeof(HierarchicalOptionalType<string>));
         }
     }
@@ -295,6 +299,7 @@ namespace BililiveRecorder.Web.Models.Graphql
             this.Field(x => x.DanmakuAuthenticateWithStreamerUid);
             this.Field(x => x.NetworkTransportUseSystemProxy);
             this.Field(x => x.NetworkTransportAllowedAddressFamily);
+            this.Field(x => x.NetworkTransportBindAddress);
             this.Field(x => x.UserScript);
         }
     }
@@ -359,6 +364,7 @@ namespace BililiveRecorder.Web.Models.Graphql
             this.Field(x => x.OptionalDanmakuAuthenticateWithStreamerUid, nullable: true, type: typeof(HierarchicalOptionalInputType<bool>));
             this.Field(x => x.OptionalNetworkTransportUseSystemProxy, nullable: true, type: typeof(HierarchicalOptionalInputType<bool>));
             this.Field(x => x.OptionalNetworkTransportAllowedAddressFamily, nullable: true, type: typeof(HierarchicalOptionalInputType<AllowedAddressFamily>));
+            this.Field(x => x.OptionalNetworkTransportBindAddress, nullable: true, type: typeof(HierarchicalOptionalInputType<string>));
             this.Field(x => x.OptionalUserScript, nullable: true, type: typeof(HierarchicalOptionalInputType<string>));
         }
     }

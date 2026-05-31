@@ -14,6 +14,7 @@ namespace BililiveRecorder.Core.Api.Danmaku
     internal class DanmakuTransportWebSocket : IDanmakuTransport
     {
         private readonly ClientWebSocket socket;
+        private readonly string? bindAddress;
 
         protected virtual string Scheme => "ws";
 
@@ -42,8 +43,9 @@ namespace BililiveRecorder.Core.Api.Danmaku
             }
         }
 
-        public DanmakuTransportWebSocket()
+        public DanmakuTransportWebSocket(string? bindAddress = null)
         {
+            this.bindAddress = bindAddress;
             this.socket = new ClientWebSocket();
             var options = this.socket.Options;
             options.UseDefaultCredentials = false;

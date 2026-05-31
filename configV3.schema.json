@@ -357,6 +357,22 @@
             }
           }
         },
+        "NetworkTransportBindAddress": {
+          "description": "绑定的网络接口或IP地址\n默认: ",
+          "markdownDescription": "绑定的网络接口或IP地址  \n默认: ``\n\n",
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "HasValue": {
+              "type": "boolean",
+              "default": true
+            },
+            "Value": {
+              "type": "string",
+              "default": ""
+            }
+          }
+        },
         "UserScript": {
           "description": "自定义脚本\n默认: ",
           "markdownDescription": "自定义脚本  \n默认: ` `\n\n",

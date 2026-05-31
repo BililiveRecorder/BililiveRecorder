@@ -218,11 +218,12 @@ namespace BililiveRecorder.Core.Recording
 
         private HttpClient CreateHttpClient()
         {
-            var httpClient = new HttpClient(new HttpClientHandler
-            {
-                AllowAutoRedirect = false,
-                UseProxy = this.room.RoomConfig.NetworkTransportUseSystemProxy,
-            });
+            var handler = Api.Http.HttpClientWithBindAddress.CreateHandler(
+                this.room.RoomConfig.NetworkTransportBindAddress,
+                this.room.RoomConfig.NetworkTransportUseSystemProxy,
+                allowAutoRedirect: false);
+
+            var httpClient = new HttpClient(handler);
             var headers = httpClient.DefaultRequestHeaders;
             headers.Add("Accept", HttpHeaderAccept);
             headers.Add("Origin", HttpHeaderOrigin);

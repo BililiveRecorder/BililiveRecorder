@@ -270,6 +270,14 @@ export const data: Array<ConfigEntry> = [
         advancedConfig: true
     },
     {
+        id: "NetworkTransportBindAddress",
+        name: "绑定的网络接口或IP地址",
+        type: "string?",
+        default: "",
+        configType: "globalOnly",
+        advancedConfig: true
+    },
+    {
         id: "UserScript",
         name: "自定义脚本",
         type: "string?",
