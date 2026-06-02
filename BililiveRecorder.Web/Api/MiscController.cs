@@ -1,4 +1,7 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net.NetworkInformation;
 using AutoMapper;
 using BililiveRecorder.Core.Config.V3;
 using BililiveRecorder.Core.Templating;
@@ -37,5 +40,49 @@ namespace BililiveRecorder.Web.Api
             var output = generator.CreateFilePath(context);
             return output;
         }
+
+        /// <summary>
+        /// 获取可用的网络接口列表
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("networkInterfaces")]
+        public ActionResult<List<NetworkInterfaceDto>> GetNetworkInterfaces()
+        {
+            try
+            {
+                var interfaces = NetworkInterface.GetAllNetworkInterfaces()
+                    .Where(ni => ni.OperationalStatus == OperationalStatus.Up)
+                    .Select(ni =>
+                    {
+                        var properties = ni.GetIPProperties();
+                        var addresses = properties.UnicastAddresses
+                            .Select(addr => addr.Address.ToString())
+                            .ToList();
+
+                        return new NetworkInterfaceDto
+                        {
+                            Name = ni.Name,
+                            Description = ni.Description,
+                            NetworkInterfaceType = ni.NetworkInterfaceType.ToString(),
+                            Addresses = addresses,
+                        };
+                    })
+                    .ToList();
+
+                return interfaces;
+            }
+            catch (Exception)
+            {
+                return new List<NetworkInterfaceDto>();
+            }
+        }
+    }
+
+    public class NetworkInterfaceDto
+    {
+        public string Name { get; set; } = string.Empty;
+        public string Description { get; set; } = string.Empty;
+        public string NetworkInterfaceType { get; set; } = string.Empty;
+        public List<string> Addresses { get; set; } = new();
     }
 }
