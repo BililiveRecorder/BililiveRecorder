@@ -77,7 +77,7 @@ namespace BililiveRecorder.Core.Api.Danmaku
             if (!string.IsNullOrWhiteSpace(this.bindAddress))
             {
                 var handler = HttpClientWithBindAddress.CreateHandler(this.bindAddress, useProxy: false);
-                var invoker = new HttpMessageInvoker(handler, disposeHandler: true);
+                using var invoker = new HttpMessageInvoker(handler, disposeHandler: true);
                 await this.socket.ConnectAsync(b.Uri, invoker, cts.Token).ConfigureAwait(false);
             }
             else

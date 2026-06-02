@@ -100,7 +100,7 @@ namespace BililiveRecorder.Core.Api.Http
             IPAddress localAddress,
             CancellationToken cancellationToken)
         {
-            var socket = new Socket(SocketType.Stream, ProtocolType.Tcp)
+            var socket = new Socket(localAddress.AddressFamily, SocketType.Stream, ProtocolType.Tcp)
             {
                 NoDelay = true
             };
