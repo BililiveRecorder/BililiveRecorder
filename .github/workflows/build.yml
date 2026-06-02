@@ -18,7 +18,8 @@ jobs:
   test:
     strategy:
       matrix:
-        os: [windows-latest, ubuntu-latest]
+        # TODO: Change back to windows-latest
+        os: [windows-2025-vs2026, ubuntu-latest]
     runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout
@@ -30,7 +31,7 @@ jobs:
       - uses: actions/setup-dotnet@v4
 
       - name: Make sure webui can be built
-        if: "${{ matrix.os == 'windows-latest' }}"
+        if: "${{ matrix.os == 'windows-2025-vs2026' }}"
         run: ./webui/build.ps1
       - name: Make sure webui can be built
         if: "${{ matrix.os == 'ubuntu-latest' }}"
@@ -44,7 +45,7 @@ jobs:
   build_wpf:
     # Tests can be run parallelly for debug builds to save time
     # needs: test
-    runs-on: windows-latest
+    runs-on: windows-2025-vs2026
     steps:
       - name: Checkout
         uses: actions/checkout@v4
