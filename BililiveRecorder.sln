@@ -31,6 +31,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BililiveRecorder.Flv.Tests"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BililiveRecorder.Web", "BililiveRecorder.Web\BililiveRecorder.Web.csproj", "{263EC584-AFD5-45C9-8347-127016B3B8F5}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BililiveRecorder.Web.Tests", "test\BililiveRecorder.Web.Tests\BililiveRecorder.Web.Tests.csproj", "{805F7751-7382-4E33-9EF9-5A0CB1A77FF3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -69,6 +71,10 @@ Global
 		{263EC584-AFD5-45C9-8347-127016B3B8F5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{263EC584-AFD5-45C9-8347-127016B3B8F5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{263EC584-AFD5-45C9-8347-127016B3B8F5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{805F7751-7382-4E33-9EF9-5A0CB1A77FF3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{805F7751-7382-4E33-9EF9-5A0CB1A77FF3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{805F7751-7382-4E33-9EF9-5A0CB1A77FF3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{805F7751-7382-4E33-9EF9-5A0CB1A77FF3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -82,6 +88,7 @@ Global
 		{4FAAE8E7-AC4E-4E99-A7D1-53D20AD8A200} = {2D44A59D-E437-4FEE-8A2E-3FF00D53A64D}
 		{32E554B1-0ECC-4145-85B8-3FC128FEBEA1} = {623A2ACC-DAC6-4E6F-9242-B4B54381AAE1}
 		{263EC584-AFD5-45C9-8347-127016B3B8F5} = {2D44A59D-E437-4FEE-8A2E-3FF00D53A64D}
+		{805F7751-7382-4E33-9EF9-5A0CB1A77FF3} = {623A2ACC-DAC6-4E6F-9242-B4B54381AAE1}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		RESX_SortFileContentOnSave = True

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading;
 using Serilog.Core;
 using Serilog.Events;
@@ -18,6 +19,7 @@ namespace BililiveRecorder.Web.Models.Rest.Logs
         private readonly ITextFormatter textFormatter;
 
         private readonly Queue<JsonLog> logs = new Queue<JsonLog>();
+        private readonly Queue<JsonLog> debugLogs = new Queue<JsonLog>();
 
         private int logId = 0;
 
@@ -36,10 +38,11 @@ namespace BililiveRecorder.Web.Models.Rest.Logs
             {
                 try
                 {
-                    this.logs.Enqueue(new JsonLog { Id = Interlocked.Increment(ref this.logId), Log = json });
+                    var queue = logEvent.Level == LogEventLevel.Debug ? this.debugLogs : this.logs;
+                    queue.Enqueue(new JsonLog { Id = Interlocked.Increment(ref this.logId), Log = json });
 
-                    while (this.logs.Count > MAX_LOG)
-                        this.logs.Dequeue();
+                    while (queue.Count > MAX_LOG)
+                        queue.Dequeue();
                 }
                 finally
                 {
@@ -48,13 +51,13 @@ namespace BililiveRecorder.Web.Models.Rest.Logs
             }
         }
 
-        public void ReadLogs(Action<Queue<JsonLog>> callback)
+        public void ReadLogs(Action<List<JsonLog>> callback)
         {
             if (this.readerWriterLock.TryEnterReadLock(1000))
             {
                 try
                 {
-                    callback(this.logs);
+                    callback(this.logs.Concat(this.debugLogs).OrderBy(x => x.Id).ToList());
                 }
                 finally
                 {

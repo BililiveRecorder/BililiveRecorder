@@ -29,12 +29,17 @@ namespace BililiveRecorder.Web.Api
                 return new JsonLogDto();
             }
 
-            List<JsonLog> logs = null!;
+            var logs = new List<JsonLog>();
 
-            sink.ReadLogs(queue =>
+            sink.ReadLogs(items =>
             {
-                logs = queue.ToList();
+                logs = items;
             });
+
+            if (logs.Count == 0)
+            {
+                return new JsonLogDto();
+            }
 
             if (!after.HasValue)
             {
