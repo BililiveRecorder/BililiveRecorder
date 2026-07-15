@@ -19,5 +19,15 @@ namespace BililiveRecorder.Core.Event
         public string RelativePath { get; set; } = string.Empty;
 
         public DateTimeOffset FileOpenTime { get; set; }
+
+        /// <summary>
+        /// 录制画质 qn 值
+        /// </summary>
+        public int Qn { get; set; }
+
+        /// <summary>
+        /// 录制画质描述
+        /// </summary>
+        public string QnDescription { get; set; } = string.Empty;
     }
 }

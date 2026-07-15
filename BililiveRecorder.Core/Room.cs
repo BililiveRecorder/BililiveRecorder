@@ -14,6 +14,7 @@ using BililiveRecorder.Core.Danmaku;
 using BililiveRecorder.Core.Event;
 using BililiveRecorder.Core.Recording;
 using BililiveRecorder.Core.Scripting;
+using BililiveRecorder.Core.Templating;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -343,7 +344,9 @@ namespace BililiveRecorder.Core
 
                     RecordSessionStarted?.Invoke(this, new RecordSessionStartedEventArgs(this)
                     {
-                        SessionId = this.recordTask.SessionId
+                        SessionId = this.recordTask.SessionId,
+                        Qn = this.recordTask.Qn,
+                        QnDescription = StreamQualityNumber.MapToString(this.recordTask.Qn),
                     });
                 });
             }

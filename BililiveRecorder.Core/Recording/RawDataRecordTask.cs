@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using BililiveRecorder.Core.Api;
 using BililiveRecorder.Core.Event;
 using BililiveRecorder.Core.Scripting;
+using BililiveRecorder.Core.Templating;
 using Serilog;
 
 namespace BililiveRecorder.Core.Recording
@@ -40,6 +41,8 @@ namespace BililiveRecorder.Core.Recording
                 FullPath = fullPath,
                 RelativePath = relativePath,
                 FileOpenTime = DateTimeOffset.Now,
+                Qn = this.qn,
+                QnDescription = StreamQualityNumber.MapToString(this.qn),
             };
             this.OnRecordFileOpening(this.fileOpeningEventArgs);
 

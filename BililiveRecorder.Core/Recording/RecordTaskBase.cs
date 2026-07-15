@@ -72,6 +72,8 @@ namespace BililiveRecorder.Core.Recording
 
         public Guid SessionId { get; } = Guid.NewGuid();
 
+        public int Qn => this.qn;
+
         #region Events
 
         public event EventHandler<IOStatsEventArgs>? IOStats;

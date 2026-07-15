@@ -10,6 +10,7 @@ using BililiveRecorder.Core.Config;
 using BililiveRecorder.Core.Event;
 using BililiveRecorder.Core.ProcessingRules;
 using BililiveRecorder.Core.Scripting;
+using BililiveRecorder.Core.Templating;
 using BililiveRecorder.Flv;
 using BililiveRecorder.Flv.Amf;
 using BililiveRecorder.Flv.Parser;
@@ -83,6 +84,8 @@ namespace BililiveRecorder.Core.Recording
                     FullPath = paths.fullPath,
                     RelativePath = paths.relativePath,
                     FileOpenTime = DateTimeOffset.Now,
+                    Qn = this.qn,
+                    QnDescription = StreamQualityNumber.MapToString(this.qn),
                 };
                 this.OnRecordFileOpening(e);
                 return e;
