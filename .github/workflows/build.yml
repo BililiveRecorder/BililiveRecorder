@@ -29,21 +29,21 @@ jobs:
 
       - uses: actions/setup-dotnet@v4
 
-      - name: Make sure webui can be built
-        if: "${{ matrix.os == 'windows-latest' }}"
-        run: ./webui/build.ps1
-      - name: Make sure webui can be built
-        if: "${{ matrix.os == 'ubuntu-latest' }}"
-        run: ./webui/build.sh
+      - name: Run NUKE Build - Test (Debug)
+        run: ./build.sh Test --configuration Debug --skip BuildWebUI
+        if: runner.os == 'Linux'
+      - name: Run NUKE Build - Test (Debug)
+        run: ./build.ps1 Test --configuration Debug --skip BuildWebUI
+        if: runner.os == 'Windows'
 
-      - name: Run Tests - Debug
-        run: dotnet test -v m -c Debug
-      - name: Run Tests - Release
-        run: dotnet test -v m -c Release
+      - name: Run NUKE Build - Test (Release)
+        run: ./build.sh Test --configuration Release --skip BuildWebUI
+        if: runner.os == 'Linux'
+      - name: Run NUKE Build - Test (Release)
+        run: ./build.ps1 Test --configuration Release --skip BuildWebUI
+        if: runner.os == 'Windows'
 
   build_wpf:
-    # Tests can be run parallelly for debug builds to save time
-    # needs: test
     runs-on: windows-latest
     steps:
       - name: Checkout
@@ -75,11 +75,6 @@ jobs:
           path: BililiveRecorder.WPF/bin/Release
 
   build_cli:
-    # Tests can be run parallelly for debug builds to save time
-    # needs: test
-    strategy:
-      matrix:
-        rid: [any, linux-arm, linux-arm64, linux-musl-arm64, linux-x64, linux-musl-x64, osx-x64, osx-arm64, win-x64]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -90,37 +85,31 @@ jobs:
 
       - uses: actions/setup-dotnet@v4
 
-      - name: Build WebUI
-        run: ./webui/build.sh
+      - name: Run NUKE Build - PublishAllCli (Debug)
+        run: ./build.sh PublishAllCli --configuration Debug
 
-      - name: Build CLI - Debug
-        if: ${{ matrix.rid == 'any' }}
-        run: dotnet publish -c Debug BililiveRecorder.Cli/BililiveRecorder.Cli.csproj
-      - name: Build CLI - Release
-        if: ${{ matrix.rid == 'any' }}
-        run: dotnet publish -c Release BililiveRecorder.Cli/BililiveRecorder.Cli.csproj
-
-      - name: Build CLI - Debug
-        if: ${{ matrix.rid != 'any' }}
-        run: dotnet publish -c Debug -r ${{ matrix.rid }} BililiveRecorder.Cli/BililiveRecorder.Cli.csproj
-      - name: Build CLI - Release
-        if: ${{ matrix.rid != 'any' }}
-        run: dotnet publish -c Release -r ${{ matrix.rid }} BililiveRecorder.Cli/BililiveRecorder.Cli.csproj
-
-      - name: Upload Artifacts - Debug
+      - name: Upload Debug Artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: CLI-${{ matrix.rid }}-Debug
-          path: BililiveRecorder.Cli/publish/${{ matrix.rid }}/Debug
-      - name: Upload Artifacts - Release
+          name: CLI-Debug
+          path: output/cli/*/Debug
+
+      - name: Run NUKE Build - PublishAllCli (Release)
+        run: ./build.sh PublishAllCli --configuration Release
+
+      - name: Upload Release Artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: CLI-${{ matrix.rid }}-Release
-          path: BililiveRecorder.Cli/publish/${{ matrix.rid }}/Release
+          name: CLI-Release
+          path: output/cli/*/Release
+
+      - name: Upload Release Archives
+        uses: actions/upload-artifact@v4
+        with:
+          name: CLI-Archives
+          path: output/artifacts/*.zip
 
   build_docker:
-    # Tests can be run parallelly for debug builds to save time
-    # needs: test
     runs-on: ubuntu-latest
     if: github.event_name != 'pull_request'
     permissions:
@@ -132,6 +121,9 @@ jobs:
         with:
           fetch-depth: 0
           submodules: recursive
+
+      - uses: actions/setup-dotnet@v4
+
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
       - name: Set up Docker Buildx
@@ -157,8 +149,8 @@ jobs:
             type=ref,event=branch
             type=ref,event=pr
 
-      - name: Build WebUI
-        run: ./webui/build.sh
+      - name: Run NUKE Build - BuildWebUI
+        run: ./build.sh BuildWebUI
       - name: Build CLI
         run: dotnet build -c Release -o ./BililiveRecorder.Cli/bin/docker_out BililiveRecorder.Cli/BililiveRecorder.Cli.csproj
       # Build and push Docker image with Buildx (don't push on PR)

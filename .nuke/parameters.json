@@ -1,0 +1,4 @@
+{
+  "$schema": "https://raw.githubusercontent.com/nuke-build/nuke/master/source/Nuke.Tooling.Generator/schema.json",
+  "Solution": "BililiveRecorder.sln"
+}
