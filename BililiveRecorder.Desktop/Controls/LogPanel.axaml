@@ -1,0 +1,18 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:models="using:BililiveRecorder.Desktop.Models"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="BililiveRecorder.Desktop.Controls.LogPanel"
+             x:DataType="models:LogEntry">
+    <DataGrid x:Name="LogDataGrid" AutoGenerateColumns="False" IsReadOnly="True" 
+              CanUserResizeColumns="True" CanUserSortColumns="False">
+        <DataGrid.Columns>
+            <DataGridTextColumn Header="时间" Binding="{Binding Timestamp, StringFormat=HH:mm:ss.ffff}" Width="100"/>
+            <DataGridTextColumn Header="级别" Binding="{Binding Level}" Width="60"/>
+            <DataGridTextColumn Header="房间" Binding="{Binding RoomId}" Width="80"/>
+            <DataGridTextColumn Header="消息" Binding="{Binding Message}" Width="*"/>
+        </DataGrid.Columns>
+    </DataGrid>
+</UserControl>

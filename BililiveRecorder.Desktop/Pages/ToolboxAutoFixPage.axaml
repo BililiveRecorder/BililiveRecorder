@@ -1,0 +1,43 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:ui="using:FluentAvalonia.UI.Controls"
+             xmlns:lucide="using:Lucide.Avalonia"
+             mc:Ignorable="d" d:DesignWidth="900" d:DesignHeight="600"
+             x:Class="BililiveRecorder.Desktop.Pages.ToolboxAutoFixPage">
+    <Border Background="Transparent" DragDrop.AllowDrop="True">
+        <Grid Margin="20">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <DockPanel Margin="0,0,0,10">
+                <Button VerticalAlignment="Bottom" DockPanel.Dock="Right" Content="文件没修好？" Click="NotFixed_Button_Click"/>
+                <Button VerticalAlignment="Bottom" DockPanel.Dock="Right" Margin="5,0" Click="Fix_Button_Click">
+                    <StackPanel Orientation="Horizontal">
+                        <lucide:LucideIcon Kind="{x:Static lucide:LucideIconKind.Sparkles}" Size="14" Margin="0,0,5,0"/>
+                        <TextBlock Text="修复"/>
+                    </StackPanel>
+                </Button>
+                <Button VerticalAlignment="Bottom" DockPanel.Dock="Right" Click="Analyze_Button_Click">
+                    <StackPanel Orientation="Horizontal">
+                        <lucide:LucideIcon Kind="{x:Static lucide:LucideIconKind.Search}" Size="14" Margin="0,0,5,0"/>
+                        <TextBlock Text="分析"/>
+                    </StackPanel>
+                </Button>
+                <Button VerticalAlignment="Bottom" DockPanel.Dock="Right" Margin="0,0,5,0" Content="设置" Click="Settings_Button_Click"/>
+                <Button VerticalAlignment="Bottom" DockPanel.Dock="Right" Margin="0,0,5,0" Content="选择文件" Click="SelectFile_Button_Click"/>
+                <TextBox x:Name="FileNameTextBox" Watermark="拖放FLV文件到此处或点击选择文件"/>
+            </DockPanel>
+            <Border Grid.Row="1" BorderThickness="1" CornerRadius="5" x:Name="AnalyzeResultDisplayArea"
+                    Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
+                    BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}">
+                <StackPanel Margin="16" VerticalAlignment="Center" HorizontalAlignment="Center">
+                    <TextBlock Text="请选择一个 FLV 文件" FontSize="26" HorizontalAlignment="Center"/>
+                    <TextBlock Text="可以拖放文件到窗口上" HorizontalAlignment="Center"/>
+                </StackPanel>
+            </Border>
+        </Grid>
+    </Border>
+</UserControl>

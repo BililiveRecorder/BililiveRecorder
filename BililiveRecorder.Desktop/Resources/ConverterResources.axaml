@@ -1,0 +1,37 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:c="using:BililiveRecorder.Desktop.Converters">
+
+    <x:Boolean x:Key="True">True</x:Boolean>
+    <x:Boolean x:Key="False">False</x:Boolean>
+
+    <c:MultiBoolToValueConverter x:Key="MultiBoolToVisibilityCollapsedConverter" TrueValue="True" FalseValue="False"/>
+
+    <c:IsNaNToValueConverter x:Key="IsNaNToVisibilityCollapsedConverter" TrueValue="True" FalseValue="False" />
+    <c:IsNaNToValueConverter x:Key="InvertIsNaNToVisibilityCollapsedConverter" TrueValue="False" FalseValue="True" />
+    <c:BoolToValueConverter x:Key="BooleanToVisibilityCollapsedConverter" TrueValue="True" FalseValue="False" />
+    <c:BoolToValueConverter x:Key="InvertBooleanToVisibilityCollapsedConverter" TrueValue="False" FalseValue="True" />
+    <c:BoolToValueConverter x:Key="BooleanToVisibilityHiddenConverter" TrueValue="True" FalseValue="False" />
+    <c:BoolToValueConverter x:Key="BooleanToLiveStatusColorBrushConverter">
+        <c:BoolToValueConverter.FalseValue>
+            <SolidColorBrush Color="#999999"/>
+        </c:BoolToValueConverter.FalseValue>
+        <c:BoolToValueConverter.TrueValue>
+            <SolidColorBrush Color="Red"/>
+        </c:BoolToValueConverter.TrueValue>
+    </c:BoolToValueConverter>
+    <c:BoolToValueConverter x:Key="BooleanToDanmakuConnectedColorBrushConverter">
+        <c:BoolToValueConverter.FalseValue>
+            <SolidColorBrush Color="Red"/>
+        </c:BoolToValueConverter.FalseValue>
+        <c:BoolToValueConverter.TrueValue>
+            <SolidColorBrush Color="#8BC34A"/>
+        </c:BoolToValueConverter.TrueValue>
+    </c:BoolToValueConverter>
+    <c:BooleanInverterConverter x:Key="BooleanInverterConverter"/>
+    <c:EnumToBooleanConverter x:Key="EnumToBooleanConverter"/>
+    <c:IsNullToVisibilityConverter x:Key="IsNullToVisibilityCollapsedConverter"/>
+    <c:RatioToColorBrushConverter x:Key="RatioToColorBrushConverter"/>
+    <c:ShortRoomIdToVisibilityConverter x:Key="ShortRoomIdToVisibilityConverter"/>
+    <c:ByteUnitsConverter x:Key="ByteUnitsConverter"/>
+</ResourceDictionary>

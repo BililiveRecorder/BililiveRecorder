@@ -1,0 +1,110 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:core="using:BililiveRecorder.Core"
+             xmlns:lucide="using:Lucide.Avalonia"
+             mc:Ignorable="d" d:DesignWidth="220" d:DesignHeight="110"
+             x:Class="BililiveRecorder.Desktop.Controls.RoomCard"
+             x:DataType="core:IRoom">
+    <Border Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
+            BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}" 
+            BorderThickness="1"
+            CornerRadius="5">
+        <Grid Margin="8,5">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="25"/>
+            </Grid.RowDefinitions>
+            <TextBlock VerticalAlignment="Center" FontSize="16" FontWeight="SemiBold"
+                       TextWrapping="NoWrap" TextTrimming="CharacterEllipsis"
+                       Text="{Binding Name, Mode=OneWay}" ToolTip.Tip="{Binding Name, Mode=OneWay}"/>
+            <Grid Grid.Row="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Row="0" Text="{Binding Title}" ToolTip.Tip="{Binding Title}"
+                           TextTrimming="CharacterEllipsis"/>
+                <StackPanel Grid.Row="1" Orientation="Horizontal">
+                    <TextBlock Text="{Binding AreaNameParent}"/>
+                    <TextBlock Text=" · "/>
+                    <TextBlock Text="{Binding AreaNameChild}"/>
+                </StackPanel>
+                <StackPanel Grid.Row="2" VerticalAlignment="Center" HorizontalAlignment="Stretch" Orientation="Horizontal">
+                    <Ellipse Width="8" Height="8" Margin="0,0,3,0"
+                             Fill="{Binding DanmakuConnected, Converter={StaticResource BooleanToDanmakuConnectedColorBrushConverter}}"
+                             ToolTip.Tip="弹幕连接状态"/>
+                    <Ellipse Width="8" Height="8" Margin="0,0,3,0"
+                             Fill="{Binding Streaming, Converter={StaticResource BooleanToLiveStatusColorBrushConverter}}"
+                             ToolTip.Tip="直播状态"/>
+                    <TextBlock Text="房间号: " FontSize="11"/>
+                    <TextBlock Text="{Binding RoomConfig.RoomId, Mode=OneWay}" FontSize="11"/>
+                    <TextBlock Text=" (短号: " FontSize="11" IsVisible="{Binding ShortId, Converter={StaticResource ShortRoomIdToVisibilityConverter}}"/>
+                    <TextBlock Text="{Binding ShortId, Mode=OneWay}" FontSize="11" IsVisible="{Binding ShortId, Converter={StaticResource ShortRoomIdToVisibilityConverter}}"/>
+                    <TextBlock Text=")" FontSize="11" IsVisible="{Binding ShortId, Converter={StaticResource ShortRoomIdToVisibilityConverter}}"/>
+                </StackPanel>
+                <Button Grid.Column="1" Grid.RowSpan="3" VerticalAlignment="Center" HorizontalAlignment="Right" 
+                        Content="⋮" Padding="5" x:Name="MenuButton">
+                    <Button.Flyout>
+                        <MenuFlyout Placement="BottomEdgeAlignedRight">
+                            <MenuItem Header="开始录制" Click="MenuItem_StartRecording_Click"/>
+                            <MenuItem Header="停止录制" Click="MenuItem_StopRecording_Click"/>
+                            <MenuItem Header="刷新信息" Click="MenuItem_RefreshInfo_Click"/>
+                            <MenuItem Header="在浏览器中打开" Click="MenuItem_OpenInBrowser_Click"/>
+                            <Separator/>
+                            <MenuItem Header="房间设置" Click="MenuItem_ShowSettings_Click"/>
+                            <MenuItem Header="全局设置" Click="MenuItem_ShowGlobalSettings_Click"/>
+                            <Separator/>
+                            <MenuItem Header="启用自动录制" Click="MenuItem_StartMonitor_Click"/>
+                            <MenuItem Header="禁用自动录制" Click="MenuItem_StopMonitor_Click"/>
+                            <Separator/>
+                            <MenuItem Header="删除房间" Click="MenuItem_DeleteRoom_Click"/>
+                        </MenuFlyout>
+                    </Button.Flyout>
+                </Button>
+            </Grid>
+
+            <Grid Grid.Row="2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Orientation="Horizontal"
+                            IsVisible="{Binding RoomConfig.AutoRecord, Mode=OneWay}">
+                    <Ellipse Width="8" Height="8" Fill="Orange"/>
+                    <TextBlock Foreground="DarkOrange" Margin="3,0,0,0" Text="监控中"/>
+                </StackPanel>
+
+                <StackPanel x:Name="RecordingIcon" VerticalAlignment="Center" HorizontalAlignment="Center" Orientation="Horizontal"
+                            IsVisible="{Binding Recording, Mode=OneWay}">
+                    <Ellipse Width="8" Height="8" Fill="Red"/>
+                    <TextBlock Foreground="Red" Margin="3,0,0,0" Text="录制中"/>
+                </StackPanel>
+
+                <Border Grid.Column="1" VerticalAlignment="Center"
+                        IsVisible="{Binding Recording, Mode=OneWay}"
+                        Background="{Binding Stats.DurationRatio, Converter={StaticResource RatioToColorBrushConverter}, Mode=OneWay}"
+                        BorderThickness="1" BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}" Margin="2,0" CornerRadius="5">
+                    <TextBlock HorizontalAlignment="Center" Foreground="Black" FontSize="11" Padding="2">
+                        <Run Text="{Binding Stats.NetworkMbps, Mode=OneWay, StringFormat={}{0:F2}}"/>
+                        <Run Text="Mbps"/>
+                    </TextBlock>
+                </Border>
+                <Button Grid.Column="2" Padding="5,3" HorizontalAlignment="Right" Margin="5,0"
+                        ToolTip.Tip="手动分段" Click="Button_Split_Click"
+                        IsVisible="{Binding Recording, Mode=OneWay}">
+                    <lucide:LucideIcon Kind="{x:Static lucide:LucideIconKind.Scissors}" Size="10"/>
+                </Button>
+            </Grid>
+        </Grid>
+    </Border>
+</UserControl>

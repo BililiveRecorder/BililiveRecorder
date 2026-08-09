@@ -1,0 +1,136 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:ui="using:FluentAvalonia.UI.Controls"
+             xmlns:controls="using:BililiveRecorder.Desktop.Controls"
+             xmlns:models="using:BililiveRecorder.Desktop.Models"
+             xmlns:lucide="using:Lucide.Avalonia"
+             mc:Ignorable="d" d:DesignWidth="500" d:DesignHeight="1500"
+             x:Class="BililiveRecorder.Desktop.Pages.SettingsPage">
+    <ScrollViewer>
+        <StackPanel Orientation="Vertical" Spacing="5" Margin="20">
+            <TextBlock Text="设置" FontSize="28" FontWeight="Bold" Margin="0,10"/>
+            
+            <Border Background="{DynamicResource CardBackgroundFillColorDefaultBrush}" 
+                    CornerRadius="8" Padding="15" Margin="0,5">
+                <StackPanel>
+                    <TextBlock Text="弹幕设置" FontSize="16" FontWeight="SemiBold" Margin="0,0,0,10"/>
+                    <ToggleSwitch x:Name="RecordDanmakuCheckbox" OnContent="启用弹幕录制" OffContent="启用弹幕录制"/>
+                    <StackPanel Margin="20,7,0,0" IsVisible="{Binding IsChecked, ElementName=RecordDanmakuCheckbox}">
+                        <ToggleSwitch OnContent="录制 SuperChat" OffContent="录制 SuperChat"/>
+                        <ToggleSwitch OnContent="录制上舰信息" OffContent="录制上舰信息"/>
+                        <ToggleSwitch OnContent="录制礼物信息" OffContent="录制礼物信息"/>
+                        <ToggleSwitch OnContent="录制原始弹幕数据" OffContent="录制原始弹幕数据"/>
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+            
+            <Border Background="{DynamicResource CardBackgroundFillColorDefaultBrush}" 
+                    CornerRadius="8" Padding="15" Margin="0,5">
+                <StackPanel>
+                    <TextBlock Text="录制模式" FontSize="16" FontWeight="SemiBold" Margin="0,0,0,10"/>
+                    <RadioButton GroupName="RecordMode" Content="标准模式" IsChecked="True"/>
+                    <RadioButton GroupName="RecordMode" Content="原始数据模式"/>
+                </StackPanel>
+            </Border>
+            
+            <Border Background="{DynamicResource CardBackgroundFillColorDefaultBrush}" 
+                    CornerRadius="8" Padding="15" Margin="0,5">
+                <StackPanel>
+                    <TextBlock Text="标准模式录制修复设置" FontSize="16" FontWeight="SemiBold" Margin="0,0,0,10"/>
+                    <ToggleSwitch OnContent="检测到可能缺少数据时分段" OffContent="检测到可能缺少数据时分段"/>
+                    <ToggleSwitch OnContent="使用实验性花屏修复判定逻辑" OffContent="使用实验性花屏修复判定逻辑"/>
+                </StackPanel>
+            </Border>
+            
+            <Border Background="{DynamicResource CardBackgroundFillColorDefaultBrush}" 
+                    CornerRadius="8" Padding="15" Margin="0,5">
+                <StackPanel>
+                    <TextBlock Text="自动分段" FontSize="16" FontWeight="SemiBold" Margin="0,0,0,10"/>
+                    <RadioButton GroupName="Splitting" Content="不自动分段" x:Name="CutDisabledRadioButton" IsChecked="True"/>
+                    <RadioButton GroupName="Splitting" Content="按文件大小分段" x:Name="CutBySizeRadioButton"/>
+                    <RadioButton GroupName="Splitting" Content="按时间分段" x:Name="CutByTimeRadioButton"/>
+                    <StackPanel Orientation="Horizontal" Margin="0,5,0,0" 
+                                IsVisible="{Binding !IsChecked, ElementName=CutDisabledRadioButton}">
+                        <TextBlock Text="每"/>
+                        <TextBox Margin="5,0" Width="100"/>
+                        <TextBlock Text="MB/分钟 分段"/>
+                    </StackPanel>
+                    <ToggleSwitch OnContent="标题变化时分段" OffContent="标题变化时分段"/>
+                </StackPanel>
+            </Border>
+            
+            <Border Background="{DynamicResource CardBackgroundFillColorDefaultBrush}" 
+                    CornerRadius="8" Padding="15" Margin="0,5">
+                <StackPanel>
+                    <TextBlock Text="直播封面" FontSize="16" FontWeight="SemiBold" Margin="0,0,0,10"/>
+                    <ToggleSwitch OnContent="录制时同时保存直播封面" OffContent="录制时同时保存直播封面"/>
+                </StackPanel>
+            </Border>
+            
+            <Border Background="{DynamicResource CardBackgroundFillColorDefaultBrush}" 
+                    CornerRadius="8" Padding="15" Margin="0,5">
+                <StackPanel MaxWidth="500" HorizontalAlignment="Left">
+                    <TextBlock Text="文件名格式" FontSize="16" FontWeight="SemiBold" Margin="0,0,0,10"/>
+                    <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                        <lucide:LucideIcon Kind="{x:Static lucide:LucideIconKind.Info}" Size="15" Margin="2,0" VerticalAlignment="Center"/>
+                        <TextBlock VerticalAlignment="Center" Text="点击查看详细说明"/>
+                        <Button Margin="5,0,0,0" Command="{x:Static models:Commands.OpenLink}" 
+                                CommandParameter="https://rec.danmuji.org/docs/basic/settings/#%E5%BD%95%E5%88%B6%E6%96%87%E4%BB%B6%E5%90%8D%E6%A0%BC%E5%BC%8F">
+                            <lucide:LucideIcon Kind="{x:Static lucide:LucideIconKind.ExternalLink}" Size="15"/>
+                        </Button>
+                    </StackPanel>
+                    <TextBlock Text="录制文件名格式"/>
+                    <TextBox Margin="0,5,0,0"/>
+                    <Button Margin="0,10,0,5" Content="测试"/>
+                </StackPanel>
+            </Border>
+            
+            <Border Background="{DynamicResource CardBackgroundFillColorDefaultBrush}" 
+                    CornerRadius="8" Padding="15" Margin="0,5">
+                <StackPanel>
+                    <TextBlock Text="开播通知" FontSize="16" FontWeight="SemiBold" Margin="0,0,0,10"/>
+                    <ToggleSwitch OnContent="直播间开播时弹出系统通知" OffContent="直播间开播时弹出系统通知"/>
+                </StackPanel>
+            </Border>
+            
+            <Border Background="{DynamicResource CardBackgroundFillColorDefaultBrush}" 
+                    CornerRadius="8" Padding="15" Margin="0,5">
+                <StackPanel MaxWidth="400" HorizontalAlignment="Left">
+                    <TextBlock Text="录制画质" FontSize="16" FontWeight="SemiBold" Margin="0,0,0,10"/>
+                    <Button Margin="0,0,0,5" Command="{x:Static models:Commands.OpenLink}" 
+                            CommandParameter="https://rec.danmuji.org/docs/basic/settings/#%E7%9B%B4%E6%92%AD%E7%94%BB%E8%B4%A8">
+                        <StackPanel Orientation="Horizontal">
+                            <lucide:LucideIcon Kind="{x:Static lucide:LucideIconKind.Info}" Size="15"/>
+                            <lucide:LucideIcon Kind="{x:Static lucide:LucideIconKind.ExternalLink}" Size="15" Margin="5,0,0,0"/>
+                        </StackPanel>
+                    </Button>
+                    <TextBlock Text="逗号分割的录制画质ID"/>
+                    <TextBox Width="220" HorizontalAlignment="Left" Margin="0,5,0,0"/>
+                </StackPanel>
+            </Border>
+            
+            <Border Background="{DynamicResource CardBackgroundFillColorDefaultBrush}" 
+                    CornerRadius="8" Padding="15" Margin="0,5">
+                <StackPanel>
+                    <TextBlock Text="录制条件" FontSize="16" FontWeight="SemiBold" Margin="0,0,0,10"/>
+                    <TextBlock Margin="5" Text="跳过录制的直播标题正则匹配表达式，每行一个" />
+                    <TextBox AcceptsReturn="True" TextWrapping="Wrap" Height="100" Margin="5"/>
+                </StackPanel>
+            </Border>
+            
+            <Border Background="{DynamicResource CardBackgroundFillColorDefaultBrush}" 
+                    CornerRadius="8" Padding="15" Margin="0,5">
+                <StackPanel MaxWidth="400" HorizontalAlignment="Left">
+                    <TextBlock Text="Webhook" FontSize="16" FontWeight="SemiBold" Margin="0,0,0,10"/>
+                    <TextBlock Text="Webhook 地址（每行一个）" Margin="0,0,0,10"/>
+                    <TextBlock Text="Webhook v2"/>
+                    <TextBox AcceptsReturn="True" TextWrapping="Wrap" Height="60"/>
+                    <TextBlock Text="Webhook v1" Margin="0,10,0,0"/>
+                    <TextBox AcceptsReturn="True" TextWrapping="Wrap" Height="60"/>
+                </StackPanel>
+            </Border>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

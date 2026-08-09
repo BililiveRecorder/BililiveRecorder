@@ -1,0 +1,32 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:lucide="using:Lucide.Avalonia"
+             mc:Ignorable="d" d:DesignWidth="900" d:DesignHeight="600"
+             x:Class="BililiveRecorder.Desktop.Pages.AnnouncementPage">
+    <Grid Margin="5">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Button HorizontalAlignment="Right" Margin="5,0" x:Name="RefreshButton" Click="Button_Click">
+            <StackPanel Orientation="Horizontal">
+                <lucide:LucideIcon Kind="{x:Static lucide:LucideIconKind.RefreshCw}" Size="16" VerticalAlignment="Center"/>
+                <TextBlock Text="刷新" Margin="5,0,0,0"/>
+            </StackPanel>
+        </Button>
+        <Border Margin="5" Grid.Row="1" x:Name="Container" BorderBrush="{DynamicResource SystemControlBackgroundBaseLowBrush}" BorderThickness="1" CornerRadius="5">
+            <ScrollViewer>
+                <TextBlock x:Name="ContentTextBlock" TextWrapping="Wrap" Margin="10"/>
+            </ScrollViewer>
+        </Border>
+        <StackPanel x:Name="Loading" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" IsVisible="False">
+            <ProgressBar IsIndeterminate="True" Width="80" Height="5" Margin="5"/>
+            <TextBlock TextAlignment="Center" FontSize="18" Text="Loading……"/>
+        </StackPanel>
+        <TextBlock x:Name="Error" Grid.Row="1" FontSize="20" Text="加载失败"
+                   HorizontalAlignment="Center" VerticalAlignment="Center" IsVisible="False"
+                   Foreground="Red"/>
+    </Grid>
+</UserControl>

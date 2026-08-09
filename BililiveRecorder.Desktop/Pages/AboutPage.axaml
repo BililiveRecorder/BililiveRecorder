@@ -1,0 +1,93 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:models="using:BililiveRecorder.Desktop.Models"
+             mc:Ignorable="d" d:DesignWidth="900" d:DesignHeight="600"
+             x:Class="BililiveRecorder.Desktop.Pages.AboutPage">
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <StackPanel Orientation="Horizontal">
+            <Border HorizontalAlignment="Left" Height="60" Margin="0,5,5,0">
+                <!-- TODO: Add app icon -->
+            </Border>
+            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                <StackPanel>
+                    <TextBlock Text="mikufans" HorizontalAlignment="Center" Margin="0,0,0,-6"/>
+                    <TextBlock Text="mikufans" FontSize="32"/>
+                </StackPanel>
+                <StackPanel>
+                    <TextBlock Text="lù" HorizontalAlignment="Center" Margin="0,0,0,-6"/>
+                    <TextBlock Text="录" FontSize="32"/>
+                </StackPanel>
+                <StackPanel>
+                    <TextBlock Text="bō" HorizontalAlignment="Center" Margin="0,0,0,-6"/>
+                    <TextBlock Text="播" FontSize="32"/>
+                </StackPanel>
+                <StackPanel>
+                    <TextBlock Text="jī" HorizontalAlignment="Center" Margin="0,0,0,-6"/>
+                    <TextBlock Text="姬" FontSize="32"/>
+                </StackPanel>
+            </StackPanel>
+        </StackPanel>
+        <StackPanel Grid.Row="1" Margin="0,10">
+            <TextBlock FontSize="16" TextWrapping="Wrap" x:Name="VersionTextBlock"/>
+            <StackPanel Orientation="Horizontal">
+                <TextBlock FontSize="16" Text="版权"/>
+                <TextBlock FontSize="16" Text=" © Genteure"/>
+            </StackPanel>
+            <TextBlock FontSize="16" TextWrapping="Wrap" Text="本软件基于 GNU General Public License v3 开源许可证发布"/>
+            <StackPanel Orientation="Horizontal">
+                <TextBlock FontSize="16" Text="联系方式: " VerticalAlignment="Center" Margin="0,0,5,0"/>
+                <Button Padding="0" Content="rec@danmuji.org" Command="{x:Static models:Commands.OpenLink}" CommandParameter="mailto:rec@danmuji.org" Classes="Hyperlink"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <TextBlock FontSize="16" Text="网站: " VerticalAlignment="Center" Margin="0,0,5,0"/>
+                <Button Padding="0" Content="https://rec.danmuji.org" Command="{x:Static models:Commands.OpenLink}" CommandParameter="https://rec.danmuji.org" Classes="Hyperlink"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <TextBlock FontSize="16" Text="项目地址: " VerticalAlignment="Center" Margin="0,0,5,0"/>
+                <Button Padding="0" Content="https://github.com/BililiveRecorder/BililiveRecorder" Command="{x:Static models:Commands.OpenLink}" CommandParameter="https://github.com/BililiveRecorder/BililiveRecorder" Classes="Hyperlink"/>
+            </StackPanel>
+        </StackPanel>
+        <Grid Grid.Row="2">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <TextBlock Text="翻译" FontSize="22"/>
+            <ListBox Grid.Row="1" Margin="0,5,0,0">
+                <ListBoxItem Content="Dewei Li (deweili)"/>
+                <ListBoxItem Content="Fox Older (olderfox)"/>
+                <ListBoxItem Content="Genteure (genteure)"/>
+                <ListBoxItem Content="Heongle (heongle)"/>
+                <ListBoxItem Content="kafu (kafu0611)"/>
+                <ListBoxItem Content="Kenneth (w41k3r15347)"/>
+                <ListBoxItem Content="OrangeCat (dust0517)"/>
+                <ListBoxItem Content="Vincent Tse (vincentkilua)"/>
+            </ListBox>
+        </Grid>
+        <Grid Grid.Row="3">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <TextBlock Text="使用的开源库" FontSize="22"/>
+            <ListBox Grid.Row="1" Margin="0,5,0,0">
+                <ListBoxItem Content="Avalonia"/>
+                <ListBoxItem Content="FluentAvalonia"/>
+                <ListBoxItem Content="Microsoft.Extensions.DependencyInjection"/>
+                <ListBoxItem Content="Newtonsoft.Json"/>
+                <ListBoxItem Content="Polly"/>
+                <ListBoxItem Content="Serilog"/>
+                <ListBoxItem Content="StructLinq"/>
+                <ListBoxItem Content="System.IO.Pipelines"/>
+            </ListBox>
+        </Grid>
+    </Grid>
+</UserControl>

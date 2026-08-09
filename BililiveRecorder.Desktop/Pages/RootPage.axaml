@@ -1,0 +1,56 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:ui="using:FluentAvalonia.UI.Controls"
+             xmlns:local="using:BililiveRecorder.Desktop.Pages"
+             xmlns:models="using:BililiveRecorder.Desktop.Models"
+             xmlns:controls="using:BililiveRecorder.Desktop.Controls"
+             xmlns:lucide="using:Lucide.Avalonia"
+             mc:Ignorable="d" d:DesignWidth="900" d:DesignHeight="600"
+             x:Class="BililiveRecorder.Desktop.Pages.RootPage"
+             x:DataType="models:RootModel">
+    <Grid>
+        <ui:NavigationView x:Name="NavigationView"
+                           IsBackEnabled="False"
+                           IsBackButtonVisible="False"
+                           IsSettingsVisible="False"
+                           IsPaneOpen="False"
+                           OpenPaneLength="200"
+                           SelectionChanged="NavigationView_SelectionChanged">
+            <ui:NavigationView.PaneCustomContent>
+                <StackPanel Margin="4">
+                    <Button Click="SwitchLanguage_Click" Padding="8">
+                        <lucide:LucideIcon Kind="{x:Static lucide:LucideIconKind.Languages}" Size="18"/>
+                    </Button>
+                    <Button Click="SwitchLightDarkTheme_Click" Padding="8" Margin="0,4,0,0">
+                        <lucide:LucideIcon Kind="{x:Static lucide:LucideIconKind.SunMoon}" Size="18"/>
+                    </Button>
+                </StackPanel>
+            </ui:NavigationView.PaneCustomContent>
+            <ui:NavigationView.PaneFooter>
+                <Grid Width="40" Height="40" x:Name="DebugBuildIcon" IsVisible="False" HorizontalAlignment="Left">
+                    <lucide:LucideIcon Kind="{x:Static lucide:LucideIconKind.Bug}" Size="24" ToolTip.Tip="Debug Build 测试版"/>
+                </Grid>
+            </ui:NavigationView.PaneFooter>
+            <ui:NavigationView.MenuItems>
+                <ui:NavigationViewItem Content="公告" Tag="AnnouncementPage" IsSelected="True"/>
+                <ui:NavigationViewItem Content="房间" Tag="RoomListPage" IsEnabled="False" x:Name="RoomListPageNavigationViewItem"/>
+                <ui:NavigationViewItem Content="工具箱" SelectsOnInvoked="False">
+                    <ui:NavigationViewItem.MenuItems>
+                        <ui:NavigationViewItem Content="修复" Tag="ToolboxAutoFixPage"/>
+                        <ui:NavigationViewItem Content="转封装" Tag="ToolboxRemuxPage"/>
+                        <ui:NavigationViewItem Content="弹幕合并" Tag="ToolboxDanmakuMergerPage"/>
+                    </ui:NavigationViewItem.MenuItems>
+                </ui:NavigationViewItem>
+            </ui:NavigationView.MenuItems>
+            <ui:NavigationView.FooterMenuItems>
+                <ui:NavigationViewItem Content="高级设置" Tag="AdvancedSettingsPage" x:Name="AdvancedSettingsPageItem" IsVisible="False"/>
+                <ui:NavigationViewItem Content="设置" Tag="SettingsPage" IsEnabled="False" x:Name="SettingsPageNavigationViewItem" PointerPressed="NavigationViewItem_PointerPressed"/>
+                <ui:NavigationViewItem Content="日志" Tag="LogPage"/>
+                <ui:NavigationViewItem Content="关于" Tag="AboutPage"/>
+            </ui:NavigationView.FooterMenuItems>
+            <ui:Frame x:Name="MainFrame" />
+        </ui:NavigationView>
+    </Grid>
+</UserControl>
