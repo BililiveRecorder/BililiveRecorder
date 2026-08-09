@@ -1,0 +1,45 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:lucide="using:Lucide.Avalonia"
+             xmlns:local="clr-namespace:BililiveRecorder.Desktop.Pages"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="600"
+             x:Class="BililiveRecorder.Desktop.Pages.ToolboxDanmakuMergerPage">
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        
+        <StackPanel Spacing="5">
+            <TextBlock Text="弹幕合并 Danmaku Merge" FontSize="28" FontWeight="SemiBold"/>
+            <TextBlock TextWrapping="Wrap" Text="合并多个弹幕XML文件。"/>
+            <TextBlock TextWrapping="Wrap" Text="Merge multiple danmaku XML files."/>
+        </StackPanel>
+        
+        <StackPanel Grid.Row="1" Margin="0,20" Spacing="10">
+            <Button x:Name="SelectFilesButton" Click="SelectFiles_Click">
+                <StackPanel Orientation="Horizontal" Spacing="10">
+                    <lucide:LucideIcon Kind="Files" Width="16" Height="16"/>
+                    <TextBlock Text="选择XML文件 Select XML Files"/>
+                </StackPanel>
+            </Button>
+            <TextBlock x:Name="SelectedFilesText" Text="未选择文件 No files selected" Foreground="Gray"/>
+            <Button x:Name="StartMergeButton" Click="StartMerge_Click" IsEnabled="False">
+                <StackPanel Orientation="Horizontal" Spacing="10">
+                    <lucide:LucideIcon Kind="GitMerge" Width="16" Height="16"/>
+                    <TextBlock Text="开始合并 Start Merge"/>
+                </StackPanel>
+            </Button>
+        </StackPanel>
+        
+        <Border Grid.Row="2" BorderBrush="{DynamicResource SystemControlForegroundBaseMediumLowBrush}" 
+                BorderThickness="1" CornerRadius="5" Padding="10">
+            <ScrollViewer>
+                <TextBlock x:Name="OutputText" TextWrapping="Wrap" Text="输出日志 Output Log..."/>
+            </ScrollViewer>
+        </Border>
+    </Grid>
+</UserControl>

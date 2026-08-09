@@ -1,0 +1,47 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:local="clr-namespace:BililiveRecorder.Desktop.Pages"
+             mc:Ignorable="d" d:DesignWidth="900" d:DesignHeight="600"
+             x:Class="BililiveRecorder.Desktop.Pages.AnnouncementPage">
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        
+        <TextBlock Text="公告 Announcement" FontSize="28" FontWeight="SemiBold" Margin="0,10"/>
+        
+        <Border Grid.Row="1" BorderBrush="{DynamicResource SystemControlForegroundBaseMediumLowBrush}" 
+                BorderThickness="1" CornerRadius="5" Margin="0,10" Padding="15">
+            <ScrollViewer>
+                <StackPanel Spacing="10">
+                    <TextBlock TextWrapping="Wrap" FontSize="14">
+                        <Run Text="欢迎使用 mikufans 录播姬 (Avalonia Desktop 版)!" FontWeight="Bold" FontSize="18"/>
+                    </TextBlock>
+                    <TextBlock TextWrapping="Wrap" FontSize="14" Text="Welcome to BililiveRecorder (Avalonia Desktop version)!"/>
+                    <TextBlock TextWrapping="Wrap" FontSize="14" Text=""/>
+                    <TextBlock TextWrapping="Wrap" FontSize="14">
+                        <Run Text="这是录播姬的跨平台版本，使用 Avalonia UI 框架构建。" />
+                    </TextBlock>
+                    <TextBlock TextWrapping="Wrap" FontSize="14">
+                        <Run Text="This is the cross-platform version of BililiveRecorder, built with Avalonia UI framework." />
+                    </TextBlock>
+                    <TextBlock TextWrapping="Wrap" FontSize="14" Text=""/>
+                    <TextBlock TextWrapping="Wrap" FontSize="14">
+                        <Run Text="请选择或创建一个工作目录来开始录制。" />
+                    </TextBlock>
+                    <TextBlock TextWrapping="Wrap" FontSize="14">
+                        <Run Text="Please select or create a working directory to start recording." />
+                    </TextBlock>
+                    <TextBlock TextWrapping="Wrap" FontSize="14" Text=""/>
+                    <TextBlock TextWrapping="Wrap" FontSize="14">
+                        <Run Text="更多信息请访问官网：" />
+                        <Run Text="https://rec.danmuji.org" Foreground="DodgerBlue"/>
+                    </TextBlock>
+                </StackPanel>
+            </ScrollViewer>
+        </Border>
+    </Grid>
+</UserControl>

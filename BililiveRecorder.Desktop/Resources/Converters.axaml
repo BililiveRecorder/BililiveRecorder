@@ -1,0 +1,12 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:BililiveRecorder.Desktop.Converters">
+    
+    <!-- Boolean converters -->
+    <local:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" 
+                                     TrueValue="True" FalseValue="False"/>
+    <local:InvertBoolConverter x:Key="InvertBoolConverter"/>
+    <local:BoolToVisibilityConverter x:Key="BoolToVisibilityCollapsedConverter" 
+                                     TrueValue="True" FalseValue="False"/>
+    
+</ResourceDictionary>

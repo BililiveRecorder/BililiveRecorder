@@ -1,0 +1,136 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:local="clr-namespace:BililiveRecorder.Desktop.Pages"
+             xmlns:lucide="using:Lucide.Avalonia"
+             mc:Ignorable="d" d:DesignWidth="500" d:DesignHeight="1500"
+             x:Class="BililiveRecorder.Desktop.Pages.SettingsPage">
+    <ScrollViewer>
+        <StackPanel Orientation="Vertical" Spacing="10" Margin="20">
+            <TextBlock Text="设置 Settings" FontSize="28" FontWeight="SemiBold" Margin="0,10"/>
+            
+            <!-- Danmaku Settings -->
+            <Border BorderBrush="{DynamicResource SystemControlForegroundBaseMediumLowBrush}" BorderThickness="1" CornerRadius="5" Padding="15">
+                <StackPanel Spacing="10">
+                    <TextBlock Text="弹幕录制 Danmaku Recording" FontSize="18" FontWeight="SemiBold"/>
+                    <ToggleSwitch x:Name="RecordDanmakuToggle" OnContent="启用 Enabled" OffContent="启用 Enabled" IsChecked="{Binding RecordDanmaku}"/>
+                    <StackPanel x:Name="DanmakuOptionsPanel" Spacing="5" Margin="20,0,0,0">
+                        <ToggleSwitch OnContent="超级留言 SuperChat" OffContent="超级留言 SuperChat" IsChecked="{Binding RecordDanmakuSuperChat}"/>
+                        <ToggleSwitch OnContent="上舰 Guard" OffContent="上舰 Guard" IsChecked="{Binding RecordDanmakuGuard}"/>
+                        <ToggleSwitch OnContent="礼物 Gift" OffContent="礼物 Gift" IsChecked="{Binding RecordDanmakuGift}"/>
+                        <ToggleSwitch OnContent="原始数据 Raw" OffContent="原始数据 Raw" IsChecked="{Binding RecordDanmakuRaw}"/>
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+            
+            <!-- Record Mode -->
+            <Border BorderBrush="{DynamicResource SystemControlForegroundBaseMediumLowBrush}" BorderThickness="1" CornerRadius="5" Padding="15">
+                <StackPanel Spacing="10">
+                    <TextBlock Text="录制模式 Record Mode" FontSize="18" FontWeight="SemiBold"/>
+                    <RadioButton GroupName="RecordMode" Content="标准模式 Standard" x:Name="StandardModeRadio"/>
+                    <RadioButton GroupName="RecordMode" Content="原始数据 Raw Data" x:Name="RawDataModeRadio"/>
+                </StackPanel>
+            </Border>
+            
+            <!-- Standard Mode Fix Settings -->
+            <Border BorderBrush="{DynamicResource SystemControlForegroundBaseMediumLowBrush}" BorderThickness="1" CornerRadius="5" Padding="15">
+                <StackPanel Spacing="10">
+                    <TextBlock Text="标准模式录制修复设置 Standard Mode Fix" FontSize="18" FontWeight="SemiBold"/>
+                    <ToggleSwitch OnContent="检测到可能缺少数据时分段" OffContent="检测到可能缺少数据时分段" IsChecked="{Binding FlvProcessorSplitOnScriptTag}"/>
+                    <ToggleSwitch OnContent="使用实验性花屏修复判定逻辑" OffContent="使用实验性花屏修复判定逻辑" IsChecked="{Binding FlvProcessorDisableSplitOnH264AnnexB}"/>
+                </StackPanel>
+            </Border>
+            
+            <!-- Splitting Settings -->
+            <Border BorderBrush="{DynamicResource SystemControlForegroundBaseMediumLowBrush}" BorderThickness="1" CornerRadius="5" Padding="15">
+                <StackPanel Spacing="10">
+                    <TextBlock Text="自动分段 Auto Split" FontSize="18" FontWeight="SemiBold"/>
+                    <RadioButton GroupName="Splitting" Content="不分段 Disabled" x:Name="CutDisabledRadio"/>
+                    <RadioButton GroupName="Splitting" Content="按大小 By Size" x:Name="CutBySizeRadio"/>
+                    <RadioButton GroupName="Splitting" Content="按时间 By Time" x:Name="CutByTimeRadio"/>
+                    <StackPanel Orientation="Horizontal" Spacing="10" Margin="20,5,0,0">
+                        <TextBlock Text="分段数值 Value:" VerticalAlignment="Center"/>
+                        <TextBox Width="100" Text="{Binding CuttingNumber}"/>
+                        <TextBlock x:Name="CuttingUnitText" Text="MB / 分钟" VerticalAlignment="Center"/>
+                    </StackPanel>
+                    <ToggleSwitch OnContent="直播间标题变化时新建文件 Split on Title Change" OffContent="直播间标题变化时新建文件 Split on Title Change" IsChecked="{Binding CuttingByTitle}"/>
+                </StackPanel>
+            </Border>
+            
+            <!-- Cover Settings -->
+            <Border BorderBrush="{DynamicResource SystemControlForegroundBaseMediumLowBrush}" BorderThickness="1" CornerRadius="5" Padding="15">
+                <StackPanel Spacing="10">
+                    <TextBlock Text="直播封面 Stream Cover" FontSize="18" FontWeight="SemiBold"/>
+                    <ToggleSwitch OnContent="录制时同时保存直播封面 Save cover when recording" OffContent="录制时同时保存直播封面 Save cover when recording" IsChecked="{Binding SaveStreamCover}"/>
+                </StackPanel>
+            </Border>
+            
+            <!-- File Name Settings -->
+            <Border BorderBrush="{DynamicResource SystemControlForegroundBaseMediumLowBrush}" BorderThickness="1" CornerRadius="5" Padding="15">
+                <StackPanel Spacing="10">
+                    <StackPanel Orientation="Horizontal" Spacing="10">
+                        <TextBlock Text="文件名模板 File Name Template" FontSize="18" FontWeight="SemiBold"/>
+                        <Button Click="OpenFileNameHelp_Click" ToolTip.Tip="帮助 Help">
+                            <lucide:LucideIcon Kind="HelpCircle" Width="16" Height="16"/>
+                        </Button>
+                    </StackPanel>
+                    <TextBox x:Name="FileNameTemplateTextBox" Text="{Binding FileNameRecordTemplate}" AcceptsReturn="False"/>
+                    <Button Content="测试 Test" Click="TestFileNameTemplate_Button_Click"/>
+                    <Border x:Name="FileNameTestResultArea" IsVisible="False" 
+                            BorderBrush="{DynamicResource SystemControlForegroundBaseMediumLowBrush}" 
+                            CornerRadius="5" BorderThickness="1" Padding="10" Margin="0,5">
+                        <StackPanel Spacing="5">
+                            <TextBlock Text="测试结果 Test Result:"/>
+                            <TextBlock x:Name="FileNameTestErrorText"/>
+                            <TextBox x:Name="FileNameTestResultText" IsReadOnly="True"/>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+            </Border>
+            
+            <!-- Stream Start Notification -->
+            <Border BorderBrush="{DynamicResource SystemControlForegroundBaseMediumLowBrush}" BorderThickness="1" CornerRadius="5" Padding="15">
+                <StackPanel Spacing="10">
+                    <TextBlock Text="开播通知 Stream Notification" FontSize="18" FontWeight="SemiBold"/>
+                    <ToggleSwitch OnContent="直播间开播时弹出系统通知" OffContent="直播间开播时弹出系统通知" IsChecked="{Binding WpfNotifyStreamStart}"/>
+                </StackPanel>
+            </Border>
+            
+            <!-- Recording Quality -->
+            <Border BorderBrush="{DynamicResource SystemControlForegroundBaseMediumLowBrush}" BorderThickness="1" CornerRadius="5" Padding="15">
+                <StackPanel Spacing="10">
+                    <StackPanel Orientation="Horizontal" Spacing="10">
+                        <TextBlock Text="录制画质 Recording Quality" FontSize="18" FontWeight="SemiBold"/>
+                        <Button Click="OpenQualityHelp_Click" ToolTip.Tip="帮助 Help">
+                            <lucide:LucideIcon Kind="HelpCircle" Width="16" Height="16"/>
+                        </Button>
+                    </StackPanel>
+                    <TextBlock Text="逗号分割的录制画质ID Comma-separated quality IDs"/>
+                    <TextBox Width="220" HorizontalAlignment="Left" Text="{Binding RecordingQuality}"/>
+                </StackPanel>
+            </Border>
+            
+            <!-- Title Filter -->
+            <Border BorderBrush="{DynamicResource SystemControlForegroundBaseMediumLowBrush}" BorderThickness="1" CornerRadius="5" Padding="15">
+                <StackPanel Spacing="10">
+                    <TextBlock Text="录制条件 Recording Filter" FontSize="18" FontWeight="SemiBold"/>
+                    <TextBlock Text="跳过录制的直播标题正则匹配表达式，每行一个" TextWrapping="Wrap"/>
+                    <TextBlock Text="Regex patterns to skip recording (one per line)" TextWrapping="Wrap"/>
+                    <TextBox AcceptsReturn="True" TextWrapping="Wrap" Height="100" Text="{Binding TitleFilterPatterns}"/>
+                </StackPanel>
+            </Border>
+            
+            <!-- Webhook Settings -->
+            <Border BorderBrush="{DynamicResource SystemControlForegroundBaseMediumLowBrush}" BorderThickness="1" CornerRadius="5" Padding="15">
+                <StackPanel Spacing="10">
+                    <TextBlock Text="Webhook" FontSize="18" FontWeight="SemiBold"/>
+                    <TextBlock Text="Webhook v2"/>
+                    <TextBox AcceptsReturn="True" TextWrapping="Wrap" Height="80" Text="{Binding WebHookUrlsV2}"/>
+                    <TextBlock Text="Webhook v1"/>
+                    <TextBox AcceptsReturn="True" TextWrapping="Wrap" Height="80" Text="{Binding WebHookUrls}"/>
+                </StackPanel>
+            </Border>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

@@ -1,0 +1,45 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:lucide="using:Lucide.Avalonia"
+             xmlns:local="clr-namespace:BililiveRecorder.Desktop.Pages"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="600"
+             x:Class="BililiveRecorder.Desktop.Pages.ToolboxRemuxPage">
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        
+        <StackPanel Spacing="5">
+            <TextBlock Text="封装 Remux" FontSize="28" FontWeight="SemiBold"/>
+            <TextBlock TextWrapping="Wrap" Text="将FLV文件重新封装为其他格式。"/>
+            <TextBlock TextWrapping="Wrap" Text="Remux FLV files to other formats."/>
+        </StackPanel>
+        
+        <StackPanel Grid.Row="1" Margin="0,20" Spacing="10">
+            <Button x:Name="SelectFileButton" Click="SelectFile_Click">
+                <StackPanel Orientation="Horizontal" Spacing="10">
+                    <lucide:LucideIcon Kind="FileVideo" Width="16" Height="16"/>
+                    <TextBlock Text="选择FLV文件 Select FLV File"/>
+                </StackPanel>
+            </Button>
+            <TextBlock x:Name="SelectedFileText" Text="未选择文件 No file selected" Foreground="Gray"/>
+            <Button x:Name="StartRemuxButton" Click="StartRemux_Click" IsEnabled="False">
+                <StackPanel Orientation="Horizontal" Spacing="10">
+                    <lucide:LucideIcon Kind="FileOutput" Width="16" Height="16"/>
+                    <TextBlock Text="开始封装 Start Remux"/>
+                </StackPanel>
+            </Button>
+        </StackPanel>
+        
+        <Border Grid.Row="2" BorderBrush="{DynamicResource SystemControlForegroundBaseMediumLowBrush}" 
+                BorderThickness="1" CornerRadius="5" Padding="10">
+            <ScrollViewer>
+                <TextBlock x:Name="OutputText" TextWrapping="Wrap" Text="输出日志 Output Log..."/>
+            </ScrollViewer>
+        </Border>
+    </Grid>
+</UserControl>
