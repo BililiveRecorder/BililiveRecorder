@@ -76,6 +76,8 @@ namespace BililiveRecorder.Web.Models
         public Optional<uint>? OptionalTimingApiTimeout { get; set; }
         public Optional<uint>? OptionalTimingStreamRetry { get; set; }
         public Optional<uint>? OptionalTimingStreamRetryNoQn { get; set; }
+        public Optional<bool>? OptionalRecordingQualityUpgradeCheck { get; set; }
+        public Optional<uint>? OptionalTimingQualityUpgradeCheckInterval { get; set; }
         public Optional<uint>? OptionalTimingStreamConnect { get; set; }
         public Optional<uint>? OptionalTimingDanmakuRetry { get; set; }
         public Optional<uint>? OptionalTimingWatchdogTimeout { get; set; }
@@ -114,6 +116,8 @@ namespace BililiveRecorder.Web.Models
             if (this.OptionalTimingApiTimeout.HasValue) config.OptionalTimingApiTimeout = this.OptionalTimingApiTimeout.Value;
             if (this.OptionalTimingStreamRetry.HasValue) config.OptionalTimingStreamRetry = this.OptionalTimingStreamRetry.Value;
             if (this.OptionalTimingStreamRetryNoQn.HasValue) config.OptionalTimingStreamRetryNoQn = this.OptionalTimingStreamRetryNoQn.Value;
+            if (this.OptionalRecordingQualityUpgradeCheck.HasValue) config.OptionalRecordingQualityUpgradeCheck = this.OptionalRecordingQualityUpgradeCheck.Value;
+            if (this.OptionalTimingQualityUpgradeCheckInterval.HasValue) config.OptionalTimingQualityUpgradeCheckInterval = this.OptionalTimingQualityUpgradeCheckInterval.Value;
             if (this.OptionalTimingStreamConnect.HasValue) config.OptionalTimingStreamConnect = this.OptionalTimingStreamConnect.Value;
             if (this.OptionalTimingDanmakuRetry.HasValue) config.OptionalTimingDanmakuRetry = this.OptionalTimingDanmakuRetry.Value;
             if (this.OptionalTimingWatchdogTimeout.HasValue) config.OptionalTimingWatchdogTimeout = this.OptionalTimingWatchdogTimeout.Value;
@@ -177,6 +181,8 @@ namespace BililiveRecorder.Web.Models.Rest
         public Optional<uint> OptionalTimingApiTimeout { get; set; }
         public Optional<uint> OptionalTimingStreamRetry { get; set; }
         public Optional<uint> OptionalTimingStreamRetryNoQn { get; set; }
+        public Optional<bool> OptionalRecordingQualityUpgradeCheck { get; set; }
+        public Optional<uint> OptionalTimingQualityUpgradeCheckInterval { get; set; }
         public Optional<uint> OptionalTimingStreamConnect { get; set; }
         public Optional<uint> OptionalTimingDanmakuRetry { get; set; }
         public Optional<uint> OptionalTimingWatchdogTimeout { get; set; }
@@ -245,6 +251,8 @@ namespace BililiveRecorder.Web.Models.Graphql
             this.Field(x => x.OptionalTimingApiTimeout, type: typeof(HierarchicalOptionalType<uint>));
             this.Field(x => x.OptionalTimingStreamRetry, type: typeof(HierarchicalOptionalType<uint>));
             this.Field(x => x.OptionalTimingStreamRetryNoQn, type: typeof(HierarchicalOptionalType<uint>));
+            this.Field(x => x.OptionalRecordingQualityUpgradeCheck, type: typeof(HierarchicalOptionalType<bool>));
+            this.Field(x => x.OptionalTimingQualityUpgradeCheckInterval, type: typeof(HierarchicalOptionalType<uint>));
             this.Field(x => x.OptionalTimingStreamConnect, type: typeof(HierarchicalOptionalType<uint>));
             this.Field(x => x.OptionalTimingDanmakuRetry, type: typeof(HierarchicalOptionalType<uint>));
             this.Field(x => x.OptionalTimingWatchdogTimeout, type: typeof(HierarchicalOptionalType<uint>));
@@ -287,6 +295,8 @@ namespace BililiveRecorder.Web.Models.Graphql
             this.Field(x => x.TimingApiTimeout);
             this.Field(x => x.TimingStreamRetry);
             this.Field(x => x.TimingStreamRetryNoQn);
+            this.Field(x => x.RecordingQualityUpgradeCheck);
+            this.Field(x => x.TimingQualityUpgradeCheckInterval);
             this.Field(x => x.TimingStreamConnect);
             this.Field(x => x.TimingDanmakuRetry);
             this.Field(x => x.TimingWatchdogTimeout);
@@ -351,6 +361,8 @@ namespace BililiveRecorder.Web.Models.Graphql
             this.Field(x => x.OptionalTimingApiTimeout, nullable: true, type: typeof(HierarchicalOptionalInputType<uint>));
             this.Field(x => x.OptionalTimingStreamRetry, nullable: true, type: typeof(HierarchicalOptionalInputType<uint>));
             this.Field(x => x.OptionalTimingStreamRetryNoQn, nullable: true, type: typeof(HierarchicalOptionalInputType<uint>));
+            this.Field(x => x.OptionalRecordingQualityUpgradeCheck, nullable: true, type: typeof(HierarchicalOptionalInputType<bool>));
+            this.Field(x => x.OptionalTimingQualityUpgradeCheckInterval, nullable: true, type: typeof(HierarchicalOptionalInputType<uint>));
             this.Field(x => x.OptionalTimingStreamConnect, nullable: true, type: typeof(HierarchicalOptionalInputType<uint>));
             this.Field(x => x.OptionalTimingDanmakuRetry, nullable: true, type: typeof(HierarchicalOptionalInputType<uint>));
             this.Field(x => x.OptionalTimingWatchdogTimeout, nullable: true, type: typeof(HierarchicalOptionalInputType<uint>));

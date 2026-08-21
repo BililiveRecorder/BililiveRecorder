@@ -206,6 +206,22 @@ export const data: Array<ConfigEntry> = [
         default: 90,
     },
     {
+        id: "RecordingQualityUpgradeCheck",
+        name: "自动更新优先画质",
+        type: "bool",
+        configType: "globalOnly",
+        advancedConfig: true,
+        default: false,
+    },
+    {
+        id: "TimingQualityUpgradeCheckInterval",
+        name: "画质更新检查间隔 秒",
+        type: "uint",
+        configType: "globalOnly",
+        advancedConfig: true,
+        default: 90,
+    },
+    {
         id: "TimingStreamConnect",
         name: "连接直播服务器超时时间 毫秒",
         type: "uint",

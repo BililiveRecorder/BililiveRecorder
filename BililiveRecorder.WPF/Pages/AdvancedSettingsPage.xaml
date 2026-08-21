@@ -115,6 +115,15 @@
                         </c:SettingWithDefault.ToolTip>
                         <ui:NumberBox Minimum="10" Description="单位: 秒" SmallChange="5" Text="{Binding TimingStreamRetryNoQn,Delay=500}"/>
                     </c:SettingWithDefault>
+                    <c:SettingWithDefault IsSettingNotUsingDefault="{Binding HasTimingQualityUpgradeCheckInterval}" Header="画质更新检查间隔">
+                        <c:SettingWithDefault.ToolTip>
+                            <TextBlock>
+                                每隔多长时间检查一次是否有更高优先级的画质可用<LineBreak/>
+                                检测到更优画质后会结束当前录制并立即重新开始
+                            </TextBlock>
+                        </c:SettingWithDefault.ToolTip>
+                        <ui:NumberBox Minimum="10" Description="单位: 秒" SmallChange="5" Text="{Binding TimingQualityUpgradeCheckInterval,Delay=500}"/>
+                    </c:SettingWithDefault>
                     <c:SettingWithDefault IsSettingNotUsingDefault="{Binding HasTimingStreamConnect}" Header="录制连接超时">
                         <c:SettingWithDefault.ToolTip>
                             <TextBlock>

@@ -40,6 +40,8 @@ namespace BililiveRecorder.Cli.Configure
         TimingApiTimeout,
         TimingStreamRetry,
         TimingStreamRetryNoQn,
+        RecordingQualityUpgradeCheck,
+        TimingQualityUpgradeCheckInterval,
         TimingStreamConnect,
         TimingDanmakuRetry,
         TimingWatchdogTimeout,
@@ -104,6 +106,8 @@ namespace BililiveRecorder.Cli.Configure
             GlobalConfig.Add(GlobalConfigProperties.TimingApiTimeout, new ConfigInstruction<GlobalConfig, uint>(config => config.HasTimingApiTimeout = false, (config, value) => config.TimingApiTimeout = value) { Name = "TimingApiTimeout", CanBeOptional = true });
             GlobalConfig.Add(GlobalConfigProperties.TimingStreamRetry, new ConfigInstruction<GlobalConfig, uint>(config => config.HasTimingStreamRetry = false, (config, value) => config.TimingStreamRetry = value) { Name = "TimingStreamRetry", CanBeOptional = true });
             GlobalConfig.Add(GlobalConfigProperties.TimingStreamRetryNoQn, new ConfigInstruction<GlobalConfig, uint>(config => config.HasTimingStreamRetryNoQn = false, (config, value) => config.TimingStreamRetryNoQn = value) { Name = "TimingStreamRetryNoQn", CanBeOptional = true });
+            GlobalConfig.Add(GlobalConfigProperties.RecordingQualityUpgradeCheck, new ConfigInstruction<GlobalConfig, bool>(config => config.HasRecordingQualityUpgradeCheck = false, (config, value) => config.RecordingQualityUpgradeCheck = value) { Name = "RecordingQualityUpgradeCheck", CanBeOptional = true });
+            GlobalConfig.Add(GlobalConfigProperties.TimingQualityUpgradeCheckInterval, new ConfigInstruction<GlobalConfig, uint>(config => config.HasTimingQualityUpgradeCheckInterval = false, (config, value) => config.TimingQualityUpgradeCheckInterval = value) { Name = "TimingQualityUpgradeCheckInterval", CanBeOptional = true });
             GlobalConfig.Add(GlobalConfigProperties.TimingStreamConnect, new ConfigInstruction<GlobalConfig, uint>(config => config.HasTimingStreamConnect = false, (config, value) => config.TimingStreamConnect = value) { Name = "TimingStreamConnect", CanBeOptional = true });
             GlobalConfig.Add(GlobalConfigProperties.TimingDanmakuRetry, new ConfigInstruction<GlobalConfig, uint>(config => config.HasTimingDanmakuRetry = false, (config, value) => config.TimingDanmakuRetry = value) { Name = "TimingDanmakuRetry", CanBeOptional = true });
             GlobalConfig.Add(GlobalConfigProperties.TimingWatchdogTimeout, new ConfigInstruction<GlobalConfig, uint>(config => config.HasTimingWatchdogTimeout = false, (config, value) => config.TimingWatchdogTimeout = value) { Name = "TimingWatchdogTimeout", CanBeOptional = true });

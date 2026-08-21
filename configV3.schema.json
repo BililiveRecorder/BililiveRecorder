@@ -207,6 +207,40 @@
             }
           }
         },
+        "RecordingQualityUpgradeCheck": {
+          "description": "自动更新优先画质\n默认: false",
+          "markdownDescription": "自动更新优先画质  \n默认: `false `\n\n",
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "HasValue": {
+              "type": "boolean",
+              "default": true
+            },
+            "Value": {
+              "type": "boolean",
+              "default": false
+            }
+          }
+        },
+        "TimingQualityUpgradeCheckInterval": {
+          "description": "画质更新检查间隔 秒\n默认: 90",
+          "markdownDescription": "画质更新检查间隔 秒  \n默认: `90 `\n\n",
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "HasValue": {
+              "type": "boolean",
+              "default": true
+            },
+            "Value": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 4294967295,
+              "default": 90
+            }
+          }
+        },
         "TimingStreamConnect": {
           "description": "连接直播服务器超时时间 毫秒\n默认: 5000",
           "markdownDescription": "连接直播服务器超时时间 毫秒  \n默认: `5000 `\n\n",

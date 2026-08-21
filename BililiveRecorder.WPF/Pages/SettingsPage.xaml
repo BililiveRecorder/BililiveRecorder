@@ -130,6 +130,9 @@
                         <TextBox Text="{Binding RecordingQuality,UpdateSourceTrigger=PropertyChanged,Delay=1000}"
                                  ui:TextBoxHelper.IsDeleteButtonVisible="False" Width="220" HorizontalAlignment="Left"/>
                     </c:SettingWithDefault>
+                    <c:SettingWithDefault IsSettingNotUsingDefault="{Binding HasRecordingQualityUpgradeCheck}">
+                        <ui:ToggleSwitch IsOn="{Binding RecordingQualityUpgradeCheck}" OnContent="自动更新优先画质（实验性选项）" OffContent="自动更新优先画质（实验性选项）"/>
+                    </c:SettingWithDefault>
                 </StackPanel>
             </GroupBox>
             <GroupBox Header="录制条件">

@@ -32,6 +32,7 @@ namespace BililiveRecorder.Core
         private readonly object recordStartLock = new object();
         private readonly SemaphoreSlim recordRetryDelaySemaphoreSlim = new SemaphoreSlim(1, 1);
         private readonly Timer timer;
+        private readonly Timer qualityUpgradeTimer;
 
         private readonly IServiceScope scope;
         private readonly ILogger loggerWithoutContext;
@@ -83,6 +84,7 @@ namespace BililiveRecorder.Core
             this.userScriptRunner = userScriptRunner ?? throw new ArgumentNullException(nameof(userScriptRunner));
 
             this.timer = new Timer(this.RoomConfig.TimingCheckInterval * 1000d);
+            this.qualityUpgradeTimer = new Timer(this.RoomConfig.TimingQualityUpgradeCheckInterval * 1000d);
             this.cts = new CancellationTokenSource();
             this.ct = this.cts.Token;
 
@@ -90,6 +92,7 @@ namespace BililiveRecorder.Core
             this.RoomConfig.PropertyChanged += this.RoomConfig_PropertyChanged;
 
             this.timer.Elapsed += this.Timer_Elapsed;
+            this.qualityUpgradeTimer.Elapsed += this.QualityUpgradeTimer_Elapsed;
 
             this.danmakuClient.StatusChanged += this.DanmakuClient_StatusChanged;
             this.danmakuClient.DanmakuReceived += this.DanmakuClient_DanmakuReceived;
@@ -99,6 +102,8 @@ namespace BililiveRecorder.Core
             {
                 await Task.Delay(1500 + (initDelayFactor * 500));
                 this.timer.Start();
+                if (this.RoomConfig.RecordingQualityUpgradeCheck)
+                    this.qualityUpgradeTimer.Start();
                 await this.RefreshRoomInfoAsync();
             });
         }
@@ -698,6 +703,69 @@ namespace BililiveRecorder.Core
         }
 
 
+        private void QualityUpgradeTimer_Elapsed(object? sender, System.Timers.ElapsedEventArgs e)
+        {
+            if (this.disposedValue || !this.RoomConfig.RecordingQualityUpgradeCheck)
+                return;
+
+            _ = Task.Run(async () =>
+            {
+                try
+                {
+                    await this.CheckAndUpgradeQualityAsync().ConfigureAwait(false);
+                }
+                catch (Exception) { }
+            });
+        }
+
+        private async Task CheckAndUpgradeQualityAsync()
+        {
+            if (this.disposedValue)
+                return;
+
+            IRecordTask? task;
+            lock (this.recordStartLock)
+            {
+                task = this.recordTask;
+            }
+
+            if (task is null || !this.Streaming || !this.AutoRecordForThisSession)
+                return;
+
+            var allowedQn = StreamQualitySelector.ParseAllowedQn(this.RoomConfig.RecordingQuality);
+            if (allowedQn.Count == 0)
+                return;
+
+            var current = task.CurrentCodecQn;
+            var currentIndex = StreamQualitySelector.IndexOfQn(allowedQn, current);
+            if (currentIndex < 0)
+                return; // 当前画质不在设置列表（例如用户脚本返回的流），跳过
+
+            StreamCodecQn best;
+            try
+            {
+                best = await StreamQualitySelector.SelectBestAvailableAsync(this.apiClient, allowedQn, this.RoomConfig.RoomId).ConfigureAwait(false);
+            }
+            catch (NoMatchingQnValueException)
+            {
+                return; // 当前无可用画质匹配，等下次再检查
+            }
+
+            var bestIndex = StreamQualitySelector.IndexOfQn(allowedQn, best);
+            if (bestIndex < 0 || bestIndex >= currentIndex)
+                return; // 没有更高优先级的画质
+
+            this.logger.Information("检测到更高优先级画质 {Best} (当前 {Current})，将重新开始录制", best, current);
+
+            lock (this.recordStartLock)
+            {
+                // 停止当前录制；录制结束后会经由 RecordSessionEnded 自动开始新录制
+                if (this.recordTask is not null && this.recordTask.SessionId == task.SessionId)
+                    this.recordTask.RequestStop();
+            }
+        }
+
+
         private void Room_PropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
             switch (e.PropertyName)
@@ -734,6 +802,15 @@ namespace BililiveRecorder.Core
                     break;
                 case nameof(this.RoomConfig.TimingCheckInterval):
                     this.timer.Interval = this.RoomConfig.TimingCheckInterval * 1000d;
+                    break;
+                case nameof(this.RoomConfig.TimingQualityUpgradeCheckInterval):
+                    this.qualityUpgradeTimer.Interval = this.RoomConfig.TimingQualityUpgradeCheckInterval * 1000d;
+                    break;
+                case nameof(this.RoomConfig.RecordingQualityUpgradeCheck):
+                    if (this.RoomConfig.RecordingQualityUpgradeCheck)
+                        this.qualityUpgradeTimer.Start();
+                    else
+                        this.qualityUpgradeTimer.Stop();
                     break;
                 case nameof(this.RoomConfig.AutoRecord):
                     if (this.RoomConfig.AutoRecord)
@@ -782,6 +859,8 @@ namespace BililiveRecorder.Core
                     // dispose managed state (managed objects)
                     this.cts.Cancel();
                     this.cts.Dispose();
+                    this.qualityUpgradeTimer.Stop();
+                    this.qualityUpgradeTimer.Dispose();
                     this.recordTask?.RequestStop();
                     this.basicDanmakuWriter.Disable();
                     this.scope.Dispose();

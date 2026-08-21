@@ -202,6 +202,16 @@ namespace BililiveRecorder.Core.Config.V3
         public uint TimingStreamRetryNoQn => this.GetPropertyValue<uint>();
 
         /// <summary>
+        /// 自动更新优先画质
+        /// </summary>
+        public bool RecordingQualityUpgradeCheck => this.GetPropertyValue<bool>();
+
+        /// <summary>
+        /// 画质更新检查间隔 秒
+        /// </summary>
+        public uint TimingQualityUpgradeCheckInterval => this.GetPropertyValue<uint>();
+
+        /// <summary>
         /// 连接直播服务器超时时间 毫秒
         /// </summary>
         public uint TimingStreamConnect => this.GetPropertyValue<uint>();
@@ -460,6 +470,22 @@ namespace BililiveRecorder.Core.Config.V3
         public Optional<uint> OptionalTimingStreamRetryNoQn { get => this.GetPropertyValueOptional<uint>(nameof(this.TimingStreamRetryNoQn)); set => this.SetPropertyValueOptional(value, nameof(this.TimingStreamRetryNoQn)); }
 
         /// <summary>
+        /// 自动更新优先画质
+        /// </summary>
+        public bool RecordingQualityUpgradeCheck { get => this.GetPropertyValue<bool>(); set => this.SetPropertyValue(value); }
+        public bool HasRecordingQualityUpgradeCheck { get => this.GetPropertyHasValue(nameof(this.RecordingQualityUpgradeCheck)); set => this.SetPropertyHasValue<bool>(value, nameof(this.RecordingQualityUpgradeCheck)); }
+        [JsonProperty(nameof(RecordingQualityUpgradeCheck)), EditorBrowsable(EditorBrowsableState.Never)]
+        public Optional<bool> OptionalRecordingQualityUpgradeCheck { get => this.GetPropertyValueOptional<bool>(nameof(this.RecordingQualityUpgradeCheck)); set => this.SetPropertyValueOptional(value, nameof(this.RecordingQualityUpgradeCheck)); }
+
+        /// <summary>
+        /// 画质更新检查间隔 秒
+        /// </summary>
+        public uint TimingQualityUpgradeCheckInterval { get => this.GetPropertyValue<uint>(); set => this.SetPropertyValue(value); }
+        public bool HasTimingQualityUpgradeCheckInterval { get => this.GetPropertyHasValue(nameof(this.TimingQualityUpgradeCheckInterval)); set => this.SetPropertyHasValue<uint>(value, nameof(this.TimingQualityUpgradeCheckInterval)); }
+        [JsonProperty(nameof(TimingQualityUpgradeCheckInterval)), EditorBrowsable(EditorBrowsableState.Never)]
+        public Optional<uint> OptionalTimingQualityUpgradeCheckInterval { get => this.GetPropertyValueOptional<uint>(nameof(this.TimingQualityUpgradeCheckInterval)); set => this.SetPropertyValueOptional(value, nameof(this.TimingQualityUpgradeCheckInterval)); }
+
+        /// <summary>
         /// 连接直播服务器超时时间 毫秒
         /// </summary>
         public uint TimingStreamConnect { get => this.GetPropertyValue<uint>(); set => this.SetPropertyValue(value); }
@@ -589,6 +615,10 @@ namespace BililiveRecorder.Core.Config.V3
         public uint TimingStreamRetry => 6000;
 
         public uint TimingStreamRetryNoQn => 90;
+
+        public bool RecordingQualityUpgradeCheck => false;
+
+        public uint TimingQualityUpgradeCheckInterval => 90;
 
         public uint TimingStreamConnect => 5000;
 
