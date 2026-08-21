@@ -207,7 +207,7 @@ export const data: Array<ConfigEntry> = [
     },
     {
         id: "RecordingQualityUpgradeCheck",
-        name: "自动升级画质",
+        name: "自动更新优先画质",
         type: "bool",
         configType: "globalOnly",
         advancedConfig: true,
@@ -215,11 +215,11 @@ export const data: Array<ConfigEntry> = [
     },
     {
         id: "TimingQualityUpgradeCheckInterval",
-        name: "画质升级检查间隔 秒",
+        name: "画质更新检查间隔 秒",
         type: "uint",
         configType: "globalOnly",
         advancedConfig: true,
-        default: 60,
+        default: 90,
     },
     {
         id: "TimingStreamConnect",

@@ -208,8 +208,8 @@
           }
         },
         "RecordingQualityUpgradeCheck": {
-          "description": "自动升级画质\n默认: false",
-          "markdownDescription": "自动升级画质  \n默认: `false `\n\n",
+          "description": "自动更新优先画质\n默认: false",
+          "markdownDescription": "自动更新优先画质  \n默认: `false `\n\n",
           "type": "object",
           "additionalProperties": false,
           "properties": {
@@ -224,8 +224,8 @@
           }
         },
         "TimingQualityUpgradeCheckInterval": {
-          "description": "画质升级检查间隔 秒\n默认: 60",
-          "markdownDescription": "画质升级检查间隔 秒  \n默认: `60 `\n\n",
+          "description": "画质更新检查间隔 秒\n默认: 90",
+          "markdownDescription": "画质更新检查间隔 秒  \n默认: `90 `\n\n",
           "type": "object",
           "additionalProperties": false,
           "properties": {
@@ -237,7 +237,7 @@
               "type": "integer",
               "minimum": 0,
               "maximum": 4294967295,
-              "default": 60
+              "default": 90
             }
           }
         },

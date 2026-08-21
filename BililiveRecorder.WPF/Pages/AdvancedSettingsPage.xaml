@@ -115,10 +115,7 @@
                         </c:SettingWithDefault.ToolTip>
                         <ui:NumberBox Minimum="10" Description="单位: 秒" SmallChange="5" Text="{Binding TimingStreamRetryNoQn,Delay=500}"/>
                     </c:SettingWithDefault>
-                    <c:SettingWithDefault IsSettingNotUsingDefault="{Binding HasRecordingQualityUpgradeCheck}">
-                        <ui:ToggleSwitch IsOn="{Binding RecordingQualityUpgradeCheck}" OnContent="自动升级画质" OffContent="自动升级画质"/>
-                    </c:SettingWithDefault>
-                    <c:SettingWithDefault IsSettingNotUsingDefault="{Binding HasTimingQualityUpgradeCheckInterval}" Header="画质升级检查间隔">
+                    <c:SettingWithDefault IsSettingNotUsingDefault="{Binding HasTimingQualityUpgradeCheckInterval}" Header="画质更新检查间隔">
                         <c:SettingWithDefault.ToolTip>
                             <TextBlock>
                                 每隔多长时间检查一次是否有更高优先级的画质可用<LineBreak/>

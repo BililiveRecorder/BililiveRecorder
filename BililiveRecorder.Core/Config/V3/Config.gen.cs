@@ -202,12 +202,12 @@ namespace BililiveRecorder.Core.Config.V3
         public uint TimingStreamRetryNoQn => this.GetPropertyValue<uint>();
 
         /// <summary>
-        /// 自动升级画质
+        /// 自动更新优先画质
         /// </summary>
         public bool RecordingQualityUpgradeCheck => this.GetPropertyValue<bool>();
 
         /// <summary>
-        /// 画质升级检查间隔 秒
+        /// 画质更新检查间隔 秒
         /// </summary>
         public uint TimingQualityUpgradeCheckInterval => this.GetPropertyValue<uint>();
 
@@ -470,7 +470,7 @@ namespace BililiveRecorder.Core.Config.V3
         public Optional<uint> OptionalTimingStreamRetryNoQn { get => this.GetPropertyValueOptional<uint>(nameof(this.TimingStreamRetryNoQn)); set => this.SetPropertyValueOptional(value, nameof(this.TimingStreamRetryNoQn)); }
 
         /// <summary>
-        /// 自动升级画质
+        /// 自动更新优先画质
         /// </summary>
         public bool RecordingQualityUpgradeCheck { get => this.GetPropertyValue<bool>(); set => this.SetPropertyValue(value); }
         public bool HasRecordingQualityUpgradeCheck { get => this.GetPropertyHasValue(nameof(this.RecordingQualityUpgradeCheck)); set => this.SetPropertyHasValue<bool>(value, nameof(this.RecordingQualityUpgradeCheck)); }
@@ -478,7 +478,7 @@ namespace BililiveRecorder.Core.Config.V3
         public Optional<bool> OptionalRecordingQualityUpgradeCheck { get => this.GetPropertyValueOptional<bool>(nameof(this.RecordingQualityUpgradeCheck)); set => this.SetPropertyValueOptional(value, nameof(this.RecordingQualityUpgradeCheck)); }
 
         /// <summary>
-        /// 画质升级检查间隔 秒
+        /// 画质更新检查间隔 秒
         /// </summary>
         public uint TimingQualityUpgradeCheckInterval { get => this.GetPropertyValue<uint>(); set => this.SetPropertyValue(value); }
         public bool HasTimingQualityUpgradeCheckInterval { get => this.GetPropertyHasValue(nameof(this.TimingQualityUpgradeCheckInterval)); set => this.SetPropertyHasValue<uint>(value, nameof(this.TimingQualityUpgradeCheckInterval)); }
@@ -618,7 +618,7 @@ namespace BililiveRecorder.Core.Config.V3
 
         public bool RecordingQualityUpgradeCheck => false;
 
-        public uint TimingQualityUpgradeCheckInterval => 60;
+        public uint TimingQualityUpgradeCheckInterval => 90;
 
         public uint TimingStreamConnect => 5000;
 

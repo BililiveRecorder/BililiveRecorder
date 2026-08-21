@@ -2,9 +2,9 @@
 
 ## 功能概述
 
-新增可选功能：**自动升级画质**。
+新增可选功能：**自动更新优先画质**。
 
-开启后，每隔一定时间（`TimingQualityUpgradeCheckInterval`）检查一次当前直播是否有更高优先级的画质可用；
+开启后，每隔一定时间（`TimingQualityUpgradeCheckInterval`，默认 90 秒）检查一次当前直播是否有更高优先级的画质可用；
 若发现更优画质（在 `RecordingQuality` 列表中出现得更靠前），则结束当前录制并立即重新开始录制，从而切换到更高画质。
 
 默认**关闭**，不影响现有行为。
@@ -13,8 +13,8 @@
 
 | id | 类型 | 默认值 | 说明 |
 | --- | --- | --- | --- |
-| `RecordingQualityUpgradeCheck` | bool | `false` | 是否启用自动升级画质 |
-| `TimingQualityUpgradeCheckInterval` | uint | `60` | 画质升级检查间隔（秒） |
+| `RecordingQualityUpgradeCheck` | bool | `false` | 是否启用自动更新优先画质 |
+| `TimingQualityUpgradeCheckInterval` | uint | `90` | 画质更新检查间隔（秒） |
 
 > 说明：画质优先级由 `RecordingQuality`（如 `avc10000,hevc10000`）中的**先后顺序**决定，越靠前优先级越高。
 
