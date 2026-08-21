@@ -1,5 +1,6 @@
 using System;
 using System.Threading.Tasks;
+using BililiveRecorder.Core.Api;
 using BililiveRecorder.Core.Event;
 
 namespace BililiveRecorder.Core.Recording
@@ -7,6 +8,8 @@ namespace BililiveRecorder.Core.Recording
     internal interface IRecordTask
     {
         Guid SessionId { get; }
+
+        StreamCodecQn CurrentCodecQn { get; }
 
         event EventHandler<IOStatsEventArgs>? IOStats;
         event EventHandler<RecordingStatsEventArgs>? RecordingStats;
