@@ -681,8 +681,12 @@ namespace BililiveRecorder.Core
         {
             this.StartDamakuConnection(delay: false);
 
-            // 如果开启了自动录制 或者 还没有获取过第一次房间信息
-            if (this.RoomConfig.AutoRecord || !this.danmakuConnectHoldOff.IsSet)
+            // 自动录制、首次加载，或当前有手动录制任务时都要继续刷新状态。
+            // 手动录制时也需要依靠房间状态收尾，否则可能一直等到直播流自行断开。
+            if (RoomLifecyclePolicy.ShouldRefreshRoomInfo(
+                this.RoomConfig.AutoRecord,
+                this.danmakuConnectHoldOff.IsSet,
+                this.recordTask is not null))
             {
                 _ = Task.Run(async () =>
                 {
@@ -715,6 +719,20 @@ namespace BililiveRecorder.Core
                     else
                     {
                         this.AutoRecordForThisSession = true;
+
+                        // 房间 API 已确认下播时主动结束当前录制任务。
+                        // 某些直播流在下播后仍会继续发送数据，单靠流端断开会让录制和
+                        // StreamEnded Webhook 一直无法收敛。
+                        lock (this.recordStartLock)
+                        {
+                            if (RoomLifecyclePolicy.ShouldStopRecordingWhenOffline(
+                                this.Streaming,
+                                this.recordTask is not null))
+                            {
+                                this.logger.Information("房间已下播，请求停止当前录制任务");
+                                this.recordTask?.RequestStop();
+                            }
+                        }
                     }
                     break;
                 case nameof(this.Title):
