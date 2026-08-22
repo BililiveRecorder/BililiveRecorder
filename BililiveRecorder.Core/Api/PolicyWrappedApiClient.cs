@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 using BililiveRecorder.Core.Api.Model;
 using Polly;
@@ -30,9 +31,12 @@ namespace BililiveRecorder.Core.Api
             .ExecuteAsync(_ => this.client.GetRoomInfoAsync(roomid), new Context(PolicyNames.CacheKeyRoomInfo + ":" + roomid))
             .ConfigureAwait(false);
 
-        public async Task<BilibiliApiResponse<RoomPlayInfo>> GetStreamUrlAsync(int roomid, int qn) => await this.policies
+        public async Task<BilibiliApiResponse<RoomPlayInfo>> GetStreamUrlAsync(int roomid, int qn, CancellationToken cancellationToken = default) => await this.policies
             .Get<IAsyncPolicy>(PolicyNames.PolicyStreamApiRequestAsync)
-            .ExecuteAsync(_ => this.client.GetStreamUrlAsync(roomid, qn), new Context(PolicyNames.CacheKeyStream + ":" + roomid + ":" + qn))
+            .ExecuteAsync(
+                (_, token) => this.client.GetStreamUrlAsync(roomid, qn, token),
+                new Context(PolicyNames.CacheKeyStream + ":" + roomid + ":" + qn),
+                cancellationToken)
             .ConfigureAwait(false);
 
         public void Dispose() => this.client.Dispose();
