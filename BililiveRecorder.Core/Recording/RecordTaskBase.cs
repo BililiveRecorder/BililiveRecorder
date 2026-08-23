@@ -76,6 +76,8 @@ namespace BililiveRecorder.Core.Recording
 
         public bool IsReceiving { get; private set; }
 
+        protected bool FileOpeningTriggered => this.fileOpeningTriggered;
+
         public int Qn => this.qn;
 
         #region Events
@@ -91,6 +93,7 @@ namespace BililiveRecorder.Core.Recording
         protected void OnRecordFileOpening(RecordFileOpeningEventArgs e)
         {
             this.fileOpeningTriggered = true;
+            this.logger.Verbose("收到 FileOpening，Session={SessionId}, Path={Path}, IsReceiving={IsReceiving}", this.SessionId, e.FullPath, this.IsReceiving);
             RecordFileOpening?.Invoke(this, e);
         }
         protected void OnRecordFileClosed(RecordFileClosedEventArgs e) => RecordFileClosed?.Invoke(this, e);
@@ -98,7 +101,19 @@ namespace BililiveRecorder.Core.Recording
 
         #endregion
 
-        public virtual void RequestStop() => this.cts.Cancel();
+        public virtual void RequestStop()
+        {
+            if (!this.cts.IsCancellationRequested)
+            {
+                this.logger.Verbose(
+                    "请求停止录制任务，Session={SessionId}, IsReceiving={IsReceiving}, FileOpening={FileOpening}, TimeoutTriggered={TimeoutTriggered}",
+                    this.SessionId,
+                    this.IsReceiving,
+                    this.fileOpeningTriggered,
+                    this.timeoutTriggered);
+            }
+            this.cts.Cancel();
+        }
 
         public virtual void SplitOutput() { }
 
@@ -107,6 +122,8 @@ namespace BililiveRecorder.Core.Recording
             if (this.started)
                 throw new InvalidOperationException("Only one StartAsync call allowed per instance.");
             this.started = true;
+
+            this.logger.Verbose("录制任务开始启动，Session={SessionId}, RoomId={RoomId}, TaskType={TaskType}", this.SessionId, this.room.RoomConfig.RoomId, this.GetType().Name);
 
             this.ct.ThrowIfCancellationRequested();
             var (fullUrl, codecQn) = await this.FetchStreamUrlAsync(
@@ -119,11 +136,14 @@ namespace BililiveRecorder.Core.Recording
 
             this.logger.Information("连接直播服务器 {Host} 录制画质 {Qn} ({QnDescription})", this.streamHost, codecQn, qnDesc);
             this.logger.Debug("直播流地址 {Url}", fullUrl);
+            this.logger.Verbose("已获取直播流地址，Session={SessionId}, Host={Host}, Codec={Codec}, Qn={Qn}", this.SessionId, this.streamHost, codecQn.Codec, codecQn.Qn);
 
             var stream = await this.GetStreamAsync(
                 fullUrl: fullUrl,
                 timeout: (int)this.room.RoomConfig.TimingStreamConnect,
                 cancellationToken: this.ct).ConfigureAwait(false);
+
+            this.logger.Verbose("GetStreamAsync 返回，Session={SessionId}, StreamType={StreamType}, IsCancellationRequested={IsCancellationRequested}", this.SessionId, stream.GetType().FullName, this.ct.IsCancellationRequested);
 
             try
             {
@@ -170,6 +190,7 @@ namespace BililiveRecorder.Core.Recording
             // concurrent offline status refresh from cancelling a task after the
             // stream has already been acquired.
             this.IsReceiving = true;
+            this.logger.Verbose("录制任务进入接收阶段，Session={SessionId}, IsReceiving={IsReceiving}, FileOpening={FileOpening}", this.SessionId, this.IsReceiving, this.fileOpeningTriggered);
             this.StartRecordingLoop(stream);
         }
 
@@ -208,6 +229,18 @@ namespace BililiveRecorder.Core.Recording
             var netMbps = networkDownloadBytes * (8d / 1024d / 1024d) / durationDiff.TotalSeconds;
             var diskMBps = diskWriteBytes / (1024d * 1024d) / diskWriteDuration.TotalSeconds;
 
+            this.logger.Verbose(
+                "录制 watchdog 采样，Session={SessionId}, NetworkBytes={NetworkBytes}, NetworkMbps={NetworkMbps:F4}, DiskBytes={DiskBytes}, DiskMBps={DiskMBps:F4}, NoDataSeconds={NoDataSeconds:F1}, NoFileSeconds={NoFileSeconds:F1}, FileOpening={FileOpening}, TimeoutMs={TimeoutMs}",
+                this.SessionId,
+                networkDownloadBytes,
+                netMbps,
+                diskWriteBytes,
+                diskMBps,
+                this.durationSinceNoDataReceived.TotalSeconds,
+                this.durationSinceNoFileOpened.TotalSeconds,
+                this.fileOpeningTriggered,
+                this.room.RoomConfig.TimingWatchdogTimeout);
+
             this.OnIOStats(new IOStatsEventArgs
             {
                 StreamHost = this.streamHost,
@@ -231,6 +264,15 @@ namespace BililiveRecorder.Core.Recording
             if ((!this.timeoutTriggered) && (fileOpeningTimedOut || noDataTimedOut))
             {
                 this.timeoutTriggered = true;
+                this.logger.Verbose(
+                    "watchdog 触发停止，Session={SessionId}, NoDataTimedOut={NoDataTimedOut}, FileOpeningTimedOut={FileOpeningTimedOut}, NoDataSeconds={NoDataSeconds:F1}, NoFileSeconds={NoFileSeconds:F1}, NetworkBytes={NetworkBytes}, FileOpening={FileOpening}",
+                    this.SessionId,
+                    noDataTimedOut,
+                    fileOpeningTimedOut,
+                    this.durationSinceNoDataReceived.TotalSeconds,
+                    this.durationSinceNoFileOpened.TotalSeconds,
+                    networkDownloadBytes,
+                    this.fileOpeningTriggered);
                 if (noDataTimedOut)
                     this.logger.Warning("检测到录制卡住，可能是网络或硬盘原因，将会主动断开连接");
                 else
@@ -434,9 +476,11 @@ namespace BililiveRecorder.Core.Recording
             connectionTimeoutCts.CancelAfter(timeout);
 
             var streamHostInfoBuilder = new StringBuilder();
+            var requestAttempt = 0;
 
             while (true)
             {
+                requestAttempt++;
                 var allowedAddressFamily = this.room.RoomConfig.NetworkTransportAllowedAddressFamily;
                 HttpRequestMessage request;
                 Uri originalUri;
@@ -523,10 +567,26 @@ namespace BililiveRecorder.Core.Recording
 
             sendRequest:
 
+                this.logger.Verbose(
+                    "发起直播流请求，Session={SessionId}, Attempt={Attempt}, Host={Host}, AddressFamily={AddressFamily}, CancellationRequested={CancellationRequested}",
+                    this.SessionId,
+                    requestAttempt,
+                    originalUri.Host,
+                    allowedAddressFamily,
+                    connectionTimeoutCts.IsCancellationRequested);
+
                 var resp = await client.SendAsync(request,
                      HttpCompletionOption.ResponseHeadersRead,
                      connectionTimeoutCts.Token)
                      .ConfigureAwait(false);
+
+                this.logger.Verbose(
+                    "直播流响应，Session={SessionId}, Attempt={Attempt}, StatusCode={StatusCode}, ContentLength={ContentLength}, Location={Location}",
+                    this.SessionId,
+                    requestAttempt,
+                    (int)resp.StatusCode,
+                    resp.Content.Headers.ContentLength,
+                    resp.Headers.Location?.ToString());
 
                 switch (resp.StatusCode)
                 {
@@ -535,6 +595,7 @@ namespace BililiveRecorder.Core.Recording
                             this.logger.Information("开始接收直播流");
                             this.streamHostFull = streamHostInfoBuilder.ToString();
                             var stream = await resp.Content.ReadAsStreamAsync().ConfigureAwait(false);
+                            this.logger.Verbose("HTTP 200 已打开响应流，Session={SessionId}, StreamHost={StreamHost}, StreamType={StreamType}", this.SessionId, this.streamHostFull, stream.GetType().FullName);
                             return stream;
                         }
                     case HttpStatusCode.Moved:

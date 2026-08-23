@@ -221,7 +221,18 @@ namespace BililiveRecorder.Core
                 this.Title = room.Room.Title;
                 this.AreaNameParent = room.Room.ParentAreaName;
                 this.AreaNameChild = room.Room.AreaName;
-                this.Streaming = room.Room.LiveStatus == 1;
+                var previousStreaming = this.Streaming;
+                var nextStreaming = room.Room.LiveStatus == 1;
+                this.logger.Verbose(
+                    "房间状态轮询，RoomId={RoomId}, LiveStatus={LiveStatus}, Streaming={PreviousStreaming}->{NextStreaming}, Recording={Recording}, IsReceiving={IsReceiving}, SessionId={SessionId}",
+                    room.Room.RoomId,
+                    room.Room.LiveStatus,
+                    previousStreaming,
+                    nextStreaming,
+                    this.recordTask is not null,
+                    this.recordTask?.IsReceiving == true,
+                    this.recordTask?.SessionId);
+                this.Streaming = nextStreaming;
 
                 this.Name = room.User.BaseInfo.Name;
 
@@ -288,6 +299,14 @@ namespace BililiveRecorder.Core
                 var task = this.recordTaskFactory.CreateRecordTask(this, this.nextRecordShouldUseRawMode ? RecordMode.RawData : null);
                 this.nextRecordShouldUseRawMode = false;
 
+                this.logger.Verbose(
+                    "创建录制任务，RoomId={RoomId}, SessionId={SessionId}, TaskType={TaskType}, Streaming={Streaming}, AutoRecord={AutoRecord}",
+                    this.RoomConfig.RoomId,
+                    task.SessionId,
+                    task.GetType().Name,
+                    this.Streaming,
+                    this.AutoRecordForThisSession);
+
                 task.IOStats += this.RecordTask_IOStats;
                 task.RecordingStats += this.RecordTask_RecordingStats;
                 task.RecordFileOpening += this.RecordTask_RecordFileOpening;
@@ -305,6 +324,7 @@ namespace BililiveRecorder.Core
                             await this.FetchRoomInfoAsync();
 
                         await task.StartAsync();
+                        this.logger.Verbose("录制任务 StartAsync 完成，RoomId={RoomId}, SessionId={SessionId}, IsReceiving={IsReceiving}", this.RoomConfig.RoomId, task.SessionId, task.IsReceiving);
                     }
                     catch (NoMatchingQnValueException)
                     {
@@ -511,6 +531,7 @@ namespace BililiveRecorder.Core
         ///
         private void RecordTask_RecordFileClosed(object? sender, RecordFileClosedEventArgs e)
         {
+            this.logger.Verbose("Room 收到 FileClosed，RoomId={RoomId}, SessionId={SessionId}, Path={Path}, Size={Size}, Duration={Duration}, Streaming={Streaming}", this.RoomConfig.RoomId, e.SessionId, e.FullPath, e.FileSize, e.Duration, this.Streaming);
             this.basicDanmakuWriter.Disable();
 
             RecordFileClosed?.Invoke(this, e);
@@ -519,6 +540,7 @@ namespace BililiveRecorder.Core
         ///
         private void RecordTask_RecordFileOpening(object? sender, RecordFileOpeningEventArgs e)
         {
+            this.logger.Verbose("Room 收到 FileOpening，RoomId={RoomId}, SessionId={SessionId}, Path={Path}, Streaming={Streaming}", this.RoomConfig.RoomId, e.SessionId, e.FullPath, this.Streaming);
             if (this.RoomConfig.RecordDanmaku)
                 this.basicDanmakuWriter.EnableWithPath(Path.ChangeExtension(e.FullPath, "xml"), this);
             else
@@ -571,9 +593,11 @@ namespace BililiveRecorder.Core
         private void RecordTask_RecordSessionEnded(object? sender, EventArgs e)
         {
             Guid id;
+            var senderTask = sender as IRecordTask;
             lock (this.recordStartLock)
             {
                 id = this.recordTask?.SessionId ?? default;
+                this.logger.Verbose("Room 收到 RecordSessionEnded，RoomId={RoomId}, SenderSessionId={SenderSessionId}, CurrentSessionId={CurrentSessionId}, Streaming={Streaming}, IsReceiving={IsReceiving}", this.RoomConfig.RoomId, senderTask?.SessionId, id, this.Streaming, this.recordTask?.IsReceiving == true);
                 this.recordTask = null;
                 _ = Task.Run(async () =>
                 {
@@ -641,10 +665,12 @@ namespace BililiveRecorder.Core
             {
                 case Api.Danmaku.DanmakuMsgType.LiveStart:
                     this.logger.Debug("推送直播开始");
+                    this.logger.Verbose("收到弹幕直播开始推送，RoomId={RoomId}, Streaming={Streaming}, Recording={Recording}, SessionId={SessionId}", this.RoomConfig.RoomId, this.Streaming, this.recordTask is not null, this.recordTask?.SessionId);
                     this.Streaming = true;
                     break;
                 case Api.Danmaku.DanmakuMsgType.LiveEnd:
                     this.logger.Debug("推送直播结束");
+                    this.logger.Verbose("收到弹幕直播结束推送，RoomId={RoomId}, Streaming={Streaming}, Recording={Recording}, IsReceiving={IsReceiving}, SessionId={SessionId}", this.RoomConfig.RoomId, this.Streaming, this.recordTask is not null, this.recordTask?.IsReceiving == true, this.recordTask?.SessionId);
                     this.Streaming = false;
                     break;
                 case Api.Danmaku.DanmakuMsgType.RoomChange:
@@ -718,6 +744,13 @@ namespace BililiveRecorder.Core
             switch (e.PropertyName)
             {
                 case nameof(this.Streaming):
+                    this.logger.Verbose(
+                        "房间 Streaming 属性变化，RoomId={RoomId}, Streaming={Streaming}, Recording={Recording}, IsReceiving={IsReceiving}, SessionId={SessionId}",
+                        this.RoomConfig.RoomId,
+                        this.Streaming,
+                        this.recordTask is not null,
+                        this.recordTask?.IsReceiving == true,
+                        this.recordTask?.SessionId);
                     if (this.Streaming)
                     {
                         // 如果开播状态是通过广播消息获取的，本地的直播间信息就不是最新的，需要重新获取。
