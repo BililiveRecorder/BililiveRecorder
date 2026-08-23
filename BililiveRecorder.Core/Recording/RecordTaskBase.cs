@@ -56,6 +56,8 @@ namespace BililiveRecorder.Core.Recording
 
         private DateTimeOffset ioStatsLastTrigger;
         private TimeSpan durationSinceNoDataReceived;
+        private TimeSpan durationSinceNoFileOpened;
+        private volatile bool fileOpeningTriggered;
 
         protected RecordTaskBase(IRoom room, ILogger logger, IApiClient apiClient, UserScriptRunner userScriptRunner)
         {
@@ -86,7 +88,11 @@ namespace BililiveRecorder.Core.Recording
 
         protected void OnIOStats(IOStatsEventArgs e) => IOStats?.Invoke(this, e);
         protected void OnRecordingStats(RecordingStatsEventArgs e) => RecordingStats?.Invoke(this, e);
-        protected void OnRecordFileOpening(RecordFileOpeningEventArgs e) => RecordFileOpening?.Invoke(this, e);
+        protected void OnRecordFileOpening(RecordFileOpeningEventArgs e)
+        {
+            this.fileOpeningTriggered = true;
+            RecordFileOpening?.Invoke(this, e);
+        }
         protected void OnRecordFileClosed(RecordFileClosedEventArgs e) => RecordFileClosed?.Invoke(this, e);
         protected void OnRecordSessionEnded(EventArgs e) => RecordSessionEnded?.Invoke(this, e);
 
@@ -135,6 +141,8 @@ namespace BililiveRecorder.Core.Recording
 
             this.ioStatsLastTrigger = DateTimeOffset.UtcNow;
             this.durationSinceNoDataReceived = TimeSpan.Zero;
+            this.durationSinceNoFileOpened = TimeSpan.Zero;
+            this.fileOpeningTriggered = false;
 
             this.ct.Register(state => _ = Task.Run(async () =>
             {
@@ -184,6 +192,8 @@ namespace BililiveRecorder.Core.Recording
                 durationDiff = endTime - startTime;
 
                 this.durationSinceNoDataReceived = networkDownloadBytes > 0 ? TimeSpan.Zero : this.durationSinceNoDataReceived + durationDiff;
+                if (!this.fileOpeningTriggered)
+                    this.durationSinceNoFileOpened += durationDiff;
 
                 // disks
                 lock (this.ioDiskStatsLock) // 锁硬盘统计
@@ -211,10 +221,20 @@ namespace BililiveRecorder.Core.Recording
                 DiskMBps = diskMBps,
             });
 
-            if ((!this.timeoutTriggered) && (this.durationSinceNoDataReceived.TotalMilliseconds > this.room.RoomConfig.TimingWatchdogTimeout))
+            var watchdogTimeout = this.room.RoomConfig.TimingWatchdogTimeout;
+            // A stream can keep delivering bytes while the parser waits for a
+            // complete FLV tag, so the no-data watchdog alone cannot detect it.
+            var fileOpeningTimedOut = !this.fileOpeningTriggered &&
+                this.durationSinceNoFileOpened.TotalMilliseconds > watchdogTimeout;
+            var noDataTimedOut = this.durationSinceNoDataReceived.TotalMilliseconds > watchdogTimeout;
+
+            if ((!this.timeoutTriggered) && (fileOpeningTimedOut || noDataTimedOut))
             {
                 this.timeoutTriggered = true;
-                this.logger.Warning("检测到录制卡住，可能是网络或硬盘原因，将会主动断开连接");
+                if (noDataTimedOut)
+                    this.logger.Warning("检测到录制卡住，可能是网络或硬盘原因，将会主动断开连接");
+                else
+                    this.logger.Warning("检测到录制卡住，长时间没有新建录制文件，可能是直播流格式或网络原因，将会主动断开连接");
                 this.RequestStop();
             }
         }
