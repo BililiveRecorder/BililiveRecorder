@@ -20,7 +20,7 @@
 
 可以在 [Docker Hub `bililive/recorder`](https://hub.docker.com/r/bililive/recorder) 或 [`ghcr.io/bililiverecorder/bililiverecorder`](https://github.com/bililiverecorder/BililiveRecorder/pkgs/container/bililiverecorder) 拉取 Docker 镜像。
 
-安装使用教程在 [rec.danmuji.org/user/install](https://rec.danmuji.org/user/install)。
+安装使用教程在 [rec.danmuji.org/install/versions](https://rec.danmuji.org/install/versions/)。
 
 ## 功能
 

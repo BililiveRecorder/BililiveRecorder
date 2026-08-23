@@ -32,7 +32,7 @@ Binary files of the command line version are available for Linux, macOS, and Win
 
 Docker images can be pulled from [Docker Hub `bililive/recorder`](https://hub.docker.com/r/bililive/recorder) or [`ghcr.io/bililiverecorder/bililiverecorder`](https://github.com/bililiverecorder/BililiveRecorder/pkgs/container/bililiverecorder).
 
-See [rec.danmuji.org/user/install](https://rec.danmuji.org/user/install) for step by step installation guides (in Chinese).
+See [rec.danmuji.org/install/versions](https://rec.danmuji.org/install/versions/) for step by step installation guides (in Chinese).
 
 ## Feature
 

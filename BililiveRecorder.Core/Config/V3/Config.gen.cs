@@ -560,7 +560,7 @@ namespace BililiveRecorder.Core.Config.V3
 
         public string RecordingQuality => @"avc10000,hevc10000";
 
-        public string FileNameRecordTemplate => @"{{ roomId }}-{{ name }}/录制-{{ roomId }}-{{ ""now"" | time_zone: ""Asia/Shanghai"" | format_date: ""yyyyMMdd-HHmmss-fff"" }}-{{ title }}.flv";
+        public string FileNameRecordTemplate => @"{{ roomId }}-{{ name | unescape }}/录制-{{ roomId }}-{{ ""now"" | time_zone: ""Asia/Shanghai"" | format_date: ""yyyyMMdd-HHmmss-fff"" }}-{{ title | unescape }}.flv";
 
         public bool FlvProcessorSplitOnScriptTag => false;
 
