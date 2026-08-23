@@ -53,11 +53,25 @@ namespace BililiveRecorder.Web.Api
             else
             {
                 var index = logs.BinarySearch(new JsonLog { Id = after.Value });
+                var continuous = index >= 0;
+
+                if (continuous)
+                {
+                    for (var i = index; i < logs.Count - 1; i++)
+                    {
+                        if (logs[i].Id + 1 != logs[i + 1].Id)
+                        {
+                            continuous = false;
+                            break;
+                        }
+                    }
+                }
+
                 return new JsonLogDto
                 {
-                    Continuous = index >= 0,
+                    Continuous = continuous,
                     Cursor = logs[^1].Id,
-                    Logs = logs.TakeLast((index >= 0) ? (logs.Count - index - 1) : logs.Count).Select(x => x.Log)
+                    Logs = logs.TakeLast(continuous ? logs.Count - index - 1 : logs.Count).Select(x => x.Log)
                 };
             }
         }
