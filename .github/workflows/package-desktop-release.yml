@@ -38,8 +38,7 @@ env:
 
 jobs:
   package:
-    # TODO: Change back to windows-latest
-    runs-on: windows-2025-vs2026
+    runs-on: windows-latest
     permissions:
       actions: read
       contents: read
