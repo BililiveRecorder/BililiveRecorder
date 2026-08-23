@@ -37,6 +37,20 @@ namespace BililiveRecorder.Core.UnitTests.Recording
         }
 
         [Fact]
+        public void NotRecording_ConfigRecordMode_Change_Raises_PropertyChanged()
+        {
+            using var room = CreateRoom(RecordMode.Standard);
+
+            var notified = new List<string?>();
+            room.PropertyChanged += (_, e) => notified.Add(e.PropertyName);
+
+            room.RoomConfig.RecordMode = RecordMode.RawData;
+
+            Assert.Equal(RecordMode.RawData, room.RecordModeForThisSession);
+            Assert.Contains(nameof(room.RecordModeForThisSession), notified);
+        }
+
+        [Fact]
         public void Recording_StandardRecordTask_Returns_Standard()
         {
             using var room = CreateRoom(RecordMode.RawData);

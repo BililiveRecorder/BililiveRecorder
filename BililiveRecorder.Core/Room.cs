@@ -749,6 +749,9 @@ namespace BililiveRecorder.Core
                             this.CreateAndStartNewRecordTask(skipFetchRoomInfo: false);
                     }
                     break;
+                case nameof(this.RoomConfig.RecordMode):
+                    this.OnPropertyChanged(nameof(this.RecordModeForThisSession));
+                    break;
                 default:
                     break;
             }
