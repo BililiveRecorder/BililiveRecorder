@@ -20,7 +20,7 @@ namespace BililiveRecorder.Flv.Tests.FlvTests
             var pipe = new Pipe();
             await pipe.Writer.CompleteAsync().ConfigureAwait(false);
 
-            using var reader = new FlvTagPipeReader(pipe.Reader, new TestRecyclableMemoryStreamProvider(), false, false, null);
+            using var reader = new FlvTagPipeReader(pipe.Reader, new TestRecyclableMemoryStreamProvider(), skipData: false, leaveOpen: false, logger: null);
             using var cancellationTokenSource = new CancellationTokenSource(1000);
 
             var tag = await reader.ReadTagAsync(cancellationTokenSource.Token).ConfigureAwait(false);
