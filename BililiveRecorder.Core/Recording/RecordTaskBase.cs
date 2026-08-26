@@ -125,11 +125,7 @@ namespace BililiveRecorder.Core.Recording
             }
             catch
             {
-#if NET6_0_OR_GREATER
-                await stream.DisposeAsync();
-#else
                 stream.Dispose();
-#endif
                 throw;
             }
 
