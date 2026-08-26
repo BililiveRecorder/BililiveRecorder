@@ -80,7 +80,11 @@ namespace BililiveRecorder.Flv.Parser
                             examined = consumed;
                         }
                         else
+                        {
+                            if (result.IsCompleted)
+                                break;
                             continue;
+                        }
                     }
 
                     if (this.ParseTagData(ref buffer, out var tag))
