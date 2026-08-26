@@ -31,8 +31,6 @@ namespace BililiveRecorder.Core.Recording
         {
             var (fullPath, relativePath) = this.CreateFileName();
 
-            this.logger.Verbose("初始化原始数据录制，Session={SessionId}, StreamType={StreamType}, Path={Path}", this.SessionId, stream.GetType().FullName, fullPath);
-
             try
             { Directory.CreateDirectory(Path.GetDirectoryName(fullPath)!); }
             catch (Exception) { }
@@ -52,21 +50,15 @@ namespace BililiveRecorder.Core.Recording
 
             var file = new FileStream(fullPath, FileMode.CreateNew, FileAccess.ReadWrite, FileShare.Read);
 
-            this.logger.Verbose("原始数据录制文件已创建，Session={SessionId}, Path={Path}", this.SessionId, fullPath);
-
             _ = Task.Run(async () => await this.WriteStreamToFileAsync(stream, file).ConfigureAwait(false));
         }
 
         private async Task WriteStreamToFileAsync(Stream stream, FileStream file)
         {
-            long totalBytes = 0;
-            var readCount = 0;
             try
             {
                 var buffer = new byte[1024 * 8];
                 this.timer.Start();
-
-                this.logger.Verbose("开始原始数据写入，Session={SessionId}", this.SessionId);
 
                 while (!this.ct.IsCancellationRequested)
                 {
@@ -79,8 +71,6 @@ namespace BililiveRecorder.Core.Recording
                         break;
 
                     Interlocked.Add(ref this.ioNetworkDownloadedBytes, bytesRead);
-                    totalBytes += bytesRead;
-                    readCount++;
 
                     this.ioDiskStopwatch.Restart();
 
@@ -115,7 +105,6 @@ namespace BililiveRecorder.Core.Recording
             finally
             {
                 this.timer.Stop();
-                this.logger.Verbose("结束原始数据写入，Session={SessionId}, TotalBytes={TotalBytes}, ReadCount={ReadCount}", this.SessionId, totalBytes, readCount);
                 this.RequestStop();
 
                 RecordFileClosedEventArgs? recordFileClosedEvent;

@@ -76,7 +76,6 @@ namespace BililiveRecorder.Core.Recording
 
             this.targetProvider = new WriterTargetProvider(this, paths =>
             {
-                this.logger.Verbose("准备触发 FileOpening，Session={SessionId}, Path={Path}", this.SessionId, paths.fullPath);
                 this.logger.ForContext(LoggingContext.RoomId, this.room.RoomConfig.RoomId).Information("新建录制文件 {Path}", paths.fullPath);
 
                 var e = new RecordFileOpeningEventArgs(this.room)
@@ -89,7 +88,6 @@ namespace BililiveRecorder.Core.Recording
                     QnDescription = StreamQualityNumber.MapToString(this.qn),
                 };
                 this.OnRecordFileOpening(e);
-                this.logger.Verbose("FileOpening 回调已完成，Session={SessionId}, Path={Path}", this.SessionId, paths.fullPath);
                 return e;
             });
         }
@@ -98,7 +96,6 @@ namespace BililiveRecorder.Core.Recording
 
         protected override void StartRecordingLoop(Stream stream)
         {
-            this.logger.Verbose("初始化标准录制管线，Session={SessionId}, StreamType={StreamType}", this.SessionId, stream.GetType().FullName);
             var pipe = new Pipe(new PipeOptions(useSynchronizationContext: false));
 
             this.reader = this.tagGroupReaderFactory.CreateTagGroupReader(this.flvTagReaderFactory.CreateFlvTagReader(pipe.Reader));
@@ -123,7 +120,6 @@ namespace BililiveRecorder.Core.Recording
             _ = Task.Run(async () => await this.FillPipeAsync(stream, pipe.Writer).ConfigureAwait(false));
 
             _ = Task.Run(this.RecordingLoopAsync);
-            this.logger.Verbose("标准录制管线已启动，Session={SessionId}", this.SessionId);
         }
 
         private async Task FillPipeAsync(Stream stream, PipeWriter writer)
@@ -132,11 +128,8 @@ namespace BililiveRecorder.Core.Recording
             this.timer.Start();
 
             Exception? exception = null;
-            long totalBytes = 0;
-            var readCount = 0;
             try
             {
-                this.logger.Verbose("开始从直播流填充 Pipe，Session={SessionId}", this.SessionId);
                 while (!this.ct.IsCancellationRequested)
                 {
                     var memory = writer.GetMemory(minimumBufferSize);
@@ -144,34 +137,24 @@ namespace BililiveRecorder.Core.Recording
                     {
                         var bytesRead = await stream.ReadAsync(memory, this.ct).ConfigureAwait(false);
                         if (bytesRead == 0)
-                        {
-                            this.logger.Verbose("直播流返回 EOF，Session={SessionId}, TotalBytes={TotalBytes}, ReadCount={ReadCount}", this.SessionId, totalBytes, readCount);
                             break;
-                        }
                         writer.Advance(bytesRead);
                         _ = Interlocked.Add(ref this.ioNetworkDownloadedBytes, bytesRead);
-                        totalBytes += bytesRead;
-                        readCount++;
                     }
                     catch (Exception ex)
                     {
                         exception = ex;
-                        this.logger.Verbose(ex, "读取直播流失败，Session={SessionId}, TotalBytes={TotalBytes}, ReadCount={ReadCount}", this.SessionId, totalBytes, readCount);
                         break;
                     }
 
                     var result = await writer.FlushAsync(this.ct).ConfigureAwait(false);
                     if (result.IsCompleted)
-                    {
-                        this.logger.Verbose("Pipe 已完成，停止填充，Session={SessionId}, TotalBytes={TotalBytes}, ReadCount={ReadCount}", this.SessionId, totalBytes, readCount);
                         break;
-                    }
                 }
             }
             finally
             {
                 this.timer.Stop();
-                this.logger.Verbose("结束填充 Pipe，Session={SessionId}, TotalBytes={TotalBytes}, ReadCount={ReadCount}, Exception={Exception}", this.SessionId, totalBytes, readCount, exception?.GetType().FullName);
 #if NET6_0_OR_GREATER
                 await stream.DisposeAsync().ConfigureAwait(false);
 #else
@@ -183,27 +166,17 @@ namespace BililiveRecorder.Core.Recording
 
         private async Task RecordingLoopAsync()
         {
-            var groupCount = 0;
             try
             {
                 if (this.reader is null) return;
                 if (this.writer is null) return;
 
-                this.logger.Verbose("开始解析并写入 FLV 分组，Session={SessionId}", this.SessionId);
-
                 while (!this.ct.IsCancellationRequested)
                 {
-                    this.logger.Verbose("等待下一个 FLV 分组，Session={SessionId}, GroupCount={GroupCount}, FileOpening={FileOpening}", this.SessionId, groupCount, this.FileOpeningTriggered);
                     var group = await this.reader.ReadGroupAsync(this.ct).ConfigureAwait(false);
 
                     if (group is null)
-                    {
-                        this.logger.Verbose("FLV 分组读取结束，Session={SessionId}, GroupCount={GroupCount}, FileOpening={FileOpening}", this.SessionId, groupCount, this.FileOpeningTriggered);
                         break;
-                    }
-
-                    groupCount++;
-                    this.logger.Verbose("收到 FLV 分组，Session={SessionId}, GroupCount={GroupCount}, ActionType={ActionType}, FileOpening={FileOpening}", this.SessionId, groupCount, group.GetType().Name, this.FileOpeningTriggered);
 
                     this.context.Reset(group, this.session);
 
@@ -222,8 +195,6 @@ namespace BililiveRecorder.Core.Recording
                         this.ioDiskWrittenBytes += bytesWritten;
                     }
                     this.ioDiskStopwatch.Reset();
-
-                    this.logger.Verbose("FLV 分组写入完成，Session={SessionId}, GroupCount={GroupCount}, BytesWritten={BytesWritten}, Actions={ActionCount}, FileOpening={FileOpening}", this.SessionId, groupCount, bytesWritten, this.context.Actions.Count, this.FileOpeningTriggered);
 
                     if (this.context.Actions.FirstOrDefault(x => x is PipelineDisconnectAction) is PipelineDisconnectAction disconnectAction)
                     {
@@ -252,7 +223,6 @@ namespace BililiveRecorder.Core.Recording
             }
             finally
             {
-                this.logger.Verbose("结束解析并写入 FLV 分组，Session={SessionId}, GroupCount={GroupCount}, FileOpening={FileOpening}", this.SessionId, groupCount, this.FileOpeningTriggered);
                 this.reader?.Dispose();
                 this.reader = null;
                 this.writer?.Dispose();
@@ -337,8 +307,6 @@ namespace BililiveRecorder.Core.Recording
             {
                 var paths = this.task.CreateFileName();
 
-                this.task.logger.Verbose("准备实际创建录制文件，Session={SessionId}, Path={Path}", this.task.SessionId, paths.fullPath);
-
                 try
                 { _ = Directory.CreateDirectory(Path.GetDirectoryName(paths.fullPath)!); }
                 catch (Exception) { }
@@ -346,17 +314,8 @@ namespace BililiveRecorder.Core.Recording
                 this.last_path = paths.fullPath;
                 var state = this.OnNewFile(paths);
 
-                try
-                {
-                    var stream = new FileStream(paths.fullPath, FileMode.CreateNew, FileAccess.ReadWrite, FileShare.Read);
-                    this.task.logger.Verbose("录制文件 FileStream 创建成功，Session={SessionId}, Path={Path}", this.task.SessionId, paths.fullPath);
-                    return (stream, state);
-                }
-                catch (Exception ex)
-                {
-                    this.task.logger.Verbose(ex, "录制文件 FileStream 创建失败，Session={SessionId}, Path={Path}", this.task.SessionId, paths.fullPath);
-                    throw;
-                }
+                var stream = new FileStream(paths.fullPath, FileMode.CreateNew, FileAccess.ReadWrite, FileShare.Read);
+                return (stream, state);
             }
 
             public Stream CreateAccompanyingTextLogStream()

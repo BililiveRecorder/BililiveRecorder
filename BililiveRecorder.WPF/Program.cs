@@ -43,17 +43,11 @@ namespace BililiveRecorder.WPF
         internal static readonly bool DebugMode = false;
 #endif
 
-        internal static readonly bool VerboseLoggingEnabled =
-#if DEBUG
-            DebugMode ||
-#endif
-            IsVerboseLoggingRequested();
-
         static Program()
         {
             AttachConsole(-1);
             levelSwitchGlobal = new LoggingLevelSwitch(Serilog.Events.LogEventLevel.Debug);
-            if (VerboseLoggingEnabled)
+            if (DebugMode)
                 levelSwitchGlobal.MinimumLevel = Serilog.Events.LogEventLevel.Verbose;
             levelSwitchConsole = new LoggingLevelSwitch(Serilog.Events.LogEventLevel.Error);
             logger = BuildLogger();
@@ -88,14 +82,6 @@ namespace BililiveRecorder.WPF
             });
             ServicePointManager.Expect100Continue = false;
             update = new Update(logger);
-        }
-
-        private static bool IsVerboseLoggingRequested()
-        {
-            var value = Environment.GetEnvironmentVariable("BILILIVERECORDER_VERBOSE_LOG");
-            return string.Equals(value, "1", StringComparison.OrdinalIgnoreCase)
-                || string.Equals(value, "true", StringComparison.OrdinalIgnoreCase)
-                || string.Equals(value, "yes", StringComparison.OrdinalIgnoreCase);
         }
 
         [STAThread]
