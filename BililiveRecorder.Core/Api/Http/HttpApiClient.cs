@@ -92,7 +92,7 @@ namespace BililiveRecorder.Core.Api.Http
 
         private readonly SemaphoreSlim wbiSemaphoreSlim = new SemaphoreSlim(1, 1);
 
-        private async Task UpdateWbiKeyAsync(CancellationToken cancellationToken = default)
+        private async Task UpdateWbiKeyAsync()
         {
             if (this.disposedValue)
                 throw new ObjectDisposedException(nameof(HttpApiClient));
@@ -100,14 +100,14 @@ namespace BililiveRecorder.Core.Api.Http
             if (this.wbiLastUpdate + wbiUpdateInterval > DateTimeOffset.UtcNow)
                 return;
 
-            await this.wbiSemaphoreSlim.WaitAsync(cancellationToken).ConfigureAwait(false);
+            await this.wbiSemaphoreSlim.WaitAsync().ConfigureAwait(false);
             try
             {
                 if (this.wbiLastUpdate + wbiUpdateInterval > DateTimeOffset.UtcNow)
                     return;
 
                 const string URL = @"https://api.bilibili.com/x/web-interface/nav";
-                var resp = await this.client.GetAsync(URL, cancellationToken).ConfigureAwait(false);
+                var resp = await this.client.GetAsync(URL).ConfigureAwait(false);
                 resp.EnsureSuccessStatusCode();
                 var text = await resp.Content.ReadAsStringAsync().ConfigureAwait(false);
                 var jo = JObject.Parse(text);
@@ -147,9 +147,9 @@ namespace BililiveRecorder.Core.Api.Http
             }
         }
 
-        private async Task<string> FetchAsTextAsync(string url, CancellationToken cancellationToken = default)
+        private async Task<string> FetchAsTextAsync(string url)
         {
-            var resp = await this.client.GetAsync(url, cancellationToken).ConfigureAwait(false);
+            var resp = await this.client.GetAsync(url).ConfigureAwait(false);
 
             if (resp.StatusCode == (HttpStatusCode)412)
                 throw new Http412Exception("Got HTTP Status 412 when requesting " + url);
@@ -159,9 +159,9 @@ namespace BililiveRecorder.Core.Api.Http
             return await resp.Content.ReadAsStringAsync().ConfigureAwait(false);
         }
 
-        private async Task<BilibiliApiResponse<T>> FetchAsync<T>(string url, CancellationToken cancellationToken = default) where T : class
+        private async Task<BilibiliApiResponse<T>> FetchAsync<T>(string url) where T : class
         {
-            var text = await this.FetchAsTextAsync(url, cancellationToken).ConfigureAwait(false);
+            var text = await this.FetchAsTextAsync(url).ConfigureAwait(false);
             var obj = JsonConvert.DeserializeObject<BilibiliApiResponse<T>>(text);
             return obj?.Code != 0 ? throw new BilibiliApiResponseCodeNotZeroException(obj?.Code, text) : obj;
         }
@@ -194,7 +194,7 @@ namespace BililiveRecorder.Core.Api.Http
             return obj;
         }
 
-        public Task<BilibiliApiResponse<RoomPlayInfo>> GetStreamUrlAsync(int roomid, int qn, CancellationToken cancellationToken = default)
+        public Task<BilibiliApiResponse<RoomPlayInfo>> GetStreamUrlAsync(int roomid, int qn)
         {
             if (this.disposedValue)
                 throw new ObjectDisposedException(nameof(HttpApiClient));
@@ -209,7 +209,7 @@ namespace BililiveRecorder.Core.Api.Http
             q.AddOrReplace(Wbi.W_RID, sign.sign);
             q.AddOrReplace(Wbi.WTS, sign.ts);
 
-            return this.FetchAsync<RoomPlayInfo>(url, cancellationToken);
+            return this.FetchAsync<RoomPlayInfo>(url);
         }
 
         public async Task<(bool, string)> TestCookieAsync()

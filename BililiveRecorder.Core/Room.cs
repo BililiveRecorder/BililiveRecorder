@@ -304,15 +304,11 @@ namespace BililiveRecorder.Core
                         if (!skipFetchRoomInfo)
                             await this.FetchRoomInfoAsync();
 
-                        await task.StartAsync();
+                        await this.recordTask.StartAsync();
                     }
                     catch (NoMatchingQnValueException)
                     {
-                        lock (this.recordStartLock)
-                        {
-                            if (ReferenceEquals(this.recordTask, task))
-                                this.recordTask = null;
-                        }
+                        this.recordTask = null;
                         this.OnPropertyChanged(nameof(this.Recording));
 
                         // 无匹配的画质，重试录制之前等待更长时间
@@ -324,11 +320,7 @@ namespace BililiveRecorder.Core
                     {
                         this.logger.Write(ex is ExecutionRejectedException ? LogEventLevel.Verbose : LogEventLevel.Warning, ex, "启动录制出错");
 
-                        lock (this.recordStartLock)
-                        {
-                            if (ReferenceEquals(this.recordTask, task))
-                                this.recordTask = null;
-                        }
+                        this.recordTask = null;
                         this.OnPropertyChanged(nameof(this.Recording));
 
                         if (ex is IOException ioex && (ioex.HResult == HR_ERROR_DISK_FULL || ioex.HResult == HR_ERROR_HANDLE_DISK_FULL))
@@ -352,9 +344,9 @@ namespace BililiveRecorder.Core
 
                     RecordSessionStarted?.Invoke(this, new RecordSessionStartedEventArgs(this)
                     {
-                        SessionId = task.SessionId,
-                        Qn = task.Qn,
-                        QnDescription = StreamQualityNumber.MapToString(task.Qn),
+                        SessionId = this.recordTask.SessionId,
+                        Qn = this.recordTask.Qn,
+                        QnDescription = StreamQualityNumber.MapToString(this.recordTask.Qn),
                     });
                 });
             }
@@ -709,17 +701,16 @@ namespace BililiveRecorder.Core
                     {
                         this.AutoRecordForThisSession = true;
 
-                        // 如果录制任务还卡在启动阶段，取消它以避免永久占用录制槽位。
-                        // 已经开始接收直播流的任务交给其数据 watchdog 收尾，避免因为
-                        // API 状态切换而截断仍在传输的最后一段数据。
+                        // 房间 API 已确认下播时主动结束当前录制任务。
+                        // 某些直播流在下播后仍会继续发送数据，单靠流端断开会让录制和
+                        // StreamEnded Webhook 一直无法收敛。
                         lock (this.recordStartLock)
                         {
-                            if (RoomLifecyclePolicy.ShouldCancelRecordTaskStartup(
+                            if (RoomLifecyclePolicy.ShouldStopRecordingWhenOffline(
                                 this.Streaming,
-                                this.recordTask is not null,
-                                this.recordTask?.IsReceiving == true))
+                                this.recordTask is not null))
                             {
-                                this.logger.Information("房间已下播，取消尚未进入接收阶段的录制任务");
+                                this.logger.Information("房间已下播，请求停止当前录制任务");
                                 this.recordTask?.RequestStop();
                             }
                         }

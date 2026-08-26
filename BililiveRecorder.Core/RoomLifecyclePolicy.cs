@@ -5,10 +5,7 @@ namespace BililiveRecorder.Core
         internal static bool ShouldRefreshRoomInfo(bool autoRecord, bool roomInfoLoaded, bool recording) =>
             autoRecord || !roomInfoLoaded || recording;
 
-        internal static bool ShouldCancelRecordTaskStartup(
-            bool streaming,
-            bool recordTaskExists,
-            bool recordTaskReceiving) =>
-            !streaming && recordTaskExists && !recordTaskReceiving;
+        internal static bool ShouldStopRecordingWhenOffline(bool streaming, bool recording) =>
+            !streaming && recording;
     }
 }

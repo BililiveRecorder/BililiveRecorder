@@ -7,7 +7,6 @@ namespace BililiveRecorder.Core.Recording
     internal interface IRecordTask
     {
         Guid SessionId { get; }
-        bool IsReceiving { get; }
 
         int Qn { get; }
 

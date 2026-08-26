@@ -22,22 +22,17 @@ namespace BililiveRecorder.Core.UnitTests
         }
 
         [Theory]
-        [InlineData(false, true, false, true)]
-        [InlineData(false, true, true, false)]
-        [InlineData(false, false, false, false)]
-        [InlineData(true, true, false, false)]
-        public void ShouldCancelOnlyARecordTaskThatHasNotStartedWhenRoomIsOffline(
+        [InlineData(false, true, true)]
+        [InlineData(false, false, false)]
+        [InlineData(true, true, false)]
+        public void ShouldStopOnlyAnActiveRecordingWhenRoomIsOffline(
             bool streaming,
-            bool recordTaskExists,
-            bool recordTaskReceiving,
+            bool recording,
             bool expected)
         {
             Assert.Equal(
                 expected,
-                RoomLifecyclePolicy.ShouldCancelRecordTaskStartup(
-                    streaming,
-                    recordTaskExists,
-                    recordTaskReceiving));
+                RoomLifecyclePolicy.ShouldStopRecordingWhenOffline(streaming, recording));
         }
     }
 }

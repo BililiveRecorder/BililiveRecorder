@@ -72,8 +72,6 @@ namespace BililiveRecorder.Core.Recording
 
         public Guid SessionId { get; } = Guid.NewGuid();
 
-        public bool IsReceiving { get; private set; }
-
         public int Qn => this.qn;
 
         #region Events
@@ -102,10 +100,7 @@ namespace BililiveRecorder.Core.Recording
                 throw new InvalidOperationException("Only one StartAsync call allowed per instance.");
             this.started = true;
 
-            this.ct.ThrowIfCancellationRequested();
-            var (fullUrl, codecQn) = await this.FetchStreamUrlAsync(
-                this.room.RoomConfig.RoomId,
-                this.ct).ConfigureAwait(false);
+            var (fullUrl, codecQn) = await this.FetchStreamUrlAsync(this.room.RoomConfig.RoomId).ConfigureAwait(false);
 
             this.qn = codecQn.Qn;
             this.streamHost = new Uri(fullUrl).Host;
@@ -114,20 +109,7 @@ namespace BililiveRecorder.Core.Recording
             this.logger.Information("连接直播服务器 {Host} 录制画质 {Qn} ({QnDescription})", this.streamHost, codecQn, qnDesc);
             this.logger.Debug("直播流地址 {Url}", fullUrl);
 
-            var stream = await this.GetStreamAsync(
-                fullUrl: fullUrl,
-                timeout: (int)this.room.RoomConfig.TimingStreamConnect,
-                cancellationToken: this.ct).ConfigureAwait(false);
-
-            try
-            {
-                this.ct.ThrowIfCancellationRequested();
-            }
-            catch
-            {
-                stream.Dispose();
-                throw;
-            }
+            var stream = await this.GetStreamAsync(fullUrl: fullUrl, timeout: (int)this.room.RoomConfig.TimingStreamConnect).ConfigureAwait(false);
 
             this.ioStatsLastTrigger = DateTimeOffset.UtcNow;
             this.durationSinceNoDataReceived = TimeSpan.Zero;
@@ -154,10 +136,6 @@ namespace BililiveRecorder.Core.Recording
                 { }
             }), state: new WeakReference<Stream>(stream), useSynchronizationContext: false);
 
-            // Mark the task as receiving before starting the loop. This keeps a
-            // concurrent offline status refresh from cancelling a task after the
-            // stream has already been acquired.
-            this.IsReceiving = true;
             this.StartRecordingLoop(stream);
         }
 
@@ -306,9 +284,7 @@ namespace BililiveRecorder.Core.Recording
             return qns;
         }
 
-        protected async Task<(string url, StreamCodecQn codecQn)> FetchStreamUrlAsync(
-            int roomid,
-            CancellationToken cancellationToken)
+        protected async Task<(string url, StreamCodecQn codecQn)> FetchStreamUrlAsync(int roomid)
         {
             var allowedQn = ParseAllowedQn(this.room.RoomConfig.RecordingQuality);
 
@@ -320,10 +296,7 @@ namespace BililiveRecorder.Core.Recording
             }
 
             const int DefaultQn = 10000;
-            var codecItems = await this.apiClient.GetCodecItemInStreamUrlAsync(
-                roomid: roomid,
-                qn: DefaultQn,
-                cancellationToken: cancellationToken).ConfigureAwait(false);
+            var codecItems = await this.apiClient.GetCodecItemInStreamUrlAsync(roomid: roomid, qn: DefaultQn).ConfigureAwait(false);
             //?? throw new Exception("no supported stream url, qn: " + DefaultQn);
 
             var allAvailableCodecQn = new List<StreamCodecQn>();
@@ -365,10 +338,7 @@ namespace BililiveRecorder.Core.Recording
             if (selectedCodecQn.Qn != DefaultQn)
             {
                 // 最终选择的 qn 与默认不同，需要重新请求一次
-                codecItems = await this.apiClient.GetCodecItemInStreamUrlAsync(
-                    roomid: roomid,
-                    qn: selectedCodecQn.Qn,
-                    cancellationToken: cancellationToken).ConfigureAwait(false);
+                codecItems = await this.apiClient.GetCodecItemInStreamUrlAsync(roomid: roomid, qn: selectedCodecQn.Qn).ConfigureAwait(false);
             }
 
             var item = selectedCodecQn.Codec switch
@@ -400,14 +370,9 @@ namespace BililiveRecorder.Core.Recording
             return (fullUrl, new StreamCodecQn { Codec = selectedCodecQn.Codec, Qn = item.CurrentQn });
         }
 
-        protected async Task<Stream> GetStreamAsync(
-            string fullUrl,
-            int timeout,
-            CancellationToken cancellationToken)
+        protected async Task<Stream> GetStreamAsync(string fullUrl, int timeout)
         {
             var client = this.CreateHttpClient();
-            using var connectionTimeoutCts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
-            connectionTimeoutCts.CancelAfter(timeout);
 
             var streamHostInfoBuilder = new StringBuilder();
 
@@ -462,9 +427,7 @@ namespace BililiveRecorder.Core.Recording
                 }
                 else
                 {
-                    var ips = await ResolveHostAddressesAsync(
-                        originalUri.DnsSafeHost,
-                        connectionTimeoutCts.Token).ConfigureAwait(false);
+                    var ips = await Dns.GetHostAddressesAsync(originalUri.DnsSafeHost);
 
                     var filtered = ips.Where(x => allowedAddressFamily switch
                     {
@@ -501,7 +464,7 @@ namespace BililiveRecorder.Core.Recording
 
                 var resp = await client.SendAsync(request,
                      HttpCompletionOption.ResponseHeadersRead,
-                     connectionTimeoutCts.Token)
+                     new CancellationTokenSource(timeout).Token)
                      .ConfigureAwait(false);
 
                 switch (resp.StatusCode)
@@ -526,31 +489,6 @@ namespace BililiveRecorder.Core.Recording
                         throw new Exception(string.Format("尝试下载直播流时服务器返回了 ({0}){1}", resp.StatusCode, resp.ReasonPhrase));
                 }
             }
-        }
-
-        private static async Task<IPAddress[]> ResolveHostAddressesAsync(
-            string host,
-            CancellationToken cancellationToken)
-        {
-#if NET6_0_OR_GREATER
-            return await Dns.GetHostAddressesAsync(host, cancellationToken).ConfigureAwait(false);
-#else
-            var dnsTask = Dns.GetHostAddressesAsync(host);
-            var cancellationTask = Task.Delay(Timeout.Infinite, cancellationToken);
-            if (await Task.WhenAny(dnsTask, cancellationTask).ConfigureAwait(false) != dnsTask)
-            {
-                // The .NET Framework overload has no cancellation token. Observe a
-                // late DNS failure while allowing the record task to stop now.
-                _ = dnsTask.ContinueWith(
-                    task => _ = task.Exception,
-                    CancellationToken.None,
-                    TaskContinuationOptions.OnlyOnFaulted | TaskContinuationOptions.ExecuteSynchronously,
-                    TaskScheduler.Default);
-                cancellationToken.ThrowIfCancellationRequested();
-            }
-
-            return await dnsTask.ConfigureAwait(false);
-#endif
         }
         #endregion
     }
