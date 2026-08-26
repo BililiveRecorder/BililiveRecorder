@@ -389,11 +389,9 @@ namespace BililiveRecorder.Core
                 if (!this.Streaming || !this.AutoRecordForThisSession)
                     return;
 
-                // 重试前先刷新房间信息，避免在确认状态前占用录制任务。
-                await this.FetchRoomInfoAsync().ConfigureAwait(false);
-
+                // 启动录制时更新房间信息
                 if (this.Streaming && this.AutoRecordForThisSession)
-                    this.CreateAndStartNewRecordTask(skipFetchRoomInfo: true);
+                    this.CreateAndStartNewRecordTask(skipFetchRoomInfo: false);
             }
             catch (Exception ex)
             {
@@ -569,8 +567,29 @@ namespace BililiveRecorder.Core
             {
                 id = this.recordTask?.SessionId ?? default;
                 this.recordTask = null;
-                // 使用已有的重试等待，给下播推送和房间状态轮询留出收敛时间。
-                _ = Task.Run(() => this.RestartAfterRecordTaskFailedAsync(RestartRecordingReason.GenericRetry));
+                _ = Task.Run(async () =>
+                {
+                    await Task.Yield();
+
+                    // 录制结束退出后的重试逻辑
+                    // 比 RestartAfterRecordTaskFailedAsync 少了等待时间
+
+                    // 如果状态是非直播中，跳过重试尝试。当状态切换到直播中时会开始新的录制任务。
+                    if (!this.Streaming || !this.AutoRecordForThisSession)
+                        return;
+
+                    try
+                    {
+                        // 开始录制前刷新房间信息
+                        if (this.Streaming && this.AutoRecordForThisSession)
+                            this.CreateAndStartNewRecordTask(skipFetchRoomInfo: false);
+                    }
+                    catch (Exception ex)
+                    {
+                        this.logger.Write(LogEventLevel.Warning, ex, "重试开始录制时出错");
+                        _ = Task.Run(() => this.RestartAfterRecordTaskFailedAsync(RestartRecordingReason.GenericRetry));
+                    }
+                });
             }
 
             this.basicDanmakuWriter.Disable();
