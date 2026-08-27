@@ -198,6 +198,7 @@ namespace BililiveRecorder.Core.Api.Danmaku
                     this.RoomID = obj["roomid"]?.ToObject<string>();
                     break;
                 case "DANMU_MSG": // 弹幕
+                case "DANMU_MSG_MIRROR": // 跨房弹幕
                     this.MsgType = DanmakuMsgType.Comment;
                     this.CommentText = obj["info"]?[1]?.ToObject<string>();
                     this.UserID = obj["info"]?[2]?[0]?.ToObject<long>() ?? 0;
