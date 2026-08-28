@@ -27,6 +27,7 @@ namespace BililiveRecorder.DependencyInjection
             .AddSingleton<IRecorder, Recorder>()
             .AddSingleton<IRoomFactory, RoomFactory>()
             .AddScoped<IBasicDanmakuWriter, BasicDanmakuWriter>()
+            .AddScoped<IRawDanmakuWriter, RawDanmakuWriter>()
             .AddSingleton<UserScriptRunner>()
             ;
 

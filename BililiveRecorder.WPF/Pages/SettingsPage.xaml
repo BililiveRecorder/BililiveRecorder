@@ -41,6 +41,7 @@
                         <ui:ToggleSwitch IsEnabled="{Binding RecordDanmaku}" IsOn="{Binding RecordDanmakuRaw}"
                                          OnContent="{l:Loc Settings_Danmaku_ToggleSwitch_Raw}" OffContent="{l:Loc Settings_Danmaku_ToggleSwitch_Raw}"/>
                     </StackPanel>
+                    <ui:ToggleSwitch IsOn="{Binding SaveRawDanmaku}" OnContent="保存原始弹幕数据（.jsonl）" OffContent="保存原始弹幕数据（.jsonl）"/>
                 </StackPanel>
             </GroupBox>
             <GroupBox Header="{l:Loc Settings_RecordMode_Title}">
