@@ -59,8 +59,21 @@
                     <ui:ToggleSwitch IsOn="{Binding FlvProcessorDisableSplitOnH264AnnexB}" OnContent="使用实验性花屏修复判定逻辑" OffContent="使用实验性花屏修复判定逻辑"/>
                 </StackPanel>
             </GroupBox>
-            <GroupBox Header="{l:Loc Settings_Splitting_Title}">
+            <GroupBox x:Name="SplittingGroupBox" Header="{l:Loc Settings_Splitting_Title}">
                 <StackPanel>
+                    <TextBlock Margin="0,0,0,5" FontSize="14" Foreground="DarkOrange" TextWrapping="Wrap"
+                               Text="{l:Loc Settings_Splitting_RawDataModeWarning}">
+                        <TextBlock.Style>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="Visibility" Value="Collapsed"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding RecordMode}" Value="{x:Static config:RecordMode.RawData}">
+                                        <Setter Property="Visibility" Value="Visible"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </TextBlock.Style>
+                    </TextBlock>
                     <RadioButton GroupName="Splitting" Name="CutDisabledRadioButton" Content="{l:Loc Settings_Splitting_RadioButton_Disabled}"
                                  IsChecked="{Binding Path=CuttingMode, Converter={StaticResource EnumToBooleanConverter},
                         ConverterParameter={x:Static config:CuttingMode.Disabled}}" />

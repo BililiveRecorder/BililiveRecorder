@@ -277,6 +277,9 @@
   <data name="RoomCard_SplitButton_Tooltip" xml:space="preserve">
     <value>喵喵喵喵喵喵喵喵</value>
   </data>
+  <data name="RoomCard_SplitButton_Tooltip_RawDataDisabled" xml:space="preserve">
+    <value>喵喵喵喵喵喵喵喵喵</value>
+  </data>
   <data name="RoomCard_Status_AutoRecordForThisSessionDisabled_Tooltip" xml:space="preserve">
     <value>喵喵喵喵喵喵喵喵喵喵~ 喵喵喵喵喵喵喵</value>
   </data>
@@ -490,6 +493,9 @@
   <data name="Settings_Splitting_RadioButton_Disabled" xml:space="preserve">
     <value>喵喵喵喵喵</value>
   </data>
+  <data name="Settings_Splitting_ToggleSwitch_ByTitle" xml:space="preserve">
+    <value>喵喵喵喵喵喵喵喵喵喵</value>
+  </data>
   <data name="Settings_Splitting_TextBox_Left" xml:space="preserve">
     <value>喵</value>
   </data>
@@ -504,6 +510,9 @@
   </data>
   <data name="Settings_Splitting_Title" xml:space="preserve">
     <value>喵喵喵喵</value>
+  </data>
+  <data name="Settings_Splitting_RawDataModeWarning" xml:space="preserve">
+    <value>喵喵喵喵喵喵喵喵喵喵</value>
   </data>
   <data name="Settings_Webhook_Address" xml:space="preserve">
     <value>Nyahook 喵喵 喵喵喵喵</value>

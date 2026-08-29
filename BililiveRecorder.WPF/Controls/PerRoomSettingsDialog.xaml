@@ -1,5 +1,6 @@
 <ui:ContentDialog
     x:Class="BililiveRecorder.WPF.Controls.PerRoomSettingsDialog"
+    x:Name="RootDialog"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -75,19 +76,32 @@
                         </local:SettingWithDefault>
                     </StackPanel>
                 </GroupBox>
-                <GroupBox Header="{l:Loc Settings_Splitting_Title}">
+                <GroupBox x:Name="SplittingGroupBox" Header="{l:Loc Settings_Splitting_Title}">
                     <StackPanel>
+                        <TextBlock Margin="0,0,0,5" FontSize="14" Foreground="DarkOrange" TextWrapping="Wrap"
+                                   Text="{l:Loc Settings_Splitting_RawDataModeWarning}">
+                            <TextBlock.Style>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding DataContext.RecordModeForThisSession, ElementName=RootDialog}" Value="{x:Static config:RecordMode.RawData}">
+                                            <Setter Property="Visibility" Value="Visible"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBlock.Style>
+                        </TextBlock>
                         <local:SettingWithDefault IsSettingNotUsingDefault="{Binding HasCuttingMode}">
                             <StackPanel>
                                 <RadioButton GroupName="Splitting" Content="{l:Loc Settings_Splitting_RadioButton_Disabled}"
-                                 IsChecked="{Binding Path=CuttingMode, Converter={StaticResource EnumToBooleanConverter},
-                        ConverterParameter={x:Static config:CuttingMode.Disabled}}" />
+                                             IsChecked="{Binding Path=CuttingMode, Converter={StaticResource EnumToBooleanConverter},
+                                    ConverterParameter={x:Static config:CuttingMode.Disabled}}" />
                                 <RadioButton GroupName="Splitting" Content="{l:Loc Settings_Splitting_RadioButton_BySize}"
-                                 IsChecked="{Binding Path=CuttingMode, Converter={StaticResource EnumToBooleanConverter},
-                        ConverterParameter={x:Static config:CuttingMode.BySize}}" />
+                                             IsChecked="{Binding Path=CuttingMode, Converter={StaticResource EnumToBooleanConverter},
+                                    ConverterParameter={x:Static config:CuttingMode.BySize}}" />
                                 <RadioButton GroupName="Splitting" Content="{l:Loc Settings_Splitting_RadioButton_ByTime}"
-                                 IsChecked="{Binding Path=CuttingMode, Converter={StaticResource EnumToBooleanConverter},
-                        ConverterParameter={x:Static config:CuttingMode.ByTime}}" />
+                                             IsChecked="{Binding Path=CuttingMode, Converter={StaticResource EnumToBooleanConverter},
+                                    ConverterParameter={x:Static config:CuttingMode.ByTime}}" />
                             </StackPanel>
                         </local:SettingWithDefault>
                         <local:SettingWithDefault IsSettingNotUsingDefault="{Binding HasCuttingNumber}">
