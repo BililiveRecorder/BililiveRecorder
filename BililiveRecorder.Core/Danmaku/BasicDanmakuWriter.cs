@@ -168,16 +168,19 @@ namespace BililiveRecorder.Core.Danmaku
                     case DanmakuMsgType.GiftSend:
                         if (this.config.RecordDanmakuGift)
                         {
-                            await this.xmlWriter.WriteStartElementAsync(null, "gift", null).ConfigureAwait(false);
                             var ts = Math.Max(this.dmTime.Elapsed.TotalSeconds, 0d);
-                            await this.xmlWriter.WriteAttributeStringAsync(null, "ts", null, ts.ToString("F3")).ConfigureAwait(false);
-                            await this.xmlWriter.WriteAttributeStringAsync(null, "user", null, RemoveInvalidXMLChars(danmakuModel.UserName)).ConfigureAwait(false);
-                            await this.xmlWriter.WriteAttributeStringAsync(null, "uid", null, danmakuModel.UserID.ToString()).ConfigureAwait(false);
-                            await this.xmlWriter.WriteAttributeStringAsync(null, "giftname", null, RemoveInvalidXMLChars(danmakuModel.GiftName)).ConfigureAwait(false);
-                            await this.xmlWriter.WriteAttributeStringAsync(null, "giftcount", null, danmakuModel.GiftCount.ToString()).ConfigureAwait(false);
-                            if (recordDanmakuRaw)
-                                await this.xmlWriter.WriteAttributeStringAsync(null, "raw", null, RemoveInvalidXMLChars(danmakuModel.RawObject?["data"]?.ToString(Newtonsoft.Json.Formatting.None))).ConfigureAwait(false);
-                            await this.xmlWriter.WriteEndElementAsync().ConfigureAwait(false);
+                            var raw = recordDanmakuRaw ? RemoveInvalidXMLChars(danmakuModel.RawObject?["data"]?.ToString(Newtonsoft.Json.Formatting.None)) : null;
+
+                            if (danmakuModel.GiftList is { Count: > 0 } giftList)
+                            {
+                                // SEND_GIFT_V2 一条消息可能包含多件礼物，每件礼物写一个 gift 元素
+                                foreach (var gift in giftList)
+                                    await WriteGiftAsync(this.xmlWriter, ts, danmakuModel, gift.GiftName, gift.Num, raw).ConfigureAwait(false);
+                            }
+                            else
+                            {
+                                await WriteGiftAsync(this.xmlWriter, ts, danmakuModel, danmakuModel.GiftName, danmakuModel.GiftCount, raw).ConfigureAwait(false);
+                            }
                         }
                         break;
                     case DanmakuMsgType.GuardBuy:
@@ -215,6 +218,19 @@ namespace BililiveRecorder.Core.Danmaku
             {
                 this.semaphoreSlim.Release();
             }
+        }
+
+        private static async Task WriteGiftAsync(XmlWriter writer, double ts, DanmakuModel danmakuModel, string? giftName, int giftCount, string? raw)
+        {
+            await writer.WriteStartElementAsync(null, "gift", null).ConfigureAwait(false);
+            await writer.WriteAttributeStringAsync(null, "ts", null, ts.ToString("F3")).ConfigureAwait(false);
+            await writer.WriteAttributeStringAsync(null, "user", null, RemoveInvalidXMLChars(danmakuModel.UserName)).ConfigureAwait(false);
+            await writer.WriteAttributeStringAsync(null, "uid", null, danmakuModel.UserID.ToString()).ConfigureAwait(false);
+            await writer.WriteAttributeStringAsync(null, "giftname", null, RemoveInvalidXMLChars(giftName)).ConfigureAwait(false);
+            await writer.WriteAttributeStringAsync(null, "giftcount", null, giftCount.ToString()).ConfigureAwait(false);
+            if (raw is not null)
+                await writer.WriteAttributeStringAsync(null, "raw", null, raw).ConfigureAwait(false);
+            await writer.WriteEndElementAsync().ConfigureAwait(false);
         }
 
         private static void WriteStartDocument(XmlWriter writer, IRoom room)

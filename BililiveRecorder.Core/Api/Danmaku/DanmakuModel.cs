@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using Newtonsoft.Json.Linq;
 
 #nullable enable
@@ -138,6 +140,15 @@ namespace BililiveRecorder.Core.Api.Danmaku
         public int GiftCount { get; set; }
 
         /// <summary>
+        /// 礼物列表
+        /// <para>此项有值的消息类型：<list type="bullet">
+        /// <item><see cref="DanmakuMsgType.GiftSend"/>（仅 <c>SEND_GIFT_V2</c>）</item>
+        /// </list></para>
+        /// <para>一条 <c>SEND_GIFT_V2</c> 消息可能包含多件礼物，<see cref="GiftName"/> 和 <see cref="GiftCount"/> 为其中第一件。</para>
+        /// </summary>
+        public IReadOnlyList<SendGiftV2GiftItem>? GiftList { get; set; }
+
+        /// <summary>
         /// 该用户是否为房管（包括主播）
         /// <para>此项有值的消息类型：<list type="bullet">
         /// <item><see cref="DanmakuMsgType.Comment"/></item>
@@ -213,6 +224,35 @@ namespace BililiveRecorder.Core.Api.Danmaku
                     this.UserID = obj["data"]?["uid"]?.ToObject<long>() ?? 0;
                     this.GiftCount = obj["data"]?["num"]?.ToObject<int>() ?? 0;
                     break;
+                case "SEND_GIFT_V2": // 送礼物，礼物内容为 base64 编码的 protobuf
+                    {
+                        var pb = obj["data"]?["pb"]?.ToObject<string>();
+                        if (string.IsNullOrEmpty(pb))
+                        {
+                            this.MsgType = DanmakuMsgType.Unknown;
+                            break;
+                        }
+
+                        var broadcast = SendGiftV2Broadcast.Parse(Convert.FromBase64String(pb));
+
+                        // 与网页端行为一致，switch 为 false 的消息不作为礼物处理
+                        if (!broadcast.Switch)
+                        {
+                            this.MsgType = DanmakuMsgType.Unknown;
+                            break;
+                        }
+
+                        this.MsgType = DanmakuMsgType.GiftSend;
+                        this.UserName = broadcast.Uname;
+                        this.UserID = broadcast.Uid;
+                        this.GiftList = broadcast.GiftList;
+                        if (broadcast.GiftList.Count > 0)
+                        {
+                            this.GiftName = broadcast.GiftList[0].GiftName;
+                            this.GiftCount = broadcast.GiftList[0].Num;
+                        }
+                        break;
+                    }
                 case "GUARD_BUY": // 购买舰长
                     {
                         this.MsgType = DanmakuMsgType.GuardBuy;
