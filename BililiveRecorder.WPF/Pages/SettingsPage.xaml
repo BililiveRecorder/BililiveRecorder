@@ -64,10 +64,10 @@
                         ConverterParameter={x:Static config:RecordMode.RawData}}" />
                 </StackPanel>
             </GroupBox>
-            <GroupBox Header="标准模式录制修复设置">
+            <GroupBox Header="{l:Loc Settings_GroupBox_StandardFix}">
                 <StackPanel>
-                    <ui:ToggleSwitch IsOn="{Binding FlvProcessorSplitOnScriptTag}" OnContent="检测到可能缺少数据时分段" OffContent="检测到可能缺少数据时分段"/>
-                    <ui:ToggleSwitch IsOn="{Binding FlvProcessorDisableSplitOnH264AnnexB}" OnContent="使用实验性花屏修复判定逻辑" OffContent="使用实验性花屏修复判定逻辑"/>
+                    <ui:ToggleSwitch IsOn="{Binding FlvProcessorSplitOnScriptTag}" OnContent="{l:Loc Settings_ToggleSwitch_FlvProcessorSplitOnScriptTag}" OffContent="{l:Loc Settings_ToggleSwitch_FlvProcessorSplitOnScriptTag}"/>
+                    <ui:ToggleSwitch IsOn="{Binding FlvProcessorDisableSplitOnH264AnnexB}" OnContent="{l:Loc Settings_ToggleSwitch_FlvProcessorDisableSplitOnH264AnnexB}" OffContent="{l:Loc Settings_ToggleSwitch_FlvProcessorDisableSplitOnH264AnnexB}"/>
                 </StackPanel>
             </GroupBox>
             <GroupBox Header="{l:Loc Settings_Splitting_Title}">
@@ -95,8 +95,8 @@
 
                 </StackPanel>
             </GroupBox>
-            <GroupBox Header="直播封面">
-                <ui:ToggleSwitch IsOn="{Binding SaveStreamCover}" OnContent="录制时同时保存直播封面" OffContent="录制时同时保存直播封面"/>
+            <GroupBox Header="{l:Loc Settings_GroupBox_StreamCover}">
+                <ui:ToggleSwitch IsOn="{Binding SaveStreamCover}" OnContent="{l:Loc Settings_ToggleSwitch_SaveStreamCover}" OffContent="{l:Loc Settings_ToggleSwitch_SaveStreamCover}"/>
             </GroupBox>
             <GroupBox Header="{l:Loc Settings_FileName_Title}">
                 <StackPanel MaxWidth="500" HorizontalAlignment="Left">
@@ -114,25 +114,25 @@
                     <c:SettingWithDefault IsSettingNotUsingDefault="{Binding HasFileNameRecordTemplate}" Header="{l:Loc Settings_FileName_Record}">
                         <TextBox Text="{Binding FileNameRecordTemplate,Delay=500}" ui:TextBoxHelper.IsDeleteButtonVisible="False"/>
                     </c:SettingWithDefault>
-                    <Button Margin="0,10,0,5" Content="测试" Click="TestFileNameTemplate_Button_Click"/>
+                    <Button Margin="0,10,0,5" Content="{l:Loc Settings_Button_Test}" Click="TestFileNameTemplate_Button_Click"/>
                     <Border x:Name="FileNameTestResultArea" d:DataContext="{d:DesignInstance Type=t:FileNameTemplateOutput}" Visibility="Collapsed"
                             BorderBrush="{DynamicResource SystemControlBackgroundBaseMediumBrush}" CornerRadius="5" BorderThickness="1" Padding="5">
                         <StackPanel Orientation="Vertical" Margin="0">
-                            <TextBlock Text="测试结果："/>
+                            <TextBlock Text="{l:Loc Settings_TextBlock_TestResult}"/>
                             <TextBlock Text="{Binding ErrorMessage,Mode=OneWay}" Margin="0,5"/>
                             <TextBox IsReadOnly="True" Text="{Binding RelativePath,Mode=OneWay}"/>
                         </StackPanel>
                     </Border>
                 </StackPanel>
             </GroupBox>
-            <GroupBox Header="开播通知">
+            <GroupBox Header="{l:Loc Settings_GroupBox_StreamStartNotify}">
                 <StackPanel>
-                    <ui:ToggleSwitch IsOn="{Binding WpfNotifyStreamStart}" OnContent="直播间开播时弹出系统通知" OffContent="直播间开播时弹出系统通知"/>
+                    <ui:ToggleSwitch IsOn="{Binding WpfNotifyStreamStart}" OnContent="{l:Loc Settings_ToggleSwitch_WpfNotifyStreamStart}" OffContent="{l:Loc Settings_ToggleSwitch_WpfNotifyStreamStart}"/>
                     <ui:ToggleSwitch IsOn="{Binding WpfDisableTrayToolTip}" OnContent="{l:Loc Settings_Wpf_ToggleSwitch_DisableTrayToolTip}" OffContent="{l:Loc Settings_Wpf_ToggleSwitch_DisableTrayToolTip}"/>
-                    <ui:ToggleSwitch IsOn="{Binding WpfDisableUpdateCheck}" OnContent="禁用自动检查更新" OffContent="禁用自动检查更新"/>
+                    <ui:ToggleSwitch IsOn="{Binding WpfDisableUpdateCheck}" OnContent="{l:Loc Settings_Wpf_ToggleSwitch_DisableUpdateCheck}" OffContent="{l:Loc Settings_Wpf_ToggleSwitch_DisableUpdateCheck}"/>
                 </StackPanel>
             </GroupBox>
-            <GroupBox Header="录制画质">
+            <GroupBox Header="{l:Loc Settings_GroupBox_RecordQuality}">
                 <StackPanel MaxWidth="400" HorizontalAlignment="Left">
                     <Button Margin="5,0,0,0" Command="{x:Static m:Commands.OpenLink}" CommandParameter="https://rec.danmuji.org/docs/basic/settings/#%E7%9B%B4%E6%92%AD%E7%94%BB%E8%B4%A8">
                         <StackPanel Orientation="Horizontal">
@@ -140,16 +140,16 @@
                             <ui:PathIcon Margin="5,0,0,0" Width="15" Height="15" Style="{StaticResource PathIconDataOpenInNew}"/>
                         </StackPanel>
                     </Button>
-                    <TextBlock Text="逗号分割的录制画质ID"/>
+                    <TextBlock Text="{l:Loc Settings_TextBlock_RecordQualityHint}"/>
                     <c:SettingWithDefault IsSettingNotUsingDefault="{Binding HasRecordingQuality}">
                         <TextBox Text="{Binding RecordingQuality,UpdateSourceTrigger=PropertyChanged,Delay=1000}"
                                  ui:TextBoxHelper.IsDeleteButtonVisible="False" Width="220" HorizontalAlignment="Left"/>
                     </c:SettingWithDefault>
                 </StackPanel>
             </GroupBox>
-            <GroupBox Header="录制条件">
+            <GroupBox Header="{l:Loc Settings_GroupBox_RecordCondition}">
                 <StackPanel>
-                    <TextBlock Margin="5" Text="跳过录制的直播标题正则匹配表达式，每行一个" />
+                    <TextBlock Margin="5" Text="{l:Loc Settings_TextBlock_SkipTitleRegexHint}" />
                     <TextBox Margin="5" AcceptsReturn="True" TextWrapping="Wrap" VerticalScrollBarVisibility="Visible"
                          Text="{Binding TitleFilterPatterns,UpdateSourceTrigger=PropertyChanged,Delay=1000}" ui:TextBoxHelper.IsDeleteButtonVisible="False"/>
                 </StackPanel>

@@ -727,4 +727,57 @@ Will use default setting and disable user input when checked.</comment>
     <value>关闭托盘图标悬浮提示</value>
     <comment>Shown as both On and Off content for the toggle switch</comment>
   </data>
+  <data name="Settings_Wpf_ToggleSwitch_DisableUpdateCheck" xml:space="preserve">
+    <value>禁用自动检查更新</value>
+    <comment>Shown as both On and Off content for the toggle switch</comment>
+  </data>
+  <data name="Settings_GroupBox_StandardFix" xml:space="preserve">
+    <value>标准模式录制修复设置</value>
+  </data>
+  <data name="Settings_ToggleSwitch_FlvProcessorSplitOnScriptTag" xml:space="preserve">
+    <value>检测到可能缺少数据时分段</value>
+    <comment>Shown as both On and Off content for the toggle switch</comment>
+  </data>
+  <data name="Settings_ToggleSwitch_FlvProcessorDisableSplitOnH264AnnexB" xml:space="preserve">
+    <value>使用实验性花屏修复判定逻辑</value>
+    <comment>Shown as both On and Off content for the toggle switch</comment>
+  </data>
+  <data name="Settings_GroupBox_StreamCover" xml:space="preserve">
+    <value>直播封面</value>
+  </data>
+  <data name="Settings_ToggleSwitch_SaveStreamCover" xml:space="preserve">
+    <value>录制时同时保存直播封面</value>
+    <comment>Shown as both On and Off content for the toggle switch</comment>
+  </data>
+  <data name="Settings_Button_Test" xml:space="preserve">
+    <value>测试</value>
+  </data>
+  <data name="Settings_TextBlock_TestResult" xml:space="preserve">
+    <value>测试结果：</value>
+  </data>
+  <data name="Settings_GroupBox_StreamStartNotify" xml:space="preserve">
+    <value>开播通知</value>
+  </data>
+  <data name="Settings_ToggleSwitch_WpfNotifyStreamStart" xml:space="preserve">
+    <value>直播间开播时弹出系统通知</value>
+    <comment>Shown as both On and Off content for the toggle switch</comment>
+  </data>
+  <data name="Settings_GroupBox_RecordQuality" xml:space="preserve">
+    <value>录制画质</value>
+  </data>
+  <data name="Settings_TextBlock_RecordQualityHint" xml:space="preserve">
+    <value>逗号分割的录制画质ID</value>
+  </data>
+  <data name="Settings_GroupBox_RecordCondition" xml:space="preserve">
+    <value>录制条件</value>
+  </data>
+  <data name="Settings_TextBlock_SkipTitleRegexHint" xml:space="preserve">
+    <value>跳过录制的直播标题正则匹配表达式，每行一个</value>
+  </data>
+  <data name="RoomListPage_Menu_View_NotifyStreamStart" xml:space="preserve">
+    <value>开播时弹出系统通知</value>
+  </data>
+  <data name="RoomListPage_Menu_RefreshAllRoomInfo" xml:space="preserve">
+    <value>刷新全部房间信息</value>
+  </data>
 </root>
