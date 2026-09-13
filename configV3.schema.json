@@ -546,6 +546,22 @@
             }
           }
         },
+        "SaveRawDanmaku": {
+          "description": "保存原始弹幕数据\n默认: false",
+          "markdownDescription": "保存原始弹幕数据  \n默认: `false `\n\n",
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "HasValue": {
+              "type": "boolean",
+              "default": true
+            },
+            "Value": {
+              "type": "boolean",
+              "default": false
+            }
+          }
+        },
         "SaveStreamCover": {
           "description": "保存直播封面\n默认: false",
           "markdownDescription": "保存直播封面  \n默认: `false `\n\n",
@@ -820,6 +836,22 @@
             "Value": {
               "type": "boolean",
               "default": true
+            }
+          }
+        },
+        "SaveRawDanmaku": {
+          "description": "保存原始弹幕数据\n默认: false",
+          "markdownDescription": "保存原始弹幕数据  \n默认: `false `\n\n",
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "HasValue": {
+              "type": "boolean",
+              "default": true
+            },
+            "Value": {
+              "type": "boolean",
+              "default": false
             }
           }
         },

@@ -80,6 +80,13 @@ export const data: Array<ConfigEntry> = [
         default: true
     },
     {
+        id: "SaveRawDanmaku",
+        name: "保存原始弹幕数据",
+        type: "bool",
+        configType: "room",
+        default: false
+    },
+    {
         id: "SaveStreamCover",
         name: "保存直播封面",
         type: "bool",
