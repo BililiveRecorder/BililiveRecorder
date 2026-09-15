@@ -128,7 +128,8 @@
             <GroupBox Header="开播通知">
                 <StackPanel>
                     <ui:ToggleSwitch IsOn="{Binding WpfNotifyStreamStart}" OnContent="直播间开播时弹出系统通知" OffContent="直播间开播时弹出系统通知"/>
-                    <ui:ToggleSwitch IsOn="{Binding WpfDisableTrayToolTip}" OnContent="关闭托盘图标悬浮提示" OffContent="关闭托盘图标悬浮提示"/>
+                    <ui:ToggleSwitch IsOn="{Binding WpfDisableTrayToolTip}" OnContent="{l:Loc Settings_Wpf_ToggleSwitch_DisableTrayToolTip}" OffContent="{l:Loc Settings_Wpf_ToggleSwitch_DisableTrayToolTip}"/>
+                    <ui:ToggleSwitch IsOn="{Binding WpfDisableUpdateCheck}" OnContent="禁用自动检查更新" OffContent="禁用自动检查更新"/>
                 </StackPanel>
             </GroupBox>
             <GroupBox Header="录制画质">

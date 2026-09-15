@@ -118,6 +118,22 @@
             }
           }
         },
+        "WpfDisableUpdateCheck": {
+          "description": "桌面版禁用自动检查更新\n默认: false",
+          "markdownDescription": "桌面版禁用自动检查更新  \n默认: `false `\n\n",
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "HasValue": {
+              "type": "boolean",
+              "default": true
+            },
+            "Value": {
+              "type": "boolean",
+              "default": false
+            }
+          }
+        },
         "Cookie": {
           "description": "Cookie\n默认: ",
           "markdownDescription": "Cookie  \n默认: ` `\n\n",

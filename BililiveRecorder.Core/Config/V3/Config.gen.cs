@@ -185,6 +185,11 @@ namespace BililiveRecorder.Core.Config.V3
         public bool WpfDisableTrayToolTip => this.GetPropertyValue<bool>();
 
         /// <summary>
+        /// 桌面版禁用自动检查更新
+        /// </summary>
+        public bool WpfDisableUpdateCheck => this.GetPropertyValue<bool>();
+
+        /// <summary>
         /// Cookie
         /// </summary>
         public string? Cookie => this.GetPropertyValue<string>();
@@ -446,6 +451,14 @@ namespace BililiveRecorder.Core.Config.V3
         public Optional<bool> OptionalWpfDisableTrayToolTip { get => this.GetPropertyValueOptional<bool>(nameof(this.WpfDisableTrayToolTip)); set => this.SetPropertyValueOptional(value, nameof(this.WpfDisableTrayToolTip)); }
 
         /// <summary>
+        /// 桌面版禁用自动检查更新
+        /// </summary>
+        public bool WpfDisableUpdateCheck { get => this.GetPropertyValue<bool>(); set => this.SetPropertyValue(value); }
+        public bool HasWpfDisableUpdateCheck { get => this.GetPropertyHasValue(nameof(this.WpfDisableUpdateCheck)); set => this.SetPropertyHasValue<bool>(value, nameof(this.WpfDisableUpdateCheck)); }
+        [JsonProperty(nameof(WpfDisableUpdateCheck)), EditorBrowsable(EditorBrowsableState.Never)]
+        public Optional<bool> OptionalWpfDisableUpdateCheck { get => this.GetPropertyValueOptional<bool>(nameof(this.WpfDisableUpdateCheck)); set => this.SetPropertyValueOptional(value, nameof(this.WpfDisableUpdateCheck)); }
+
+        /// <summary>
         /// Cookie
         /// </summary>
         public string? Cookie { get => this.GetPropertyValue<string>(); set => this.SetPropertyValue(value); }
@@ -623,6 +636,8 @@ namespace BililiveRecorder.Core.Config.V3
         public bool WpfNotifyStreamStart => false;
 
         public bool WpfDisableTrayToolTip => false;
+
+        public bool WpfDisableUpdateCheck => false;
 
         public string Cookie => @"";
 

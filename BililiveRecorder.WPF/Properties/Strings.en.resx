@@ -720,4 +720,8 @@ Please analyze the original file, not the output of auto repair.</value>
   <data name="WorkDirectorySelector_Title" xml:space="preserve">
     <value>Select Directory</value>
   </data>
+  <data name="Settings_Wpf_ToggleSwitch_DisableTrayToolTip" xml:space="preserve">
+    <value>Disable tray icon tooltip</value>
+    <comment>Shown as both On and Off content for the toggle switch</comment>
+  </data>
 </root>

@@ -172,6 +172,13 @@ export const data: Array<ConfigEntry> = [
         default: false
     },
     {
+        id: "WpfDisableUpdateCheck",
+        name: "桌面版禁用自动检查更新",
+        type: "bool",
+        configType: "globalOnly",
+        default: false
+    },
+    {
         id: "Cookie",
         name: "Cookie",
         type: "string?",
