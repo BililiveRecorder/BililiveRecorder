@@ -424,6 +424,9 @@
   <data name="Settings_Danmaku_ToggleSwitch_Guard" xml:space="preserve">
     <value>喵喵 喵喵喵喵</value>
   </data>
+  <data name="Settings_Danmaku_ToggleSwitch_KeepConnected" xml:space="preserve">
+    <value>喵喵喵喵喵喵喵喵喵喵喵喵喵喵喵喵喵喵喵喵</value>
+  </data>
   <data name="Settings_Danmaku_ToggleSwitch_Raw" xml:space="preserve">
     <value>喵喵 喵喵喵喵喵</value>
   </data>

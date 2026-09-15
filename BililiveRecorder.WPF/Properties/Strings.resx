@@ -426,6 +426,9 @@
   <data name="Settings_Danmaku_ToggleSwitch_Guard" xml:space="preserve">
     <value>保存 舰长购买</value>
   </data>
+  <data name="Settings_Danmaku_ToggleSwitch_KeepConnected" xml:space="preserve">
+    <value>开启自动录制时保持连接弹幕服务器</value>
+  </data>
   <data name="Settings_Danmaku_ToggleSwitch_Raw" xml:space="preserve">
     <value>保存 弹幕原始数据</value>
   </data>

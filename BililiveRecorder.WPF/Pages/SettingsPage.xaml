@@ -30,17 +30,28 @@
             <TextBlock Text="{l:Loc Settings_SettingsPage_Title}" Style="{StaticResource TitleTextBlockStyle}" FontFamily="Microsoft Yahei" Margin="0,10"/>
             <GroupBox Header="{l:Loc Settings_Danmaku_Title}">
                 <StackPanel>
-                    <ui:ToggleSwitch IsOn="{Binding RecordDanmaku}" Name="RecordDanmakuCheckbox" OnContent="{l:Loc Settings_Danmaku_ToggleSwitch_Enabled}" OffContent="{l:Loc Settings_Danmaku_ToggleSwitch_Enabled}"/>
-                    <StackPanel Margin="0,7,0,0" Visibility="{Binding ElementName=RecordDanmakuCheckbox,Path=IsOn,Converter={StaticResource BooleanToVisibilityCollapsedConverter}}">
+                    <ui:ToggleSwitch IsOn="{Binding RecordDanmaku}" Name="RecordDanmakuCheckbox"
+                                     OnContent="{l:Loc Settings_Danmaku_ToggleSwitch_Enabled}"
+                                     OffContent="{l:Loc Settings_Danmaku_ToggleSwitch_Enabled}"/>
+                    <StackPanel Margin="28,2,0,0"
+                                Visibility="{Binding ElementName=RecordDanmakuCheckbox,Path=IsOn,
+                                             Converter={StaticResource BooleanToVisibilityCollapsedConverter}}">
                         <ui:ToggleSwitch IsEnabled="{Binding RecordDanmaku}" IsOn="{Binding RecordDanmakuSuperChat}"
-                                         OnContent="{l:Loc Settings_Danmaku_ToggleSwitch_SuperChat}" OffContent="{l:Loc Settings_Danmaku_ToggleSwitch_SuperChat}"/>
+                                         OnContent="{l:Loc Settings_Danmaku_ToggleSwitch_SuperChat}"
+                                         OffContent="{l:Loc Settings_Danmaku_ToggleSwitch_SuperChat}"/>
                         <ui:ToggleSwitch IsEnabled="{Binding RecordDanmaku}" IsOn="{Binding RecordDanmakuGuard}"
-                                         OnContent="{l:Loc Settings_Danmaku_ToggleSwitch_Guard}" OffContent="{l:Loc Settings_Danmaku_ToggleSwitch_Guard}"/>
+                                         OnContent="{l:Loc Settings_Danmaku_ToggleSwitch_Guard}"
+                                         OffContent="{l:Loc Settings_Danmaku_ToggleSwitch_Guard}"/>
                         <ui:ToggleSwitch IsEnabled="{Binding RecordDanmaku}" IsOn="{Binding RecordDanmakuGift}"
-                                         OnContent="{l:Loc Settings_Danmaku_ToggleSwitch_Gift}" OffContent="{l:Loc Settings_Danmaku_ToggleSwitch_Gift}"/>
+                                         OnContent="{l:Loc Settings_Danmaku_ToggleSwitch_Gift}"
+                                         OffContent="{l:Loc Settings_Danmaku_ToggleSwitch_Gift}"/>
                         <ui:ToggleSwitch IsEnabled="{Binding RecordDanmaku}" IsOn="{Binding RecordDanmakuRaw}"
-                                         OnContent="{l:Loc Settings_Danmaku_ToggleSwitch_Raw}" OffContent="{l:Loc Settings_Danmaku_ToggleSwitch_Raw}"/>
+                                         OnContent="{l:Loc Settings_Danmaku_ToggleSwitch_Raw}"
+                                         OffContent="{l:Loc Settings_Danmaku_ToggleSwitch_Raw}"/>
                     </StackPanel>
+                    <ui:ToggleSwitch IsOn="{Binding RecordDanmakuKeepConnected}" Margin="0,8,0,0"
+                                     OnContent="{l:Loc Settings_Danmaku_ToggleSwitch_KeepConnected}"
+                                     OffContent="{l:Loc Settings_Danmaku_ToggleSwitch_KeepConnected}"/>
                 </StackPanel>
             </GroupBox>
             <GroupBox Header="{l:Loc Settings_RecordMode_Title}">

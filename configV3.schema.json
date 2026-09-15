@@ -359,7 +359,7 @@
         },
         "NetworkTransportBindAddress": {
           "description": "绑定的网络接口或IP地址\n默认: ",
-          "markdownDescription": "绑定的网络接口或IP地址  \n默认: ``\n\n",
+          "markdownDescription": "绑定的网络接口或IP地址  \n默认: ` `\n\n",
           "type": "object",
           "additionalProperties": false,
           "properties": {
@@ -533,6 +533,22 @@
         "RecordDanmakuGuard": {
           "description": "弹幕录制-上船\n默认: true",
           "markdownDescription": "弹幕录制-上船  \n默认: `true `\n\n",
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "HasValue": {
+              "type": "boolean",
+              "default": true
+            },
+            "Value": {
+              "type": "boolean",
+              "default": true
+            }
+          }
+        },
+        "RecordDanmakuKeepConnected": {
+          "description": "弹幕录制-保持连接\n默认: true",
+          "markdownDescription": "弹幕录制-保持连接  \n默认: `true `\n\n",
           "type": "object",
           "additionalProperties": false,
           "properties": {
@@ -810,6 +826,22 @@
         "RecordDanmakuGuard": {
           "description": "弹幕录制-上船\n默认: true",
           "markdownDescription": "弹幕录制-上船  \n默认: `true `\n\n",
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "HasValue": {
+              "type": "boolean",
+              "default": true
+            },
+            "Value": {
+              "type": "boolean",
+              "default": true
+            }
+          }
+        },
+        "RecordDanmakuKeepConnected": {
+          "description": "弹幕录制-保持连接\n默认: true",
+          "markdownDescription": "弹幕录制-保持连接  \n默认: `true `\n\n",
           "type": "object",
           "additionalProperties": false,
           "properties": {

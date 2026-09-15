@@ -80,6 +80,13 @@ export const data: Array<ConfigEntry> = [
         default: true
     },
     {
+        id: "RecordDanmakuKeepConnected",
+        name: "弹幕录制-保持连接",
+        type: "bool",
+        configType: "room",
+        default: true
+    },
+    {
         id: "SaveStreamCover",
         name: "保存直播封面",
         type: "bool",

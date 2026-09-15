@@ -427,6 +427,9 @@ Modification of timing might get your IP blocked, and/or unable to start recordi
   <data name="Settings_Danmaku_ToggleSwitch_Guard" xml:space="preserve">
     <value>Save New Member</value>
   </data>
+  <data name="Settings_Danmaku_ToggleSwitch_KeepConnected" xml:space="preserve">
+    <value>Keep Connected to Danmaku Server When Auto-Recording is On</value>
+  </data>
   <data name="Settings_Danmaku_ToggleSwitch_Raw" xml:space="preserve">
     <value>Save Raw Data</value>
   </data>

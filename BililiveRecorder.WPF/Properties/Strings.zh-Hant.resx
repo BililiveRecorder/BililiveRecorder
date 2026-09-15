@@ -403,6 +403,9 @@
   <data name="Settings_Danmaku_ToggleSwitch_Guard" xml:space="preserve">
     <value>保存 艦長購買</value>
   </data>
+  <data name="Settings_Danmaku_ToggleSwitch_KeepConnected" xml:space="preserve">
+    <value>開啟自動錄製時保持連接彈幕伺服器</value>
+  </data>
   <data name="Settings_Danmaku_ToggleSwitch_Raw" xml:space="preserve">
     <value>保存 彈幕原始數據</value>
   </data>
