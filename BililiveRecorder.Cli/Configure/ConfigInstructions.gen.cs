@@ -35,6 +35,7 @@ namespace BililiveRecorder.Cli.Configure
         WebHookUrlsV2,
         WpfShowTitleAndArea,
         WpfNotifyStreamStart,
+        WpfDisableTrayToolTip,
         Cookie,
         LiveApiHost,
         TimingCheckInterval,
@@ -102,6 +103,7 @@ namespace BililiveRecorder.Cli.Configure
             GlobalConfig.Add(GlobalConfigProperties.WebHookUrlsV2, new ConfigInstruction<GlobalConfig, string>(config => config.HasWebHookUrlsV2 = false, (config, value) => config.WebHookUrlsV2 = value) { Name = "WebHookUrlsV2", CanBeOptional = true });
             GlobalConfig.Add(GlobalConfigProperties.WpfShowTitleAndArea, new ConfigInstruction<GlobalConfig, bool>(config => config.HasWpfShowTitleAndArea = false, (config, value) => config.WpfShowTitleAndArea = value) { Name = "WpfShowTitleAndArea", CanBeOptional = true });
             GlobalConfig.Add(GlobalConfigProperties.WpfNotifyStreamStart, new ConfigInstruction<GlobalConfig, bool>(config => config.HasWpfNotifyStreamStart = false, (config, value) => config.WpfNotifyStreamStart = value) { Name = "WpfNotifyStreamStart", CanBeOptional = true });
+            GlobalConfig.Add(GlobalConfigProperties.WpfDisableTrayToolTip, new ConfigInstruction<GlobalConfig, bool>(config => config.HasWpfDisableTrayToolTip = false, (config, value) => config.WpfDisableTrayToolTip = value) { Name = "WpfDisableTrayToolTip", CanBeOptional = true });
             GlobalConfig.Add(GlobalConfigProperties.Cookie, new ConfigInstruction<GlobalConfig, string>(config => config.HasCookie = false, (config, value) => config.Cookie = value) { Name = "Cookie", CanBeOptional = true });
             GlobalConfig.Add(GlobalConfigProperties.LiveApiHost, new ConfigInstruction<GlobalConfig, string>(config => config.HasLiveApiHost = false, (config, value) => config.LiveApiHost = value) { Name = "LiveApiHost", CanBeOptional = true });
             GlobalConfig.Add(GlobalConfigProperties.TimingCheckInterval, new ConfigInstruction<GlobalConfig, uint>(config => config.HasTimingCheckInterval = false, (config, value) => config.TimingCheckInterval = value) { Name = "TimingCheckInterval", CanBeOptional = true });

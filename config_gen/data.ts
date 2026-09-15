@@ -165,6 +165,13 @@ export const data: Array<ConfigEntry> = [
         default: false
     },
     {
+        id: "WpfDisableTrayToolTip",
+        name: "桌面版关闭托盘图标悬浮提示",
+        type: "bool",
+        configType: "globalOnly",
+        default: false
+    },
+    {
         id: "Cookie",
         name: "Cookie",
         type: "string?",

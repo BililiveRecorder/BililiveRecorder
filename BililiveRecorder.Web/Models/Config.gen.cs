@@ -73,6 +73,7 @@ namespace BililiveRecorder.Web.Models
         public Optional<string?>? OptionalWebHookUrlsV2 { get; set; }
         public Optional<bool>? OptionalWpfShowTitleAndArea { get; set; }
         public Optional<bool>? OptionalWpfNotifyStreamStart { get; set; }
+        public Optional<bool>? OptionalWpfDisableTrayToolTip { get; set; }
         public Optional<string?>? OptionalCookie { get; set; }
         public Optional<string?>? OptionalLiveApiHost { get; set; }
         public Optional<uint>? OptionalTimingCheckInterval { get; set; }
@@ -113,6 +114,7 @@ namespace BililiveRecorder.Web.Models
             if (this.OptionalWebHookUrlsV2.HasValue) config.OptionalWebHookUrlsV2 = this.OptionalWebHookUrlsV2.Value;
             if (this.OptionalWpfShowTitleAndArea.HasValue) config.OptionalWpfShowTitleAndArea = this.OptionalWpfShowTitleAndArea.Value;
             if (this.OptionalWpfNotifyStreamStart.HasValue) config.OptionalWpfNotifyStreamStart = this.OptionalWpfNotifyStreamStart.Value;
+            if (this.OptionalWpfDisableTrayToolTip.HasValue) config.OptionalWpfDisableTrayToolTip = this.OptionalWpfDisableTrayToolTip.Value;
             if (this.OptionalCookie.HasValue) config.OptionalCookie = this.OptionalCookie.Value;
             if (this.OptionalLiveApiHost.HasValue) config.OptionalLiveApiHost = this.OptionalLiveApiHost.Value;
             if (this.OptionalTimingCheckInterval.HasValue) config.OptionalTimingCheckInterval = this.OptionalTimingCheckInterval.Value;
@@ -179,6 +181,7 @@ namespace BililiveRecorder.Web.Models.Rest
         public Optional<string?> OptionalWebHookUrlsV2 { get; set; }
         public Optional<bool> OptionalWpfShowTitleAndArea { get; set; }
         public Optional<bool> OptionalWpfNotifyStreamStart { get; set; }
+        public Optional<bool> OptionalWpfDisableTrayToolTip { get; set; }
         public Optional<string?> OptionalCookie { get; set; }
         public Optional<string?> OptionalLiveApiHost { get; set; }
         public Optional<uint> OptionalTimingCheckInterval { get; set; }
@@ -250,6 +253,7 @@ namespace BililiveRecorder.Web.Models.Graphql
             this.Field(x => x.OptionalWebHookUrlsV2, type: typeof(HierarchicalOptionalType<string>));
             this.Field(x => x.OptionalWpfShowTitleAndArea, type: typeof(HierarchicalOptionalType<bool>));
             this.Field(x => x.OptionalWpfNotifyStreamStart, type: typeof(HierarchicalOptionalType<bool>));
+            this.Field(x => x.OptionalWpfDisableTrayToolTip, type: typeof(HierarchicalOptionalType<bool>));
             this.Field(x => x.OptionalCookie, type: typeof(HierarchicalOptionalType<string>));
             this.Field(x => x.OptionalLiveApiHost, type: typeof(HierarchicalOptionalType<string>));
             this.Field(x => x.OptionalTimingCheckInterval, type: typeof(HierarchicalOptionalType<uint>));
@@ -294,6 +298,7 @@ namespace BililiveRecorder.Web.Models.Graphql
             this.Field(x => x.WebHookUrlsV2);
             this.Field(x => x.WpfShowTitleAndArea);
             this.Field(x => x.WpfNotifyStreamStart);
+            this.Field(x => x.WpfDisableTrayToolTip);
             this.Field(x => x.Cookie);
             this.Field(x => x.LiveApiHost);
             this.Field(x => x.TimingCheckInterval);
@@ -361,6 +366,7 @@ namespace BililiveRecorder.Web.Models.Graphql
             this.Field(x => x.OptionalWebHookUrlsV2, nullable: true, type: typeof(HierarchicalOptionalInputType<string>));
             this.Field(x => x.OptionalWpfShowTitleAndArea, nullable: true, type: typeof(HierarchicalOptionalInputType<bool>));
             this.Field(x => x.OptionalWpfNotifyStreamStart, nullable: true, type: typeof(HierarchicalOptionalInputType<bool>));
+            this.Field(x => x.OptionalWpfDisableTrayToolTip, nullable: true, type: typeof(HierarchicalOptionalInputType<bool>));
             this.Field(x => x.OptionalCookie, nullable: true, type: typeof(HierarchicalOptionalInputType<string>));
             this.Field(x => x.OptionalLiveApiHost, nullable: true, type: typeof(HierarchicalOptionalInputType<string>));
             this.Field(x => x.OptionalTimingCheckInterval, nullable: true, type: typeof(HierarchicalOptionalInputType<uint>));

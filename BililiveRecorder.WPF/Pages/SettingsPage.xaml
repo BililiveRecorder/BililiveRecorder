@@ -126,7 +126,10 @@
                 </StackPanel>
             </GroupBox>
             <GroupBox Header="开播通知">
-                <ui:ToggleSwitch IsOn="{Binding WpfNotifyStreamStart}" OnContent="直播间开播时弹出系统通知" OffContent="直播间开播时弹出系统通知"/>
+                <StackPanel>
+                    <ui:ToggleSwitch IsOn="{Binding WpfNotifyStreamStart}" OnContent="直播间开播时弹出系统通知" OffContent="直播间开播时弹出系统通知"/>
+                    <ui:ToggleSwitch IsOn="{Binding WpfDisableTrayToolTip}" OnContent="关闭托盘图标悬浮提示" OffContent="关闭托盘图标悬浮提示"/>
+                </StackPanel>
             </GroupBox>
             <GroupBox Header="录制画质">
                 <StackPanel MaxWidth="400" HorizontalAlignment="Left">
