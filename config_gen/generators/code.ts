@@ -76,10 +76,7 @@ export default function code(sections: string[]): void {
 
         let format = spawn('dotnet',
             [
-                'tool',
-                'run',
-                'dotnet-format',
-                '--',
+                'format',
                 '--include',
                 ...formatList
             ],
@@ -88,11 +85,11 @@ export default function code(sections: string[]): void {
             })
 
         format.stdout.on('data', function (data) {
-            stdout.write('[dotnet-format] ' + data.toString());
+            stdout.write('[dotnet format] ' + data.toString());
         });
 
         format.stderr.on('data', function (data) {
-            stderr.write('[dotnet-format] ' + data.toString());
+            stderr.write('[dotnet format] ' + data.toString());
         });
 
         format.on('exit', function (code) {

@@ -1,5 +1,0 @@
-extraction:
-  csharp:
-     index:
-        build_command:
-        - dotnet build BililiveRecorder.Cli/BililiveRecorder.Cli.csproj

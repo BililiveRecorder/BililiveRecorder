@@ -19,11 +19,11 @@
         <!--<Message Importance="High" Text="DEBUG12 $(_CommandLineDefinedRuntimeIdentifier) $(_CommandLineDefinedSelfContained) $(TargetFrameworkIdentifier) $([MSBuild]::VersionGreaterThanOrEquals($(TargetFrameworkVersion), '6.0'))"/>-->
     </Target>
     <ItemGroup>
-        <PackageReference Include="Microsoft.CodeAnalysis.BannedApiAnalyzers" Version="3.3.3">
+        <PackageReference Include="Microsoft.CodeAnalysis.BannedApiAnalyzers" Version="5.6.0">
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
             <PrivateAssets>all</PrivateAssets>
         </PackageReference>
-        <PackageReference Include="GitVersion.MsBuild" Version="5.10.1">
+        <PackageReference Include="GitVersion.MsBuild" Version="6.8.2">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>

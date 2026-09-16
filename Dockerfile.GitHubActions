@@ -8,7 +8,7 @@ ENV PGID=0
 WORKDIR /app
 VOLUME [ "/rec" ]
 
-COPY --from=tianon/gosu:1.17 /gosu /usr/local/bin/
+COPY --from=tianon/gosu:1.19 /gosu /usr/local/bin/
 COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
 COPY ./BililiveRecorder.Cli/bin/docker_out /app
 
