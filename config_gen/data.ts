@@ -80,6 +80,13 @@ export const data: Array<ConfigEntry> = [
         default: true
     },
     {
+        id: "RecordDanmakuKeepConnected",
+        name: "弹幕录制-保持连接",
+        type: "bool",
+        configType: "room",
+        default: true
+    },
+    {
         id: "SaveStreamCover",
         name: "保存直播封面",
         type: "bool",
@@ -153,6 +160,20 @@ export const data: Array<ConfigEntry> = [
     {
         id: "WpfNotifyStreamStart",
         name: "桌面版开播时弹出系统通知",
+        type: "bool",
+        configType: "globalOnly",
+        default: false
+    },
+    {
+        id: "WpfDisableTrayToolTip",
+        name: "桌面版关闭托盘图标悬浮提示",
+        type: "bool",
+        configType: "globalOnly",
+        default: false
+    },
+    {
+        id: "WpfDisableUpdateCheck",
+        name: "桌面版禁用自动检查更新",
         type: "bool",
         configType: "globalOnly",
         default: false

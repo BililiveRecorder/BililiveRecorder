@@ -58,13 +58,15 @@ namespace BililiveRecorder.Core.Api.Danmaku
                 this.danmakuTransport = null;
 
                 this.timer.Stop();
+
+                // 在信号量内触发事件，保证与其他连接/断开操作的事件顺序一致，
+                // 避免迟到的"已断开"事件出现在成功重连的"已连接"事件之后。
+                StatusChanged?.Invoke(this, StatusChangedEventArgs.False);
             }
             finally
             {
                 this.semaphoreSlim.Release();
             }
-
-            StatusChanged?.Invoke(this, StatusChangedEventArgs.False);
         }
 
         public async Task ConnectAsync(int roomId, DanmakuTransportMode transportMode, string? bindAddress, AllowedAddressFamily allowedAddressFamily, CancellationToken cancellationToken)
@@ -131,13 +133,13 @@ namespace BililiveRecorder.Core.Api.Danmaku
                     }
                     catch (Exception) { }
                 }, CancellationToken.None);
+
+                StatusChanged?.Invoke(this, StatusChangedEventArgs.True);
             }
             finally
             {
                 this.semaphoreSlim.Release();
             }
-
-            StatusChanged?.Invoke(this, StatusChangedEventArgs.True);
         }
 
         private void ProcessCommand(string json)

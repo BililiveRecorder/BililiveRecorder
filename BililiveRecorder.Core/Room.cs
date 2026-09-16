@@ -154,12 +154,23 @@ namespace BililiveRecorder.Core
             {
                 this.AutoRecordForThisSession = true;
 
-                _ = Task.Run(() =>
+                _ = Task.Run(async () =>
                 {
+                    // 未开启自动录制时不会保持弹幕连接，房间状态可能不是最新的，
+                    // 所以手动开始录制前必须先刷新一次房间信息，
+                    // 否则 CreateAndStartNewRecordTask 会因为过期的 Streaming=false 直接返回。
                     try
                     {
-                        // 手动触发录制，启动录制前再刷新一次房间信息
-                        this.CreateAndStartNewRecordTask(skipFetchRoomInfo: false);
+                        await this.FetchRoomInfoAsync();
+                    }
+                    catch (Exception ex)
+                    {
+                        this.logger.Write(ex is ExecutionRejectedException ? LogEventLevel.Verbose : LogEventLevel.Warning, ex, "尝试开始录制时刷新房间信息出错");
+                    }
+
+                    try
+                    {
+                        this.CreateAndStartNewRecordTask(skipFetchRoomInfo: true);
                     }
                     catch (Exception ex)
                     {
@@ -304,6 +315,8 @@ namespace BililiveRecorder.Core
                         if (!skipFetchRoomInfo)
                             await this.FetchRoomInfoAsync();
 
+                        this.StartDamakuConnection(delay: false);
+
                         await this.recordTask.StartAsync();
                     }
                     catch (NoMatchingQnValueException)
@@ -406,6 +419,14 @@ namespace BililiveRecorder.Core
             {
                 if (this.disposedValue)
                     return;
+
+                if (!this.Recording && !(this.RoomConfig.AutoRecord && this.RoomConfig.RecordDanmakuKeepConnected))
+                {
+                    // 定时器每次触发都会走到这里，降为 Verbose 避免刷日志
+                    this.logger.Verbose("未开启自动录制且当前未在录制中，跳过连接弹幕服务器");
+                    return;
+                }
+
                 try
                 {
                     if (delay)
@@ -443,6 +464,27 @@ namespace BililiveRecorder.Core
                         this.StartDamakuConnection(delay: true);
                 }
             });
+
+        /// <summary>
+        /// 当前配置下不需要保持弹幕服务器连接时断开连接。
+        /// </summary>
+        private void DisconnectDanmakuIfNotNeeded()
+        {
+            if (this.Recording || (this.RoomConfig.AutoRecord && this.RoomConfig.RecordDanmakuKeepConnected))
+                return;
+
+            _ = Task.Run(async () =>
+            {
+                try
+                {
+                    await this.danmakuClient.DisconnectAsync().ConfigureAwait(false);
+                }
+                catch (Exception ex)
+                {
+                    this.logger.Debug(ex, "断开弹幕服务器连接时出错");
+                }
+            });
+        }
 
         #endregion
 
@@ -597,6 +639,8 @@ namespace BililiveRecorder.Core
             this.OnPropertyChanged(nameof(this.Recording));
             this.Stats.Reset();
 
+            this.DisconnectDanmakuIfNotNeeded();
+
             RecordSessionEnded?.Invoke(this, new RecordSessionEndedEventArgs(this)
             {
                 SessionId = id
@@ -743,10 +787,16 @@ namespace BililiveRecorder.Core
                     {
                         this.AutoRecordForThisSession = true;
 
-                        // 启动录制时更新一次房间信息
                         if (this.Streaming && this.AutoRecordForThisSession)
                             this.CreateAndStartNewRecordTask(skipFetchRoomInfo: false);
                     }
+                    else
+                    {
+                        this.DisconnectDanmakuIfNotNeeded();
+                    }
+                    break;
+                case nameof(this.RoomConfig.RecordDanmakuKeepConnected):
+                    this.DisconnectDanmakuIfNotNeeded();
                     break;
                 default:
                     break;

@@ -22,6 +22,7 @@ namespace BililiveRecorder.Web.Models
         public Optional<bool>? OptionalRecordDanmakuSuperChat { get; set; }
         public Optional<bool>? OptionalRecordDanmakuGift { get; set; }
         public Optional<bool>? OptionalRecordDanmakuGuard { get; set; }
+        public Optional<bool>? OptionalRecordDanmakuKeepConnected { get; set; }
         public Optional<bool>? OptionalSaveStreamCover { get; set; }
         public Optional<string?>? OptionalRecordingQuality { get; set; }
         public Optional<bool>? OptionalFlvProcessorSplitOnScriptTag { get; set; }
@@ -40,6 +41,7 @@ namespace BililiveRecorder.Web.Models
             if (this.OptionalRecordDanmakuSuperChat.HasValue) config.OptionalRecordDanmakuSuperChat = this.OptionalRecordDanmakuSuperChat.Value;
             if (this.OptionalRecordDanmakuGift.HasValue) config.OptionalRecordDanmakuGift = this.OptionalRecordDanmakuGift.Value;
             if (this.OptionalRecordDanmakuGuard.HasValue) config.OptionalRecordDanmakuGuard = this.OptionalRecordDanmakuGuard.Value;
+            if (this.OptionalRecordDanmakuKeepConnected.HasValue) config.OptionalRecordDanmakuKeepConnected = this.OptionalRecordDanmakuKeepConnected.Value;
             if (this.OptionalSaveStreamCover.HasValue) config.OptionalSaveStreamCover = this.OptionalSaveStreamCover.Value;
             if (this.OptionalRecordingQuality.HasValue) config.OptionalRecordingQuality = this.OptionalRecordingQuality.Value;
             if (this.OptionalFlvProcessorSplitOnScriptTag.HasValue) config.OptionalFlvProcessorSplitOnScriptTag = this.OptionalFlvProcessorSplitOnScriptTag.Value;
@@ -59,6 +61,7 @@ namespace BililiveRecorder.Web.Models
         public Optional<bool>? OptionalRecordDanmakuSuperChat { get; set; }
         public Optional<bool>? OptionalRecordDanmakuGift { get; set; }
         public Optional<bool>? OptionalRecordDanmakuGuard { get; set; }
+        public Optional<bool>? OptionalRecordDanmakuKeepConnected { get; set; }
         public Optional<bool>? OptionalSaveStreamCover { get; set; }
         public Optional<string?>? OptionalRecordingQuality { get; set; }
         public Optional<string?>? OptionalFileNameRecordTemplate { get; set; }
@@ -70,6 +73,8 @@ namespace BililiveRecorder.Web.Models
         public Optional<string?>? OptionalWebHookUrlsV2 { get; set; }
         public Optional<bool>? OptionalWpfShowTitleAndArea { get; set; }
         public Optional<bool>? OptionalWpfNotifyStreamStart { get; set; }
+        public Optional<bool>? OptionalWpfDisableTrayToolTip { get; set; }
+        public Optional<bool>? OptionalWpfDisableUpdateCheck { get; set; }
         public Optional<string?>? OptionalCookie { get; set; }
         public Optional<string?>? OptionalLiveApiHost { get; set; }
         public Optional<uint>? OptionalTimingCheckInterval { get; set; }
@@ -98,6 +103,7 @@ namespace BililiveRecorder.Web.Models
             if (this.OptionalRecordDanmakuSuperChat.HasValue) config.OptionalRecordDanmakuSuperChat = this.OptionalRecordDanmakuSuperChat.Value;
             if (this.OptionalRecordDanmakuGift.HasValue) config.OptionalRecordDanmakuGift = this.OptionalRecordDanmakuGift.Value;
             if (this.OptionalRecordDanmakuGuard.HasValue) config.OptionalRecordDanmakuGuard = this.OptionalRecordDanmakuGuard.Value;
+            if (this.OptionalRecordDanmakuKeepConnected.HasValue) config.OptionalRecordDanmakuKeepConnected = this.OptionalRecordDanmakuKeepConnected.Value;
             if (this.OptionalSaveStreamCover.HasValue) config.OptionalSaveStreamCover = this.OptionalSaveStreamCover.Value;
             if (this.OptionalRecordingQuality.HasValue) config.OptionalRecordingQuality = this.OptionalRecordingQuality.Value;
             if (this.OptionalFileNameRecordTemplate.HasValue) config.OptionalFileNameRecordTemplate = this.OptionalFileNameRecordTemplate.Value;
@@ -109,6 +115,8 @@ namespace BililiveRecorder.Web.Models
             if (this.OptionalWebHookUrlsV2.HasValue) config.OptionalWebHookUrlsV2 = this.OptionalWebHookUrlsV2.Value;
             if (this.OptionalWpfShowTitleAndArea.HasValue) config.OptionalWpfShowTitleAndArea = this.OptionalWpfShowTitleAndArea.Value;
             if (this.OptionalWpfNotifyStreamStart.HasValue) config.OptionalWpfNotifyStreamStart = this.OptionalWpfNotifyStreamStart.Value;
+            if (this.OptionalWpfDisableTrayToolTip.HasValue) config.OptionalWpfDisableTrayToolTip = this.OptionalWpfDisableTrayToolTip.Value;
+            if (this.OptionalWpfDisableUpdateCheck.HasValue) config.OptionalWpfDisableUpdateCheck = this.OptionalWpfDisableUpdateCheck.Value;
             if (this.OptionalCookie.HasValue) config.OptionalCookie = this.OptionalCookie.Value;
             if (this.OptionalLiveApiHost.HasValue) config.OptionalLiveApiHost = this.OptionalLiveApiHost.Value;
             if (this.OptionalTimingCheckInterval.HasValue) config.OptionalTimingCheckInterval = this.OptionalTimingCheckInterval.Value;
@@ -144,6 +152,7 @@ namespace BililiveRecorder.Web.Models.Rest
         public Optional<bool> OptionalRecordDanmakuSuperChat { get; set; }
         public Optional<bool> OptionalRecordDanmakuGift { get; set; }
         public Optional<bool> OptionalRecordDanmakuGuard { get; set; }
+        public Optional<bool> OptionalRecordDanmakuKeepConnected { get; set; }
         public Optional<bool> OptionalSaveStreamCover { get; set; }
         public Optional<string?> OptionalRecordingQuality { get; set; }
         public Optional<bool> OptionalFlvProcessorSplitOnScriptTag { get; set; }
@@ -162,6 +171,7 @@ namespace BililiveRecorder.Web.Models.Rest
         public Optional<bool> OptionalRecordDanmakuSuperChat { get; set; }
         public Optional<bool> OptionalRecordDanmakuGift { get; set; }
         public Optional<bool> OptionalRecordDanmakuGuard { get; set; }
+        public Optional<bool> OptionalRecordDanmakuKeepConnected { get; set; }
         public Optional<bool> OptionalSaveStreamCover { get; set; }
         public Optional<string?> OptionalRecordingQuality { get; set; }
         public Optional<string?> OptionalFileNameRecordTemplate { get; set; }
@@ -173,6 +183,8 @@ namespace BililiveRecorder.Web.Models.Rest
         public Optional<string?> OptionalWebHookUrlsV2 { get; set; }
         public Optional<bool> OptionalWpfShowTitleAndArea { get; set; }
         public Optional<bool> OptionalWpfNotifyStreamStart { get; set; }
+        public Optional<bool> OptionalWpfDisableTrayToolTip { get; set; }
+        public Optional<bool> OptionalWpfDisableUpdateCheck { get; set; }
         public Optional<string?> OptionalCookie { get; set; }
         public Optional<string?> OptionalLiveApiHost { get; set; }
         public Optional<uint> OptionalTimingCheckInterval { get; set; }
@@ -210,6 +222,7 @@ namespace BililiveRecorder.Web.Models.Graphql
             this.Field(x => x.OptionalRecordDanmakuSuperChat, type: typeof(HierarchicalOptionalType<bool>));
             this.Field(x => x.OptionalRecordDanmakuGift, type: typeof(HierarchicalOptionalType<bool>));
             this.Field(x => x.OptionalRecordDanmakuGuard, type: typeof(HierarchicalOptionalType<bool>));
+            this.Field(x => x.OptionalRecordDanmakuKeepConnected, type: typeof(HierarchicalOptionalType<bool>));
             this.Field(x => x.OptionalSaveStreamCover, type: typeof(HierarchicalOptionalType<bool>));
             this.Field(x => x.OptionalRecordingQuality, type: typeof(HierarchicalOptionalType<string>));
             this.Field(x => x.OptionalFlvProcessorSplitOnScriptTag, type: typeof(HierarchicalOptionalType<bool>));
@@ -231,6 +244,7 @@ namespace BililiveRecorder.Web.Models.Graphql
             this.Field(x => x.OptionalRecordDanmakuSuperChat, type: typeof(HierarchicalOptionalType<bool>));
             this.Field(x => x.OptionalRecordDanmakuGift, type: typeof(HierarchicalOptionalType<bool>));
             this.Field(x => x.OptionalRecordDanmakuGuard, type: typeof(HierarchicalOptionalType<bool>));
+            this.Field(x => x.OptionalRecordDanmakuKeepConnected, type: typeof(HierarchicalOptionalType<bool>));
             this.Field(x => x.OptionalSaveStreamCover, type: typeof(HierarchicalOptionalType<bool>));
             this.Field(x => x.OptionalRecordingQuality, type: typeof(HierarchicalOptionalType<string>));
             this.Field(x => x.OptionalFileNameRecordTemplate, type: typeof(HierarchicalOptionalType<string>));
@@ -242,6 +256,8 @@ namespace BililiveRecorder.Web.Models.Graphql
             this.Field(x => x.OptionalWebHookUrlsV2, type: typeof(HierarchicalOptionalType<string>));
             this.Field(x => x.OptionalWpfShowTitleAndArea, type: typeof(HierarchicalOptionalType<bool>));
             this.Field(x => x.OptionalWpfNotifyStreamStart, type: typeof(HierarchicalOptionalType<bool>));
+            this.Field(x => x.OptionalWpfDisableTrayToolTip, type: typeof(HierarchicalOptionalType<bool>));
+            this.Field(x => x.OptionalWpfDisableUpdateCheck, type: typeof(HierarchicalOptionalType<bool>));
             this.Field(x => x.OptionalCookie, type: typeof(HierarchicalOptionalType<string>));
             this.Field(x => x.OptionalLiveApiHost, type: typeof(HierarchicalOptionalType<string>));
             this.Field(x => x.OptionalTimingCheckInterval, type: typeof(HierarchicalOptionalType<uint>));
@@ -274,6 +290,7 @@ namespace BililiveRecorder.Web.Models.Graphql
             this.Field(x => x.RecordDanmakuSuperChat);
             this.Field(x => x.RecordDanmakuGift);
             this.Field(x => x.RecordDanmakuGuard);
+            this.Field(x => x.RecordDanmakuKeepConnected);
             this.Field(x => x.SaveStreamCover);
             this.Field(x => x.RecordingQuality);
             this.Field(x => x.FileNameRecordTemplate);
@@ -285,6 +302,8 @@ namespace BililiveRecorder.Web.Models.Graphql
             this.Field(x => x.WebHookUrlsV2);
             this.Field(x => x.WpfShowTitleAndArea);
             this.Field(x => x.WpfNotifyStreamStart);
+            this.Field(x => x.WpfDisableTrayToolTip);
+            this.Field(x => x.WpfDisableUpdateCheck);
             this.Field(x => x.Cookie);
             this.Field(x => x.LiveApiHost);
             this.Field(x => x.TimingCheckInterval);
@@ -318,6 +337,7 @@ namespace BililiveRecorder.Web.Models.Graphql
             this.Field(x => x.OptionalRecordDanmakuSuperChat, nullable: true, type: typeof(HierarchicalOptionalInputType<bool>));
             this.Field(x => x.OptionalRecordDanmakuGift, nullable: true, type: typeof(HierarchicalOptionalInputType<bool>));
             this.Field(x => x.OptionalRecordDanmakuGuard, nullable: true, type: typeof(HierarchicalOptionalInputType<bool>));
+            this.Field(x => x.OptionalRecordDanmakuKeepConnected, nullable: true, type: typeof(HierarchicalOptionalInputType<bool>));
             this.Field(x => x.OptionalSaveStreamCover, nullable: true, type: typeof(HierarchicalOptionalInputType<bool>));
             this.Field(x => x.OptionalRecordingQuality, nullable: true, type: typeof(HierarchicalOptionalInputType<string>));
             this.Field(x => x.OptionalFlvProcessorSplitOnScriptTag, nullable: true, type: typeof(HierarchicalOptionalInputType<bool>));
@@ -339,6 +359,7 @@ namespace BililiveRecorder.Web.Models.Graphql
             this.Field(x => x.OptionalRecordDanmakuSuperChat, nullable: true, type: typeof(HierarchicalOptionalInputType<bool>));
             this.Field(x => x.OptionalRecordDanmakuGift, nullable: true, type: typeof(HierarchicalOptionalInputType<bool>));
             this.Field(x => x.OptionalRecordDanmakuGuard, nullable: true, type: typeof(HierarchicalOptionalInputType<bool>));
+            this.Field(x => x.OptionalRecordDanmakuKeepConnected, nullable: true, type: typeof(HierarchicalOptionalInputType<bool>));
             this.Field(x => x.OptionalSaveStreamCover, nullable: true, type: typeof(HierarchicalOptionalInputType<bool>));
             this.Field(x => x.OptionalRecordingQuality, nullable: true, type: typeof(HierarchicalOptionalInputType<string>));
             this.Field(x => x.OptionalFileNameRecordTemplate, nullable: true, type: typeof(HierarchicalOptionalInputType<string>));
@@ -350,6 +371,8 @@ namespace BililiveRecorder.Web.Models.Graphql
             this.Field(x => x.OptionalWebHookUrlsV2, nullable: true, type: typeof(HierarchicalOptionalInputType<string>));
             this.Field(x => x.OptionalWpfShowTitleAndArea, nullable: true, type: typeof(HierarchicalOptionalInputType<bool>));
             this.Field(x => x.OptionalWpfNotifyStreamStart, nullable: true, type: typeof(HierarchicalOptionalInputType<bool>));
+            this.Field(x => x.OptionalWpfDisableTrayToolTip, nullable: true, type: typeof(HierarchicalOptionalInputType<bool>));
+            this.Field(x => x.OptionalWpfDisableUpdateCheck, nullable: true, type: typeof(HierarchicalOptionalInputType<bool>));
             this.Field(x => x.OptionalCookie, nullable: true, type: typeof(HierarchicalOptionalInputType<string>));
             this.Field(x => x.OptionalLiveApiHost, nullable: true, type: typeof(HierarchicalOptionalInputType<string>));
             this.Field(x => x.OptionalTimingCheckInterval, nullable: true, type: typeof(HierarchicalOptionalInputType<uint>));

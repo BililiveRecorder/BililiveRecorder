@@ -102,6 +102,14 @@ namespace BililiveRecorder.Core.Config.V3
         public Optional<bool> OptionalRecordDanmakuGuard { get => this.GetPropertyValueOptional<bool>(nameof(this.RecordDanmakuGuard)); set => this.SetPropertyValueOptional(value, nameof(this.RecordDanmakuGuard)); }
 
         /// <summary>
+        /// 弹幕录制-保持连接
+        /// </summary>
+        public bool RecordDanmakuKeepConnected { get => this.GetPropertyValue<bool>(); set => this.SetPropertyValue(value); }
+        public bool HasRecordDanmakuKeepConnected { get => this.GetPropertyHasValue(nameof(this.RecordDanmakuKeepConnected)); set => this.SetPropertyHasValue<bool>(value, nameof(this.RecordDanmakuKeepConnected)); }
+        [JsonProperty(nameof(RecordDanmakuKeepConnected)), EditorBrowsable(EditorBrowsableState.Never)]
+        public Optional<bool> OptionalRecordDanmakuKeepConnected { get => this.GetPropertyValueOptional<bool>(nameof(this.RecordDanmakuKeepConnected)); set => this.SetPropertyValueOptional(value, nameof(this.RecordDanmakuKeepConnected)); }
+
+        /// <summary>
         /// 保存直播封面
         /// </summary>
         public bool SaveStreamCover { get => this.GetPropertyValue<bool>(); set => this.SetPropertyValue(value); }
@@ -170,6 +178,16 @@ namespace BililiveRecorder.Core.Config.V3
         /// 桌面版开播时弹出系统通知
         /// </summary>
         public bool WpfNotifyStreamStart => this.GetPropertyValue<bool>();
+
+        /// <summary>
+        /// 桌面版关闭托盘图标悬浮提示
+        /// </summary>
+        public bool WpfDisableTrayToolTip => this.GetPropertyValue<bool>();
+
+        /// <summary>
+        /// 桌面版禁用自动检查更新
+        /// </summary>
+        public bool WpfDisableUpdateCheck => this.GetPropertyValue<bool>();
 
         /// <summary>
         /// Cookie
@@ -329,6 +347,14 @@ namespace BililiveRecorder.Core.Config.V3
         public Optional<bool> OptionalRecordDanmakuGuard { get => this.GetPropertyValueOptional<bool>(nameof(this.RecordDanmakuGuard)); set => this.SetPropertyValueOptional(value, nameof(this.RecordDanmakuGuard)); }
 
         /// <summary>
+        /// 弹幕录制-保持连接
+        /// </summary>
+        public bool RecordDanmakuKeepConnected { get => this.GetPropertyValue<bool>(); set => this.SetPropertyValue(value); }
+        public bool HasRecordDanmakuKeepConnected { get => this.GetPropertyHasValue(nameof(this.RecordDanmakuKeepConnected)); set => this.SetPropertyHasValue<bool>(value, nameof(this.RecordDanmakuKeepConnected)); }
+        [JsonProperty(nameof(RecordDanmakuKeepConnected)), EditorBrowsable(EditorBrowsableState.Never)]
+        public Optional<bool> OptionalRecordDanmakuKeepConnected { get => this.GetPropertyValueOptional<bool>(nameof(this.RecordDanmakuKeepConnected)); set => this.SetPropertyValueOptional(value, nameof(this.RecordDanmakuKeepConnected)); }
+
+        /// <summary>
         /// 保存直播封面
         /// </summary>
         public bool SaveStreamCover { get => this.GetPropertyValue<bool>(); set => this.SetPropertyValue(value); }
@@ -415,6 +441,22 @@ namespace BililiveRecorder.Core.Config.V3
         public bool HasWpfNotifyStreamStart { get => this.GetPropertyHasValue(nameof(this.WpfNotifyStreamStart)); set => this.SetPropertyHasValue<bool>(value, nameof(this.WpfNotifyStreamStart)); }
         [JsonProperty(nameof(WpfNotifyStreamStart)), EditorBrowsable(EditorBrowsableState.Never)]
         public Optional<bool> OptionalWpfNotifyStreamStart { get => this.GetPropertyValueOptional<bool>(nameof(this.WpfNotifyStreamStart)); set => this.SetPropertyValueOptional(value, nameof(this.WpfNotifyStreamStart)); }
+
+        /// <summary>
+        /// 桌面版关闭托盘图标悬浮提示
+        /// </summary>
+        public bool WpfDisableTrayToolTip { get => this.GetPropertyValue<bool>(); set => this.SetPropertyValue(value); }
+        public bool HasWpfDisableTrayToolTip { get => this.GetPropertyHasValue(nameof(this.WpfDisableTrayToolTip)); set => this.SetPropertyHasValue<bool>(value, nameof(this.WpfDisableTrayToolTip)); }
+        [JsonProperty(nameof(WpfDisableTrayToolTip)), EditorBrowsable(EditorBrowsableState.Never)]
+        public Optional<bool> OptionalWpfDisableTrayToolTip { get => this.GetPropertyValueOptional<bool>(nameof(this.WpfDisableTrayToolTip)); set => this.SetPropertyValueOptional(value, nameof(this.WpfDisableTrayToolTip)); }
+
+        /// <summary>
+        /// 桌面版禁用自动检查更新
+        /// </summary>
+        public bool WpfDisableUpdateCheck { get => this.GetPropertyValue<bool>(); set => this.SetPropertyValue(value); }
+        public bool HasWpfDisableUpdateCheck { get => this.GetPropertyHasValue(nameof(this.WpfDisableUpdateCheck)); set => this.SetPropertyHasValue<bool>(value, nameof(this.WpfDisableUpdateCheck)); }
+        [JsonProperty(nameof(WpfDisableUpdateCheck)), EditorBrowsable(EditorBrowsableState.Never)]
+        public Optional<bool> OptionalWpfDisableUpdateCheck { get => this.GetPropertyValueOptional<bool>(nameof(this.WpfDisableUpdateCheck)); set => this.SetPropertyValueOptional(value, nameof(this.WpfDisableUpdateCheck)); }
 
         /// <summary>
         /// Cookie
@@ -569,6 +611,8 @@ namespace BililiveRecorder.Core.Config.V3
 
         public bool RecordDanmakuGuard => true;
 
+        public bool RecordDanmakuKeepConnected => true;
+
         public bool SaveStreamCover => false;
 
         public string RecordingQuality => @"avc10000,hevc10000";
@@ -590,6 +634,10 @@ namespace BililiveRecorder.Core.Config.V3
         public bool WpfShowTitleAndArea => true;
 
         public bool WpfNotifyStreamStart => false;
+
+        public bool WpfDisableTrayToolTip => false;
+
+        public bool WpfDisableUpdateCheck => false;
 
         public string Cookie => @"";
 
