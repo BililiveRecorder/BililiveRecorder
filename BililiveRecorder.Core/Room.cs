@@ -465,6 +465,27 @@ namespace BililiveRecorder.Core
                 }
             });
 
+        /// <summary>
+        /// 当前配置下不需要保持弹幕服务器连接时断开连接。
+        /// </summary>
+        private void DisconnectDanmakuIfNotNeeded()
+        {
+            if (this.Recording || (this.RoomConfig.AutoRecord && this.RoomConfig.RecordDanmakuKeepConnected))
+                return;
+
+            _ = Task.Run(async () =>
+            {
+                try
+                {
+                    await this.danmakuClient.DisconnectAsync().ConfigureAwait(false);
+                }
+                catch (Exception ex)
+                {
+                    this.logger.Debug(ex, "断开弹幕服务器连接时出错");
+                }
+            });
+        }
+
         #endregion
 
         #region Event Handlers
@@ -618,20 +639,7 @@ namespace BililiveRecorder.Core
             this.OnPropertyChanged(nameof(this.Recording));
             this.Stats.Reset();
 
-            if (!this.Recording && !(this.RoomConfig.AutoRecord && this.RoomConfig.RecordDanmakuKeepConnected))
-            {
-                _ = Task.Run(async () =>
-                {
-                    try
-                    {
-                        await this.danmakuClient.DisconnectAsync().ConfigureAwait(false);
-                    }
-                    catch (Exception ex)
-                    {
-                        this.logger.Debug(ex, "断开弹幕服务器连接时出错");
-                    }
-                });
-            }
+            this.DisconnectDanmakuIfNotNeeded();
 
             RecordSessionEnded?.Invoke(this, new RecordSessionEndedEventArgs(this)
             {
@@ -784,21 +792,11 @@ namespace BililiveRecorder.Core
                     }
                     else
                     {
-                        if (!this.Recording)
-                        {
-                            _ = Task.Run(async () =>
-                            {
-                                try
-                                {
-                                    await this.danmakuClient.DisconnectAsync().ConfigureAwait(false);
-                                }
-                                catch (Exception ex)
-                                {
-                                    this.logger.Debug(ex, "断开弹幕服务器连接时出错");
-                                }
-                            });
-                        }
+                        this.DisconnectDanmakuIfNotNeeded();
                     }
+                    break;
+                case nameof(this.RoomConfig.RecordDanmakuKeepConnected):
+                    this.DisconnectDanmakuIfNotNeeded();
                     break;
                 default:
                     break;
