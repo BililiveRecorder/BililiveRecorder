@@ -1,7 +1,9 @@
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using BililiveRecorder.Core.Config.V3;
 using BililiveRecorder.Core.Templating;
+using BililiveRecorder.WPF.Models;
 using Newtonsoft.Json.Linq;
 using Serilog;
 
@@ -29,6 +31,11 @@ namespace BililiveRecorder.WPF.Pages
         };
 
         private readonly GlobalConfig? globalConfig;
+        private bool suppressQualityUpdate;
+        private System.Windows.Controls.ComboBox? codecComboBox;
+        private System.Windows.Controls.ComboBox? qualityComboBox;
+        private System.Windows.Controls.StackPanel? qualityDropdownPanel;
+        private System.Windows.Controls.StackPanel? qualityAdvancedPanel;
 
         public SettingsPage() : this((GlobalConfig?)(RootPage.ServiceProvider?.GetService(typeof(GlobalConfig))))
         {
@@ -39,6 +46,99 @@ namespace BililiveRecorder.WPF.Pages
             this.globalConfig = globalConfig;
 
             this.InitializeComponent();
+        }
+
+        private void CodecComboBox_Loaded(object sender, System.Windows.RoutedEventArgs e)
+        {
+            this.codecComboBox = (System.Windows.Controls.ComboBox)sender;
+            this.codecComboBox.ItemsSource = RecordingQualityHelper.CodecPreferenceItems;
+            this.SyncDropdownsFromConfig();
+        }
+
+        private void QualityComboBox_Loaded(object sender, System.Windows.RoutedEventArgs e)
+        {
+            this.qualityComboBox = (System.Windows.Controls.ComboBox)sender;
+            this.qualityComboBox.ItemsSource = RecordingQualityHelper.QualityItems;
+            this.SyncDropdownsFromConfig();
+        }
+
+        private void QualityDropdownPanel_Loaded(object sender, System.Windows.RoutedEventArgs e)
+        {
+            this.qualityDropdownPanel = (System.Windows.Controls.StackPanel)sender;
+        }
+
+        private void QualityAdvancedPanel_Loaded(object sender, System.Windows.RoutedEventArgs e)
+        {
+            this.qualityAdvancedPanel = (System.Windows.Controls.StackPanel)sender;
+        }
+
+        private void SyncDropdownsFromConfig()
+        {
+            if (this.codecComboBox is null || this.qualityComboBox is null)
+                return;
+
+            this.suppressQualityUpdate = true;
+            try
+            {
+                var qualityString = this.globalConfig?.RecordingQuality;
+
+                if (RecordingQualityHelper.TryParseQualityString(qualityString, out var codec, out var maxQn))
+                {
+                    this.codecComboBox.SelectedItem = RecordingQualityHelper.CodecPreferenceItems
+                        .FirstOrDefault(x => x.Value == codec)
+                        ?? RecordingQualityHelper.CodecPreferenceItems[0];
+
+                    this.qualityComboBox.SelectedItem = RecordingQualityHelper.QualityItems
+                        .FirstOrDefault(x => x.Qn == maxQn)
+                        ?? RecordingQualityHelper.QualityItems[2]; // default: 原画
+                }
+                else
+                {
+                    this.codecComboBox.SelectedIndex = 0;
+                    this.qualityComboBox.SelectedIndex = 2; // 原画
+                }
+            }
+            finally
+            {
+                this.suppressQualityUpdate = false;
+            }
+        }
+
+        private void CodecOrQuality_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        {
+            if (this.suppressQualityUpdate || this.globalConfig is null)
+                return;
+
+            if (this.codecComboBox?.SelectedItem is CodecPreferenceItem codecItem
+                && this.qualityComboBox?.SelectedItem is QualityItem qualityItem)
+            {
+                var qualityString = RecordingQualityHelper.GenerateQualityString(codecItem.Value, qualityItem.Qn);
+                this.globalConfig.RecordingQuality = qualityString;
+            }
+        }
+
+        private void QualityAdvancedModeCheckBox_Changed(object sender, System.Windows.RoutedEventArgs e)
+        {
+            var checkBox = (System.Windows.Controls.CheckBox)sender;
+            var isAdvanced = checkBox.IsChecked == true;
+
+            if (!isAdvanced)
+            {
+                // Switching back to dropdown mode — try to parse current config
+                var qualityString = this.globalConfig?.RecordingQuality;
+                if (!RecordingQualityHelper.TryParseQualityString(qualityString, out _, out _))
+                {
+                    // Cannot parse custom string, stay in advanced mode
+                    checkBox.IsChecked = true;
+                    return;
+                }
+                this.SyncDropdownsFromConfig();
+            }
+
+            if (this.qualityDropdownPanel != null)
+                this.qualityDropdownPanel.Visibility = isAdvanced ? System.Windows.Visibility.Collapsed : System.Windows.Visibility.Visible;
+            if (this.qualityAdvancedPanel != null)
+                this.qualityAdvancedPanel.Visibility = isAdvanced ? System.Windows.Visibility.Visible : System.Windows.Visibility.Collapsed;
         }
 
 #pragma warning disable VSTHRD100 // Avoid async void methods

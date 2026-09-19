@@ -125,10 +125,28 @@
                             <ui:PathIcon Margin="5,0,0,0" Width="15" Height="15" Style="{StaticResource PathIconDataOpenInNew}"/>
                         </StackPanel>
                     </Button>
-                    <TextBlock Text="逗号分割的录制画质ID"/>
                     <c:SettingWithDefault IsSettingNotUsingDefault="{Binding HasRecordingQuality}">
-                        <TextBox Text="{Binding RecordingQuality,UpdateSourceTrigger=PropertyChanged,Delay=1000}"
-                                 ui:TextBoxHelper.IsDeleteButtonVisible="False" Width="220" HorizontalAlignment="Left"/>
+                        <StackPanel>
+                            <!-- 下拉选项模式 -->
+                            <StackPanel Loaded="QualityDropdownPanel_Loaded">
+                                <TextBlock Text="编码格式" Margin="0,2,0,2"/>
+                                <ComboBox Loaded="CodecComboBox_Loaded" Width="220" HorizontalAlignment="Left"
+                                          SelectionChanged="CodecOrQuality_SelectionChanged"/>
+                                <TextBlock Text="最高录制画质" Margin="0,8,0,2"/>
+                                <ComboBox Loaded="QualityComboBox_Loaded" Width="220" HorizontalAlignment="Left"
+                                          SelectionChanged="CodecOrQuality_SelectionChanged"/>
+                                <TextBlock Text="若直播源无所选画质，将自动降至最近可用画质" Margin="0,4,0,0"
+                                           Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}" FontSize="12"/>
+                            </StackPanel>
+                            <!-- 高级手动模式 -->
+                            <StackPanel Loaded="QualityAdvancedPanel_Loaded" Visibility="Collapsed">
+                                <TextBlock Text="逗号分割的录制画质ID" Margin="0,2,0,2"/>
+                                <TextBox Text="{Binding RecordingQuality,UpdateSourceTrigger=PropertyChanged,Delay=1000}"
+                                         ui:TextBoxHelper.IsDeleteButtonVisible="False" Width="220" HorizontalAlignment="Left"/>
+                            </StackPanel>
+                            <CheckBox Content="高级选项（手动填入参数）" Margin="0,6,0,0"
+                                      Checked="QualityAdvancedModeCheckBox_Changed" Unchecked="QualityAdvancedModeCheckBox_Changed"/>
+                        </StackPanel>
                     </c:SettingWithDefault>
                 </StackPanel>
             </GroupBox>
