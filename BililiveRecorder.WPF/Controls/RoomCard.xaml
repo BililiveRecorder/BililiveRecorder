@@ -11,6 +11,7 @@
     l:ResxLocalizationProvider.DefaultDictionary="Strings"
     xmlns:local="clr-namespace:BililiveRecorder.WPF.Controls"
     xmlns:core="clr-namespace:BililiveRecorder.Core;assembly=BililiveRecorder.Core"
+    xmlns:config="clr-namespace:BililiveRecorder.Core.Config;assembly=BililiveRecorder.Core"
     d:DataContext="{d:DesignInstance core:IRoom}"
     d:DesignWidth="220" d:DesignHeight="110"
     mc:Ignorable="d">
@@ -170,9 +171,21 @@
                         </Button>
                     </Grid>
                 </Border>
-                <Button Grid.Column="2" Padding="5,3" HorizontalAlignment="Right" Margin="5,0"
-                        ToolTip="{l:Loc RoomCard_SplitButton_Tooltip}" Click="Button_Split_Click"
+                <Button x:Name="SplitButton" Grid.Column="2" Padding="5,3" HorizontalAlignment="Right" Margin="5,0"
+                        Click="Button_Split_Click"
+                        ToolTipService.ShowOnDisabled="True"
                         Visibility="{Binding Recording, Converter={StaticResource BooleanToVisibilityCollapsedConverter},Mode=OneWay}">
+                    <Button.Style>
+                        <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+                            <Setter Property="ToolTip" Value="{l:Loc RoomCard_SplitButton_Tooltip}"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding RecordModeForThisSession}" Value="{x:Static config:RecordMode.RawData}">
+                                    <Setter Property="IsEnabled" Value="False"/>
+                                    <Setter Property="ToolTip" Value="{l:Loc RoomCard_SplitButton_Tooltip_RawDataDisabled}"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
                     <ui:PathIcon Width="10" Style="{StaticResource PathIconDataContentCut}"/>
                 </Button>
             </Grid>

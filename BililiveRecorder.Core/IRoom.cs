@@ -1,6 +1,7 @@
 using System;
 using System.ComponentModel;
 using System.Threading.Tasks;
+using BililiveRecorder.Core.Config;
 using BililiveRecorder.Core.Config.V3;
 using BililiveRecorder.Core.Event;
 using Newtonsoft.Json.Linq;
@@ -26,6 +27,7 @@ namespace BililiveRecorder.Core
         bool Streaming { get; }
         bool DanmakuConnected { get; }
         bool AutoRecordForThisSession { get; }
+        RecordMode RecordModeForThisSession { get; }
         RoomStats Stats { get; }
 
         event EventHandler<RecordSessionStartedEventArgs>? RecordSessionStarted;

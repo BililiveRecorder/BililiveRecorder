@@ -121,6 +121,13 @@ namespace BililiveRecorder.Core
 
         public bool Recording => this.recordTask != null;
 
+        public RecordMode RecordModeForThisSession => this.recordTask switch
+        {
+            RawDataRecordTask => RecordMode.RawData,
+            StandardRecordTask => RecordMode.Standard,
+            _ => this.RoomConfig.RecordMode,
+        };
+
         public RoomConfig RoomConfig { get; }
         public RoomStats Stats { get; } = new RoomStats();
 
@@ -293,9 +300,8 @@ namespace BililiveRecorder.Core
                 task.RecordFileOpening += this.RecordTask_RecordFileOpening;
                 task.RecordFileClosed += this.RecordTask_RecordFileClosed;
                 task.RecordSessionEnded += this.RecordTask_RecordSessionEnded;
-                this.recordTask = task;
+                this.SetRecordTask(task);
                 this.Stats.Reset();
-                this.OnPropertyChanged(nameof(this.Recording));
 
                 _ = Task.Run(async () =>
                 {
@@ -308,8 +314,7 @@ namespace BililiveRecorder.Core
                     }
                     catch (NoMatchingQnValueException)
                     {
-                        this.recordTask = null;
-                        this.OnPropertyChanged(nameof(this.Recording));
+                        this.SetRecordTask(null);
 
                         // 无匹配的画质，重试录制之前等待更长时间
                         _ = Task.Run(() => this.RestartAfterRecordTaskFailedAsync(RestartRecordingReason.NoMatchingQnValue));
@@ -320,8 +325,7 @@ namespace BililiveRecorder.Core
                     {
                         this.logger.Write(ex is ExecutionRejectedException ? LogEventLevel.Verbose : LogEventLevel.Warning, ex, "启动录制出错");
 
-                        this.recordTask = null;
-                        this.OnPropertyChanged(nameof(this.Recording));
+                        this.SetRecordTask(null);
 
                         if (ex is IOException ioex && (ioex.HResult == HR_ERROR_DISK_FULL || ioex.HResult == HR_ERROR_HANDLE_DISK_FULL))
                         {
@@ -594,7 +598,7 @@ namespace BililiveRecorder.Core
 
             this.basicDanmakuWriter.Disable();
 
-            this.OnPropertyChanged(nameof(this.Recording));
+            this.OnRecordTaskChanged();
             this.Stats.Reset();
 
             RecordSessionEnded?.Invoke(this, new RecordSessionEndedEventArgs(this)
@@ -748,12 +752,27 @@ namespace BililiveRecorder.Core
                             this.CreateAndStartNewRecordTask(skipFetchRoomInfo: false);
                     }
                     break;
+                case nameof(this.RoomConfig.RecordMode):
+                    this.OnPropertyChanged(nameof(this.RecordModeForThisSession));
+                    break;
                 default:
                     break;
             }
         }
 
         #endregion
+
+        private void SetRecordTask(IRecordTask? recordTask)
+        {
+            this.recordTask = recordTask;
+            this.OnRecordTaskChanged();
+        }
+
+        private void OnRecordTaskChanged()
+        {
+            this.OnPropertyChanged(nameof(this.Recording));
+            this.OnPropertyChanged(nameof(this.RecordModeForThisSession));
+        }
 
         #region PropertyChanged
 
