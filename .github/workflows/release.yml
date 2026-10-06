@@ -19,12 +19,16 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           fetch-depth: 0
           submodules: recursive
 
       - uses: actions/setup-dotnet@v6
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: '.node-version'
 
       - name: Make sure webui can be built
         if: "${{ matrix.os == 'windows-latest' }}"
@@ -46,23 +50,23 @@ jobs:
     runs-on: windows-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           fetch-depth: 0
           submodules: recursive
       - name: Add msbuild to PATH
-        uses: microsoft/setup-msbuild@v2
+        uses: microsoft/setup-msbuild@v3
       - name: Restore Packages
         run: msbuild -t:restore /v:m BililiveRecorder.WPF/BililiveRecorder.WPF.csproj
       - name: Build WPF
         run: msbuild /nologo /v:m /p:Configuration="${{ matrix.build_configuration }}" BililiveRecorder.WPF/BililiveRecorder.WPF.csproj
       - name: Upload Build Artifacts
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: WPF-${{ matrix.build_configuration }}
           path: BililiveRecorder.WPF/bin/${{ matrix.build_configuration }}
       - name: Upload Packed Artifacts
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: WPF-NupkgReleases
           path: BililiveRecorder.WPF/bin/NupkgReleases
@@ -71,7 +75,7 @@ jobs:
           cd BililiveRecorder.WPF/bin/${{ matrix.build_configuration }}
           7z a BililiveRecorder-WPF-Portable.zip .
       - name: Upload Portable Zip File
-        uses: shogo82148/actions-upload-release-asset@v1
+        uses: shogo82148/actions-upload-release-asset@aaba0f56bdbc1071f4af234d5cb16055e8a400de # v1.10.4
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
@@ -89,12 +93,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           fetch-depth: 0
           submodules: recursive
 
       - uses: actions/setup-dotnet@v6
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: '.node-version'
 
       - name: Build WebUI
         run: ./webui/build.sh
@@ -107,7 +115,7 @@ jobs:
         run: dotnet publish -c ${{ matrix.build_configuration }} -r ${{ matrix.rid }} BililiveRecorder.Cli/BililiveRecorder.Cli.csproj
 
       - name: Upload Artifacts
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: CLI-${{ matrix.rid }}-${{ matrix.build_configuration }}
           path: BililiveRecorder.Cli/publish/${{ matrix.rid }}/Release
@@ -118,7 +126,7 @@ jobs:
           zip -r /tmp/CLI-${{ matrix.rid }}-${{ matrix.build_configuration }}.zip .
 
       - name: Upload Release Asset
-        uses: shogo82148/actions-upload-release-asset@v1
+        uses: shogo82148/actions-upload-release-asset@aaba0f56bdbc1071f4af234d5cb16055e8a400de # v1.10.4
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
@@ -135,7 +143,7 @@ jobs:
       packages: write
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           fetch-depth: 0
           submodules: recursive
@@ -173,6 +181,12 @@ jobs:
             type=semver,pattern={{version}}
             type=semver,pattern={{major}}.{{minor}}
             type=semver,pattern={{major}}
+
+      - uses: actions/setup-dotnet@v6
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: '.node-version'
 
       - name: Build WebUI
         run: ./webui/build.sh

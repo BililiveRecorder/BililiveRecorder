@@ -63,7 +63,7 @@ for (const section of sections) {
         continue
     }
 
-    // For C# files, skip whitespace-only differences since dotnet-format may adjust formatting
+    // For C# files, skip whitespace-only differences since dotnet format may adjust formatting
     if (section.name === "schema") {
         // Schema is JSON, compare exactly
         if (actual !== expected) {
@@ -74,12 +74,12 @@ for (const section of sections) {
             console.log(`[validate] OK: ${section.name}`)
         }
     } else {
-        // For C# files, compare ignoring trailing whitespace per line (dotnet-format may change it)
+        // For C# files, compare ignoring trailing whitespace per line (dotnet format may change it)
         const normalizeLines = (s: string) => s.split('\n').map(l => l.trimEnd()).join('\n')
         if (normalizeLines(actual) !== normalizeLines(expected)) {
             console.error(`[validate] WARNING: Generated file for section "${section.name}" may be out of date: ${section.path}`)
             console.error(`[validate]          Run 'npm run build' in config_gen/ to regenerate and format.`)
-            // Don't fail for C# since dotnet-format is not available during validate
+            // Don't fail for C# since dotnet format is not available during validate
         } else {
             console.log(`[validate] OK: ${section.name}`)
         }

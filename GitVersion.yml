@@ -3,15 +3,16 @@ increment: Patch
 branches:
   develop:
     mode: ContinuousDelivery
-    tag: alpha
+    label: alpha
     increment: Patch
-    prevent-increment-of-merged-branch-version: false
+    prevent-increment:
+      of-merged-branch: false
     track-merge-target: true
     regex: ^dev(elop)?(ment)?$
     source-branches: []
     tracks-release-branches: true
     is-release-branch: false
-    is-mainline: false
+    is-main-branch: false
     pre-release-weight: 0
 ignore:
   sha: []
