@@ -21,7 +21,6 @@ using Newtonsoft.Json.Linq;
 using Polly;
 using Serilog;
 using Serilog.Events;
-using Timer = System.Timers.Timer;
 
 namespace BililiveRecorder.Core
 {
@@ -32,7 +31,6 @@ namespace BililiveRecorder.Core
 
         private readonly object recordStartLock = new object();
         private readonly SemaphoreSlim recordRetryDelaySemaphoreSlim = new SemaphoreSlim(1, 1);
-        private readonly Timer timer;
 
         private readonly IServiceScope scope;
         private readonly ILogger loggerWithoutContext;
@@ -83,25 +81,17 @@ namespace BililiveRecorder.Core
             this.recordTaskFactory = recordTaskFactory ?? throw new ArgumentNullException(nameof(recordTaskFactory));
             this.userScriptRunner = userScriptRunner ?? throw new ArgumentNullException(nameof(userScriptRunner));
 
-            this.timer = new Timer(this.RoomConfig.TimingCheckInterval * 1000d);
             this.cts = new CancellationTokenSource();
             this.ct = this.cts.Token;
 
             this.PropertyChanged += this.Room_PropertyChanged;
             this.RoomConfig.PropertyChanged += this.RoomConfig_PropertyChanged;
 
-            this.timer.Elapsed += this.Timer_Elapsed;
-
             this.danmakuClient.StatusChanged += this.DanmakuClient_StatusChanged;
             this.danmakuClient.DanmakuReceived += this.DanmakuClient_DanmakuReceived;
             this.danmakuClient.BeforeHandshake = this.DanmakuClient_BeforeHandshake;
 
-            _ = Task.Run(async () =>
-            {
-                await Task.Delay(1500 + (initDelayFactor * 500));
-                this.timer.Start();
-                await this.RefreshRoomInfoAsync();
-            });
+            // 定时检查开播状态与弹幕连接保活均由 Recorder 的批量轮询统一负责
         }
 
         public int ShortId { get => this.shortId; private set => this.SetField(ref this.shortId, value); }
@@ -237,6 +227,57 @@ namespace BililiveRecorder.Core
             this.nextRecordShouldUseRawMode = true;
         }
 
+        /// <summary>
+        /// 将批量接口 getRoomBaseInfo 返回的房间信息更新到房间状态。
+        /// 批量接口仅用于定时检查开播状态等基础信息，
+        /// 检测到开播时先全量拉取一次房间信息（含头像/封面），再更新状态触发开播通知。
+        /// </summary>
+        internal async Task ApplyBatchRoomInfoAsync(Api.Model.RoomBaseInfo info)
+        {
+            if (this.disposedValue)
+                return;
+
+            try
+            {
+                this.logger.Debug("批量拉取房间信息成功: {@info}", info);
+
+                // 未开播 → 开播时先全量拉取一次，保证头像/封面等数据在开播通知触发前是完整的
+                if (!this.Streaming && info.LiveStatus == 1)
+                {
+                    try
+                    {
+                        await this.FetchRoomInfoAsync().ConfigureAwait(false);
+                    }
+                    catch (Exception ex)
+                    {
+                        this.logger.Write(ex is ExecutionRejectedException ? LogEventLevel.Verbose : LogEventLevel.Warning, ex, "开播前拉取房间信息时出错");
+                    }
+                }
+
+                this.RoomConfig.RoomId = info.RoomId;
+                this.ShortId = info.ShortId;
+                this.Uid = info.Uid;
+                this.Title = info.Title;
+                this.AreaNameParent = info.ParentAreaName;
+                this.AreaNameChild = info.AreaName;
+                this.Streaming = info.LiveStatus == 1;
+
+                this.Name = info.Name;
+
+                // allow danmaku client to connect
+                this.danmakuConnectHoldOff.Set();
+                this.StartDamakuConnection(delay: false);
+
+                // 刚更新了房间信息不需要再获取一次
+                if (this.Streaming && this.AutoRecordForThisSession && this.RoomConfig.AutoRecord)
+                    this.CreateAndStartNewRecordTask(skipFetchRoomInfo: true);
+            }
+            catch (Exception ex)
+            {
+                this.logger.Write(ex is ExecutionRejectedException ? LogEventLevel.Verbose : LogEventLevel.Warning, ex, "更新批量房间信息时出错");
+            }
+        }
+
         private static readonly TimeSpan TitleRegexMatchTimeout = TimeSpan.FromSeconds(0.5);
 
         /// <exception cref="ArgumentException" />
@@ -303,6 +344,8 @@ namespace BililiveRecorder.Core
                     {
                         if (!skipFetchRoomInfo)
                             await this.FetchRoomInfoAsync();
+
+                        this.StartDamakuConnection(delay: false);
 
                         await this.recordTask.StartAsync();
                     }
@@ -406,6 +449,12 @@ namespace BililiveRecorder.Core
             {
                 if (this.disposedValue)
                     return;
+
+                if (!this.Recording && !(this.RoomConfig.AutoRecord && this.RoomConfig.RecordDanmakuKeepConnected))
+                {
+                    return;
+                }
+
                 try
                 {
                     if (delay)
@@ -597,6 +646,21 @@ namespace BililiveRecorder.Core
             this.OnPropertyChanged(nameof(this.Recording));
             this.Stats.Reset();
 
+            if (!this.Recording && !(this.RoomConfig.AutoRecord && this.RoomConfig.RecordDanmakuKeepConnected))
+            {
+                _ = Task.Run(async () =>
+                {
+                    try
+                    {
+                        await this.danmakuClient.DisconnectAsync().ConfigureAwait(false);
+                    }
+                    catch (Exception ex)
+                    {
+                        this.logger.Debug(ex, "断开弹幕服务器连接时出错");
+                    }
+                });
+            }
+
             RecordSessionEnded?.Invoke(this, new RecordSessionEndedEventArgs(this)
             {
                 SessionId = id
@@ -677,30 +741,6 @@ namespace BililiveRecorder.Core
             }
         }
 
-        private void Timer_Elapsed(object? sender, System.Timers.ElapsedEventArgs e)
-        {
-            this.StartDamakuConnection(delay: false);
-
-            // 如果开启了自动录制 或者 还没有获取过第一次房间信息
-            if (this.RoomConfig.AutoRecord || !this.danmakuConnectHoldOff.IsSet)
-            {
-                _ = Task.Run(async () =>
-                {
-                    try
-                    {
-                        // 定时主动检查不需要错误重试
-                        await this.FetchRoomInfoAsync().ConfigureAwait(false);
-
-                        // 刚更新了房间信息不需要再获取一次
-                        if (this.Streaming && this.AutoRecordForThisSession && this.RoomConfig.AutoRecord)
-                            this.CreateAndStartNewRecordTask(skipFetchRoomInfo: true);
-                    }
-                    catch (Exception) { }
-                });
-            }
-        }
-
-
         private void Room_PropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
             switch (e.PropertyName)
@@ -735,17 +775,30 @@ namespace BililiveRecorder.Core
                 case nameof(this.RoomConfig.RoomId):
                     this.logger = this.loggerWithoutContext.ForContext(LoggingContext.RoomId, this.RoomConfig.RoomId);
                     break;
-                case nameof(this.RoomConfig.TimingCheckInterval):
-                    this.timer.Interval = this.RoomConfig.TimingCheckInterval * 1000d;
-                    break;
                 case nameof(this.RoomConfig.AutoRecord):
                     if (this.RoomConfig.AutoRecord)
                     {
                         this.AutoRecordForThisSession = true;
 
-                        // 启动录制时更新一次房间信息
                         if (this.Streaming && this.AutoRecordForThisSession)
                             this.CreateAndStartNewRecordTask(skipFetchRoomInfo: false);
+                    }
+                    else
+                    {
+                        if (!this.Recording)
+                        {
+                            _ = Task.Run(async () =>
+                            {
+                                try
+                                {
+                                    await this.danmakuClient.DisconnectAsync().ConfigureAwait(false);
+                                }
+                                catch (Exception ex)
+                                {
+                                    this.logger.Debug(ex, "断开弹幕服务器连接时出错");
+                                }
+                            });
+                        }
                     }
                     break;
                 default:

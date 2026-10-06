@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Threading;
 using BililiveRecorder.Core;
-using Hardcodet.Wpf.TaskbarNotification;
 using Microsoft.Toolkit.Uwp.Notifications;
 using Serilog;
 
@@ -55,7 +54,7 @@ namespace BililiveRecorder.WPF
                 {
                     if (Application.Current.MainWindow is NewMainWindow nmw)
                     {
-                        nmw.ShowBalloonTipCallback?.Invoke(room.Name + " 开播了", $"{room.Title}\n{room.AreaNameParent} · {room.AreaNameChild}", BalloonIcon.None);
+                        nmw.ShowBalloonTipCallback?.Invoke(room.Name + " 开播了", $"{room.Title}\n{room.AreaNameParent} · {room.AreaNameChild}", Controls.BalloonIcon.Info);
                     }
                 }));
 

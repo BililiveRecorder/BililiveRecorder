@@ -718,4 +718,61 @@ rec@danmuji.orgまでフィードバック受け付けます。
   <data name="WorkDirectorySelector_Title" xml:space="preserve">
     <value>ディレクトリーを設定</value>
   </data>
+  <data name="Settings_Wpf_ToggleSwitch_DisableTrayToolTip" xml:space="preserve">
+    <value>トレイアイコンのツールチップを無効にする</value>
+    <comment>Shown as both On and Off content for the toggle switch</comment>
+  </data>
+  <data name="Settings_Wpf_ToggleSwitch_DisableUpdateCheck" xml:space="preserve">
+    <value>自動更新チェックを無効にする</value>
+    <comment>Shown as both On and Off content for the toggle switch</comment>
+  </data>
+  <data name="Settings_GroupBox_StandardFix" xml:space="preserve">
+    <value>標準モードの録画修復設定</value>
+  </data>
+  <data name="Settings_ToggleSwitch_FlvProcessorSplitOnScriptTag" xml:space="preserve">
+    <value>データ不足が検出された場合に分割</value>
+    <comment>Shown as both On and Off content for the toggle switch</comment>
+  </data>
+  <data name="Settings_ToggleSwitch_FlvProcessorDisableSplitOnH264AnnexB" xml:space="preserve">
+    <value>実験的な乱れ修復判定ロジックを使用</value>
+    <comment>Shown as both On and Off content for the toggle switch</comment>
+  </data>
+  <data name="Settings_GroupBox_StreamCover" xml:space="preserve">
+    <value>配信サムネイル</value>
+  </data>
+  <data name="Settings_ToggleSwitch_SaveStreamCover" xml:space="preserve">
+    <value>録画時に配信サムネイルを保存</value>
+    <comment>Shown as both On and Off content for the toggle switch</comment>
+  </data>
+  <data name="Settings_Button_Test" xml:space="preserve">
+    <value>テスト</value>
+  </data>
+  <data name="Settings_TextBlock_TestResult" xml:space="preserve">
+    <value>テスト結果：</value>
+  </data>
+  <data name="Settings_GroupBox_StreamStartNotify" xml:space="preserve">
+    <value>配信開始通知</value>
+  </data>
+  <data name="Settings_ToggleSwitch_WpfNotifyStreamStart" xml:space="preserve">
+    <value>配信開始時にシステム通知を表示</value>
+    <comment>Shown as both On and Off content for the toggle switch</comment>
+  </data>
+  <data name="Settings_GroupBox_RecordQuality" xml:space="preserve">
+    <value>録画画質</value>
+  </data>
+  <data name="Settings_TextBlock_RecordQualityHint" xml:space="preserve">
+    <value>カンマ区切りの録画画質ID</value>
+  </data>
+  <data name="Settings_GroupBox_RecordCondition" xml:space="preserve">
+    <value>録画条件</value>
+  </data>
+  <data name="Settings_TextBlock_SkipTitleRegexHint" xml:space="preserve">
+    <value>録画をスキップする配信タイトルの正規表現（1行に1つ）</value>
+  </data>
+  <data name="RoomListPage_Menu_View_NotifyStreamStart" xml:space="preserve">
+    <value>配信開始時にシステム通知を表示</value>
+  </data>
+  <data name="RoomListPage_Menu_RefreshAllRoomInfo" xml:space="preserve">
+    <value>すべてのルーム情報を更新</value>
+  </data>
 </root>

@@ -1,0 +1,230 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:ctl="using:BililiveRecorder.Desktop.Controls"
+        xmlns:conv="using:BililiveRecorder.Desktop.Converters"
+        xmlns:cfg="using:BililiveRecorder.Core.Config"
+        x:Name="Root"
+        x:Class="BililiveRecorder.Desktop.Views.PerRoomSettingsWindow"
+        x:CompileBindings="False"
+        Width="600" Height="760" MinWidth="480" MinHeight="420"
+        WindowStartupLocation="CenterOwner">
+
+    <ScrollViewer Padding="20,16">
+        <StackPanel Spacing="16" DataContext="{Binding Room.RoomConfig}">
+
+            <!-- 弹幕录制 -->
+            <StackPanel Spacing="0">
+                <TextBlock Classes="settingsSectionHeader"
+                           Text="{Binding #Root.DataContext.Loc[Settings_Danmaku_Title]}" />
+                <Border Classes="settingsCard">
+                    <StackPanel>
+                        <ctl:SettingWithDefault Header="{Binding #Root.DataContext.Loc[Settings_Danmaku_ToggleSwitch_Enabled]}"
+                                                IsSettingNotUsingDefault="{Binding HasRecordDanmaku}"
+                                                IsInlineContent="True">
+                            <ToggleSwitch IsChecked="{Binding RecordDanmaku}" />
+                        </ctl:SettingWithDefault>
+                        <!-- 子项缩进，与全局设置一致 -->
+                        <StackPanel Margin="12,0,0,0">
+                            <ctl:SettingWithDefault Header="{Binding #Root.DataContext.Loc[Settings_Danmaku_ToggleSwitch_SuperChat]}"
+                                                    IsSettingNotUsingDefault="{Binding HasRecordDanmakuSuperChat}"
+                                                    IsInlineContent="True">
+                                <ToggleSwitch IsChecked="{Binding RecordDanmakuSuperChat}" />
+                            </ctl:SettingWithDefault>
+                            <ctl:SettingWithDefault Header="{Binding #Root.DataContext.Loc[Settings_Danmaku_ToggleSwitch_Guard]}"
+                                                    IsSettingNotUsingDefault="{Binding HasRecordDanmakuGuard}"
+                                                    IsInlineContent="True">
+                                <ToggleSwitch IsChecked="{Binding RecordDanmakuGuard}" />
+                            </ctl:SettingWithDefault>
+                            <ctl:SettingWithDefault Header="{Binding #Root.DataContext.Loc[Settings_Danmaku_ToggleSwitch_Gift]}"
+                                                    IsSettingNotUsingDefault="{Binding HasRecordDanmakuGift}"
+                                                    IsInlineContent="True">
+                                <ToggleSwitch IsChecked="{Binding RecordDanmakuGift}" />
+                            </ctl:SettingWithDefault>
+                            <ctl:SettingWithDefault Header="{Binding #Root.DataContext.Loc[Settings_Danmaku_ToggleSwitch_Raw]}"
+                                                    IsSettingNotUsingDefault="{Binding HasRecordDanmakuRaw}"
+                                                    IsInlineContent="True">
+                                <ToggleSwitch IsChecked="{Binding RecordDanmakuRaw}" />
+                            </ctl:SettingWithDefault>
+                        </StackPanel>
+                        <Border Classes="settingsDivider" />
+                        <ctl:SettingWithDefault Header="{Binding #Root.DataContext.Loc[Settings_Danmaku_ToggleSwitch_KeepConnected]}"
+                                                IsSettingNotUsingDefault="{Binding HasRecordDanmakuKeepConnected}"
+                                                IsInlineContent="True">
+                            <ToggleSwitch IsChecked="{Binding RecordDanmakuKeepConnected}" />
+                        </ctl:SettingWithDefault>
+                    </StackPanel>
+                </Border>
+            </StackPanel>
+
+            <!-- 录制模式 -->
+            <StackPanel Spacing="0">
+                <TextBlock Classes="settingsSectionHeader"
+                           Text="{Binding #Root.DataContext.Loc[Settings_RecordMode_Title]}" />
+                <Border Classes="settingsCard">
+                    <StackPanel>
+                        <Grid Classes="settingsRow" ColumnDefinitions="*,Auto">
+                            <TextBlock Classes="settingsRowTitle"
+                                       Text="{Binding #Root.DataContext.Loc[Settings_RecordMode_RadioButton_Standard]}"
+                                       VerticalAlignment="Center" />
+                            <RadioButton Grid.Column="1"
+                                         GroupName="RoomRecordMode"
+                                         IsChecked="{Binding RecordMode, Mode=TwoWay, Converter={x:Static conv:EnumToBooleanConverter.Instance}, ConverterParameter={x:Static cfg:RecordMode.Standard}}"
+                                         VerticalAlignment="Center" />
+                        </Grid>
+                        <Grid Classes="settingsRow" ColumnDefinitions="*,Auto">
+                            <TextBlock Classes="settingsRowTitle"
+                                       Text="{Binding #Root.DataContext.Loc[Settings_RecordMode_RadioButton_RawData]}"
+                                       VerticalAlignment="Center" />
+                            <RadioButton Grid.Column="1"
+                                         GroupName="RoomRecordMode"
+                                         IsChecked="{Binding RecordMode, Mode=TwoWay, Converter={x:Static conv:EnumToBooleanConverter.Instance}, ConverterParameter={x:Static cfg:RecordMode.RawData}}"
+                                         VerticalAlignment="Center" />
+                        </Grid>
+                    </StackPanel>
+                </Border>
+            </StackPanel>
+
+            <!-- 标准修复 -->
+            <StackPanel Spacing="0">
+                <TextBlock Classes="settingsSectionHeader"
+                           Text="{Binding #Root.DataContext.Loc[Settings_GroupBox_StandardFix]}" />
+                <Border Classes="settingsCard">
+                    <StackPanel>
+                        <ctl:SettingWithDefault Header="{Binding #Root.DataContext.Loc[Settings_ToggleSwitch_FlvProcessorSplitOnScriptTag]}"
+                                                IsSettingNotUsingDefault="{Binding HasFlvProcessorSplitOnScriptTag}"
+                                                IsInlineContent="True">
+                            <ToggleSwitch IsChecked="{Binding FlvProcessorSplitOnScriptTag}" />
+                        </ctl:SettingWithDefault>
+                        <ctl:SettingWithDefault Header="{Binding #Root.DataContext.Loc[Settings_ToggleSwitch_FlvProcessorDisableSplitOnH264AnnexB]}"
+                                                IsSettingNotUsingDefault="{Binding HasFlvProcessorDisableSplitOnH264AnnexB}"
+                                                IsInlineContent="True">
+                            <ToggleSwitch IsChecked="{Binding FlvProcessorDisableSplitOnH264AnnexB}" />
+                        </ctl:SettingWithDefault>
+                    </StackPanel>
+                </Border>
+            </StackPanel>
+
+            <!-- 自动分段 -->
+            <StackPanel Spacing="0">
+                <TextBlock Classes="settingsSectionHeader"
+                           Text="{Binding #Root.DataContext.Loc[Settings_Splitting_Title]}" />
+                <Border Classes="settingsCard">
+                    <StackPanel>
+                        <Grid Classes="settingsRow" ColumnDefinitions="*,Auto">
+                            <TextBlock Classes="settingsRowTitle"
+                                       Text="{Binding #Root.DataContext.Loc[Settings_Splitting_RadioButton_Disabled]}"
+                                       VerticalAlignment="Center" />
+                            <RadioButton Grid.Column="1"
+                                         GroupName="RoomCuttingMode"
+                                         IsChecked="{Binding CuttingMode, Mode=TwoWay, Converter={x:Static conv:EnumToBooleanConverter.Instance}, ConverterParameter={x:Static cfg:CuttingMode.Disabled}}"
+                                         VerticalAlignment="Center" />
+                        </Grid>
+                        <Grid Classes="settingsRow" ColumnDefinitions="*,Auto">
+                            <TextBlock Classes="settingsRowTitle"
+                                       Text="{Binding #Root.DataContext.Loc[Settings_Splitting_RadioButton_BySize]}"
+                                       VerticalAlignment="Center" />
+                            <RadioButton Grid.Column="1"
+                                         GroupName="RoomCuttingMode"
+                                         IsChecked="{Binding CuttingMode, Mode=TwoWay, Converter={x:Static conv:EnumToBooleanConverter.Instance}, ConverterParameter={x:Static cfg:CuttingMode.BySize}}"
+                                         VerticalAlignment="Center" />
+                        </Grid>
+                        <Grid Classes="settingsRow" ColumnDefinitions="*,Auto">
+                            <TextBlock Classes="settingsRowTitle"
+                                       Text="{Binding #Root.DataContext.Loc[Settings_Splitting_RadioButton_ByTime]}"
+                                       VerticalAlignment="Center" />
+                            <RadioButton Grid.Column="1"
+                                         GroupName="RoomCuttingMode"
+                                         IsChecked="{Binding CuttingMode, Mode=TwoWay, Converter={x:Static conv:EnumToBooleanConverter.Instance}, ConverterParameter={x:Static cfg:CuttingMode.ByTime}}"
+                                         VerticalAlignment="Center" />
+                        </Grid>
+                        <Border Classes="settingsDivider"
+                                IsVisible="{Binding CuttingMode, Converter={x:Static conv:EnumNotToBooleanConverter.Instance}, ConverterParameter={x:Static cfg:CuttingMode.Disabled}}" />
+                        <Grid Classes="settingsRow" ColumnDefinitions="*,Auto"
+                              IsVisible="{Binding CuttingMode, Converter={x:Static conv:EnumNotToBooleanConverter.Instance}, ConverterParameter={x:Static cfg:CuttingMode.Disabled}}">
+                            <StackPanel VerticalAlignment="Center" Spacing="2">
+                                <TextBlock Classes="settingsRowTitle"
+                                           Text="{Binding #Root.DataContext.Loc[Settings_Splitting_TextBox_Left]}" />
+                                <TextBlock Classes="settingsRowDescription"
+                                           Text="{Binding #Root.DataContext.Loc[Settings_Splitting_TextBox_Right]}" />
+                            </StackPanel>
+                            <StackPanel Grid.Column="1"
+                                        Orientation="Horizontal"
+                                        Spacing="8"
+                                        VerticalAlignment="Center">
+                                <TextBox Text="{Binding CuttingNumber}" Width="100" />
+                                <TextBlock Text="{Binding #Root.DataContext.Loc[Settings_Splitting_TextBox_SizeUnit]}"
+                                           VerticalAlignment="Center"
+                                           Opacity="0.7"
+                                           IsVisible="{Binding CuttingMode, Converter={x:Static conv:EnumToBooleanConverter.Instance}, ConverterParameter={x:Static cfg:CuttingMode.BySize}}" />
+                                <TextBlock Text="{Binding #Root.DataContext.Loc[Settings_Splitting_TextBox_TimeUnit]}"
+                                           VerticalAlignment="Center"
+                                           Opacity="0.7"
+                                           IsVisible="{Binding CuttingMode, Converter={x:Static conv:EnumToBooleanConverter.Instance}, ConverterParameter={x:Static cfg:CuttingMode.ByTime}}" />
+                            </StackPanel>
+                        </Grid>
+                        <Border Classes="settingsDivider" />
+                        <Grid Classes="settingsRow" ColumnDefinitions="*,Auto">
+                            <TextBlock Classes="settingsRowTitle"
+                                       Text="{Binding #Root.DataContext.Loc[Settings_Splitting_ToggleSwitch_ByTitle]}"
+                                       VerticalAlignment="Center" />
+                            <ToggleSwitch Grid.Column="1"
+                                          IsChecked="{Binding CuttingByTitle}"
+                                          VerticalAlignment="Center" />
+                        </Grid>
+                    </StackPanel>
+                </Border>
+            </StackPanel>
+
+            <!-- 直播封面 -->
+            <StackPanel Spacing="0">
+                <TextBlock Classes="settingsSectionHeader"
+                           Text="{Binding #Root.DataContext.Loc[Settings_GroupBox_StreamCover]}" />
+                <Border Classes="settingsCard">
+                    <ctl:SettingWithDefault Header="{Binding #Root.DataContext.Loc[Settings_ToggleSwitch_SaveStreamCover]}"
+                                            IsSettingNotUsingDefault="{Binding HasSaveStreamCover}"
+                                            IsInlineContent="True">
+                        <ToggleSwitch IsChecked="{Binding SaveStreamCover}" />
+                    </ctl:SettingWithDefault>
+                </Border>
+            </StackPanel>
+
+            <!-- 录制画质 -->
+            <StackPanel Spacing="0">
+                <TextBlock Classes="settingsSectionHeader"
+                           Text="{Binding #Root.DataContext.Loc[Settings_GroupBox_RecordQuality]}" />
+                <Border Classes="settingsCard">
+                    <ctl:SettingWithDefault Header="{Binding #Root.DataContext.Loc[Settings_GroupBox_RecordQuality]}"
+                                            IsSettingNotUsingDefault="{Binding HasRecordingQuality}"
+                                            IsInlineContent="True">
+                        <StackPanel Orientation="Horizontal" Spacing="8">
+                            <TextBox Text="{Binding RecordingQuality}"
+                                     Width="180"
+                                     Watermark="{Binding #Root.DataContext.Loc[Settings_TextBlock_RecordQualityHint]}" />
+                        </StackPanel>
+                    </ctl:SettingWithDefault>
+                </Border>
+            </StackPanel>
+
+            <!-- 录制条件 -->
+            <StackPanel Spacing="0">
+                <TextBlock Classes="settingsSectionHeader"
+                           Text="{Binding #Root.DataContext.Loc[Settings_GroupBox_RecordCondition]}" />
+                <Border Classes="settingsCard">
+                    <ctl:SettingWithDefault Header="{Binding #Root.DataContext.Loc[Settings_GroupBox_RecordCondition]}"
+                                            IsSettingNotUsingDefault="{Binding HasTitleFilterPatterns}">
+                        <StackPanel Spacing="4">
+                            <TextBlock Classes="settingsHint"
+                                       Text="{Binding #Root.DataContext.Loc[Settings_TextBlock_SkipTitleRegexHint]}" />
+                            <TextBox Text="{Binding TitleFilterPatterns}"
+                                     AcceptsReturn="True"
+                                     TextWrapping="Wrap"
+                                     MinHeight="80"
+                                     MaxHeight="160"
+                                     ScrollViewer.VerticalScrollBarVisibility="Auto" />
+                        </StackPanel>
+                    </ctl:SettingWithDefault>
+                </Border>
+            </StackPanel>
+        </StackPanel>
+    </ScrollViewer>
+</Window>

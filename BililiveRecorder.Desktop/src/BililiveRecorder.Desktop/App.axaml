@@ -1,0 +1,133 @@
+<Application xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:fst="using:FluentAvalonia.Styling"
+             xmlns:ctl="using:BililiveRecorder.Desktop.Controls"
+             xmlns:conv="using:Avalonia.Data.Converters"
+             x:Class="BililiveRecorder.Desktop.App"
+             RequestedThemeVariant="Default">
+    <!-- 设置页垂直节奏统一为 3：所有行（开关/单选/SettingWithDefault）上下边距相同，卡片不再叠 padding -->
+    <Application.Resources>
+        <ResourceDictionary>
+            <ControlTheme x:Key="{x:Type ctl:SettingWithDefault}" TargetType="ctl:SettingWithDefault">
+                <Setter Property="Template">
+                    <ControlTemplate>
+                        <Panel>
+                            <!-- 行内（开关/勾选）：上下 0 -->
+                            <Grid ColumnDefinitions="*,Auto,Auto" Margin="16,0,16,0"
+                                  IsVisible="{TemplateBinding IsInlineContent}">
+                                <TextBlock Text="{TemplateBinding Header}"
+                                           Classes="settingsRowTitle"
+                                           VerticalAlignment="Center"
+                                           TextWrapping="Wrap" />
+                                <ContentPresenter Grid.Column="1"
+                                                  Content="{TemplateBinding Content}"
+                                                  IsEnabled="{TemplateBinding IsSettingNotUsingDefault}"
+                                                  VerticalAlignment="Center"
+                                                  Margin="12,0,0,0" />
+                                <CheckBox x:Name="PART_DefaultCheckBox"
+                                          Classes="settingsDefaultCheck"
+                                          Grid.Column="2"
+                                          VerticalAlignment="Center"
+                                          Margin="10,0,0,0" />
+                            </Grid>
+                            <!-- 块级（输入框等）：上下按 6 收口 -->
+                            <StackPanel IsVisible="{Binding IsInlineContent, RelativeSource={RelativeSource TemplatedParent}, Converter={x:Static conv:BoolConverters.Not}}">
+                                <Grid ColumnDefinitions="*,Auto" Margin="16,6,16,0">
+                                    <TextBlock Text="{TemplateBinding Header}"
+                                               Classes="settingsRowTitle"
+                                               VerticalAlignment="Center"
+                                               TextWrapping="Wrap" />
+                                    <CheckBox x:Name="PART_DefaultCheckBox_Block"
+                                              Classes="settingsDefaultCheck"
+                                              Grid.Column="1"
+                                              VerticalAlignment="Center"
+                                              Margin="10,0,0,0" />
+                                </Grid>
+                                <ContentPresenter Content="{TemplateBinding Content}"
+                                                  Margin="16,4,16,6"
+                                                  IsEnabled="{TemplateBinding IsSettingNotUsingDefault}" />
+                            </StackPanel>
+                        </Panel>
+                    </ControlTemplate>
+                </Setter>
+            </ControlTheme>
+        </ResourceDictionary>
+    </Application.Resources>
+    <Application.Styles>
+        <fst:FluentAvaloniaTheme />
+
+        <!-- 行距只靠行 margin=3；控件自身 Margin 清零，避免主题默认边距叠上去 -->
+        <Style Selector="ToggleSwitch">
+            <Setter Property="OffContent" Value="" />
+            <Setter Property="OnContent" Value="" />
+            <Setter Property="Margin" Value="0" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
+        <Style Selector="CheckBox.settingsDefaultCheck">
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="Margin" Value="0" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
+
+        <Style Selector="TextBlock.settingsSectionHeader">
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="Opacity" Value="0.72" />
+            <Setter Property="Margin" Value="4,0,0,8" />
+        </Style>
+
+        <Style Selector="Border.settingsCard">
+            <Setter Property="Background" Value="#12808080" />
+            <Setter Property="BorderBrush" Value="#26808080" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="CornerRadius" Value="4" />
+            <Setter Property="Padding" Value="0" />
+        </Style>
+        <Style Selector="Border.settingsCardWarning">
+            <Setter Property="Background" Value="#14D96C3F" />
+            <Setter Property="BorderBrush" Value="#33D96C3F" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="CornerRadius" Value="4" />
+            <Setter Property="Padding" Value="16,12" />
+        </Style>
+
+        <!-- 设置行：默认上下 6；含开关的用 tight=0 -->
+        <Style Selector="Grid.settingsRow">
+            <Setter Property="Margin" Value="16,6,16,6" />
+        </Style>
+        <Style Selector="Grid.settingsRow.tight">
+            <Setter Property="Margin" Value="16,0,16,0" />
+        </Style>
+        <Style Selector="Grid.settingsRow > RadioButton">
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="MinHeight" Value="0" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
+        <Style Selector="StackPanel.settingsRowBody">
+            <Setter Property="Margin" Value="16,6,16,6" />
+        </Style>
+
+        <Style Selector="TextBlock.settingsRowTitle">
+            <Setter Property="FontSize" Value="14" />
+            <Setter Property="TextWrapping" Value="Wrap" />
+        </Style>
+        <Style Selector="TextBlock.settingsRowDescription">
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="Opacity" Value="0.65" />
+            <Setter Property="TextWrapping" Value="Wrap" />
+            <Setter Property="Margin" Value="0,2,8,0" />
+        </Style>
+        <Style Selector="TextBlock.settingsHint">
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="Opacity" Value="0.65" />
+            <Setter Property="TextWrapping" Value="Wrap" />
+        </Style>
+
+        <Style Selector="Border.settingsDivider">
+            <Setter Property="Height" Value="1" />
+            <Setter Property="Margin" Value="16,0" />
+            <Setter Property="Background" Value="{DynamicResource SystemControlForegroundBaseLowBrush}" />
+            <Setter Property="Opacity" Value="0.55" />
+        </Style>
+    </Application.Styles>
+</Application>

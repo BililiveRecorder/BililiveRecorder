@@ -1,0 +1,13 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="BililiveRecorder.Desktop.Views.ToolProgressWindow"
+        Width="380" Height="140"
+        CanResize="False"
+        WindowStartupLocation="CenterOwner"
+        ShowInTaskbar="False">
+    <StackPanel Margin="16" Spacing="10" VerticalAlignment="Center">
+        <ProgressBar x:Name="ProgressBar" Minimum="0" Maximum="100" Height="8" />
+        <TextBlock x:Name="ProgressText" Text="0%" HorizontalAlignment="Center" />
+        <Button x:Name="CancelButton" Click="Cancel_Click" HorizontalAlignment="Center" />
+    </StackPanel>
+</Window>

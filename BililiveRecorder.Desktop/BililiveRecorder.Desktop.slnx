@@ -1,0 +1,5 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/BililiveRecorder.Desktop/BililiveRecorder.Desktop.csproj" />
+  </Folder>
+</Solution>

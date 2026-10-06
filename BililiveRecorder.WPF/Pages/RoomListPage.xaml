@@ -67,7 +67,7 @@
                     <MenuItem Header="{l:Loc RoomListPage_Menu_Sort_RoomId}" Tag="{x:Static local:SortedBy.RoomId}" Click="MenuItem_SortBy_Click"/>
                     <MenuItem Header="{l:Loc RoomListPage_Menu_Sort_Status}" Tag="{x:Static local:SortedBy.Status}" Click="MenuItem_SortBy_Click"/>
                     <Separator/>
-                    <MenuItem Header="开播时弹出系统通知" IsCheckable="True" IsChecked="{Binding Config.Global.WpfNotifyStreamStart}"/>
+                    <MenuItem Header="{l:Loc RoomListPage_Menu_View_NotifyStreamStart}" IsCheckable="True" IsChecked="{Binding Config.Global.WpfNotifyStreamStart}"/>
                     <MenuItem Header="{l:Loc RoomListPage_Menu_View_ShowTitleAndAreaCheckBox}" IsCheckable="True" IsChecked="{Binding Config.Global.WpfShowTitleAndArea}"/>
                     <MenuItem Header="{l:Loc RoomListPage_Menu_View_ShowLogCheckBox}" IsCheckable="True" Checked="MenuItem_ShowLog_Click" Unchecked="MenuItem_HideLog_Click"/>
                 </MenuItem>
@@ -75,7 +75,7 @@
                     <MenuItem Header="{l:Loc RoomListPage_Menu_AutoRecord_EnableAll}" Click="MenuItem_EnableAutoRecAll_Click"/>
                     <MenuItem Header="{l:Loc RoomListPage_Menu_AutoRecord_DisableAll}" Click="MenuItem_DisableAutoRecAll_Click"/>
                     <Separator/>
-                    <MenuItem Header="刷新全部房间信息" Click="MenuItem_RefreshAllRoomInfo_Click"/>
+                    <MenuItem Header="{l:Loc RoomListPage_Menu_RefreshAllRoomInfo}" Click="MenuItem_RefreshAllRoomInfo_Click"/>
                 </MenuItem>
                 <MenuItem Header="{l:Loc RoomListPage_Menu_Links}">
                     <MenuItem Header="{l:Loc RoomListPage_Menu_Links_Website}" Command="{x:Static m:Commands.OpenLink}" CommandParameter="https://rec.danmuji.org/">

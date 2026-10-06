@@ -78,6 +78,36 @@ jobs:
           name: WPF-Release
           path: BililiveRecorder.WPF/bin/Release
 
+  build_desktop:
+    # Avalonia 桌面端（BililiveRecorder.Desktop，net10.0）
+    # Tests can be run parallelly for debug builds to save time
+    # needs: test
+    strategy:
+      matrix:
+        rid: [linux-x64, linux-arm64, osx-x64, osx-arm64, win-x64]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+          submodules: recursive
+
+      # 桌面端目标 net10.0，需要显式安装 .NET 10 SDK
+      # （仓库 global.json 固定 8.0.100 + rollForward latestMajor）
+      - uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: '10.0.x'
+
+      - name: Build Desktop - Release
+        run: dotnet publish -c Release -r ${{ matrix.rid }} --self-contained true BililiveRecorder.Desktop/src/BililiveRecorder.Desktop/BililiveRecorder.Desktop.csproj
+
+      - name: Upload Artifacts - Release
+        uses: actions/upload-artifact@v7
+        with:
+          name: Desktop-${{ matrix.rid }}-Release
+          path: BililiveRecorder.Desktop/src/BililiveRecorder.Desktop/bin/Release/net10.0/${{ matrix.rid }}/publish
+
   build_cli:
     # Tests can be run parallelly for debug builds to save time
     # needs: test

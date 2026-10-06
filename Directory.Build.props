@@ -31,4 +31,8 @@
     <ItemGroup>
         <AdditionalFiles Include="$(MSBuildThisFileDirectory)BannedSymbols.txt" Link="BannedSymbols.txt"/>
     </ItemGroup>
+    <!-- DisableGitVersionTask=true 时 GitVersion 不生成 GitVersionInformation，用此桩保证可编译 -->
+    <ItemGroup Condition="'$(DisableGitVersionTask)' == 'true'">
+        <Compile Include="$(MSBuildThisFileDirectory)GitVersionInformation.Stub.cs" Link="GitVersionInformation.Stub.cs" />
+    </ItemGroup>
 </Project>

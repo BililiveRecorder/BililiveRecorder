@@ -1,0 +1,20 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:BililiveRecorder.Desktop.ViewModels"
+             x:Class="BililiveRecorder.Desktop.Views.ToolboxRemuxView"
+             x:DataType="vm:ToolboxViewModel">
+
+    <ScrollViewer Padding="16,12">
+        <StackPanel Spacing="10" MaxWidth="760" HorizontalAlignment="Left">
+            <TextBlock Text="{Binding Loc[Toolbox_Remux_Title]}" FontSize="20" FontWeight="SemiBold" />
+            <TextBlock TextWrapping="Wrap" Opacity="0.8"
+                       Text="使用 FFmpeg 将 FLV 无损转封装为 MP4（-c copy，不重新编码）。&#x0a;Convert FLV to MP4 losslessly via FFmpeg (stream copy)." />
+
+            <TextBox x:Name="InputPathBox" Watermark="input.flv" />
+            <Button Content="{Binding Loc[Toolbox_AutoFix_ButtonSelectInput]}" Click="BrowseInput_Click" />
+
+            <Button x:Name="RemuxButton" Content="{Binding Loc[Toolbox_Remux_Title]}" Click="Remux_Click" HorizontalAlignment="Left" />
+            <TextBlock x:Name="StatusText" TextWrapping="Wrap" Opacity="0.8" />
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

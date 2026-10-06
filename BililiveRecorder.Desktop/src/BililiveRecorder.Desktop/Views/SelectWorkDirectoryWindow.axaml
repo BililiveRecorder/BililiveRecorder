@@ -1,0 +1,44 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="BililiveRecorder.Desktop.Views.SelectWorkDirectoryWindow"
+        Width="620" Height="330"
+        MinWidth="500" MinHeight="280"
+        WindowStartupLocation="CenterScreen"
+        CanResize="False"
+        ShowInTaskbar="True">
+
+    <StackPanel Margin="20" Spacing="14">
+        <TextBlock x:Name="TitleText"
+                   FontSize="20"
+                   FontWeight="SemiBold" />
+
+        <TextBlock TextWrapping="Wrap"
+                   Opacity="0.8"
+                   Text="选择用于保存录像和配置文件的工作目录。&#x0a;Select the working directory used for recordings and config files." />
+
+        <Grid ColumnDefinitions="*,Auto">
+            <TextBox x:Name="PathBox" />
+            <Button x:Name="BrowseButton"
+                    Grid.Column="1"
+                    Margin="8,0,0,0"
+                    Click="Browse_Click" />
+        </Grid>
+
+        <CheckBox x:Name="SkipAskingBox" />
+
+        <TextBlock x:Name="ErrorText"
+                   Foreground="OrangeRed"
+                   TextWrapping="Wrap"
+                   IsVisible="False" />
+
+        <StackPanel Orientation="Horizontal"
+                    HorizontalAlignment="Right"
+                    Spacing="8">
+            <Button x:Name="QuitButton"
+                    Click="Quit_Click" />
+            <Button x:Name="ConfirmButton"
+                    Classes="accent"
+                    Click="Confirm_Click" />
+        </StackPanel>
+    </StackPanel>
+</Window>

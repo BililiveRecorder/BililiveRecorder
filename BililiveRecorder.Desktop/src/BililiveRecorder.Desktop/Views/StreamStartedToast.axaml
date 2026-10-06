@@ -1,0 +1,36 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="BililiveRecorder.Desktop.Views.StreamStartedToast"
+        Width="300" Height="120"
+        CanResize="False"
+        ShowInTaskbar="False"
+        SystemDecorations="None"
+        Topmost="True"
+        TransparencyBackgroundFallback="Transparent"
+        Background="#E6222222">
+    <Button Click="Toast_Click"
+            HorizontalAlignment="Stretch"
+            VerticalAlignment="Stretch"
+            HorizontalContentAlignment="Left"
+            VerticalContentAlignment="Top"
+            Background="Transparent"
+            BorderThickness="0"
+            Padding="12,10">
+        <StackPanel Spacing="4">
+            <TextBlock x:Name="NameText"
+                       Foreground="White"
+                       FontWeight="Bold"
+                       FontSize="14"
+                       TextTrimming="CharacterEllipsis" />
+            <TextBlock x:Name="TitleText"
+                       Foreground="#DDFFFFFF"
+                       FontSize="12"
+                       TextTrimming="CharacterEllipsis"
+                       TextWrapping="Wrap" MaxHeight="30" />
+            <TextBlock x:Name="AreaText"
+                       Foreground="#88FFFFFF"
+                       FontSize="11"
+                       TextTrimming="CharacterEllipsis" />
+        </StackPanel>
+    </Button>
+</Window>

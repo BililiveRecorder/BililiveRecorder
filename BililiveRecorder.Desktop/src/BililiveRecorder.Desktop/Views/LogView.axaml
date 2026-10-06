@@ -1,0 +1,31 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:conv="using:BililiveRecorder.Desktop.Converters"
+             xmlns:infra="using:BililiveRecorder.Desktop.Infrastructure"
+             xmlns:vm="using:BililiveRecorder.Desktop.ViewModels"
+             x:Class="BililiveRecorder.Desktop.Views.LogView"
+             x:DataType="vm:LogViewModel">
+
+    <Grid RowDefinitions="*">
+        <ListBox x:Name="LogList"
+                 ItemsSource="{Binding Logs}"
+                 FontSize="12"
+                 Grid.Row="0">
+            <ListBox.ContextMenu>
+                <ContextMenu x:CompileBindings="False">
+                    <MenuItem Header="{Binding Loc[Global_Copy]}" Click="Copy_Click" />
+                </ContextMenu>
+            </ListBox.ContextMenu>
+            <ListBox.ItemTemplate>
+                <DataTemplate x:DataType="infra:LogEntry">
+                    <Grid ColumnDefinitions="140,60,80,*" Margin="2">
+                        <TextBlock Grid.Column="0" Text="{Binding Timestamp.LocalDateTime}" Opacity="0.7" VerticalAlignment="Top" />
+                        <TextBlock Grid.Column="1" Text="{Binding Level}" Foreground="{Binding Level, Converter={x:Static conv:LogEventLevelToBrushConverter.Instance}}" VerticalAlignment="Top" />
+                        <TextBlock Grid.Column="2" Text="{Binding RoomId}" Opacity="0.7" VerticalAlignment="Top" />
+                        <TextBlock Grid.Column="3" Text="{Binding Message}" TextWrapping="WrapWithOverflow" VerticalAlignment="Top" />
+                    </Grid>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+    </Grid>
+</UserControl>

@@ -119,7 +119,7 @@
                     <Label Content="CliWrap"/>
                     <Label Content="FastHashes"/>
                     <Label Content="GitVersion.MsBuild"/>
-                    <Label Content="Hardcodet.NotifyIcon.Wpf"/>
+                    <Label Content="System.Windows.Forms (NotifyIcon)"/>
                     <Label Content="HierarchicalPropertyDefault"/>
                     <Label Content="JsonSubTypes"/>
                     <Label Content="Microsoft.Bcl.HashCode"/>
