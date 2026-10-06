@@ -1,30 +1,38 @@
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
+using BililiveRecorder.Core.Api;
 using BililiveRecorder.Core.Config;
 using BililiveRecorder.Core.Config.V3;
 using BililiveRecorder.Core.Event;
 using BililiveRecorder.Core.SimpleWebhook;
 using Serilog;
+using Timer = System.Timers.Timer;
 
 namespace BililiveRecorder.Core
 {
     internal class Recorder : IRecorder
     {
+        private const int TimingBatchSize = 50;
+
         private readonly object lockObject = new object();
         private readonly ObservableCollection<IRoom> roomCollection;
         private readonly IRoomFactory roomFactory;
+        private readonly IApiClient apiClient;
         private readonly ILogger logger;
         private readonly BasicWebhookV1 basicWebhookV1;
         private readonly BasicWebhookV2 basicWebhookV2;
+        private readonly Timer timingTimer;
 
         private bool disposedValue;
 
-        public Recorder(IRoomFactory roomFactory, ConfigV3 config, ILogger logger)
+        public Recorder(IRoomFactory roomFactory, IApiClient apiClient, ConfigV3 config, ILogger logger)
         {
             this.roomFactory = roomFactory ?? throw new ArgumentNullException(nameof(roomFactory));
+            this.apiClient = apiClient ?? throw new ArgumentNullException(nameof(apiClient));
             this.Config = config ?? throw new ArgumentNullException(nameof(config));
             this.logger = logger?.ForContext<Recorder>() ?? throw new ArgumentNullException(nameof(logger));
             this.roomCollection = new ObservableCollection<IRoom>();
@@ -32,6 +40,11 @@ namespace BililiveRecorder.Core
 
             this.basicWebhookV1 = new BasicWebhookV1(config);
             this.basicWebhookV2 = new BasicWebhookV2(config.Global);
+
+            this.timingTimer = new Timer(this.Config.Global.TimingCheckInterval * 1000d);
+            this.timingTimer.Elapsed += this.TimingTimer_Elapsed;
+            this.Config.Global.PropertyChanged += this.GlobalConfig_PropertyChanged;
+            this.timingTimer.Start();
 
             {
                 logger.Debug("Recorder created with {RoomCount} rooms", config.Rooms.Count);
@@ -44,6 +57,9 @@ namespace BililiveRecorder.Core
 
                 this.SaveConfig();
             }
+
+            // 启动后立即进行第一次批量拉取，不等一个轮询周期
+            _ = Task.Run(this.TimingBatchFetchAsync);
         }
 
         public event EventHandler<AggregatedRoomEventArgs<RecordSessionStartedEventArgs>>? RecordSessionStarted;
@@ -189,6 +205,64 @@ namespace BililiveRecorder.Core
 
         #endregion
 
+        #region Timing batch fetch
+
+        private void TimingTimer_Elapsed(object? sender, System.Timers.ElapsedEventArgs e)
+        {
+            _ = Task.Run(this.TimingBatchFetchAsync);
+        }
+
+        private async Task TimingBatchFetchAsync()
+        {
+            try
+            {
+                List<Room> rooms;
+                lock (this.lockObject)
+                {
+                    // 所有房间都参与定时批量轮询，非自动录制的房间仅用于保持状态显示更新
+                    rooms = this.roomCollection.OfType<Room>().ToList();
+                }
+
+                if (rooms.Count == 0)
+                    return;
+
+                this.logger.Debug("定时批量检查房间状态: {RoomCount} 个房间", rooms.Count);
+
+                for (var offset = 0; offset < rooms.Count; offset += TimingBatchSize)
+                {
+                    var count = Math.Min(TimingBatchSize, rooms.Count - offset);
+                    var chunk = rooms.GetRange(offset, count);
+
+                    try
+                    {
+                        var infoDict = await this.apiClient.GetRoomsBaseInfoAsync(chunk.Select(r => r.RoomConfig.RoomId)).ConfigureAwait(false);
+
+                        foreach (var room in chunk)
+                        {
+                            if (infoDict.TryGetValue(room.RoomConfig.RoomId, out var info))
+                                await room.ApplyBatchRoomInfoAsync(info).ConfigureAwait(false);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        this.logger.Debug(ex, "批量拉取房间信息时出错");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                this.logger.Debug(ex, "定时批量检查房间状态时出错");
+            }
+        }
+
+        private void GlobalConfig_PropertyChanged(object? sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(GlobalConfig.TimingCheckInterval))
+                this.timingTimer.Interval = this.Config.Global.TimingCheckInterval * 1000d;
+        }
+
+        #endregion
+
         #region Dispose
 
         protected virtual void Dispose(bool disposing)
@@ -199,12 +273,15 @@ namespace BililiveRecorder.Core
                 {
                     // dispose managed state (managed objects)
                     this.logger.Debug("Dispose called");
-                    this.SaveConfig();
+                    this.timingTimer.Stop();
+                    this.timingTimer.Elapsed -= this.TimingTimer_Elapsed;
+                    this.Config.Global.PropertyChanged -= this.GlobalConfig_PropertyChanged;
+                    this.timingTimer.Dispose();
                     foreach (var room in this.roomCollection)
                         room.Dispose();
                 }
 
-                // free unmanaged resources (unmanaged objects) and override finalizer
+                // free unmanaged resources (unmanaged objects and override finalizer)
                 // set large fields to null
                 this.disposedValue = true;
             }
