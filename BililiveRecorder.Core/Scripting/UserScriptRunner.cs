@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using BililiveRecorder.Core.Api;
+using BililiveRecorder.Core.Api.Http;
 using BililiveRecorder.Core.Config.V3;
 using BililiveRecorder.Core.Scripting.Runtime;
 using Acornima.Ast;
@@ -24,6 +25,7 @@ namespace BililiveRecorder.Core.Scripting
 
         private readonly GlobalConfig config;
         private readonly Options jintOptions;
+        private readonly Wbi? wbi;
 
         private static readonly Prepared<Script> setupScript;
         private static readonly JintStorage sharedStorage = new();
@@ -39,8 +41,14 @@ globalThis.recorderEvents = {};
         }
 
         public UserScriptRunner(GlobalConfig config)
+            : this(config, null)
+        {
+        }
+
+        internal UserScriptRunner(GlobalConfig config, Wbi? wbi)
         {
             this.config = config ?? throw new ArgumentNullException(nameof(config));
+            this.wbi = wbi;
 
             this.jintOptions = new Options()
                 .CatchClrExceptions()
@@ -54,6 +62,7 @@ globalThis.recorderEvents = {};
                     engine.SetValue("URL", TypeReference.CreateTypeReference<JintURL>(engine));
                     engine.SetValue("URLSearchParams", TypeReference.CreateTypeReference<JintURLSearchParams>(engine));
                     engine.SetValue("sharedStorage", ObjectWrapper.Create(engine, sharedStorage));
+                    engine.SetValue("wbiSign", JintWbi.Create(engine, this.wbi));
                 });
         }
 

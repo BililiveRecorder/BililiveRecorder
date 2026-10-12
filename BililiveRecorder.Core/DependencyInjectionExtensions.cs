@@ -27,7 +27,7 @@ namespace BililiveRecorder.DependencyInjection
             .AddSingleton<IRecorder, Recorder>()
             .AddSingleton<IRoomFactory, RoomFactory>()
             .AddScoped<IBasicDanmakuWriter, BasicDanmakuWriter>()
-            .AddSingleton<UserScriptRunner>()
+            .AddSingleton(sp => new UserScriptRunner(sp.GetRequiredService<GlobalConfig>(), sp.GetRequiredService<Wbi>()))
             ;
 
         private static IServiceCollection AddRecorderPollyPolicy(this IServiceCollection services) => services
@@ -36,6 +36,7 @@ namespace BililiveRecorder.DependencyInjection
             ;
 
         public static IServiceCollection AddRecorderApiClients(this IServiceCollection services) => services
+            .AddSingleton<Wbi>()
             .AddSingleton<HttpApiClient>()
             .AddSingleton<ICookieTester>(sp => sp.GetRequiredService<HttpApiClient>())
             .AddSingleton<PolicyWrappedApiClient<HttpApiClient>>()
