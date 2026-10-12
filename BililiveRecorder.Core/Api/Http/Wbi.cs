@@ -19,7 +19,9 @@ namespace BililiveRecorder.Core.Api.Http
             22, 25, 54, 21, 56, 59, 6, 63, 57, 62, 11, 36, 20, 34, 44, 52,
         };
 
-        public string? Key { get; private set; } = null;
+        private volatile string? key = null;
+
+        public string? Key => this.key;
 
         public void UpdateKey(string img, string sub)
         {
@@ -30,7 +32,7 @@ namespace BililiveRecorder.Core.Api.Http
             {
                 key[i] = full[KEY_MAP[i]];
             }
-            this.Key = new string(key);
+            this.key = new string(key);
         }
 
         public (string ts, string sign) Sign(IEnumerable<KeyValuePair<string, string>> query)
@@ -38,7 +40,8 @@ namespace BililiveRecorder.Core.Api.Http
 
         public (string ts, string sign) Sign(IEnumerable<KeyValuePair<string, string>> query, long ts)
         {
-            if (this.Key == null)
+            var key = this.key;
+            if (key == null)
                 throw new InvalidOperationException("Key is not set.");
 
             var tsStr = ts.ToString();
@@ -53,7 +56,7 @@ namespace BililiveRecorder.Core.Api.Http
 #pragma warning restore VSTHRD002 // Avoid problematic synchronous waits
 
             using var md5 = MD5.Create();
-            var hash = md5.ComputeHash(Encoding.UTF8.GetBytes(contentString + this.Key));
+            var hash = md5.ComputeHash(Encoding.UTF8.GetBytes(contentString + key));
             var sign = BitConverter.ToString(hash).Replace("-", "").ToLower();
 
             return (tsStr, sign);

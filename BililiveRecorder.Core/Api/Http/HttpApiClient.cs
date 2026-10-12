@@ -29,16 +29,17 @@ namespace BililiveRecorder.Core.Api.Http
 
         private readonly GlobalConfig config;
 
-        private readonly Wbi wbi = new Wbi();
+        private readonly Wbi wbi;
         private DateTimeOffset wbiLastUpdate = DateTimeOffset.MinValue;
         private static readonly TimeSpan wbiUpdateInterval = TimeSpan.FromHours(4);
 
         private HttpClient client;
         private bool disposedValue;
 
-        public HttpApiClient(GlobalConfig config)
+        public HttpApiClient(GlobalConfig config, Wbi wbi)
         {
             this.config = config ?? throw new ArgumentNullException(nameof(config));
+            this.wbi = wbi ?? throw new ArgumentNullException(nameof(wbi));
 
             config.PropertyChanged += this.Config_PropertyChanged;
 
