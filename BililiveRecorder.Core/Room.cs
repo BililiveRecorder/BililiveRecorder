@@ -119,7 +119,10 @@ namespace BililiveRecorder.Core
 
         public bool DanmakuConnected { get => this.danmakuConnected; private set => this.SetField(ref this.danmakuConnected, value); }
 
-        public bool Recording => this.recordTask != null;
+        // 录制是一个操作，视频和弹幕是其中的两个分支：只要这次录制会话还开着
+        //（哪怕视频一直录不出来、只有弹幕在落盘），对界面和 API 来说这个房间就是「录制中」，
+        // 这样「停止录制」、录制时长统计这些行为才和实际发生的事一致
+        public bool Recording => this.recordTask != null || this.recordingSessionActive;
 
         public RoomConfig RoomConfig { get; }
         public RoomStats Stats { get; } = new RoomStats();
@@ -553,6 +556,7 @@ namespace BililiveRecorder.Core
         private void StartRecordingSession()
         {
             this.recordingSessionActive = true;
+            this.OnPropertyChanged(nameof(this.Recording));
             // 新的录制会话先把上一轮「录不出视频」的判断清掉，等这次真的失败了再置上
             this.videoRecordingImpossible = false;
             this.UpdateDanmakuRecording();
@@ -565,6 +569,7 @@ namespace BililiveRecorder.Core
 
             this.recordingSessionActive = false;
             this.StopDanmakuRecording();
+            this.OnPropertyChanged(nameof(this.Recording));
         }
 
         // 确认这次录制会话录不出视频（没有可用画质、硬盘满、房间加密），让弹幕先直接落盘
