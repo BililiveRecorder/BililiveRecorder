@@ -3,8 +3,11 @@ using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Data;
 using BililiveRecorder.Core.Api;
 using BililiveRecorder.Core.Scripting;
+using BililiveRecorder.WPF.Controls;
 using Newtonsoft.Json.Linq;
 using Serilog;
 
@@ -49,12 +52,29 @@ namespace BililiveRecorder.WPF.Pages
             throw new TestException("test task exception triggered");
         });
 
+        private static TextBox? FindCookieTextBox(DependencyObject sender)
+        {
+            if (sender is not FrameworkElement button)
+                return null;
+
+            if (button.Parent is not StackPanel stackPanel)
+                return null;
+
+            foreach (var child in stackPanel.Children)
+            {
+                if (child is SettingWithDefault { InnerContent: TextBox tb })
+                    return tb;
+            }
+            return null;
+        }
+
 #pragma warning disable VSTHRD100 // Avoid async void methods
         private async void TestCookie_Click(object sender, RoutedEventArgs e)
 #pragma warning restore VSTHRD100 // Avoid async void methods
         {
             try
             {
+                FindCookieTextBox((DependencyObject)sender)?.GetBindingExpression(System.Windows.Controls.TextBox.TextProperty)?.UpdateSource();
                 await this.TestCookieAsync().ConfigureAwait(false);
             }
             catch (Exception ex)

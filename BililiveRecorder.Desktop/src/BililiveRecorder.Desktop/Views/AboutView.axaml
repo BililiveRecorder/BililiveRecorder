@@ -1,0 +1,47 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:BililiveRecorder.Desktop.ViewModels"
+             x:Class="BililiveRecorder.Desktop.Views.AboutView"
+             x:DataType="vm:AboutViewModel">
+
+    <ScrollViewer Padding="16,12">
+        <StackPanel Spacing="8" MaxWidth="720" HorizontalAlignment="Left">
+            <TextBlock FontSize="30" FontWeight="Bold" Text="mikufans 录播姬" />
+            <TextBlock FontSize="14" Opacity="0.8" Text="Desktop (Avalonia)" />
+
+            <TextBlock FontSize="14" Margin="0,8,0,0">
+                <Run Text="{Binding VersionText, Mode=OneWay}" />
+            </TextBlock>
+            <TextBlock FontSize="14" Text="{Binding Loc[About_Copyright]}" />
+            <TextBlock FontSize="14" Text="© Genteure" />
+            <TextBlock FontSize="14" Text="{Binding Loc[About_License]}" TextWrapping="Wrap" />
+
+            <StackPanel Orientation="Horizontal" Spacing="6" Margin="0,8,0,0">
+                <TextBlock FontSize="14" VerticalAlignment="Center" Text="{Binding Loc[About_Contact]}" />
+                <Button Padding="4,0" Background="Transparent" BorderThickness="0"
+                        Content="rec@danmuji.org" Foreground="CornflowerBlue"
+                        Click="OpenLink_Click" Tag="mailto:rec@danmuji.org" />
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Spacing="6">
+                <TextBlock FontSize="14" VerticalAlignment="Center" Text="{Binding Loc[About_Website]}" />
+                <Button Padding="4,0" Background="Transparent" BorderThickness="0"
+                        Content="https://rec.danmuji.org" Foreground="CornflowerBlue"
+                        Click="OpenLink_Click" Tag="https://rec.danmuji.org" />
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Spacing="6">
+                <TextBlock FontSize="14" VerticalAlignment="Center" Text="{Binding Loc[About_Project]}" />
+                <Button Padding="4,0" Background="Transparent" BorderThickness="0"
+                        Content="https://github.com/BililiveRecorder/BililiveRecorder" Foreground="CornflowerBlue"
+                        Click="OpenLink_Click" Tag="https://github.com/BililiveRecorder/BililiveRecorder" />
+            </StackPanel>
+
+            <TextBlock FontSize="20" FontWeight="SemiBold" Margin="0,16,0,4" Text="{Binding Loc[About_Translator]}" />
+            <TextBlock FontSize="13" Opacity="0.8" TextWrapping="Wrap"
+                       Text="Dewei Li (deweili), Fox Older (olderfox), Genteure (genteure), Heongle (heongle), kafu (kafu0611), Kenneth (w41k3r15347), OrangeCat (dust0517), Vincent Tse (vincentkilua)" />
+
+            <TextBlock FontSize="20" FontWeight="SemiBold" Margin="0,16,0,4" Text="{Binding Loc[About_LibrariesUsed]}" />
+            <TextBlock FontSize="13" Opacity="0.8" TextWrapping="Wrap"
+                       Text="Avalonia, Avalonia.Themes.Fluent, CliWrap, CommunityToolkit.Mvvm, FluentAvaloniaUI, HierarchicalPropertyDefault, JsonSubTypes, Microsoft.Extensions.DependencyInjection, Microsoft.IO.RecyclableMemoryStream, Nerdbank.Streams, Newtonsoft.Json, Polly, Serilog, Serilog.Sinks.Async/Console/File, StructLinq, System.CommandLine, System.IO.Pipelines" />
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

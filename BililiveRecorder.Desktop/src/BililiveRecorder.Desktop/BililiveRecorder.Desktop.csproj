@@ -1,0 +1,48 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+    <RootNamespace>BililiveRecorder.Desktop</RootNamespace>
+    <AssemblyName>BililiveRecorder.Desktop</AssemblyName>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <ApplicationIcon>..\..\..\BililiveRecorder.WPF\ico.ico</ApplicationIcon>
+    <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
+    <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
+    <Version>2.0.0</Version>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Avalonia" Version="11.3.*" />
+    <PackageReference Include="Avalonia.Desktop" Version="11.3.*" />
+    <PackageReference Include="Avalonia.Diagnostics" Version="11.3.*" Condition="'$(Configuration)' == 'Debug'" />
+    <PackageReference Include="Avalonia.Themes.Fluent" Version="11.3.*" />
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.*" />
+    <PackageReference Include="CliWrap" Version="3.*" />
+    <PackageReference Include="FluentAvaloniaUI" Version="2.5.1" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Include="Serilog.Sinks.Async" Version="2.*" />
+    <PackageReference Include="Serilog.Sinks.Console" Version="6.*" />
+    <PackageReference Include="Serilog.Sinks.File" Version="7.*" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\BililiveRecorder.Core\BililiveRecorder.Core.csproj" />
+    <ProjectReference Include="..\..\..\BililiveRecorder.Flv\BililiveRecorder.Flv.csproj" />
+    <ProjectReference Include="..\..\..\BililiveRecorder.ToolBox\BililiveRecorder.ToolBox.csproj" />
+  </ItemGroup>
+
+  <!-- 复用 WPF 项目的本地化资源（neutral = zh-Hans，附 en / en-PN / ja / zh-Hant） -->
+  <ItemGroup>
+    <EmbeddedResource Include="..\..\..\BililiveRecorder.WPF\Properties\Strings.resx" Link="Strings.resx" />
+    <EmbeddedResource Include="..\..\..\BililiveRecorder.WPF\Properties\Strings.en.resx" Link="Strings.en.resx" />
+    <EmbeddedResource Include="..\..\..\BililiveRecorder.WPF\Properties\Strings.en-PN.resx" Link="Strings.en-PN.resx" />
+    <EmbeddedResource Include="..\..\..\BililiveRecorder.WPF\Properties\Strings.ja.resx" Link="Strings.ja.resx" />
+    <EmbeddedResource Include="..\..\..\BililiveRecorder.WPF\Properties\Strings.zh-Hant.resx" Link="Strings.zh-Hant.resx" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AvaloniaResource Include="..\..\..\BililiveRecorder.WPF\ico.ico" Link="ico.ico" />
+  </ItemGroup>
+
+</Project>

@@ -21,7 +21,6 @@ using Newtonsoft.Json.Linq;
 using Polly;
 using Serilog;
 using Serilog.Events;
-using Timer = System.Timers.Timer;
 
 namespace BililiveRecorder.Core
 {
@@ -32,7 +31,6 @@ namespace BililiveRecorder.Core
 
         private readonly object recordStartLock = new object();
         private readonly SemaphoreSlim recordRetryDelaySemaphoreSlim = new SemaphoreSlim(1, 1);
-        private readonly Timer timer;
 
         private readonly IServiceScope scope;
         private readonly ILogger loggerWithoutContext;
@@ -59,6 +57,16 @@ namespace BililiveRecorder.Core
         private bool nextRecordShouldUseRawMode = false;
 
         private IRecordTask? recordTask;
+
+        private readonly object danmakuFileLock = new();
+        private bool recordingSessionActive;
+        private bool danmakuFileActive;
+        private string? danmakuFileFullPath;
+        private string? currentVideoFileFullPath;
+        private bool danmakuFileStartFailed;
+        // 确认这次录制会话录不出视频（没有可用画质、硬盘满、房间加密等），弹幕才会直接落盘
+        private bool videoRecordingImpossible;
+
         private DateTimeOffset danmakuClientConnectTime;
         private readonly ManualResetEventSlim danmakuConnectHoldOff = new();
 
@@ -83,25 +91,17 @@ namespace BililiveRecorder.Core
             this.recordTaskFactory = recordTaskFactory ?? throw new ArgumentNullException(nameof(recordTaskFactory));
             this.userScriptRunner = userScriptRunner ?? throw new ArgumentNullException(nameof(userScriptRunner));
 
-            this.timer = new Timer(this.RoomConfig.TimingCheckInterval * 1000d);
             this.cts = new CancellationTokenSource();
             this.ct = this.cts.Token;
 
             this.PropertyChanged += this.Room_PropertyChanged;
             this.RoomConfig.PropertyChanged += this.RoomConfig_PropertyChanged;
 
-            this.timer.Elapsed += this.Timer_Elapsed;
-
             this.danmakuClient.StatusChanged += this.DanmakuClient_StatusChanged;
             this.danmakuClient.DanmakuReceived += this.DanmakuClient_DanmakuReceived;
             this.danmakuClient.BeforeHandshake = this.DanmakuClient_BeforeHandshake;
 
-            _ = Task.Run(async () =>
-            {
-                await Task.Delay(1500 + (initDelayFactor * 500));
-                this.timer.Start();
-                await this.RefreshRoomInfoAsync();
-            });
+            // 定时检查开播状态与弹幕连接保活均由 Recorder 的批量轮询统一负责
         }
 
         public int ShortId { get => this.shortId; private set => this.SetField(ref this.shortId, value); }
@@ -119,7 +119,10 @@ namespace BililiveRecorder.Core
 
         public bool DanmakuConnected { get => this.danmakuConnected; private set => this.SetField(ref this.danmakuConnected, value); }
 
-        public bool Recording => this.recordTask != null;
+        // 录制是一个操作，视频和弹幕是其中的两个分支：只要这次录制会话还开着
+        //（哪怕视频一直录不出来、只有弹幕在落盘），对界面和 API 来说这个房间就是「录制中」，
+        // 这样「停止录制」、录制时长统计这些行为才和实际发生的事一致
+        public bool Recording => this.recordTask != null || this.recordingSessionActive;
 
         public RoomConfig RoomConfig { get; }
         public RoomStats Stats { get; } = new RoomStats();
@@ -178,6 +181,9 @@ namespace BililiveRecorder.Core
             {
                 this.AutoRecordForThisSession = false;
 
+                // 录制被手动停止了，弹幕作为录制的分支一起停掉
+                this.EndRecordingSession();
+
                 if (this.recordTask == null)
                     return;
 
@@ -221,11 +227,13 @@ namespace BililiveRecorder.Core
                 this.Title = room.Room.Title;
                 this.AreaNameParent = room.Room.ParentAreaName;
                 this.AreaNameChild = room.Room.AreaName;
-                this.Streaming = room.Room.LiveStatus == 1;
 
                 this.Name = room.User.BaseInfo.Name;
 
                 this.RawBilibiliApiJsonData = room.RawBilibiliApiJsonData;
+
+                // Streaming 变化会触发录制/弹幕逻辑，放在最后确保主播名等信息已就绪
+                this.Streaming = room.Room.LiveStatus == 1;
 
                 // allow danmaku client to connect
                 this.danmakuConnectHoldOff.Set();
@@ -235,6 +243,59 @@ namespace BililiveRecorder.Core
         public void MarkNextRecordShouldUseRawMode()
         {
             this.nextRecordShouldUseRawMode = true;
+        }
+
+        /// <summary>
+        /// 将批量接口 getRoomBaseInfo 返回的房间信息更新到房间状态。
+        /// 批量接口仅用于定时检查开播状态等基础信息，
+        /// 检测到开播时先全量拉取一次房间信息（含头像/封面），再更新状态触发开播通知。
+        /// </summary>
+        internal async Task ApplyBatchRoomInfoAsync(Api.Model.RoomBaseInfo info)
+        {
+            if (this.disposedValue)
+                return;
+
+            try
+            {
+                this.logger.Debug("批量拉取房间信息成功: {@info}", info);
+
+                // 未开播 → 开播时先全量拉取一次，保证头像/封面等数据在开播通知触发前是完整的
+                if (!this.Streaming && info.LiveStatus == 1)
+                {
+                    try
+                    {
+                        await this.FetchRoomInfoAsync().ConfigureAwait(false);
+                    }
+                    catch (Exception ex)
+                    {
+                        this.logger.Write(ex is ExecutionRejectedException ? LogEventLevel.Verbose : LogEventLevel.Warning, ex, "开播前拉取房间信息时出错");
+                    }
+                }
+
+                this.RoomConfig.RoomId = info.RoomId;
+                this.ShortId = info.ShortId;
+                this.Uid = info.Uid;
+                this.Title = info.Title;
+                this.AreaNameParent = info.ParentAreaName;
+                this.AreaNameChild = info.AreaName;
+                this.Name = info.Name;
+
+                // Streaming 放在最后：属性变更会同步触发开始录制，
+                // 录制用到的房间信息（特别是 Name）必须已经更新完
+                this.Streaming = info.LiveStatus == 1;
+
+                // allow danmaku client to connect
+                this.danmakuConnectHoldOff.Set();
+                this.StartDamakuConnection(delay: false);
+
+                // 刚更新了房间信息不需要再获取一次
+                if (this.Streaming && this.AutoRecordForThisSession && this.RoomConfig.AutoRecord)
+                    this.CreateAndStartNewRecordTask(skipFetchRoomInfo: true);
+            }
+            catch (Exception ex)
+            {
+                this.logger.Write(ex is ExecutionRejectedException ? LogEventLevel.Verbose : LogEventLevel.Warning, ex, "更新批量房间信息时出错");
+            }
         }
 
         private static readonly TimeSpan TitleRegexMatchTimeout = TimeSpan.FromSeconds(0.5);
@@ -297,6 +358,9 @@ namespace BililiveRecorder.Core
                 this.Stats.Reset();
                 this.OnPropertyChanged(nameof(this.Recording));
 
+                // 从这里开始进入一次录制会话，弹幕跟着会话一起录
+                this.StartRecordingSession();
+
                 _ = Task.Run(async () =>
                 {
                     try
@@ -304,12 +368,17 @@ namespace BililiveRecorder.Core
                         if (!skipFetchRoomInfo)
                             await this.FetchRoomInfoAsync();
 
+                        this.StartDamakuConnection(delay: false);
+
                         await this.recordTask.StartAsync();
                     }
                     catch (NoMatchingQnValueException)
                     {
                         this.recordTask = null;
                         this.OnPropertyChanged(nameof(this.Recording));
+
+                        // 画质不可用，确认这次录不出视频，弹幕先直接落盘
+                        this.MarkVideoRecordingImpossible();
 
                         // 无匹配的画质，重试录制之前等待更长时间
                         _ = Task.Run(() => this.RestartAfterRecordTaskFailedAsync(RestartRecordingReason.NoMatchingQnValue));
@@ -326,12 +395,16 @@ namespace BililiveRecorder.Core
                         if (ex is IOException ioex && (ioex.HResult == HR_ERROR_DISK_FULL || ioex.HResult == HR_ERROR_HANDLE_DISK_FULL))
                         {
                             this.logger.Warning("因为硬盘空间已满，本次不再自动重试启动录制。");
+                            // 硬盘满了这次也录不出视频，弹幕直接落盘
+                            this.MarkVideoRecordingImpossible();
                             return;
                         }
                         else if (ex is BilibiliApiResponseCodeNotZeroException notzero && notzero.Code == 19002005)
                         {
                             // 房间已加密
                             this.logger.Warning("房间已加密，无密码获取不到直播流，本次不再自动重试启动录制。");
+                            // 房间加密拿不到直播流，弹幕直接落盘
+                            this.MarkVideoRecordingImpossible();
                             return;
                         }
                         else
@@ -406,6 +479,12 @@ namespace BililiveRecorder.Core
             {
                 if (this.disposedValue)
                     return;
+
+                if (!this.Recording && !this.recordingSessionActive && !(this.RoomConfig.AutoRecord && this.RoomConfig.RecordDanmakuKeepConnected))
+                {
+                    return;
+                }
+
                 try
                 {
                     if (delay)
@@ -443,6 +522,197 @@ namespace BililiveRecorder.Core
                         this.StartDamakuConnection(delay: true);
                 }
             });
+
+        #endregion
+
+        #region Danmaku Recording
+
+        // 弹幕是录制的一个分支：录制会话一开始就跟着录，会话一结束就一起停。
+        // 正常情况下弹幕文件跟着视频文件建立，与视频文件同名，时间基准也一致。
+        // 只有确认这次会话录不出视频（没有可用画质、硬盘满、房间加密）时，才不等视频，
+        // 直接把弹幕写进一个单独的 xml，这样录不了视频也不会把弹幕丢掉。
+        // 后来视频又录出来了（画质恢复、换了直播流）的话，弹幕再跟着视频文件切换。
+        private void UpdateDanmakuRecording()
+        {
+            if (this.disposedValue)
+                return;
+
+            if (!this.recordingSessionActive || !this.RoomConfig.RecordDanmaku)
+            {
+                this.StopDanmakuRecording();
+                return;
+            }
+
+            lock (this.danmakuFileLock)
+            {
+                // 会话开始或开关变更时允许重新尝试创建弹幕文件
+                this.danmakuFileStartFailed = false;
+
+                if (!this.danmakuFileActive)
+                    this.StartDanmakuFileLocked();
+            }
+        }
+
+        private void StartRecordingSession()
+        {
+            this.recordingSessionActive = true;
+            this.OnPropertyChanged(nameof(this.Recording));
+            // 新的录制会话先把上一轮「录不出视频」的判断清掉，等这次真的失败了再置上
+            this.videoRecordingImpossible = false;
+            this.UpdateDanmakuRecording();
+        }
+
+        private void EndRecordingSession()
+        {
+            if (!this.recordingSessionActive)
+                return;
+
+            this.recordingSessionActive = false;
+            this.StopDanmakuRecording();
+            this.OnPropertyChanged(nameof(this.Recording));
+        }
+
+        // 确认这次录制会话录不出视频（没有可用画质、硬盘满、房间加密），让弹幕先直接落盘
+        private void MarkVideoRecordingImpossible()
+        {
+            lock (this.danmakuFileLock)
+            {
+                this.videoRecordingImpossible = true;
+            }
+
+            this.UpdateDanmakuRecording();
+        }
+
+        private void OnDanmakuMessage(Api.Danmaku.DanmakuModel d)
+        {
+            if (this.disposedValue || !this.recordingSessionActive || !this.RoomConfig.RecordDanmaku)
+                return;
+
+            lock (this.danmakuFileLock)
+            {
+                // 本分段已经创建失败过就不再逐条弹幕重试，等写出下一个视频文件或重新开始弹幕录制时再试
+                if (!this.danmakuFileActive && !this.danmakuFileStartFailed && this.videoRecordingImpossible)
+                    this.StartDanmakuFileLocked();
+            }
+
+            if (this.danmakuFileActive)
+                _ = Task.Run(async () => await this.basicDanmakuWriter.WriteAsync(d));
+        }
+
+        // 在 danmakuFileLock 里调用：有视频文件时和视频文件同名，确认录不出视频时单独建一个
+        private void StartDanmakuFileLocked()
+        {
+            if (this.disposedValue || !this.recordingSessionActive || !this.RoomConfig.RecordDanmaku)
+                return;
+
+            string path;
+            string fullPath;
+
+            var videoFullPath = this.currentVideoFileFullPath;
+            if (videoFullPath is not null)
+            {
+                // 已经有视频写到文件里了（录制中途打开弹幕录制、重试、切割或断流重连），直接跟视频文件同名
+                fullPath = videoFullPath;
+                path = Path.ChangeExtension(videoFullPath, "xml");
+            }
+            else if (this.videoRecordingImpossible)
+            {
+                // 确认这次会话录不出视频了，不等视频文件，直接给弹幕单独建一个
+                try
+                {
+                    (path, fullPath) = this.CreateDanmakuRecordingPaths();
+                }
+                catch (Exception ex)
+                {
+                    this.logger.Warning(ex, "生成录制弹幕的文件路径时出错");
+                    // 本分段不再反复重试，等写出下一个视频文件或重新开始弹幕录制时再试
+                    this.danmakuFileStartFailed = true;
+                    return;
+                }
+            }
+            else
+            {
+                // 还在取流等视频文件，弹幕先不落盘，等视频文件出来再跟着写
+                return;
+            }
+
+            var wasActive = this.danmakuFileActive;
+
+            try
+            {
+                this.basicDanmakuWriter.EnableWithPath(path, this);
+            }
+            catch (Exception ex)
+            {
+                this.logger.Warning(ex, "创建弹幕文件 {FilePath} 时出错", path);
+                // 本分段不再反复重试，等写出下一个视频文件或重新开始弹幕录制时再试
+                this.danmakuFileStartFailed = true;
+                return;
+            }
+
+            this.danmakuFileActive = true;
+            this.danmakuFileFullPath = fullPath;
+
+            if (videoFullPath is not null)
+            {
+                if (wasActive)
+                    this.logger.Debug("弹幕文件跟随视频文件切换到 {FilePath}", path);
+                else
+                    this.logger.Information("录制弹幕到 {FilePath}", path);
+            }
+            else
+            {
+                this.logger.Information("录制不了视频，弹幕直接落盘到 {FilePath}", path);
+            }
+        }
+
+        // 确认录不出视频时，按文件名模板给单独落盘的弹幕文件起个名字
+        private (string path, string fullPath) CreateDanmakuRecordingPaths()
+        {
+            var fileNameGenerator = new FileNameGenerator(this.RoomConfig, this.logger);
+
+            var fileNameTemplateOutput = fileNameGenerator.CreateFilePath(new FileNameTemplateContext
+            {
+                RoomId = this.RoomConfig.RoomId,
+                ShortId = this.ShortId,
+                Name = FileNameGenerator.RemoveInvalidFileName(this.Name, ignore_slash: false),
+                Uid = this.Uid,
+                Title = FileNameGenerator.RemoveInvalidFileName(this.Title, ignore_slash: false),
+                AreaParent = FileNameGenerator.RemoveInvalidFileName(this.AreaNameParent, ignore_slash: false),
+                AreaChild = FileNameGenerator.RemoveInvalidFileName(this.AreaNameChild, ignore_slash: false),
+                PartIndex = 1,
+                Qn = 0,
+                Json = this.RawBilibiliApiJsonData,
+            });
+
+            var fullPath = fileNameTemplateOutput.FullPath!;
+            if (string.IsNullOrWhiteSpace(fullPath))
+                throw new InvalidOperationException("未配置录制文件夹");
+
+            // 弹幕文件和视频文件是成对的，重名时换个名字，别把两边搅在一起
+            for (var i = 2; File.Exists(fullPath) || File.Exists(Path.ChangeExtension(fullPath, "xml")); i++)
+            {
+                var extension = Path.GetExtension(fullPath);
+                fullPath = $"{fullPath.Substring(0, fullPath.Length - extension.Length)} ({i}){extension}";
+            }
+
+            return (Path.ChangeExtension(fullPath, "xml"), fullPath);
+        }
+
+        private void StopDanmakuRecording()
+        {
+            lock (this.danmakuFileLock)
+            {
+                if (!this.danmakuFileActive)
+                    return;
+
+                this.danmakuFileActive = false;
+                this.danmakuFileFullPath = null;
+            }
+
+            this.basicDanmakuWriter.Disable();
+            this.logger.Information("停止录制弹幕");
+        }
 
         #endregion
 
@@ -503,7 +773,13 @@ namespace BililiveRecorder.Core
         ///
         private void RecordTask_RecordFileClosed(object? sender, RecordFileClosedEventArgs e)
         {
-            this.basicDanmakuWriter.Disable();
+            lock (this.danmakuFileLock)
+            {
+                // 这个分段的视频文件写完了，当前视频路径失效（这个分段不会再建弹幕文件）。
+                // 弹幕文件先不关：录制会话还在继续，后面这段没有视频的时间弹幕继续写在这个文件里，
+                // 直到写出下一个视频文件或录制结束。
+                this.currentVideoFileFullPath = null;
+            }
 
             RecordFileClosed?.Invoke(this, e);
         }
@@ -511,10 +787,33 @@ namespace BililiveRecorder.Core
         ///
         private void RecordTask_RecordFileOpening(object? sender, RecordFileOpeningEventArgs e)
         {
-            if (this.RoomConfig.RecordDanmaku)
-                this.basicDanmakuWriter.EnableWithPath(Path.ChangeExtension(e.FullPath, "xml"), this);
-            else
-                this.basicDanmakuWriter.Disable();
+            lock (this.danmakuFileLock)
+            {
+                // 视频写出文件了，说明这次会话能录，之前「录不出视频」的判断作废
+                this.videoRecordingImpossible = false;
+
+                // 弹幕文件以当前视频文件为准，中途开启弹幕录制时也能立刻跟上
+                this.currentVideoFileFullPath = e.FullPath;
+
+                if (this.RoomConfig.RecordDanmaku)
+                {
+                    // 写出了新视频文件，允许为这个分段重新尝试创建弹幕文件
+                    this.danmakuFileStartFailed = false;
+
+                    if (!this.danmakuFileActive)
+                    {
+                        // 这次录制会话还没有弹幕文件，直接跟视频文件同名
+                        this.StartDanmakuFileLocked();
+                    }
+                    else if (this.danmakuFileFullPath == null || !string.Equals(this.danmakuFileFullPath, e.FullPath, StringComparison.OrdinalIgnoreCase))
+                    {
+                        // 视频写出了新文件（切割或断流重连），弹幕跟着分段
+                        this.StartDanmakuFileLocked();
+                    }
+
+                    // 名字已经对齐（同一个视频文件）时不用动，弹幕文件早就在写了
+                }
+            }
 
             if (this.RoomConfig.SaveStreamCover)
             {
@@ -592,10 +891,26 @@ namespace BililiveRecorder.Core
                 });
             }
 
-            this.basicDanmakuWriter.Disable();
-
             this.OnPropertyChanged(nameof(this.Recording));
             this.Stats.Reset();
+
+            // 视频录制任务结束了，但录制会话可能还在继续（马上会重开一个新任务），
+            // 弹幕文件先不关，免得重试间隙的弹幕丢掉。会话真的结束时由 EndRecordingSession 关闭。
+
+            if (!this.Recording && !this.recordingSessionActive && !(this.RoomConfig.AutoRecord && this.RoomConfig.RecordDanmakuKeepConnected))
+            {
+                _ = Task.Run(async () =>
+                {
+                    try
+                    {
+                        await this.danmakuClient.DisconnectAsync().ConfigureAwait(false);
+                    }
+                    catch (Exception ex)
+                    {
+                        this.logger.Debug(ex, "断开弹幕服务器连接时出错");
+                    }
+                });
+            }
 
             RecordSessionEnded?.Invoke(this, new RecordSessionEndedEventArgs(this)
             {
@@ -655,7 +970,9 @@ namespace BililiveRecorder.Core
                     break;
             }
 
-            _ = Task.Run(async () => await this.basicDanmakuWriter.WriteAsync(d));
+            // 弹幕是录制会话的一个分支：会话没开就不写；会话开着时，正常情况下跟着视频文件写进同名 xml，
+            // 只有确认这次会话录不出视频了，才直接落盘到一个单独的 xml 里
+            this.OnDanmakuMessage(d);
         }
 
         private void DanmakuClient_StatusChanged(object? sender, Api.Danmaku.StatusChangedEventArgs e)
@@ -677,30 +994,6 @@ namespace BililiveRecorder.Core
             }
         }
 
-        private void Timer_Elapsed(object? sender, System.Timers.ElapsedEventArgs e)
-        {
-            this.StartDamakuConnection(delay: false);
-
-            // 如果开启了自动录制 或者 还没有获取过第一次房间信息
-            if (this.RoomConfig.AutoRecord || !this.danmakuConnectHoldOff.IsSet)
-            {
-                _ = Task.Run(async () =>
-                {
-                    try
-                    {
-                        // 定时主动检查不需要错误重试
-                        await this.FetchRoomInfoAsync().ConfigureAwait(false);
-
-                        // 刚更新了房间信息不需要再获取一次
-                        if (this.Streaming && this.AutoRecordForThisSession && this.RoomConfig.AutoRecord)
-                            this.CreateAndStartNewRecordTask(skipFetchRoomInfo: true);
-                    }
-                    catch (Exception) { }
-                });
-            }
-        }
-
-
         private void Room_PropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
             switch (e.PropertyName)
@@ -715,6 +1008,9 @@ namespace BililiveRecorder.Core
                     else
                     {
                         this.AutoRecordForThisSession = true;
+
+                        // 下播了，录制会话结束，弹幕也跟着停
+                        this.EndRecordingSession();
                     }
                     break;
                 case nameof(this.Title):
@@ -735,18 +1031,35 @@ namespace BililiveRecorder.Core
                 case nameof(this.RoomConfig.RoomId):
                     this.logger = this.loggerWithoutContext.ForContext(LoggingContext.RoomId, this.RoomConfig.RoomId);
                     break;
-                case nameof(this.RoomConfig.TimingCheckInterval):
-                    this.timer.Interval = this.RoomConfig.TimingCheckInterval * 1000d;
-                    break;
                 case nameof(this.RoomConfig.AutoRecord):
                     if (this.RoomConfig.AutoRecord)
                     {
                         this.AutoRecordForThisSession = true;
 
-                        // 启动录制时更新一次房间信息
                         if (this.Streaming && this.AutoRecordForThisSession)
                             this.CreateAndStartNewRecordTask(skipFetchRoomInfo: false);
                     }
+
+                    // 自动录制关掉但录制还在继续时，弹幕继续录；录制也停了就断开弹幕
+                    this.UpdateDanmakuRecording();
+
+                    if (!this.RoomConfig.AutoRecord && !this.Recording && !this.recordingSessionActive)
+                    {
+                        _ = Task.Run(async () =>
+                        {
+                            try
+                            {
+                                await this.danmakuClient.DisconnectAsync().ConfigureAwait(false);
+                            }
+                            catch (Exception ex)
+                            {
+                                this.logger.Debug(ex, "断开弹幕服务器连接时出错");
+                            }
+                        });
+                    }
+                    break;
+                case nameof(this.RoomConfig.RecordDanmaku):
+                    this.UpdateDanmakuRecording();
                     break;
                 default:
                     break;
@@ -786,6 +1099,7 @@ namespace BililiveRecorder.Core
                     this.cts.Cancel();
                     this.cts.Dispose();
                     this.recordTask?.RequestStop();
+                    this.StopDanmakuRecording();
                     this.basicDanmakuWriter.Disable();
                     this.scope.Dispose();
                 }

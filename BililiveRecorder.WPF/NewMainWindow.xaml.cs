@@ -4,7 +4,6 @@ using System.Threading;
 using System.Windows;
 using System.Windows.Threading;
 using BililiveRecorder.WPF.Controls;
-using Hardcodet.Wpf.TaskbarNotification;
 using ModernWpf.Controls;
 using Serilog;
 using WPFLocalizeExtension.Engine;
@@ -40,7 +39,7 @@ namespace BililiveRecorder.WPF
 
         public event EventHandler? NativeBeforeWindowClose;
 
-        internal Action<string, string, BalloonIcon>? ShowBalloonTipCallback { get; set; }
+        internal Action<string, string, Controls.BalloonIcon>? ShowBalloonTipCallback { get; set; }
 
         internal void CloseWithoutConfirmAction()
         {

@@ -671,4 +671,61 @@ Will use default setting and disable user input when checked.</comment>
   <data name="WorkDirectorySelector_Title" xml:space="preserve">
     <value>選擇工作目錄</value>
   </data>
+  <data name="Settings_Wpf_ToggleSwitch_DisableTrayToolTip" xml:space="preserve">
+    <value>關閉托盤圖示懸浮提示</value>
+    <comment>Shown as both On and Off content for the toggle switch</comment>
+  </data>
+  <data name="Settings_Wpf_ToggleSwitch_DisableUpdateCheck" xml:space="preserve">
+    <value>停用自動檢查更新</value>
+    <comment>Shown as both On and Off content for the toggle switch</comment>
+  </data>
+  <data name="Settings_GroupBox_StandardFix" xml:space="preserve">
+    <value>標準模式錄製修復設定</value>
+  </data>
+  <data name="Settings_ToggleSwitch_FlvProcessorSplitOnScriptTag" xml:space="preserve">
+    <value>偵測到可能缺少資料時分段</value>
+    <comment>Shown as both On and Off content for the toggle switch</comment>
+  </data>
+  <data name="Settings_ToggleSwitch_FlvProcessorDisableSplitOnH264AnnexB" xml:space="preserve">
+    <value>使用實驗性花屏修復判定邏輯</value>
+    <comment>Shown as both On and Off content for the toggle switch</comment>
+  </data>
+  <data name="Settings_GroupBox_StreamCover" xml:space="preserve">
+    <value>直播封面</value>
+  </data>
+  <data name="Settings_ToggleSwitch_SaveStreamCover" xml:space="preserve">
+    <value>錄製時同時儲存直播封面</value>
+    <comment>Shown as both On and Off content for the toggle switch</comment>
+  </data>
+  <data name="Settings_Button_Test" xml:space="preserve">
+    <value>測試</value>
+  </data>
+  <data name="Settings_TextBlock_TestResult" xml:space="preserve">
+    <value>測試結果：</value>
+  </data>
+  <data name="Settings_GroupBox_StreamStartNotify" xml:space="preserve">
+    <value>開播通知</value>
+  </data>
+  <data name="Settings_ToggleSwitch_WpfNotifyStreamStart" xml:space="preserve">
+    <value>直播間開播時彈出系統通知</value>
+    <comment>Shown as both On and Off content for the toggle switch</comment>
+  </data>
+  <data name="Settings_GroupBox_RecordQuality" xml:space="preserve">
+    <value>錄製畫質</value>
+  </data>
+  <data name="Settings_TextBlock_RecordQualityHint" xml:space="preserve">
+    <value>逗號分割的錄製畫質ID</value>
+  </data>
+  <data name="Settings_GroupBox_RecordCondition" xml:space="preserve">
+    <value>錄製條件</value>
+  </data>
+  <data name="Settings_TextBlock_SkipTitleRegexHint" xml:space="preserve">
+    <value>跳過錄製的直播標題正則匹配表達式，每行一個</value>
+  </data>
+  <data name="RoomListPage_Menu_View_NotifyStreamStart" xml:space="preserve">
+    <value>開播時彈出系統通知</value>
+  </data>
+  <data name="RoomListPage_Menu_RefreshAllRoomInfo" xml:space="preserve">
+    <value>重新整理全部房間資訊</value>
+  </data>
 </root>

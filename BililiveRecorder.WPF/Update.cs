@@ -1,5 +1,7 @@
 using System;
 using System.Threading.Tasks;
+using BililiveRecorder.Core.Config.V3;
+using BililiveRecorder.WPF.Pages;
 using Serilog;
 using Squirrel;
 
@@ -25,10 +27,29 @@ namespace BililiveRecorder.WPF
             await this.updateInProgress;
         }
 
+        private bool IsUpdateCheckDisabled()
+        {
+            try
+            {
+                return RootPage.ServiceProvider?.GetService(typeof(GlobalConfig)) is GlobalConfig globalConfig
+                    && globalConfig.WpfDisableUpdateCheck;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
         public async Task WaitForUpdatesOnShutdownAsync() => await this.updateInProgress.ContinueWith(ex => { }, TaskScheduler.Default).ConfigureAwait(false);
 
         private async Task RealUpdateAsync()
         {
+            if (this.IsUpdateCheckDisabled())
+            {
+                this.logger.Debug("已禁用自动检查更新，跳过");
+                return;
+            }
+
             this.logger.Debug("Checking updates");
             try
             {

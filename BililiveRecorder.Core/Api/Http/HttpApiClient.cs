@@ -194,6 +194,40 @@ namespace BililiveRecorder.Core.Api.Http
             return obj;
         }
 
+        public async Task<IReadOnlyDictionary<int, RoomBaseInfo>> GetRoomsBaseInfoAsync(IEnumerable<int> roomIds)
+        {
+            if (this.disposedValue)
+                throw new ObjectDisposedException(nameof(HttpApiClient));
+
+            Url url = $@"{this.config.LiveApiHost}/xlive/web-room/v1/index/getRoomBaseInfo";
+            url = url.SetQueryParams(new
+            {
+                room_ids = roomIds.ToArray(),
+                req_biz = "web_room_componet",
+            });
+
+            var text = await this.FetchAsTextAsync(url).ConfigureAwait(false);
+
+            var jobject = JObject.Parse(text);
+
+            var code = jobject["code"]?.ToObject<int?>();
+            if (code != 0)
+                throw new BilibiliApiResponseCodeNotZeroException(code, text);
+
+            var data = jobject["data"]?["by_room_ids"] as JObject
+                ?? throw new BilibiliApiResponseCodeNotZeroException(code, text);
+
+            var result = new Dictionary<int, RoomBaseInfo>();
+            foreach (var property in data.Properties())
+            {
+                var info = property.Value.ToObject<RoomBaseInfo>();
+                if (info != null && int.TryParse(property.Name, out var roomId))
+                    result[roomId] = info;
+            }
+
+            return result;
+        }
+
         public Task<BilibiliApiResponse<RoomPlayInfo>> GetStreamUrlAsync(int roomid, int qn)
         {
             if (this.disposedValue)

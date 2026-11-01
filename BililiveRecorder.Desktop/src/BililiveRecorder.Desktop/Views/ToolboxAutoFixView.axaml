@@ -1,0 +1,36 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:BililiveRecorder.Desktop.ViewModels"
+             x:Class="BililiveRecorder.Desktop.Views.ToolboxAutoFixView"
+             x:DataType="vm:ToolboxViewModel">
+
+    <ScrollViewer Padding="16,12">
+        <StackPanel Spacing="10" MaxWidth="760" HorizontalAlignment="Left">
+            <TextBlock Text="{Binding Loc[Toolbox_AutoFix_Title]}" FontSize="20" FontWeight="SemiBold" />
+
+            <TextBlock Text="{Binding Loc[Toolbox_AutoFix_InputPathPlaceholder]}" Opacity="0.7" />
+            <TextBox x:Name="InputPathBox" Watermark="input.flv" />
+            <StackPanel Orientation="Horizontal" Spacing="8">
+                <Button Content="{Binding Loc[Toolbox_AutoFix_ButtonSelectInput]}" Click="BrowseInput_Click" />
+                <Button Content="{Binding Loc[Toolbox_AutoFix_ButtonAnalyze]}" Click="Analyze_Click" x:Name="AnalyzeButton" />
+                <Button Content="{Binding Loc[Toolbox_AutoFix_ButtonFix]}" Click="Fix_Click" x:Name="FixButton" />
+                <Button Content="{Binding Loc[Toolbox_AutoFix_NotFixed_ButtonExportData]}" Click="Export_Click" x:Name="ExportButton" />
+            </StackPanel>
+
+            <StackPanel Orientation="Horizontal" Spacing="16" Margin="0,4,0,0">
+                <CheckBox x:Name="SplitOnScriptTagBox" Content="按脚本 tag 切割 Split on script tag" IsChecked="True" />
+                <CheckBox x:Name="DisableSplitOnH264AnnexBBox" Content="不在 H264 AnnexB 处切割 Disable split on H264 AnnexB" />
+            </StackPanel>
+
+            <TextBlock x:Name="StatusText" TextWrapping="Wrap" Opacity="0.8" />
+
+            <TextBox x:Name="ResultText"
+                     IsReadOnly="True"
+                     AcceptsReturn="True"
+                     TextWrapping="Wrap"
+                     MinHeight="220"
+                     FontFamily="Consolas, monospace"
+                     IsVisible="False" />
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

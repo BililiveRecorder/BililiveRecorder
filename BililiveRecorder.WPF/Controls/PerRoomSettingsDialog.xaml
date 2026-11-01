@@ -45,6 +45,11 @@
                         <local:SettingWithDefault IsSettingNotUsingDefault="{Binding HasRecordDanmakuRaw}">
                             <ui:ToggleSwitch IsOn="{Binding RecordDanmakuRaw}" OnContent="{l:Loc Settings_Danmaku_ToggleSwitch_Raw}" OffContent="{l:Loc Settings_Danmaku_ToggleSwitch_Raw}"/>
                         </local:SettingWithDefault>
+                        <local:SettingWithDefault IsSettingNotUsingDefault="{Binding HasRecordDanmakuKeepConnected}">
+                            <ui:ToggleSwitch IsOn="{Binding RecordDanmakuKeepConnected}"
+                                             OnContent="{l:Loc Settings_Danmaku_ToggleSwitch_KeepConnected}"
+                                             OffContent="{l:Loc Settings_Danmaku_ToggleSwitch_KeepConnected}"/>
+                        </local:SettingWithDefault>
                     </StackPanel>
                 </GroupBox>
                 <GroupBox Header="{l:Loc Settings_RecordMode_Title}">

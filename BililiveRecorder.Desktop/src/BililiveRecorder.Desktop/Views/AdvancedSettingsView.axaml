@@ -1,0 +1,250 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:ctl="using:BililiveRecorder.Desktop.Controls"
+             xmlns:conv="using:BililiveRecorder.Desktop.Converters"
+             xmlns:cfg="using:BililiveRecorder.Core.Config"
+             xmlns:vm="using:BililiveRecorder.Desktop.ViewModels"
+             x:Class="BililiveRecorder.Desktop.Views.AdvancedSettingsView"
+             x:DataType="vm:SettingsViewModel">
+
+    <ScrollViewer Padding="20,16">
+        <StackPanel MaxWidth="720" HorizontalAlignment="Left" Spacing="16">
+
+            <TextBlock Text="{Binding Loc[Settings_AdvancedPage_Title]}"
+                       FontSize="28"
+                       FontWeight="Bold" />
+
+            <Border Classes="settingsCardWarning">
+                <StackPanel Spacing="6">
+                    <TextBlock Text="{Binding Loc[Settings_AdvancedPage_Warning]}"
+                               Foreground="OrangeRed"
+                               TextWrapping="Wrap"
+                               FontWeight="SemiBold"
+                               FontSize="13" />
+                    <TextBlock TextWrapping="Wrap"
+                               Opacity="0.9"
+                               FontSize="12"
+                               Text="所有高级设置项目均不是录播姬的“正式功能”，它们的作用是便于 power users 在不修改录播姬源码重新编译的情况下深度调整录播姬的行为。请根据个人实际需求谨慎使用高级设置，不要随意修改。" />
+                </StackPanel>
+            </Border>
+
+            <!-- 弹幕 -->
+            <StackPanel Spacing="0">
+                <TextBlock Classes="settingsSectionHeader"
+                           Text="{Binding Loc[Settings_Danmaku_Title]}" />
+                <Border Classes="settingsCard">
+                    <StackPanel>
+                        <ctl:SettingWithDefault Header="{Binding Loc[Settings_Danmaku_FlushInterval]}"
+                                                IsSettingNotUsingDefault="{Binding Config.HasRecordDanmakuFlushInterval}"
+                                                IsInlineContent="True">
+                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                <TextBox Text="{Binding Config.RecordDanmakuFlushInterval}" Width="120" />
+                                <TextBlock Text="个" VerticalAlignment="Center" Opacity="0.7" />
+                            </StackPanel>
+                        </ctl:SettingWithDefault>
+                        <Border Classes="settingsDivider" />
+                        <ctl:SettingWithDefault Header="使用主播 UID 认证弹幕连接 Authenticate with streamer UID"
+                                                IsSettingNotUsingDefault="{Binding Config.HasDanmakuAuthenticateWithStreamerUid}"
+                                                IsInlineContent="True">
+                            <ToggleSwitch IsChecked="{Binding Config.DanmakuAuthenticateWithStreamerUid}" />
+                        </ctl:SettingWithDefault>
+                        <Border Classes="settingsDivider" />
+                        <ctl:SettingWithDefault Header="弹幕服务器连接方式 Danmaku transport"
+                                                IsSettingNotUsingDefault="{Binding Config.HasDanmakuTransport}">
+                            <StackPanel Orientation="Horizontal" Spacing="14">
+                                <RadioButton GroupName="DanmakuTransport" Content="Random"
+                                             IsChecked="{Binding Config.DanmakuTransport, Mode=TwoWay, Converter={x:Static conv:EnumToBooleanConverter.Instance}, ConverterParameter={x:Static cfg:DanmakuTransportMode.Random}}" />
+                                <RadioButton GroupName="DanmakuTransport" Content="TCP"
+                                             IsChecked="{Binding Config.DanmakuTransport, Mode=TwoWay, Converter={x:Static conv:EnumToBooleanConverter.Instance}, ConverterParameter={x:Static cfg:DanmakuTransportMode.Tcp}}" />
+                                <RadioButton GroupName="DanmakuTransport" Content="WS"
+                                             IsChecked="{Binding Config.DanmakuTransport, Mode=TwoWay, Converter={x:Static conv:EnumToBooleanConverter.Instance}, ConverterParameter={x:Static cfg:DanmakuTransportMode.Ws}}" />
+                                <RadioButton GroupName="DanmakuTransport" Content="WSS"
+                                             IsChecked="{Binding Config.DanmakuTransport, Mode=TwoWay, Converter={x:Static conv:EnumToBooleanConverter.Instance}, ConverterParameter={x:Static cfg:DanmakuTransportMode.Wss}}" />
+                            </StackPanel>
+                        </ctl:SettingWithDefault>
+                    </StackPanel>
+                </Border>
+            </StackPanel>
+
+            <!-- 脚本 -->
+            <StackPanel Spacing="0">
+                <Grid ColumnDefinitions="*,Auto" Margin="4,0,0,6">
+                    <TextBlock Classes="settingsSectionHeader"
+                               Text="脚本 Scripting"
+                               Margin="0"
+                               VerticalAlignment="Center" />
+                    <Button Grid.Column="1"
+                            x:Name="TestScriptButton"
+                            Content="{Binding Loc[Settings_Button_Test]}"
+                            Click="TestScriptButton_Click" />
+                </Grid>
+                <Border Classes="settingsCard">
+                    <ctl:SettingWithDefault Header="请自由发挥 (("
+                                            IsSettingNotUsingDefault="{Binding Config.HasUserScript}">
+                        <TextBox Text="{Binding Config.UserScript}"
+                                 AcceptsReturn="True"
+                                 TextWrapping="Wrap"
+                                 MinHeight="80"
+                                 MaxHeight="180"
+                                 ScrollViewer.VerticalScrollBarVisibility="Auto"
+                                 FontFamily="Consolas, monospace" />
+                    </ctl:SettingWithDefault>
+                </Border>
+            </StackPanel>
+
+            <!-- FLV -->
+            <StackPanel Spacing="0">
+                <TextBlock Classes="settingsSectionHeader" Text="FLV" />
+                <Border Classes="settingsCard">
+                    <Grid Classes="settingsRow tight" ColumnDefinitions="*,Auto">
+                        <TextBlock Classes="settingsRowTitle"
+                                   Text="在 FLV 中写入 metadata（录制中无法播放时关闭）"
+                                   VerticalAlignment="Center"
+                                   TextWrapping="Wrap" />
+                        <ToggleSwitch Grid.Column="1"
+                                      IsChecked="{Binding Config.FlvWriteMetadata}"
+                                      VerticalAlignment="Center"
+                                      Margin="12,0,0,0" />
+                    </Grid>
+                </Border>
+            </StackPanel>
+
+            <!-- 网络 -->
+            <StackPanel Spacing="0">
+                <TextBlock Classes="settingsSectionHeader" Text="网络 Network" />
+                <Border Classes="settingsCard">
+                    <StackPanel>
+                        <ctl:SettingWithDefault Header="使用系统代理 Use system proxy"
+                                                IsSettingNotUsingDefault="{Binding Config.HasNetworkTransportUseSystemProxy}"
+                                                IsInlineContent="True">
+                            <ToggleSwitch IsChecked="{Binding Config.NetworkTransportUseSystemProxy}" />
+                        </ctl:SettingWithDefault>
+                        <Border Classes="settingsDivider" />
+                        <ctl:SettingWithDefault Header="允许的地址类型 Allowed address family"
+                                                IsSettingNotUsingDefault="{Binding Config.HasNetworkTransportAllowedAddressFamily}">
+                            <StackPanel Orientation="Horizontal" Spacing="12">
+                                <RadioButton GroupName="AllowedAddressFamily" Content="System"
+                                             IsChecked="{Binding Config.NetworkTransportAllowedAddressFamily, Mode=TwoWay, Converter={x:Static conv:EnumToBooleanConverter.Instance}, ConverterParameter={x:Static cfg:AllowedAddressFamily.System}}" />
+                                <RadioButton GroupName="AllowedAddressFamily" Content="Any"
+                                             IsChecked="{Binding Config.NetworkTransportAllowedAddressFamily, Mode=TwoWay, Converter={x:Static conv:EnumToBooleanConverter.Instance}, ConverterParameter={x:Static cfg:AllowedAddressFamily.Any}}" />
+                                <RadioButton GroupName="AllowedAddressFamily" Content="IPv4"
+                                             IsChecked="{Binding Config.NetworkTransportAllowedAddressFamily, Mode=TwoWay, Converter={x:Static conv:EnumToBooleanConverter.Instance}, ConverterParameter={x:Static cfg:AllowedAddressFamily.Ipv4}}" />
+                                <RadioButton GroupName="AllowedAddressFamily" Content="IPv6"
+                                             IsChecked="{Binding Config.NetworkTransportAllowedAddressFamily, Mode=TwoWay, Converter={x:Static conv:EnumToBooleanConverter.Instance}, ConverterParameter={x:Static cfg:AllowedAddressFamily.Ipv6}}" />
+                            </StackPanel>
+                        </ctl:SettingWithDefault>
+                        <Border Classes="settingsDivider" />
+                        <ctl:SettingWithDefault Header="直播 API 服务器 Live API host"
+                                                IsSettingNotUsingDefault="{Binding Config.HasLiveApiHost}"
+                                                IsInlineContent="True">
+                            <TextBox Text="{Binding Config.LiveApiHost}" MinWidth="200" />
+                        </ctl:SettingWithDefault>
+                    </StackPanel>
+                </Border>
+            </StackPanel>
+
+            <!-- 时间设置 -->
+            <StackPanel Spacing="0">
+                <TextBlock Classes="settingsSectionHeader" Text="时间设置 Timing (ms)" />
+                <Border Classes="settingsCard">
+                    <StackPanel>
+                        <ctl:SettingWithDefault Header="录制重试间隔"
+                                                IsSettingNotUsingDefault="{Binding Config.HasTimingStreamRetry}"
+                                                IsInlineContent="True">
+                            <StackPanel Orientation="Horizontal" Spacing="6">
+                                <TextBox Text="{Binding Config.TimingStreamRetry}" Width="120"
+                                         ToolTip.Tip="录制断开后等待多长时间再尝试开始录制" />
+                                <TextBlock Text="单位: 毫秒" VerticalAlignment="Center" Classes="settingsHint" />
+                            </StackPanel>
+                        </ctl:SettingWithDefault>
+                        <Border Classes="settingsDivider" />
+                        <ctl:SettingWithDefault Header="录制重试间隔（无匹配画质）"
+                                                IsSettingNotUsingDefault="{Binding Config.HasTimingStreamRetryNoQn}"
+                                                IsInlineContent="True">
+                            <StackPanel Orientation="Horizontal" Spacing="6">
+                                <TextBox Text="{Binding Config.TimingStreamRetryNoQn}" Width="120"
+                                         ToolTip.Tip="无匹配的画质后等待多长时间再尝试开始录制" />
+                                <TextBlock Text="单位: 秒" VerticalAlignment="Center" Classes="settingsHint" />
+                            </StackPanel>
+                        </ctl:SettingWithDefault>
+                        <Border Classes="settingsDivider" />
+                        <ctl:SettingWithDefault Header="录制连接超时"
+                                                IsSettingNotUsingDefault="{Binding Config.HasTimingStreamConnect}"
+                                                IsInlineContent="True">
+                            <StackPanel Orientation="Horizontal" Spacing="6">
+                                <TextBox Text="{Binding Config.TimingStreamConnect}" Width="120"
+                                         ToolTip.Tip="发出连接直播服务器的请求后等待多长时间，防止直播服务器长时间不返回数据导致卡住" />
+                                <TextBlock Text="单位: 毫秒" VerticalAlignment="Center" Classes="settingsHint" />
+                            </StackPanel>
+                        </ctl:SettingWithDefault>
+                        <Border Classes="settingsDivider" />
+                        <ctl:SettingWithDefault Header="弹幕重连间隔"
+                                                IsSettingNotUsingDefault="{Binding Config.HasTimingDanmakuRetry}"
+                                                IsInlineContent="True">
+                            <StackPanel Orientation="Horizontal" Spacing="6">
+                                <TextBox Text="{Binding Config.TimingDanmakuRetry}" Width="120"
+                                         ToolTip.Tip="弹幕服务器被断开后等待多长时间再尝试连接。监控开播的主要途径是通过弹幕服务器发送的信息" />
+                                <TextBlock Text="单位: 毫秒" VerticalAlignment="Center" Classes="settingsHint" />
+                            </StackPanel>
+                        </ctl:SettingWithDefault>
+                        <Border Classes="settingsDivider" />
+                        <ctl:SettingWithDefault Header="接收数据超时"
+                                                IsSettingNotUsingDefault="{Binding Config.HasTimingWatchdogTimeout}"
+                                                IsInlineContent="True">
+                            <StackPanel Orientation="Horizontal" Spacing="6">
+                                <TextBox Text="{Binding Config.TimingWatchdogTimeout}" Width="120"
+                                         ToolTip.Tip="在一定时间没有收到直播服务器发送的数据后断开重连，用于防止因为玄学网络问题导致卡住" />
+                                <TextBlock Text="单位: 毫秒" VerticalAlignment="Center" Classes="settingsHint" />
+                            </StackPanel>
+                        </ctl:SettingWithDefault>
+                        <Border Classes="settingsDivider" />
+                        <ctl:SettingWithDefault Header="开播检查间隔"
+                                                IsSettingNotUsingDefault="{Binding Config.HasTimingCheckInterval}"
+                                                IsInlineContent="True">
+                            <StackPanel Orientation="Horizontal" Spacing="6">
+                                <TextBox Text="{Binding Config.TimingCheckInterval}" Width="120"
+                                         ToolTip.Tip="定时请求 HTTP 接口的间隔，主要目的是防止没有从弹幕服务器收到开播消息。时间间隔设置太短会被 mikufans 服务器屏蔽，导致无法录制" />
+                                <TextBlock Text="单位: 秒" VerticalAlignment="Center" Classes="settingsHint" />
+                            </StackPanel>
+                        </ctl:SettingWithDefault>
+                    </StackPanel>
+                </Border>
+            </StackPanel>
+
+            <!-- Cookie -->
+            <StackPanel Spacing="0">
+                <TextBlock Classes="settingsSectionHeader" Text="Cookie" />
+                <Border Classes="settingsCard">
+                    <StackPanel>
+                        <StackPanel Classes="settingsRowBody" Spacing="6">
+                            <TextBlock TextWrapping="Wrap"
+                                       Opacity="0.85"
+                                       FontSize="12"
+                                       Text="Cookie 会用于包括获取直播间信息、获取直播流地址、连接弹幕服务器在内的所有 API 请求中。录播姬的请求与浏览器内正常使用所发送的请求不完全一致，能通过分析请求日志识别出来。&#x0a;软件开发者不对账号发生的任何事情负责，包括并不限于被标记为机器人账号、大会员被冻结、无法参与各种抽奖和活动等。建议使用小号。&#x0a;如您知晓您的账号会因以上所列出来的部分原因所导致无法使用或权益受损等情况，并愿意承担由此所会带来的一系列后果，请继续以下的操作，软件开发者不会对您账号所发生的任何后果承担责任。" />
+                        </StackPanel>
+                        <Border Classes="settingsDivider" />
+                        <ctl:SettingWithDefault Header="Cookie"
+                                                IsSettingNotUsingDefault="{Binding Config.HasCookie}">
+                            <TextBox Text="{Binding Config.Cookie}"
+                                     MaxWidth="480"
+                                     HorizontalAlignment="Left" />
+                        </ctl:SettingWithDefault>
+                        <Border Classes="settingsDivider" />
+                        <Grid Classes="settingsRow" ColumnDefinitions="*,Auto">
+                            <StackPanel Orientation="Horizontal" Spacing="10" VerticalAlignment="Center">
+                                <Button x:Name="TestCookieButton"
+                                        Content="{Binding Loc[Settings_Button_Test]}"
+                                        Click="TestCookieButton_Click" />
+                                <TextBlock x:Name="CookieTestResult"
+                                           IsVisible="False"
+                                           TextWrapping="Wrap"
+                                           VerticalAlignment="Center"
+                                           MaxWidth="420" />
+                            </StackPanel>
+                        </Grid>
+                    </StackPanel>
+                </Border>
+            </StackPanel>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

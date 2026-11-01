@@ -1,0 +1,26 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:BililiveRecorder.Desktop.ViewModels"
+             x:Class="BililiveRecorder.Desktop.Views.AnnouncementView"
+             x:DataType="vm:AnnouncementViewModel">
+
+    <Grid RowDefinitions="Auto,*,Auto" Margin="16,12" RowSpacing="8">
+        <StackPanel Grid.Row="0" Orientation="Horizontal" Spacing="8">
+            <TextBlock Text="{Binding Loc[RootPage_NavigationViewItem_AnnouncementPage]}" FontSize="18" FontWeight="SemiBold" />
+            <Button x:Name="RefreshButton" Content="{Binding Loc[AnnouncementPage_RefreshButton]}" Click="Refresh_Click" />
+        </StackPanel>
+
+        <TextBox Grid.Row="1"
+                 x:Name="AnnouncementText"
+                 IsReadOnly="True"
+                 TextWrapping="Wrap"
+                 AcceptsReturn="True"
+                 FontSize="14" />
+
+        <TextBlock Grid.Row="2"
+                   x:Name="ErrorText"
+                   Text="{Binding Loc[AnnouncementPage_FetchFailed]}"
+                   Foreground="OrangeRed"
+                   IsVisible="False" />
+    </Grid>
+</UserControl>

@@ -94,6 +94,14 @@ namespace BililiveRecorder.Core.Config.V2
         public Optional<bool> OptionalRecordDanmakuGuard { get => this.GetPropertyValueOptional<bool>(nameof(this.RecordDanmakuGuard)); set => this.SetPropertyValueOptional(value, nameof(this.RecordDanmakuGuard)); }
 
         /// <summary>
+        /// 弹幕录制-保持连接
+        /// </summary>
+        public bool RecordDanmakuKeepConnected { get => this.GetPropertyValue<bool>(); set => this.SetPropertyValue(value); }
+        public bool HasRecordDanmakuKeepConnected { get => this.GetPropertyHasValue(nameof(this.RecordDanmakuKeepConnected)); set => this.SetPropertyHasValue<bool>(value, nameof(this.RecordDanmakuKeepConnected)); }
+        [JsonProperty(nameof(RecordDanmakuKeepConnected)), EditorBrowsable(EditorBrowsableState.Never)]
+        public Optional<bool> OptionalRecordDanmakuKeepConnected { get => this.GetPropertyValueOptional<bool>(nameof(this.RecordDanmakuKeepConnected)); set => this.SetPropertyValueOptional(value, nameof(this.RecordDanmakuKeepConnected)); }
+
+        /// <summary>
         /// 直播画质
         /// </summary>
         public string? RecordingQuality { get => this.GetPropertyValue<string>(); set => this.SetPropertyValue(value); }
@@ -236,6 +244,14 @@ namespace BililiveRecorder.Core.Config.V2
         public Optional<bool> OptionalRecordDanmakuGuard { get => this.GetPropertyValueOptional<bool>(nameof(this.RecordDanmakuGuard)); set => this.SetPropertyValueOptional(value, nameof(this.RecordDanmakuGuard)); }
 
         /// <summary>
+        /// 弹幕录制-保持连接
+        /// </summary>
+        public bool RecordDanmakuKeepConnected { get => this.GetPropertyValue<bool>(); set => this.SetPropertyValue(value); }
+        public bool HasRecordDanmakuKeepConnected { get => this.GetPropertyHasValue(nameof(this.RecordDanmakuKeepConnected)); set => this.SetPropertyHasValue<bool>(value, nameof(this.RecordDanmakuKeepConnected)); }
+        [JsonProperty(nameof(RecordDanmakuKeepConnected)), EditorBrowsable(EditorBrowsableState.Never)]
+        public Optional<bool> OptionalRecordDanmakuKeepConnected { get => this.GetPropertyValueOptional<bool>(nameof(this.RecordDanmakuKeepConnected)); set => this.SetPropertyValueOptional(value, nameof(this.RecordDanmakuKeepConnected)); }
+
+        /// <summary>
         /// 直播画质
         /// </summary>
         public string? RecordingQuality { get => this.GetPropertyValue<string>(); set => this.SetPropertyValue(value); }
@@ -369,6 +385,8 @@ namespace BililiveRecorder.Core.Config.V2
         public bool RecordDanmakuGift => false;
 
         public bool RecordDanmakuGuard => true;
+
+        public bool RecordDanmakuKeepConnected => true;
 
         public string RecordingQuality => "10000";
 
