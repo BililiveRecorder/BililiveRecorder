@@ -162,32 +162,31 @@ namespace BililiveRecorder.Cli
         private static async Task<int> RunConfigModeAsync(RunModeArguments args)
         {
             var path = Path.GetFullPath(args.Path);
-
-            using var logger = BuildLogger(args.LogLevel, args.LogFileLevel, enableWebLog: args.HttpBind is not null);
-            Log.Logger = logger;
-
             path = Path.GetFullPath(path);
 
             ConfigV3? config;
+            string? configSource = null;
 
             if (args.ConfigOverride is not null)
             {
-                if (Directory.Exists(args.ConfigOverride))
-                {
-                    var overrideFile = Path.Combine(args.ConfigOverride, "config.json");
-                    logger.Information("Using config from {ConfigOverride}", overrideFile);
-                    config = ConfigParser.LoadFromFile(overrideFile);
-                }
-                else
-                {
-                    logger.Information("Using config from {ConfigOverride}", args.ConfigOverride);
-                    config = ConfigParser.LoadFromFile(args.ConfigOverride);
-                }
+                configSource = Directory.Exists(args.ConfigOverride)
+                    ? Path.Combine(args.ConfigOverride, "config.json")
+                    : args.ConfigOverride;
+                config = ConfigParser.LoadFromFile(configSource);
             }
             else
             {
                 config = ConfigParser.LoadFromDirectory(path);
             }
+
+            using var logger = BuildLogger(args.LogLevel, args.LogFileLevel,
+                enableWebLog: args.HttpBind is not null,
+                logFileMaxSizeMB: config?.Global.LogFileMaxSizeMB ?? 0,
+                logRetainFileCount: config?.Global.LogRetainFileCount ?? 0);
+            Log.Logger = logger;
+
+            if (configSource is not null)
+                logger.Information("Using config from {ConfigOverride}", configSource);
 
             if (config is null)
             {
@@ -500,13 +499,16 @@ namespace BililiveRecorder.Cli
             .AddRecorder()
             .BuildServiceProvider();
 
-        private static Logger BuildLogger(LogEventLevel logLevel, LogEventLevel logFileLevel, bool enableWebLog = false)
+        private static Logger BuildLogger(LogEventLevel logLevel, LogEventLevel logFileLevel, bool enableWebLog = false, uint logFileMaxSizeMB = 0, uint logRetainFileCount = 0)
         {
             var logFilePath = Environment.GetEnvironmentVariable("BILILIVERECORDER_LOG_FILE_PATH");
             if (string.IsNullOrWhiteSpace(logFilePath))
                 logFilePath = Path.Combine(AppContext.BaseDirectory, "logs", "bilirec.txt");
             logFilePath = Path.GetFullPath(logFilePath);
             var logFilePathMicrosoft = Path.Combine(Path.GetDirectoryName(logFilePath)!, Path.GetFileNameWithoutExtension(logFilePath) + "-web" + Path.GetExtension(logFilePath));
+
+            long? fileSizeLimitBytes = logFileMaxSizeMB > 0 ? logFileMaxSizeMB * 1024L * 1024 : null;
+            int? retainedFileCountLimit = logRetainFileCount > 0 ? (int)logRetainFileCount : null;
 
             var matchMicrosoft = Matching.FromSource("Microsoft");
 
@@ -533,14 +535,14 @@ namespace BililiveRecorder.Cli
                 {
                     sl
                     .Filter.ByExcluding(matchMicrosoft)
-                    .WriteTo.File(new CompactJsonFormatter(), logFilePath, restrictedToMinimumLevel: logFileLevel, shared: true, rollingInterval: RollingInterval.Day, rollOnFileSizeLimit: true)
+                    .WriteTo.File(new CompactJsonFormatter(), logFilePath, restrictedToMinimumLevel: logFileLevel, shared: true, rollingInterval: RollingInterval.Day, rollOnFileSizeLimit: true, fileSizeLimitBytes: fileSizeLimitBytes, retainedFileCountLimit: retainedFileCountLimit)
                     ;
                 })
                 .WriteTo.Logger(sl =>
                 {
                     sl
                     .Filter.ByIncludingOnly(matchMicrosoft)
-                    .WriteTo.File(new CompactJsonFormatter(), logFilePathMicrosoft, restrictedToMinimumLevel: logFileLevel, shared: true, rollingInterval: RollingInterval.Day, rollOnFileSizeLimit: true)
+                    .WriteTo.File(new CompactJsonFormatter(), logFilePathMicrosoft, restrictedToMinimumLevel: logFileLevel, shared: true, rollingInterval: RollingInterval.Day, rollOnFileSizeLimit: true, fileSizeLimitBytes: fileSizeLimitBytes, retainedFileCountLimit: retainedFileCountLimit)
                     ;
                 });
 

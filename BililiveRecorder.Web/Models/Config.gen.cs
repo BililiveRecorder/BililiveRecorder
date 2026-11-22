@@ -86,6 +86,8 @@ namespace BililiveRecorder.Web.Models
         public Optional<AllowedAddressFamily>? OptionalNetworkTransportAllowedAddressFamily { get; set; }
         public Optional<string?>? OptionalNetworkTransportBindAddress { get; set; }
         public Optional<string?>? OptionalUserScript { get; set; }
+        public Optional<uint>? OptionalLogFileMaxSizeMB { get; set; }
+        public Optional<uint>? OptionalLogRetainFileCount { get; set; }
 
         public void ApplyTo(GlobalConfig config)
         {
@@ -125,6 +127,8 @@ namespace BililiveRecorder.Web.Models
             if (this.OptionalNetworkTransportAllowedAddressFamily.HasValue) config.OptionalNetworkTransportAllowedAddressFamily = this.OptionalNetworkTransportAllowedAddressFamily.Value;
             if (this.OptionalNetworkTransportBindAddress.HasValue) config.OptionalNetworkTransportBindAddress = this.OptionalNetworkTransportBindAddress.Value;
             if (this.OptionalUserScript.HasValue) config.OptionalUserScript = this.OptionalUserScript.Value;
+            if (this.OptionalLogFileMaxSizeMB.HasValue) config.OptionalLogFileMaxSizeMB = this.OptionalLogFileMaxSizeMB.Value;
+            if (this.OptionalLogRetainFileCount.HasValue) config.OptionalLogRetainFileCount = this.OptionalLogRetainFileCount.Value;
         }
     }
 
@@ -189,6 +193,8 @@ namespace BililiveRecorder.Web.Models.Rest
         public Optional<AllowedAddressFamily> OptionalNetworkTransportAllowedAddressFamily { get; set; }
         public Optional<string?> OptionalNetworkTransportBindAddress { get; set; }
         public Optional<string?> OptionalUserScript { get; set; }
+        public Optional<uint> OptionalLogFileMaxSizeMB { get; set; }
+        public Optional<uint> OptionalLogRetainFileCount { get; set; }
     }
 
 }
@@ -258,6 +264,8 @@ namespace BililiveRecorder.Web.Models.Graphql
             this.Field(x => x.OptionalNetworkTransportAllowedAddressFamily, type: typeof(HierarchicalOptionalType<AllowedAddressFamily>));
             this.Field(x => x.OptionalNetworkTransportBindAddress, type: typeof(HierarchicalOptionalType<string>));
             this.Field(x => x.OptionalUserScript, type: typeof(HierarchicalOptionalType<string>));
+            this.Field(x => x.OptionalLogFileMaxSizeMB, type: typeof(HierarchicalOptionalType<uint>));
+            this.Field(x => x.OptionalLogRetainFileCount, type: typeof(HierarchicalOptionalType<uint>));
         }
     }
 
@@ -301,6 +309,8 @@ namespace BililiveRecorder.Web.Models.Graphql
             this.Field(x => x.NetworkTransportAllowedAddressFamily);
             this.Field(x => x.NetworkTransportBindAddress);
             this.Field(x => x.UserScript);
+            this.Field(x => x.LogFileMaxSizeMB);
+            this.Field(x => x.LogRetainFileCount);
         }
     }
 
@@ -366,6 +376,8 @@ namespace BililiveRecorder.Web.Models.Graphql
             this.Field(x => x.OptionalNetworkTransportAllowedAddressFamily, nullable: true, type: typeof(HierarchicalOptionalInputType<AllowedAddressFamily>));
             this.Field(x => x.OptionalNetworkTransportBindAddress, nullable: true, type: typeof(HierarchicalOptionalInputType<string>));
             this.Field(x => x.OptionalUserScript, nullable: true, type: typeof(HierarchicalOptionalInputType<string>));
+            this.Field(x => x.OptionalLogFileMaxSizeMB, nullable: true, type: typeof(HierarchicalOptionalInputType<uint>));
+            this.Field(x => x.OptionalLogRetainFileCount, nullable: true, type: typeof(HierarchicalOptionalInputType<uint>));
         }
     }
 

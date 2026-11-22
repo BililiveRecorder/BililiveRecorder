@@ -11,6 +11,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Threading;
 using BililiveRecorder.Core.Api;
+using BililiveRecorder.Core.Config;
 using BililiveRecorder.Flv.Pipeline;
 using BililiveRecorder.ToolBox;
 using Acornima;
@@ -282,6 +283,10 @@ namespace BililiveRecorder.WPF
             if (string.IsNullOrWhiteSpace(logFilePath))
                 logFilePath = Path.Combine(AppContext.BaseDirectory, "logs", "bilirec.txt");
 
+            var (logFileMaxSizeMB, logRetainFileCount) = GetLogRetentionSettings();
+            long? fileSizeLimitBytes = logFileMaxSizeMB > 0 ? logFileMaxSizeMB * 1024L * 1024 : null;
+            int? retainedFileCountLimit = logRetainFileCount > 0 ? (int)logRetainFileCount : null;
+
             return new LoggerConfiguration()
                 .MinimumLevel.ControlledBy(levelSwitchGlobal)
                 .Enrich.WithProcessId()
@@ -306,7 +311,7 @@ namespace BililiveRecorder.WPF
 #else
                 .WriteTo.Async(l => l.Sink<WpfLogEventSink>(Serilog.Events.LogEventLevel.Information))
 #endif
-                .WriteTo.Async(l => l.File(new CompactJsonFormatter(), logFilePath, shared: true, rollingInterval: RollingInterval.Day, rollOnFileSizeLimit: true))
+                .WriteTo.Async(l => l.File(new CompactJsonFormatter(), logFilePath, shared: true, rollingInterval: RollingInterval.Day, rollOnFileSizeLimit: true, fileSizeLimitBytes: fileSizeLimitBytes, retainedFileCountLimit: retainedFileCountLimit))
                 .WriteTo.Sentry(o =>
                 {
                     o.Dsn = "https://17299be77e1a8d72156e96ca2cb2b058@o210546.ingest.us.sentry.io/5556540";
@@ -333,6 +338,26 @@ namespace BililiveRecorder.WPF
                 })
                 .CreateLogger();
 
+        }
+
+        private static (uint LogFileMaxSizeMB, uint LogRetainFileCount) GetLogRetentionSettings()
+        {
+            try
+            {
+                var workDir = new WorkDirectoryLoader().Read().Path;
+                if (string.IsNullOrWhiteSpace(workDir))
+                    return (0, 0);
+
+                var config = ConfigParser.LoadFromDirectory(workDir);
+                if (config is null)
+                    return (0, 0);
+
+                return (config.Global.LogFileMaxSizeMB, config.Global.LogRetainFileCount);
+            }
+            catch (Exception)
+            {
+                return (0, 0);
+            }
         }
 
         [DllImport("kernel32")]

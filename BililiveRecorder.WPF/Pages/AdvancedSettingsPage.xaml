@@ -165,6 +165,22 @@
                     </c:SettingWithDefault>
                 </ui:SimpleStackPanel>
             </GroupBox>
+            <GroupBox Header="日志">
+                <ui:SimpleStackPanel Spacing="10">
+                    <c:SettingWithDefault IsSettingNotUsingDefault="{Binding HasLogFileMaxSizeMB}" Header="日志单个文件最大大小">
+                        <c:SettingWithDefault.ToolTip>
+                            <TextBlock>单个日志文件超过该大小时会切换到新文件，0 表示不限制</TextBlock>
+                        </c:SettingWithDefault.ToolTip>
+                        <ui:NumberBox Minimum="0" Description="单位: MB" SmallChange="10" Text="{Binding LogFileMaxSizeMB,Delay=500}"/>
+                    </c:SettingWithDefault>
+                    <c:SettingWithDefault IsSettingNotUsingDefault="{Binding HasLogRetainFileCount}" Header="保留日志文件个数">
+                        <c:SettingWithDefault.ToolTip>
+                            <TextBlock>超过该数量的旧日志文件会被删除，0 表示不限制</TextBlock>
+                        </c:SettingWithDefault.ToolTip>
+                        <ui:NumberBox Minimum="0" SmallChange="10" Text="{Binding LogRetainFileCount,Delay=500}"/>
+                    </c:SettingWithDefault>
+                </ui:SimpleStackPanel>
+            </GroupBox>
             <GroupBox Header="Cookie">
                 <StackPanel Orientation="Vertical">
                     <TextBlock TextWrapping="Wrap">
