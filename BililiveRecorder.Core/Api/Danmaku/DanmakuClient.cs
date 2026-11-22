@@ -97,7 +97,17 @@ namespace BililiveRecorder.Core.Api.Danmaku
                     _ => throw new ArgumentOutOfRangeException(nameof(transportMode), transportMode, "Invalid danmaku transport mode."),
                 };
 
-                var reader = await transport.ConnectAsync(danmakuServerInfo.Host, danmakuServerInfo.Port, allowedAddressFamily, cancellationToken).ConfigureAwait(false);
+                PipeReader reader;
+                try
+                {
+                    reader = await transport.ConnectAsync(danmakuServerInfo.Host, danmakuServerInfo.Port, allowedAddressFamily, cancellationToken).ConfigureAwait(false);
+                }
+                catch
+                {
+                    // 连接失败时必须释放 transport，否则 ClientWebSocket/SslStream 等资源泄漏
+                    transport.Dispose();
+                    throw;
+                }
 
                 this.danmakuTransport = transport;
 
