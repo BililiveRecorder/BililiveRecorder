@@ -75,7 +75,8 @@ namespace BililiveRecorder.Core.Templating
             this.logger = logger?.ForContext<FileNameGenerator>() ?? Logger.None;
         }
 
-        public FileNameTemplateOutput CreateFilePath(FileNameTemplateContext data)
+        /// <param name="fileExtension">期望的输出文件扩展名（含点）。为 null 时强制使用 .flv。</param>
+        public FileNameTemplateOutput CreateFilePath(FileNameTemplateContext data, string? fileExtension = null)
         {
             var status = FileNameTemplateStatus.Success;
             string? errorMessage = null;
@@ -86,6 +87,7 @@ namespace BililiveRecorder.Core.Templating
             var skipFullPath = workDirectory is null;
 
             var now = DateTimeOffset.Now;
+            var expectedExt = fileExtension ?? ".flv";
             var templateOptions = new TemplateOptions
             {
                 Now = () => now,
@@ -123,13 +125,28 @@ namespace BililiveRecorder.Core.Templating
             }
 
             var ext = Path.GetExtension(relativePath);
-            if (!ext.Equals(".flv", StringComparison.OrdinalIgnoreCase))
+            if (!ext.Equals(expectedExt, StringComparison.OrdinalIgnoreCase))
             {
-                this.logger.Warning("录播姬只支持 FLV 文件格式，将在录制文件后缀名 {ExtensionName} 后添加 {DotFlv}。", ext, ".flv");
-                relativePath += ".flv";
+                if (fileExtension is not null && ext.Equals(".flv", StringComparison.OrdinalIgnoreCase))
+                {
+                    // 模板默认带 .flv 后缀，替换为实际的封装格式后缀
+                    relativePath = relativePath[..^ext.Length] + expectedExt;
 
-                if (!skipFullPath)
-                    fullPath += ".flv";
+                    if (!skipFullPath)
+                        fullPath = fullPath![..^ext.Length] + expectedExt;
+                }
+                else
+                {
+                    if (fileExtension is null)
+                        this.logger.Warning("录播姬只支持 FLV 文件格式，将在录制文件后缀名 {ExtensionName} 后添加 {DotFlv}。", ext, ".flv");
+                    else
+                        this.logger.Information("直播流为 HLS 格式，将输出 {Extension} 文件。", expectedExt);
+
+                    relativePath += expectedExt;
+
+                    if (!skipFullPath)
+                        fullPath += expectedExt;
+                }
             }
 
             if (!skipFullPath && File.Exists(fullPath))
@@ -145,6 +162,17 @@ namespace BililiveRecorder.Core.Templating
 returnDefaultPath:
             var defaultRelativePath = RemoveInvalidFileName(defaultTemplate.Render(context));
             var defaultFullPath = workDirectory is null ? null : Path.GetFullPath(Path.Combine(workDirectory, defaultRelativePath));
+
+            if (fileExtension is not null)
+            {
+                var defaultExt = Path.GetExtension(defaultRelativePath);
+                if (defaultExt.Equals(".flv", StringComparison.OrdinalIgnoreCase) && !defaultExt.Equals(expectedExt, StringComparison.OrdinalIgnoreCase))
+                {
+                    defaultRelativePath = defaultRelativePath[..^defaultExt.Length] + expectedExt;
+                    if (defaultFullPath is not null)
+                        defaultFullPath = defaultFullPath[..^defaultExt.Length] + expectedExt;
+                }
+            }
 
             return new FileNameTemplateOutput(status, errorMessage, defaultRelativePath, defaultFullPath);
         }
