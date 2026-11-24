@@ -405,6 +405,46 @@
     </PackageReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!--
+    GitVersion.MsBuild 6.x runs its tasks in the MSBuild .NET Runtime Task Host when the build is
+    driven by MSBuild.exe or Visual Studio. MSBuild can only launch that host when the
+    DOTNET_HOST_PATH and NetCoreSdkRoot (or RuntimeIdentifierGraphPath) project properties are
+    set, and the .NET SDK only sets them for SDK-style projects. This is a legacy (non-SDK)
+    project, so fill them in from the .NET SDK selected by global.json before GitVersion runs.
+    Otherwise MSBuild 18 fails with: "The task failed to load because it requires the MSBuild
+    .NET Runtime Task Host, but the .NET Runtime Task Host could not be found for the specified
+    version."
+  -->
+  <Target Name="_ConfigureNetRuntimeTaskHostForGitVersion"
+          Condition="'$(MSBuildRuntimeType)' == 'Full' and '$(DisableGitVersionTask)' != 'true'"
+          BeforeTargets="GetVersion;UpdateAssemblyInfo;GenerateGitVersionInformation;WriteVersionInfoToBuildLog">
+    <PropertyGroup>
+      <_GitVersionSdkInfoDirectory Condition="'$(IntermediateOutputPath)' != ''">$(IntermediateOutputPath)</_GitVersionSdkInfoDirectory>
+      <_GitVersionSdkInfoDirectory Condition="'$(_GitVersionSdkInfoDirectory)' == ''">$(BaseIntermediateOutputPath)</_GitVersionSdkInfoDirectory>
+      <_GitVersionSdkVersionFile>$(_GitVersionSdkInfoDirectory)gitversion-sdk-version.txt</_GitVersionSdkVersionFile>
+      <_GitVersionSdkListFile>$(_GitVersionSdkInfoDirectory)gitversion-sdk-list.txt</_GitVersionSdkListFile>
+    </PropertyGroup>
+    <MakeDir Directories="$(_GitVersionSdkInfoDirectory)" />
+    <Exec Command="dotnet --version" WorkingDirectory="$(MSBuildProjectDirectory)" ConsoleToMsBuild="true" StandardOutputImportance="low">
+      <Output TaskParameter="ConsoleOutput" ItemName="_GitVersionSdkVersionOutput" />
+    </Exec>
+    <WriteLinesToFile File="$(_GitVersionSdkVersionFile)" Lines="@(_GitVersionSdkVersionOutput)" Overwrite="true" />
+    <Exec Command="dotnet --list-sdks" WorkingDirectory="$(MSBuildProjectDirectory)" ConsoleToMsBuild="true" StandardOutputImportance="low">
+      <Output TaskParameter="ConsoleOutput" ItemName="_GitVersionSdkListOutput" />
+    </Exec>
+    <WriteLinesToFile File="$(_GitVersionSdkListFile)" Lines="@(_GitVersionSdkListOutput)" Overwrite="true" />
+    <PropertyGroup>
+      <_GitVersionSdkVersion>$([System.IO.File]::ReadAllText('$(_GitVersionSdkVersionFile)').Trim())</_GitVersionSdkVersion>
+      <_GitVersionSdkList>$([System.IO.File]::ReadAllText('$(_GitVersionSdkListFile)'))</_GitVersionSdkList>
+      <_GitVersionSdkBaseDirectory>$([System.Text.RegularExpressions.Regex]::Match($(_GitVersionSdkList), $([System.String]::Concat('(?m)^', $(_GitVersionSdkVersion), ' \[([^\]]+)\]'))).Groups[1].Value)</_GitVersionSdkBaseDirectory>
+      <DOTNET_HOST_PATH Condition="'$(DOTNET_HOST_PATH)' == ''">$([System.IO.Path]::GetFullPath('$(_GitVersionSdkBaseDirectory)\..\dotnet.exe'))</DOTNET_HOST_PATH>
+      <NetCoreSdkRoot Condition="'$(NetCoreSdkRoot)' == ''">$([System.IO.Path]::GetFullPath('$(_GitVersionSdkBaseDirectory)\$(_GitVersionSdkVersion)'))</NetCoreSdkRoot>
+      <RuntimeIdentifierGraphPath Condition="'$(RuntimeIdentifierGraphPath)' == ''">$(NetCoreSdkRoot)\PortableRuntimeIdentifierGraph.json</RuntimeIdentifierGraphPath>
+    </PropertyGroup>
+    <Message Importance="low" Text="Using .NET SDK '$(NetCoreSdkRoot)' for the GitVersion .NET task host." />
+    <Error Condition="'$(_GitVersionSdkVersion)' == '' or '$(NetCoreSdkRoot)' == '' or !Exists('$(NetCoreSdkRoot)')"
+           Text="Could not locate the .NET SDK directory to run the GitVersion .NET task host. 'dotnet --version' returned '$(_GitVersionSdkVersion)' and 'dotnet --list-sdks' returned '$(_GitVersionSdkList)'." />
+  </Target>
   <Target Name="AfterBuild" Condition=" '$(Configuration)' == 'Release'">
     <GetAssemblyIdentity AssemblyFiles="$(TargetPath)">
       <Output TaskParameter="Assemblies" ItemName="myAssemblyInfo" />
