@@ -345,7 +345,7 @@
       <Version>7.1.3</Version>
     </PackageReference>
     <PackageReference Include="ModernWpfUI">
-      <Version>0.9.6</Version>
+      <Version>0.9.5</Version>
     </PackageReference>
     <PackageReference Include="Newtonsoft.Json">
       <Version>13.0.4</Version>
