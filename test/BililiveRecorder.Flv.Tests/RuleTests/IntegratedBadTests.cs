@@ -16,7 +16,6 @@ using Xunit;
 
 namespace BililiveRecorder.Flv.Tests.RuleTests
 {
-    [UsesVerify]
     [ExpectationPath("Bad")]
     public class IntegratedBadTests : IntegratedTestBase
     {
@@ -32,7 +31,7 @@ namespace BililiveRecorder.Flv.Tests.RuleTests
             var comments = new List<ProcessingComment>();
 
             // Act
-            await RunPipeline(reader, flvTagListWriter, comments).ConfigureAwait(false);
+            await RunPipeline(reader, flvTagListWriter, comments);
 
             // Assert
             comments.RemoveAll(x => !x.ActionRequired);
@@ -52,7 +51,7 @@ namespace BililiveRecorder.Flv.Tests.RuleTests
                 var outputTags = flvTagListWriter.Files[i];
 
                 AssertTags.ShouldHaveLinearTimestamps(outputTags);
-                await AssertTagsByRerunPipeline(outputTags).ConfigureAwait(false);
+                await AssertTagsByRerunPipeline(outputTags);
 
                 var xmlStr = outputTags.SerializeXml();
                 sw.WriteLine(xmlStr);

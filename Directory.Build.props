@@ -5,6 +5,7 @@
         <Company>$(Authors)</Company>
         <LangVersion>11.0</LangVersion>
         <Nullable>enable</Nullable>
+        <SolutionName>BililiveRecorder</SolutionName>
     </PropertyGroup>
     <Target Name="_DisableCommandLineWarnings" BeforeTargets="ValidateCommandLineProperties">
         <!-- Disable warning message -->

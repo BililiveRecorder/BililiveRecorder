@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using BililiveRecorder.Flv.Amf;
 using FluentAssertions;
 using VerifyTests;
@@ -8,7 +9,6 @@ using Xunit;
 
 namespace BililiveRecorder.Flv.Tests.AmfTests
 {
-    [UsesVerify]
     [ExpectationPath("Amf")]
     public class AmfSerializerTests
     {
@@ -61,7 +61,7 @@ namespace BililiveRecorder.Flv.Tests.AmfTests
 
         [Expectation("Json")]
         [Theory, MemberData(nameof(GetTestData))]
-        public async void JsonSerializationShouldMatchExpectation(int index, ScriptTagBody input)
+        public async Task JsonSerializationShouldMatchExpectation(int index, ScriptTagBody input)
         {
             var json = input.ToJson();
 
@@ -70,7 +70,7 @@ namespace BililiveRecorder.Flv.Tests.AmfTests
 
         [Expectation("Binary")]
         [Theory, MemberData(nameof(GetTestData))]
-        public async void BinarySerializationShouldMatchExpectation(int index, ScriptTagBody input)
+        public async Task BinarySerializationShouldMatchExpectation(int index, ScriptTagBody input)
         {
             var binary = input.ToBytes();
 

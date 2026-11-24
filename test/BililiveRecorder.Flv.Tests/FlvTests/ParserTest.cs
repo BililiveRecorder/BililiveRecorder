@@ -10,7 +10,6 @@ using Xunit;
 
 namespace BililiveRecorder.Flv.Tests.FlvTests
 {
-    [UsesVerify]
     [ExpectationPath("FlvParser")]
     public class ParserTest
     {
@@ -18,12 +17,12 @@ namespace BililiveRecorder.Flv.Tests.FlvTests
         public async Task CompletedEmptyPipeReturnsNullAsync()
         {
             var pipe = new Pipe();
-            await pipe.Writer.CompleteAsync().ConfigureAwait(false);
+            await pipe.Writer.CompleteAsync();
 
             using var reader = new FlvTagPipeReader(pipe.Reader, new TestRecyclableMemoryStreamProvider(), skipData: false, leaveOpen: false, logger: null);
             using var cancellationTokenSource = new CancellationTokenSource(1000);
 
-            var tag = await reader.ReadTagAsync(cancellationTokenSource.Token).ConfigureAwait(false);
+            var tag = await reader.ReadTagAsync(cancellationTokenSource.Token);
             Assert.Null(tag);
         }
 
@@ -38,7 +37,7 @@ namespace BililiveRecorder.Flv.Tests.FlvTests
 
             while (true)
             {
-                var tag = await reader.ReadTagAsync(default).ConfigureAwait(false);
+                var tag = await reader.ReadTagAsync(default);
                 if (tag is null) break;
                 tags.Add(tag);
             }

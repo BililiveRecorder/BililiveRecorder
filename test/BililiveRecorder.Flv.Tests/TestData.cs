@@ -7,7 +7,6 @@ using Xunit;
 
 namespace BililiveRecorder.Flv.Tests
 {
-    [UsesVerify]
     public class TestData
     {
         [Fact]

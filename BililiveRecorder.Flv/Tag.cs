@@ -168,7 +168,7 @@ namespace BililiveRecorder.Flv
             else
             {
                 var buffer = this.BinaryData.GetBuffer();
-                this.DataHash = BinaryConvertUtilities.ByteArrayToHexString(farmHash64.ComputeHash(buffer, (int)this.BinaryData.Length));
+                this.DataHash = farmHash64.ComputeHashValue(buffer, (int)this.BinaryData.Length).ToString("X16");
 
                 if (this.Nalus?.Count > 0)
                 {
@@ -177,8 +177,8 @@ namespace BililiveRecorder.Flv
                         var bytesLeft = buffer.Length - nalu.StartPosition;
 
                         nalu.NaluHash = bytesLeft >= nalu.FullSize
-                            ? BinaryConvertUtilities.ByteArrayToHexString(farmHash64.ComputeHash(buffer, nalu.StartPosition, (int)nalu.FullSize))
-                            : BinaryConvertUtilities.ByteArrayToHexString(farmHash64.ComputeHash(buffer, nalu.StartPosition, Math.Min(buffer.Length - nalu.StartPosition, (int)nalu.FullSize))) + "-PARTIAL";
+                            ? farmHash64.ComputeHashValue(buffer, nalu.StartPosition, (int)nalu.FullSize).ToString("X16")
+                            : farmHash64.ComputeHashValue(buffer, nalu.StartPosition, Math.Min(buffer.Length - nalu.StartPosition, (int)nalu.FullSize)).ToString("X16") + "-PARTIAL";
                     }
                 }
             }

@@ -69,9 +69,9 @@ namespace BililiveRecorder.Flv.Tests
 
         public static void ShouldHaveSingleHeaderTagPerType(List<Tag> tags)
         {
-            Assert.Single(tags.Where(x => x.Type == TagType.Script));
-            Assert.Single(tags.Where(x => x.Type == TagType.Audio && x.Flag == TagFlag.Header));
-            Assert.Single(tags.Where(x => x.Type == TagType.Video && x.Flag == (TagFlag.Header | TagFlag.Keyframe)));
+            Assert.Single(tags, x => x.Type == TagType.Script);
+            Assert.Single(tags, x => x.Type == TagType.Audio && x.Flag == TagFlag.Header);
+            Assert.Single(tags, x => x.Type == TagType.Video && x.Flag == (TagFlag.Header | TagFlag.Keyframe));
         }
     }
 }

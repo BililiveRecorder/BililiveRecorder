@@ -59,20 +59,20 @@ namespace BililiveRecorder.Flv.Pipeline.Rules
                     }
                 }
 
-                var hash = farmHash64.ComputeHash(tagHashs.GetBuffer(), (int)tagHashs.Length);
+                var hash = farmHash64.ComputeHashValue(tagHashs.GetBuffer(), (int)tagHashs.Length);
 
                 // 存储最近 MAX_HISTORY 个 Data Chunk 的特征的 Queue
-                Queue<byte[]> hashHistory;
-                if (context.SessionItems.TryGetValue(QUEUE_KEY, out var obj) && obj is Queue<byte[]> q)
+                Queue<ulong> hashHistory;
+                if (context.SessionItems.TryGetValue(QUEUE_KEY, out var obj) && obj is Queue<ulong> q)
                     hashHistory = q;
                 else
                 {
-                    hashHistory = new Queue<byte[]>(MAX_HISTORY + 1);
+                    hashHistory = new Queue<ulong>(MAX_HISTORY + 1);
                     context.SessionItems[QUEUE_KEY] = hashHistory;
                 }
 
                 // 对比历史特征
-                if (hashHistory.ToStructEnumerable().Any(x => x.SequenceEqual(hash), x => x))
+                if (hashHistory.ToStructEnumerable().Any(x => x == hash, x => x))
                 {
                     // 重复数据                    
                     context.AddComment(comment);

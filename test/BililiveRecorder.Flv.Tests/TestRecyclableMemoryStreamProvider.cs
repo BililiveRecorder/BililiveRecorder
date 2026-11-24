@@ -6,11 +6,14 @@ namespace BililiveRecorder.Flv.Tests
     public class TestRecyclableMemoryStreamProvider : IMemoryStreamProvider
     {
         private static readonly RecyclableMemoryStreamManager manager
-            = new RecyclableMemoryStreamManager(32 * 1024, 64 * 1024, 64 * 1024 * 32)
+            = new RecyclableMemoryStreamManager(new RecyclableMemoryStreamManager.Options
             {
-                MaximumFreeSmallPoolBytes = 64 * 1024 * 1024,
-                MaximumFreeLargePoolBytes = 64 * 1024 * 32,
-            };
+                BlockSize = 32 * 1024,
+                LargeBufferMultiple = 64 * 1024,
+                MaximumBufferSize = 64 * 1024 * 32,
+                MaximumSmallPoolFreeBytes = 64 * 1024 * 1024,
+                MaximumLargePoolFreeBytes = 64 * 1024 * 32,
+            });
 
         public MemoryStream CreateMemoryStream(string tag) => manager.GetStream(tag);
     }

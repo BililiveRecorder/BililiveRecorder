@@ -12,11 +12,14 @@ namespace BililiveRecorder.ToolBox
         {
             const int K = 1024;
             const int M = K * K;
-            this.manager = new RecyclableMemoryStreamManager(32 * K, 64 * K, 64 * K * 32)
+            this.manager = new RecyclableMemoryStreamManager(new RecyclableMemoryStreamManager.Options
             {
-                MaximumFreeSmallPoolBytes = 32 * M,
-                MaximumFreeLargePoolBytes = 64 * K * 32,
-            };
+                BlockSize = 32 * K,
+                LargeBufferMultiple = 64 * K,
+                MaximumBufferSize = 64 * K * 32,
+                MaximumSmallPoolFreeBytes = 32 * M,
+                MaximumLargePoolFreeBytes = 64 * K * 32,
+            });
 
             //manager.StreamFinalized += () =>
             //{

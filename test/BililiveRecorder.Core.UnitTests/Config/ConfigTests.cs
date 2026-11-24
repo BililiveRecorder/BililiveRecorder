@@ -7,7 +7,6 @@ using Xunit;
 
 namespace BililiveRecorder.Core.UnitTests.Config
 {
-    [UsesVerify]
     public class ConfigTests
     {
         [Fact]

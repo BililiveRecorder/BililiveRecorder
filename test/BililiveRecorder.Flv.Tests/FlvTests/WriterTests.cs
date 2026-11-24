@@ -9,7 +9,6 @@ using Xunit;
 
 namespace BililiveRecorder.Flv.Tests.FlvTests
 {
-    [UsesVerify]
     [ExpectationPath("FlvWriter")]
     public class WriterTests
     {
@@ -29,7 +28,7 @@ namespace BililiveRecorder.Flv.Tests.FlvTests
 
             while (true)
             {
-                var tag = await reader.ReadTagAsync(default).ConfigureAwait(false);
+                var tag = await reader.ReadTagAsync(default);
                 if (tag is null) break;
                 await writer.WriteTag(tag);
             }
