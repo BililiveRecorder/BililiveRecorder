@@ -59,8 +59,6 @@ namespace BililiveRecorder.Cli
                 entrypointLogger.Information("Starting, {Version}, {CommandLine}", GitVersionInformation.InformationalVersion, args);
                 try
                 {
-                    ServicePointManager.Expect100Continue = false;
-
                     var cmd_run = new Command("run", "Run BililiveRecorder in standard mode")
                     {
                         new Option<string?>(new []{ "--config-override" }, () => null, "Config path override"),
@@ -390,7 +388,7 @@ namespace BililiveRecorder.Cli
                     return null;
                 }
 
-                return new X509Certificate2(arguments.CertPfxPath, arguments.CertPassword);
+                return X509CertificateLoader.LoadPkcs12FromFile(arguments.CertPfxPath, arguments.CertPassword);
             }
             else if (arguments.CertPemPath is not null || arguments.CertKeyPath is not null)
             {
@@ -422,7 +420,7 @@ namespace BililiveRecorder.Cli
                     ? X509Certificate2.CreateFromPemFile(arguments.CertPemPath, arguments.CertKeyPath)
                     : X509Certificate2.CreateFromEncryptedPemFile(arguments.CertPemPath, arguments.CertPassword, arguments.CertKeyPath);
 
-                return new X509Certificate2(cert.Export(X509ContentType.Pfx));
+                return X509CertificateLoader.LoadPkcs12(cert.Export(X509ContentType.Pfx), null);
             }
             else
             {
@@ -443,7 +441,7 @@ namespace BililiveRecorder.Cli
                     using var key = RSA.Create();
                     var req = new CertificateRequest("CN=自签名证书，每次启动都会重新生成", key, HashAlgorithmName.SHA256, RSASignaturePadding.Pkcs1);
                     req.CertificateExtensions.Add(new X509BasicConstraintsExtension(true, false, 0, false));
-                    CA = new X509Certificate2(req.CreateSelfSigned(firstDayofCurrentYear, firstDayofCurrentYear.AddYears(10)).Export(X509ContentType.Pfx));
+                    CA = X509CertificateLoader.LoadPkcs12(req.CreateSelfSigned(firstDayofCurrentYear, firstDayofCurrentYear.AddYears(10)).Export(X509ContentType.Pfx), null);
                 }
 
                 {
@@ -461,7 +459,7 @@ namespace BililiveRecorder.Cli
 
                     using var cert = req.Create(CA, firstDayofCurrentYear, firstDayofCurrentYear.AddYears(10), "BililiveRecorder".Select(x => (byte)x).ToArray());
                     using var withPrivateKey = cert.CopyWithPrivateKey(key);
-                    return new X509Certificate2(withPrivateKey.Export(X509ContentType.Pfx));
+                    return X509CertificateLoader.LoadPkcs12(withPrivateKey.Export(X509ContentType.Pfx), null);
                 }
             }
             finally
