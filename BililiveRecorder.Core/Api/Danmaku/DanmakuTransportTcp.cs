@@ -15,6 +15,7 @@ namespace BililiveRecorder.Core.Api.Danmaku
     internal class DanmakuTransportTcp : IDanmakuTransport
     {
         private static readonly Random random = new Random();
+        private TcpClient? tcpClient;
         private Stream? stream;
         private readonly string? bindAddress;
 
@@ -29,64 +30,74 @@ namespace BililiveRecorder.Core.Api.Danmaku
                 throw new InvalidOperationException("Tcp socket is connected.");
 
             var tcp = new TcpClient();
+            this.tcpClient = tcp;
 
-            if (!string.IsNullOrWhiteSpace(this.bindAddress))
+            try
             {
-                var localAddress = HttpClientWithBindAddress.ResolveBindAddress(this.bindAddress);
-                if (localAddress is not null)
+                if (!string.IsNullOrWhiteSpace(this.bindAddress))
                 {
-                    tcp.Client.Bind(new IPEndPoint(localAddress, 0));
-                }
-            }
-
-            var localFamily = (tcp.Client.LocalEndPoint as IPEndPoint)?.Address?.AddressFamily;
-
-            if (localFamily is null && (allowedAddressFamily == AllowedAddressFamily.System || allowedAddressFamily == AllowedAddressFamily.Any))
-            {
-                await tcp.ConnectAsync(host, port).ConfigureAwait(false);
-            }
-            else
-            {
-                var ips = await Dns.GetHostAddressesAsync(host).ConfigureAwait(false);
-
-                var filtered = ips.Where(x =>
-                {
-                    if (localFamily is not null && x.AddressFamily != localFamily.Value)
-                        return false;
-
-                    return allowedAddressFamily switch
+                    var localAddress = HttpClientWithBindAddress.ResolveBindAddress(this.bindAddress);
+                    if (localAddress is not null)
                     {
-                        AllowedAddressFamily.Ipv4 => x.AddressFamily == AddressFamily.InterNetwork,
-                        AllowedAddressFamily.Ipv6 => x.AddressFamily == AddressFamily.InterNetworkV6,
-                        _ => true, // System/Any
-                    };
-                }).ToArray();
-
-                if (filtered.Length == 0)
-                    throw new InvalidOperationException("DNS did not return any IP addresses matching the allowed address family.");
-
-                int startIndex;
-                lock (random)
-                    startIndex = random.Next(filtered.Length);
-
-                Exception? lastException = null;
-                for (var i = 0; i < filtered.Length; i++)
-                {
-                    var ip = filtered[(startIndex + i) % filtered.Length];
-                    try
-                    {
-                        await tcp.ConnectAsync(ip, port).ConfigureAwait(false);
-                        lastException = null;
-                        break;
-                    }
-                    catch (Exception ex)
-                    {
-                        lastException = ex;
+                        tcp.Client.Bind(new IPEndPoint(localAddress, 0));
                     }
                 }
 
-                if (lastException is not null)
-                    throw new InvalidOperationException("Failed to connect to any resolved IP address.", lastException);
+                var localFamily = (tcp.Client.LocalEndPoint as IPEndPoint)?.Address?.AddressFamily;
+
+                if (localFamily is null && (allowedAddressFamily == AllowedAddressFamily.System || allowedAddressFamily == AllowedAddressFamily.Any))
+                {
+                    await tcp.ConnectAsync(host, port).ConfigureAwait(false);
+                }
+                else
+                {
+                    var ips = await Dns.GetHostAddressesAsync(host).ConfigureAwait(false);
+
+                    var filtered = ips.Where(x =>
+                    {
+                        if (localFamily is not null && x.AddressFamily != localFamily.Value)
+                            return false;
+
+                        return allowedAddressFamily switch
+                        {
+                            AllowedAddressFamily.Ipv4 => x.AddressFamily == AddressFamily.InterNetwork,
+                            AllowedAddressFamily.Ipv6 => x.AddressFamily == AddressFamily.InterNetworkV6,
+                            _ => true, // System/Any
+                        };
+                    }).ToArray();
+
+                    if (filtered.Length == 0)
+                        throw new InvalidOperationException("DNS did not return any IP addresses matching the allowed address family.");
+
+                    int startIndex;
+                    lock (random)
+                        startIndex = random.Next(filtered.Length);
+
+                    Exception? lastException = null;
+                    for (var i = 0; i < filtered.Length; i++)
+                    {
+                        var ip = filtered[(startIndex + i) % filtered.Length];
+                        try
+                        {
+                            await tcp.ConnectAsync(ip, port).ConfigureAwait(false);
+                            lastException = null;
+                            break;
+                        }
+                        catch (Exception ex)
+                        {
+                            lastException = ex;
+                        }
+                    }
+
+                    if (lastException is not null)
+                        throw new InvalidOperationException("Failed to connect to any resolved IP address.", lastException);
+                }
+            }
+            catch
+            {
+                tcp.Dispose();
+                this.tcpClient = null;
+                throw;
             }
 
             var networkStream = tcp.GetStream();
@@ -94,7 +105,13 @@ namespace BililiveRecorder.Core.Api.Danmaku
             return networkStream.UsePipeReader();
         }
 
-        public void Dispose() => this.stream?.Dispose();
+        public void Dispose()
+        {
+            this.stream?.Dispose();
+            this.stream = null;
+            this.tcpClient?.Dispose();
+            this.tcpClient = null;
+        }
 
         public async Task SendAsync(byte[] buffer, int offset, int count)
         {

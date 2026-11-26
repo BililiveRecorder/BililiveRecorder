@@ -251,6 +251,16 @@ namespace BililiveRecorder.Core.Config.V3
         /// </summary>
         public string? UserScript => this.GetPropertyValue<string>();
 
+        /// <summary>
+        /// 日志单个文件最大大小 MB（0 为不限制）
+        /// </summary>
+        public uint LogFileMaxSizeMB => this.GetPropertyValue<uint>();
+
+        /// <summary>
+        /// 保留日志文件个数（0 为不限制）
+        /// </summary>
+        public uint LogRetainFileCount => this.GetPropertyValue<uint>();
+
     }
 
     [JsonObject(MemberSerialization.OptIn)]
@@ -544,6 +554,22 @@ namespace BililiveRecorder.Core.Config.V3
         [JsonProperty(nameof(UserScript)), EditorBrowsable(EditorBrowsableState.Never)]
         public Optional<string?> OptionalUserScript { get => this.GetPropertyValueOptional<string>(nameof(this.UserScript)); set => this.SetPropertyValueOptional(value, nameof(this.UserScript)); }
 
+        /// <summary>
+        /// 日志单个文件最大大小 MB（0 为不限制）
+        /// </summary>
+        public uint LogFileMaxSizeMB { get => this.GetPropertyValue<uint>(); set => this.SetPropertyValue(value); }
+        public bool HasLogFileMaxSizeMB { get => this.GetPropertyHasValue(nameof(this.LogFileMaxSizeMB)); set => this.SetPropertyHasValue<uint>(value, nameof(this.LogFileMaxSizeMB)); }
+        [JsonProperty(nameof(LogFileMaxSizeMB)), EditorBrowsable(EditorBrowsableState.Never)]
+        public Optional<uint> OptionalLogFileMaxSizeMB { get => this.GetPropertyValueOptional<uint>(nameof(this.LogFileMaxSizeMB)); set => this.SetPropertyValueOptional(value, nameof(this.LogFileMaxSizeMB)); }
+
+        /// <summary>
+        /// 保留日志文件个数（0 为不限制）
+        /// </summary>
+        public uint LogRetainFileCount { get => this.GetPropertyValue<uint>(); set => this.SetPropertyValue(value); }
+        public bool HasLogRetainFileCount { get => this.GetPropertyHasValue(nameof(this.LogRetainFileCount)); set => this.SetPropertyHasValue<uint>(value, nameof(this.LogRetainFileCount)); }
+        [JsonProperty(nameof(LogRetainFileCount)), EditorBrowsable(EditorBrowsableState.Never)]
+        public Optional<uint> OptionalLogRetainFileCount { get => this.GetPropertyValueOptional<uint>(nameof(this.LogRetainFileCount)); set => this.SetPropertyValueOptional(value, nameof(this.LogRetainFileCount)); }
+
     }
 
     public sealed partial class DefaultConfig
@@ -622,6 +648,10 @@ namespace BililiveRecorder.Core.Config.V3
         public string NetworkTransportBindAddress => @"";
 
         public string UserScript => @"";
+
+        public uint LogFileMaxSizeMB => 0;
+
+        public uint LogRetainFileCount => 0;
 
     }
 

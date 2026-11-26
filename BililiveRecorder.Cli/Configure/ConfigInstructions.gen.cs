@@ -49,7 +49,9 @@ namespace BililiveRecorder.Cli.Configure
         NetworkTransportUseSystemProxy,
         NetworkTransportAllowedAddressFamily,
         NetworkTransportBindAddress,
-        UserScript
+        UserScript,
+        LogFileMaxSizeMB,
+        LogRetainFileCount
     }
     public enum RoomConfigProperties
     {
@@ -115,6 +117,8 @@ namespace BililiveRecorder.Cli.Configure
             GlobalConfig.Add(GlobalConfigProperties.NetworkTransportAllowedAddressFamily, new ConfigInstruction<GlobalConfig, AllowedAddressFamily>(config => config.HasNetworkTransportAllowedAddressFamily = false, (config, value) => config.NetworkTransportAllowedAddressFamily = value) { Name = "NetworkTransportAllowedAddressFamily", CanBeOptional = true });
             GlobalConfig.Add(GlobalConfigProperties.NetworkTransportBindAddress, new ConfigInstruction<GlobalConfig, string>(config => config.HasNetworkTransportBindAddress = false, (config, value) => config.NetworkTransportBindAddress = value) { Name = "NetworkTransportBindAddress", CanBeOptional = true });
             GlobalConfig.Add(GlobalConfigProperties.UserScript, new ConfigInstruction<GlobalConfig, string>(config => config.HasUserScript = false, (config, value) => config.UserScript = value) { Name = "UserScript", CanBeOptional = true });
+            GlobalConfig.Add(GlobalConfigProperties.LogFileMaxSizeMB, new ConfigInstruction<GlobalConfig, uint>(config => config.HasLogFileMaxSizeMB = false, (config, value) => config.LogFileMaxSizeMB = value) { Name = "LogFileMaxSizeMB", CanBeOptional = true });
+            GlobalConfig.Add(GlobalConfigProperties.LogRetainFileCount, new ConfigInstruction<GlobalConfig, uint>(config => config.HasLogRetainFileCount = false, (config, value) => config.LogRetainFileCount = value) { Name = "LogRetainFileCount", CanBeOptional = true });
 
             RoomConfig.Add(RoomConfigProperties.RoomId, new ConfigInstruction<RoomConfig, int>(config => config.HasRoomId = false, (config, value) => config.RoomId = value) { Name = "RoomId", CanBeOptional = false });
             RoomConfig.Add(RoomConfigProperties.AutoRecord, new ConfigInstruction<RoomConfig, bool>(config => config.HasAutoRecord = false, (config, value) => config.AutoRecord = value) { Name = "AutoRecord", CanBeOptional = false });

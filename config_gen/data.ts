@@ -285,4 +285,20 @@ export const data: Array<ConfigEntry> = [
         configType: "globalOnly",
         advancedConfig: true
     },
+    {
+        id: "LogFileMaxSizeMB",
+        name: "日志单个文件最大大小 MB（0 为不限制）",
+        type: "uint",
+        default: 0,
+        configType: "globalOnly",
+        advancedConfig: true
+    },
+    {
+        id: "LogRetainFileCount",
+        name: "保留日志文件个数（0 为不限制）",
+        type: "uint",
+        default: 0,
+        configType: "globalOnly",
+        advancedConfig: true
+    },
 ];

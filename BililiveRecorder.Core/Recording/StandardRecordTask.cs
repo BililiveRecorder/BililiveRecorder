@@ -92,7 +92,11 @@ namespace BililiveRecorder.Core.Recording
             });
         }
 
-        public override void SplitOutput() => this.splitFileRule.SetSplitBeforeFlag();
+        public override void SplitOutput()
+        {
+            base.SplitOutput();
+            this.splitFileRule.SetSplitBeforeFlag();
+        }
 
         protected override void StartRecordingLoop(Stream stream)
         {

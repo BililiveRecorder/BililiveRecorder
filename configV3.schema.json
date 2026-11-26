@@ -359,7 +359,7 @@
         },
         "NetworkTransportBindAddress": {
           "description": "绑定的网络接口或IP地址\n默认: ",
-          "markdownDescription": "绑定的网络接口或IP地址  \n默认: ``\n\n",
+          "markdownDescription": "绑定的网络接口或IP地址  \n默认: ` `\n\n",
           "type": "object",
           "additionalProperties": false,
           "properties": {
@@ -386,6 +386,42 @@
             "Value": {
               "type": "string",
               "default": ""
+            }
+          }
+        },
+        "LogFileMaxSizeMB": {
+          "description": "日志单个文件最大大小 MB（0 为不限制）\n默认: 0",
+          "markdownDescription": "日志单个文件最大大小 MB（0 为不限制）  \n默认: `0 `\n\n",
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "HasValue": {
+              "type": "boolean",
+              "default": true
+            },
+            "Value": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 4294967295,
+              "default": 0
+            }
+          }
+        },
+        "LogRetainFileCount": {
+          "description": "保留日志文件个数（0 为不限制）\n默认: 0",
+          "markdownDescription": "保留日志文件个数（0 为不限制）  \n默认: `0 `\n\n",
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "HasValue": {
+              "type": "boolean",
+              "default": true
+            },
+            "Value": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 4294967295,
+              "default": 0
             }
           }
         },
